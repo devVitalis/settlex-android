@@ -1,0 +1,59 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    /*----------------------------------------------
+    Custom Filled Button Style - SettleXApp
+    Based on M3: Widget.Material3.Button
+    ---------------------------------------------*/
+    <style name="Widget.SettleXApp.Button.Filled" parent="Widget.Material3.Button">
+        <item name="backgroundTint">@color/btn_color_selector_filled</item>
+        <item name="android:textColor">@color/white</item>
+        <item name="android:fontFamily">sans-serif</item>
+        <item name="android:includeFontPadding">false</item>
+        <item name="android:textAllCaps">false</item>
+    </style>
+
+    /*----------------------------------------------------
+    Custom Filled Button Style - Rounded 8dp - SettleXApp
+    Based on M3: Widget.Material3.Button
+    ----------------------------------------------------*/
+    <style name="Widget.SettleXApp.Button.Filled.Rounded8" parent="Widget.Material3.Button">
+        <item name="backgroundTint">@color/btn_color_selector_filled</item>
+        <item name="android:textColor">@color/white</item>
+        <item name="android:fontFamily">sans-serif</item>
+        <item name="android:includeFontPadding">false</item>
+        <item name="android:textAllCaps">false</item>
+        <item name="shapeAppearance">@style/SettleXApp.Rounded8</item>
+    </style>
+
+    /*----------------------------------------------
+    Custom Outlined Button Style - SettleXApp
+    Based on M3: Widget.Material3.Button
+    ---------------------------------------------*/
+    <style name="Widget.SettleXApp.Button.Outlined.Rounded8" parent="Widget.Material3.Button">
+        <item name="backgroundTint">@color/btn_color_selector_outlined</item>
+        <item name="android:textColor">@color/blue</item>
+        <item name="android:fontFamily">sans-serif</item>
+        <item name="android:includeFontPadding">false</item>
+        <item name="android:textAllCaps">false</item>
+        <item name="shapeAppearance">@style/SettleXApp.Rounded8</item>
+    </style>
+
+    /*----------------------------------------------
+    Custom Outlined Button Style - SettleXApp
+    Based on M3: Widget.Material3.Button
+    ---------------------------------------------*/
+    <style name="Widget.SettleXApp.Button.Outlined" parent="Widget.Material3.Button">
+        <item name="backgroundTint">@color/btn_color_selector_outlined</item>
+        <item name="android:textColor">@color/blue</item>
+        <item name="android:fontFamily">sans-serif</item>
+        <item name="android:includeFontPadding">false</item>
+        <item name="android:textAllCaps">false</item>
+    </style>
+
+    /*-------------------------------
+    Shape style with 8dp radius
+    -------------------------------*/
+    <style name="SettleXApp.Rounded8" parent="ShapeAppearance.Material3.SmallComponent">
+        <item name="cornerSize">8dp</item>
+    </style>
+</resources>

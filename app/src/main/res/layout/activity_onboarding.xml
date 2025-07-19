@@ -1,0 +1,89 @@
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/white"
+    android:fitsSystemWindows="true"
+    tools:context=".view.Onboarding.activity.OnboardingActivity">
+
+    <!--Txt Skip-->
+    <TextView
+        android:id="@+id/txtSkip"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentTop="true"
+        android:layout_alignParentEnd="true"
+        android:layout_marginHorizontal="10dp"
+        android:layout_marginTop="10dp"
+        android:background="@drawable/bg_16dp_light_gray"
+        android:fontFamily="sans-serif"
+        android:gravity="center"
+        android:includeFontPadding="false"
+        android:paddingHorizontal="10dp"
+        android:paddingVertical="5dp"
+        android:text="Skip"
+        android:textColor="@color/gray"
+        android:textSize="15sp" />
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_above="@id/btnContainer"
+        android:layout_below="@id/txtSkip"
+        android:orientation="vertical">
+
+        <!--ViewPager2 (Fragment Container)-->
+        <androidx.viewpager2.widget.ViewPager2
+            android:id="@+id/viewPager"
+            android:layout_centerHorizontal="true"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:scrollbars="none"/>
+
+        <!--Dots Indicator-->
+        <com.tbuonomo.viewpagerdotsindicator.DotsIndicator
+            android:id="@+id/dotsIndicator"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:layout_centerHorizontal="true"
+            android:layout_below="@id/viewPager"
+            android:layout_marginTop="15dp"
+            app:dotsColor="@color/light_blue"
+            app:dotsSize="5dp"
+            app:dotsSpacing="2dp"
+            app:dotsWidthFactor="2.5"
+            app:progressMode="false"
+            app:selectedDotColor="@color/blue" />
+    </RelativeLayout>
+
+    <LinearLayout
+        android:id="@+id/btnContainer"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_alignParentBottom="true"
+        android:gravity="center_horizontal"
+        android:orientation="vertical"
+        android:paddingHorizontal="15dp"
+        android:paddingVertical="25dp">
+
+        <!--Btn Create Account-->
+        <com.google.android.material.button.MaterialButton
+            android:id="@+id/btnCreateAccount"
+            style="@style/Widget.SettleXApp.Button.Filled"
+            android:layout_width="match_parent"
+            android:layout_height="55dp"
+            android:text="Get Started"
+            android:textColor="@color/white" />
+
+        <!--Btn Login-->
+        <com.google.android.material.button.MaterialButton
+            android:id="@+id/btnLogin"
+            style="@style/Widget.SettleXApp.Button.Outlined"
+            android:layout_width="match_parent"
+            android:layout_height="55dp"
+            android:layout_marginTop="2dp"
+            android:text="Login" />
+    </LinearLayout>
+</RelativeLayout>
