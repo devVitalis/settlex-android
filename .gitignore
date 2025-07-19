@@ -1,0 +1,41 @@
+*.iml
+.gradle
+/local.properties
+/.idea/caches
+/.idea/libraries
+/.idea/modules.xml
+/.idea/workspace.xml
+/.idea/navEditor.xml
+/.idea/assetWizardSettings.xml
+.DS_Store
+/build
+/captures
+.externalNativeBuild
+.cxx
+local.properties
+
+# Firebase and Google Services (never commit secrets)
+google-services.json
+firebase-debug.log
+
+# Keystores and signing configs
+*.jks
+*.keystore
+
+# Jetpack Compose previews
+*.preview
+
+# OS/editor junk
+Thumbs.db
+*.swp
+*.swo
+*.log
+*.stacktrace
+
+# Kotlin/Java compiler outputs
+*.jar
+*.war
+*.ear
+*.class
+*.apk
+*.ap_
