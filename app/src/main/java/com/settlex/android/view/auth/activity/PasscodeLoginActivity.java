@@ -1,4 +1,4 @@
-package com.settlex.android.view.activities;
+package com.settlex.android.view.auth.activity;
 
 import android.os.Bundle;
 
@@ -6,12 +6,12 @@ import androidx.appcompat.app.AppCompatActivity;
 
 import com.settlex.android.R;
 
-public class SignInActivity extends AppCompatActivity {
+public class PasscodeLoginActivity extends AppCompatActivity {
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_sign_in);
+        setContentView(R.layout.activity_passcode_login);
 
     }
 }

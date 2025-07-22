@@ -1,6 +1,7 @@
 package com.settlex.android.controller;
 
 import static android.content.Intent.FLAG_ACTIVITY_CLEAR_TASK;
+import static android.content.Intent.FLAG_ACTIVITY_CLEAR_TOP;
 
 import android.annotation.SuppressLint;
 import android.app.Activity;
@@ -12,10 +13,12 @@ import android.os.Looper;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.splashscreen.SplashScreen;
 
-import com.settlex.android.data.local.SessionManager;
-import com.settlex.android.data.local.UserOnboardingPrefs;
+import com.settlex.android.data.local.AppOnboardingPrefs;
+import com.settlex.android.manager.SessionManager;
+import com.settlex.android.manager.UserOnboardingPrefs;
 import com.settlex.android.view.Onboarding.activity.OnboardingActivity;
-import com.settlex.android.view.activities.SignInActivity;
+import com.settlex.android.view.auth.activity.PasscodeLoginActivity;
+import com.settlex.android.view.auth.activity.SignInActivity;
 
 @SuppressLint("CustomSplashScreen")
 public class SplashActivity extends AppCompatActivity {
@@ -31,25 +34,23 @@ public class SplashActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
 
         SessionManager sm = SessionManager.getInstance();
-        UserOnboardingPrefs prefs = new UserOnboardingPrefs(this);
+        AppOnboardingPrefs prefs = new AppOnboardingPrefs(this);
 
         new Handler(Looper.getMainLooper()).postDelayed(() -> {
             keepSplashVisible = false;
 
             if (!prefs.isIntroViewed()) {
+                // User hasn't seen onboarding
                 loadActivity(OnboardingActivity.class);
 
-            } else if (!sm.isUserLoggedIn()) {
+            } else if (!sm.isUserLoggedIn() || !sm.hasPasscode()) {
+                // User hasn't logged in yet || Logged in but no passcode set
                 loadActivity(SignInActivity.class);
 
-            } else if (!sm.hasPasscode()) {
-                loadActivity(SignInActivity.class);
+            } else {
+                // User is logged in and has passcode
+                loadActivity(PasscodeLoginActivity.class);
             }
-//        else {
-//            // loadActivity(PasscodeLoginActivity.class);
-//        }
-//        finish();
-
         }, 500);
     }
 
@@ -58,7 +59,7 @@ public class SplashActivity extends AppCompatActivity {
     -----------------------------*/
     private void loadActivity(Class<? extends Activity> activityClass) {
         Intent intent = new Intent(this, activityClass);
-        intent.addFlags(FLAG_ACTIVITY_CLEAR_TASK);
+        intent.addFlags(FLAG_ACTIVITY_CLEAR_TASK | FLAG_ACTIVITY_CLEAR_TOP);
         startActivity(intent);
     }
 }

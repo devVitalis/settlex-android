@@ -12,15 +12,17 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.content.ContextCompat;
 
 import com.settlex.android.R;
-import com.settlex.android.data.local.UserOnboardingPrefs;
+import com.settlex.android.data.local.AppOnboardingPrefs;
+import com.settlex.android.manager.UserOnboardingPrefs;
 import com.settlex.android.databinding.ActivityOnboardingBinding;
 import com.settlex.android.view.Onboarding.adapter.OnboardingAdapter;
-import com.settlex.android.view.activities.SignInActivity;
+import com.settlex.android.view.auth.activity.SignInActivity;
+import com.settlex.android.view.auth.activity.SignUpActivity;
 
 public class OnboardingActivity extends AppCompatActivity {
 
     private ActivityOnboardingBinding binding;
-    private UserOnboardingPrefs prefs;
+    private AppOnboardingPrefs prefs;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -28,7 +30,7 @@ public class OnboardingActivity extends AppCompatActivity {
         binding = ActivityOnboardingBinding.inflate(getLayoutInflater());
         setContentView(binding.getRoot());
 
-        prefs = new UserOnboardingPrefs(this);
+        prefs = new AppOnboardingPrefs(this);
 
         setupStatusBar();
         setupViewPager();
@@ -49,22 +51,21 @@ public class OnboardingActivity extends AppCompatActivity {
     -------------------------------*/
     private void setupUIActions() {
         binding.btnCreateAccount.setOnClickListener(v -> {
-            prefs.setIntroViewed();
-            Intent intent = new Intent(this, SignInActivity.class);
+            prefs.setIntroViewed(true);
+            Intent intent = new Intent(this, SignUpActivity.class);
             intent.addFlags(FLAG_ACTIVITY_CLEAR_TASK);
             startActivity(intent);
         });
 
         binding.btnLogin.setOnClickListener(v -> {
-            prefs.setIntroViewed();
+            prefs.setIntroViewed(true);
             Intent intent = new Intent(this, SignInActivity.class);
             intent.addFlags(FLAG_ACTIVITY_CLEAR_TASK);
             startActivity(intent);
-
         });
 
         binding.txtSkip.setOnClickListener(v -> {
-            prefs.setIntroViewed();
+            prefs.setIntroViewed(true);
             Intent intent = new Intent(this, SignInActivity.class);
             intent.addFlags(FLAG_ACTIVITY_CLEAR_TASK);
             startActivity(intent);

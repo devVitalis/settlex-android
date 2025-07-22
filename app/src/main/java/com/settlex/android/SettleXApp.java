@@ -15,20 +15,14 @@ public class SettleXApp extends Application {
     public void onCreate() {
         super.onCreate();
 
-        /*-------------------------------
-        Initialize global references
-        -------------------------------*/
+        // Initialize global references
         instance = this;
         appContext = getApplicationContext();
 
-        /*-------------------------------
-        Initialize Firebase Core SDK
-        -------------------------------*/
+        // Initialize Firebase Core SDK
         FirebaseApp.initializeApp(this);
 
-        /*-------------------------------
-        Initialize network state monitor
-        -------------------------------*/
+        // Initialize network state monitor
         NetworkMonitor.startNetworkCallback();
     }
 

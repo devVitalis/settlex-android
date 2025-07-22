@@ -56,4 +56,30 @@
     <style name="SettleXApp.Rounded8" parent="ShapeAppearance.Material3.SmallComponent">
         <item name="cornerSize">8dp</item>
     </style>
+
+    /*---------------------------------------------------
+    Custom CheckBox Style - SettleXApp
+    Based on M3: Widget.Material3.CompoundButton.CheckBox
+    ----------------------------------------------------*/
+    <style name="Widget.SettleXApp.CheckBox" parent="Widget.Material3.CompoundButton.CheckBox">
+        <item name="buttonTint">@color/checkbox_color_selector</item>
+        <item name="android:textColor">@color/black</item>
+        <item name="android:fontFamily">sans-serif</item>
+        <item name="android:textSize">12sp</item>
+    </style>
+
+    /*---------------------------------------------------------
+    Custom TextInputLayout - Outline Variant
+    Based on M3: Widget.Material3.TextInputLayout.OutlinedBox
+    ---------------------------------------------------------*/
+    <style name="Widget.SettleXApp.TextInputLayout.Outlined" parent="Widget.Material3.TextInputLayout.OutlinedBox">
+        <item name="boxBackgroundColor">@color/white</item>
+        <item name="boxStrokeColor">@color/text_input_stroke_color_selector</item>
+        <item name="strokeWidth">0.5dp</item>
+        <item name="shapeAppearance">@style/SettleXApp.Rounded8</item>
+        <item name="boxStrokeErrorColor">@color/red</item>
+        <item name="hintTextColor">@color/text_input_hint_color_selector</item>
+        <item name="fontFamily">@font/poppins_regular</item>
+        <item name="android:includeFontPadding">false</item>
+    </style>
 </resources>
