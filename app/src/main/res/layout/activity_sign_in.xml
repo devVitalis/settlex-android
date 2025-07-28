@@ -88,7 +88,7 @@
                     android:layout_marginBottom="10dp"
                     android:contentDescription="Logo"
                     android:scaleType="fitCenter"
-                    android:src="@drawable/logo" />
+                    android:src="@drawable/logo_with_txt" />
 
                 <!--Email field-->
                 <com.google.android.material.textfield.TextInputLayout

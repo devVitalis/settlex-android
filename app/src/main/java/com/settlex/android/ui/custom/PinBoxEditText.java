@@ -1,4 +1,4 @@
-package com.settlex.android.ui.customviews;
+package com.settlex.android.ui.custom;
 
 
 import android.content.Context;

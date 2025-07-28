@@ -1,4 +1,4 @@
-package com.settlex.android.ui.customviews;
+package com.settlex.android.ui.custom;
 
 import android.animation.ValueAnimator;
 import android.content.Context;

@@ -3,17 +3,18 @@
     <color name="black">#FF000000</color>
     <color name="white">#FFFFFFFF</color>
 
-    <color name="gray">#757575</color>
-    <color name="light_gray">#F5F5F5</color>
+    <color name="gray">#9E9E9E </color>
+    <color name="gray_dark">#4A4A4A</color>
+    <color name="gray_light">#F5F5F5</color>
 
     <color name="blue">#0044CC</color>
-    <color name="deep_blue">#004A91</color>
-    <color name="light_blue">#94A4DBFF</color>
-    <color name="very_light_blue">#EDF2FE</color>
+    <color name="blue_deep">#004A91</color>
+    <color name="blue_light">#94A4DBFF</color>
+    <color name="blue_very_light">#EDF2FE</color>
 
     <color name="red">#FF0A0A</color>
 
-    <color name="light_orange">#FFF4E0</color>
+    <color name="orange_light">#FFF4E0</color>
 
 
 </resources>

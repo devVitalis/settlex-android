@@ -28,11 +28,32 @@ public class SignUpController {
         });
     }
 
+    public void verifyEmailOtp(String email, String otp, VerifyEmailOtpCallback cb){
+        auth.verifyEmailOtp(email, otp, new AuthManager.VerifyEmailOtpCallback() {
+            @Override
+            public void onSuccess() {
+                cb.onSuccess("Verification Successful");
+            }
+
+            @Override
+            public void onFailure(String reason) {
+                cb.onFailure(reason);
+            }
+        });
+    }
+
     /*---------------------------------------
     Callback Interfaces For Success/Failures
     ---------------------------------------*/
     public interface SendEmailOtpCallback {
         void onSuccess(String message);
+
+        void onFailure(String reason);
+    }
+
+    public interface VerifyEmailOtpCallback {
+        void onSuccess(String message);
+
         void onFailure(String reason);
     }
 }

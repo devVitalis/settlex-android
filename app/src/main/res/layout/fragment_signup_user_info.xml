@@ -85,13 +85,23 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_gravity="start"
-                    android:layout_marginTop="40dp"
+                    android:layout_marginTop="25dp"
                     android:fontFamily="@font/poppins_regular"
                     android:includeFontPadding="false"
-                    android:text="Let's setup your Name"
+                    android:text="Lets get to know you"
                     android:textColor="@color/black"
                     android:textSize="20sp"
                     android:textStyle="bold" />
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="start"
+                    android:fontFamily="@font/poppins_light"
+                    android:includeFontPadding="false"
+                    android:text="Tell us your name"
+                    android:textColor="@color/black"
+                    android:textSize="13sp" />
 
                 <!--Pages Count-->
                 <TextView
@@ -151,7 +161,7 @@
                     android:layout_marginTop="20dp"
                     android:fontFamily="@font/poppins_light"
                     android:includeFontPadding="false"
-                    android:text="Please enter your first and last name."
+                    android:text="Please enter your first name and last name as it appears on your NIN"
                     android:textColor="@color/black"
                     android:textSize="13sp" />
 
@@ -223,34 +233,6 @@
             android:paddingHorizontal="15dp"
             android:paddingVertical="25dp">
 
-            <LinearLayout
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:gravity="center_vertical"
-                android:orientation="horizontal">
-
-                <!--CheckBox, Terms & Conditions, PrivacyPolicy TxT-->
-                <com.google.android.material.checkbox.MaterialCheckBox
-                    android:id="@+id/checkBoxTermsPrivacy"
-                    style="@style/Widget.SettleXApp.CheckBox"
-                    android:layout_width="20dp"
-                    android:layout_height="20dp"
-                    android:layout_marginEnd="5dp"
-                    android:gravity="center" />
-
-                <!--Terms & Conditions, PrivacyPolicy TxT-->
-                <TextView
-                    android:id="@+id/txtTermsPrivacy"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:fontFamily="@font/poppins_light"
-                    android:includeFontPadding="false"
-                    android:text="I have read, understood and agreed to the Terms &amp; Conditions and Privacy Policy."
-                    android:textColor="@color/black"
-                    android:textSize="12sp" />
-            </LinearLayout>
-
-
             <!--Continue Btn-->
             <com.google.android.material.button.MaterialButton
                 android:id="@+id/btnContinue"
@@ -258,7 +240,6 @@
                 android:layout_width="match_parent"
                 android:layout_height="55dp"
                 android:layout_gravity="center"
-                android:layout_marginTop="10dp"
                 android:enabled="false"
                 android:text="Continue"
                 android:textSize="14sp" />

@@ -4,12 +4,18 @@ import static android.view.View.GONE;
 import static android.view.View.VISIBLE;
 
 import android.annotation.SuppressLint;
+import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
+import android.graphics.Color;
 import android.graphics.Rect;
 import android.os.Bundle;
 import android.text.Editable;
+import android.text.SpannableStringBuilder;
+import android.text.Spanned;
 import android.text.TextWatcher;
+import android.text.method.LinkMovementMethod;
+import android.text.style.ClickableSpan;
 import android.util.Patterns;
 import android.view.LayoutInflater;
 import android.view.MotionEvent;
@@ -29,6 +35,8 @@ import com.settlex.android.controller.ProgressViewController;
 import com.settlex.android.controller.SignUpController;
 import com.settlex.android.data.model.UserModel;
 import com.settlex.android.databinding.FragmentSignUpUserContactInfoBinding;
+import com.settlex.android.ui.activities.PrivacyPolicyActivity;
+import com.settlex.android.ui.activities.TermsAndConditionsActivity;
 import com.settlex.android.ui.auth.activity.SignInActivity;
 import com.settlex.android.ui.auth.viewmodel.SignUpViewModel;
 
@@ -44,12 +52,13 @@ public class SignUpUserContactInfoFragment extends Fragment {
     public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         binding = FragmentSignUpUserContactInfoBinding.inflate(inflater, container, false);
 
-        setupStatusBar();
-        setupUIActions();
-
         controller = new SignUpController();
         progressBar = new ProgressViewController(binding.fragmentContainer);
         vm = new ViewModelProvider(requireActivity()).get(SignUpViewModel.class);
+
+        setupStatusBar();
+        setupUIActions();
+
         return binding.getRoot();
     }
 
@@ -64,12 +73,17 @@ public class SignUpUserContactInfoFragment extends Fragment {
     -----------------------------*/
     private void setupUIActions() {
         reEnableFocus();
-        hideErrorPrompt();
         setupTextWatchers();
+        hideInfoMessagePrompt();
+        setClickableLegalLinks();
         setupHideKeyboardOnTouch();
+        setupPhoneInputFocusHandler();
 
         // Click Listeners
-        binding.imgBackBefore.setOnClickListener(v -> {startActivity(new Intent(requireActivity(), SignInActivity.class));requireActivity().finish();});
+        binding.imgBackBefore.setOnClickListener(v -> {
+            startActivity(new Intent(requireActivity(), SignInActivity.class));
+            requireActivity().finish();
+        });
         binding.btnHelp.setOnClickListener(v -> loadFragment(new SignUpEmailVerificationFragment()));
         binding.btnContinue.setOnClickListener(v -> saveUserInfoAndSendEmailVerification());
     }
@@ -96,8 +110,8 @@ public class SignUpUserContactInfoFragment extends Fragment {
 
             @Override
             public void onFailure(String reason) {
-                binding.txtErrorMsgEmail.setText(reason);
-                binding.txtErrorMsgEmail.setVisibility(VISIBLE);
+                binding.txtErrorInfoEmail.setText(reason);
+                binding.txtErrorInfoEmail.setVisibility(VISIBLE);
                 progressBar.hide();
             }
         });
@@ -112,8 +126,9 @@ public class SignUpUserContactInfoFragment extends Fragment {
 
         boolean validEmail = Patterns.EMAIL_ADDRESS.matcher(email).matches();
         boolean validPhone = phone.matches("^0(7[0-9]|8[0-9]|9[0-9])[0-9]{8}$");
+        boolean isChecked = binding.checkBoxTermsPrivacy.isChecked();
 
-        binding.btnContinue.setEnabled(validEmail && validPhone);
+        binding.btnContinue.setEnabled(validEmail && validPhone && isChecked);
     }
 
     /*-----------------------------------
@@ -129,6 +144,19 @@ public class SignUpUserContactInfoFragment extends Fragment {
         };
         binding.editTxtEmail.setOnClickListener(enableFocusListener);
         binding.editTxtPhoneNumber.setOnClickListener(enableFocusListener);
+    }
+
+    /*-------------------------------------------
+    Enable Dynamic Stroke color on PhoneInputBg
+    -------------------------------------------*/
+    private void setupPhoneInputFocusHandler() {
+        binding.editTxtPhoneNumber.setOnFocusChangeListener((view, hasFocus) -> {
+            if (hasFocus) {
+                binding.phoneInputBg.setBackgroundResource(R.drawable.bg_phone_input_custom_focused);
+            } else {
+                binding.phoneInputBg.setBackgroundResource(R.drawable.bg_phone_input_custom_default);
+            }
+        });
     }
 
     /*-----------------------------------------
@@ -152,13 +180,54 @@ public class SignUpUserContactInfoFragment extends Fragment {
 
         binding.editTxtEmail.addTextChangedListener(watcher);
         binding.editTxtPhoneNumber.addTextChangedListener(watcher);
+        binding.checkBoxTermsPrivacy.setOnCheckedChangeListener((compoundButton, b) -> updateButtonState());
+    }
+
+    /*-----------------------------------
+    Setup Clickable Legal Links & Color
+    -----------------------------------*/
+    private void setClickableLegalLinks() {
+        String legalText = "I have read, understood and agreed to the Terms & Conditions and Privacy Policy.";
+        SpannableStringBuilder span = new SpannableStringBuilder(legalText);
+
+        ClickableSpan terms = new ClickableSpan() {
+            @Override
+            public void onClick(@NonNull View widget) {
+                loadActivity(TermsAndConditionsActivity.class);
+            }
+
+            @Override
+            public void updateDrawState(@NonNull android.text.TextPaint ds) {
+                ds.setColor(Color.parseColor("#0044CC"));
+                ds.setUnderlineText(false);
+            }
+        };
+
+        ClickableSpan privacy = new ClickableSpan() {
+            @Override
+            public void onClick(@NonNull View widget) {
+                loadActivity(PrivacyPolicyActivity.class);
+            }
+
+            @Override
+            public void updateDrawState(@NonNull android.text.TextPaint ds) {
+                ds.setColor(Color.parseColor("#0044CC"));
+                ds.setUnderlineText(false);
+            }
+        };
+
+        span.setSpan(terms, 42, 61, Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
+        span.setSpan(privacy, 65, 80, Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
+
+        binding.txtTermsPrivacy.setText(span);
+        binding.txtTermsPrivacy.setMovementMethod(LinkMovementMethod.getInstance());
     }
 
     /*-------------------------------------------
     Hide error prompt as soon as the user starts
     fixing the field
     -------------------------------------------*/
-    private void hideErrorPrompt() {
+    private void hideInfoMessagePrompt() {
         binding.editTxtEmail.addTextChangedListener(new TextWatcher() {
             @Override
             public void beforeTextChanged(CharSequence s, int start, int count, int after) {
@@ -166,7 +235,7 @@ public class SignUpUserContactInfoFragment extends Fragment {
 
             @Override
             public void onTextChanged(CharSequence s, int start, int before, int count) {
-                binding.txtErrorMsgEmail.setVisibility(GONE);
+                binding.txtErrorInfoEmail.setVisibility(GONE);
             }
 
             @Override
@@ -196,25 +265,35 @@ public class SignUpUserContactInfoFragment extends Fragment {
     ----------------------------------------------*/
     @SuppressLint("ClickableViewAccessibility")
     private void setupHideKeyboardOnTouch() {
-        binding.fragmentContainer.setOnTouchListener((v, event) -> {
+        binding.getRoot().setOnTouchListener((v, event) -> {
             if (event.getAction() == MotionEvent.ACTION_DOWN) {
-                v.performClick();
-                View focused = requireActivity().getCurrentFocus();
-                if (focused instanceof EditText) {
+                View currentFocus = requireActivity().getCurrentFocus();
+                if (currentFocus instanceof EditText) {
                     Rect outRect = new Rect();
-                    focused.getGlobalVisibleRect(outRect);
+                    currentFocus.getGlobalVisibleRect(outRect);
+
                     if (!outRect.contains((int) event.getRawX(), (int) event.getRawY())) {
-                        focused.clearFocus();
+                        currentFocus.clearFocus();
+
                         InputMethodManager imm = (InputMethodManager) requireActivity().getSystemService(Context.INPUT_METHOD_SERVICE);
                         if (imm != null) {
-                            imm.hideSoftInputFromWindow(focused.getWindowToken(), 0);
+                            imm.hideSoftInputFromWindow(currentFocus.getWindowToken(), 0);
                         }
+
                         binding.fragmentContainer.requestFocus();
                     }
                 }
             }
             return false;
         });
+    }
+
+
+    /*------------------------
+    Launch external activity
+    -------------------------*/
+    private void loadActivity(Class<? extends Activity> activityClass) {
+        startActivity(new Intent(requireActivity(), activityClass));
     }
 
     /*----------------------------

@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/fragment_container"
     android:layout_width="match_parent"
@@ -64,7 +65,7 @@
         </RelativeLayout>
 
         <!--Scroll Layout-->
-        <androidx.core.widget.NestedScrollView
+        <ScrollView
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:layout_below="@+id/header"
@@ -105,9 +106,10 @@
                     android:fontFamily="@font/poppins_regular"
                     android:gravity="center"
                     android:includeFontPadding="false"
-                    android:text="Enter the One-Time-Password (OTP) sent to your email (*****@gmail.com)"                 android:textAlignment="center"
+                    android:text="Enter the OTP sent to your email address (*****@gmail.com)"
+                    android:textAlignment="center"
                     android:textColor="@color/gray"
-                    android:textSize="13sp" />
+                    android:textSize="14sp" />
 
                 <TextView
                     android:layout_width="wrap_content"
@@ -128,7 +130,7 @@
                     android:layout_marginTop="5dp"
                     android:orientation="horizontal">
 
-                    <com.settlex.android.ui.customviews.PinBoxEditText
+                    <com.settlex.android.ui.custom.PinBoxEditText
                         android:id="@+id/otpDigit1"
                         style="@style/Widget.SettleXApp.EditText.PinBox"
                         android:layout_height="match_parent"
@@ -140,7 +142,7 @@
                         android:layout_height="0dp"
                         android:layout_weight="1" />
 
-                    <com.settlex.android.ui.customviews.PinBoxEditText
+                    <com.settlex.android.ui.custom.PinBoxEditText
                         android:id="@+id/otpDigit2"
                         style="@style/Widget.SettleXApp.EditText.PinBox"
                         android:inputType="number"
@@ -151,7 +153,7 @@
                         android:layout_height="0dp"
                         android:layout_weight="1" />
 
-                    <com.settlex.android.ui.customviews.PinBoxEditText
+                    <com.settlex.android.ui.custom.PinBoxEditText
                         android:id="@+id/otpDigit3"
                         style="@style/Widget.SettleXApp.EditText.PinBox"
                         android:inputType="number"
@@ -162,7 +164,7 @@
                         android:layout_height="0dp"
                         android:layout_weight="1" />
 
-                    <com.settlex.android.ui.customviews.PinBoxEditText
+                    <com.settlex.android.ui.custom.PinBoxEditText
                         android:id="@+id/otpDigit4"
                         style="@style/Widget.SettleXApp.EditText.PinBox"
                         android:inputType="number"
@@ -173,7 +175,7 @@
                         android:layout_height="0dp"
                         android:layout_weight="1" />
 
-                    <com.settlex.android.ui.customviews.PinBoxEditText
+                    <com.settlex.android.ui.custom.PinBoxEditText
                         android:id="@+id/otpDigit5"
                         style="@style/Widget.SettleXApp.EditText.PinBox"
                         android:inputType="number"
@@ -184,7 +186,7 @@
                         android:layout_height="0dp"
                         android:layout_weight="1" />
 
-                    <com.settlex.android.ui.customviews.PinBoxEditText
+                    <com.settlex.android.ui.custom.PinBoxEditText
                         android:id="@+id/otpDigit6"
                         style="@style/Widget.SettleXApp.EditText.PinBox"
                         android:inputType="number"
@@ -195,18 +197,31 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content">
 
-                    <!--Display Error TxT-->
-                    <TextView
-                        android:id="@+id/txtErrorMsg"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
+                    <!--Success anim-->
+                    <com.airbnb.lottie.LottieAnimationView
+                        android:id="@+id/successAnim"
+                        android:layout_width="20dp"
+                        android:layout_height="20dp"
                         android:layout_alignParentStart="true"
                         android:layout_centerVertical="true"
+                        android:visibility="gone"
+                        app:lottie_autoPlay="true"
+                        app:lottie_fileName="success_anim.json"
+                        app:lottie_loop="false" />
+
+
+                    <!--Success/Failure TxT-->
+                    <TextView
+                        android:id="@+id/txtMessage"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_centerVertical="true"
                         android:layout_gravity="start"
-                        android:text="Error reason"
                         android:layout_marginTop="5dp"
+                        android:layout_toEndOf="@+id/successAnim"
                         android:fontFamily="@font/poppins_light"
                         android:includeFontPadding="false"
+                        android:text="message"
                         android:textColor="@color/red"
                         android:textSize="12sp"
                         android:visibility="gone" />
@@ -250,9 +265,9 @@
                         style="@style/Widget.SettleXApp.Button.Outlined"
                         android:layout_width="wrap_content"
                         android:layout_height="40dp"
-                        android:fontFamily="@font/poppins_regular"
                         android:layout_gravity="center"
                         android:layout_marginStart="5dp"
+                        android:fontFamily="@font/poppins_regular"
                         android:paddingHorizontal="0dp"
                         android:paddingVertical="0dp"
                         android:text="Resend"
@@ -269,8 +284,8 @@
                     android:includeFontPadding="false"
                     android:padding="10dp"
                     android:text="Didn’t get the email? Make sure to also check your spam/junk folder if you can't find the email in your inbox."
-                    android:textColor="@color/gray"
-                    android:textSize="10sp" />
+                    android:textColor="@color/gray_dark"
+                    android:textSize="11sp" />
 
 
                 <Space
@@ -285,11 +300,12 @@
                     android:layout_width="match_parent"
                     android:layout_height="55dp"
                     android:layout_marginBottom="25dp"
+                    android:enabled="false"
                     android:paddingHorizontal="15dp"
                     android:text="Verify"
                     android:textSize="14sp" />
             </LinearLayout>
-        </androidx.core.widget.NestedScrollView>
+        </ScrollView>
     </RelativeLayout>
 
     <include

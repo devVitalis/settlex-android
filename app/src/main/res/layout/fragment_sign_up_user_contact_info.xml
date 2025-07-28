@@ -184,17 +184,17 @@
                         android:layout_height="55dp"
                         android:focusable="false"
                         android:focusableInTouchMode="false"
+                        android:fontFamily="@font/poppins_regular"
                         android:gravity="start|center"
                         android:imeOptions="actionNext"
                         android:includeFontPadding="false"
                         android:inputType="textEmailAddress"
-                        android:textColorHint="@color/gray"
                         android:textSize="14sp" />
                 </com.google.android.material.textfield.TextInputLayout>
 
                 <!--Display Error TxT - Hidden-->
                 <TextView
-                    android:id="@+id/txtErrorMsgEmail"
+                    android:id="@+id/txtErrorInfoEmail"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_gravity="start"
@@ -206,33 +206,66 @@
                     android:textSize="11sp"
                     android:visibility="gone" />
 
-                <!--PhoneNumber field-->
-                <com.google.android.material.textfield.TextInputLayout
-                    android:id="@+id/txtInputLayoutPhoneNumber"
-                    style="@style/Widget.SettleXApp.TextInputLayout.Outlined"
+                <!--Phone Number Input (Custom)-->
+                <RelativeLayout
+                    android:id="@+id/phoneInputBg"
                     android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_gravity="center"
+                    android:layout_height="55dp"
                     android:layout_marginTop="10dp"
-                    android:gravity="center"
-                    android:hint="Enter your phone number"
-                    android:orientation="horizontal"
-                    app:endIconMode="clear_text">
+                    android:background="@drawable/bg_phone_input_custom_default"
+                    android:focusable="true"
+                    android:focusableInTouchMode="true">
 
-                    <com.google.android.material.textfield.TextInputEditText
+                    <!-- Nigerian Flag -->
+                    <ImageView
+                        android:id="@+id/flagIcon"
+                        android:layout_width="24dp"
+                        android:layout_height="16dp"
+                        android:layout_alignParentStart="true"
+                        android:layout_centerVertical="true"
+                        android:layout_marginStart="15dp"
+                        android:src="@drawable/ic_nigeria_flag" />
+
+                    <!-- Country Code -->
+                    <TextView
+                        android:id="@+id/countryCode"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_centerVertical="true"
+                        android:layout_marginStart="8dp"
+                        android:layout_toEndOf="@id/flagIcon"
+                        android:includeFontPadding="false"
+                        android:text="+234"
+                        android:textColor="@color/black"
+                        android:textSize="14sp" />
+
+                    <!-- Divider -->
+                    <View
+                        android:id="@+id/divider"
+                        android:layout_width="1dp"
+                        android:layout_height="20dp"
+                        android:layout_centerVertical="true"
+                        android:layout_marginStart="8dp"
+                        android:layout_toEndOf="@id/countryCode"
+                        android:background="@color/gray" />
+
+                    <!-- Phone Number Input -->
+                    <EditText
                         android:id="@+id/editTxtPhoneNumber"
                         android:layout_width="match_parent"
-                        android:layout_height="55dp"
+                        android:layout_height="match_parent"
+                        android:layout_marginStart="10dp"
+                        android:layout_toEndOf="@id/divider"
                         android:focusable="false"
                         android:focusableInTouchMode="false"
-                        android:gravity="start|center"
-                        android:imeOptions="actionDone"
+                        android:background="@android:color/transparent"
+                        android:fontFamily="@font/poppins_regular"
+                        android:hint="Enter your phone number"
                         android:includeFontPadding="false"
-                        android:inputType="number"
-                        android:maxLength="11"
+                        android:inputType="phone"
                         android:textColorHint="@color/gray"
                         android:textSize="14sp" />
-                </com.google.android.material.textfield.TextInputLayout>
+                </RelativeLayout>
 
                 <!--Display Error TxT - Hidden-->
                 <TextView
@@ -260,6 +293,33 @@
             android:paddingHorizontal="15dp"
             android:paddingVertical="25dp">
 
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:gravity="center_vertical"
+                android:orientation="horizontal">
+
+                <!--CheckBox, Terms & Conditions, PrivacyPolicy TxT-->
+                <com.google.android.material.checkbox.MaterialCheckBox
+                    android:id="@+id/checkBoxTermsPrivacy"
+                    style="@style/Widget.SettleXApp.CheckBox"
+                    android:layout_width="20dp"
+                    android:layout_height="20dp"
+                    android:layout_marginEnd="5dp"
+                    android:gravity="center" />
+
+                <!--Terms & Conditions, PrivacyPolicy TxT-->
+                <TextView
+                    android:id="@+id/txtTermsPrivacy"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:fontFamily="@font/poppins_light"
+                    android:includeFontPadding="false"
+                    android:text="I have read, understood and agreed to the Terms &amp; Conditions and Privacy Policy."
+                    android:textColor="@color/black"
+                    android:textSize="12sp" />
+            </LinearLayout>
+
             <!--Continue Btn-->
             <com.google.android.material.button.MaterialButton
                 android:id="@+id/btnContinue"
@@ -267,6 +327,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="55dp"
                 android:layout_gravity="center"
+                android:layout_marginTop="10dp"
                 android:enabled="false"
                 android:text="Continue"
                 android:textSize="14sp" />

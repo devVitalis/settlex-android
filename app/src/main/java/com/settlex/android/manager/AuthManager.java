@@ -108,17 +108,22 @@ public class AuthManager {
     /*---------------------------------------------
     Callable function to verify OTP (Server Side)
     ---------------------------------------------*/
-    private void verifyEmailOtp(String email, String otp) {
+    public void verifyEmailOtp(String email, String otp, VerifyEmailOtpCallback callback) {
         EmailOtpVerify verify = new EmailOtpVerify(email, otp);
-        service.verifyEmailOtp(verify).enqueue(new Callback<ResponseBody>() {
+        service.verifyEmailOtp(verify).enqueue(new Callback<>() {
             @Override
-            public void onResponse(Call<ResponseBody> call, Response<ResponseBody> response) {
-
+            public void onResponse(@NonNull Call<ResponseBody> call, @NonNull Response<ResponseBody> response) {
+                if (response.isSuccessful()){
+                    callback.onSuccess();
+                } else {
+                    String reason = ResponseHandler.getErrorMessage(response);
+                    callback.onFailure(reason);
+                }
             }
 
             @Override
-            public void onFailure(Call<ResponseBody> call, Throwable t) {
-
+            public void onFailure(@NonNull Call<ResponseBody> call, @NonNull Throwable t) {
+                callback.onFailure(t.getMessage());
             }
         });
     }

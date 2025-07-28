@@ -3,6 +3,6 @@
     <item android:width="100dp"
         android:height="75dp"
         android:gravity="center">
-        <bitmap android:src="@drawable/logo" />
+        <bitmap android:src="@drawable/logo_with_txt" />
     </item>
 </layer-list>

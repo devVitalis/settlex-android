@@ -50,7 +50,7 @@
             android:layout_centerHorizontal="true"
             android:layout_below="@id/viewPager"
             android:layout_marginTop="15dp"
-            app:dotsColor="@color/light_blue"
+            app:dotsColor="@color/blue_light"
             app:dotsSize="5dp"
             app:dotsSpacing="2dp"
             app:dotsWidthFactor="2.5"

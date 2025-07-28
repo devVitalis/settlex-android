@@ -66,12 +66,11 @@ public class SignupUserInfoFragment extends Fragment {
     private void setupUIActions() {
         reEnableFocus();
         setupInputWatchers();
-        setClickableLegalLinks();
         setupHideKeyboardOnTouch();
 
         // Click Listeners
         binding.imgBackBefore.setOnClickListener(v -> requireActivity().getSupportFragmentManager().popBackStack());
-        binding.btnHelp.setOnClickListener(v -> loadActivity(AuthHelpActivity.class));
+        binding.btnHelp.setOnClickListener(v -> startActivity(new Intent(requireActivity(), AuthHelpActivity.class)));
 
         binding.btnContinue.setOnClickListener(v -> {
             String firstName = Objects.requireNonNull(binding.editTxtFirstName.getText()).toString().trim();
@@ -97,9 +96,8 @@ public class SignupUserInfoFragment extends Fragment {
 
         boolean validFirst = !firstName.isEmpty() && firstName.matches("^[A-Z][a-z]+(?:\\s[A-Z][a-z]+)*$");
         boolean validLast = !lastName.isEmpty() && lastName.matches("^[A-Z][a-z]+(?:\\s[A-Z][a-z]+)*$");
-        boolean isChecked = binding.checkBoxTermsPrivacy.isChecked();
 
-        binding.btnContinue.setEnabled(validFirst && validLast && isChecked);
+        binding.btnContinue.setEnabled(validFirst && validLast);
     }
 
     /*----------------------------
@@ -123,47 +121,6 @@ public class SignupUserInfoFragment extends Fragment {
 
         binding.editTxtFirstName.addTextChangedListener(watcher);
         binding.editTxtLastName.addTextChangedListener(watcher);
-        binding.checkBoxTermsPrivacy.setOnCheckedChangeListener((buttonView, isChecked) -> updateButtonState());
-    }
-
-    /*----------------------------
-    Clickable Legal Policy Links
-    ----------------------------*/
-    private void setClickableLegalLinks() {
-        String legalText = "I have read, understood and agreed to the Terms & Conditions and Privacy Policy.";
-        SpannableStringBuilder span = new SpannableStringBuilder(legalText);
-
-        ClickableSpan terms = new ClickableSpan() {
-            @Override
-            public void onClick(@NonNull View widget) {
-                loadActivity(TermsAndConditionsActivity.class);
-            }
-
-            @Override
-            public void updateDrawState(@NonNull android.text.TextPaint ds) {
-                ds.setColor(Color.parseColor("#0044CC"));
-                ds.setUnderlineText(false);
-            }
-        };
-
-        ClickableSpan privacy = new ClickableSpan() {
-            @Override
-            public void onClick(@NonNull View widget) {
-                loadActivity(PrivacyPolicyActivity.class);
-            }
-
-            @Override
-            public void updateDrawState(@NonNull android.text.TextPaint ds) {
-                ds.setColor(Color.parseColor("#0044CC"));
-                ds.setUnderlineText(false);
-            }
-        };
-
-        span.setSpan(terms, 42, 61, Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
-        span.setSpan(privacy, 65, 80, Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
-
-        binding.txtTermsPrivacy.setText(span);
-        binding.txtTermsPrivacy.setMovementMethod(LinkMovementMethod.getInstance());
     }
 
     /*---------------------------------
@@ -218,13 +175,6 @@ public class SignupUserInfoFragment extends Fragment {
                 .replace(R.id.fragment_container, fragment)
                 .addToBackStack(null)
                 .commit();
-    }
-
-    /*------------------------
-    Launch external activity
-    -------------------------*/
-    private void loadActivity(Class<? extends Activity> activityClass) {
-        startActivity(new Intent(requireActivity(), activityClass));
     }
 
     /*-------------------------------

@@ -71,8 +71,8 @@ dependencies {
     implementation(libs.retrofit)
     implementation(libs.converter.gson)
 
-    // Country code picker
-    implementation(libs.ccp)
+    // Lottie
+    implementation(libs.lottie)
 
 }
 
