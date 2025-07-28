@@ -10,26 +10,27 @@
         android:dataExtractionRules="@xml/data_extraction_rules"
         android:fullBackupContent="@xml/backup_rules"
         android:icon="@mipmap/logo"
+        android:roundIcon="@mipmap/ic_launcher_round"
         android:label="@string/app_name"
         android:supportsRtl="true"
         android:theme="@style/Theme.SettleX">
         <activity
-            android:name=".view.activities.PrivacyPolicyActivity"
+            android:name=".ui.activities.PrivacyPolicyActivity"
             android:exported="false" />
         <activity
-            android:name=".view.activities.TermsAndConditionsActivity"
+            android:name=".ui.activities.TermsAndConditionsActivity"
             android:exported="false" />
         <activity
-            android:name=".view.activities.AuthHelpActivity"
+            android:name=".ui.activities.AuthHelpActivity"
             android:exported="false" />
         <activity
-            android:name=".view.auth.activity.SignUpActivity"
+            android:name=".ui.auth.activity.PasscodeLoginActivity"
             android:exported="false" />
         <activity
-            android:name=".view.auth.activity.SignInActivity"
+            android:name=".ui.auth.activity.SignUpActivity"
             android:exported="false" />
         <activity
-            android:name=".view.auth.activity.PasscodeLoginActivity"
+            android:name=".ui.Onboarding.activity.OnboardingActivity"
             android:exported="false" />
         <activity
             android:name=".controller.SplashActivity"
@@ -41,12 +42,6 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-        <activity
-            android:name=".view.activities.SignInActivity"
-            android:exported="false" />
-        <activity
-            android:name=".view.Onboarding.activity.OnboardingActivity"
-            android:exported="false" />
     </application>
 
 </manifest>

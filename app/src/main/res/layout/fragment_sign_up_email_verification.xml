@@ -1,0 +1,300 @@
+<?xml version="1.0" encoding="utf-8"?>
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/fragment_container"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/white"
+    android:fitsSystemWindows="true"
+    android:focusable="true"
+    android:focusableInTouchMode="true"
+    tools:context=".ui.auth.fragment.SignUpEmailVerificationFragment">
+
+    <RelativeLayout
+        android:id="@+id/mainLayout"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+
+        <!--Header-->
+        <RelativeLayout
+            android:id="@+id/header"
+            android:layout_width="match_parent"
+            android:layout_height="35dp"
+            android:layout_alignParentTop="true">
+
+            <ImageView
+                android:id="@+id/imgViewGoBack"
+                android:layout_width="17dp"
+                android:layout_height="17dp"
+                android:layout_alignParentStart="true"
+                android:layout_centerVertical="true"
+                android:layout_marginStart="20dp"
+                android:contentDescription="Arrow Back"
+                android:scaleType="centerCrop"
+                android:src="@drawable/ic_arrow_back" />
+
+            <LinearLayout
+                android:id="@+id/txtHelp"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentEnd="true"
+                android:layout_centerVertical="true"
+                android:layout_marginEnd="15dp"
+                android:background="@drawable/bg_24dp_blue"
+                android:gravity="center"
+                android:orientation="horizontal"
+                android:paddingHorizontal="5dp"
+                android:paddingVertical="2dp">
+
+                <ImageView
+                    android:layout_width="15dp"
+                    android:layout_height="15dp"
+                    android:contentDescription="Help"
+                    android:src="@drawable/ic_help" />
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:fontFamily="@font/poppins_light"
+                    android:includeFontPadding="false"
+                    android:text="Help"
+                    android:textColor="@color/white"
+                    android:textSize="12sp" />
+            </LinearLayout>
+        </RelativeLayout>
+
+        <!--Scroll Layout-->
+        <androidx.core.widget.NestedScrollView
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_below="@+id/header"
+            android:layout_alignParentBottom="true"
+            android:fillViewport="true"
+            android:scrollbars="none">
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:gravity="center_horizontal"
+                android:orientation="vertical"
+                android:paddingStart="15dp"
+                android:paddingEnd="15dp">
+
+                <ImageView
+                    android:layout_width="match_parent"
+                    android:layout_height="100dp"
+                    android:scaleType="fitCenter"
+                    android:src="@drawable/img_email_sent" />
+
+                <!--TxT-->
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:fontFamily="@font/poppins_regular"
+                    android:includeFontPadding="false"
+                    android:text="Enter your verification code"
+                    android:textColor="@color/black"
+                    android:textSize="20sp"
+                    android:textStyle="bold" />
+
+                <TextView
+                    android:id="@+id/txtInfoInstruction"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="10dp"
+                    android:fontFamily="@font/poppins_regular"
+                    android:gravity="center"
+                    android:includeFontPadding="false"
+                    android:text="Enter the One-Time-Password (OTP) sent to your email (*****@gmail.com)"                 android:textAlignment="center"
+                    android:textColor="@color/gray"
+                    android:textSize="13sp" />
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="start"
+                    android:layout_marginTop="20dp"
+                    android:fontFamily="@font/poppins_regular"
+                    android:gravity="center"
+                    android:includeFontPadding="false"
+                    android:text="OTP Code"
+                    android:textColor="@color/black"
+                    android:textSize="13sp" />
+
+                <!--Enter OTP field-->
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="5dp"
+                    android:orientation="horizontal">
+
+                    <com.settlex.android.ui.customviews.PinBoxEditText
+                        android:id="@+id/otpDigit1"
+                        style="@style/Widget.SettleXApp.EditText.PinBox"
+                        android:layout_height="match_parent"
+                        android:inputType="number"
+                        android:maxLength="1" />
+
+                    <Space
+                        android:layout_width="0dp"
+                        android:layout_height="0dp"
+                        android:layout_weight="1" />
+
+                    <com.settlex.android.ui.customviews.PinBoxEditText
+                        android:id="@+id/otpDigit2"
+                        style="@style/Widget.SettleXApp.EditText.PinBox"
+                        android:inputType="number"
+                        android:maxLength="1" />
+
+                    <Space
+                        android:layout_width="0dp"
+                        android:layout_height="0dp"
+                        android:layout_weight="1" />
+
+                    <com.settlex.android.ui.customviews.PinBoxEditText
+                        android:id="@+id/otpDigit3"
+                        style="@style/Widget.SettleXApp.EditText.PinBox"
+                        android:inputType="number"
+                        android:maxLength="1" />
+
+                    <Space
+                        android:layout_width="0dp"
+                        android:layout_height="0dp"
+                        android:layout_weight="1" />
+
+                    <com.settlex.android.ui.customviews.PinBoxEditText
+                        android:id="@+id/otpDigit4"
+                        style="@style/Widget.SettleXApp.EditText.PinBox"
+                        android:inputType="number"
+                        android:maxLength="1" />
+
+                    <Space
+                        android:layout_width="0dp"
+                        android:layout_height="0dp"
+                        android:layout_weight="1" />
+
+                    <com.settlex.android.ui.customviews.PinBoxEditText
+                        android:id="@+id/otpDigit5"
+                        style="@style/Widget.SettleXApp.EditText.PinBox"
+                        android:inputType="number"
+                        android:maxLength="1" />
+
+                    <Space
+                        android:layout_width="0dp"
+                        android:layout_height="0dp"
+                        android:layout_weight="1" />
+
+                    <com.settlex.android.ui.customviews.PinBoxEditText
+                        android:id="@+id/otpDigit6"
+                        style="@style/Widget.SettleXApp.EditText.PinBox"
+                        android:inputType="number"
+                        android:maxLength="1" />
+                </LinearLayout>
+
+                <RelativeLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content">
+
+                    <!--Display Error TxT-->
+                    <TextView
+                        android:id="@+id/txtErrorMsg"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_alignParentStart="true"
+                        android:layout_centerVertical="true"
+                        android:layout_gravity="start"
+                        android:text="Error reason"
+                        android:layout_marginTop="5dp"
+                        android:fontFamily="@font/poppins_light"
+                        android:includeFontPadding="false"
+                        android:textColor="@color/red"
+                        android:textSize="12sp"
+                        android:visibility="gone" />
+
+                    <!--Clear ALl TxT-->
+                    <TextView
+                        android:id="@+id/btnClearAll"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_alignParentEnd="true"
+                        android:layout_centerVertical="true"
+                        android:layout_gravity="end"
+                        android:layout_marginTop="10dp"
+                        android:fontFamily="@font/poppins_light"
+                        android:gravity="center"
+                        android:text="Clear All"
+                        android:textColor="@color/blue"
+                        android:textSize="12sp"
+                        android:visibility="gone" />
+                </RelativeLayout>
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="5dp"
+                    android:gravity="center_vertical"
+                    android:orientation="horizontal">
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:fontFamily="@font/poppins_regular"
+                        android:includeFontPadding="false"
+                        android:text="Didn't receive the OTP?"
+                        android:textColor="@color/black"
+                        android:textSize="13sp" />
+
+                    <!--Resend (OTP) Btn-->
+                    <com.google.android.material.button.MaterialButton
+                        android:id="@+id/btnResendOtp"
+                        style="@style/Widget.SettleXApp.Button.Outlined"
+                        android:layout_width="wrap_content"
+                        android:layout_height="40dp"
+                        android:fontFamily="@font/poppins_regular"
+                        android:layout_gravity="center"
+                        android:layout_marginStart="5dp"
+                        android:paddingHorizontal="0dp"
+                        android:paddingVertical="0dp"
+                        android:text="Resend"
+                        android:textSize="13sp" />
+                </LinearLayout>
+
+                <TextView
+                    android:id="@+id/txtInfo"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="10dp"
+                    android:background="@drawable/bg_8dp_light_orange"
+                    android:fontFamily="@font/poppins_regular"
+                    android:includeFontPadding="false"
+                    android:padding="10dp"
+                    android:text="Didn’t get the email? Make sure to also check your spam/junk folder if you can't find the email in your inbox."
+                    android:textColor="@color/gray"
+                    android:textSize="10sp" />
+
+
+                <Space
+                    android:layout_width="0dp"
+                    android:layout_height="0dp"
+                    android:layout_weight="1" />
+
+                <!--Verify Btn-->
+                <com.google.android.material.button.MaterialButton
+                    android:id="@+id/btnVerify"
+                    style="@style/Widget.SettleXApp.Button.Filled.Rounded8.Blue"
+                    android:layout_width="match_parent"
+                    android:layout_height="55dp"
+                    android:layout_marginBottom="25dp"
+                    android:paddingHorizontal="15dp"
+                    android:text="Verify"
+                    android:textSize="14sp" />
+            </LinearLayout>
+        </androidx.core.widget.NestedScrollView>
+    </RelativeLayout>
+
+    <include
+        layout="@layout/progressbar_overlay"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent" />
+</FrameLayout>
+

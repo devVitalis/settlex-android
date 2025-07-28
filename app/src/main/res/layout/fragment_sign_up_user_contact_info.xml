@@ -9,7 +9,7 @@
     android:fitsSystemWindows="true"
     android:focusable="true"
     android:focusableInTouchMode="true"
-    tools:context=".view.auth.fragment.SignUpUserContactInfoFragment">
+    tools:context=".ui.auth.fragment.SignUpUserContactInfoFragment">
 
     <RelativeLayout
         android:id="@+id/parentLayout"
@@ -82,17 +82,26 @@
 
                 <!--TxT-->
                 <TextView
-                    android:id="@+id/txtTitle"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_gravity="start"
-                    android:layout_marginTop="40dp"
+                    android:layout_marginTop="25dp"
                     android:fontFamily="@font/poppins_regular"
                     android:includeFontPadding="false"
-                    android:text="Contact Details"
+                    android:text="Create your Account"
                     android:textColor="@color/black"
                     android:textSize="20sp"
                     android:textStyle="bold" />
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="start"
+                    android:fontFamily="@font/poppins_light"
+                    android:includeFontPadding="false"
+                    android:text="Lets get you started"
+                    android:textColor="@color/black"
+                    android:textSize="13sp" />
 
                 <!--Pages View-->
                 <TextView
@@ -103,7 +112,7 @@
                     android:layout_marginBottom="5dp"
                     android:fontFamily="@font/poppins_regular"
                     android:includeFontPadding="false"
-                    android:text="2 of 4"
+                    android:text="1 of 4"
                     android:textColor="@color/black"
                     android:textSize="13sp"
                     android:textStyle="bold" />
@@ -126,7 +135,7 @@
                         android:layout_height="2dp"
                         android:layout_marginEnd="10dp"
                         android:layout_weight="1"
-                        android:background="@drawable/bg_24dp_blue"
+                        android:background="@drawable/bg_oval_light_blue"
                         android:orientation="horizontal" />
 
                     <View
@@ -152,9 +161,50 @@
                     android:layout_marginTop="20dp"
                     android:fontFamily="@font/poppins_light"
                     android:includeFontPadding="false"
-                    android:text="Enter a valid phone number and email address as a OTP will be sent to this number."
+                    android:text="Please enter a valid email address and phone number; an OTP will be sent to this address."
                     android:textColor="@color/black"
                     android:textSize="13sp" />
+
+                <!--Email Field-->
+                <com.google.android.material.textfield.TextInputLayout
+                    android:id="@+id/txtInputLayoutEmail"
+                    style="@style/Widget.SettleXApp.TextInputLayout.Outlined"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center"
+                    android:layout_marginTop="10dp"
+                    android:gravity="center"
+                    android:hint="Enter your email address"
+                    android:orientation="horizontal"
+                    app:endIconMode="clear_text">
+
+                    <com.google.android.material.textfield.TextInputEditText
+                        android:id="@+id/editTxtEmail"
+                        android:layout_width="match_parent"
+                        android:layout_height="55dp"
+                        android:focusable="false"
+                        android:focusableInTouchMode="false"
+                        android:gravity="start|center"
+                        android:imeOptions="actionNext"
+                        android:includeFontPadding="false"
+                        android:inputType="textEmailAddress"
+                        android:textColorHint="@color/gray"
+                        android:textSize="14sp" />
+                </com.google.android.material.textfield.TextInputLayout>
+
+                <!--Display Error TxT - Hidden-->
+                <TextView
+                    android:id="@+id/txtErrorMsgEmail"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="start"
+                    android:layout_marginTop="5dp"
+                    android:fontFamily="@font/poppins_light"
+                    android:includeFontPadding="false"
+                    android:text="Email already exist"
+                    android:textColor="@color/red"
+                    android:textSize="11sp"
+                    android:visibility="gone" />
 
                 <!--PhoneNumber field-->
                 <com.google.android.material.textfield.TextInputLayout
@@ -197,47 +247,6 @@
                     android:textColor="@color/red"
                     android:textSize="11sp"
                     android:visibility="gone" />
-
-                <!--Email Field-->
-                <com.google.android.material.textfield.TextInputLayout
-                    android:id="@+id/txtInputLayoutEmail"
-                    style="@style/Widget.SettleXApp.TextInputLayout.Outlined"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_gravity="center"
-                    android:layout_marginTop="10dp"
-                    android:gravity="center"
-                    android:hint="Enter your email address"
-                    android:orientation="horizontal"
-                    app:endIconMode="clear_text">
-
-                    <com.google.android.material.textfield.TextInputEditText
-                        android:id="@+id/editTxtEmail"
-                        android:layout_width="match_parent"
-                        android:layout_height="55dp"
-                        android:focusable="false"
-                        android:focusableInTouchMode="false"
-                        android:gravity="start|center"
-                        android:imeOptions="actionNext"
-                        android:includeFontPadding="false"
-                        android:inputType="textEmailAddress"
-                        android:textColorHint="@color/gray"
-                        android:textSize="14sp" />
-                </com.google.android.material.textfield.TextInputLayout>
-
-                <!--Display Error TxT - Hidden-->
-                <TextView
-                    android:id="@+id/txtErrorMsgEmail"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_gravity="start"
-                    android:layout_marginTop="5dp"
-                    android:fontFamily="@font/poppins_light"
-                    android:includeFontPadding="false"
-                    android:text="Email already exist"
-                    android:textColor="@color/red"
-                    android:textSize="11sp"
-                    android:visibility="gone" />
             </LinearLayout>
         </ScrollView>
 
@@ -254,7 +263,7 @@
             <!--Continue Btn-->
             <com.google.android.material.button.MaterialButton
                 android:id="@+id/btnContinue"
-                style="@style/Widget.SettleXApp.Button.Filled.Rounded8"
+                style="@style/Widget.SettleXApp.Button.Filled.Rounded8.Blue"
                 android:layout_width="match_parent"
                 android:layout_height="55dp"
                 android:layout_gravity="center"

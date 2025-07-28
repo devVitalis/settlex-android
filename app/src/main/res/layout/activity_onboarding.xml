@@ -5,11 +5,11 @@
     android:layout_height="match_parent"
     android:background="@color/white"
     android:fitsSystemWindows="true"
-    tools:context=".view.Onboarding.activity.OnboardingActivity">
+    tools:context=".ui.Onboarding.activity.OnboardingActivity">
 
     <!--Txt Skip-->
     <TextView
-        android:id="@+id/txtSkip"
+        android:id="@+id/btnSkip"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_alignParentTop="true"
@@ -30,7 +30,7 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:layout_above="@id/btnContainer"
-        android:layout_below="@id/txtSkip"
+        android:layout_below="@id/btnSkip"
         android:orientation="vertical">
 
         <!--ViewPager2 (Fragment Container)-->
@@ -71,7 +71,7 @@
         <!--Btn Create Account-->
         <com.google.android.material.button.MaterialButton
             android:id="@+id/btnCreateAccount"
-            style="@style/Widget.SettleXApp.Button.Filled"
+            style="@style/Widget.SettleXApp.Button.Filled.Blue"
             android:layout_width="match_parent"
             android:layout_height="55dp"
             android:text="Get Started"
@@ -80,7 +80,7 @@
         <!--Btn Login-->
         <com.google.android.material.button.MaterialButton
             android:id="@+id/btnLogin"
-            style="@style/Widget.SettleXApp.Button.Outlined"
+            style="@style/Widget.SettleXApp.Button.Filled.LightBlue"
             android:layout_width="match_parent"
             android:layout_height="55dp"
             android:layout_marginTop="2dp"

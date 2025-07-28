@@ -49,9 +49,9 @@ dependencies {
 
     // Firebase Dependencies
     implementation(platform(libs.firebase.bom))
-
     implementation(libs.firebase.auth)
     implementation(libs.firebase.firestore)
+    implementation(libs.firebase.functions)
     implementation(libs.firebase.storage)
     implementation(libs.firebase.messaging)
 
@@ -63,6 +63,16 @@ dependencies {
 
     // Glide
     implementation(libs.glide)
+
+    // Gson
+    implementation(libs.gson)
+
+    // Retrofit
+    implementation(libs.retrofit)
+    implementation(libs.converter.gson)
+
+    // Country code picker
+    implementation(libs.ccp)
 
 }
 

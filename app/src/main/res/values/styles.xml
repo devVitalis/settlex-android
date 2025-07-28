@@ -4,8 +4,8 @@
     Custom Filled Button Style - SettleXApp
     Based on M3: Widget.Material3.Button
     ---------------------------------------------*/
-    <style name="Widget.SettleXApp.Button.Filled" parent="Widget.Material3.Button">
-        <item name="backgroundTint">@color/btn_color_selector_filled</item>
+    <style name="Widget.SettleXApp.Button.Filled.Blue" parent="Widget.Material3.Button">
+        <item name="backgroundTint">@color/btn_filled_color_selector_blue</item>
         <item name="android:textColor">@color/white</item>
         <item name="android:fontFamily">sans-serif</item>
         <item name="android:includeFontPadding">false</item>
@@ -16,8 +16,8 @@
     Custom Filled Button Style - Rounded 8dp - SettleXApp
     Based on M3: Widget.Material3.Button
     ----------------------------------------------------*/
-    <style name="Widget.SettleXApp.Button.Filled.Rounded8" parent="Widget.Material3.Button">
-        <item name="backgroundTint">@color/btn_color_selector_filled</item>
+    <style name="Widget.SettleXApp.Button.Filled.Rounded8.Blue" parent="Widget.Material3.Button">
+        <item name="backgroundTint">@color/btn_filled_color_selector_blue</item>
         <item name="android:textColor">@color/white</item>
         <item name="android:fontFamily">sans-serif</item>
         <item name="android:includeFontPadding">false</item>
@@ -26,11 +26,23 @@
     </style>
 
     /*----------------------------------------------
-    Custom Outlined Button Style - SettleXApp
+    Custom Filled Button Style - SettleXApp
     Based on M3: Widget.Material3.Button
     ---------------------------------------------*/
-    <style name="Widget.SettleXApp.Button.Outlined.Rounded8" parent="Widget.Material3.Button">
-        <item name="backgroundTint">@color/btn_color_selector_outlined</item>
+    <style name="Widget.SettleXApp.Button.Filled.LightBlue" parent="Widget.Material3.Button">
+        <item name="backgroundTint">@color/btn_filled_color_selector_light_blue</item>
+        <item name="android:textColor">@color/blue</item>
+        <item name="android:fontFamily">sans-serif</item>
+        <item name="android:includeFontPadding">false</item>
+        <item name="android:textAllCaps">false</item>
+    </style>
+
+    /*----------------------------------------------
+    Custom Filled Button Style - SettleXApp
+    Based on M3: Widget.Material3.Button
+    ---------------------------------------------*/
+    <style name="Widget.SettleXApp.Button.Filled.Rounded8.LightBlue" parent="Widget.Material3.Button">
+        <item name="backgroundTint">@color/btn_filled_color_selector_light_blue</item>
         <item name="android:textColor">@color/blue</item>
         <item name="android:fontFamily">sans-serif</item>
         <item name="android:includeFontPadding">false</item>
@@ -42,9 +54,9 @@
     Custom Outlined Button Style - SettleXApp
     Based on M3: Widget.Material3.Button
     ---------------------------------------------*/
-    <style name="Widget.SettleXApp.Button.Outlined" parent="Widget.Material3.Button">
-        <item name="backgroundTint">@color/btn_color_selector_outlined</item>
-        <item name="android:textColor">@color/blue</item>
+    <style name="Widget.SettleXApp.Button.Outlined" parent="Widget.Material3.Button.OutlinedButton">
+        <item name="android:textColor">@color/btn_outlined_text_color_selector</item>
+        <item name="strokeColor">@color/btn_outlined_color_selector</item>
         <item name="android:fontFamily">sans-serif</item>
         <item name="android:includeFontPadding">false</item>
         <item name="android:textAllCaps">false</item>
@@ -62,7 +74,7 @@
     Based on M3: Widget.Material3.CompoundButton.CheckBox
     ----------------------------------------------------*/
     <style name="Widget.SettleXApp.CheckBox" parent="Widget.Material3.CompoundButton.CheckBox">
-        <item name="buttonTint">@color/checkbox_color_selector</item>
+        <item name="buttonTint">@color/checkbox_color_selector_blue</item>
         <item name="android:textColor">@color/black</item>
         <item name="android:fontFamily">sans-serif</item>
         <item name="android:textSize">12sp</item>
@@ -74,12 +86,28 @@
     ---------------------------------------------------------*/
     <style name="Widget.SettleXApp.TextInputLayout.Outlined" parent="Widget.Material3.TextInputLayout.OutlinedBox">
         <item name="boxBackgroundColor">@color/white</item>
-        <item name="boxStrokeColor">@color/text_input_stroke_color_selector</item>
+        <item name="boxStrokeColor">@color/text_input_layout_stroke_color_selector</item>
         <item name="strokeWidth">0.5dp</item>
         <item name="shapeAppearance">@style/SettleXApp.Rounded8</item>
         <item name="boxStrokeErrorColor">@color/red</item>
-        <item name="hintTextColor">@color/text_input_hint_color_selector</item>
+        <item name="hintTextColor">@color/text_input_layout_hint_color_selector</item>
         <item name="fontFamily">@font/poppins_regular</item>
+        <item name="android:includeFontPadding">false</item>
+    </style>
+
+    /*-------------------------------------------
+    Custom EditText (PinBoxEditText)- SettleXApp
+    For Pin Box || OTP View
+    -------------------------------------------*/
+    <style name="Widget.SettleXApp.EditText.PinBox" parent="Base.Widget.AppCompat.EditText">
+        <item name="android:layout_width">45dp</item>
+        <item name="android:layout_height">45dp</item>
+        <item name="android:textSize">14sp</item>
+        <item name="android:background">@drawable/bg_pinbox_edit_txt</item>
+        <item name="android:textColor">@color/black</item>
+        <item name="android:fontFamily">sans-serif</item>
+        <item name="android:textAlignment">center</item>
+        <item name="android:gravity">center</item>
         <item name="android:includeFontPadding">false</item>
     </style>
 </resources>

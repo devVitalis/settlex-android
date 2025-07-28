@@ -9,7 +9,7 @@
     android:fitsSystemWindows="true"
     android:focusable="true"
     android:focusableInTouchMode="true"
-    tools:context=".view.auth.activity.SignInActivity">
+    tools:context=".ui.auth.activity.SignInActivity">
 
     <RelativeLayout
         android:id="@+id/parentLayout"
@@ -162,7 +162,7 @@
                 <!--Login Btn-->
                 <com.google.android.material.button.MaterialButton
                     android:id="@+id/btnSignIn"
-                    style="@style/Widget.SettleXApp.Button.Filled"
+                    style="@style/Widget.SettleXApp.Button.Filled.Blue"
                     android:layout_width="match_parent"
                     android:layout_height="55dp"
                     android:layout_gravity="center"

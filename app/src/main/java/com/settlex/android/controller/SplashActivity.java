@@ -15,10 +15,9 @@ import androidx.core.splashscreen.SplashScreen;
 
 import com.settlex.android.data.local.AppOnboardingPrefs;
 import com.settlex.android.manager.SessionManager;
-import com.settlex.android.manager.UserOnboardingPrefs;
-import com.settlex.android.view.Onboarding.activity.OnboardingActivity;
-import com.settlex.android.view.auth.activity.PasscodeLoginActivity;
-import com.settlex.android.view.auth.activity.SignInActivity;
+import com.settlex.android.ui.Onboarding.activity.OnboardingActivity;
+import com.settlex.android.ui.auth.activity.PasscodeLoginActivity;
+import com.settlex.android.ui.auth.activity.SignInActivity;
 
 @SuppressLint("CustomSplashScreen")
 public class SplashActivity extends AppCompatActivity {

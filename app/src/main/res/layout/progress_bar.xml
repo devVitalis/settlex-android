@@ -5,7 +5,7 @@
     android:layout_gravity="center">
 
     <!-- Custom rotating ring -->
-    <com.settlex.android.view.custom.SettleXProgressView
+    <com.settlex.android.ui.customviews.SettleXProgressView
         android:id="@+id/progress_bar"
         android:layout_width="50dp"
         android:layout_height="50dp"

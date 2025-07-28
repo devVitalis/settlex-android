@@ -9,7 +9,7 @@
     android:fitsSystemWindows="true"
     android:focusable="true"
     android:focusableInTouchMode="true"
-    tools:context=".view.auth.fragment.SignupUserInfoFragment">
+    tools:context=".ui.auth.fragment.SignupUserInfoFragment">
 
     <RelativeLayout
         android:id="@+id/parentLayout"
@@ -88,7 +88,7 @@
                     android:layout_marginTop="40dp"
                     android:fontFamily="@font/poppins_regular"
                     android:includeFontPadding="false"
-                    android:text="Create your Account"
+                    android:text="Let's setup your Name"
                     android:textColor="@color/black"
                     android:textSize="20sp"
                     android:textStyle="bold" />
@@ -102,7 +102,7 @@
                     android:layout_marginBottom="5dp"
                     android:fontFamily="@font/poppins_regular"
                     android:includeFontPadding="false"
-                    android:text="1 of 4"
+                    android:text="2 of 4"
                     android:textColor="@color/black"
                     android:textSize="13sp"
                     android:textStyle="bold" />
@@ -125,7 +125,7 @@
                         android:layout_height="2dp"
                         android:layout_marginEnd="10dp"
                         android:layout_weight="1"
-                        android:background="@drawable/bg_24dp_light_blue"
+                        android:background="@drawable/bg_24dp_blue"
                         android:orientation="horizontal" />
 
                     <View
@@ -151,7 +151,7 @@
                     android:layout_marginTop="20dp"
                     android:fontFamily="@font/poppins_light"
                     android:includeFontPadding="false"
-                    android:text="Enter your details below to create an account."
+                    android:text="Please enter your first and last name."
                     android:textColor="@color/black"
                     android:textSize="13sp" />
 
@@ -254,7 +254,7 @@
             <!--Continue Btn-->
             <com.google.android.material.button.MaterialButton
                 android:id="@+id/btnContinue"
-                style="@style/Widget.SettleXApp.Button.Filled.Rounded8"
+                style="@style/Widget.SettleXApp.Button.Filled.Rounded8.Blue"
                 android:layout_width="match_parent"
                 android:layout_height="55dp"
                 android:layout_gravity="center"
