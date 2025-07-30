@@ -1,4 +1,4 @@
-package com.settlex.android.ui.activities;
+package com.settlex.android.ui.activities.help;
 
 import android.os.Bundle;
 

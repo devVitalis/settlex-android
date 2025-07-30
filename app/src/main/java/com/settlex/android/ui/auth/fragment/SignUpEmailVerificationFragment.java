@@ -1,13 +1,8 @@
 package com.settlex.android.ui.auth.fragment;
 
-import static android.view.View.GONE;
-import static android.view.View.VISIBLE;
-
 import android.animation.Animator;
 import android.animation.AnimatorListenerAdapter;
-import android.annotation.SuppressLint;
 import android.content.Context;
-import android.graphics.Rect;
 import android.os.Bundle;
 import android.os.CountDownTimer;
 import android.text.Editable;
@@ -16,7 +11,6 @@ import android.text.TextUtils;
 import android.text.TextWatcher;
 import android.view.KeyEvent;
 import android.view.LayoutInflater;
-import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.Window;
@@ -33,18 +27,15 @@ import androidx.lifecycle.ViewModelProvider;
 import com.airbnb.lottie.RenderMode;
 import com.settlex.android.R;
 import com.settlex.android.controller.ProgressViewController;
-import com.settlex.android.controller.SignUpController;
-import com.settlex.android.data.model.UserModel;
 import com.settlex.android.databinding.FragmentSignUpEmailVerificationBinding;
-import com.settlex.android.ui.auth.viewmodel.SignUpViewModel;
-import com.settlex.android.utils.string.StringUtil;
+import com.settlex.android.utils.StringUtil;
+import com.settlex.android.ui.auth.viewmodel.AuthViewModel;
 
 public class SignUpEmailVerificationFragment extends Fragment {
 
-    private UserModel user;
-    private SignUpViewModel vm;
+    private AuthViewModel vm;
+    private CountDownTimer timer;
     private EditText[] otpCodeInputs;
-    private SignUpController controller;
     private ProgressViewController progressBar;
     private FragmentSignUpEmailVerificationBinding binding;
 
@@ -58,10 +49,8 @@ public class SignUpEmailVerificationFragment extends Fragment {
     public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         binding = FragmentSignUpEmailVerificationBinding.inflate(getLayoutInflater(), container, false);
 
-        controller = new SignUpController();
         progressBar = new ProgressViewController(binding.fragmentContainer);
-        vm = new ViewModelProvider(requireActivity()).get(SignUpViewModel.class);
-        user = vm.getUser().getValue();
+        vm = new ViewModelProvider(requireActivity()).get(AuthViewModel.class);
 
         setupStatusBar();
         setupUIActions();
@@ -76,6 +65,13 @@ public class SignUpEmailVerificationFragment extends Fragment {
         disableResendOtpBtn();
     }
 
+    @Override
+    public void onDestroyView() {
+        timer.cancel();
+        binding = null;
+        super.onDestroyView();
+    }
+
     /*-----------------------------------
     Bind Views & Handle Event Listeners
     -----------------------------------*/
@@ -83,7 +79,6 @@ public class SignUpEmailVerificationFragment extends Fragment {
         formatTxtInfo();
         setupOtpCodeInputs();
         maskAndDisplayUserEmail();
-        setupHideKeyboardOnTouch();
 
         // Click Listeners
         binding.imgViewGoBack.setOnClickListener(v -> requireActivity().getSupportFragmentManager().popBackStack());
@@ -92,24 +87,25 @@ public class SignUpEmailVerificationFragment extends Fragment {
         binding.btnResendOtp.setOnClickListener(view -> resendEmailVerificationOtp());
     }
 
+    /*------------------------------------
+    Verify OTP and Handle Result Response
+    -------------------------------------*/
     private void verifyOtp() {
         progressBar.show();
 
-        String email = user.getEmail();
+        String email = vm.getEmail();
         String otp = getEnteredOtpCode();
 
-        controller.verifyEmailOtp(email, otp, new SignUpController.VerifyEmailOtpCallback() {
-            @Override
-            public void onSuccess(String message) {
+        vm.verifyEmailOtp(email, otp);
+        vm.getOtpVerifyResult().observe(getViewLifecycleOwner(), result -> {
+            if (result.isSuccess()) {
                 binding.successAnim.setRenderMode(RenderMode.SOFTWARE);
                 binding.successAnim.setVisibility(View.VISIBLE);
                 binding.successAnim.playAnimation();
 
-                binding.txtMessage.setText(message);
+                binding.txtMessage.setText(result.message());
                 binding.txtMessage.setTextColor(ContextCompat.getColor(requireContext(), R.color.blue));
                 binding.txtMessage.setVisibility(View.VISIBLE);
-
-                progressBar.hide();
 
                 // Listen for animation end, then load next fragment
                 binding.successAnim.addAnimatorListener(new AnimatorListenerAdapter() {
@@ -118,40 +114,33 @@ public class SignUpEmailVerificationFragment extends Fragment {
                         loadFragment(new SignupUserInfoFragment());
                     }
                 });
-
+            } else {
+                binding.txtMessage.setText(result.message());
+                binding.txtMessage.setVisibility(View.VISIBLE);
             }
-
-            @Override
-            public void onFailure(String reason) {
-                binding.txtMessage.setText(reason);
-                binding.txtMessage.setVisibility(VISIBLE);
-                progressBar.hide();
-            }
+            progressBar.hide();
         });
     }
 
+    /*------------------------------------
+    Resend OTP to Email and Handle Result
+    -------------------------------------*/
     private void resendEmailVerificationOtp() {
         progressBar.show();
+        String email = vm.getEmail();
 
-        String email = user.getEmail();
-
-        controller.sendEmailOtp(email, new SignUpController.SendEmailOtpCallback() {
-            @Override
-            public void onSuccess(String message) {
-                Toast.makeText(requireContext(), message, Toast.LENGTH_SHORT).show();
+        vm.sendEmailOtp(email);
+        vm.getEmailOtpResult().observe(getViewLifecycleOwner(), result -> {
+            if (result.isSuccess()) {
                 disableResendOtpBtn();
-                progressBar.hide();
+                Toast.makeText(requireContext(), result.message(), Toast.LENGTH_SHORT).show();
+            } else {
+                binding.txtMessage.setText(result.message());
+                binding.txtMessage.setVisibility(View.VISIBLE);
             }
-
-            @Override
-            public void onFailure(String reason) {
-                binding.txtMessage.setText(reason);
-                binding.txtMessage.setVisibility(VISIBLE);
-                progressBar.hide();
-            }
+            progressBar.hide();
         });
     }
-
 
     /*------------------------------------------
     Setup passcode input chaining logic
@@ -180,9 +169,9 @@ public class SignUpEmailVerificationFragment extends Fragment {
                 public void onTextChanged(CharSequence s, int start, int before, int count) {
                     if (isOtpFullyEntered()) hideKeyboard();
 
-                    binding.btnClearAll.setVisibility(TextUtils.isEmpty(s) ? GONE : VISIBLE);
+                    binding.btnClearAll.setVisibility(TextUtils.isEmpty(s) ? View.GONE : View.VISIBLE);
                     if (TextUtils.isEmpty(s)) {
-                        binding.txtMessage.setVisibility(GONE);
+                        binding.txtMessage.setVisibility(View.GONE);
                     }
 
                     if (s.length() == 1 && next != null) {
@@ -264,7 +253,7 @@ public class SignUpEmailVerificationFragment extends Fragment {
         binding.btnResendOtp.setEnabled(false);
         binding.btnResendOtp.setTag(binding.btnResendOtp.getText());
 
-        new CountDownTimer(60000, 1000) {
+        timer = new CountDownTimer(60000, 1000) {
 
             public void onTick(long millisUntilFinished) {
                 int seconds = (int) (millisUntilFinished / 1000);
@@ -286,11 +275,9 @@ public class SignUpEmailVerificationFragment extends Fragment {
     Mask and display in the UI
     ----------------------------------*/
     private void maskAndDisplayUserEmail() {
-        if (user != null) {
-            String email = user.getEmail();
-            String displayEmail = "Enter the OTP sent to your email address" + "<font color='#0044CC'>" + "(" + StringUtil.maskEmail(email) + ")" + "<font/>";
-            binding.txtInfoInstruction.setText(Html.fromHtml(displayEmail, Html.FROM_HTML_MODE_LEGACY));
-        }
+        String email = vm.getEmail();
+        String displayEmail = "Enter the OTP sent to your email address" + "<font color='#0044CC'>" + "\n(" + StringUtil.maskEmail(email) + ")" + "<font/>";
+        binding.txtInfoInstruction.setText(Html.fromHtml(displayEmail, Html.FROM_HTML_MODE_LEGACY));
     }
 
     /*----------------------
@@ -323,32 +310,6 @@ public class SignUpEmailVerificationFragment extends Fragment {
                 .getSupportFragmentManager()
                 .beginTransaction().replace(R.id.fragment_container, fragment)
                 .commit();
-    }
-
-    /*----------------------------------------------
-    Dismiss keyboard and clear focus on outside tap
-    ----------------------------------------------*/
-    @SuppressLint("ClickableViewAccessibility")
-    private void setupHideKeyboardOnTouch() {
-        binding.fragmentContainer.setOnTouchListener((v, event) -> {
-            if (event.getAction() == MotionEvent.ACTION_DOWN) {
-                v.performClick();
-                View focused = requireActivity().getCurrentFocus();
-                if (focused instanceof EditText) {
-                    Rect outRect = new Rect();
-                    focused.getGlobalVisibleRect(outRect);
-                    if (!outRect.contains((int) event.getRawX(), (int) event.getRawY())) {
-                        focused.clearFocus();
-                        InputMethodManager imm = (InputMethodManager) requireActivity().getSystemService(Context.INPUT_METHOD_SERVICE);
-                        if (imm != null) {
-                            imm.hideSoftInputFromWindow(focused.getWindowToken(), 0);
-                        }
-                        binding.fragmentContainer.requestFocus();
-                    }
-                }
-            }
-            return false;
-        });
     }
 
     /*-------------------------------

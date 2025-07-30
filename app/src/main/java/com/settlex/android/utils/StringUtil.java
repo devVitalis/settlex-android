@@ -1,13 +1,13 @@
-package com.settlex.android.utils.string;
+package com.settlex.android.utils;
 
 import java.text.NumberFormat;
 import java.util.Locale;
 
 public class StringUtil {
 
-    /*-------------------------------------------------------
+    /*-----------------------------------------------------
     Mask user's email for display (e.g., b***k@gmail.com)
-    --------------------------------------------------------*/
+    -----------------------------------------------------*/
     public static String maskEmail(String email) {
         if (email == null || !email.contains("@")) return "";
 
@@ -22,6 +22,24 @@ public class StringUtil {
         String masked = emailPrefix.charAt(0) + "***" + emailPrefix.charAt(emailPrefix.length() - 1);
         return masked + "@" + domain;
     }
+
+    /*------------------------------------------------
+    Capitalize each word(e.g., settle x -> Settle X)
+    -------------------------------------------------*/
+    public static String capitalizeEachWord(String input) {
+        if (input == null || input.isEmpty()) return input;
+        String[] words = input.toLowerCase().trim().split("\\s+");
+        StringBuilder result = new StringBuilder();
+        for (String word : words) {
+            if (!word.isEmpty()) {
+                result.append(Character.toUpperCase(word.charAt(0)))
+                        .append(word.substring(1))
+                        .append(" ");
+            }
+        }
+        return result.toString().trim();
+    }
+
 
     /*----------------------------------------
      Format amount to ₦ with commas

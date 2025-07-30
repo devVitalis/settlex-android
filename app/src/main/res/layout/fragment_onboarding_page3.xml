@@ -15,8 +15,8 @@
 
         <com.google.android.material.imageview.ShapeableImageView
             android:id="@+id/img_intro_slide_3"
-            android:layout_width="300dp"
-            android:layout_height="300dp"
+            android:layout_width="270dp"
+            android:layout_height="270dp"
             android:scaleType="centerCrop"
             android:src="@drawable/img_intro_slide_3" />
     </LinearLayout>
@@ -47,6 +47,6 @@
             android:text="We safeguard your personal data with bank-level encryption to ensure it stays private and secure."
             android:textAlignment="center"
             android:textColor="@color/gray"
-            android:textSize="13sp" />
+            android:textSize="15sp" />
     </LinearLayout>
 </RelativeLayout>

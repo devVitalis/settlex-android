@@ -37,8 +37,8 @@ public class OnboardingActivity extends AppCompatActivity {
     }
 
     /*------------------------------------
-    Setup onboarding ViewPager2 and dots
-    -------------------------------------*/
+        Setup onboarding ViewPager2 and dots
+        -------------------------------------*/
     private void setupViewPager() {
         OnboardingAdapter adapter = new OnboardingAdapter(this);
         binding.viewPager.setAdapter(adapter);

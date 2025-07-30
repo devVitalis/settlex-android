@@ -7,15 +7,15 @@
     <!-- Custom rotating ring -->
     <com.settlex.android.ui.custom.SettleXProgressView
         android:id="@+id/progress_bar"
-        android:layout_width="50dp"
-        android:layout_height="50dp"
+        android:layout_width="60dp"
+        android:layout_height="60dp"
         android:layout_gravity="center" />
 
     <!-- Center logo -->
     <ImageView
         android:id="@+id/logo"
-        android:layout_width="35dp"
-        android:layout_height="35dp"
+        android:layout_width="45dp"
+        android:layout_height="45dp"
         android:layout_gravity="center"
         android:contentDescription="Logo"
         android:src="@drawable/logo_circle" />

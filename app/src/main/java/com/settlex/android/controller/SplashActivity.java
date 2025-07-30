@@ -17,7 +17,6 @@ import com.settlex.android.data.local.AppOnboardingPrefs;
 import com.settlex.android.manager.SessionManager;
 import com.settlex.android.ui.Onboarding.activity.OnboardingActivity;
 import com.settlex.android.ui.auth.activity.PasscodeLoginActivity;
-import com.settlex.android.ui.auth.activity.SignInActivity;
 
 @SuppressLint("CustomSplashScreen")
 public class SplashActivity extends AppCompatActivity {
@@ -44,7 +43,7 @@ public class SplashActivity extends AppCompatActivity {
 
             } else if (!sm.isUserLoggedIn() || !sm.hasPasscode()) {
                 // User hasn't logged in yet || Logged in but no passcode set
-                loadActivity(SignInActivity.class);
+                loadActivity(OnboardingActivity.class);
 
             } else {
                 // User is logged in and has passcode

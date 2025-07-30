@@ -1,4 +1,7 @@
-package com.settlex.android.data.model;
+package com.settlex.android.data.remote.model;
+
+import java.util.HashMap;
+import java.util.Map;
 
 public class UserModel {
 
@@ -13,7 +16,7 @@ public class UserModel {
     private String referralCode;
     private String passcode;
     private String passcodeSalt;
-    private boolean hasPasscode;
+    public boolean hasPasscode;
 
     public UserModel() { /* Required no-arg constructor for Firestore deserialization*/ }
 
@@ -133,4 +136,26 @@ public class UserModel {
     public void setHasPasscode(boolean hasPasscode) {
         this.hasPasscode = hasPasscode;
     }
+
+    /*---------------------------------------------
+    Convert UserModel to Map for JSON-safe
+    serialization in Firestore or Cloud Functions
+    ----------------------------------------------*/
+    public Map<String, Object> toMap() {
+        Map<String, Object> map = new HashMap<>();
+        map.put("uid", uid);
+        map.put("email", email);
+        map.put("phone", phone);
+        map.put("firstName", firstName);
+        map.put("lastName", lastName);
+        map.put("referralCode", referralCode);
+        map.put("balance", balance);
+        map.put("passcode", passcode);
+        map.put("passcodeSalt", passcodeSalt);
+        map.put("hasPasscode", hasPasscode);
+        map.put("createdAt", createdAt);
+        map.put("role", role);
+        return map;
+    }
+
 }

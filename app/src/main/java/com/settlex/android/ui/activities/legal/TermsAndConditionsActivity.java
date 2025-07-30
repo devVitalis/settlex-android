@@ -1,4 +1,4 @@
-package com.settlex.android.ui.activities;
+package com.settlex.android.ui.activities.legal;
 
 import android.os.Bundle;
 import android.text.Html;

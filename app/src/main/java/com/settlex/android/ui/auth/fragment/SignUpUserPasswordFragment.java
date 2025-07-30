@@ -1,12 +1,8 @@
 package com.settlex.android.ui.auth.fragment;
 
-import static android.view.View.GONE;
-import static android.view.View.VISIBLE;
-
 import android.annotation.SuppressLint;
 import android.content.Context;
 import android.content.Intent;
-import android.graphics.Rect;
 import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.text.Editable;
@@ -29,10 +25,11 @@ import androidx.lifecycle.ViewModelProvider;
 
 import com.settlex.android.R;
 import com.settlex.android.controller.ProgressViewController;
-import com.settlex.android.data.model.UserModel;
+import com.settlex.android.data.remote.model.UserModel;
 import com.settlex.android.databinding.FragmentSignUpUserPasswordBinding;
-import com.settlex.android.ui.activities.AuthHelpActivity;
-import com.settlex.android.ui.auth.viewmodel.SignUpViewModel;
+import com.settlex.android.ui.activities.help.AuthHelpActivity;
+import com.settlex.android.ui.auth.viewmodel.AuthViewModel;
+import com.settlex.android.ui.dashboard.DashboardActivity;
 
 import java.util.Objects;
 
@@ -40,23 +37,31 @@ public class SignUpUserPasswordFragment extends Fragment {
 
     private FragmentSignUpUserPasswordBinding binding;
     private ProgressViewController progressBar;
-    private SignUpViewModel vm;
+    private AuthViewModel vm;
 
     /*----------------------------
     Required Public Constructor
     ----------------------------*/
-    public SignUpUserPasswordFragment() {}
+    public SignUpUserPasswordFragment() {
+    }
 
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         binding = FragmentSignUpUserPasswordBinding.inflate(inflater, container, false);
 
+        progressBar = new ProgressViewController(binding.fragmentContainer);
+        vm = new ViewModelProvider(requireActivity()).get(AuthViewModel.class);
+
         setupStatusBar();
         setupUIActions();
 
-        progressBar = new ProgressViewController(binding.fragmentContainer);
-        vm = new ViewModelProvider(requireActivity()).get(SignUpViewModel.class);
         return binding.getRoot();
+    }
+
+    @Override
+    public void onDestroyView() {
+        binding = null;
+        super.onDestroyView();
     }
 
     /*----------------------------
@@ -65,7 +70,7 @@ public class SignUpUserPasswordFragment extends Fragment {
     private void setupUIActions() {
         reEnableFocus();
         observePasswordFields();
-        setupHideKeyboardOnTouch();
+        setupUI(binding.fragmentContainer);
 
         binding.txtInputLayoutPassword.setEndIconVisible(false);
         binding.txtInputLayoutConfirmPassword.setEndIconVisible(false);
@@ -73,7 +78,7 @@ public class SignUpUserPasswordFragment extends Fragment {
         // Click Listeners
         binding.imgBackBefore.setOnClickListener(v -> requireActivity().getSupportFragmentManager().popBackStack());
         binding.btnHelp.setOnClickListener(v -> startActivity(new Intent(requireActivity(), AuthHelpActivity.class)));
-        binding.ImgViewExpendLess.setOnClickListener(v -> invitationCodeToggle());
+        binding.icExpendLess.setOnClickListener(v -> invitationCodeToggle());
         binding.btnCreateAccount.setOnClickListener(v -> attemptAccountCreation());
     }
 
@@ -86,28 +91,20 @@ public class SignUpUserPasswordFragment extends Fragment {
         String password = Objects.requireNonNull(binding.editTxtPassword.getText()).toString().trim();
         String invitationCode = Objects.requireNonNull(binding.editTxtInvitationCode.getText()).toString().trim();
 
+        vm.updateUserFields(invitationCode);
         UserModel user = vm.getUser().getValue();
-        if (user == null) {
+        vm.createUserAccount(user, vm.getEmail(), password);
+
+        vm.getAccountCreationResult().observe(getViewLifecycleOwner(), result -> {
+            if (result.isSuccess()) {
+                navigateToDashboard();
+            } else {
+                binding.txtMessageInfo.setText(result.message());
+                binding.txtMessageInfo.setVisibility(View.VISIBLE);
+            }
             progressBar.hide();
-            return;
-        }
-
-        user.setReferralCode(invitationCode.isEmpty() ? null : invitationCode);
-        user.setBalance(0.00);
-        user.setPasscode(null);
-        user.setPasscodeSalt(null);
-        user.setHasPasscode(false);
+        });
     }
-
-        /*-----------------------------
-        Navigate to Dashboard Activity
-        -----------------------------*/
-//        private void navigateToDashboard() {
-//            Intent intent = new Intent(requireContext(), DashboardActivity.class);
-//            intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK);
-//            startActivity(intent);
-//        }
-
 
     /*------------------------------
     Validate password and update UI
@@ -129,7 +126,7 @@ public class SignUpUserPasswordFragment extends Fragment {
         appendCondition(feedback, lower, "Contains lowercase letter\n");
         appendCondition(feedback, special, "Contains special character (e.g. @#$%^&+=!.)\n");
 
-        binding.txtPasswordPrompt.setVisibility(allGood || password.isEmpty() ? GONE : VISIBLE);
+        binding.txtPasswordPrompt.setVisibility(allGood || password.isEmpty() ? View.GONE : View.VISIBLE);
         binding.txtPasswordPrompt.setText(feedback);
         binding.txtInputLayoutPassword.setEndIconVisible(!password.isEmpty());
         binding.txtInputLayoutConfirmPassword.setEndIconVisible(!confirmPassword.isEmpty());
@@ -144,7 +141,7 @@ public class SignUpUserPasswordFragment extends Fragment {
         String confirm = Objects.requireNonNull(binding.editTxtConfirmPassword.getText()).toString().trim();
 
         boolean condition = confirm.isEmpty() || confirm.equals(original);
-        binding.txtErrorMsg.setVisibility(condition ? GONE : VISIBLE);
+        binding.txtMessageInfo.setVisibility(!condition ? View.VISIBLE : View.GONE);
 
         updateButtonState();
     }
@@ -210,47 +207,57 @@ public class SignUpUserPasswordFragment extends Fragment {
     Toggle invitation code visibility
     ---------------------------------*/
     private void invitationCodeToggle() {
-        boolean isVisible = binding.editTxtInvitationCode.getVisibility() == VISIBLE;
-        binding.editTxtInvitationCode.setVisibility(isVisible ? GONE : VISIBLE);
-        binding.ImgViewExpendLess.setImageResource(isVisible ? R.drawable.ic_expend_less : R.drawable.ic_expend_more);
+        boolean isVisible = binding.editTxtInvitationCode.getVisibility() == View.VISIBLE;
+        binding.editTxtInvitationCode.setVisibility(isVisible ? View.GONE : View.VISIBLE);
+        binding.icExpendLess.setImageResource(isVisible ? R.drawable.ic_expend_less : R.drawable.ic_expend_more);
     }
 
-    /*------------------------------
-    Navigate to another fragment
-    ------------------------------*/
-    private void loadFragment(Fragment fragment) {
-        requireActivity().getSupportFragmentManager()
-                .beginTransaction()
-                .replace(R.id.fragment_container, fragment)
-                .commit();
+    /*-----------------------------
+    Navigate to Dashboard Activity
+    -----------------------------*/
+    private void navigateToDashboard() {
+        Intent intent = new Intent(requireContext(), DashboardActivity.class);
+        intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK);
+        startActivity(intent);
     }
 
-    /*-----------------------------------------------
-    Dismiss keyboard and clear focus on outside tap
-    ------------------------------------------------*/
+    /*---------------------------------------
+    Set up touch listener to hide keyboard
+    when user taps outside EditText views
+    ---------------------------------------*/
     @SuppressLint("ClickableViewAccessibility")
-    private void setupHideKeyboardOnTouch() {
-        binding.fragmentContainer.setOnTouchListener((v, event) -> {
-            if (event.getAction() == MotionEvent.ACTION_DOWN) {
-                v.performClick();
-                View focused = requireActivity().getCurrentFocus();
-                if (focused instanceof EditText) {
-                    Rect outRect = new Rect();
-                    focused.getGlobalVisibleRect(outRect);
-                    if (!outRect.contains((int) event.getRawX(), (int) event.getRawY())) {
-                        focused.clearFocus();
-                        InputMethodManager imm = (InputMethodManager) requireActivity().getSystemService(Context.INPUT_METHOD_SERVICE);
-                        if (imm != null) {
-                            imm.hideSoftInputFromWindow(focused.getWindowToken(), 0);
-                        }
-                        binding.fragmentContainer.requestFocus();
-                    }
+    private void setupUI(View root) {
+        if (!(root instanceof EditText)) {
+            root.setOnTouchListener((v, event) -> {
+                if (event.getAction() == MotionEvent.ACTION_DOWN) {
+                    hideKeyboardAndClearFocus();
                 }
+                return false;
+            });
+        }
+
+        if (root instanceof ViewGroup) {
+            for (int i = 0; i < ((ViewGroup) root).getChildCount(); i++) {
+                View child = ((ViewGroup) root).getChildAt(i);
+                setupUI(child);
             }
-            return false;
-        });
+        }
     }
 
+    /*----------------------------------------
+    Helper method to hide keyboard and
+    clear focus from currently focused view
+    ----------------------------------------*/
+    private void hideKeyboardAndClearFocus() {
+        View focused = requireActivity().getCurrentFocus();
+        if (focused instanceof EditText) {
+            focused.clearFocus();
+            InputMethodManager imm = (InputMethodManager) requireActivity().getSystemService(Context.INPUT_METHOD_SERVICE);
+            if (imm != null) {
+                imm.hideSoftInputFromWindow(focused.getWindowToken(), 0);
+            }
+        }
+    }
 
     /*--------------------------
     Setup custom status bar

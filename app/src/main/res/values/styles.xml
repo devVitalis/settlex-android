@@ -90,6 +90,9 @@
         <item name="strokeWidth">0.5dp</item>
         <item name="shapeAppearance">@style/SettleXApp.Rounded8</item>
         <item name="boxStrokeErrorColor">@color/red</item>
+        <item name="endIconTint">@color/gray_dark</item>
+        <item name="android:textColor">@color/black</item>
+        <item name="android:textColorHint">@color/gray</item>
         <item name="hintTextColor">@color/text_input_layout_hint_color_selector</item>
         <item name="fontFamily">@font/poppins_regular</item>
         <item name="android:includeFontPadding">false</item>

@@ -1,19 +1,11 @@
 package com.settlex.android.ui.auth.fragment;
 
-
 import android.annotation.SuppressLint;
-import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
-import android.graphics.Color;
-import android.graphics.Rect;
 import android.os.Bundle;
 import android.text.Editable;
-import android.text.SpannableStringBuilder;
-import android.text.Spanned;
 import android.text.TextWatcher;
-import android.text.method.LinkMovementMethod;
-import android.text.style.ClickableSpan;
 import android.view.LayoutInflater;
 import android.view.MotionEvent;
 import android.view.View;
@@ -28,63 +20,67 @@ import androidx.fragment.app.Fragment;
 import androidx.lifecycle.ViewModelProvider;
 
 import com.settlex.android.R;
-
-import com.settlex.android.data.model.UserModel;
 import com.settlex.android.databinding.FragmentSignupUserInfoBinding;
-import com.settlex.android.ui.activities.PrivacyPolicyActivity;
-import com.settlex.android.ui.activities.TermsAndConditionsActivity;
-import com.settlex.android.ui.activities.AuthHelpActivity;
-import com.settlex.android.ui.auth.viewmodel.SignUpViewModel;
-
+import com.settlex.android.utils.StringUtil;
+import com.settlex.android.ui.activities.help.AuthHelpActivity;
+import com.settlex.android.ui.auth.viewmodel.AuthViewModel;
 
 import java.util.Objects;
 
 public class SignupUserInfoFragment extends Fragment {
 
     private FragmentSignupUserInfoBinding binding;
-    private SignUpViewModel vm;
+    private AuthViewModel vm;
 
     /*----------------------------
     Required Public Constructor
     ----------------------------*/
-    public SignupUserInfoFragment() { }
+    public SignupUserInfoFragment() {
+    }
 
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         binding = FragmentSignupUserInfoBinding.inflate(inflater, container, false);
 
+        vm = new ViewModelProvider(requireActivity()).get(AuthViewModel.class);
+
         setupStatusBar();
         setupUIActions();
 
-        vm = new ViewModelProvider(requireActivity()).get(SignUpViewModel.class);
         return binding.getRoot();
     }
 
-    /*-----------------------
-    Handle Event Listeners
-    -----------------------*/
+    @Override
+    public void onDestroyView() {
+        binding = null;
+        super.onDestroyView();
+    }
+
+    /*-------------------------------------
+    Handle Event Listeners & Method Calls
+    -------------------------------------*/
     private void setupUIActions() {
         reEnableFocus();
         setupInputWatchers();
-        setupHideKeyboardOnTouch();
+        setupUI(binding.fragmentContainer);
 
         // Click Listeners
         binding.imgBackBefore.setOnClickListener(v -> requireActivity().getSupportFragmentManager().popBackStack());
         binding.btnHelp.setOnClickListener(v -> startActivity(new Intent(requireActivity(), AuthHelpActivity.class)));
+        binding.btnContinue.setOnClickListener(v -> updateUserInfoAndMoveOn());
+    }
 
-        binding.btnContinue.setOnClickListener(v -> {
-            String firstName = Objects.requireNonNull(binding.editTxtFirstName.getText()).toString().trim();
-            String lastName = Objects.requireNonNull(binding.editTxtLastName.getText()).toString().trim();
+    /*------------------------------------------------
+    Update/Save User First and Last Name To ViewModel
+    ------------------------------------------------*/
+    private void updateUserInfoAndMoveOn() {
+        String firstName = Objects.requireNonNull(binding.editTxtFirstName.getText()).toString().trim();
+        String lastName = Objects.requireNonNull(binding.editTxtLastName.getText()).toString().trim();
 
-            UserModel user = vm.getUser().getValue();
-            if (user == null) user = new UserModel();
+        vm.updateFirstName(StringUtil.capitalizeEachWord(firstName));
+        vm.updateLastName(StringUtil.capitalizeEachWord(lastName));
 
-            user.setFirstName(firstName);
-            user.setLastName(lastName);
-
-            vm.setUser(user);
-            loadFragment(new SignUpUserContactInfoFragment());
-        });
+        loadFragment(new SignUpUserPasswordFragment());
     }
 
     /*----------------------------------
@@ -94,15 +90,15 @@ public class SignupUserInfoFragment extends Fragment {
         String firstName = Objects.requireNonNull(binding.editTxtFirstName.getText()).toString().trim();
         String lastName = Objects.requireNonNull(binding.editTxtLastName.getText()).toString().trim();
 
-        boolean validFirst = !firstName.isEmpty() && firstName.matches("^[A-Z][a-z]+(?:\\s[A-Z][a-z]+)*$");
-        boolean validLast = !lastName.isEmpty() && lastName.matches("^[A-Z][a-z]+(?:\\s[A-Z][a-z]+)*$");
+        boolean validFirst = !firstName.isEmpty() && firstName.matches("^[a-zA-Z]{2,}(?:\\s[a-zA-Z]{2,})*$");
+        boolean validLast = !lastName.isEmpty() && lastName.matches("^[a-zA-Z]{2,}(?:\\s[a-zA-Z]{2,})*$");
 
         binding.btnContinue.setEnabled(validFirst && validLast);
     }
 
-    /*----------------------------
-    Validate fields while typing
-    -----------------------------*/
+    /*------------------------------------
+    Validate EditText fields while typing
+    ------------------------------------*/
     private void setupInputWatchers() {
         TextWatcher watcher = new TextWatcher() {
             @Override
@@ -139,30 +135,42 @@ public class SignupUserInfoFragment extends Fragment {
         binding.editTxtLastName.setOnClickListener(enableFocusListener);
     }
 
-    /*----------------------------------------------
-    Dismiss keyboard and clear focus on outside tap
-    ----------------------------------------------*/
+    /*---------------------------------------
+    Set up touch listener to hide keyboard
+    when user taps outside EditText views
+    ---------------------------------------*/
     @SuppressLint("ClickableViewAccessibility")
-    private void setupHideKeyboardOnTouch() {
-        binding.fragmentContainer.setOnTouchListener((v, event) -> {
-            if (event.getAction() == MotionEvent.ACTION_DOWN) {
-                v.performClick();
-                View focused = requireActivity().getCurrentFocus();
-                if (focused instanceof EditText) {
-                    Rect outRect = new Rect();
-                    focused.getGlobalVisibleRect(outRect);
-                    if (!outRect.contains((int) event.getRawX(), (int) event.getRawY())) {
-                        focused.clearFocus();
-                        InputMethodManager imm = (InputMethodManager) requireActivity().getSystemService(Context.INPUT_METHOD_SERVICE);
-                        if (imm != null) {
-                            imm.hideSoftInputFromWindow(focused.getWindowToken(), 0);
-                        }
-                        binding.fragmentContainer.requestFocus();
-                    }
+    private void setupUI(View root) {
+        if (!(root instanceof EditText)) {
+            root.setOnTouchListener((v, event) -> {
+                if (event.getAction() == MotionEvent.ACTION_DOWN) {
+                    hideKeyboardAndClearFocus();
                 }
+                return false;
+            });
+        }
+
+        if (root instanceof ViewGroup) {
+            for (int i = 0; i < ((ViewGroup) root).getChildCount(); i++) {
+                View child = ((ViewGroup) root).getChildAt(i);
+                setupUI(child);
             }
-            return false;
-        });
+        }
+    }
+
+    /*----------------------------------------
+    Helper method to hide keyboard and
+    clear focus from currently focused view
+    ----------------------------------------*/
+    private void hideKeyboardAndClearFocus() {
+        View focused = requireActivity().getCurrentFocus();
+        if (focused instanceof EditText) {
+            focused.clearFocus();
+            InputMethodManager imm = (InputMethodManager) requireActivity().getSystemService(Context.INPUT_METHOD_SERVICE);
+            if (imm != null) {
+                imm.hideSoftInputFromWindow(focused.getWindowToken(), 0);
+            }
+        }
     }
 
     /*-----------------------------

@@ -1,4 +1,4 @@
-package com.settlex.android.network;
+package com.settlex.android.utils;
 
 import android.content.Context;
 import android.net.ConnectivityManager;

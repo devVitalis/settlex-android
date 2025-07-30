@@ -15,13 +15,16 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.SettleX">
         <activity
-            android:name=".ui.activities.PrivacyPolicyActivity"
+            android:name=".ui.dashboard.DashboardActivity"
             android:exported="false" />
         <activity
-            android:name=".ui.activities.TermsAndConditionsActivity"
+            android:name=".ui.activities.legal.PrivacyPolicyActivity"
             android:exported="false" />
         <activity
-            android:name=".ui.activities.AuthHelpActivity"
+            android:name=".ui.activities.legal.TermsAndConditionsActivity"
+            android:exported="false" />
+        <activity
+            android:name=".ui.activities.help.AuthHelpActivity"
             android:exported="false" />
         <activity
             android:name=".ui.auth.activity.PasscodeLoginActivity"

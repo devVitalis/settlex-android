@@ -1,18 +1,17 @@
 package com.settlex.android.ui.auth.fragment;
 
-import static android.view.View.GONE;
-import static android.view.View.VISIBLE;
+import static android.content.Intent.FLAG_ACTIVITY_CLEAR_TASK;
 
 import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 import android.graphics.Color;
-import android.graphics.Rect;
 import android.os.Bundle;
 import android.text.Editable;
 import android.text.SpannableStringBuilder;
 import android.text.Spanned;
+import android.text.TextUtils;
 import android.text.TextWatcher;
 import android.text.method.LinkMovementMethod;
 import android.text.style.ClickableSpan;
@@ -32,29 +31,31 @@ import androidx.lifecycle.ViewModelProvider;
 
 import com.settlex.android.R;
 import com.settlex.android.controller.ProgressViewController;
-import com.settlex.android.controller.SignUpController;
-import com.settlex.android.data.model.UserModel;
 import com.settlex.android.databinding.FragmentSignUpUserContactInfoBinding;
-import com.settlex.android.ui.activities.PrivacyPolicyActivity;
-import com.settlex.android.ui.activities.TermsAndConditionsActivity;
+import com.settlex.android.ui.activities.legal.PrivacyPolicyActivity;
+import com.settlex.android.ui.activities.legal.TermsAndConditionsActivity;
 import com.settlex.android.ui.auth.activity.SignInActivity;
-import com.settlex.android.ui.auth.viewmodel.SignUpViewModel;
+import com.settlex.android.ui.auth.viewmodel.AuthViewModel;
 
 import java.util.Objects;
 
 public class SignUpUserContactInfoFragment extends Fragment {
-    private SignUpViewModel vm;
-    private SignUpController controller;
+    private AuthViewModel vm;
     private ProgressViewController progressBar;
     private FragmentSignUpUserContactInfoBinding binding;
+
+    /*----------------------------------
+    Required Empty Public Constructor
+    ----------------------------------*/
+    public SignUpUserContactInfoFragment() {
+    }
 
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         binding = FragmentSignUpUserContactInfoBinding.inflate(inflater, container, false);
 
-        controller = new SignUpController();
         progressBar = new ProgressViewController(binding.fragmentContainer);
-        vm = new ViewModelProvider(requireActivity()).get(SignUpViewModel.class);
+        vm = new ViewModelProvider(requireActivity()).get(AuthViewModel.class);
 
         setupStatusBar();
         setupUIActions();
@@ -62,10 +63,10 @@ public class SignUpUserContactInfoFragment extends Fragment {
         return binding.getRoot();
     }
 
-    /*----------------------------------
-    Required Empty Public Constructor
-    ----------------------------------*/
-    public SignUpUserContactInfoFragment() {
+    @Override
+    public void onDestroyView() {
+        binding = null;
+        super.onDestroyView();
     }
 
     /*-----------------------------
@@ -76,44 +77,38 @@ public class SignUpUserContactInfoFragment extends Fragment {
         setupTextWatchers();
         hideInfoMessagePrompt();
         setClickableLegalLinks();
-        setupHideKeyboardOnTouch();
         setupPhoneInputFocusHandler();
+        setupUI(binding.fragmentContainer);
 
         // Click Listeners
         binding.imgBackBefore.setOnClickListener(v -> {
-            startActivity(new Intent(requireActivity(), SignInActivity.class));
-            requireActivity().finish();
+            Intent intent = new Intent(requireActivity(), SignInActivity.class);
+            intent.addFlags(FLAG_ACTIVITY_CLEAR_TASK);
+            startActivity(intent);
         });
-        binding.btnHelp.setOnClickListener(v -> loadFragment(new SignUpEmailVerificationFragment()));
-        binding.btnContinue.setOnClickListener(v -> saveUserInfoAndSendEmailVerification());
+        binding.btnHelp.setOnClickListener(v -> loadFragment(new SignUpUserPasswordFragment()));
+        binding.btnContinue.setOnClickListener(v -> saveUserInfoAndSendVerificationEmail());
     }
 
     /*------------------------------------------------------
     Save user info (Live Data) and send OTP to the email
     ------------------------------------------------------*/
-    private void saveUserInfoAndSendEmailVerification() {
+    private void saveUserInfoAndSendVerificationEmail() {
         progressBar.show();
         String email = Objects.requireNonNull(binding.editTxtEmail.getText()).toString().trim();
         String phone = Objects.requireNonNull(binding.editTxtPhoneNumber.getText()).toString().trim();
 
-        UserModel user = new UserModel();
-        user.setEmail(email);
-        user.setPhone(phone);
-        vm.setUser(user);
-
-        controller.sendEmailOtp(email, new SignUpController.SendEmailOtpCallback() {
-            @Override
-            public void onSuccess(String message) {
+        vm.updateEmail(email);
+        vm.updatePhone(phone);
+        vm.sendEmailOtp(email);
+        vm.getEmailOtpResult().observe(getViewLifecycleOwner(), result -> {
+            if (result.isSuccess()) {
                 loadFragment(new SignUpEmailVerificationFragment());
-                progressBar.hide();
+            } else {
+                binding.txtErrorInfoEmail.setText(result.message());
+                binding.txtErrorInfoEmail.setVisibility(View.VISIBLE);
             }
-
-            @Override
-            public void onFailure(String reason) {
-                binding.txtErrorInfoEmail.setText(reason);
-                binding.txtErrorInfoEmail.setVisibility(VISIBLE);
-                progressBar.hide();
-            }
+            progressBar.hide();
         });
     }
 
@@ -152,9 +147,16 @@ public class SignUpUserContactInfoFragment extends Fragment {
     private void setupPhoneInputFocusHandler() {
         binding.editTxtPhoneNumber.setOnFocusChangeListener((view, hasFocus) -> {
             if (hasFocus) {
-                binding.phoneInputBg.setBackgroundResource(R.drawable.bg_phone_input_custom_focused);
+                binding.phoneInputBg.setBackgroundResource(R.drawable.bg_input_custom_focused);
             } else {
-                binding.phoneInputBg.setBackgroundResource(R.drawable.bg_phone_input_custom_default);
+                binding.phoneInputBg.setBackgroundResource(R.drawable.bg_input_custom_not_focused);
+            }
+        });
+        binding.editTxtEmail.setOnFocusChangeListener((view, hasFocus) -> {
+            if (hasFocus) {
+                binding.emailInputBg.setBackgroundResource(R.drawable.bg_input_custom_focused);
+            } else {
+                binding.emailInputBg.setBackgroundResource(R.drawable.bg_input_custom_not_focused);
             }
         });
     }
@@ -235,7 +237,8 @@ public class SignUpUserContactInfoFragment extends Fragment {
 
             @Override
             public void onTextChanged(CharSequence s, int start, int before, int count) {
-                binding.txtErrorInfoEmail.setVisibility(GONE);
+                binding.txtErrorInfoEmail.setVisibility(View.GONE);
+                binding.emailSectionHeader.setVisibility(!TextUtils.isEmpty(s) ? View.VISIBLE : View.INVISIBLE);
             }
 
             @Override
@@ -250,7 +253,7 @@ public class SignUpUserContactInfoFragment extends Fragment {
 
             @Override
             public void onTextChanged(CharSequence s, int start, int before, int count) {
-                binding.txtErrorMsgPhoneNumber.setVisibility(GONE);
+                binding.txtErrorMsgPhoneNumber.setVisibility(View.GONE);
             }
 
             @Override
@@ -259,35 +262,6 @@ public class SignUpUserContactInfoFragment extends Fragment {
             }
         });
     }
-
-    /*----------------------------------------------
-    Dismiss keyboard and clear focus on outside tap
-    ----------------------------------------------*/
-    @SuppressLint("ClickableViewAccessibility")
-    private void setupHideKeyboardOnTouch() {
-        binding.getRoot().setOnTouchListener((v, event) -> {
-            if (event.getAction() == MotionEvent.ACTION_DOWN) {
-                View currentFocus = requireActivity().getCurrentFocus();
-                if (currentFocus instanceof EditText) {
-                    Rect outRect = new Rect();
-                    currentFocus.getGlobalVisibleRect(outRect);
-
-                    if (!outRect.contains((int) event.getRawX(), (int) event.getRawY())) {
-                        currentFocus.clearFocus();
-
-                        InputMethodManager imm = (InputMethodManager) requireActivity().getSystemService(Context.INPUT_METHOD_SERVICE);
-                        if (imm != null) {
-                            imm.hideSoftInputFromWindow(currentFocus.getWindowToken(), 0);
-                        }
-
-                        binding.fragmentContainer.requestFocus();
-                    }
-                }
-            }
-            return false;
-        });
-    }
-
 
     /*------------------------
     Launch external activity
@@ -305,6 +279,44 @@ public class SignUpUserContactInfoFragment extends Fragment {
                 .beginTransaction().replace(R.id.fragment_container, fragment)
                 .addToBackStack(null)
                 .commit();
+    }
+
+    /*---------------------------------------
+    Set up touch listener to hide keyboard
+    when user taps outside EditText views
+    ---------------------------------------*/
+    @SuppressLint("ClickableViewAccessibility")
+    private void setupUI(View root) {
+        if (!(root instanceof EditText)) {
+            root.setOnTouchListener((v, event) -> {
+                if (event.getAction() == MotionEvent.ACTION_DOWN) {
+                    hideKeyboardAndClearFocus();
+                }
+                return false;
+            });
+        }
+
+        if (root instanceof ViewGroup) {
+            for (int i = 0; i < ((ViewGroup) root).getChildCount(); i++) {
+                View child = ((ViewGroup) root).getChildAt(i);
+                setupUI(child);
+            }
+        }
+    }
+
+    /*----------------------------------------
+    Helper method to hide keyboard and
+    clear focus from currently focused view
+    ----------------------------------------*/
+    private void hideKeyboardAndClearFocus() {
+        View focused = requireActivity().getCurrentFocus();
+        if (focused instanceof EditText) {
+            focused.clearFocus();
+            InputMethodManager imm = (InputMethodManager) requireActivity().getSystemService(Context.INPUT_METHOD_SERVICE);
+            if (imm != null) {
+                imm.hideSoftInputFromWindow(focused.getWindowToken(), 0);
+            }
+        }
     }
 
     /*-------------------------------

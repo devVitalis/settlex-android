@@ -7,7 +7,7 @@
     android:layout_height="match_parent"
     android:background="@color/white"
     android:fitsSystemWindows="true"
-    tools:context=".ui.activities.PrivacyPolicyActivity">
+    tools:context=".ui.activities.legal.PrivacyPolicyActivity">
 
     <RelativeLayout
         android:id="@+id/header"

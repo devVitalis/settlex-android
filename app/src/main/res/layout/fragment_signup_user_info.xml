@@ -112,7 +112,7 @@
                     android:layout_marginBottom="5dp"
                     android:fontFamily="@font/poppins_regular"
                     android:includeFontPadding="false"
-                    android:text="2 of 4"
+                    android:text="3 of 4"
                     android:textColor="@color/black"
                     android:textSize="13sp"
                     android:textStyle="bold" />
@@ -143,7 +143,7 @@
                         android:layout_height="2dp"
                         android:layout_marginEnd="10dp"
                         android:layout_weight="1"
-                        android:background="@drawable/bg_24dp_light_blue"
+                        android:background="@drawable/bg_24dp_blue"
                         android:orientation="horizontal" />
 
                     <View
@@ -174,6 +174,7 @@
                     android:layout_gravity="center"
                     android:layout_marginTop="20dp"
                     android:gravity="center"
+                    android:hint="First Name"
                     android:orientation="horizontal"
                     app:endIconMode="clear_text">
 
@@ -183,12 +184,13 @@
                         android:layout_height="55dp"
                         android:focusable="false"
                         android:focusableInTouchMode="false"
+                        android:fontFamily="@font/poppins_regular"
                         android:gravity="start|center_vertical"
-                        android:hint="First Name"
                         android:imeOptions="actionNext"
                         android:includeFontPadding="false"
                         android:inputType="textPersonName"
                         android:paddingHorizontal="20dp"
+                        android:textColor="@color/black"
                         android:textColorHint="@color/gray"
                         android:textSize="14sp" />
                 </com.google.android.material.textfield.TextInputLayout>
@@ -202,6 +204,7 @@
                     android:layout_gravity="center"
                     android:layout_marginTop="10dp"
                     android:gravity="center"
+                    android:hint="Last Name"
                     android:orientation="horizontal"
                     app:endIconMode="clear_text">
 
@@ -211,12 +214,13 @@
                         android:layout_height="55dp"
                         android:focusable="false"
                         android:focusableInTouchMode="false"
+                        android:fontFamily="@font/poppins_regular"
                         android:gravity="start|center_vertical"
-                        android:hint="Last Name"
                         android:imeOptions="actionDone"
                         android:includeFontPadding="false"
                         android:inputType="textPersonName"
                         android:paddingHorizontal="20dp"
+                        android:textColor="@color/black"
                         android:textColorHint="@color/gray"
                         android:textSize="14sp" />
                 </com.google.android.material.textfield.TextInputLayout>

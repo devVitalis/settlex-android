@@ -5,6 +5,6 @@
     android:id="@+id/main"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".ui.activities.help.AuthHelpActivity">
+    tools:context=".ui.dashboard.DashboardActivity">
 
 </androidx.constraintlayout.widget.ConstraintLayout>

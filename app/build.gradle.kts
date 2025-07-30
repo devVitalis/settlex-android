@@ -74,6 +74,9 @@ dependencies {
     // Lottie
     implementation(libs.lottie)
 
+    // ViewModel (MVVM)
+    implementation(libs.lifecycle.viewmodel)
+    implementation(libs.lifecycle.livedata)
 }
 
 tasks.withType<JavaCompile>().configureEach {

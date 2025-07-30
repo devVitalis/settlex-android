@@ -1,4 +1,4 @@
-package com.settlex.android.network;
+package com.settlex.android.data.remote.model.request;
 
 public class EmailOtpRequest {
     public String email;
