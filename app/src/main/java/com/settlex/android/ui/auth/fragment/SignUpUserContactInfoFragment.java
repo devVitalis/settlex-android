@@ -1,7 +1,5 @@
 package com.settlex.android.ui.auth.fragment;
 
-import static android.content.Intent.FLAG_ACTIVITY_CLEAR_TASK;
-
 import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.content.Context;
@@ -30,18 +28,17 @@ import androidx.fragment.app.Fragment;
 import androidx.lifecycle.ViewModelProvider;
 
 import com.settlex.android.R;
-import com.settlex.android.controller.ProgressViewController;
+import com.settlex.android.ui.common.SettleXProgressBarController;
 import com.settlex.android.databinding.FragmentSignUpUserContactInfoBinding;
 import com.settlex.android.ui.activities.legal.PrivacyPolicyActivity;
 import com.settlex.android.ui.activities.legal.TermsAndConditionsActivity;
-import com.settlex.android.ui.auth.activity.SignInActivity;
 import com.settlex.android.ui.auth.viewmodel.AuthViewModel;
 
 import java.util.Objects;
 
 public class SignUpUserContactInfoFragment extends Fragment {
     private AuthViewModel vm;
-    private ProgressViewController progressBar;
+    private SettleXProgressBarController progressBar;
     private FragmentSignUpUserContactInfoBinding binding;
 
     /*----------------------------------
@@ -54,7 +51,7 @@ public class SignUpUserContactInfoFragment extends Fragment {
     public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         binding = FragmentSignUpUserContactInfoBinding.inflate(inflater, container, false);
 
-        progressBar = new ProgressViewController(binding.fragmentContainer);
+        progressBar = new SettleXProgressBarController(binding.fragmentContainer);
         vm = new ViewModelProvider(requireActivity()).get(AuthViewModel.class);
 
         setupStatusBar();
@@ -77,23 +74,19 @@ public class SignUpUserContactInfoFragment extends Fragment {
         setupTextWatchers();
         hideInfoMessagePrompt();
         setClickableLegalLinks();
-        setupPhoneInputFocusHandler();
+        setupEditTxtFocusHandler();
         setupUI(binding.fragmentContainer);
 
         // Click Listeners
-        binding.imgBackBefore.setOnClickListener(v -> {
-            Intent intent = new Intent(requireActivity(), SignInActivity.class);
-            intent.addFlags(FLAG_ACTIVITY_CLEAR_TASK);
-            startActivity(intent);
-        });
+        binding.imgBackBefore.setOnClickListener(v -> {requireActivity().getOnBackPressedDispatcher().onBackPressed(); requireActivity().finish();});
         binding.btnHelp.setOnClickListener(v -> loadFragment(new SignUpUserPasswordFragment()));
-        binding.btnContinue.setOnClickListener(v -> saveUserInfoAndSendVerificationEmail());
+        binding.btnContinue.setOnClickListener(v -> saveUserInfoAndSendEmailOtp());
     }
 
-    /*------------------------------------------------------
-    Save user info (Live Data) and send OTP to the email
-    ------------------------------------------------------*/
-    private void saveUserInfoAndSendVerificationEmail() {
+    /*-----------------------------------------
+    Save user info and send OTP to the email
+    -----------------------------------------*/
+    private void saveUserInfoAndSendEmailOtp() {
         progressBar.show();
         String email = Objects.requireNonNull(binding.editTxtEmail.getText()).toString().trim();
         String phone = Objects.requireNonNull(binding.editTxtPhoneNumber.getText()).toString().trim();
@@ -101,11 +94,12 @@ public class SignUpUserContactInfoFragment extends Fragment {
         vm.updateEmail(email);
         vm.updatePhone(phone);
         vm.sendEmailOtp(email);
-        vm.getEmailOtpResult().observe(getViewLifecycleOwner(), result -> {
-            if (result.isSuccess()) {
+
+        vm.getEmailOtpResult().observe(getViewLifecycleOwner(), sendOtpResult -> {
+            if (sendOtpResult.isSuccess()) {
                 loadFragment(new SignUpEmailVerificationFragment());
             } else {
-                binding.txtErrorInfoEmail.setText(result.message());
+                binding.txtErrorInfoEmail.setText(sendOtpResult.message());
                 binding.txtErrorInfoEmail.setVisibility(View.VISIBLE);
             }
             progressBar.hide();
@@ -142,21 +136,21 @@ public class SignUpUserContactInfoFragment extends Fragment {
     }
 
     /*-------------------------------------------
-    Enable Dynamic Stroke color on PhoneInputBg
+    Enable Dynamic Stroke Color on editText bg
     -------------------------------------------*/
-    private void setupPhoneInputFocusHandler() {
+    private void setupEditTxtFocusHandler() {
         binding.editTxtPhoneNumber.setOnFocusChangeListener((view, hasFocus) -> {
             if (hasFocus) {
-                binding.phoneInputBg.setBackgroundResource(R.drawable.bg_input_custom_focused);
+                binding.phoneInputBg.setBackgroundResource(R.drawable.bg_edit_txt_custom_white_focused);
             } else {
-                binding.phoneInputBg.setBackgroundResource(R.drawable.bg_input_custom_not_focused);
+                binding.phoneInputBg.setBackgroundResource(R.drawable.bg_edit_txt_custom_white_not_focused);
             }
         });
         binding.editTxtEmail.setOnFocusChangeListener((view, hasFocus) -> {
             if (hasFocus) {
-                binding.emailInputBg.setBackgroundResource(R.drawable.bg_input_custom_focused);
+                binding.emailInputBg.setBackgroundResource(R.drawable.bg_edit_txt_custom_white_focused);
             } else {
-                binding.emailInputBg.setBackgroundResource(R.drawable.bg_input_custom_not_focused);
+                binding.emailInputBg.setBackgroundResource(R.drawable.bg_edit_txt_custom_white_not_focused);
             }
         });
     }

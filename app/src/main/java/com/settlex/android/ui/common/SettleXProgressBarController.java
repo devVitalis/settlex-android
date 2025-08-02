@@ -1,5 +1,5 @@
 
-package com.settlex.android.controller;
+package com.settlex.android.ui.common;
 
 
 import android.animation.AnimatorSet;
@@ -14,7 +14,7 @@ import androidx.annotation.NonNull;
 
 import com.settlex.android.R;
 
-public class ProgressViewController {
+public class SettleXProgressBarController {
 
     private final View progressOverlayView;
     private AnimatorSet zoomAnimator;
@@ -23,7 +23,7 @@ public class ProgressViewController {
     /*-----------------------------------------------
         Constructor: attach to activity layout
     -----------------------------------------------*/
-    public ProgressViewController(@NonNull View rootView) {
+    public SettleXProgressBarController(@NonNull View rootView) {
         ViewGroup root = (ViewGroup) rootView;
 
         View existingOverlay = root.findViewById(R.id.progressbar_overlay);

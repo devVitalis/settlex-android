@@ -1,75 +1,73 @@
 package com.settlex.android.data.repository;
 
-import androidx.annotation.NonNull;
+import android.util.Log;
 
 import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseAuthUserCollisionException;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.functions.FirebaseFunctions;
-import com.settlex.android.data.remote.model.UserModel;
-import com.settlex.android.data.remote.model.request.EmailOtpRequest;
-import com.settlex.android.data.remote.model.request.EmailOtpVerify;
-import com.settlex.android.data.remote.api.FunctionsService;
-import com.settlex.android.data.remote.RetrofitClient;
-import com.settlex.android.utils.ResponseHandler;
+import com.settlex.android.data.model.UserModel;
 
 import java.util.HashMap;
 import java.util.Map;
 
-import okhttp3.ResponseBody;
-import retrofit2.Call;
-import retrofit2.Callback;
-import retrofit2.Response;
-
 public class AuthRepository {
 
-    /*------------------------------------
-    Initialize Firebase Auth, Firestore,
-    and Retrofit Service Instance
-    -------------------------------------*/
-    private FirebaseAuth auth;
-    private FirebaseFirestore db;
-    private FirebaseFunctions functions;
-    private FunctionsService service;
+    private final FirebaseAuth auth;
+    private final FirebaseFirestore db;
+    private final FirebaseFunctions functions;
 
+    /*--------------------------------------------
+    Constructor to Initialize Services Instances
+    --------------------------------------------*/
     public AuthRepository() {
         auth = FirebaseAuth.getInstance();
         db = FirebaseFirestore.getInstance();
-        service = RetrofitClient.getService();
-        functions = FirebaseFunctions.getInstance("us-central1");
+        functions = FirebaseFunctions.getInstance("europe-west2");
     }
 
     /*-------------------------------------------
     Create user Account with email && Password
     -------------------------------------------*/
-    public void createUserAccount(UserModel user, String email, String password, CreateAccountCallback callback) {
+    public void signUpWithEmailAndPassword(UserModel user, String email, String password, CreateAccountCallback callback) {
         auth.createUserWithEmailAndPassword(email, password)
-                .addOnCompleteListener(task -> {
-                    if (task.isSuccessful()) {
-
-                        if (auth.getCurrentUser() != null) {
-                            String uid = auth.getCurrentUser().getUid();
-                            user.setUid(uid);
-
-                            saveUserProfileToDatabase(user, callback);
-                        }
+                .addOnSuccessListener(authResult -> {
+                    String uid = auth.getCurrentUser().getUid();
+                    user.setUid(uid);
+                    saveUserProfileToDatabase(user, callback);
+                })
+                .addOnFailureListener(e -> {
+                    if (e instanceof FirebaseAuthUserCollisionException) {
+                        callback.onFailure("This user already exists. Kindly log in.");
                     } else {
-                        Exception e = task.getException();
-                        String reason = (e != null) ? e.getMessage() : "Error occurred";
-                        callback.onFailure(reason);
+                        callback.onFailure(e.getMessage());
                     }
                 });
     }
 
-    /*-------------------------------------------
-    Callable Function To Save User Profile in Db
-    -------------------------------------------*/
+    /*------------------------------------
+    Save user profile and handle callback
+    -------------------------------------*/
     public void saveUserProfileToDatabase(UserModel user, CreateAccountCallback callback) {
         Map<String, Object> data = new HashMap<>();
         data.put("user", user.toMap()); // JSON-safe user data
 
         functions.getHttpsCallable("saveUserProfile")
                 .call(data)
-                .addOnSuccessListener(result -> callback.onSuccess())
+                .addOnSuccessListener(result -> {
+
+                    callback.onSuccess();
+
+                    markUserEmailVerified(user.getUid(), new CreateAccountCallback() {
+                        @Override
+                        public void onSuccess() {}
+
+                        @Override
+                        public void onFailure(String reason) {
+                            markEmailUnverified(user.getUid());
+                        }
+                    });
+                })
                 .addOnFailureListener(e -> callback.onFailure(e.getMessage()));
     }
 
@@ -77,71 +75,89 @@ public class AuthRepository {
     Trigger Cloud Function To Send Email OTP
     ----------------------------------------*/
     public void sendEmailOtp(String email, SendEmailOtpCallback callback) {
-        EmailOtpRequest request = new EmailOtpRequest(email);
-        service.sendEmailOtp(request).enqueue(new Callback<>() {
-            @Override
-            public void onResponse(@NonNull Call<ResponseBody> call, @NonNull Response<ResponseBody> response) {
-                if (response.isSuccessful()) {
-                    callback.onSuccess();
-                } else {
-                    String reason = ResponseHandler.getErrorMessage(response);
-                    callback.onFailure(reason);
-                }
-            }
+        Map<String, Object> data = new HashMap<>();
+        data.put("email", email);
 
-            @Override
-            public void onFailure(@NonNull Call<ResponseBody> call, @NonNull Throwable t) {
-                callback.onFailure(t.getMessage());
-            }
-        });
+        functions.getHttpsCallable("sendEmailOtp")
+                .call(data)
+                .addOnSuccessListener(result -> callback.onSuccess())
+                .addOnFailureListener(e -> callback.onFailure(e.getMessage()));
     }
 
     /*------------------------------------------
     Trigger Cloud Function To Verify Email OTP
     ------------------------------------------*/
     public void verifyEmailOtp(String email, String otp, VerifyEmailOtpCallback callback) {
-        EmailOtpVerify verify = new EmailOtpVerify(email, otp);
-        service.verifyEmailOtp(verify).enqueue(new Callback<>() {
-            @Override
-            public void onResponse(@NonNull Call<ResponseBody> call, @NonNull Response<ResponseBody> response) {
-                if (response.isSuccessful()) {
-                    callback.onSuccess();
-                } else {
-                    String reason = ResponseHandler.getErrorMessage(response);
-                    callback.onFailure(reason);
-                }
-            }
+        Map<String, Object> data = new HashMap<>();
+        data.put("email", email);
+        data.put("otp", otp);
 
-            @Override
-            public void onFailure(@NonNull Call<ResponseBody> call, @NonNull Throwable t) {
-                callback.onFailure(t.getMessage());
-            }
-        });
+        functions.getHttpsCallable("verifyEmailOtp")
+                .call(data)
+                .addOnSuccessListener(result -> callback.onSuccess())
+                .addOnFailureListener(e -> callback.onFailure(e.getMessage()));
     }
 
     /*--------------------------------------------
     Trigger Cloud Function To Mark Email Verified
     --------------------------------------------*/
-    private void markUserEmailVerified() {
+    private void markUserEmailVerified(String uid, CreateAccountCallback callback) {
+        Map<String, Object> data = new HashMap<>();
+        data.put("uid", uid);
 
+        functions.getHttpsCallable("markEmailVerified")
+                .call(data)
+                .addOnSuccessListener(result -> callback.onSuccess())
+                .addOnFailureListener(e -> callback.onFailure(e.getMessage()));
+    }
+
+    /*--------------------------------------------
+    Save pending flag for Unverified users (Email)
+    --------------------------------------------*/
+    private void markEmailUnverified(String uid) {
+        db.collection("users")
+                .document(uid)
+                .update("emailVerifiedPending", true)
+                .addOnFailureListener(e -> Log.w("EmailFlag", "Failed to set emailVerifiedPending", e));
+    }
+
+    /*--------------------------------------------
+    SignIn User with Email && Password
+    --------------------------------------------*/
+    public void SignInWithEmailAndPassword(String email, String password, SignInCallback callback) {
+        auth.signInWithEmailAndPassword(email, password)
+                .addOnSuccessListener(authResult -> {
+                    callback.onSuccess();
+                })
+                .addOnFailureListener(e -> callback.onFailure(e.getMessage()));
     }
 
     /*---------------------------------------
     Callback Interfaces For Success/Failures
     ---------------------------------------*/
+    // CreateAccountCallback
     public interface CreateAccountCallback {
         void onSuccess();
 
         void onFailure(String reason);
     }
 
+    // SendEmailOtpCallback
     public interface SendEmailOtpCallback {
         void onSuccess();
 
         void onFailure(String reason);
     }
 
+    // VerifyEmailOtpCallback
     public interface VerifyEmailOtpCallback {
+        void onSuccess();
+
+        void onFailure(String reason);
+    }
+
+    // SignInCallback
+    public interface SignInCallback {
         void onSuccess();
 
         void onFailure(String reason);

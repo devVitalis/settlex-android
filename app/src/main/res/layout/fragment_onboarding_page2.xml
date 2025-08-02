@@ -15,8 +15,8 @@
 
         <com.google.android.material.imageview.ShapeableImageView
             android:id="@+id/img_intro_slide_2"
-            android:layout_width="270dp"
-            android:layout_height="270dp"
+            android:layout_width="290dp"
+            android:layout_height="290dp"
             android:scaleType="centerCrop"
             android:src="@drawable/img_intro_slide_2" />
     </LinearLayout>

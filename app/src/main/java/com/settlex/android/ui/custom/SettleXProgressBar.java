@@ -15,7 +15,7 @@ import android.view.animation.LinearInterpolator;
 
 import androidx.annotation.NonNull;
 
-public class SettleXProgressView extends View {
+public class SettleXProgressBar extends View {
 
     private Paint ringPaint;
     private Paint flashPaint;
@@ -26,12 +26,12 @@ public class SettleXProgressView extends View {
     private ValueAnimator rotationAnimator;
     private ValueAnimator pulseAnimator;
 
-    public SettleXProgressView(Context context) {
+    public SettleXProgressBar(Context context) {
         super(context);
         init();
     }
 
-    public SettleXProgressView(Context context, AttributeSet attrs) {
+    public SettleXProgressBar(Context context, AttributeSet attrs) {
         super(context, attrs);
         init();
     }

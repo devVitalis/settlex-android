@@ -26,17 +26,17 @@ import androidx.lifecycle.ViewModelProvider;
 
 import com.airbnb.lottie.RenderMode;
 import com.settlex.android.R;
-import com.settlex.android.controller.ProgressViewController;
 import com.settlex.android.databinding.FragmentSignUpEmailVerificationBinding;
-import com.settlex.android.utils.StringUtil;
 import com.settlex.android.ui.auth.viewmodel.AuthViewModel;
+import com.settlex.android.ui.common.SettleXProgressBarController;
+import com.settlex.android.utils.StringUtil;
 
 public class SignUpEmailVerificationFragment extends Fragment {
 
     private AuthViewModel vm;
     private CountDownTimer timer;
     private EditText[] otpCodeInputs;
-    private ProgressViewController progressBar;
+    private SettleXProgressBarController progressBar;
     private FragmentSignUpEmailVerificationBinding binding;
 
     /*----------------------------------
@@ -49,7 +49,7 @@ public class SignUpEmailVerificationFragment extends Fragment {
     public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         binding = FragmentSignUpEmailVerificationBinding.inflate(getLayoutInflater(), container, false);
 
-        progressBar = new ProgressViewController(binding.fragmentContainer);
+        progressBar = new SettleXProgressBarController(binding.fragmentContainer);
         vm = new ViewModelProvider(requireActivity()).get(AuthViewModel.class);
 
         setupStatusBar();
@@ -84,7 +84,7 @@ public class SignUpEmailVerificationFragment extends Fragment {
         binding.imgViewGoBack.setOnClickListener(v -> requireActivity().getSupportFragmentManager().popBackStack());
         binding.btnClearAll.setOnClickListener(view -> clearOtpInputs());
         binding.btnVerify.setOnClickListener(v -> verifyOtp());
-        binding.btnResendOtp.setOnClickListener(view -> resendEmailVerificationOtp());
+        binding.btnResendOtp.setOnClickListener(view -> resendEmailOtp());
     }
 
     /*------------------------------------
@@ -125,17 +125,18 @@ public class SignUpEmailVerificationFragment extends Fragment {
     /*------------------------------------
     Resend OTP to Email and Handle Result
     -------------------------------------*/
-    private void resendEmailVerificationOtp() {
+    private void resendEmailOtp() {
         progressBar.show();
         String email = vm.getEmail();
 
         vm.sendEmailOtp(email);
-        vm.getEmailOtpResult().observe(getViewLifecycleOwner(), result -> {
-            if (result.isSuccess()) {
+
+        vm.getEmailOtpResult().observe(getViewLifecycleOwner(), sendOtpResult -> {
+            if (sendOtpResult.isSuccess()) {
                 disableResendOtpBtn();
-                Toast.makeText(requireContext(), result.message(), Toast.LENGTH_SHORT).show();
+                Toast.makeText(requireContext(), sendOtpResult.message(), Toast.LENGTH_SHORT).show();
             } else {
-                binding.txtMessage.setText(result.message());
+                binding.txtMessage.setText(sendOtpResult.message());
                 binding.txtMessage.setVisibility(View.VISIBLE);
             }
             progressBar.hide();

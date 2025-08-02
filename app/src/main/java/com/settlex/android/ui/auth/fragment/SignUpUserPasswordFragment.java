@@ -24,8 +24,8 @@ import androidx.fragment.app.Fragment;
 import androidx.lifecycle.ViewModelProvider;
 
 import com.settlex.android.R;
-import com.settlex.android.controller.ProgressViewController;
-import com.settlex.android.data.remote.model.UserModel;
+import com.settlex.android.ui.common.SettleXProgressBarController;
+import com.settlex.android.data.model.UserModel;
 import com.settlex.android.databinding.FragmentSignUpUserPasswordBinding;
 import com.settlex.android.ui.activities.help.AuthHelpActivity;
 import com.settlex.android.ui.auth.viewmodel.AuthViewModel;
@@ -36,7 +36,7 @@ import java.util.Objects;
 public class SignUpUserPasswordFragment extends Fragment {
 
     private FragmentSignUpUserPasswordBinding binding;
-    private ProgressViewController progressBar;
+    private SettleXProgressBarController progressBar;
     private AuthViewModel vm;
 
     /*----------------------------
@@ -49,7 +49,7 @@ public class SignUpUserPasswordFragment extends Fragment {
     public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         binding = FragmentSignUpUserPasswordBinding.inflate(inflater, container, false);
 
-        progressBar = new ProgressViewController(binding.fragmentContainer);
+        progressBar = new SettleXProgressBarController(binding.fragmentContainer);
         vm = new ViewModelProvider(requireActivity()).get(AuthViewModel.class);
 
         setupStatusBar();
@@ -78,7 +78,7 @@ public class SignUpUserPasswordFragment extends Fragment {
         // Click Listeners
         binding.imgBackBefore.setOnClickListener(v -> requireActivity().getSupportFragmentManager().popBackStack());
         binding.btnHelp.setOnClickListener(v -> startActivity(new Intent(requireActivity(), AuthHelpActivity.class)));
-        binding.icExpendLess.setOnClickListener(v -> invitationCodeToggle());
+        binding.icExpendLess.setOnClickListener(v -> referralCodeToggle());
         binding.btnCreateAccount.setOnClickListener(v -> attemptAccountCreation());
     }
 
@@ -91,15 +91,16 @@ public class SignUpUserPasswordFragment extends Fragment {
         String password = Objects.requireNonNull(binding.editTxtPassword.getText()).toString().trim();
         String invitationCode = Objects.requireNonNull(binding.editTxtInvitationCode.getText()).toString().trim();
 
-        vm.updateUserFields(invitationCode);
+        vm.finalizeUserFields(invitationCode);
         UserModel user = vm.getUser().getValue();
-        vm.createUserAccount(user, vm.getEmail(), password);
 
-        vm.getAccountCreationResult().observe(getViewLifecycleOwner(), result -> {
-            if (result.isSuccess()) {
+        vm.signUpUser(user, vm.getEmail(), password);
+
+        vm.getSignUpResult().observe(getViewLifecycleOwner(), signUpResult -> {
+            if (signUpResult.isSuccess()) {
                 navigateToDashboard();
             } else {
-                binding.txtMessageInfo.setText(result.message());
+                binding.txtMessageInfo.setText(signUpResult.message());
                 binding.txtMessageInfo.setVisibility(View.VISIBLE);
             }
             progressBar.hide();
@@ -206,7 +207,7 @@ public class SignUpUserPasswordFragment extends Fragment {
     /*---------------------------------
     Toggle invitation code visibility
     ---------------------------------*/
-    private void invitationCodeToggle() {
+    private void referralCodeToggle() {
         boolean isVisible = binding.editTxtInvitationCode.getVisibility() == View.VISIBLE;
         binding.editTxtInvitationCode.setVisibility(isVisible ? View.GONE : View.VISIBLE);
         binding.icExpendLess.setImageResource(isVisible ? R.drawable.ic_expend_less : R.drawable.ic_expend_more);
@@ -219,6 +220,7 @@ public class SignUpUserPasswordFragment extends Fragment {
         Intent intent = new Intent(requireContext(), DashboardActivity.class);
         intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK);
         startActivity(intent);
+        requireActivity().finish();
     }
 
     /*---------------------------------------

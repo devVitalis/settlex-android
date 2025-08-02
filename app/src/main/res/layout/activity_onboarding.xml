@@ -36,7 +36,7 @@
         <!--ViewPager2 (Fragment Container)-->
         <androidx.viewpager2.widget.ViewPager2
             android:id="@+id/viewPager"
-            android:layout_centerHorizontal="true"
+            android:layout_centerInParent="true"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:scrollbars="none"/>

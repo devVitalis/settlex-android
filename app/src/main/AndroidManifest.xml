@@ -39,7 +39,7 @@
             android:name=".ui.Onboarding.activity.OnboardingActivity"
             android:exported="false" />
         <activity
-            android:name=".controller.SplashActivity"
+            android:name=".ui.activities.splash.SplashActivity"
             android:exported="true"
             android:theme="@style/Theme.SettleX.Splash">
             <intent-filter>

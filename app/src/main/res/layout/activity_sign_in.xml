@@ -25,11 +25,11 @@
 
             <ImageView
                 android:id="@+id/imgBackBefore"
-                android:layout_width="17dp"
-                android:layout_height="17dp"
+                android:layout_width="20dp"
+                android:layout_height="20dp"
                 android:layout_alignParentStart="true"
                 android:layout_centerVertical="true"
-                android:layout_marginStart="20dp"
+                android:layout_marginStart="15dp"
                 android:contentDescription="Arrow Back"
                 android:scaleType="centerCrop"
                 android:src="@drawable/ic_arrow_back" />
@@ -85,69 +85,100 @@
                     android:layout_height="80dp"
                     android:layout_gravity="center"
                     android:layout_marginTop="50dp"
-                    android:layout_marginBottom="10dp"
                     android:contentDescription="Logo"
                     android:scaleType="fitCenter"
                     android:src="@drawable/logo_with_txt" />
 
-                <!--Email field-->
-                <com.google.android.material.textfield.TextInputLayout
-                    android:id="@+id/txtInputLayoutEmail"
-                    style="@style/Widget.SettleXApp.TextInputLayout.Outlined"
+                <RelativeLayout
+                    android:id="@+id/signInError"
                     android:layout_width="match_parent"
-                    android:layout_height="56dp"
-                    android:layout_gravity="center"
-                    android:gravity="center"
-                    android:hint="Enter your email address"
-                    android:orientation="horizontal"
-                    app:endIconMode="clear_text">
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="10dp"
+                    android:background="@drawable/bg_8dp_sign_in_error"
+                    android:padding="5dp"
+                    android:visibility="gone">
 
-                    <com.google.android.material.textfield.TextInputEditText
+                    <ImageView
+                        android:id="@+id/ic_cancel"
+                        android:layout_width="20dp"
+                        android:layout_height="20dp"
+                        android:layout_alignParentStart="true"
+                        android:layout_centerVertical="true"
+                        android:src="@drawable/ic_cancel"
+                        app:tint="@color/red" />
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_centerInParent="true"
+                        android:layout_marginStart="2dp"
+                        android:layout_toEndOf="@+id/ic_cancel"
+                        android:fontFamily="@font/poppins_light"
+                        android:includeFontPadding="false"
+                        android:text="You have 4 chances before your account is locked for 2hrs"
+                        android:textColor="@color/red"
+                        android:textSize="12sp" />
+                </RelativeLayout>
+
+                <!--Email field-->
+                <RelativeLayout
+                    android:id="@+id/emailInputBg"
+                    android:layout_width="match_parent"
+                    android:layout_height="55dp"
+                    android:layout_marginTop="10dp"
+                    android:background="@drawable/bg_edit_txt_custom_gray_not_focused"
+                    android:focusable="true"
+                    android:focusableInTouchMode="true">
+
+                    <!-- Phone Number Input -->
+                    <EditText
                         android:id="@+id/editTxtEmail"
                         android:layout_width="match_parent"
                         android:layout_height="match_parent"
+                        android:background="@android:color/transparent"
                         android:focusable="false"
                         android:focusableInTouchMode="false"
-                        android:gravity="start|center_vertical"
-                        android:imeOptions="actionNext"
+                        android:fontFamily="@font/poppins_regular"
+                        android:hint="Enter your email address"
                         android:includeFontPadding="false"
                         android:inputType="textEmailAddress"
-                        android:paddingHorizontal="20dp"
+                        android:paddingHorizontal="15dp"
+                        android:textColor="@color/black"
                         android:textColorHint="@color/gray"
                         android:textSize="14sp" />
-                </com.google.android.material.textfield.TextInputLayout>
+                </RelativeLayout>
 
                 <!--Password field-->
-                <com.google.android.material.textfield.TextInputLayout
-                    android:id="@+id/txtInputLayoutPassword"
-                    style="@style/Widget.SettleXApp.TextInputLayout.Outlined"
+                <RelativeLayout
+                    android:id="@+id/passwordInputBg"
                     android:layout_width="match_parent"
-                    android:layout_height="56dp"
-                    android:layout_gravity="center"
+                    android:layout_height="55dp"
                     android:layout_marginTop="10dp"
-                    android:gravity="center"
-                    android:hint="Enter your password"
-                    android:orientation="horizontal"
-                    app:endIconMode="password_toggle">
+                    android:background="@drawable/bg_edit_txt_custom_gray_not_focused"
+                    android:focusable="true"
+                    android:focusableInTouchMode="true">
 
-                    <com.google.android.material.textfield.TextInputEditText
+                    <EditText
                         android:id="@+id/editTxtPassword"
                         android:layout_width="match_parent"
                         android:layout_height="match_parent"
+                        android:background="@android:color/transparent"
+                        android:drawableEnd="@drawable/ic_visibility_lock"
                         android:focusable="false"
                         android:focusableInTouchMode="false"
-                        android:gravity="start|center_vertical"
-                        android:imeOptions="actionDone"
+                        android:fontFamily="@font/poppins_regular"
+                        android:hint="Enter your password"
                         android:includeFontPadding="false"
                         android:inputType="textPassword"
-                        android:paddingHorizontal="20dp"
+                        android:paddingHorizontal="15dp"
+                        android:textColor="@color/black"
                         android:textColorHint="@color/gray"
                         android:textSize="14sp" />
-                </com.google.android.material.textfield.TextInputLayout>
+                </RelativeLayout>
 
                 <!--Forgot Password TxT-->
                 <TextView
-                    android:id="@+id/txtForgotPassword"
+                    android:id="@+id/btnForgotPassword"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_gravity="end"
@@ -182,7 +213,7 @@
 
             <!--Sign Up TxT-->
             <TextView
-                android:id="@+id/txtRegister"
+                android:id="@+id/btnSignUp"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_centerInParent="true"
@@ -196,9 +227,9 @@
         </RelativeLayout>
     </RelativeLayout>
 
-        <include
-            layout="@layout/progressbar_overlay"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent" />
+    <include
+        layout="@layout/progressbar_overlay"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent" />
 </FrameLayout>
 

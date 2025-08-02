@@ -40,11 +40,9 @@ public class StringUtil {
         return result.toString().trim();
     }
 
-
-    /*----------------------------------------
-     Format amount to ₦ with commas
-     e.g. 1500 → ₦1,500.00
-    ----------------------------------------*/
+    /*-----------------------------------------------------
+    Format amount to ₦ with commas e.g. 1500 → ₦1,500.00
+    -----------------------------------------------------*/
     public static String formatToNaira(double amount) {
         NumberFormat formatter = NumberFormat.getCurrencyInstance(new Locale("en", "NG"));
         return formatter.format(amount);

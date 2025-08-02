@@ -1,7 +1,4 @@
-package com.settlex.android.controller;
-
-import static android.content.Intent.FLAG_ACTIVITY_CLEAR_TASK;
-import static android.content.Intent.FLAG_ACTIVITY_CLEAR_TOP;
+package com.settlex.android.ui.activities.splash;
 
 import android.annotation.SuppressLint;
 import android.app.Activity;
@@ -13,10 +10,11 @@ import android.os.Looper;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.splashscreen.SplashScreen;
 
-import com.settlex.android.data.local.AppOnboardingPrefs;
-import com.settlex.android.manager.SessionManager;
+import com.settlex.android.data.local.OnboardingPrefs;
+import com.settlex.android.data.local.session.SessionManager;
 import com.settlex.android.ui.Onboarding.activity.OnboardingActivity;
 import com.settlex.android.ui.auth.activity.PasscodeLoginActivity;
+import com.settlex.android.ui.auth.activity.SignInActivity;
 
 @SuppressLint("CustomSplashScreen")
 public class SplashActivity extends AppCompatActivity {
@@ -32,7 +30,7 @@ public class SplashActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
 
         SessionManager sm = SessionManager.getInstance();
-        AppOnboardingPrefs prefs = new AppOnboardingPrefs(this);
+        OnboardingPrefs prefs = new OnboardingPrefs(this);
 
         new Handler(Looper.getMainLooper()).postDelayed(() -> {
             keepSplashVisible = false;
@@ -43,7 +41,7 @@ public class SplashActivity extends AppCompatActivity {
 
             } else if (!sm.isUserLoggedIn() || !sm.hasPasscode()) {
                 // User hasn't logged in yet || Logged in but no passcode set
-                loadActivity(OnboardingActivity.class);
+                loadActivity(SignInActivity.class);
 
             } else {
                 // User is logged in and has passcode
@@ -57,7 +55,7 @@ public class SplashActivity extends AppCompatActivity {
     -----------------------------*/
     private void loadActivity(Class<? extends Activity> activityClass) {
         Intent intent = new Intent(this, activityClass);
-        intent.addFlags(FLAG_ACTIVITY_CLEAR_TASK | FLAG_ACTIVITY_CLEAR_TOP);
         startActivity(intent);
+        finish();
     }
 }

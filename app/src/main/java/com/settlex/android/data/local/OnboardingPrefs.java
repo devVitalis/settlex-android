@@ -3,9 +3,9 @@ package com.settlex.android.data.local;
 import android.content.Context;
 import android.content.SharedPreferences;
 
-public class AppOnboardingPrefs {
+public class OnboardingPrefs {
 
-    public static final String PREF_NAME = "app_onboarding";
+    public static final String PREF_NAME = "onboarding";
     public static final String KEY_NAME_INTRO_VIEWED = "intro_viewed";
 
     private final SharedPreferences prefs;
@@ -14,7 +14,7 @@ public class AppOnboardingPrefs {
     /*-----------------------------------------
     Constructor for app-wide (non-user) flags
     ------------------------------------------*/
-    public AppOnboardingPrefs(Context context) {
+    public OnboardingPrefs(Context context) {
         prefs = context.getSharedPreferences(PREF_NAME, Context.MODE_PRIVATE);
         editor = prefs.edit();
     }

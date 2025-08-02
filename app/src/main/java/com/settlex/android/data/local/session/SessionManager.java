@@ -1,16 +1,17 @@
-package com.settlex.android.manager;
+package com.settlex.android.data.local.session;
 
 import android.content.Context;
 import android.content.SharedPreferences;
 
 import com.settlex.android.SettleXApp;
+import com.settlex.android.data.local.UserOnboardPrefs;
 
 /*-------------------------------------------------
 Handles app-wide user session and user-scoped prefs
 --------------------------------------------------*/
 public class SessionManager {
 
-    private static final String PREF_NAME = "settle_x_session";
+    private static final String PREF_NAME = "session_prefs";
     private static final String KEY_USER_UID = "user_uid";
     private static final String KEY_USER_EMAIL = "user_email";
     private static final String KEY_USER_FIRSTNAME = "user_firstname";
@@ -21,7 +22,7 @@ public class SessionManager {
     private final SharedPreferences prefs;
     private final SharedPreferences.Editor editor;
 
-    private UserOnboardingPrefs onboardingPrefs;
+    private UserOnboardPrefs onboardingPrefs;
 
     /*------------------------------------
     Private constructor with app context
@@ -32,7 +33,7 @@ public class SessionManager {
 
         String uid = getUserUid();
         if (uid != null) {
-            onboardingPrefs = new UserOnboardingPrefs(context, uid);
+            onboardingPrefs = new UserOnboardPrefs(context, uid);
         }
     }
 
@@ -55,7 +56,7 @@ public class SessionManager {
         editor.putBoolean(KEY_HAS_PASSCODE, hasPasscode);
         editor.apply();
 
-        onboardingPrefs = new UserOnboardingPrefs(SettleXApp.getInstance(), uid);
+        onboardingPrefs = new UserOnboardPrefs(SettleXApp.getInstance(), uid);
     }
 
     public String getUserUid() {
@@ -90,7 +91,7 @@ public class SessionManager {
     /*--------------------------------------------------
     Access to user-scoped onboarding preferences
     --------------------------------------------------*/
-    public UserOnboardingPrefs getOnboardingPrefs() {
+    public UserOnboardPrefs getOnboardingPrefs() {
         if (onboardingPrefs == null) {
             throw new IllegalStateException("User-scoped preferences not initialized. Make sure user is logged in.");
         }

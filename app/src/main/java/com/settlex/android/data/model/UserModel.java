@@ -1,4 +1,4 @@
-package com.settlex.android.data.remote.model;
+package com.settlex.android.data.model;
 
 import java.util.HashMap;
 import java.util.Map;

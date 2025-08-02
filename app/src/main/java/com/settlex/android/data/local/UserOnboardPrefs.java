@@ -1,4 +1,4 @@
-package com.settlex.android.manager;
+package com.settlex.android.data.local;
 
 import android.content.Context;
 import android.content.SharedPreferences;
@@ -9,9 +9,9 @@ Handles onboarding-related preferences
 - Uses UID to scope preferences per user
 - Only `introViewed` is global (non-user scoped)
 --------------------------------------------------*/
-public class UserOnboardingPrefs {
+public class UserOnboardPrefs {
 
-    private static final String PREF_NAME = "user_onboarding";
+    private static final String PREF_NAME = "user_onboard_prefs";
     private static final String KEY_NOTIFICATION_PROMPT_SHOWN = "onboard_notification_prompt_shown";
     private static final String KEY_PASSCODE_PROMPT_SHOWN = "onboard_passcode_prompt_shown";
     private static final String KEY_FINGERPRINT_ENABLED = "onboard_fingerprint_enabled";
@@ -23,7 +23,7 @@ public class UserOnboardingPrefs {
     Constructor with UID for user-scoped preferences
     Used after account creation (e.g., biometrics, prompts)
     --------------------------------------------------*/
-    public UserOnboardingPrefs(Context context, String uid) {
+    public UserOnboardPrefs(Context context, String uid) {
         prefs = context.getSharedPreferences(PREF_NAME + "_" + uid, Context.MODE_PRIVATE);
         editor = prefs.edit();
     }
