@@ -175,7 +175,7 @@ public class AuthViewModel extends ViewModel {
     SignIn user and POST result to UI (Email && Password)
     ------------------------------------------------------*/
     public void signInUser(String email, String password) {
-        authRepo.SignInWithEmailAndPassword(email, password, new AuthRepository.SignInCallback() {
+        authRepo.signInWithEmail(email, password, new AuthRepository.SignInCallback() {
             @Override
             public void onSuccess() {
                 signInResult.postValue(new AuthResult(true, ""));

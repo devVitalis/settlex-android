@@ -28,11 +28,11 @@ import androidx.fragment.app.Fragment;
 import androidx.lifecycle.ViewModelProvider;
 
 import com.settlex.android.R;
-import com.settlex.android.ui.common.SettleXProgressBarController;
 import com.settlex.android.databinding.FragmentSignUpUserContactInfoBinding;
 import com.settlex.android.ui.activities.legal.PrivacyPolicyActivity;
 import com.settlex.android.ui.activities.legal.TermsAndConditionsActivity;
 import com.settlex.android.ui.auth.viewmodel.AuthViewModel;
+import com.settlex.android.ui.common.SettleXProgressBarController;
 
 import java.util.Objects;
 
@@ -78,7 +78,10 @@ public class SignUpUserContactInfoFragment extends Fragment {
         setupUI(binding.fragmentContainer);
 
         // Click Listeners
-        binding.imgBackBefore.setOnClickListener(v -> {requireActivity().getOnBackPressedDispatcher().onBackPressed(); requireActivity().finish();});
+        binding.imgBackBefore.setOnClickListener(v -> {
+            requireActivity().getOnBackPressedDispatcher().onBackPressed();
+            requireActivity().finish();
+        });
         binding.btnHelp.setOnClickListener(v -> loadFragment(new SignUpUserPasswordFragment()));
         binding.btnContinue.setOnClickListener(v -> saveUserInfoAndSendEmailOtp());
     }
@@ -141,16 +144,16 @@ public class SignUpUserContactInfoFragment extends Fragment {
     private void setupEditTxtFocusHandler() {
         binding.editTxtPhoneNumber.setOnFocusChangeListener((view, hasFocus) -> {
             if (hasFocus) {
-                binding.phoneInputBg.setBackgroundResource(R.drawable.bg_edit_txt_custom_white_focused);
+                binding.editTxtPhoneNumberBg.setBackgroundResource(R.drawable.bg_edit_txt_custom_white_focused);
             } else {
-                binding.phoneInputBg.setBackgroundResource(R.drawable.bg_edit_txt_custom_white_not_focused);
+                binding.editTxtPhoneNumberBg.setBackgroundResource(R.drawable.bg_edit_txt_custom_white_not_focused);
             }
         });
         binding.editTxtEmail.setOnFocusChangeListener((view, hasFocus) -> {
             if (hasFocus) {
-                binding.emailInputBg.setBackgroundResource(R.drawable.bg_edit_txt_custom_white_focused);
+                binding.editTxtEmailBg.setBackgroundResource(R.drawable.bg_edit_txt_custom_white_focused);
             } else {
-                binding.emailInputBg.setBackgroundResource(R.drawable.bg_edit_txt_custom_white_not_focused);
+                binding.editTxtEmailBg.setBackgroundResource(R.drawable.bg_edit_txt_custom_white_not_focused);
             }
         });
     }

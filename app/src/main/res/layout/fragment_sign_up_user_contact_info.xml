@@ -180,7 +180,7 @@
 
                 <!--Email Field-->
                 <RelativeLayout
-                    android:id="@+id/emailInputBg"
+                    android:id="@+id/editTxtEmailBg"
                     android:layout_width="match_parent"
                     android:layout_height="55dp"
                     android:background="@drawable/bg_edit_txt_custom_white_not_focused"
@@ -221,7 +221,7 @@
 
                 <!--Phone Number Input (Custom)-->
                 <RelativeLayout
-                    android:id="@+id/phoneInputBg"
+                    android:id="@+id/editTxtPhoneNumberBg"
                     android:layout_width="match_parent"
                     android:layout_height="55dp"
                     android:layout_marginTop="10dp"

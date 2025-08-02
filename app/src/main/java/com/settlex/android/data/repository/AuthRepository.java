@@ -2,12 +2,17 @@ package com.settlex.android.data.repository;
 
 import android.util.Log;
 
+import com.google.firebase.Timestamp;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseAuthUserCollisionException;
+import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.FirebaseFirestore;
+import com.google.firebase.firestore.SetOptions;
 import com.google.firebase.functions.FirebaseFunctions;
 import com.settlex.android.data.model.UserModel;
 
+import java.util.Calendar;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -60,7 +65,8 @@ public class AuthRepository {
 
                     markUserEmailVerified(user.getUid(), new CreateAccountCallback() {
                         @Override
-                        public void onSuccess() {}
+                        public void onSuccess() {
+                        }
 
                         @Override
                         public void onFailure(String reason) {
@@ -92,6 +98,7 @@ public class AuthRepository {
         data.put("email", email);
         data.put("otp", otp);
 
+        //TODO: Delete Otp Request on Verification Success
         functions.getHttpsCallable("verifyEmailOtp")
                 .call(data)
                 .addOnSuccessListener(result -> callback.onSuccess())
@@ -124,13 +131,77 @@ public class AuthRepository {
     /*--------------------------------------------
     SignIn User with Email && Password
     --------------------------------------------*/
-    public void SignInWithEmailAndPassword(String email, String password, SignInCallback callback) {
+    /*
+    public void signInWithEmailAndPassword(String email, String password, SignInCallback callback) {
         auth.signInWithEmailAndPassword(email, password)
                 .addOnSuccessListener(authResult -> {
                     callback.onSuccess();
                 })
                 .addOnFailureListener(e -> callback.onFailure(e.getMessage()));
     }
+     */
+
+    /*------------------------------------
+    Sign in Method with Lockout Handling
+-------------------------------------*/
+    public void signInWithEmail(String email, String password, SignInCallback callback) {
+        DocumentReference attemptRef = db.collection("login_attempts").document(email);
+
+        // Step 1: Check if lockUntil is still active
+        attemptRef.get()
+                .addOnSuccessListener(doc -> {
+                    if (doc.exists()) {
+                        Timestamp lockUntil = doc.getTimestamp("lockUntil");
+
+                        if (lockUntil != null && lockUntil.toDate().after(new Date())) {
+                            callback.onFailure("Account locked. Try again later.");
+                            return;
+                        }
+                    } else {
+
+                    // Step 2: Proceed with Firebase sign-in
+                    auth.signInWithEmailAndPassword(email, password)
+                            .addOnSuccessListener(authResult -> {
+                                // Step 3: Delete login_attempts doc on success if it exists
+                                if (doc.exists()) {
+                                    attemptRef.delete();
+                                }
+                                callback.onSuccess();
+                            })
+                            .addOnFailureListener(e -> {
+                                // Step 4: On failure, increment failedAttempts or create doc
+                                if (doc.exists()) {
+                                    Long failedAttempts = doc.getLong("failedAttempts");
+                                    failedAttempts = (failedAttempts != null) ? failedAttempts + 1 : 1;
+
+                                    Map<String, Object> updateData = new HashMap<>();
+                                    updateData.put("failedAttempts", failedAttempts);
+
+                                    if (failedAttempts >= 5) {
+                                        Calendar cal = Calendar.getInstance();
+                                        cal.add(Calendar.HOUR, 1);
+                                        updateData.put("lockUntil", new Timestamp(cal.getTime()));
+                                    }
+
+                                    attemptRef.set(updateData, SetOptions.merge());
+                                } else {
+                                    // First failure: create doc
+                                    Map<String, Object> data = new HashMap<>();
+                                    data.put("failedAttempts", 1);
+                                    attemptRef.set(data);
+                                }
+
+                                callback.onFailure(e.getMessage());
+                            });
+                    }
+
+                })
+                .addOnFailureListener(e -> {
+                    // Firestore read failure fallback
+                    callback.onFailure("Login failed. Try again.");
+                });
+    }
+
 
     /*---------------------------------------
     Callback Interfaces For Success/Failures

@@ -1,15 +1,13 @@
 package com.settlex.android.ui.auth.activity;
 
-import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 import android.graphics.Rect;
-import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.text.Editable;
 import android.text.Html;
-import android.text.InputType;
+import android.text.TextUtils;
 import android.text.TextWatcher;
 import android.view.MotionEvent;
 import android.view.View;
@@ -35,11 +33,6 @@ public class SignInActivity extends AppCompatActivity {
     private ActivitySignInBinding binding;
     private SettleXProgressBarController progressBar;
 
-    private final boolean[] isPasswordVisible = {false};
-    private Drawable icVisibilityOn;
-    private Drawable icVisibilityLock;
-
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -60,8 +53,10 @@ public class SignInActivity extends AppCompatActivity {
         reEnableFocus();
         formatSignUpText();
         setupEditTxtInputWatcher();
-        setupPasswordToggle();
-        setupEditTxtInputFocusHandler();
+        setupEditTxtEmailFocusHandler();
+
+        // Hide end icon on default
+        binding.txtInputLayoutPassword.setEndIconVisible(false);
 
         // Handle Click Listeners
         binding.imgBackBefore.setOnClickListener(v -> getOnBackPressedDispatcher().onBackPressed());
@@ -70,20 +65,6 @@ public class SignInActivity extends AppCompatActivity {
         binding.btnSignIn.setOnClickListener(v -> attemptSignIn());
     }
 
-    /*--------------------------------
-    Enable focus on tap for EditTexts
-    ---------------------------------*/
-    private void reEnableFocus() {
-        View.OnClickListener enableFocusListener = v -> {
-            if (v instanceof EditText editText) {
-                editText.setFocusable(true);
-                editText.setFocusableInTouchMode(true);
-                editText.requestFocus();
-            }
-        };
-        binding.editTxtEmail.setOnClickListener(enableFocusListener);
-        binding.editTxtPassword.setOnClickListener(enableFocusListener);
-    }
 
     /*-----------------------------------
     Sign in with Email && Password ()
@@ -107,28 +88,37 @@ public class SignInActivity extends AppCompatActivity {
         });
     }
 
+    /*--------------------------------
+    Enable focus on tap for EditTexts
+    ---------------------------------*/
+    private void reEnableFocus() {
+        View.OnClickListener enableFocusListener = v -> {
+            if (v instanceof EditText editText) {
+                editText.setFocusable(true);
+                editText.setFocusableInTouchMode(true);
+                editText.requestFocus();
+            }
+        };
+        binding.editTxtEmail.setOnClickListener(enableFocusListener);
+        binding.editTxtPassword.setOnClickListener(enableFocusListener);
+    }
+
     /*-------------------------------------------
     Enable Dynamic Stroke Color on editText bg
     -------------------------------------------*/
-    private void setupEditTxtInputFocusHandler() {
+    private void setupEditTxtEmailFocusHandler() {
         binding.editTxtEmail.setOnFocusChangeListener((view, hasFocus) -> {
             if (hasFocus) {
-                binding.emailInputBg.setBackgroundResource(R.drawable.bg_edit_txt_custom_gray_focused);
+                binding.editTxtEmailBg.setBackgroundResource(R.drawable.bg_edit_txt_custom_gray_focused);
             } else {
-                binding.emailInputBg.setBackgroundResource(R.drawable.bg_edit_txt_custom_gray_not_focused);
-            }
-        });
-        binding.editTxtPassword.setOnFocusChangeListener((view, hasFocus) -> {
-            if (hasFocus) {
-                binding.passwordInputBg.setBackgroundResource(R.drawable.bg_edit_txt_custom_gray_focused);
-            } else {
-                binding.passwordInputBg.setBackgroundResource(R.drawable.bg_edit_txt_custom_gray_not_focused);
+                binding.editTxtEmailBg.setBackgroundResource(R.drawable.bg_edit_txt_custom_gray_not_focused);
             }
         });
     }
 
     /*-------------------------------------------------
     Enable login button only when both fields filled
+    * && Handle Password End Icon Visibility
     -------------------------------------------------*/
     private void setupEditTxtInputWatcher() {
         TextWatcher watcher = new TextWatcher() {
@@ -153,85 +143,24 @@ public class SignInActivity extends AppCompatActivity {
         };
         binding.editTxtEmail.addTextChangedListener(watcher);
         binding.editTxtPassword.addTextChangedListener(watcher);
-    }
 
-    /*------------------------------------
-    Setup Method for Password Toggle
-    -------------------------------------*/
-    @SuppressLint("ClickableViewAccessibility")
-    private void setupPasswordToggle() {
-        icVisibilityOn = ContextCompat.getDrawable(this, R.drawable.ic_visibility_on);
-        icVisibilityLock = ContextCompat.getDrawable(this, R.drawable.ic_visibility_lock);
-
-        EditText editTxtPassword = binding.editTxtPassword;
-
-        editTxtPassword.setCompoundDrawablesWithIntrinsicBounds(null, null, null, null);
-
-        // Listen for text changes
-        editTxtPassword.addTextChangedListener(new TextWatcher() {
+        // End Icon Visibility
+        binding.editTxtPassword.addTextChangedListener(new TextWatcher() {
             @Override
-            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+            public void afterTextChanged(Editable editable) {
+
             }
 
             @Override
-            public void afterTextChanged(Editable s) {
+            public void beforeTextChanged(CharSequence charSequence, int i, int i1, int i2) {
             }
 
             @Override
-            public void onTextChanged(CharSequence s, int start, int before, int count) {
-                boolean showToggle = s.length() > 0;
-                updatePasswordToggle(showToggle);
+            public void onTextChanged(CharSequence charSequence, int i, int i1, int i2) {
+                boolean isEmpty = TextUtils.isEmpty(charSequence);
+                binding.txtInputLayoutPassword.setEndIconVisible(!isEmpty);
             }
         });
-
-        // Handle toggle icon click
-        editTxtPassword.setOnTouchListener((v, event) -> {
-            if (event.getAction() == MotionEvent.ACTION_UP) {
-                Drawable drawableEnd = editTxtPassword.getCompoundDrawables()[2];
-                if (drawableEnd != null) {
-                    int drawableWidth = drawableEnd.getBounds().width();
-                    int touchStart = editTxtPassword.getWidth()
-                            - editTxtPassword.getPaddingEnd()
-                            - drawableWidth;
-                    if (event.getX() >= touchStart) {
-                        togglePasswordVisibility(editTxtPassword);
-                        return true;
-                    }
-                }
-            }
-            return false;
-        });
-    }
-
-    /*------------------------------------
-    Toggle Password Visibility
-    -------------------------------------*/
-    private void togglePasswordVisibility(EditText editText) {
-        if (isPasswordVisible[0]) {
-            editText.setInputType(InputType.TYPE_CLASS_TEXT | InputType.TYPE_TEXT_VARIATION_PASSWORD);
-            editText.setCompoundDrawablesWithIntrinsicBounds(null, null, icVisibilityLock, null);
-        } else {
-            editText.setInputType(InputType.TYPE_CLASS_TEXT | InputType.TYPE_TEXT_VARIATION_VISIBLE_PASSWORD);
-            editText.setCompoundDrawablesWithIntrinsicBounds(null, null, icVisibilityOn, null);
-        }
-        isPasswordVisible[0] = !isPasswordVisible[0];
-        editText.setSelection(editText.getText().length());
-    }
-
-    /*------------------------------------
-    Show or Hide Toggle Icon
-    -------------------------------------*/
-    private void updatePasswordToggle(boolean showToggle) {
-        EditText editText = binding.editTxtPassword;
-        if (showToggle) {
-            if (isPasswordVisible[0]) {
-                editText.setCompoundDrawablesWithIntrinsicBounds(null, null, icVisibilityOn, null);
-            } else {
-                editText.setCompoundDrawablesWithIntrinsicBounds(null, null, icVisibilityLock, null);
-            }
-        } else {
-            editText.setCompoundDrawablesWithIntrinsicBounds(null, null, null, null);
-        }
     }
 
     /*----------------------------

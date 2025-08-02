@@ -81,13 +81,48 @@
 
                 <!--Logo-->
                 <ImageView
-                    android:layout_width="80dp"
-                    android:layout_height="80dp"
+                    android:layout_width="100dp"
+                    android:layout_height="40dp"
                     android:layout_gravity="center"
-                    android:layout_marginTop="50dp"
+                    android:layout_marginTop="40dp"
                     android:contentDescription="Logo"
                     android:scaleType="fitCenter"
-                    android:src="@drawable/logo_with_txt" />
+                    android:src="@drawable/logo_txt" />
+
+                <!--User Account Layout-->
+                <RelativeLayout
+                    android:id="@+id/userAccountLayout"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="10dp"
+                    android:layout_marginBottom="30dp"
+                    android:visibility="gone">
+
+                    <!--Avatar-->
+                    <ImageView
+                        android:id="@+id/avatar"
+                        android:layout_width="80dp"
+                        android:layout_height="80dp"
+                        android:layout_centerHorizontal="true"
+                        android:contentDescription="Avatar"
+                        android:src="@drawable/ic_avatar" />
+
+                    <!--User Account-->
+                    <TextView
+                        android:id="@+id/userAccount"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_below="@id/avatar"
+                        android:layout_centerHorizontal="true"
+                        android:layout_marginTop="10dp"
+                        android:fontFamily="@font/poppins_regular"
+                        android:includeFontPadding="false"
+                        android:text="Hi, メ • Ʋɨȶǟʟɨֆ\n(b***k@gmail.com)"
+                        android:textAlignment="center"
+                        android:textColor="@color/black"
+                        android:textSize="15sp"
+                        android:textStyle="bold" />
+                </RelativeLayout>
 
                 <RelativeLayout
                     android:id="@+id/signInError"
@@ -120,17 +155,17 @@
                         android:textSize="12sp" />
                 </RelativeLayout>
 
-                <!--Email field-->
+                <!--Email field Background-->
                 <RelativeLayout
-                    android:id="@+id/emailInputBg"
+                    android:id="@+id/edit_txt_email_bg"
                     android:layout_width="match_parent"
                     android:layout_height="55dp"
-                    android:layout_marginTop="10dp"
+                    android:layout_marginTop="30dp"
                     android:background="@drawable/bg_edit_txt_custom_gray_not_focused"
                     android:focusable="true"
                     android:focusableInTouchMode="true">
 
-                    <!-- Phone Number Input -->
+                    <!--Email field-->
                     <EditText
                         android:id="@+id/editTxtEmail"
                         android:layout_width="match_parent"
@@ -148,33 +183,35 @@
                         android:textSize="14sp" />
                 </RelativeLayout>
 
-                <!--Password field-->
-                <RelativeLayout
-                    android:id="@+id/passwordInputBg"
+                <!--Password Field-->
+                <com.google.android.material.textfield.TextInputLayout
+                    android:id="@+id/txtInputLayoutPassword"
+                    style="@style/Widget.SettleXApp.TextInputLayout.Outlined"
                     android:layout_width="match_parent"
-                    android:layout_height="55dp"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center"
                     android:layout_marginTop="10dp"
-                    android:background="@drawable/bg_edit_txt_custom_gray_not_focused"
-                    android:focusable="true"
-                    android:focusableInTouchMode="true">
+                    android:gravity="center"
+                    android:hint="Enter your password"
+                    android:orientation="horizontal"
+                    app:endIconMode="password_toggle">
 
-                    <EditText
+                    <com.google.android.material.textfield.TextInputEditText
                         android:id="@+id/editTxtPassword"
                         android:layout_width="match_parent"
-                        android:layout_height="match_parent"
-                        android:background="@android:color/transparent"
-                        android:drawableEnd="@drawable/ic_visibility_lock"
+                        android:layout_height="55dp"
                         android:focusable="false"
                         android:focusableInTouchMode="false"
                         android:fontFamily="@font/poppins_regular"
-                        android:hint="Enter your password"
+                        android:gravity="start|center_vertical"
+                        android:imeOptions="actionNext"
                         android:includeFontPadding="false"
                         android:inputType="textPassword"
-                        android:paddingHorizontal="15dp"
+                        android:paddingHorizontal="20dp"
                         android:textColor="@color/black"
                         android:textColorHint="@color/gray"
                         android:textSize="14sp" />
-                </RelativeLayout>
+                </com.google.android.material.textfield.TextInputLayout>
 
                 <!--Forgot Password TxT-->
                 <TextView
@@ -182,7 +219,7 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_gravity="end"
-                    android:layout_marginTop="5dp"
+                    android:layout_marginTop="10dp"
                     android:fontFamily="@font/poppins_light"
                     android:gravity="center"
                     android:includeFontPadding="false"
@@ -197,7 +234,8 @@
                     android:layout_width="match_parent"
                     android:layout_height="55dp"
                     android:layout_gravity="center"
-                    android:layout_marginTop="40dp"
+                    android:layout_marginHorizontal="15dp"
+                    android:layout_marginTop="30dp"
                     android:enabled="false"
                     android:text="Sign in"
                     android:textSize="14sp" />
