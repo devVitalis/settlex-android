@@ -31,6 +31,17 @@ public class AuthRepository {
         functions = FirebaseFunctions.getInstance("europe-west2");
     }
 
+    /*--------------------------------------------
+    SignIn User with Email && Password
+    --------------------------------------------*/
+    public void signInWithEmail(String email, String password, SignInCallback callback) {
+        auth.signInWithEmailAndPassword(email, password)
+                .addOnSuccessListener(authResult -> {
+                    callback.onSuccess();
+                })
+                .addOnFailureListener(e -> callback.onFailure(e.getMessage()));
+    }
+
     /*-------------------------------------------
     Create user Account with email && Password
     -------------------------------------------*/
@@ -128,22 +139,10 @@ public class AuthRepository {
                 .addOnFailureListener(e -> Log.w("EmailFlag", "Failed to set emailVerifiedPending", e));
     }
 
-    /*--------------------------------------------
-    SignIn User with Email && Password
-    --------------------------------------------*/
-    /*
-    public void signInWithEmailAndPassword(String email, String password, SignInCallback callback) {
-        auth.signInWithEmailAndPassword(email, password)
-                .addOnSuccessListener(authResult -> {
-                    callback.onSuccess();
-                })
-                .addOnFailureListener(e -> callback.onFailure(e.getMessage()));
-    }
-     */
-
     /*------------------------------------
     Sign in Method with Lockout Handling
--------------------------------------*/
+    -------------------------------------*/
+    /*
     public void signInWithEmail(String email, String password, SignInCallback callback) {
         DocumentReference attemptRef = db.collection("login_attempts").document(email);
 
@@ -201,6 +200,7 @@ public class AuthRepository {
                     callback.onFailure("Login failed. Try again.");
                 });
     }
+    */
 
 
     /*---------------------------------------

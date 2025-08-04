@@ -14,6 +14,7 @@ import android.view.View;
 import android.view.Window;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.EditText;
+import android.widget.Toast;
 
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.content.ContextCompat;
@@ -82,7 +83,7 @@ public class SignInActivity extends AppCompatActivity {
                 startActivity(new Intent(this, DashboardActivity.class));
                 finish();
             } else {
-                binding.signInError.setVisibility(View.VISIBLE);
+                Toast.makeText(this, signInResult.message(), Toast.LENGTH_LONG).show();
             }
             progressBar.hide();
         });
@@ -137,8 +138,6 @@ public class SignInActivity extends AppCompatActivity {
                 String password = Objects.requireNonNull(binding.editTxtPassword.getText()).toString().trim();
 
                 binding.btnSignIn.setEnabled(!email.isEmpty() && !password.isEmpty());
-
-                binding.signInError.setVisibility(View.GONE);
             }
         };
         binding.editTxtEmail.addTextChangedListener(watcher);

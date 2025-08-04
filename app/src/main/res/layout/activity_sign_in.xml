@@ -91,7 +91,7 @@
 
                 <!--User Account Layout-->
                 <RelativeLayout
-                    android:id="@+id/userAccountLayout"
+                    android:id="@+id/showUserInfoLayout"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_marginTop="10dp"
@@ -122,37 +122,6 @@
                         android:textColor="@color/black"
                         android:textSize="15sp"
                         android:textStyle="bold" />
-                </RelativeLayout>
-
-                <RelativeLayout
-                    android:id="@+id/signInError"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_marginTop="10dp"
-                    android:background="@drawable/bg_8dp_sign_in_error"
-                    android:padding="5dp"
-                    android:visibility="gone">
-
-                    <ImageView
-                        android:id="@+id/ic_cancel"
-                        android:layout_width="20dp"
-                        android:layout_height="20dp"
-                        android:layout_alignParentStart="true"
-                        android:layout_centerVertical="true"
-                        android:src="@drawable/ic_cancel"
-                        app:tint="@color/red" />
-
-                    <TextView
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_centerInParent="true"
-                        android:layout_marginStart="2dp"
-                        android:layout_toEndOf="@+id/ic_cancel"
-                        android:fontFamily="@font/poppins_light"
-                        android:includeFontPadding="false"
-                        android:text="You have 4 chances before your account is locked for 2hrs"
-                        android:textColor="@color/red"
-                        android:textSize="12sp" />
                 </RelativeLayout>
 
                 <!--Email field Background-->
@@ -239,6 +208,33 @@
                     android:enabled="false"
                     android:text="Sign in"
                     android:textSize="14sp" />
+
+                <LinearLayout
+                    android:id="@+id/showBiometricsLayout"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="20dp"
+                    android:gravity="center"
+                    android:orientation="horizontal">
+
+                    <ImageView
+                        android:layout_width="20dp"
+                        android:layout_height="20dp"
+                        android:contentDescription="Biometrics"
+                        android:src="@drawable/ic_biometrics"
+                        app:tint="@color/blue" />
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginStart="5dp"
+                        android:gravity="center"
+                        android:includeFontPadding="false"
+                        android:text="Use Biometrics"
+                        android:textColor="@color/blue"
+                        android:textSize="14sp"
+                        android:textStyle="bold" />
+                </LinearLayout>
             </LinearLayout>
         </ScrollView>
 
