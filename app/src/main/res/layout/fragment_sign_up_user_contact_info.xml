@@ -160,7 +160,7 @@
                     android:layout_marginTop="20dp"
                     android:fontFamily="@font/poppins_light"
                     android:includeFontPadding="false"
-                    android:text="Please enter a valid email address and phone number; an OTP will be sent to this address."
+                    android:text="Please enter a valid email address and phone number. An OTP will be sent to your email address."
                     android:textColor="@color/black"
                     android:textSize="13sp" />
 
@@ -175,7 +175,7 @@
                     android:includeFontPadding="false"
                     android:text="Email address"
                     android:textColor="@color/gray_dark"
-                    android:textSize="12sp"
+                    android:textSize="14sp"
                     android:visibility="invisible" />
 
                 <!--Email Field-->

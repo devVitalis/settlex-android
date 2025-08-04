@@ -15,6 +15,12 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.SettleX">
         <activity
+            android:name=".ui.auth.components.OtpVerificationActivity"
+            android:exported="false" />
+        <activity
+            android:name=".ui.auth.activity.PasswordResetActivity"
+            android:exported="false" />
+        <activity
             android:name=".ui.dashboard.DashboardActivity"
             android:exported="false" />
         <activity

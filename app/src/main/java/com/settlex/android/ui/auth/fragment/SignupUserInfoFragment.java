@@ -180,7 +180,7 @@ public class SignupUserInfoFragment extends Fragment {
         requireActivity()
                 .getSupportFragmentManager()
                 .beginTransaction()
-                .replace(R.id.fragment_container, fragment)
+                .replace(R.id.main, fragment)
                 .addToBackStack(null)
                 .commit();
     }

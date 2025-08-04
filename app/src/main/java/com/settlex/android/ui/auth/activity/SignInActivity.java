@@ -41,7 +41,7 @@ public class SignInActivity extends AppCompatActivity {
         setContentView(binding.getRoot());
 
         vm = new ViewModelProvider(this).get(AuthViewModel.class);
-        progressBar = new SettleXProgressBarController(binding.fragmentContainer);
+        progressBar = new SettleXProgressBarController(binding.main);
 
         setupStatusBar();
         setupUIActions();
@@ -63,6 +63,7 @@ public class SignInActivity extends AppCompatActivity {
         binding.imgBackBefore.setOnClickListener(v -> getOnBackPressedDispatcher().onBackPressed());
         binding.btnSignUp.setOnClickListener(v -> loadActivity(SignUpActivity.class));
         binding.btnHelp.setOnClickListener(v -> loadActivity(AuthHelpActivity.class));
+        binding.btnForgotPassword.setOnClickListener(view -> loadActivity(PasswordResetActivity.class));
         binding.btnSignIn.setOnClickListener(v -> attemptSignIn());
     }
 
@@ -196,7 +197,7 @@ public class SignInActivity extends AppCompatActivity {
                         imm.hideSoftInputFromWindow(currentFocus.getWindowToken(), 0);
                     }
 
-                    binding.fragmentContainer.requestFocus();
+                    binding.main.requestFocus();
                 }
             }
         }

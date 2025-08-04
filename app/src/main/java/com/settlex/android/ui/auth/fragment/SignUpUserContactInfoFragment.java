@@ -273,7 +273,7 @@ public class SignUpUserContactInfoFragment extends Fragment {
     private void loadFragment(Fragment fragment) {
         requireActivity()
                 .getSupportFragmentManager()
-                .beginTransaction().replace(R.id.fragment_container, fragment)
+                .beginTransaction().replace(R.id.main, fragment)
                 .addToBackStack(null)
                 .commit();
     }
