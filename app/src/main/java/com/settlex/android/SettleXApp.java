@@ -4,7 +4,7 @@ import android.app.Application;
 import android.content.Context;
 
 import com.google.firebase.FirebaseApp;
-import com.settlex.android.utils.NetworkMonitor;
+import com.settlex.android.util.NetworkMonitor;
 
 public class SettleXApp extends Application {
 

@@ -24,12 +24,13 @@ import androidx.fragment.app.Fragment;
 import androidx.lifecycle.ViewModelProvider;
 
 import com.settlex.android.R;
-import com.settlex.android.ui.common.SettleXProgressBarController;
 import com.settlex.android.data.model.UserModel;
 import com.settlex.android.databinding.FragmentSignUpUserPasswordBinding;
 import com.settlex.android.ui.activities.help.AuthHelpActivity;
 import com.settlex.android.ui.auth.viewmodel.AuthViewModel;
+import com.settlex.android.ui.common.SettleXProgressBarController;
 import com.settlex.android.ui.dashboard.DashboardActivity;
+import com.settlex.android.util.LiveDataUtils;
 
 import java.util.Objects;
 
@@ -96,15 +97,22 @@ public class SignUpUserPasswordFragment extends Fragment {
 
         vm.signUpUser(user, vm.getEmail(), password);
 
-        vm.getSignUpResult().observe(getViewLifecycleOwner(), signUpResult -> {
+        LiveDataUtils.observeOnce(vm.getSignUpResult(), requireActivity(), signUpResult -> {
             if (signUpResult.isSuccess()) {
                 navigateToDashboard();
             } else {
-                binding.txtMessageInfo.setText(signUpResult.message());
-                binding.txtMessageInfo.setVisibility(View.VISIBLE);
+                showError(signUpResult.message());
             }
             progressBar.hide();
         });
+    }
+
+    /*-------------------------------------------
+    Helper Method to Display Error Info to User
+    -------------------------------------------*/
+    private void showError(String message) {
+        binding.txtMessageInfo.setText(message);
+        binding.txtMessageInfo.setVisibility(View.VISIBLE);
     }
 
     /*------------------------------
@@ -169,7 +177,6 @@ public class SignUpUserPasswordFragment extends Fragment {
         binding.editTxtPassword.addTextChangedListener(passwordWatcher);
         binding.editTxtConfirmPassword.addTextChangedListener(passwordWatcher);
     }
-
 
     /*---------------------------------------
     Show check or uncheck icon beside rules

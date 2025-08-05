@@ -21,9 +21,9 @@ import androidx.lifecycle.ViewModelProvider;
 
 import com.settlex.android.R;
 import com.settlex.android.databinding.FragmentSignupUserInfoBinding;
-import com.settlex.android.utils.StringUtil;
 import com.settlex.android.ui.activities.help.AuthHelpActivity;
 import com.settlex.android.ui.auth.viewmodel.AuthViewModel;
+import com.settlex.android.util.StringUtil;
 
 import java.util.Objects;
 
@@ -67,13 +67,13 @@ public class SignupUserInfoFragment extends Fragment {
         // Click Listeners
         binding.imgBackBefore.setOnClickListener(v -> requireActivity().getSupportFragmentManager().popBackStack());
         binding.btnHelp.setOnClickListener(v -> startActivity(new Intent(requireActivity(), AuthHelpActivity.class)));
-        binding.btnContinue.setOnClickListener(v -> updateUserInfoAndMoveOn());
+        binding.btnContinue.setOnClickListener(v -> updateUserInfoAndContinue());
     }
 
-    /*------------------------------------------------
-    Update/Save User First and Last Name To ViewModel
-    ------------------------------------------------*/
-    private void updateUserInfoAndMoveOn() {
+    /*--------------------------------------------------------
+    Validate user's first and last name and update ViewModel
+    --------------------------------------------------------*/
+    private void updateUserInfoAndContinue() {
         String firstName = Objects.requireNonNull(binding.editTxtFirstName.getText()).toString().trim();
         String lastName = Objects.requireNonNull(binding.editTxtLastName.getText()).toString().trim();
 

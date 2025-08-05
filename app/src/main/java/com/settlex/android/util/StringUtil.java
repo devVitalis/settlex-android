@@ -1,9 +1,13 @@
-package com.settlex.android.utils;
+package com.settlex.android.util;
 
 import java.text.NumberFormat;
 import java.util.Locale;
 
 public class StringUtil {
+
+    private StringUtil() {
+        // Prevent instantiation
+    }
 
     /*-----------------------------------------------------
     Mask user's email for display (e.g., b***k@gmail.com)
@@ -38,6 +42,20 @@ public class StringUtil {
             }
         }
         return result.toString().trim();
+    }
+    /*------------------------------------------------
+    Normalize Nigerian phone number to +234XXXXXXXXXX
+    Accepts: 08012345678, 8012345678
+    ------------------------------------------------*/
+    public static String formatPhoneNumber(String phone) {
+        if (phone == null) return null;
+
+        // Remove leading zero if present
+        if (phone.startsWith("0")) {
+            phone = phone.substring(1);
+        }
+
+        return "+234" + phone;
     }
 
     /*-----------------------------------------------------

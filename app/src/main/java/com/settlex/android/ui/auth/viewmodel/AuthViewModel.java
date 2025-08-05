@@ -11,14 +11,14 @@ import com.settlex.android.ui.auth.util.AuthResult;
 public class AuthViewModel extends ViewModel {
     private final AuthRepository authRepo = new AuthRepository();
     private final MutableLiveData<UserModel> userLiveData = new MutableLiveData<>();
-    private final MutableLiveData<AuthResult> emailOtpResult = new MutableLiveData<>();
+    private final MutableLiveData<AuthResult> sendEmailOtpResult = new MutableLiveData<>();
     private final MutableLiveData<AuthResult> emailVerifyResult = new MutableLiveData<>();
     private final MutableLiveData<AuthResult> signUpResult = new MutableLiveData<>();
     private final MutableLiveData<AuthResult> signInResult = new MutableLiveData<>();
-
+    private final MutableLiveData<AuthResult> checkEmailExistResult = new MutableLiveData<>();
 
     /*------------------------------------
-    Safely get or create UserModel
+    Safely retrieve or initialize user
     ------------------------------------*/
     private UserModel getOrCreateUser() {
         UserModel user = userLiveData.getValue();
@@ -28,60 +28,60 @@ public class AuthViewModel extends ViewModel {
         return user;
     }
 
-    /*------------------------------------
-    Public LiveData getter
-    ------------------------------------*/
+    /*-------------------------------
+    Expose LiveData for user model
+    -------------------------------*/
     public LiveData<UserModel> getUser() {
         return userLiveData;
     }
 
-    /*------------------------------------
-    Update first name
-    ------------------------------------*/
+    /*-------------------------
+    Update user's first name
+    -------------------------*/
     public void updateFirstName(String firstName) {
         UserModel user = getOrCreateUser();
         user.setFirstName(firstName);
         userLiveData.setValue(user);
     }
 
-    /*------------------------------------
-    Update last name
-    ------------------------------------*/
+    /*------------------------
+    Update user's last name
+    ------------------------*/
     public void updateLastName(String lastName) {
         UserModel user = getOrCreateUser();
         user.setLastName(lastName);
         userLiveData.setValue(user);
     }
 
-    /*------------------------------------
-    Update email
-    ------------------------------------*/
+    /*---------------------
+    Update user's email
+    ---------------------*/
     public void updateEmail(String email) {
         UserModel user = getOrCreateUser();
         user.setEmail(email);
         userLiveData.setValue(user);
     }
 
-    /*------------------------------------
-    Get current email (may return null)
-    ------------------------------------*/
+    /*---------------------------------
+    Retrieve email (may return null)
+    ---------------------------------*/
     public String getEmail() {
         UserModel user = userLiveData.getValue();
         return (user != null) ? user.getEmail() : null;
     }
 
-    /*------------------------------------
-    Update phone number
-    ------------------------------------*/
+    /*-----------------------------
+    Update user's phone number
+    -----------------------------*/
     public void updatePhone(String phone) {
         UserModel user = getOrCreateUser();
         user.setPhone(phone);
         userLiveData.setValue(user);
     }
 
-    /*------------------------------------
-    Update: Finalize user data
-    ------------------------------------*/
+    /*---------------------------------------------
+    Finalize user fields before account creation
+    ---------------------------------------------*/
     public void finalizeUserFields(String invitationCode) {
         UserModel user = userLiveData.getValue();
         if (user == null) return;
@@ -97,94 +97,117 @@ public class AuthViewModel extends ViewModel {
         userLiveData.setValue(user);
     }
 
-    /*------------------------------------
-    Getters (LiveData) to NOTIFY UIs
-    -------------------------------------*/
-    // getEmailOtpResult
-    public LiveData<AuthResult> getEmailOtpResult() {
-        return emailOtpResult;
+    /*------------------------------------------------
+    Expose LiveData results to be observed by the UI
+    ------------------------------------------------*/
+    // Email OTP result
+    public LiveData<AuthResult> getSendEmailOtpResult() {
+        return sendEmailOtpResult;
     }
 
-    // getOtpVerifyResult
+    // Email OTP verification result
     public LiveData<AuthResult> getOtpVerifyResult() {
         return emailVerifyResult;
     }
 
-    // getSignUpResult
+    // User sign-up result
     public LiveData<AuthResult> getSignUpResult() {
         return signUpResult;
     }
 
-    // getSignInResult
+    // User sign-in result
     public LiveData<AuthResult> getSignInResult() {
         return signInResult;
     }
 
-    /*------------------------------------------
-    Send OTP via AuthRepository and post result
-    ------------------------------------------*/
+    // Email existence check result
+    public LiveData<AuthResult> getCheckExistsResult() {
+        return checkEmailExistResult;
+    }
+
+    /*------------------------------------------------
+    Send email OTP via repository and post result
+    ------------------------------------------------*/
     public void sendEmailOtp(String email) {
         authRepo.sendEmailOtp(email, new AuthRepository.SendEmailOtpCallback() {
             @Override
             public void onSuccess() {
-                emailOtpResult.postValue(new AuthResult(true, "OTP Sent"));
+                sendEmailOtpResult.postValue(AuthResult.success("OTP Sent"));
             }
 
             @Override
             public void onFailure(String reason) {
-                emailOtpResult.postValue(new AuthResult(false, reason));
+                sendEmailOtpResult.postValue(AuthResult.failure(reason));
             }
         });
     }
 
-    /*--------------------------------------------
-    Verify OTP via AuthRepository and post result
-    --------------------------------------------*/
+    /*-----------------------------------------------------
+    Verify email OTP via repository and post result
+    -----------------------------------------------------*/
     public void verifyEmailOtp(String email, String otp) {
         authRepo.verifyEmailOtp(email, otp, new AuthRepository.VerifyEmailOtpCallback() {
             @Override
             public void onSuccess() {
-                emailVerifyResult.postValue(new AuthResult(true, "Verification Successful"));
+                emailVerifyResult.postValue(AuthResult.success("Verification Successful"));
             }
 
             @Override
             public void onFailure(String reason) {
-                emailVerifyResult.postValue(new AuthResult(false, reason));
+                emailVerifyResult.postValue(AuthResult.failure(reason));
             }
         });
     }
 
-    /*--------------------------------------------------
-    Create Account via AuthRepository and post result
-    --------------------------------------------------*/
+    /*-----------------------------------------------------
+    Register new user via repository and post result
+    -----------------------------------------------------*/
     public void signUpUser(UserModel user, String email, String password) {
         authRepo.signUpWithEmailAndPassword(user, email, password, new AuthRepository.CreateAccountCallback() {
             @Override
             public void onSuccess() {
-                signUpResult.postValue(new AuthResult(true, ""));
+                signUpResult.postValue(AuthResult.success("success"));
             }
 
             @Override
             public void onFailure(String reason) {
-                signUpResult.postValue(new AuthResult(false, reason));
+                signUpResult.postValue(AuthResult.failure("Sign up failed. Please try again."));
             }
         });
     }
 
-    /*------------------------------------------------------
-    SignIn user and POST result to UI (Email && Password)
-    ------------------------------------------------------*/
+    /*-----------------------------------------------
+    Sign in user via repository and post result
+    -----------------------------------------------*/
     public void signInUser(String email, String password) {
         authRepo.signInWithEmail(email, password, new AuthRepository.SignInCallback() {
             @Override
             public void onSuccess() {
-                signInResult.postValue(new AuthResult(true, ""));
+                signInResult.postValue(AuthResult.success("success"));
             }
 
             @Override
             public void onFailure(String reason) {
-                signInResult.postValue(new AuthResult(false, reason));
+                signInResult.postValue(AuthResult.failure(reason));
             }
         });
     }
+
+    /*---------------------------------------------------
+    Check if email exists in Firebase and post result
+    ---------------------------------------------------*/
+    public void checkEmailExists(String email) {
+        authRepo.checkEmailExist(email, new AuthRepository.CheckEmailExistCallback() {
+            @Override
+            public void onSuccess(boolean exists) {
+                checkEmailExistResult.postValue(AuthResult.exists(exists));
+            }
+
+            @Override
+            public void onFailure(String reason) {
+                checkEmailExistResult.postValue(AuthResult.failure(reason));
+            }
+        });
+    }
+
 }

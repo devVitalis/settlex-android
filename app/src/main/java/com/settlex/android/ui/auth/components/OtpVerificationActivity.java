@@ -27,21 +27,12 @@ public class OtpVerificationActivity extends AppCompatActivity {
         setContentView(binding.getRoot());
 
         setupStatusBar();
-        formatMessageTxt();
         formatTxtInfo();
-
     }
 
     /*------------------------------
     Format texts style using HTML
     ------------------------------*/
-    private void formatMessageTxt() {
-        String htmlText = "Please check the OTP that<br>" +
-                "has been sent to your email account<br>" +
-                "<font color='#0000FF'>be****k@gmail.com</font>";
-        binding.txtUserEmail.setText(Html.fromHtml(htmlText, Html.FROM_HTML_MODE_LEGACY));
-    }
-
     private void formatTxtInfo() {
         String txtInfo = "Didn’t get the email? Make sure to also " +
                 "<font color='#FFA500'><b>check your spam/junk folder</b></font> " +

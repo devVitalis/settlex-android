@@ -2,17 +2,14 @@ package com.settlex.android.data.repository;
 
 import android.util.Log;
 
-import com.google.firebase.Timestamp;
 import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseAuthInvalidCredentialsException;
 import com.google.firebase.auth.FirebaseAuthUserCollisionException;
-import com.google.firebase.firestore.DocumentReference;
+import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.firestore.FirebaseFirestore;
-import com.google.firebase.firestore.SetOptions;
 import com.google.firebase.functions.FirebaseFunctions;
 import com.settlex.android.data.model.UserModel;
 
-import java.util.Calendar;
-import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -39,7 +36,13 @@ public class AuthRepository {
                 .addOnSuccessListener(authResult -> {
                     callback.onSuccess();
                 })
-                .addOnFailureListener(e -> callback.onFailure(e.getMessage()));
+                .addOnFailureListener(e -> {
+                    if (e instanceof FirebaseAuthInvalidCredentialsException) {
+                        callback.onFailure("Invalid email or password");
+                    } else {
+                        callback.onFailure(e.getMessage());
+                    }
+                });
     }
 
     /*-------------------------------------------
@@ -48,7 +51,12 @@ public class AuthRepository {
     public void signUpWithEmailAndPassword(UserModel user, String email, String password, CreateAccountCallback callback) {
         auth.createUserWithEmailAndPassword(email, password)
                 .addOnSuccessListener(authResult -> {
-                    String uid = auth.getCurrentUser().getUid();
+                    FirebaseUser currentUser = authResult.getUser();
+                    if (currentUser == null) {
+                        callback.onFailure("Authentication failed. User not found.");
+                        return;
+                    }
+                    String uid = currentUser.getUid();
                     user.setUid(uid);
                     saveUserProfileToDatabase(user, callback);
                 })
@@ -84,6 +92,26 @@ public class AuthRepository {
                             markEmailUnverified(user.getUid());
                         }
                     });
+                })
+                .addOnFailureListener(e -> callback.onFailure(e.getMessage()));
+    }
+
+    /*----------------------------------------------------
+    Check if email (user) already exist in Firebase Auth
+    ----------------------------------------------------*/
+    public void checkEmailExist(String email, CheckEmailExistCallback callback) {
+        Map<String, Object> data = new HashMap<>();
+        data.put("email", email);
+
+        functions.getHttpsCallable("checkEmailExists")
+                .call(data)
+                .addOnSuccessListener(result -> {
+                    if (result.getData() != null) {
+                        boolean exist = Boolean.TRUE.equals(((Map<?, ?>) result.getData()).get("exists"));
+                        callback.onSuccess(exist);
+                    } else {
+                        callback.onFailure("Invalid response from server.");
+                    }
                 })
                 .addOnFailureListener(e -> callback.onFailure(e.getMessage()));
     }
@@ -202,7 +230,6 @@ public class AuthRepository {
     }
     */
 
-
     /*---------------------------------------
     Callback Interfaces For Success/Failures
     ---------------------------------------*/
@@ -230,6 +257,13 @@ public class AuthRepository {
     // SignInCallback
     public interface SignInCallback {
         void onSuccess();
+
+        void onFailure(String reason);
+    }
+
+    // CheckEmailExistCallback
+    public interface CheckEmailExistCallback {
+        void onSuccess(boolean exists);
 
         void onFailure(String reason);
     }

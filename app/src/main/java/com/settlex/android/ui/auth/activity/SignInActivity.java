@@ -26,6 +26,7 @@ import com.settlex.android.ui.activities.help.AuthHelpActivity;
 import com.settlex.android.ui.auth.viewmodel.AuthViewModel;
 import com.settlex.android.ui.common.SettleXProgressBarController;
 import com.settlex.android.ui.dashboard.DashboardActivity;
+import com.settlex.android.util.LiveDataUtils;
 
 import java.util.Objects;
 
@@ -67,9 +68,8 @@ public class SignInActivity extends AppCompatActivity {
         binding.btnSignIn.setOnClickListener(v -> attemptSignIn());
     }
 
-
     /*-----------------------------------
-    Sign in with Email && Password ()
+    Sign in user with Email && Password
     -----------------------------------*/
     private void attemptSignIn() {
         progressBar.show();
@@ -79,7 +79,7 @@ public class SignInActivity extends AppCompatActivity {
 
         vm.signInUser(email, password);
 
-        vm.getSignInResult().observe(this, signInResult -> {
+        LiveDataUtils.observeOnce(vm.getSignInResult(),this, signInResult -> {
             if (signInResult.isSuccess()) {
                 startActivity(new Intent(this, DashboardActivity.class));
                 finish();

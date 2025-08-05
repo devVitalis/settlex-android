@@ -29,7 +29,8 @@ import com.settlex.android.R;
 import com.settlex.android.databinding.FragmentSignUpEmailVerificationBinding;
 import com.settlex.android.ui.auth.viewmodel.AuthViewModel;
 import com.settlex.android.ui.common.SettleXProgressBarController;
-import com.settlex.android.utils.StringUtil;
+import com.settlex.android.util.LiveDataUtils;
+import com.settlex.android.util.StringUtil;
 
 public class SignUpEmailVerificationFragment extends Fragment {
 
@@ -97,23 +98,9 @@ public class SignUpEmailVerificationFragment extends Fragment {
         String otp = getEnteredOtpCode();
 
         vm.verifyEmailOtp(email, otp);
-        vm.getOtpVerifyResult().observe(getViewLifecycleOwner(), result -> {
+        LiveDataUtils.observeOnce(vm.getOtpVerifyResult(), requireActivity(), result -> {
             if (result.isSuccess()) {
-                binding.successAnim.setRenderMode(RenderMode.SOFTWARE);
-                binding.successAnim.setVisibility(View.VISIBLE);
-                binding.successAnim.playAnimation();
-
-                binding.txtMessage.setText(result.message());
-                binding.txtMessage.setTextColor(ContextCompat.getColor(requireContext(), R.color.blue));
-                binding.txtMessage.setVisibility(View.VISIBLE);
-
-                // Listen for animation end, then load next fragment
-                binding.successAnim.addAnimatorListener(new AnimatorListenerAdapter() {
-                    @Override
-                    public void onAnimationEnd(@NonNull Animator animation) {
-                        loadFragment(new SignupUserInfoFragment());
-                    }
-                });
+                animateSuccessAndProceed(result.message());
             } else {
                 binding.txtMessage.setText(result.message());
                 binding.txtMessage.setVisibility(View.VISIBLE);
@@ -131,7 +118,7 @@ public class SignUpEmailVerificationFragment extends Fragment {
 
         vm.sendEmailOtp(email);
 
-        vm.getEmailOtpResult().observe(getViewLifecycleOwner(), sendOtpResult -> {
+        LiveDataUtils.observeOnce(vm.getSendEmailOtpResult(), requireActivity(), sendOtpResult -> {
             if (sendOtpResult.isSuccess()) {
                 disableResendOtpBtn();
                 Toast.makeText(requireContext(), sendOtpResult.message(), Toast.LENGTH_SHORT).show();
@@ -140,6 +127,27 @@ public class SignUpEmailVerificationFragment extends Fragment {
                 binding.txtMessage.setVisibility(View.VISIBLE);
             }
             progressBar.hide();
+        });
+    }
+
+    /*-------------------------------------------------
+    Play success animation, show message, then continue
+    --------------------------------------------------*/
+    private void animateSuccessAndProceed(String message) {
+        binding.successAnim.setRenderMode(RenderMode.SOFTWARE);
+        binding.successAnim.setVisibility(View.VISIBLE);
+        binding.successAnim.playAnimation();
+
+        binding.txtMessage.setText(message);
+        binding.txtMessage.setTextColor(ContextCompat.getColor(requireContext(), R.color.blue));
+        binding.txtMessage.setVisibility(View.VISIBLE);
+
+        // Listen for animation end, then load next fragment
+        binding.successAnim.addAnimatorListener(new AnimatorListenerAdapter() {
+            @Override
+            public void onAnimationEnd(@NonNull Animator animation) {
+                loadFragment(new SignupUserInfoFragment());
+            }
         });
     }
 

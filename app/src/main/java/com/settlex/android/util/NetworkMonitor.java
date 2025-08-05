@@ -1,15 +1,20 @@
-package com.settlex.android.utils;
+package com.settlex.android.util;
 
 import android.content.Context;
 import android.net.ConnectivityManager;
 import android.net.Network;
 import android.net.NetworkCapabilities;
+
 import androidx.lifecycle.LiveData;
 import androidx.lifecycle.MutableLiveData;
 
 import com.settlex.android.SettleXApp;
 
 public class NetworkMonitor {
+
+    private NetworkMonitor() {
+        // Prevent instantiation
+    }
 
     /*------------------------------------
     MutableLiveData holding network state

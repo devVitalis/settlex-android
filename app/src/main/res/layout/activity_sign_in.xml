@@ -194,7 +194,8 @@
                     android:includeFontPadding="false"
                     android:text="Forgot Password?"
                     android:textColor="@color/blue"
-                    android:textSize="12sp" />
+                    android:textSize="12sp"
+                    android:textStyle="bold" />
 
                 <!--Login Btn-->
                 <com.google.android.material.button.MaterialButton

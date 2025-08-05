@@ -103,8 +103,8 @@
     For Pin Box || OTP View
     -------------------------------------------*/
     <style name="Widget.SettleXApp.EditText.PinBox" parent="Base.Widget.AppCompat.EditText">
-        <item name="android:layout_width">45dp</item>
-        <item name="android:layout_height">45dp</item>
+        <item name="android:layout_width">50dp</item>
+        <item name="android:layout_height">50dp</item>
         <item name="android:textSize">14sp</item>
         <item name="android:background">@drawable/bg_pin_box_edit_txt</item>
         <item name="android:textColor">@color/black</item>

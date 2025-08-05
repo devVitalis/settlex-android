@@ -33,6 +33,8 @@ import com.settlex.android.ui.activities.legal.PrivacyPolicyActivity;
 import com.settlex.android.ui.activities.legal.TermsAndConditionsActivity;
 import com.settlex.android.ui.auth.viewmodel.AuthViewModel;
 import com.settlex.android.ui.common.SettleXProgressBarController;
+import com.settlex.android.util.LiveDataUtils;
+import com.settlex.android.util.StringUtil;
 
 import java.util.Objects;
 
@@ -83,30 +85,37 @@ public class SignUpUserContactInfoFragment extends Fragment {
             requireActivity().finish();
         });
         binding.btnHelp.setOnClickListener(v -> loadFragment(new SignUpUserPasswordFragment()));
-        binding.btnContinue.setOnClickListener(v -> saveUserInfoAndSendEmailOtp());
+        binding.btnContinue.setOnClickListener(v -> validateInfoAndSendOtp());
     }
 
-    /*-----------------------------------------
-    Save user info and send OTP to the email
-    -----------------------------------------*/
-    private void saveUserInfoAndSendEmailOtp() {
+    /*------------------------------------------------
+    Validate user info and send email verification OTP
+    ------------------------------------------------*/
+    private void validateInfoAndSendOtp() {
         progressBar.show();
         String email = Objects.requireNonNull(binding.editTxtEmail.getText()).toString().trim();
-        String phone = Objects.requireNonNull(binding.editTxtPhoneNumber.getText()).toString().trim();
+        String phone = StringUtil.formatPhoneNumber(binding.editTxtPhoneNumber.getText().toString().trim());
 
         vm.updateEmail(email);
         vm.updatePhone(phone);
-        vm.sendEmailOtp(email);
 
-        vm.getEmailOtpResult().observe(getViewLifecycleOwner(), sendOtpResult -> {
-            if (sendOtpResult.isSuccess()) {
+        vm.sendEmailOtp(email);
+        LiveDataUtils.observeOnce(vm.getSendEmailOtpResult(), getViewLifecycleOwner(), sendEmailOtpResult -> {
+            progressBar.hide();
+            if (sendEmailOtpResult.isSuccess()) {
                 loadFragment(new SignUpEmailVerificationFragment());
             } else {
-                binding.txtErrorInfoEmail.setText(sendOtpResult.message());
-                binding.txtErrorInfoEmail.setVisibility(View.VISIBLE);
+                showError(sendEmailOtpResult.message());
             }
-            progressBar.hide();
         });
+    }
+
+    /*-------------------------------------------
+    Helper Method to Display Error Info to User
+    -------------------------------------------*/
+    private void showError(String message) {
+        binding.txtErrorInfoEmail.setText(message);
+        binding.txtErrorInfoEmail.setVisibility(View.VISIBLE);
     }
 
     /*---------------------------------------
@@ -117,7 +126,7 @@ public class SignUpUserContactInfoFragment extends Fragment {
         String phone = Objects.requireNonNull(binding.editTxtPhoneNumber.getText()).toString().trim();
 
         boolean validEmail = Patterns.EMAIL_ADDRESS.matcher(email).matches();
-        boolean validPhone = phone.matches("^0(7[0-9]|8[0-9]|9[0-9])[0-9]{8}$");
+        boolean validPhone = phone.matches("^(0?(70|80|81|90|91))\\d{8}$");
         boolean isChecked = binding.checkBoxTermsPrivacy.isChecked();
 
         binding.btnContinue.setEnabled(validEmail && validPhone && isChecked);
