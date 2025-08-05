@@ -207,7 +207,7 @@
 
                 <!--Display Error TxT - Hidden-->
                 <TextView
-                    android:id="@+id/txtErrorInfoEmail"
+                    android:id="@+id/txtEmailError"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_gravity="start"
@@ -285,7 +285,7 @@
 
                 <!--Display Error TxT - Hidden-->
                 <TextView
-                    android:id="@+id/txtErrorMsgPhoneNumber"
+                    android:id="@+id/txtPhoneError"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_gravity="start"

@@ -111,8 +111,8 @@ public class SignUpUserPasswordFragment extends Fragment {
     Helper Method to Display Error Info to User
     -------------------------------------------*/
     private void showError(String message) {
-        binding.txtMessageInfo.setText(message);
-        binding.txtMessageInfo.setVisibility(View.VISIBLE);
+        binding.txtPasswordError.setText(message);
+        binding.txtPasswordError.setVisibility(View.VISIBLE);
     }
 
     /*------------------------------
@@ -150,7 +150,7 @@ public class SignUpUserPasswordFragment extends Fragment {
         String confirm = Objects.requireNonNull(binding.editTxtConfirmPassword.getText()).toString().trim();
 
         boolean condition = confirm.isEmpty() || confirm.equals(original);
-        binding.txtMessageInfo.setVisibility(!condition ? View.VISIBLE : View.GONE);
+        binding.txtPasswordError.setVisibility(!condition ? View.VISIBLE : View.GONE);
 
         updateButtonState();
     }

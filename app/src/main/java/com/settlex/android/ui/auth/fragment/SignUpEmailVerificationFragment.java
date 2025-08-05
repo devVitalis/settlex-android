@@ -33,7 +33,6 @@ import com.settlex.android.util.LiveDataUtils;
 import com.settlex.android.util.StringUtil;
 
 public class SignUpEmailVerificationFragment extends Fragment {
-
     private AuthViewModel vm;
     private CountDownTimer timer;
     private EditText[] otpCodeInputs;
@@ -84,26 +83,25 @@ public class SignUpEmailVerificationFragment extends Fragment {
         // Click Listeners
         binding.imgViewGoBack.setOnClickListener(v -> requireActivity().getSupportFragmentManager().popBackStack());
         binding.btnClearAll.setOnClickListener(view -> clearOtpInputs());
-        binding.btnVerify.setOnClickListener(v -> verifyOtp());
-        binding.btnResendOtp.setOnClickListener(view -> resendEmailOtp());
+        binding.btnVerify.setOnClickListener(v -> verifyEmailOtp());
+        binding.btnResendOtp.setOnClickListener(view -> resendVerifyEmailOtp());
     }
 
     /*------------------------------------
     Verify OTP and Handle Result Response
     -------------------------------------*/
-    private void verifyOtp() {
+    private void verifyEmailOtp() {
         progressBar.show();
 
         String email = vm.getEmail();
         String otp = getEnteredOtpCode();
 
         vm.verifyEmailOtp(email, otp);
-        LiveDataUtils.observeOnce(vm.getOtpVerifyResult(), requireActivity(), result -> {
+        LiveDataUtils.observeOnce(vm.getVerifyEmailOtpResult(), requireActivity(), result -> {
             if (result.isSuccess()) {
                 animateSuccessAndProceed(result.message());
             } else {
-                binding.txtMessage.setText(result.message());
-                binding.txtMessage.setVisibility(View.VISIBLE);
+               showError(result.message());
             }
             progressBar.hide();
         });
@@ -112,19 +110,18 @@ public class SignUpEmailVerificationFragment extends Fragment {
     /*------------------------------------
     Resend OTP to Email and Handle Result
     -------------------------------------*/
-    private void resendEmailOtp() {
+    private void resendVerifyEmailOtp() {
         progressBar.show();
         String email = vm.getEmail();
 
         vm.sendEmailOtp(email);
 
-        LiveDataUtils.observeOnce(vm.getSendEmailOtpResult(), requireActivity(), sendOtpResult -> {
+        LiveDataUtils.observeOnce(vm.getSendVerifyEmailOtpResult(), requireActivity(), sendOtpResult -> {
             if (sendOtpResult.isSuccess()) {
                 disableResendOtpBtn();
                 Toast.makeText(requireContext(), sendOtpResult.message(), Toast.LENGTH_SHORT).show();
             } else {
-                binding.txtMessage.setText(sendOtpResult.message());
-                binding.txtMessage.setVisibility(View.VISIBLE);
+                showError(sendOtpResult.message());
             }
             progressBar.hide();
         });
@@ -138,9 +135,9 @@ public class SignUpEmailVerificationFragment extends Fragment {
         binding.successAnim.setVisibility(View.VISIBLE);
         binding.successAnim.playAnimation();
 
-        binding.txtMessage.setText(message);
-        binding.txtMessage.setTextColor(ContextCompat.getColor(requireContext(), R.color.blue));
-        binding.txtMessage.setVisibility(View.VISIBLE);
+        binding.txtOtpFeedback.setText(message);
+        binding.txtOtpFeedback.setTextColor(ContextCompat.getColor(requireContext(), R.color.blue));
+        binding.txtOtpFeedback.setVisibility(View.VISIBLE);
 
         // Listen for animation end, then load next fragment
         binding.successAnim.addAnimatorListener(new AnimatorListenerAdapter() {
@@ -151,8 +148,16 @@ public class SignUpEmailVerificationFragment extends Fragment {
         });
     }
 
+    /*-------------------------------------------
+    Helper Method to Display Error Info to User
+    -------------------------------------------*/
+    private void showError(String message) {
+        binding.txtOtpFeedback.setText(message);
+        binding.txtOtpFeedback.setVisibility(View.VISIBLE);
+    }
+
     /*------------------------------------------
-    Setup passcode input chaining logic
+    Setup Otp input chaining logic
     -------------------------------------------*/
     private void setupOtpCodeInputs() {
         otpCodeInputs = new EditText[]{
@@ -180,7 +185,7 @@ public class SignUpEmailVerificationFragment extends Fragment {
 
                     binding.btnClearAll.setVisibility(TextUtils.isEmpty(s) ? View.GONE : View.VISIBLE);
                     if (TextUtils.isEmpty(s)) {
-                        binding.txtMessage.setVisibility(View.GONE);
+                        binding.txtOtpFeedback.setVisibility(View.GONE);
                     }
 
                     if (s.length() == 1 && next != null) {
@@ -279,14 +284,12 @@ public class SignUpEmailVerificationFragment extends Fragment {
         }.start();
     }
 
-    /*----------------------------------
-    Get User Email (OTP) code was sent
+    /*-------------------------------------
+    Get User Email (OTP) code was sent to
     Mask and display in the UI
-    ----------------------------------*/
+    -------------------------------------*/
     private void maskAndDisplayUserEmail() {
-        String email = vm.getEmail();
-        String displayEmail = "Enter the OTP sent to your email address" + "<font color='#0044CC'>" + "\n(" + StringUtil.maskEmail(email) + ")" + "<font/>";
-        binding.txtInfoInstruction.setText(Html.fromHtml(displayEmail, Html.FROM_HTML_MODE_LEGACY));
+        binding.txtUserEmail.setText(StringUtil.maskEmail(vm.getEmail()));
     }
 
     /*----------------------

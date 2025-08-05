@@ -67,7 +67,7 @@
                     android:layout_marginTop="10dp">
 
                     <TextView
-                        android:id="@+id/txtMessageInfo"
+                        android:id="@+id/txtInfo"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_alignParentStart="true"
@@ -81,7 +81,7 @@
                         android:id="@+id/txtUserEmail"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:layout_below="@+id/txtMessageInfo"
+                        android:layout_below="@+id/txtInfo"
                         android:layout_alignParentStart="true"
                         android:fontFamily="@font/poppins_regular"
                         android:includeFontPadding="false"
@@ -187,7 +187,7 @@
 
                 <!--Success/Failure TxT-->
                 <TextView
-                    android:id="@+id/txtMessage"
+                    android:id="@+id/txtOtpFeedback"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_centerVertical="true"
@@ -251,7 +251,7 @@
             </LinearLayout>
 
             <TextView
-                android:id="@+id/txtInfo"
+                android:id="@+id/txtOtpInfo"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="10dp"
@@ -264,7 +264,7 @@
                 android:textSize="11sp" />
 
             <com.google.android.material.button.MaterialButton
-                android:id="@+id/buttonConfirm"
+                android:id="@+id/btnConfirm"
                 style="@style/Widget.SettleXApp.Button.Filled.Rounded8.Blue"
                 android:layout_width="match_parent"
                 android:layout_height="55dp"

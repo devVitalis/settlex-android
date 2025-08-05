@@ -13,16 +13,23 @@ import android.view.View;
 import android.view.Window;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.EditText;
+import android.widget.Toast;
 
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.content.ContextCompat;
+import androidx.lifecycle.ViewModelProvider;
 
 import com.settlex.android.R;
 import com.settlex.android.databinding.ActivityPasswordResetBinding;
 import com.settlex.android.ui.auth.components.OtpVerificationActivity;
+import com.settlex.android.ui.auth.viewmodel.AuthViewModel;
+import com.settlex.android.ui.common.SettleXProgressBarController;
+import com.settlex.android.util.LiveDataUtils;
 
 public class PasswordResetActivity extends AppCompatActivity {
+    private SettleXProgressBarController progressBar;
     private ActivityPasswordResetBinding binding;
+    private AuthViewModel vm;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -30,6 +37,9 @@ public class PasswordResetActivity extends AppCompatActivity {
         setContentView(R.layout.activity_password_reset);
         binding = ActivityPasswordResetBinding.inflate(getLayoutInflater());
         setContentView(binding.getRoot());
+
+        vm = new ViewModelProvider(this).get(AuthViewModel.class);
+        progressBar = new SettleXProgressBarController(binding.getRoot());
 
         setupStatusBar();
         setupUIActions();
@@ -40,19 +50,42 @@ public class PasswordResetActivity extends AppCompatActivity {
     Setup UI and Event Handlers
     ---------------------------*/
     private void setupUIActions() {
-        emailEditTextWatcher();
+        observerEmailField();
         reEnableEmailEditTextFocus();
         setupEditTxtEmailFocusHandler();
 
         // Handle Click Listeners
-        binding.imgBackBefore.setOnClickListener(v -> getOnBackPressedDispatcher().onBackPressed());
-        binding.btnResetPassword.setOnClickListener(v -> startActivity(new Intent(this, OtpVerificationActivity.class)));
+        binding.imgBackBefore.setOnClickListener(v -> finish());
+        binding.btnResetPassword.setOnClickListener(v -> sendPasswordResetOtp());
     }
 
-    /*--------------------------------------
-    ---TODO
-    --------------------------------------*/
-    private void emailEditTextWatcher() {
+    /*------------------------------------------
+    Send Password Reset Verification OTP email
+    ------------------------------------------*/
+    private void sendPasswordResetOtp() {
+        progressBar.show();
+
+        String email = binding.editTxtEmail.getText().toString().trim();
+
+        vm.sendPasswordResetOtp(email);
+        LiveDataUtils.observeOnce(vm.getSendPasswordResetOtpResult(), this, otpResult -> {
+            if (otpResult.isSuccess()) {
+                Toast.makeText(this, otpResult.message(), Toast.LENGTH_SHORT).show();
+
+                Intent intent = new Intent(this, OtpVerificationActivity.class);
+                intent.putExtra("email", email);
+                startActivity(intent);
+            } else {
+                binding.txtErrorInfoEmail.setText(otpResult.message());
+            }
+            progressBar.hide();
+        });
+    }
+
+    /*--------------------------------------------------
+    Monitor email input field and toggle UI dynamically
+    --------------------------------------------------*/
+    private void observerEmailField() {
         binding.editTxtEmail.addTextChangedListener(new TextWatcher() {
             @Override
             public void afterTextChanged(Editable editable) {

@@ -119,11 +119,11 @@ public class AuthRepository {
     /*----------------------------------------
     Trigger Cloud Function To Send Email OTP
     ----------------------------------------*/
-    public void sendEmailOtp(String email, SendEmailOtpCallback callback) {
+    public void sendVerifyEmailOtp(String email, SendEmailOtpCallback callback) {
         Map<String, Object> data = new HashMap<>();
         data.put("email", email);
 
-        functions.getHttpsCallable("sendEmailOtp")
+        functions.getHttpsCallable("sendVerifyEmailOtp")
                 .call(data)
                 .addOnSuccessListener(result -> callback.onSuccess())
                 .addOnFailureListener(e -> callback.onFailure(e.getMessage()));
@@ -145,7 +145,7 @@ public class AuthRepository {
     }
 
     /*--------------------------------------------
-    Trigger Cloud Function To Mark Email Verified
+    Trigger cloud function to mark email verified
     --------------------------------------------*/
     private void markUserEmailVerified(String uid, CreateAccountCallback callback) {
         Map<String, Object> data = new HashMap<>();
@@ -158,7 +158,7 @@ public class AuthRepository {
     }
 
     /*--------------------------------------------
-    Save pending flag for Unverified users (Email)
+    Save pending flag for unverified users (Email)
     --------------------------------------------*/
     private void markEmailUnverified(String uid) {
         db.collection("users")
@@ -166,6 +166,34 @@ public class AuthRepository {
                 .update("emailVerifiedPending", true)
                 .addOnFailureListener(e -> Log.w("EmailFlag", "Failed to set emailVerifiedPending", e));
     }
+
+    /*------------------------------------
+    Send password reset email otp to user
+    -------------------------------------*/
+    public void sendPasswordResetEmailOtp(String email, SendPasswordResetOtpCallback callback) {
+        Map<String, Object> data = new HashMap<>();
+        data.put("email", email);
+
+        functions.getHttpsCallable("sendPasswordResetEmailOtp")
+                .call(data)
+                .addOnSuccessListener(result -> callback.onSuccess())
+                .addOnFailureListener(e -> callback.onFailure(e.getMessage()));
+    }
+
+    /*-----------------------------------------
+    Verify password reset otp provided by user
+    -----------------------------------------*/
+    public void verifyPasswordResetEmailOtp(String email, String otp, VerifyPasswordResetOtpCallback callback) {
+        Map<String, Object> data = new HashMap<>();
+        data.put("email", email);
+        data.put("otp", otp);
+
+        functions.getHttpsCallable("sendPasswordResetEmailOtp")
+                .call(data)
+                .addOnSuccessListener(result -> callback.onSuccess())
+                .addOnFailureListener(e -> callback.onFailure(e.getMessage()));
+    }
+
 
     /*------------------------------------
     Sign in Method with Lockout Handling
@@ -264,6 +292,20 @@ public class AuthRepository {
     // CheckEmailExistCallback
     public interface CheckEmailExistCallback {
         void onSuccess(boolean exists);
+
+        void onFailure(String reason);
+    }
+
+    // SendPasswordResetOtpCallback
+    public interface SendPasswordResetOtpCallback {
+        void onSuccess();
+
+        void onFailure(String reason);
+    }
+
+    // VerifyPasswordResetOtpCallback
+    public interface VerifyPasswordResetOtpCallback {
+        void onSuccess();
 
         void onFailure(String reason);
     }

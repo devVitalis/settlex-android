@@ -42,7 +42,7 @@ public class SignInActivity extends AppCompatActivity {
         setContentView(binding.getRoot());
 
         vm = new ViewModelProvider(this).get(AuthViewModel.class);
-        progressBar = new SettleXProgressBarController(binding.main);
+        progressBar = new SettleXProgressBarController(binding.getRoot());
 
         setupStatusBar();
         setupUIActions();
@@ -63,7 +63,7 @@ public class SignInActivity extends AppCompatActivity {
         // Handle Click Listeners
         binding.imgBackBefore.setOnClickListener(v -> getOnBackPressedDispatcher().onBackPressed());
         binding.btnSignUp.setOnClickListener(v -> loadActivity(SignUpActivity.class));
-        binding.btnHelp.setOnClickListener(v -> loadActivity(AuthHelpActivity.class));
+        binding.btnHelp.setOnClickListener(v -> loadActivity(PasswordChangeActivity.class));
         binding.btnForgotPassword.setOnClickListener(view -> loadActivity(PasswordResetActivity.class));
         binding.btnSignIn.setOnClickListener(v -> attemptSignIn());
     }

@@ -100,7 +100,7 @@ public class SignUpUserContactInfoFragment extends Fragment {
         vm.updatePhone(phone);
 
         vm.sendEmailOtp(email);
-        LiveDataUtils.observeOnce(vm.getSendEmailOtpResult(), getViewLifecycleOwner(), sendEmailOtpResult -> {
+        LiveDataUtils.observeOnce(vm.getSendVerifyEmailOtpResult(), getViewLifecycleOwner(), sendEmailOtpResult -> {
             progressBar.hide();
             if (sendEmailOtpResult.isSuccess()) {
                 loadFragment(new SignUpEmailVerificationFragment());
@@ -114,8 +114,8 @@ public class SignUpUserContactInfoFragment extends Fragment {
     Helper Method to Display Error Info to User
     -------------------------------------------*/
     private void showError(String message) {
-        binding.txtErrorInfoEmail.setText(message);
-        binding.txtErrorInfoEmail.setVisibility(View.VISIBLE);
+        binding.txtEmailError.setText(message);
+        binding.txtEmailError.setVisibility(View.VISIBLE);
     }
 
     /*---------------------------------------
@@ -243,7 +243,7 @@ public class SignUpUserContactInfoFragment extends Fragment {
 
             @Override
             public void onTextChanged(CharSequence s, int start, int before, int count) {
-                binding.txtErrorInfoEmail.setVisibility(View.GONE);
+                binding.txtEmailError.setVisibility(View.GONE);
                 binding.emailSectionHeader.setVisibility(!TextUtils.isEmpty(s) ? View.VISIBLE : View.INVISIBLE);
             }
 
@@ -259,7 +259,7 @@ public class SignUpUserContactInfoFragment extends Fragment {
 
             @Override
             public void onTextChanged(CharSequence s, int start, int before, int count) {
-                binding.txtErrorMsgPhoneNumber.setVisibility(View.GONE);
+                binding.txtPhoneError.setVisibility(View.GONE);
             }
 
             @Override

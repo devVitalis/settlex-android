@@ -11,11 +11,13 @@ import com.settlex.android.ui.auth.util.AuthResult;
 public class AuthViewModel extends ViewModel {
     private final AuthRepository authRepo = new AuthRepository();
     private final MutableLiveData<UserModel> userLiveData = new MutableLiveData<>();
-    private final MutableLiveData<AuthResult> sendEmailOtpResult = new MutableLiveData<>();
-    private final MutableLiveData<AuthResult> emailVerifyResult = new MutableLiveData<>();
+    private final MutableLiveData<AuthResult> sendVerifyEmailOtpResult = new MutableLiveData<>();
+    private final MutableLiveData<AuthResult> emailVerifyOtpResult = new MutableLiveData<>();
     private final MutableLiveData<AuthResult> signUpResult = new MutableLiveData<>();
     private final MutableLiveData<AuthResult> signInResult = new MutableLiveData<>();
     private final MutableLiveData<AuthResult> checkEmailExistResult = new MutableLiveData<>();
+    private final MutableLiveData<AuthResult> sendPasswordResetOtpResult = new MutableLiveData<>();
+    private final MutableLiveData<AuthResult> verifyPasswordResetOtpResult = new MutableLiveData<>();
 
     /*------------------------------------
     Safely retrieve or initialize user
@@ -101,13 +103,13 @@ public class AuthViewModel extends ViewModel {
     Expose LiveData results to be observed by the UI
     ------------------------------------------------*/
     // Email OTP result
-    public LiveData<AuthResult> getSendEmailOtpResult() {
-        return sendEmailOtpResult;
+    public LiveData<AuthResult> getSendVerifyEmailOtpResult() {
+        return sendVerifyEmailOtpResult;
     }
 
     // Email OTP verification result
-    public LiveData<AuthResult> getOtpVerifyResult() {
-        return emailVerifyResult;
+    public LiveData<AuthResult> getVerifyEmailOtpResult() {
+        return emailVerifyOtpResult;
     }
 
     // User sign-up result
@@ -125,19 +127,29 @@ public class AuthViewModel extends ViewModel {
         return checkEmailExistResult;
     }
 
+    // Password Reset email OTP result
+    public LiveData<AuthResult> getSendPasswordResetOtpResult() {
+        return sendPasswordResetOtpResult;
+    }
+
+    // Password Reset email OTP verification result
+    public LiveData<AuthResult> getVerifyPasswordResetOtpResult() {
+        return verifyPasswordResetOtpResult;
+    }
+
     /*------------------------------------------------
     Send email OTP via repository and post result
     ------------------------------------------------*/
     public void sendEmailOtp(String email) {
-        authRepo.sendEmailOtp(email, new AuthRepository.SendEmailOtpCallback() {
+        authRepo.sendVerifyEmailOtp(email, new AuthRepository.SendEmailOtpCallback() {
             @Override
             public void onSuccess() {
-                sendEmailOtpResult.postValue(AuthResult.success("OTP Sent"));
+                sendVerifyEmailOtpResult.postValue(AuthResult.success("OTP Sent"));
             }
 
             @Override
             public void onFailure(String reason) {
-                sendEmailOtpResult.postValue(AuthResult.failure(reason));
+                sendVerifyEmailOtpResult.postValue(AuthResult.failure(reason));
             }
         });
     }
@@ -149,12 +161,12 @@ public class AuthViewModel extends ViewModel {
         authRepo.verifyEmailOtp(email, otp, new AuthRepository.VerifyEmailOtpCallback() {
             @Override
             public void onSuccess() {
-                emailVerifyResult.postValue(AuthResult.success("Verification Successful"));
+                emailVerifyOtpResult.postValue(AuthResult.success("Verification Successful"));
             }
 
             @Override
             public void onFailure(String reason) {
-                emailVerifyResult.postValue(AuthResult.failure(reason));
+                emailVerifyOtpResult.postValue(AuthResult.failure(reason));
             }
         });
     }
@@ -210,4 +222,37 @@ public class AuthViewModel extends ViewModel {
         });
     }
 
+    /*---------------------------------------------------
+    Send password reset otp email and post result
+    ---------------------------------------------------*/
+    public void sendPasswordResetOtp(String email) {
+        authRepo.sendPasswordResetEmailOtp(email, new AuthRepository.SendPasswordResetOtpCallback() {
+            @Override
+            public void onSuccess() {
+                sendPasswordResetOtpResult.postValue(AuthResult.success("OTP Sent"));
+            }
+
+            @Override
+            public void onFailure(String reason) {
+                sendPasswordResetOtpResult.postValue(AuthResult.failure(reason));
+            }
+        });
+    }
+
+    /*---------------------------------------------------
+    Verify password reset email otp and post result
+    ---------------------------------------------------*/
+    public void verifyPasswordResetOtp(String email, String otp) {
+        authRepo.verifyPasswordResetEmailOtp(email, otp, new AuthRepository.VerifyPasswordResetOtpCallback() {
+            @Override
+            public void onSuccess() {
+                verifyPasswordResetOtpResult.postValue(AuthResult.success("Verification Successful"));
+            }
+
+            @Override
+            public void onFailure(String reason) {
+                verifyPasswordResetOtpResult.postValue(AuthResult.failure(reason));
+            }
+        });
+    }
 }

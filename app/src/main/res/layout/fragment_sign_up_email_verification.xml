@@ -173,17 +173,29 @@
                     android:textStyle="bold" />
 
                 <TextView
-                    android:id="@+id/txtInfoInstruction"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_marginTop="5dp"
                     android:fontFamily="@font/poppins_regular"
                     android:gravity="center"
                     android:includeFontPadding="false"
-                    android:text="Enter the OTP sent to your email address\n(*****@gmail.com)"
+                    android:text="Enter the OTP sent to your email address"
                     android:textAlignment="center"
                     android:textColor="@color/gray"
                     android:textSize="14sp" />
+
+                <TextView
+                    android:id="@+id/txtUserEmail"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:fontFamily="@font/poppins_regular"
+                    android:gravity="center"
+                    android:includeFontPadding="false"
+                    android:text="(*****@gmail.com)"
+                    android:textAlignment="center"
+                    android:textColor="@color/blue"
+                    android:textSize="14sp"
+                    android:textStyle="bold" />
 
                 <TextView
                     android:layout_width="wrap_content"
@@ -286,7 +298,7 @@
 
                     <!--Success/Failure TxT-->
                     <TextView
-                        android:id="@+id/txtMessage"
+                        android:id="@+id/txtOtpFeedback"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_centerVertical="true"
