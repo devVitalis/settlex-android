@@ -13,29 +13,28 @@ import com.settlex.android.data.model.UserModel;
 import java.util.HashMap;
 import java.util.Map;
 
+/**
+ * Repository layer handling authentication-related operations.
+ * Centralizes Firebase Auth, Firestore, and Cloud Functions interactions.
+ */
 public class AuthRepository {
 
-    private final FirebaseAuth auth;
-    private final FirebaseFirestore db;
-    private final FirebaseFunctions functions;
+    private final FirebaseAuth firebaseAuth;
+    private final FirebaseFirestore firestore;
+    private final FirebaseFunctions cloudFunctions;
 
-    /*--------------------------------------------
-    Constructor to Initialize Services Instances
-    --------------------------------------------*/
     public AuthRepository() {
-        auth = FirebaseAuth.getInstance();
-        db = FirebaseFirestore.getInstance();
-        functions = FirebaseFunctions.getInstance("europe-west2");
+        firebaseAuth = FirebaseAuth.getInstance();
+        firestore = FirebaseFirestore.getInstance();
+        cloudFunctions = FirebaseFunctions.getInstance("europe-west2");
     }
 
-    /*--------------------------------------------
-    SignIn User with Email && Password
-    --------------------------------------------*/
-    public void signInWithEmail(String email, String password, SignInCallback callback) {
-        auth.signInWithEmailAndPassword(email, password)
-                .addOnSuccessListener(authResult -> {
-                    callback.onSuccess();
-                })
+    /**
+     * Authenticates a user with email and password.
+     */
+    public void loginWithEmail(String email, String password, LoginWithEmailCallback callback) {
+        firebaseAuth.signInWithEmailAndPassword(email, password)
+                .addOnSuccessListener(authResult -> callback.onSuccess())
                 .addOnFailureListener(e -> {
                     if (e instanceof FirebaseAuthInvalidCredentialsException) {
                         callback.onFailure("Invalid email or password");
@@ -45,20 +44,19 @@ public class AuthRepository {
                 });
     }
 
-    /*-------------------------------------------
-    Create user Account with email && Password
-    -------------------------------------------*/
-    public void signUpWithEmailAndPassword(UserModel user, String email, String password, CreateAccountCallback callback) {
-        auth.createUserWithEmailAndPassword(email, password)
+    /**
+     * Registers a new user and stores their profile in Firestore.
+     */
+    public void registerUser(UserModel user, String email, String password, RegisterUserCallback callback) {
+        firebaseAuth.createUserWithEmailAndPassword(email, password)
                 .addOnSuccessListener(authResult -> {
                     FirebaseUser currentUser = authResult.getUser();
                     if (currentUser == null) {
                         callback.onFailure("Authentication failed. User not found.");
                         return;
                     }
-                    String uid = currentUser.getUid();
-                    user.setUid(uid);
-                    saveUserProfileToDatabase(user, callback);
+                    user.setUid(currentUser.getUid());
+                    storeUserProfile(user, callback);
                 })
                 .addOnFailureListener(e -> {
                     if (e instanceof FirebaseAuthUserCollisionException) {
@@ -69,46 +67,18 @@ public class AuthRepository {
                 });
     }
 
-    /*------------------------------------
-    Save user profile and handle callback
-    -------------------------------------*/
-    public void saveUserProfileToDatabase(UserModel user, CreateAccountCallback callback) {
-        Map<String, Object> data = new HashMap<>();
-        data.put("user", user.toMap()); // JSON-safe user data
-
-        functions.getHttpsCallable("saveUserProfile")
-                .call(data)
-                .addOnSuccessListener(result -> {
-
-                    callback.onSuccess();
-
-                    markUserEmailVerified(user.getUid(), new CreateAccountCallback() {
-                        @Override
-                        public void onSuccess() {
-                        }
-
-                        @Override
-                        public void onFailure(String reason) {
-                            markEmailUnverified(user.getUid());
-                        }
-                    });
-                })
-                .addOnFailureListener(e -> callback.onFailure(e.getMessage()));
-    }
-
-    /*----------------------------------------------------
-    Check if email (user) already exist in Firebase Auth
-    ----------------------------------------------------*/
-    public void checkEmailExist(String email, CheckEmailExistCallback callback) {
+    /**
+     * Checks if an email is already registered by calling a Cloud Function.
+     */
+    public void checkEmailExistence(String email, CheckEmailExistenceCallback callback) {
         Map<String, Object> data = new HashMap<>();
         data.put("email", email);
-
-        functions.getHttpsCallable("checkEmailExists")
+        cloudFunctions.getHttpsCallable("checkEmailExists")
                 .call(data)
                 .addOnSuccessListener(result -> {
                     if (result.getData() != null) {
-                        boolean exist = Boolean.TRUE.equals(((Map<?, ?>) result.getData()).get("exists"));
-                        callback.onSuccess(exist);
+                        boolean exists = Boolean.TRUE.equals(((Map<?, ?>) result.getData()).get("exists"));
+                        callback.onSuccess(exists);
                     } else {
                         callback.onFailure("Invalid response from server.");
                     }
@@ -116,197 +86,134 @@ public class AuthRepository {
                 .addOnFailureListener(e -> callback.onFailure(e.getMessage()));
     }
 
-    /*----------------------------------------
-    Trigger Cloud Function To Send Email OTP
-    ----------------------------------------*/
-    public void sendVerifyEmailOtp(String email, SendEmailOtpCallback callback) {
+    /**
+     * Sends an OTP for email verification.
+     */
+    public void sendEmailVerificationOtp(String email, SendEmailVerificationOtpCallback callback) {
         Map<String, Object> data = new HashMap<>();
         data.put("email", email);
-
-        functions.getHttpsCallable("sendVerifyEmailOtp")
+        cloudFunctions.getHttpsCallable("sendVerifyEmailOtp")
                 .call(data)
                 .addOnSuccessListener(result -> callback.onSuccess())
                 .addOnFailureListener(e -> callback.onFailure(e.getMessage()));
     }
 
-    /*------------------------------------------
-    Trigger Cloud Function To Verify Email OTP
-    ------------------------------------------*/
-    public void verifyEmailOtp(String email, String otp, VerifyEmailOtpCallback callback) {
+    /**
+     * Verifies the OTP entered for email verification.
+     */
+    public void verifyEmailVerificationOtp(String email, String otp, VerifyEmailVerificationOtpCallback callback) {
         Map<String, Object> data = new HashMap<>();
         data.put("email", email);
         data.put("otp", otp);
-
-        //TODO: Delete Otp Request on Verification Success
-        functions.getHttpsCallable("verifyEmailOtp")
+        cloudFunctions.getHttpsCallable("verifyEmailOtp")
                 .call(data)
                 .addOnSuccessListener(result -> callback.onSuccess())
                 .addOnFailureListener(e -> callback.onFailure(e.getMessage()));
     }
 
-    /*--------------------------------------------
-    Trigger cloud function to mark email verified
-    --------------------------------------------*/
-    private void markUserEmailVerified(String uid, CreateAccountCallback callback) {
+    /**
+     * Sends an OTP for password reset.
+     */
+    public void sendPasswordResetOtp(String email, SendPasswordResetOtpCallback callback) {
+        Map<String, Object> data = new HashMap<>();
+        data.put("email", email);
+        cloudFunctions.getHttpsCallable("sendPasswordResetEmailOtp")
+                .call(data)
+                .addOnSuccessListener(result -> callback.onSuccess())
+                .addOnFailureListener(e -> callback.onFailure(e.getMessage()));
+    }
+
+    /**
+     * Verifies the OTP for password reset.
+     */
+    public void verifyPasswordResetOtp(String email, String otp, VerifyPasswordResetOtpCallback callback) {
+        Map<String, Object> data = new HashMap<>();
+        data.put("email", email);
+        data.put("otp", otp);
+        cloudFunctions.getHttpsCallable("verifyPasswordResetEmailOtp")
+                .call(data)
+                .addOnSuccessListener(result -> callback.onSuccess())
+                .addOnFailureListener(e -> callback.onFailure(e.getMessage()));
+    }
+
+    /**
+     * Saves user profile in backend via Cloud Function and marks email as verified.
+     */
+    private void storeUserProfile(UserModel user, RegisterUserCallback callback) {
+        Map<String, Object> data = new HashMap<>();
+        data.put("user", user.toMap());
+        cloudFunctions.getHttpsCallable("saveUserProfile")
+                .call(data)
+                .addOnSuccessListener(result -> {
+                    callback.onSuccess();
+                    markEmailVerified(user.getUid(), new RegisterUserCallback() {
+                        @Override
+                        public void onSuccess() { }
+
+                        @Override
+                        public void onFailure(String reason) {
+                            setEmailUnverified(user.getUid());
+                        }
+                    });
+                })
+                .addOnFailureListener(e -> callback.onFailure(e.getMessage()));
+    }
+
+    /**
+     * Marks the user's email as verified in backend.
+     */
+    private void markEmailVerified(String uid, RegisterUserCallback callback) {
         Map<String, Object> data = new HashMap<>();
         data.put("uid", uid);
-
-        functions.getHttpsCallable("markEmailVerified")
+        cloudFunctions.getHttpsCallable("markEmailVerified")
                 .call(data)
                 .addOnSuccessListener(result -> callback.onSuccess())
                 .addOnFailureListener(e -> callback.onFailure(e.getMessage()));
     }
 
-    /*--------------------------------------------
-    Save pending flag for unverified users (Email)
-    --------------------------------------------*/
-    private void markEmailUnverified(String uid) {
-        db.collection("users")
+    /**
+     * Flags user email as unverified in Firestore if verification process fails.
+     */
+    private void setEmailUnverified(String uid) {
+        firestore.collection("users")
                 .document(uid)
                 .update("emailVerifiedPending", true)
                 .addOnFailureListener(e -> Log.w("EmailFlag", "Failed to set emailVerifiedPending", e));
     }
 
-    /*------------------------------------
-    Send password reset email otp to user
-    -------------------------------------*/
-    public void sendPasswordResetEmailOtp(String email, SendPasswordResetOtpCallback callback) {
-        Map<String, Object> data = new HashMap<>();
-        data.put("email", email);
-
-        functions.getHttpsCallable("sendPasswordResetEmailOtp")
-                .call(data)
-                .addOnSuccessListener(result -> callback.onSuccess())
-                .addOnFailureListener(e -> callback.onFailure(e.getMessage()));
-    }
-
-    /*-----------------------------------------
-    Verify password reset otp provided by user
-    -----------------------------------------*/
-    public void verifyPasswordResetEmailOtp(String email, String otp, VerifyPasswordResetOtpCallback callback) {
-        Map<String, Object> data = new HashMap<>();
-        data.put("email", email);
-        data.put("otp", otp);
-
-        functions.getHttpsCallable("sendPasswordResetEmailOtp")
-                .call(data)
-                .addOnSuccessListener(result -> callback.onSuccess())
-                .addOnFailureListener(e -> callback.onFailure(e.getMessage()));
-    }
-
-
-    /*------------------------------------
-    Sign in Method with Lockout Handling
-    -------------------------------------*/
-    /*
-    public void signInWithEmail(String email, String password, SignInCallback callback) {
-        DocumentReference attemptRef = db.collection("login_attempts").document(email);
-
-        // Step 1: Check if lockUntil is still active
-        attemptRef.get()
-                .addOnSuccessListener(doc -> {
-                    if (doc.exists()) {
-                        Timestamp lockUntil = doc.getTimestamp("lockUntil");
-
-                        if (lockUntil != null && lockUntil.toDate().after(new Date())) {
-                            callback.onFailure("Account locked. Try again later.");
-                            return;
-                        }
-                    } else {
-
-                    // Step 2: Proceed with Firebase sign-in
-                    auth.signInWithEmailAndPassword(email, password)
-                            .addOnSuccessListener(authResult -> {
-                                // Step 3: Delete login_attempts doc on success if it exists
-                                if (doc.exists()) {
-                                    attemptRef.delete();
-                                }
-                                callback.onSuccess();
-                            })
-                            .addOnFailureListener(e -> {
-                                // Step 4: On failure, increment failedAttempts or create doc
-                                if (doc.exists()) {
-                                    Long failedAttempts = doc.getLong("failedAttempts");
-                                    failedAttempts = (failedAttempts != null) ? failedAttempts + 1 : 1;
-
-                                    Map<String, Object> updateData = new HashMap<>();
-                                    updateData.put("failedAttempts", failedAttempts);
-
-                                    if (failedAttempts >= 5) {
-                                        Calendar cal = Calendar.getInstance();
-                                        cal.add(Calendar.HOUR, 1);
-                                        updateData.put("lockUntil", new Timestamp(cal.getTime()));
-                                    }
-
-                                    attemptRef.set(updateData, SetOptions.merge());
-                                } else {
-                                    // First failure: create doc
-                                    Map<String, Object> data = new HashMap<>();
-                                    data.put("failedAttempts", 1);
-                                    attemptRef.set(data);
-                                }
-
-                                callback.onFailure(e.getMessage());
-                            });
-                    }
-
-                })
-                .addOnFailureListener(e -> {
-                    // Firestore read failure fallback
-                    callback.onFailure("Login failed. Try again.");
-                });
-    }
-    */
-
-    /*---------------------------------------
-    Callback Interfaces For Success/Failures
-    ---------------------------------------*/
-    // CreateAccountCallback
-    public interface CreateAccountCallback {
+    // ===== Callback Interfaces =====
+    public interface LoginWithEmailCallback {
         void onSuccess();
-
         void onFailure(String reason);
     }
 
-    // SendEmailOtpCallback
-    public interface SendEmailOtpCallback {
+    public interface RegisterUserCallback {
         void onSuccess();
-
         void onFailure(String reason);
     }
 
-    // VerifyEmailOtpCallback
-    public interface VerifyEmailOtpCallback {
-        void onSuccess();
-
-        void onFailure(String reason);
-    }
-
-    // SignInCallback
-    public interface SignInCallback {
-        void onSuccess();
-
-        void onFailure(String reason);
-    }
-
-    // CheckEmailExistCallback
-    public interface CheckEmailExistCallback {
+    public interface CheckEmailExistenceCallback {
         void onSuccess(boolean exists);
-
         void onFailure(String reason);
     }
 
-    // SendPasswordResetOtpCallback
+    public interface SendEmailVerificationOtpCallback {
+        void onSuccess();
+        void onFailure(String reason);
+    }
+
+    public interface VerifyEmailVerificationOtpCallback {
+        void onSuccess();
+        void onFailure(String reason);
+    }
+
     public interface SendPasswordResetOtpCallback {
         void onSuccess();
-
         void onFailure(String reason);
     }
 
-    // VerifyPasswordResetOtpCallback
     public interface VerifyPasswordResetOtpCallback {
         void onSuccess();
-
         void onFailure(String reason);
     }
 }

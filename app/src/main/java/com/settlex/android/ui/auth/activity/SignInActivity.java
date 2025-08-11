@@ -22,7 +22,6 @@ import androidx.lifecycle.ViewModelProvider;
 
 import com.settlex.android.R;
 import com.settlex.android.databinding.ActivitySignInBinding;
-import com.settlex.android.ui.activities.help.AuthHelpActivity;
 import com.settlex.android.ui.auth.viewmodel.AuthViewModel;
 import com.settlex.android.ui.common.SettleXProgressBarController;
 import com.settlex.android.ui.dashboard.DashboardActivity;
@@ -46,6 +45,27 @@ public class SignInActivity extends AppCompatActivity {
 
         setupStatusBar();
         setupUIActions();
+
+        vm.getLoginResult().observe(this, result -> {
+            if (result != null) {
+                switch (result.getStatus()) {
+                    case SUCCESS -> {
+                        startActivity(new Intent(this, DashboardActivity.class));
+                        finish();
+
+                        progressBar.hide();
+                    }
+
+                    case ERROR -> {
+                        Toast.makeText(this, result.getMessage(), Toast.LENGTH_LONG).show();
+
+                        progressBar.hide();
+                    }
+
+                    case LOADING -> progressBar.show();
+                }
+            }
+        });
     }
 
     /*---------------------------
@@ -77,17 +97,7 @@ public class SignInActivity extends AppCompatActivity {
         String email = Objects.requireNonNull(binding.editTxtEmail.getText()).toString().trim();
         String password = Objects.requireNonNull(binding.editTxtPassword.getText()).toString().trim();
 
-        vm.signInUser(email, password);
-
-        LiveDataUtils.observeOnce(vm.getSignInResult(),this, signInResult -> {
-            if (signInResult.isSuccess()) {
-                startActivity(new Intent(this, DashboardActivity.class));
-                finish();
-            } else {
-                Toast.makeText(this, signInResult.message(), Toast.LENGTH_LONG).show();
-            }
-            progressBar.hide();
-        });
+        vm.loginWithEmail(email, password);
     }
 
     /*--------------------------------

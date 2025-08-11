@@ -1,14 +1,13 @@
 package com.settlex.android.ui.auth.fragment;
 
 import android.annotation.SuppressLint;
-import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
-import android.graphics.Color;
 import android.os.Bundle;
 import android.text.Editable;
 import android.text.SpannableStringBuilder;
 import android.text.Spanned;
+import android.text.TextPaint;
 import android.text.TextUtils;
 import android.text.TextWatcher;
 import android.text.method.LinkMovementMethod;
@@ -23,6 +22,7 @@ import android.view.inputmethod.InputMethodManager;
 import android.widget.EditText;
 
 import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
 import androidx.core.content.ContextCompat;
 import androidx.fragment.app.Fragment;
 import androidx.lifecycle.ViewModelProvider;
@@ -31,35 +31,35 @@ import com.settlex.android.R;
 import com.settlex.android.databinding.FragmentSignUpUserContactInfoBinding;
 import com.settlex.android.ui.activities.legal.PrivacyPolicyActivity;
 import com.settlex.android.ui.activities.legal.TermsAndConditionsActivity;
+import com.settlex.android.ui.auth.util.AuthResult;
 import com.settlex.android.ui.auth.viewmodel.AuthViewModel;
 import com.settlex.android.ui.common.SettleXProgressBarController;
-import com.settlex.android.util.LiveDataUtils;
 import com.settlex.android.util.StringUtil;
 
 import java.util.Objects;
 
 public class SignUpUserContactInfoFragment extends Fragment {
-    private AuthViewModel vm;
-    private SettleXProgressBarController progressBar;
+    private AuthViewModel authViewModel;
+    private SettleXProgressBarController progressController;
     private FragmentSignUpUserContactInfoBinding binding;
-
-    /*----------------------------------
-    Required Empty Public Constructor
-    ----------------------------------*/
-    public SignUpUserContactInfoFragment() {
-    }
 
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         binding = FragmentSignUpUserContactInfoBinding.inflate(inflater, container, false);
 
-        progressBar = new SettleXProgressBarController(binding.fragmentContainer);
-        vm = new ViewModelProvider(requireActivity()).get(AuthViewModel.class);
+        progressController = new SettleXProgressBarController(binding.getRoot());
+        authViewModel = new ViewModelProvider(requireActivity()).get(AuthViewModel.class);
 
-        setupStatusBar();
-        setupUIActions();
+        configureStatusBar();
+        initializeUiComponents();
 
         return binding.getRoot();
+    }
+
+    @Override
+    public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
+        super.onViewCreated(view, savedInstanceState);
+        setupVerificationObserver();
     }
 
     @Override
@@ -68,110 +68,106 @@ public class SignUpUserContactInfoFragment extends Fragment {
         super.onDestroyView();
     }
 
-    /*-----------------------------
-    Handle UI & Event Listeners
-    -----------------------------*/
-    private void setupUIActions() {
-        reEnableFocus();
-        setupTextWatchers();
-        hideInfoMessagePrompt();
-        setClickableLegalLinks();
-        setupEditTxtFocusHandler();
-        setupUI(binding.fragmentContainer);
+    private void initializeUiComponents() {
+        setupInputValidation();
+        configureLegalLinks();
+        setupFocusHandling();
+        setupTouchToHideKeyboard(binding.getRoot());
 
-        // Click Listeners
-        binding.imgBackBefore.setOnClickListener(v -> {
-            requireActivity().getOnBackPressedDispatcher().onBackPressed();
-            requireActivity().finish();
-        });
-        binding.btnHelp.setOnClickListener(v -> loadFragment(new SignUpUserPasswordFragment()));
-        binding.btnContinue.setOnClickListener(v -> validateInfoAndSendOtp());
+        binding.imgBackBefore.setOnClickListener(v -> navigateBack());
+        binding.btnContinue.setOnClickListener(v -> validateAndRequestOtp());
     }
 
-    /*------------------------------------------------
-    Validate user info and send email verification OTP
-    ------------------------------------------------*/
-    private void validateInfoAndSendOtp() {
-        progressBar.show();
-        String email = Objects.requireNonNull(binding.editTxtEmail.getText()).toString().trim();
-        String phone = StringUtil.formatPhoneNumber(binding.editTxtPhoneNumber.getText().toString().trim());
+    /**
+     * ===============================================================
+     * Observes OTP sending result and handles UI state changes:
+     * - Shows loading indicator during request
+     * - Navigates to verification screen on success
+     * - Displays error message if request fails
+     * ===============================================================
+     */
+    private void setupVerificationObserver() {
+        authViewModel.getSendVerificationOtpResult().observe(getViewLifecycleOwner(), event -> {
+            AuthResult<String> result = event.getContentIfNotHandled();
+            if (result != null) {
 
-        vm.updateEmail(email);
-        vm.updatePhone(phone);
-
-        vm.sendEmailOtp(email);
-        LiveDataUtils.observeOnce(vm.getSendVerifyEmailOtpResult(), getViewLifecycleOwner(), sendEmailOtpResult -> {
-            progressBar.hide();
-            if (sendEmailOtpResult.isSuccess()) {
-                loadFragment(new SignUpEmailVerificationFragment());
-            } else {
-                showError(sendEmailOtpResult.message());
+                switch (result.getStatus()) {
+                    case LOADING -> progressController.show();
+                    case SUCCESS -> {
+                        progressController.hide();
+                        navigateToFragment(new SignUpEmailVerificationFragment());
+                    }
+                    case ERROR -> {
+                        progressController.hide();
+                        showEmailError(result.getMessage());
+                    }
+                }
             }
         });
     }
 
-    /*-------------------------------------------
-    Helper Method to Display Error Info to User
-    -------------------------------------------*/
-    private void showError(String message) {
+    private void validateAndRequestOtp() {
+        String email = Objects.requireNonNull(binding.editTxtEmail.getText()).toString().trim();
+        String phone = StringUtil.formatPhoneNumber(binding.editTxtPhoneNumber.getText().toString().trim());
+
+        authViewModel.updateEmail(email);
+        authViewModel.updatePhone(phone);
+        authViewModel.sendEmailVerificationOtp(email);
+    }
+
+    private void showEmailError(String message) {
         binding.txtEmailError.setText(message);
         binding.txtEmailError.setVisibility(View.VISIBLE);
     }
 
-    /*---------------------------------------
-    Enable Continue when inputs are valid
-    ---------------------------------------*/
-    private void updateButtonState() {
+    /**
+     * ===============================================
+     * Updates continue button state based on:
+     * - Email format validity
+     * - Phone number format validity
+     * - Terms checkbox status
+     * ===============================================
+     */
+    private void updateContinueButtonState() {
         String email = Objects.requireNonNull(binding.editTxtEmail.getText()).toString().trim();
         String phone = Objects.requireNonNull(binding.editTxtPhoneNumber.getText()).toString().trim();
 
-        boolean validEmail = Patterns.EMAIL_ADDRESS.matcher(email).matches();
-        boolean validPhone = phone.matches("^(0?(70|80|81|90|91))\\d{8}$");
-        boolean isChecked = binding.checkBoxTermsPrivacy.isChecked();
+        boolean isValidEmail = Patterns.EMAIL_ADDRESS.matcher(email).matches();
+        boolean isValidPhone = phone.matches("^(0)?[7-9][0-1]\\d{8}$");
+        boolean isTermsAccepted = binding.checkBoxTermsPrivacy.isChecked();
 
-        binding.btnContinue.setEnabled(validEmail && validPhone && isChecked);
+        binding.btnContinue.setEnabled(isValidEmail && isValidPhone && isTermsAccepted);
     }
 
-    /*-----------------------------------
-    Enable focus on tap for EditTexts
-    -----------------------------------*/
-    private void reEnableFocus() {
-        View.OnClickListener enableFocusListener = v -> {
-            if (v instanceof EditText editText) {
-                editText.setFocusable(true);
-                editText.setFocusableInTouchMode(true);
-                editText.requestFocus();
+    private void setupFocusHandling() {
+        View.OnClickListener focusListener = v -> {
+            if (v instanceof EditText) {
+                v.setFocusable(true);
+                v.setFocusableInTouchMode(true);
+                v.requestFocus();
             }
         };
-        binding.editTxtEmail.setOnClickListener(enableFocusListener);
-        binding.editTxtPhoneNumber.setOnClickListener(enableFocusListener);
+
+        binding.editTxtEmail.setOnClickListener(focusListener);
+        binding.editTxtPhoneNumber.setOnClickListener(focusListener);
+
+        binding.editTxtPhoneNumber.setOnFocusChangeListener((v, hasFocus) ->
+                binding.editTxtPhoneNumberBg.setBackgroundResource(
+                        hasFocus
+                                ? R.drawable.bg_edit_txt_custom_white_focused
+                                : R.drawable.bg_edit_txt_custom_white_not_focused)
+        );
+
+        binding.editTxtEmail.setOnFocusChangeListener((v, hasFocus) ->
+                binding.editTxtEmailBg.setBackgroundResource(
+                        hasFocus
+                                ? R.drawable.bg_edit_txt_custom_white_focused
+                                : R.drawable.bg_edit_txt_custom_white_not_focused)
+        );
     }
 
-    /*-------------------------------------------
-    Enable Dynamic Stroke Color on editText bg
-    -------------------------------------------*/
-    private void setupEditTxtFocusHandler() {
-        binding.editTxtPhoneNumber.setOnFocusChangeListener((view, hasFocus) -> {
-            if (hasFocus) {
-                binding.editTxtPhoneNumberBg.setBackgroundResource(R.drawable.bg_edit_txt_custom_white_focused);
-            } else {
-                binding.editTxtPhoneNumberBg.setBackgroundResource(R.drawable.bg_edit_txt_custom_white_not_focused);
-            }
-        });
-        binding.editTxtEmail.setOnFocusChangeListener((view, hasFocus) -> {
-            if (hasFocus) {
-                binding.editTxtEmailBg.setBackgroundResource(R.drawable.bg_edit_txt_custom_white_focused);
-            } else {
-                binding.editTxtEmailBg.setBackgroundResource(R.drawable.bg_edit_txt_custom_white_not_focused);
-            }
-        });
-    }
-
-    /*-----------------------------------------
-    Validate Text inputs & update btn state
-    -----------------------------------------*/
-    private void setupTextWatchers() {
-        TextWatcher watcher = new TextWatcher() {
+    private void setupInputValidation() {
+        TextWatcher validationWatcher = new TextWatcher() {
             @Override
             public void beforeTextChanged(CharSequence s, int start, int count, int after) {
             }
@@ -182,63 +178,22 @@ public class SignUpUserContactInfoFragment extends Fragment {
 
             @Override
             public void onTextChanged(CharSequence s, int start, int before, int count) {
-                updateButtonState();
+                updateContinueButtonState();
             }
         };
 
-        binding.editTxtEmail.addTextChangedListener(watcher);
-        binding.editTxtPhoneNumber.addTextChangedListener(watcher);
-        binding.checkBoxTermsPrivacy.setOnCheckedChangeListener((compoundButton, b) -> updateButtonState());
-    }
+        binding.editTxtEmail.addTextChangedListener(validationWatcher);
+        binding.editTxtPhoneNumber.addTextChangedListener(validationWatcher);
+        binding.checkBoxTermsPrivacy.setOnCheckedChangeListener((buttonView, isChecked) -> updateContinueButtonState());
 
-    /*-----------------------------------
-    Setup Clickable Legal Links & Color
-    -----------------------------------*/
-    private void setClickableLegalLinks() {
-        String legalText = "I have read, understood and agreed to the Terms & Conditions and Privacy Policy.";
-        SpannableStringBuilder span = new SpannableStringBuilder(legalText);
-
-        ClickableSpan terms = new ClickableSpan() {
-            @Override
-            public void onClick(@NonNull View widget) {
-                loadActivity(TermsAndConditionsActivity.class);
-            }
-
-            @Override
-            public void updateDrawState(@NonNull android.text.TextPaint ds) {
-                ds.setColor(Color.parseColor("#0044CC"));
-                ds.setUnderlineText(false);
-            }
-        };
-
-        ClickableSpan privacy = new ClickableSpan() {
-            @Override
-            public void onClick(@NonNull View widget) {
-                loadActivity(PrivacyPolicyActivity.class);
-            }
-
-            @Override
-            public void updateDrawState(@NonNull android.text.TextPaint ds) {
-                ds.setColor(Color.parseColor("#0044CC"));
-                ds.setUnderlineText(false);
-            }
-        };
-
-        span.setSpan(terms, 42, 61, Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
-        span.setSpan(privacy, 65, 80, Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
-
-        binding.txtTermsPrivacy.setText(span);
-        binding.txtTermsPrivacy.setMovementMethod(LinkMovementMethod.getInstance());
-    }
-
-    /*-------------------------------------------
-    Hide error prompt as soon as the user starts
-    fixing the field
-    -------------------------------------------*/
-    private void hideInfoMessagePrompt() {
+        // Clear errors when typing
         binding.editTxtEmail.addTextChangedListener(new TextWatcher() {
             @Override
             public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+            }
+
+            @Override
+            public void afterTextChanged(Editable s) {
             }
 
             @Override
@@ -246,57 +201,58 @@ public class SignUpUserContactInfoFragment extends Fragment {
                 binding.txtEmailError.setVisibility(View.GONE);
                 binding.emailSectionHeader.setVisibility(!TextUtils.isEmpty(s) ? View.VISIBLE : View.INVISIBLE);
             }
-
-            @Override
-            public void afterTextChanged(Editable s) {
-            }
-        });
-
-        binding.editTxtPhoneNumber.addTextChangedListener(new TextWatcher() {
-            @Override
-            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
-            }
-
-            @Override
-            public void onTextChanged(CharSequence s, int start, int before, int count) {
-                binding.txtPhoneError.setVisibility(View.GONE);
-            }
-
-            @Override
-            public void afterTextChanged(Editable s) {
-
-            }
         });
     }
 
-    /*------------------------
-    Launch external activity
-    -------------------------*/
-    private void loadActivity(Class<? extends Activity> activityClass) {
-        startActivity(new Intent(requireActivity(), activityClass));
+    /**
+     * ==============================================================================
+     * Configures clickable spans for Terms & Conditions and Privacy Policy links
+     * ==============================================================================
+     */
+    private void configureLegalLinks() {
+        String legalText = "I have read, understood and agreed to the Terms & Conditions and Privacy Policy.";
+        SpannableStringBuilder span = new SpannableStringBuilder(legalText);
+
+        ClickableSpan termsSpan = new ClickableSpan() {
+            @Override
+            public void onClick(@NonNull View widget) {
+                startActivity(new Intent(requireActivity(), TermsAndConditionsActivity.class));
+            }
+
+            @Override
+            public void updateDrawState(@NonNull TextPaint ds) {
+                ds.setColor(ContextCompat.getColor(requireContext(), R.color.blue));
+                ds.setUnderlineText(false);
+            }
+        };
+
+        ClickableSpan privacySpan = new ClickableSpan() {
+            @Override
+            public void onClick(@NonNull View widget) {
+                startActivity(new Intent(requireActivity(), PrivacyPolicyActivity.class));
+            }
+
+            @Override
+            public void updateDrawState(@NonNull TextPaint ds) {
+                ds.setColor(ContextCompat.getColor(requireContext(), R.color.blue));
+                ds.setUnderlineText(false);
+            }
+        };
+
+        // Set spans for "Terms & Conditions" and "Privacy Policy" text
+        span.setSpan(termsSpan, legalText.indexOf("Terms"), legalText.indexOf("Conditions") + "Conditions".length(), Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
+        span.setSpan(privacySpan, legalText.indexOf("Privacy"), legalText.indexOf("Policy") + "Policy".length(), Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
+
+        binding.txtTermsPrivacy.setText(span);
+        binding.txtTermsPrivacy.setMovementMethod(LinkMovementMethod.getInstance());
     }
 
-    /*----------------------------
-    Navigate to another fragment
-    ----------------------------*/
-    private void loadFragment(Fragment fragment) {
-        requireActivity()
-                .getSupportFragmentManager()
-                .beginTransaction().replace(R.id.main, fragment)
-                .addToBackStack(null)
-                .commit();
-    }
-
-    /*---------------------------------------
-    Set up touch listener to hide keyboard
-    when user taps outside EditText views
-    ---------------------------------------*/
     @SuppressLint("ClickableViewAccessibility")
-    private void setupUI(View root) {
+    private void setupTouchToHideKeyboard(View root) {
         if (!(root instanceof EditText)) {
             root.setOnTouchListener((v, event) -> {
                 if (event.getAction() == MotionEvent.ACTION_DOWN) {
-                    hideKeyboardAndClearFocus();
+                    hideKeyboard();
                 }
                 return false;
             });
@@ -304,36 +260,37 @@ public class SignUpUserContactInfoFragment extends Fragment {
 
         if (root instanceof ViewGroup) {
             for (int i = 0; i < ((ViewGroup) root).getChildCount(); i++) {
-                View child = ((ViewGroup) root).getChildAt(i);
-                setupUI(child);
+                setupTouchToHideKeyboard(((ViewGroup) root).getChildAt(i));
             }
         }
     }
 
-    /*----------------------------------------
-    Helper method to hide keyboard and
-    clear focus from currently focused view
-    ----------------------------------------*/
-    private void hideKeyboardAndClearFocus() {
-        View focused = requireActivity().getCurrentFocus();
-        if (focused instanceof EditText) {
-            focused.clearFocus();
-            InputMethodManager imm = (InputMethodManager) requireActivity().getSystemService(Context.INPUT_METHOD_SERVICE);
-            if (imm != null) {
-                imm.hideSoftInputFromWindow(focused.getWindowToken(), 0);
-            }
+    private void hideKeyboard() {
+        View focusedView = requireActivity().getCurrentFocus();
+        if (focusedView != null) {
+            InputMethodManager imm = (InputMethodManager) requireContext().getSystemService(Context.INPUT_METHOD_SERVICE);
+            imm.hideSoftInputFromWindow(focusedView.getWindowToken(), 0);
+            focusedView.clearFocus();
         }
     }
 
-    /*-------------------------------
-    Customize status bar appearance
-    -------------------------------*/
-    private void setupStatusBar() {
+    private void navigateToFragment(Fragment fragment) {
+        requireActivity().getSupportFragmentManager()
+                .beginTransaction()
+                .replace(R.id.fragment_container, fragment)
+                .addToBackStack(null)
+                .commit();
+    }
+
+    private void navigateBack() {
+        requireActivity().getOnBackPressedDispatcher().onBackPressed();
+        requireActivity().finish();
+    }
+
+    private void configureStatusBar() {
         Window window = requireActivity().getWindow();
         window.setStatusBarColor(ContextCompat.getColor(requireContext(), R.color.white));
         View decorView = window.getDecorView();
-        int flags = decorView.getSystemUiVisibility();
-        flags |= View.SYSTEM_UI_FLAG_LIGHT_STATUS_BAR;
-        decorView.setSystemUiVisibility(flags);
+        decorView.setSystemUiVisibility(decorView.getSystemUiVisibility() | View.SYSTEM_UI_FLAG_LIGHT_STATUS_BAR);
     }
 }

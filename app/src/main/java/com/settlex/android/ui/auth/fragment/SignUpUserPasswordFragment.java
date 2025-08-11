@@ -8,6 +8,7 @@ import android.os.Bundle;
 import android.text.Editable;
 import android.text.SpannableStringBuilder;
 import android.text.Spanned;
+import android.text.TextUtils;
 import android.text.TextWatcher;
 import android.text.style.ImageSpan;
 import android.view.LayoutInflater;
@@ -19,6 +20,7 @@ import android.view.inputmethod.InputMethodManager;
 import android.widget.EditText;
 
 import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
 import androidx.core.content.ContextCompat;
 import androidx.fragment.app.Fragment;
 import androidx.lifecycle.ViewModelProvider;
@@ -30,33 +32,31 @@ import com.settlex.android.ui.activities.help.AuthHelpActivity;
 import com.settlex.android.ui.auth.viewmodel.AuthViewModel;
 import com.settlex.android.ui.common.SettleXProgressBarController;
 import com.settlex.android.ui.dashboard.DashboardActivity;
-import com.settlex.android.util.LiveDataUtils;
 
 import java.util.Objects;
 
 public class SignUpUserPasswordFragment extends Fragment {
-
     private FragmentSignUpUserPasswordBinding binding;
-    private SettleXProgressBarController progressBar;
-    private AuthViewModel vm;
-
-    /*----------------------------
-    Required Public Constructor
-    ----------------------------*/
-    public SignUpUserPasswordFragment() {
-    }
+    private SettleXProgressBarController progressController;
+    private AuthViewModel authViewModel;
 
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         binding = FragmentSignUpUserPasswordBinding.inflate(inflater, container, false);
 
-        progressBar = new SettleXProgressBarController(binding.fragmentContainer);
-        vm = new ViewModelProvider(requireActivity()).get(AuthViewModel.class);
+        progressController = new SettleXProgressBarController(binding.fragmentContainer);
+        authViewModel = new ViewModelProvider(requireActivity()).get(AuthViewModel.class);
 
-        setupStatusBar();
-        setupUIActions();
+        configureStatusBar();
+        initializeUiComponents();
 
         return binding.getRoot();
+    }
+
+    @Override
+    public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
+        super.onViewCreated(view, savedInstanceState);
+        setupRegistrationObserver();
     }
 
     @Override
@@ -65,112 +65,134 @@ public class SignUpUserPasswordFragment extends Fragment {
         super.onDestroyView();
     }
 
-    /*----------------------------
-    Handle UI & Event Listeners
-    ----------------------------*/
-    private void setupUIActions() {
-        reEnableFocus();
-        observePasswordFields();
-        setupUI(binding.fragmentContainer);
+    private void initializeUiComponents() {
+        setupPasswordValidation();
+        configureFocusHandling();
+        setupTouchToHideKeyboard(binding.getRoot());
+        togglePasswordVisibilityIcons(false);
 
-        binding.txtInputLayoutPassword.setEndIconVisible(false);
-        binding.txtInputLayoutConfirmPassword.setEndIconVisible(false);
-
-        // Click Listeners
-        binding.imgBackBefore.setOnClickListener(v -> requireActivity().getSupportFragmentManager().popBackStack());
-        binding.btnHelp.setOnClickListener(v -> startActivity(new Intent(requireActivity(), AuthHelpActivity.class)));
-        binding.icExpendLess.setOnClickListener(v -> referralCodeToggle());
-        binding.btnCreateAccount.setOnClickListener(v -> attemptAccountCreation());
+        binding.imgBackBefore.setOnClickListener(v -> navigateBack());
+        binding.btnHelp.setOnClickListener(v -> launchHelpActivity());
+        binding.icExpendLess.setOnClickListener(v -> toggleReferralCodeVisibility());
+        binding.btnCreateAccount.setOnClickListener(v -> validateAndCreateAccount());
     }
 
-    /*----------------------------
-    Handle final form submission
-    ----------------------------*/
-    private void attemptAccountCreation() {
-        progressBar.show();
+    /**===============================================================
+     * Observes user registration process and handles UI state:
+     * - Shows loading indicator during registration
+     * - Navigates to dashboard on success
+     * - Displays error message if registration fails
+     ===============================================================*/
+    private void setupRegistrationObserver() {
+        authViewModel.getRegisterResult().observe(getViewLifecycleOwner(), result -> {
+            if (result == null) return;
 
-        String password = Objects.requireNonNull(binding.editTxtPassword.getText()).toString().trim();
-        String invitationCode = Objects.requireNonNull(binding.editTxtInvitationCode.getText()).toString().trim();
-
-        vm.finalizeUserFields(invitationCode);
-        UserModel user = vm.getUser().getValue();
-
-        vm.signUpUser(user, vm.getEmail(), password);
-
-        LiveDataUtils.observeOnce(vm.getSignUpResult(), requireActivity(), signUpResult -> {
-            if (signUpResult.isSuccess()) {
-                navigateToDashboard();
-            } else {
-                showError(signUpResult.message());
+            switch (result.getStatus()) {
+                case LOADING -> progressController.show();
+                case SUCCESS -> {
+                    navigateToDashboard();
+                    progressController.hide();
+                }
+                case ERROR -> {
+                    showRegistrationError(result.getMessage());
+                    progressController.hide();
+                }
             }
-            progressBar.hide();
         });
     }
 
-    /*-------------------------------------------
-    Helper Method to Display Error Info to User
-    -------------------------------------------*/
-    private void showError(String message) {
-        binding.txtPasswordError.setText(message);
-        binding.txtPasswordError.setVisibility(View.VISIBLE);
+    /**=====================================================
+     Validates inputs and initiates account creation:
+        - Collects password and invitation code
+        - Finalizes user fields in ViewModel
+        - Triggers registration API call
+     =====================================================*/
+    private void validateAndCreateAccount() {
+        String password = Objects.requireNonNull(binding.editTxtPassword.getText()).toString().trim();
+        String invitationCode = Objects.requireNonNull(binding.editTxtInvitationCode.getText()).toString().trim();
+
+        authViewModel.finalizeUserFields(invitationCode);
+        UserModel user = authViewModel.getUser().getValue();
+        authViewModel.registerUser(authViewModel.getEmail(), password, user);
     }
 
-    /*------------------------------
-    Validate password and update UI
-    -------------------------------*/
-    private void updateButtonState() {
+    private void showRegistrationError(String message) {
+        binding.txtErrorFeedback.setText(message);
+        binding.txtErrorFeedback.setVisibility(View.VISIBLE);
+    }
+
+    /**=================================================
+     Validates password against requirements:
+        - Minimum 8 characters
+        - At least one uppercase letter
+        - At least one lowercase letter
+        - At least one special character
+        - Matching confirmation password
+     ==================================================*/
+    private void validatePassword() {
         String password = Objects.requireNonNull(binding.editTxtPassword.getText()).toString().trim();
         String confirmPassword = Objects.requireNonNull(binding.editTxtConfirmPassword.getText()).toString().trim();
 
-        boolean length = password.length() >= 8;
-        boolean upper = password.matches(".*[A-Z].*");
-        boolean lower = password.matches(".*[a-z].*");
-        boolean special = password.matches(".*[@#$%^&+=!.].*");
-        boolean match = password.equals(confirmPassword);
-        boolean allGood = length && upper && lower && special;
+        boolean hasLength = password.length() >= 8;
+        boolean hasUpper = password.matches(".*[A-Z].*");
+        boolean hasLower = password.matches(".*[a-z].*");
+        boolean hasSpecial = password.matches(".*[@#$%^&+=!.].*");
+        boolean matches = password.equals(confirmPassword);
 
-        SpannableStringBuilder feedback = new SpannableStringBuilder();
-        appendCondition(feedback, length, "At least 8 characters\n");
-        appendCondition(feedback, upper, "Contains uppercase letter\n");
-        appendCondition(feedback, lower, "Contains lowercase letter\n");
-        appendCondition(feedback, special, "Contains special character (e.g. @#$%^&+=!.)\n");
+        if (!confirmPassword.isEmpty() && !matches) {
+            binding.txtErrorFeedback.setText(getString(R.string.error_password_mismatch));
+            binding.txtErrorFeedback.setVisibility(View.VISIBLE);
+        } else {
+            binding.txtErrorFeedback.setVisibility(View.GONE);
+        }
 
-        binding.txtPasswordPrompt.setVisibility(allGood || password.isEmpty() ? View.GONE : View.VISIBLE);
-        binding.txtPasswordPrompt.setText(feedback);
-        binding.txtInputLayoutPassword.setEndIconVisible(!password.isEmpty());
-        binding.txtInputLayoutConfirmPassword.setEndIconVisible(!confirmPassword.isEmpty());
-        binding.btnCreateAccount.setEnabled(length && upper && lower && special && match);
+        updateCreateAccountButtonState(hasLength, hasUpper, hasLower, hasSpecial, matches);
+        showPasswordRequirements(hasLength, hasUpper, hasLower, hasSpecial, password);
     }
 
-    /*----------------------------------------
-    Check password match and update UI state
-    ----------------------------------------*/
-    private void validatePassword() {
-        String original = Objects.requireNonNull(binding.editTxtPassword.getText()).toString().trim();
-        String confirm = Objects.requireNonNull(binding.editTxtConfirmPassword.getText()).toString().trim();
-
-        boolean condition = confirm.isEmpty() || confirm.equals(original);
-        binding.txtPasswordError.setVisibility(!condition ? View.VISIBLE : View.GONE);
-
-        updateButtonState();
+    private void updateCreateAccountButtonState(boolean hasLength, boolean hasUpper, boolean hasLower, boolean hasSpecial, boolean matches) {
+        binding.btnCreateAccount.setEnabled(hasLength && hasUpper && hasLower && hasSpecial && matches);
     }
 
-    /*----------------------------------
-    Observe and validate password input
-    -----------------------------------*/
-    private void observePasswordFields() {
+    private void showPasswordRequirements(boolean hasLength, boolean hasUpper, boolean hasLower, boolean hasSpecial, String password) {
+        SpannableStringBuilder requirements = new SpannableStringBuilder();
+        appendRequirement(requirements, hasLength, getString(R.string.password_requirement_length));
+        appendRequirement(requirements, hasUpper, getString(R.string.password_requirement_upper));
+        appendRequirement(requirements, hasLower, getString(R.string.password_requirement_lower));
+        appendRequirement(requirements, hasSpecial, getString(R.string.password_requirement_special));
+
+        boolean shouldShowPasswordPrompt = password.isEmpty() || (hasLength && hasUpper && hasLower && hasSpecial);
+
+        binding.txtPasswordPrompt.setVisibility((!shouldShowPasswordPrompt) ? View.VISIBLE : View.GONE);
+        binding.txtPasswordPrompt.setText(requirements);
+    }
+
+    private void appendRequirement(SpannableStringBuilder builder, boolean isMet, String text) {
+        Drawable icon = ContextCompat.getDrawable(requireContext(), isMet ? R.drawable.ic_checkbox_checked : R.drawable.ic_checkbox_unchecked);
+        if (icon != null) {
+            int size = (int) (binding.txtPasswordPrompt.getTextSize() * 1.5f);
+            icon.setBounds(0, 0, size, size);
+            builder.append(" ");
+            builder.setSpan(new ImageSpan(icon, ImageSpan.ALIGN_BOTTOM),
+                    builder.length() - 1, builder.length(), Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
+            builder.append(" ").append(text).append("\n");
+        }
+    }
+
+    private void setupPasswordValidation() {
         TextWatcher passwordWatcher = new TextWatcher() {
             @Override
             public void beforeTextChanged(CharSequence s, int start, int count, int after) {
             }
 
             @Override
-            public void onTextChanged(CharSequence s, int start, int before, int count) {
-                validatePassword();
+            public void afterTextChanged(Editable s) {
             }
 
             @Override
-            public void afterTextChanged(Editable s) {
+            public void onTextChanged(CharSequence s, int start, int before, int count) {
+                validatePassword();
+                togglePasswordVisibilityIcons(!TextUtils.isEmpty(s));
             }
         };
 
@@ -178,68 +200,37 @@ public class SignUpUserPasswordFragment extends Fragment {
         binding.editTxtConfirmPassword.addTextChangedListener(passwordWatcher);
     }
 
-    /*---------------------------------------
-    Show check or uncheck icon beside rules
-    ---------------------------------------*/
-    private void appendCondition(SpannableStringBuilder builder, boolean condition, String text) {
-        Drawable icon = ContextCompat.getDrawable(requireContext(), condition ? R.drawable.ic_checkbox_checked : R.drawable.ic_checkbox_unchecked);
-        if (icon != null) {
-            int size = (int) (binding.txtPasswordPrompt.getTextSize() * 1.3f);
-            icon.setBounds(0, 0, size, size);
-            ImageSpan span = new ImageSpan(icon, ImageSpan.ALIGN_BOTTOM);
-            int start = builder.length();
-            builder.append(" ");
-            builder.setSpan(span, start, start + 1, Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
-        }
-        builder.append(" ").append(text);
+    private void togglePasswordVisibilityIcons(boolean show) {
+        binding.txtInputLayoutPassword.setEndIconVisible(show);
+        binding.txtInputLayoutConfirmPassword.setEndIconVisible(show);
     }
 
-    /*---------------------------------
-    Enable focus on tap for EditTexts
-    ---------------------------------*/
-    private void reEnableFocus() {
-        View.OnClickListener enableFocusListener = v -> {
-            if (v instanceof EditText editText) {
-                editText.setFocusable(true);
-                editText.setFocusableInTouchMode(true);
-                editText.requestFocus();
+    private void configureFocusHandling() {
+        View.OnClickListener focusListener = v -> {
+            if (v instanceof EditText) {
+                v.setFocusable(true);
+                v.setFocusableInTouchMode(true);
+                v.requestFocus();
             }
         };
 
-        binding.editTxtPassword.setOnClickListener(enableFocusListener);
-        binding.editTxtConfirmPassword.setOnClickListener(enableFocusListener);
-        binding.editTxtInvitationCode.setOnClickListener(enableFocusListener);
+        binding.editTxtPassword.setOnClickListener(focusListener);
+        binding.editTxtConfirmPassword.setOnClickListener(focusListener);
+        binding.editTxtInvitationCode.setOnClickListener(focusListener);
     }
 
-    /*---------------------------------
-    Toggle invitation code visibility
-    ---------------------------------*/
-    private void referralCodeToggle() {
+    private void toggleReferralCodeVisibility() {
         boolean isVisible = binding.editTxtInvitationCode.getVisibility() == View.VISIBLE;
         binding.editTxtInvitationCode.setVisibility(isVisible ? View.GONE : View.VISIBLE);
         binding.icExpendLess.setImageResource(isVisible ? R.drawable.ic_expend_less : R.drawable.ic_expend_more);
     }
 
-    /*-----------------------------
-    Navigate to Dashboard Activity
-    -----------------------------*/
-    private void navigateToDashboard() {
-        Intent intent = new Intent(requireContext(), DashboardActivity.class);
-        intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK);
-        startActivity(intent);
-        requireActivity().finish();
-    }
-
-    /*---------------------------------------
-    Set up touch listener to hide keyboard
-    when user taps outside EditText views
-    ---------------------------------------*/
     @SuppressLint("ClickableViewAccessibility")
-    private void setupUI(View root) {
+    private void setupTouchToHideKeyboard(View root) {
         if (!(root instanceof EditText)) {
             root.setOnTouchListener((v, event) -> {
                 if (event.getAction() == MotionEvent.ACTION_DOWN) {
-                    hideKeyboardAndClearFocus();
+                    hideKeyboard();
                 }
                 return false;
             });
@@ -247,36 +238,39 @@ public class SignUpUserPasswordFragment extends Fragment {
 
         if (root instanceof ViewGroup) {
             for (int i = 0; i < ((ViewGroup) root).getChildCount(); i++) {
-                View child = ((ViewGroup) root).getChildAt(i);
-                setupUI(child);
+                setupTouchToHideKeyboard(((ViewGroup) root).getChildAt(i));
             }
         }
     }
 
-    /*----------------------------------------
-    Helper method to hide keyboard and
-    clear focus from currently focused view
-    ----------------------------------------*/
-    private void hideKeyboardAndClearFocus() {
-        View focused = requireActivity().getCurrentFocus();
-        if (focused instanceof EditText) {
-            focused.clearFocus();
-            InputMethodManager imm = (InputMethodManager) requireActivity().getSystemService(Context.INPUT_METHOD_SERVICE);
-            if (imm != null) {
-                imm.hideSoftInputFromWindow(focused.getWindowToken(), 0);
-            }
+    private void hideKeyboard() {
+        View focusedView = requireActivity().getCurrentFocus();
+        if (focusedView != null) {
+            InputMethodManager imm = (InputMethodManager) requireContext().getSystemService(Context.INPUT_METHOD_SERVICE);
+            imm.hideSoftInputFromWindow(focusedView.getWindowToken(), 0);
+            focusedView.clearFocus();
         }
     }
 
-    /*--------------------------
-    Setup custom status bar
-    --------------------------*/
-    private void setupStatusBar() {
+    private void navigateToDashboard() {
+        Intent intent = new Intent(requireContext(), DashboardActivity.class);
+        intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK);
+        startActivity(intent);
+        requireActivity().finish();
+    }
+
+    private void navigateBack() {
+        requireActivity().getSupportFragmentManager().popBackStack();
+    }
+
+    private void launchHelpActivity() {
+        startActivity(new Intent(requireActivity(), AuthHelpActivity.class));
+    }
+
+    private void configureStatusBar() {
         Window window = requireActivity().getWindow();
         window.setStatusBarColor(ContextCompat.getColor(requireContext(), R.color.white));
         View decorView = window.getDecorView();
-        int flags = decorView.getSystemUiVisibility();
-        flags |= View.SYSTEM_UI_FLAG_LIGHT_STATUS_BAR;
-        decorView.setSystemUiVisibility(flags);
+        decorView.setSystemUiVisibility(decorView.getSystemUiVisibility() | View.SYSTEM_UI_FLAG_LIGHT_STATUS_BAR);
     }
 }

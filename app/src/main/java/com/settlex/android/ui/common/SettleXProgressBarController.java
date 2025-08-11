@@ -1,6 +1,4 @@
-
 package com.settlex.android.ui.common;
-
 
 import android.animation.AnimatorSet;
 import android.animation.ObjectAnimator;
@@ -15,14 +13,12 @@ import androidx.annotation.NonNull;
 import com.settlex.android.R;
 
 public class SettleXProgressBarController {
-
     private final View progressOverlayView;
     private AnimatorSet zoomAnimator;
 
-
-    /*-----------------------------------------------
-        Constructor: attach to activity layout
-    -----------------------------------------------*/
+    /*---------------------------------------
+    Constructor: attach to activity layout
+    ---------------------------------------*/
     public SettleXProgressBarController(@NonNull View rootView) {
         ViewGroup root = (ViewGroup) rootView;
 
@@ -34,14 +30,12 @@ public class SettleXProgressBarController {
             progressOverlayView = inflater.inflate(R.layout.progressbar_overlay, root, false);
             root.addView(progressOverlayView);
         }
-
         progressOverlayView.setVisibility(View.GONE);
     }
 
-
     /*---------------------------------
-        Show the loader overlay
-     ----------------------------------*/
+    Show the loader overlay
+    ----------------------------------*/
     public void show() {
         if (progressOverlayView.getVisibility() != View.VISIBLE) {
             progressOverlayView.setAlpha(1f);
@@ -64,23 +58,21 @@ public class SettleXProgressBarController {
         }
     }
 
-
     /*---------------------------------
-        Hide the loader overlay
-     ----------------------------------*/
+    Hide the loader overlay
+    ----------------------------------*/
     public void hide() {
         if (progressOverlayView.getVisibility() == View.VISIBLE) {
             if (zoomAnimator != null && zoomAnimator.isRunning()) {
                 zoomAnimator.cancel();
             }
-
             progressOverlayView.setAlpha(1f);
             progressOverlayView.setVisibility(View.GONE);
         }
     }
 
     /*---------------------------------
-       Expose the view
+    Expose the view
     ----------------------------------*/
     public View getOverlayView() {
         return progressOverlayView;

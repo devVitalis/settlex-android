@@ -2,7 +2,7 @@
 <FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
-    android:id="@+id/fragment_container"
+    android:id="@+id/main"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="@color/white"
@@ -24,7 +24,7 @@
             android:layout_alignParentTop="true">
 
             <ImageView
-                android:id="@+id/imgViewGoBack"
+                android:id="@+id/imgBackBefore"
                 android:layout_width="20dp"
                 android:layout_height="20dp"
                 android:layout_alignParentStart="true"
@@ -99,7 +99,7 @@
                     android:layout_gravity="start"
                     android:fontFamily="@font/poppins_light"
                     android:includeFontPadding="false"
-                    android:text="Confirm your email"
+                    android:text="Confirm your email address"
                     android:textColor="@color/black"
                     android:textSize="13sp" />
 
@@ -179,7 +179,7 @@
                     android:fontFamily="@font/poppins_regular"
                     android:gravity="center"
                     android:includeFontPadding="false"
-                    android:text="Enter the OTP sent to your email address"
+                    android:text="Enter the OTP sent to your email"
                     android:textAlignment="center"
                     android:textColor="@color/gray"
                     android:textSize="14sp" />
@@ -309,22 +309,6 @@
                         android:includeFontPadding="false"
                         android:text="message"
                         android:textColor="@color/red"
-                        android:textSize="12sp"
-                        android:visibility="gone" />
-
-                    <!--Clear ALl TxT-->
-                    <TextView
-                        android:id="@+id/btnClearAll"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_alignParentEnd="true"
-                        android:layout_centerVertical="true"
-                        android:layout_gravity="end"
-                        android:layout_marginTop="10dp"
-                        android:fontFamily="@font/poppins_light"
-                        android:gravity="center"
-                        android:text="Clear All"
-                        android:textColor="@color/blue"
                         android:textSize="12sp"
                         android:visibility="gone" />
                 </RelativeLayout>

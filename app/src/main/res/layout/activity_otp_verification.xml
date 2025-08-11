@@ -168,55 +168,19 @@
                     android:maxLength="1" />
             </LinearLayout>
 
-            <!--Container-->
-            <RelativeLayout
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content">
-
-                <!--Success anim-->
-                <com.airbnb.lottie.LottieAnimationView
-                    android:id="@+id/successAnim"
-                    android:layout_width="20dp"
-                    android:layout_height="20dp"
-                    android:layout_alignParentStart="true"
-                    android:layout_centerVertical="true"
-                    android:visibility="gone"
-                    app:lottie_autoPlay="true"
-                    app:lottie_fileName="success_anim.json"
-                    app:lottie_loop="false" />
-
-                <!--Success/Failure TxT-->
-                <TextView
-                    android:id="@+id/txtOtpFeedback"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_centerVertical="true"
-                    android:layout_gravity="start"
-                    android:layout_marginTop="5dp"
-                    android:layout_toEndOf="@+id/successAnim"
-                    android:fontFamily="@font/poppins_light"
-                    android:includeFontPadding="false"
-                    android:text="message"
-                    android:textColor="@color/red"
-                    android:textSize="12sp"
-                    android:visibility="gone" />
-
-                <!--Clear ALl TxT-->
-                <TextView
-                    android:id="@+id/btnClearAll"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_alignParentEnd="true"
-                    android:layout_centerVertical="true"
-                    android:layout_gravity="end"
-                    android:layout_marginTop="10dp"
-                    android:fontFamily="@font/poppins_light"
-                    android:gravity="center"
-                    android:text="Clear All"
-                    android:textColor="@color/blue"
-                    android:textSize="12sp"
-                    android:visibility="gone" />
-            </RelativeLayout>
+            <!--Success/Failure TxT-->
+            <TextView
+                android:id="@+id/txtOtpFeedback"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="start"
+                android:layout_marginTop="5dp"
+                android:fontFamily="@font/poppins_light"
+                android:includeFontPadding="false"
+                android:text="message"
+                android:textColor="@color/red"
+                android:textSize="12sp"
+                android:visibility="gone" />
 
             <!--Container-->
             <LinearLayout
@@ -255,13 +219,16 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="10dp"
-                android:background="@drawable/bg_8dp_light_orange"
+                android:background="@drawable/bg_8dp_light_blue"
+                android:drawablePadding="2dp"
                 android:fontFamily="@font/poppins_regular"
                 android:includeFontPadding="false"
                 android:padding="10dp"
-                android:text="Didn’t get the email? Make sure to also check your spam/junk folder if you can't find the email in your inbox."
+                android:text="For your security, do not share this code with anyone; even if they claim to be from SettleX."
                 android:textColor="@color/gray_dark"
-                android:textSize="11sp" />
+                android:textSize="11sp"
+                app:drawableStartCompat="@drawable/ic_been_here"
+                app:drawableTint="@color/blue" />
 
             <com.google.android.material.button.MaterialButton
                 android:id="@+id/btnConfirm"

@@ -12,7 +12,6 @@
     tools:context=".ui.auth.activity.SignInActivity">
 
     <RelativeLayout
-        android:id="@+id/parentLayout"
         android:layout_width="match_parent"
         android:layout_height="match_parent">
 
@@ -216,7 +215,8 @@
                     android:layout_height="wrap_content"
                     android:layout_marginTop="20dp"
                     android:gravity="center"
-                    android:orientation="horizontal">
+                    android:orientation="horizontal"
+                    android:visibility="gone">
 
                     <ImageView
                         android:layout_width="20dp"

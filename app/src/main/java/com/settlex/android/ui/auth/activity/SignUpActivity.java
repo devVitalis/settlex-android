@@ -20,13 +20,10 @@ public class SignUpActivity extends AppCompatActivity {
         if (savedInstanceState == null) loadFragment(new SignUpUserContactInfoFragment());
     }
 
-    /*------------------------
-    Replace Fragment Utility
-    ------------------------*/
     private void loadFragment(Fragment fragment) {
         getSupportFragmentManager()
                 .beginTransaction()
-                .replace(R.id.main, fragment)
+                .replace(R.id.fragment_container, fragment)
                 .commit();
     }
 }

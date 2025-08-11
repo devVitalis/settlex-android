@@ -1,5 +1,25 @@
 <resources>
     <string name="app_name">SettleX</string>
-    <!-- TODO: Remove or change this placeholder text -->
-    <string name="hello_blank_fragment">Hello blank fragment</string>
+
+    <!-- Authentication Flow -->
+    <string name="password_requirement_length">At least 8 characters</string>
+    <string name="password_requirement_upper">Contains uppercase letter</string>
+    <string name="password_requirement_lower">Contains lowercase letter</string>
+    <string name="password_requirement_special">Contains special character (e.g. @#$%^&amp;+=!.)</string>
+    <string name="terms_privacy_agreement">I have read, understood and agreed to the Terms &amp; Conditions and Privacy Policy.</string>
+    <string name="resend_otp_countdown">Resend in %1$d</string>
+
+    <!-- Button Labels -->
+
+
+    <!-- Field Labels -->
+
+
+    <!-- Error Messages -->
+    <string name="error_password_mismatch">Passwords do not match!</string>
+
+    <!-- Success Messages -->
+
+    <!-- Titles -->
+
 </resources>

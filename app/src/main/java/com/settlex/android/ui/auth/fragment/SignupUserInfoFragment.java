@@ -28,25 +28,16 @@ import com.settlex.android.util.StringUtil;
 import java.util.Objects;
 
 public class SignupUserInfoFragment extends Fragment {
-
     private FragmentSignupUserInfoBinding binding;
-    private AuthViewModel vm;
-
-    /*----------------------------
-    Required Public Constructor
-    ----------------------------*/
-    public SignupUserInfoFragment() {
-    }
+    private AuthViewModel authViewModel;
 
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         binding = FragmentSignupUserInfoBinding.inflate(inflater, container, false);
+        authViewModel = new ViewModelProvider(requireActivity()).get(AuthViewModel.class);
 
-        vm = new ViewModelProvider(requireActivity()).get(AuthViewModel.class);
-
-        setupStatusBar();
-        setupUIActions();
-
+        configureStatusBar();
+        initializeUiComponents();
         return binding.getRoot();
     }
 
@@ -56,95 +47,79 @@ public class SignupUserInfoFragment extends Fragment {
         super.onDestroyView();
     }
 
-    /*-------------------------------------
-    Handle Event Listeners & Method Calls
-    -------------------------------------*/
-    private void setupUIActions() {
-        reEnableFocus();
-        setupInputWatchers();
-        setupUI(binding.fragmentContainer);
+    private void initializeUiComponents() {
+        setupFocusHandling();
+        setupInputValidation();
+        configureTouchToHideKeyboard(binding.getRoot());
 
-        // Click Listeners
-        binding.imgBackBefore.setOnClickListener(v -> requireActivity().getSupportFragmentManager().popBackStack());
-        binding.btnHelp.setOnClickListener(v -> startActivity(new Intent(requireActivity(), AuthHelpActivity.class)));
-        binding.btnContinue.setOnClickListener(v -> updateUserInfoAndContinue());
+        binding.imgBackBefore.setOnClickListener(v -> navigateBack());
+        binding.btnHelp.setOnClickListener(v -> launchHelpActivity());
+        binding.btnContinue.setOnClickListener(v -> validateUserInfoAndNext());
     }
 
-    /*--------------------------------------------------------
-    Validate user's first and last name and update ViewModel
-    --------------------------------------------------------*/
-    private void updateUserInfoAndContinue() {
+    /**==============================================================
+     Validates and saves user information before proceeding:
+        - Capitalizes first and last names
+        - Updates ViewModel with formatted names
+        - Navigates to password fragment
+     =============================================================*/
+    private void validateUserInfoAndNext() {
+        String firstName = StringUtil.capitalizeEachWord(Objects.requireNonNull(binding.editTxtFirstName.getText()).toString().trim());
+        String lastName = StringUtil.capitalizeEachWord(Objects.requireNonNull(binding.editTxtLastName.getText()).toString().trim());
+
+        authViewModel.updateFirstName(firstName);
+        authViewModel.updateLastName(lastName);
+
+        navigateToFragment(new SignUpUserPasswordFragment());
+    }
+
+    /**=============================================================
+     Updates continue button state based on:
+        - Non-empty first and last names
+        - Valid name format (letters only, minimum 2 characters)
+     =============================================================*/
+    private void updateContinueButtonState() {
         String firstName = Objects.requireNonNull(binding.editTxtFirstName.getText()).toString().trim();
         String lastName = Objects.requireNonNull(binding.editTxtLastName.getText()).toString().trim();
 
-        vm.updateFirstName(StringUtil.capitalizeEachWord(firstName));
-        vm.updateLastName(StringUtil.capitalizeEachWord(lastName));
+        boolean isValidFirstName = !firstName.isEmpty() && firstName.matches("^[a-zA-Z]{2,}(?:\\s[a-zA-Z]{2,})*$");
+        boolean isValidLastName = !lastName.isEmpty() && lastName.matches("^[a-zA-Z]{2,}(?:\\s[a-zA-Z]{2,})*$");
 
-        loadFragment(new SignUpUserPasswordFragment());
+        binding.btnContinue.setEnabled(isValidFirstName && isValidLastName);
     }
 
-    /*----------------------------------
-    Enable Continue when name is valid
-    ----------------------------------*/
-    private void updateButtonState() {
-        String firstName = Objects.requireNonNull(binding.editTxtFirstName.getText()).toString().trim();
-        String lastName = Objects.requireNonNull(binding.editTxtLastName.getText()).toString().trim();
-
-        boolean validFirst = !firstName.isEmpty() && firstName.matches("^[a-zA-Z]{2,}(?:\\s[a-zA-Z]{2,})*$");
-        boolean validLast = !lastName.isEmpty() && lastName.matches("^[a-zA-Z]{2,}(?:\\s[a-zA-Z]{2,})*$");
-
-        binding.btnContinue.setEnabled(validFirst && validLast);
-    }
-
-    /*------------------------------------
-    Validate EditText fields while typing
-    ------------------------------------*/
-    private void setupInputWatchers() {
-        TextWatcher watcher = new TextWatcher() {
-            @Override
-            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
-            }
-
-            @Override
-            public void onTextChanged(CharSequence s, int start, int before, int count) {
-                updateButtonState();
-            }
-
-            @Override
-            public void afterTextChanged(Editable s) {
+    private void setupFocusHandling() {
+        View.OnClickListener focusListener = v -> {
+            if (v instanceof EditText) {
+                v.setFocusable(true);
+                v.setFocusableInTouchMode(true);
+                v.requestFocus();
             }
         };
 
-        binding.editTxtFirstName.addTextChangedListener(watcher);
-        binding.editTxtLastName.addTextChangedListener(watcher);
+        binding.editTxtFirstName.setOnClickListener(focusListener);
+        binding.editTxtLastName.setOnClickListener(focusListener);
     }
 
-    /*---------------------------------
-    Enable focus on tap for EditTexts
-    ---------------------------------*/
-    private void reEnableFocus() {
-        View.OnClickListener enableFocusListener = v -> {
-            if (v instanceof EditText editText) {
-                editText.setFocusable(true);
-                editText.setFocusableInTouchMode(true);
-                editText.requestFocus();
+    private void setupInputValidation() {
+        TextWatcher validationWatcher = new TextWatcher() {
+            @Override public void beforeTextChanged(CharSequence s, int start, int count, int after) {}
+            @Override public void afterTextChanged(Editable s) {}
+            @Override public void onTextChanged(CharSequence s, int start, int before, int count) {
+                updateContinueButtonState();
             }
         };
 
-        binding.editTxtFirstName.setOnClickListener(enableFocusListener);
-        binding.editTxtLastName.setOnClickListener(enableFocusListener);
+        binding.editTxtFirstName.addTextChangedListener(validationWatcher);
+        binding.editTxtLastName.addTextChangedListener(validationWatcher);
     }
 
-    /*---------------------------------------
-    Set up touch listener to hide keyboard
-    when user taps outside EditText views
-    ---------------------------------------*/
     @SuppressLint("ClickableViewAccessibility")
-    private void setupUI(View root) {
+    private void configureTouchToHideKeyboard(View root) {
         if (!(root instanceof EditText)) {
             root.setOnTouchListener((v, event) -> {
                 if (event.getAction() == MotionEvent.ACTION_DOWN) {
-                    hideKeyboardAndClearFocus();
+                    hideKeyboard();
                 }
                 return false;
             });
@@ -152,48 +127,40 @@ public class SignupUserInfoFragment extends Fragment {
 
         if (root instanceof ViewGroup) {
             for (int i = 0; i < ((ViewGroup) root).getChildCount(); i++) {
-                View child = ((ViewGroup) root).getChildAt(i);
-                setupUI(child);
+                configureTouchToHideKeyboard(((ViewGroup) root).getChildAt(i));
             }
         }
     }
 
-    /*----------------------------------------
-    Helper method to hide keyboard and
-    clear focus from currently focused view
-    ----------------------------------------*/
-    private void hideKeyboardAndClearFocus() {
-        View focused = requireActivity().getCurrentFocus();
-        if (focused instanceof EditText) {
-            focused.clearFocus();
-            InputMethodManager imm = (InputMethodManager) requireActivity().getSystemService(Context.INPUT_METHOD_SERVICE);
-            if (imm != null) {
-                imm.hideSoftInputFromWindow(focused.getWindowToken(), 0);
-            }
+    private void hideKeyboard() {
+        View focusedView = requireActivity().getCurrentFocus();
+        if (focusedView != null) {
+            InputMethodManager imm = (InputMethodManager) requireContext().getSystemService(Context.INPUT_METHOD_SERVICE);
+            imm.hideSoftInputFromWindow(focusedView.getWindowToken(), 0);
+            focusedView.clearFocus();
         }
     }
 
-    /*-----------------------------
-    Navigate to another fragment
-    -----------------------------*/
-    private void loadFragment(Fragment fragment) {
-        requireActivity()
-                .getSupportFragmentManager()
+    private void navigateToFragment(Fragment fragment) {
+        requireActivity().getSupportFragmentManager()
                 .beginTransaction()
-                .replace(R.id.main, fragment)
+                .replace(R.id.fragment_container, fragment)
                 .addToBackStack(null)
                 .commit();
     }
 
-    /*-------------------------------
-    Customize status bar appearance
-    -------------------------------*/
-    private void setupStatusBar() {
+    private void navigateBack() {
+        requireActivity().getSupportFragmentManager().popBackStack();
+    }
+
+    private void launchHelpActivity() {
+        startActivity(new Intent(requireActivity(), AuthHelpActivity.class));
+    }
+
+    private void configureStatusBar() {
         Window window = requireActivity().getWindow();
         window.setStatusBarColor(ContextCompat.getColor(requireContext(), R.color.white));
         View decorView = window.getDecorView();
-        int flags = decorView.getSystemUiVisibility();
-        flags |= View.SYSTEM_UI_FLAG_LIGHT_STATUS_BAR;
-        decorView.setSystemUiVisibility(flags);
+        decorView.setSystemUiVisibility(decorView.getSystemUiVisibility() | View.SYSTEM_UI_FLAG_LIGHT_STATUS_BAR);
     }
 }
