@@ -26,6 +26,35 @@
             android:contentDescription="Arrow Back"
             android:scaleType="centerCrop"
             android:src="@drawable/ic_arrow_back" />
+
+        <LinearLayout
+            android:id="@+id/btnHelp"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentEnd="true"
+            android:layout_centerVertical="true"
+            android:layout_marginEnd="15dp"
+            android:background="@drawable/bg_24dp_blue"
+            android:gravity="center"
+            android:orientation="horizontal"
+            android:paddingHorizontal="5dp"
+            android:paddingVertical="2dp">
+
+            <ImageView
+                android:layout_width="15dp"
+                android:layout_height="15dp"
+                android:contentDescription="Help"
+                android:src="@drawable/ic_help" />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:fontFamily="@font/poppins_light"
+                android:includeFontPadding="false"
+                android:text="Help"
+                android:textColor="@color/white"
+                android:textSize="12sp" />
+        </LinearLayout>
     </RelativeLayout>
 
     <!--ScrollView Layout-->
@@ -224,10 +253,10 @@
                 android:fontFamily="@font/poppins_regular"
                 android:includeFontPadding="false"
                 android:padding="10dp"
-                android:text="For your security, do not share this code with anyone; even if they claim to be from SettleX."
+                android:text="For your security, do not disclose this code to anyone; even if they claim to be from SettleX."
                 android:textColor="@color/gray_dark"
                 android:textSize="11sp"
-                app:drawableStartCompat="@drawable/ic_been_here"
+                app:drawableStartCompat="@drawable/ic_shield_check_protection"
                 app:drawableTint="@color/blue" />
 
             <com.google.android.material.button.MaterialButton

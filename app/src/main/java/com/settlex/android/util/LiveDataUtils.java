@@ -4,8 +4,8 @@ import androidx.lifecycle.LifecycleOwner;
 import androidx.lifecycle.LiveData;
 import androidx.lifecycle.Observer;
 
+// TODO: Remove/Delete observeOnce
 public final class LiveDataUtils {
-
     private LiveDataUtils() {
         // Prevent instantiation
     }

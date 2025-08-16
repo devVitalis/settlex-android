@@ -28,7 +28,6 @@ import com.settlex.android.ui.auth.viewmodel.AuthViewModel;
 import com.settlex.android.ui.common.SettleXProgressBarController;
 
 public class SignUpEmailVerificationFragment extends Fragment {
-    // Cooldown duration between OTP resend attempts (60 seconds)
     private static final int OTP_RESEND_COOLDOWN_MS = 60000;
     private static final int COUNTDOWN_INTERVAL_MS = 1000;
 
@@ -45,8 +44,8 @@ public class SignUpEmailVerificationFragment extends Fragment {
         progressController = new SettleXProgressBarController(binding.getRoot());
         authViewModel = new ViewModelProvider(requireActivity()).get(AuthViewModel.class);
 
-        configureStatusBar();
-        initializeUiComponents();
+        setupStatusBar();
+        setupUiActions();
 
         return binding.getRoot();
     }
@@ -55,7 +54,8 @@ public class SignUpEmailVerificationFragment extends Fragment {
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
         startResendOtpCooldown();
-        setupVerificationObservers();
+        sendEmailVerificationOtpObserver();
+        verifyEmailVerificationOtpObserver();
     }
 
     @Override
@@ -65,18 +65,12 @@ public class SignUpEmailVerificationFragment extends Fragment {
         super.onDestroyView();
     }
 
-    private void initializeUiComponents() {
-        setupEmailVerificationInfoText();
-        configureOtpInputBehavior();
-        displayEmail();
-
-        binding.imgBackBefore.setOnClickListener(v -> navigateBack());
-        binding.btnVerify.setOnClickListener(v -> verifyEmailWithOtp());
-        binding.btnResendOtp.setOnClickListener(v -> resendVerificationOtp());
-    }
-
-    private void setupVerificationObservers() {
-        authViewModel.getVerifyVerificationOtpResult().observe(getViewLifecycleOwner(), event -> {
+    /**
+     * Observes the LiveData for verifying an email verification OTP.
+     * It handles loading, success, and error states.
+     */
+    private void verifyEmailVerificationOtpObserver() {
+        authViewModel.getVerifyEmailVerificationOtpResult().observe(getViewLifecycleOwner(), event -> {
             AuthResult<String> result = event.getContentIfNotHandled();
             if (result != null) {
                 switch (result.getStatus()) {
@@ -92,8 +86,14 @@ public class SignUpEmailVerificationFragment extends Fragment {
                 }
             }
         });
+    }
 
-        authViewModel.getSendVerificationOtpResult().observe(getViewLifecycleOwner(), event -> {
+    /**
+     * Observes the LiveData for sending an email verification OTP.
+     * It handles loading, success, and error states.
+     */
+    private void sendEmailVerificationOtpObserver() {
+        authViewModel.getSendEmailVerificationOtpResult().observe(getViewLifecycleOwner(), event -> {
             AuthResult<String> result = event.getContentIfNotHandled();
             if (result != null) {
                 switch (result.getStatus()) {
@@ -111,28 +111,58 @@ public class SignUpEmailVerificationFragment extends Fragment {
         });
     }
 
-    private void verifyEmailWithOtp() {
-        authViewModel.verifyEmailVerificationOtp(authViewModel.getEmail(), getEnteredOtpDigits());
-    }
-
-    private void resendVerificationOtp() {
-        authViewModel.sendEmailVerificationOtp(authViewModel.getEmail());
-    }
-
     private void showOtpError(String message) {
         binding.txtOtpFeedback.setText(message);
         binding.txtOtpFeedback.setVisibility(View.VISIBLE);
     }
 
     /**
-     * =======================================================
-     * Configures OTP input fields with chaining behavior:
-     * - Auto-focuses to next field when digit is entered
-     * - Handles backspace to navigate to previous field
-     * - Disables text selection to prevent UX issues
-     * =======================================================
+     * Initializes and sets up all UI-related actions and listeners.
      */
-    private void configureOtpInputBehavior() {
+    private void setupUiActions() {
+        formatInfoText();
+        setupOtpInputBehavior();
+        displayEmail();
+
+        binding.imgBackBefore.setOnClickListener(v -> navigateBack());
+        binding.btnVerify.setOnClickListener(v -> verifyEmailVerificationOtp());
+        binding.btnResendOtp.setOnClickListener(v -> requestEmailVerificationOtp());
+    }
+
+    private void verifyEmailVerificationOtp() {
+        authViewModel.verifyEmailOtp(authViewModel.getEmail(), getEnteredOtpDigits());
+    }
+
+    private void requestEmailVerificationOtp() {
+        authViewModel.sendEmailVerificationOtp(authViewModel.getEmail());
+    }
+
+    /**
+     * Starts a cooldown timer for the OTP resend button.
+     */
+    private void startResendOtpCooldown() {
+        binding.btnResendOtp.setEnabled(false);
+        final CharSequence originalText = binding.btnResendOtp.getText();
+
+        resendOtpCountdownTimer = new CountDownTimer(OTP_RESEND_COOLDOWN_MS, COUNTDOWN_INTERVAL_MS) {
+            public void onTick(long millisUntilFinished) {
+                if (binding == null) return;
+                binding.btnResendOtp.setText(getString(R.string.resend_otp_countdown, millisUntilFinished / 1000));
+            }
+
+            public void onFinish() {
+                if (binding != null) {
+                    binding.btnResendOtp.setText(originalText);
+                    binding.btnResendOtp.setEnabled(true);
+                }
+            }
+        }.start();
+    }
+
+    /**
+     * Configures OTP input fields with chaining behavior.
+     */
+    private void setupOtpInputBehavior() {
         otpDigitViews = new EditText[]{
                 binding.otpDigit1, binding.otpDigit2, binding.otpDigit3,
                 binding.otpDigit4, binding.otpDigit5, binding.otpDigit6
@@ -143,7 +173,6 @@ public class SignUpEmailVerificationFragment extends Fragment {
             EditText nextDigitView = (i < otpDigitViews.length - 1) ? otpDigitViews[i + 1] : null;
             EditText previousDigitView = (i > 0) ? otpDigitViews[i - 1] : null;
 
-            // Disable text selection to prevent UX issues with small input fields
             currentDigitView.setLongClickable(false);
             currentDigitView.setTextIsSelectable(false);
             currentDigitView.setEnabled(i == 0);
@@ -155,7 +184,7 @@ public class SignUpEmailVerificationFragment extends Fragment {
 
                 @Override
                 public void onTextChanged(CharSequence s, int start, int before, int count) {
-                    if (isOtpDigitsFilled()) hideSoftKeyboard();
+                    if (isOtpDigitsFilled()) hideKeyboard();
                     if (TextUtils.isEmpty(s)) binding.txtOtpFeedback.setVisibility(View.GONE);
 
                     if (s.length() == 1 && nextDigitView != null) {
@@ -187,6 +216,10 @@ public class SignUpEmailVerificationFragment extends Fragment {
         }
     }
 
+    /**
+     * Checks if all OTP digit input fields are filled.
+     * @return True if all fields are filled, otherwise false.
+     */
     private boolean isOtpDigitsFilled() {
         for (EditText digitView : otpDigitViews) {
             if (TextUtils.isEmpty(digitView.getText())) {
@@ -196,6 +229,10 @@ public class SignUpEmailVerificationFragment extends Fragment {
         return true;
     }
 
+    /**
+     * Concatenates the digits from the OTP input fields into a single string.
+     * @return The complete OTP string.
+     */
     private String getEnteredOtpDigits() {
         StringBuilder otpBuilder = new StringBuilder();
         for (EditText digitView : otpDigitViews) {
@@ -205,48 +242,27 @@ public class SignUpEmailVerificationFragment extends Fragment {
     }
 
     /**
-     * =====================================================
-     * Starts cooldown timer that:
-     * - Disables resend button during countdown
-     * - Shows remaining time in button text
-     * - Restores original button state when complete
-     * =====================================================
+     * Displays the user's email address on the screen.
      */
-    private void startResendOtpCooldown() {
-        binding.btnResendOtp.setEnabled(false);
-        final CharSequence originalText = binding.btnResendOtp.getText();
-
-        resendOtpCountdownTimer = new CountDownTimer(OTP_RESEND_COOLDOWN_MS, COUNTDOWN_INTERVAL_MS) {
-            public void onTick(long millisUntilFinished) {
-                if (binding == null) return;
-                binding.btnResendOtp.setText(getString(R.string.resend_otp_countdown, millisUntilFinished / 1000));
-            }
-
-            public void onFinish() {
-                if (binding != null) {
-                    binding.btnResendOtp.setText(originalText);
-                    binding.btnResendOtp.setEnabled(true);
-                }
-            }
-        }.start();
-    }
-
     private void displayEmail() {
         binding.txtUserEmail.setText(authViewModel.getEmail());
     }
 
-    private void hideSoftKeyboard() {
+    /**
+     * Formats informational text with HTML.
+     */
+    private void formatInfoText() {
+        String infoText = "Didn’t get the email? Make sure to also "
+                + "<font color='#FFA500'><b>check your spam/junk folder</b></font> " + "if you can't find the email in your inbox.";
+        binding.txtInfo.setText(Html.fromHtml(infoText, Html.FROM_HTML_MODE_LEGACY));
+    }
+
+    private void hideKeyboard() {
         InputMethodManager imm = (InputMethodManager) requireContext().getSystemService(Context.INPUT_METHOD_SERVICE);
         View focusedView = requireActivity().getCurrentFocus();
         if (focusedView != null) {
             imm.hideSoftInputFromWindow(focusedView.getWindowToken(), 0);
         }
-    }
-
-    private void setupEmailVerificationInfoText() {
-        String infoText = "Didn’t get the email? Make sure to also "
-                + "<font color='#FFA500'><b>check your spam/junk folder</b></font> " + "if you can't find the email in your inbox.";
-        binding.txtInfo.setText(Html.fromHtml(infoText, Html.FROM_HTML_MODE_LEGACY));
     }
 
     private void navigateToFragment(Fragment fragment) {
@@ -260,7 +276,7 @@ public class SignUpEmailVerificationFragment extends Fragment {
         requireActivity().getSupportFragmentManager().popBackStack();
     }
 
-    private void configureStatusBar() {
+    private void setupStatusBar() {
         Window window = requireActivity().getWindow();
         window.setStatusBarColor(ContextCompat.getColor(requireContext(), R.color.white));
         View decorView = window.getDecorView();

@@ -11,24 +11,12 @@ import android.view.inputmethod.InputConnectionWrapper;
 import androidx.annotation.NonNull;
 import androidx.appcompat.widget.AppCompatEditText;
 
-/*-------------------------------------
- Custom EditText for PIN/Digit Input
- with backspace detection support
---------------------------------------*/
 public class PinBoxEditText extends AppCompatEditText {
-
-    /*------------------------------------
-    Listener interface for backspace key
-    -------------------------------------*/
-    public interface OnBackspaceListener {
-        void onBackspace(PinBoxEditText view);
-    }
-
     private OnBackspaceListener backspaceListener;
 
-    /*------------------------------------
+    /*====================
     Constructors for all use cases
-    -------------------------------------*/
+                    =====================*/
     public PinBoxEditText(Context context) {
         super(context);
     }
@@ -41,16 +29,9 @@ public class PinBoxEditText extends AppCompatEditText {
         super(context, attrs, defStyleAttr);
     }
 
-    /*------------------------------------
-    Set the backspace listener if needed
-    -------------------------------------*/
-    public void setOnBackspaceListener(OnBackspaceListener listener) {
-        this.backspaceListener = listener;
-    }
-
-    /*------------------------------------
+    /*====================
     Override to detect soft backspace key
-    -------------------------------------*/
+                    =====================*/
     @Override
     public InputConnection onCreateInputConnection(@NonNull EditorInfo outAttrs) {
         InputConnection baseConnection = super.onCreateInputConnection(outAttrs);
@@ -59,9 +40,7 @@ public class PinBoxEditText extends AppCompatEditText {
             @Override
             public boolean deleteSurroundingText(int beforeLength, int afterLength) {
 
-                /*------------------------------------
-                Detect soft keyboard backspace press
-                -------------------------------------*/
+                // Detect soft keyboard backspace press
                 if (beforeLength == 1 && afterLength == 0) {
                     sendKeyEvent(new KeyEvent(KeyEvent.ACTION_DOWN, KeyEvent.KEYCODE_DEL));
                     sendKeyEvent(new KeyEvent(KeyEvent.ACTION_UP, KeyEvent.KEYCODE_DEL));
@@ -75,5 +54,10 @@ public class PinBoxEditText extends AppCompatEditText {
                 return super.deleteSurroundingText(beforeLength, afterLength);
             }
         };
+    }
+
+    // Listener interface for backspace key
+    public interface OnBackspaceListener {
+        void onBackspace(PinBoxEditText view);
     }
 }

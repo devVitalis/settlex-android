@@ -44,7 +44,7 @@ public class StringUtil {
         return result.toString().trim();
     }
     /*------------------------------------------------
-    Normalize Nigerian phone number to +234XXXXXXXXXX
+    Normalize Nigerian phone number to +234XXXX
     Accepts: 08012345678, 8012345678
     ------------------------------------------------*/
     public static String formatPhoneNumber(String phone) {

@@ -86,7 +86,7 @@
                     android:layout_marginTop="40dp"
                     android:contentDescription="Logo"
                     android:scaleType="fitCenter"
-                    android:src="@drawable/logo_txt" />
+                    android:src="@drawable/logo" />
 
                 <!--User Account Layout-->
                 <RelativeLayout

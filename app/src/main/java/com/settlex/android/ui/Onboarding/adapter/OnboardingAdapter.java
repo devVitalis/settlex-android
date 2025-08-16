@@ -12,33 +12,20 @@ import com.settlex.android.ui.Onboarding.fragment.OnboardingPage3Fragment;
 
 public class OnboardingAdapter extends FragmentStateAdapter {
 
-    /*-----------------------------------------------
-    Initialize the adapter with the hosting activity
-    -----------------------------------------------*/
     public OnboardingAdapter(@NonNull FragmentActivity fragmentActivity) {
         super(fragmentActivity);
     }
 
-    /*---------------------------------------------------
-    Return the correct onboarding page based on position
-    0 → Page 1, 1 → Page 2, 2 → Page 3
-    ---------------------------------------------------*/
     @NonNull
     @Override
     public Fragment createFragment(int position) {
-        switch (position) {
-            case 0:
-                return new OnboardingPage1Fragment();
-            case 1:
-                return new OnboardingPage2Fragment();
-            case 2: default:
-                return new OnboardingPage3Fragment();
-        }
+        return switch (position) {
+            case 0 -> new OnboardingPage1Fragment();
+            case 1 -> new OnboardingPage2Fragment();
+            default -> new OnboardingPage3Fragment();
+        };
     }
 
-    /*--------------------------------
-    Total number of onboarding pages
-    --------------------------------*/
     @Override
     public int getItemCount() {
         return 3;

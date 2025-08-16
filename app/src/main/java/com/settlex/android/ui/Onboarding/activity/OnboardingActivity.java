@@ -65,16 +65,10 @@ public class OnboardingActivity extends AppCompatActivity {
         });
     }
 
-    /*--------------------------
-    Customize status bar color
-    --------------------------*/
     private void setupStatusBar() {
         Window window = getWindow();
         window.setStatusBarColor(ContextCompat.getColor(this, R.color.white));
-
-        View decor = window.getDecorView();
-        int flags = decor.getSystemUiVisibility();
-        flags |= View.SYSTEM_UI_FLAG_LIGHT_STATUS_BAR;
-        decor.setSystemUiVisibility(flags);
+        View decorView = window.getDecorView();
+        decorView.setSystemUiVisibility(decorView.getSystemUiVisibility() | View.SYSTEM_UI_FLAG_LIGHT_STATUS_BAR);
     }
 }

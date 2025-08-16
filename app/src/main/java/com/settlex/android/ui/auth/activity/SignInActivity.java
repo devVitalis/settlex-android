@@ -25,14 +25,13 @@ import com.settlex.android.databinding.ActivitySignInBinding;
 import com.settlex.android.ui.auth.viewmodel.AuthViewModel;
 import com.settlex.android.ui.common.SettleXProgressBarController;
 import com.settlex.android.ui.dashboard.DashboardActivity;
-import com.settlex.android.util.LiveDataUtils;
 
 import java.util.Objects;
 
 public class SignInActivity extends AppCompatActivity {
-    private AuthViewModel vm;
+    private AuthViewModel authViewModel;
     private ActivitySignInBinding binding;
-    private SettleXProgressBarController progressBar;
+    private SettleXProgressBarController progressBarController;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -40,29 +39,25 @@ public class SignInActivity extends AppCompatActivity {
         binding = ActivitySignInBinding.inflate(getLayoutInflater());
         setContentView(binding.getRoot());
 
-        vm = new ViewModelProvider(this).get(AuthViewModel.class);
-        progressBar = new SettleXProgressBarController(binding.getRoot());
+        authViewModel = new ViewModelProvider(this).get(AuthViewModel.class);
+        progressBarController = new SettleXProgressBarController(binding.getRoot());
 
         setupStatusBar();
         setupUIActions();
 
-        vm.getLoginResult().observe(this, result -> {
+        authViewModel.getLoginResult().observe(this, result -> {
             if (result != null) {
                 switch (result.getStatus()) {
+                    case LOADING -> progressBarController.show();
                     case SUCCESS -> {
                         startActivity(new Intent(this, DashboardActivity.class));
                         finish();
-
-                        progressBar.hide();
+                        progressBarController.hide();
                     }
-
                     case ERROR -> {
                         Toast.makeText(this, result.getMessage(), Toast.LENGTH_LONG).show();
-
-                        progressBar.hide();
+                        progressBarController.hide();
                     }
-
-                    case LOADING -> progressBar.show();
                 }
             }
         });
@@ -92,12 +87,12 @@ public class SignInActivity extends AppCompatActivity {
     Sign in user with Email && Password
     -----------------------------------*/
     private void attemptSignIn() {
-        progressBar.show();
+        progressBarController.show();
 
         String email = Objects.requireNonNull(binding.editTxtEmail.getText()).toString().trim();
         String password = Objects.requireNonNull(binding.editTxtPassword.getText()).toString().trim();
 
-        vm.loginWithEmail(email, password);
+        authViewModel.loginWithEmail(email, password);
     }
 
     /*--------------------------------
@@ -214,16 +209,10 @@ public class SignInActivity extends AppCompatActivity {
         return super.dispatchTouchEvent(event);
     }
 
-    /*-------------------------------------
-    Set up status bar appearance and flags
-    -------------------------------------*/
     private void setupStatusBar() {
         Window window = getWindow();
         window.setStatusBarColor(ContextCompat.getColor(this, R.color.white));
-
-        View decor = window.getDecorView();
-        int flags = decor.getSystemUiVisibility();
-        flags |= View.SYSTEM_UI_FLAG_LIGHT_STATUS_BAR;
-        decor.setSystemUiVisibility(flags);
+        View decorView = window.getDecorView();
+        decorView.setSystemUiVisibility(decorView.getSystemUiVisibility() | View.SYSTEM_UI_FLAG_LIGHT_STATUS_BAR);
     }
 }

@@ -36,8 +36,9 @@ public class SignupUserInfoFragment extends Fragment {
         binding = FragmentSignupUserInfoBinding.inflate(inflater, container, false);
         authViewModel = new ViewModelProvider(requireActivity()).get(AuthViewModel.class);
 
-        configureStatusBar();
-        initializeUiComponents();
+        setupStatusBar();
+        setupUiActions();
+
         return binding.getRoot();
     }
 
@@ -47,10 +48,10 @@ public class SignupUserInfoFragment extends Fragment {
         super.onDestroyView();
     }
 
-    private void initializeUiComponents() {
-        setupFocusHandling();
+    private void setupUiActions() {
+        reEnableEditTextFocus();
         setupInputValidation();
-        configureTouchToHideKeyboard(binding.getRoot());
+        clearFocusAndHideKeyboardOnOutsideTap(binding.getRoot());
 
         binding.imgBackBefore.setOnClickListener(v -> navigateBack());
         binding.btnHelp.setOnClickListener(v -> launchHelpActivity());
@@ -61,7 +62,6 @@ public class SignupUserInfoFragment extends Fragment {
      Validates and saves user information before proceeding:
         - Capitalizes first and last names
         - Updates ViewModel with formatted names
-        - Navigates to password fragment
      =============================================================*/
     private void validateUserInfoAndNext() {
         String firstName = StringUtil.capitalizeEachWord(Objects.requireNonNull(binding.editTxtFirstName.getText()).toString().trim());
@@ -88,7 +88,7 @@ public class SignupUserInfoFragment extends Fragment {
         binding.btnContinue.setEnabled(isValidFirstName && isValidLastName);
     }
 
-    private void setupFocusHandling() {
+    private void reEnableEditTextFocus() {
         View.OnClickListener focusListener = v -> {
             if (v instanceof EditText) {
                 v.setFocusable(true);
@@ -114,33 +114,6 @@ public class SignupUserInfoFragment extends Fragment {
         binding.editTxtLastName.addTextChangedListener(validationWatcher);
     }
 
-    @SuppressLint("ClickableViewAccessibility")
-    private void configureTouchToHideKeyboard(View root) {
-        if (!(root instanceof EditText)) {
-            root.setOnTouchListener((v, event) -> {
-                if (event.getAction() == MotionEvent.ACTION_DOWN) {
-                    hideKeyboard();
-                }
-                return false;
-            });
-        }
-
-        if (root instanceof ViewGroup) {
-            for (int i = 0; i < ((ViewGroup) root).getChildCount(); i++) {
-                configureTouchToHideKeyboard(((ViewGroup) root).getChildAt(i));
-            }
-        }
-    }
-
-    private void hideKeyboard() {
-        View focusedView = requireActivity().getCurrentFocus();
-        if (focusedView != null) {
-            InputMethodManager imm = (InputMethodManager) requireContext().getSystemService(Context.INPUT_METHOD_SERVICE);
-            imm.hideSoftInputFromWindow(focusedView.getWindowToken(), 0);
-            focusedView.clearFocus();
-        }
-    }
-
     private void navigateToFragment(Fragment fragment) {
         requireActivity().getSupportFragmentManager()
                 .beginTransaction()
@@ -157,7 +130,34 @@ public class SignupUserInfoFragment extends Fragment {
         startActivity(new Intent(requireActivity(), AuthHelpActivity.class));
     }
 
-    private void configureStatusBar() {
+    @SuppressLint("ClickableViewAccessibility")
+    private void clearFocusAndHideKeyboardOnOutsideTap(View root) {
+        if (!(root instanceof EditText)) {
+            root.setOnTouchListener((v, event) -> {
+                if (event.getAction() == MotionEvent.ACTION_DOWN) {
+                    hideKeyboard();
+                }
+                return false;
+            });
+        }
+
+        if (root instanceof ViewGroup) {
+            for (int i = 0; i < ((ViewGroup) root).getChildCount(); i++) {
+                clearFocusAndHideKeyboardOnOutsideTap(((ViewGroup) root).getChildAt(i));
+            }
+        }
+    }
+
+    private void hideKeyboard() {
+        View focusedView = requireActivity().getCurrentFocus();
+        if (focusedView != null) {
+            InputMethodManager imm = (InputMethodManager) requireContext().getSystemService(Context.INPUT_METHOD_SERVICE);
+            imm.hideSoftInputFromWindow(focusedView.getWindowToken(), 0);
+            focusedView.clearFocus();
+        }
+    }
+
+    private void setupStatusBar() {
         Window window = requireActivity().getWindow();
         window.setStatusBarColor(ContextCompat.getColor(requireContext(), R.color.white));
         View decorView = window.getDecorView();

@@ -5,64 +5,41 @@ import java.util.Map;
 
 public class UserModel {
 
-    private String createdAt;
     private String uid;
-    private String role;
     private String firstName;
     private String lastName;
     private String email;
     private String phone;
-    private double balance;
     private String referralCode;
-    private String passcode;
-    private String passcodeSalt;
-    public boolean hasPasscode;
+    private String pin;
+    private String pinSalt;
+    public boolean hasPin;
 
     public UserModel() { /* Required no-arg constructor for Firestore deserialization*/ }
 
     /*------------------------------------
     Public Constructor for initialization
     ------------------------------------*/
-    public UserModel(String createdAt, String role, String firstName, String lastName, String email, String phone, double balance, String referralCode, String passcode, String passcodeSalt, boolean hasPasscode) {
-        this.createdAt = createdAt;
-        this.role = role;
+    public UserModel(String firstName, String lastName, String email, String phone, String referralCode, String pin, String pinSalt, boolean hasPin) {
         this.firstName = firstName;
         this.lastName = lastName;
         this.email = email;
         this.phone = phone;
-        this.balance = balance;
         this.referralCode = referralCode;
-        this.passcode = passcode;
-        this.passcodeSalt = passcodeSalt;
-        this.hasPasscode = hasPasscode;
+        this.pin = pin;
+        this.pinSalt = pinSalt;
+        this.hasPin = hasPin;
     }
 
     /*--------------------
     Getters and Setters
     --------------------*/
-
-    public String getCreatedAt() {
-        return createdAt;
-    }
-
-    public void setCreatedAt(String createdAt) {
-        this.createdAt = createdAt;
-    }
-
     public String getUid() {
         return uid;
     }
 
     public void setUid(String uid) {
         this.uid = uid;
-    }
-
-    public String getRole() {
-        return role;
-    }
-
-    public void setRole(String role) {
-        this.role = role;
     }
 
     public String getFirstName() {
@@ -97,14 +74,6 @@ public class UserModel {
         this.phone = phone;
     }
 
-    public double getBalance() {
-        return balance;
-    }
-
-    public void setBalance(double balance) {
-        this.balance = balance;
-    }
-
     public String getReferralCode() {
         return referralCode;
     }
@@ -113,28 +82,28 @@ public class UserModel {
         this.referralCode = referralCode;
     }
 
-    public String getPasscode() {
-        return passcode;
+    public String getPin() {
+        return pin;
     }
 
-    public void setPasscode(String passcode) {
-        this.passcode = passcode;
+    public void setPin(String pin) {
+        this.pin = pin;
     }
 
-    public String getPasscodeSalt() {
-        return passcodeSalt;
+    public String getPinSalt() {
+        return pinSalt;
     }
 
-    public void setPasscodeSalt(String passcodeSalt) {
-        this.passcodeSalt = passcodeSalt;
+    public void setPinSalt(String pinSalt) {
+        this.pinSalt = pinSalt;
     }
 
-    public boolean getHasPasscode() {
-        return hasPasscode;
+    public boolean getHasPin() {
+        return hasPin;
     }
 
-    public void setHasPasscode(boolean hasPasscode) {
-        this.hasPasscode = hasPasscode;
+    public void setHasPin(boolean hasPin) {
+        this.hasPin = hasPin;
     }
 
     /*---------------------------------------------
@@ -149,12 +118,9 @@ public class UserModel {
         map.put("firstName", firstName);
         map.put("lastName", lastName);
         map.put("referralCode", referralCode);
-        map.put("balance", balance);
-        map.put("passcode", passcode);
-        map.put("passcodeSalt", passcodeSalt);
-        map.put("hasPasscode", hasPasscode);
-        map.put("createdAt", createdAt);
-        map.put("role", role);
+        map.put("pin", pin);
+        map.put("pinSalt", pinSalt);
+        map.put("hasPin", hasPin);
         return map;
     }
 
