@@ -13,49 +13,44 @@ import androidx.core.splashscreen.SplashScreen;
 import com.settlex.android.data.local.OnboardingPrefs;
 import com.settlex.android.data.local.session.SessionManager;
 import com.settlex.android.ui.Onboarding.activity.OnboardingActivity;
-import com.settlex.android.ui.auth.activity.PasscodeLoginActivity;
+import com.settlex.android.ui.auth.activity.PinLoginActivity;
 import com.settlex.android.ui.auth.activity.SignInActivity;
 
+/**
+ * Handles app cold-start routing with splash screen animation.
+ */
 @SuppressLint("CustomSplashScreen")
 public class SplashActivity extends AppCompatActivity {
-
     private boolean keepSplashVisible = true;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
-
+        // Configure splash screen retention
         SplashScreen splashScreen = SplashScreen.installSplashScreen(this);
         splashScreen.setKeepOnScreenCondition(() -> keepSplashVisible);
 
         super.onCreate(savedInstanceState);
 
-        SessionManager sm = SessionManager.getInstance();
-        OnboardingPrefs prefs = new OnboardingPrefs(this);
-
+        // Route after minimal delay (500ms)
         new Handler(Looper.getMainLooper()).postDelayed(() -> {
             keepSplashVisible = false;
-
-            if (!prefs.isIntroViewed()) {
-                // User hasn't seen onboarding
-                loadActivity(OnboardingActivity.class);
-
-            } else if (!sm.isUserLoggedIn() || !sm.hasPasscode()) {
-                // User hasn't logged in yet || Logged in but no passcode set
-                loadActivity(SignInActivity.class);
-
-            } else {
-                // User is logged in and has passcode
-                loadActivity(PasscodeLoginActivity.class);
-            }
-        }, 500);
+            routeToDestination();
+        }, 300);
     }
 
-    /*----------------------------
-    Launch activity from context
-    -----------------------------*/
-    private void loadActivity(Class<? extends Activity> activityClass) {
-        Intent intent = new Intent(this, activityClass);
-        startActivity(intent);
+    /**
+     * Determines next activity based on onboarding/auth state
+     */
+    private void routeToDestination() {
+        SessionManager session = SessionManager.getInstance();
+        OnboardingPrefs prefs = new OnboardingPrefs(this);
+
+        Class<? extends Activity> destination =
+                !prefs.isIntroViewed() ? OnboardingActivity.class :
+                        !session.isUserLoggedIn() || !session.hasPin() ? SignInActivity.class :
+                                PinLoginActivity.class;
+
+        startActivity(new Intent(this, destination));
         finish();
     }
 }

@@ -1,10 +1,12 @@
 package com.settlex.android.data.model;
 
-import java.util.HashMap;
-import java.util.Map;
-
+/**
+ * Represents a user entity with personal and security data.
+ * Used for both Firestore operations and local storage.
+ */
 public class UserModel {
 
+    // Fields ordered by logical grouping: identity -> contact -> security
     private String uid;
     private String firstName;
     private String lastName;
@@ -13,13 +15,20 @@ public class UserModel {
     private String referralCode;
     private String pin;
     private String pinSalt;
-    public boolean hasPin;
+    public boolean hasPin;  // Public flag for quick PIN status checks
 
-    public UserModel() { /* Required no-arg constructor for Firestore deserialization*/ }
+    // ====================== CONSTRUCTORS ======================
 
-    /*------------------------------------
-    Public Constructor for initialization
-    ------------------------------------*/
+    /**
+     * Required for Firestore deserialization
+     */
+    public UserModel() {
+    }
+
+    /**
+     * Full constructor for manual user creation.
+     * Includes all required fields for account setup.
+     */
     public UserModel(String firstName, String lastName, String email, String phone, String referralCode, String pin, String pinSalt, boolean hasPin) {
         this.firstName = firstName;
         this.lastName = lastName;
@@ -31,9 +40,8 @@ public class UserModel {
         this.hasPin = hasPin;
     }
 
-    /*--------------------
-    Getters and Setters
-    --------------------*/
+    // ====================== GETTERS/SETTERS ======================
+    // --- Identity ---
     public String getUid() {
         return uid;
     }
@@ -58,6 +66,7 @@ public class UserModel {
         this.lastName = lastName;
     }
 
+    // --- Contact ---
     public String getEmail() {
         return email;
     }
@@ -82,6 +91,7 @@ public class UserModel {
         this.referralCode = referralCode;
     }
 
+    // --- Security ---
     public String getPin() {
         return pin;
     }
@@ -105,23 +115,4 @@ public class UserModel {
     public void setHasPin(boolean hasPin) {
         this.hasPin = hasPin;
     }
-
-    /*---------------------------------------------
-    Convert UserModel to Map for JSON-safe
-    serialization in Firestore or Cloud Functions
-    ----------------------------------------------*/
-    public Map<String, Object> toMap() {
-        Map<String, Object> map = new HashMap<>();
-        map.put("uid", uid);
-        map.put("email", email);
-        map.put("phone", phone);
-        map.put("firstName", firstName);
-        map.put("lastName", lastName);
-        map.put("referralCode", referralCode);
-        map.put("pin", pin);
-        map.put("pinSalt", pinSalt);
-        map.put("hasPin", hasPin);
-        return map;
-    }
-
 }

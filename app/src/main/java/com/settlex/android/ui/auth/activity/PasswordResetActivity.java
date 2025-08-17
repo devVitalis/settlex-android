@@ -24,10 +24,14 @@ import com.settlex.android.ui.auth.util.AuthResult;
 import com.settlex.android.ui.auth.viewmodel.AuthViewModel;
 import com.settlex.android.ui.common.SettleXProgressBarController;
 
+/**
+ * Handles password reset initiation flow:
+ */
 public class PasswordResetActivity extends AppCompatActivity {
-    private SettleXProgressBarController progressBarController;
+
     private ActivityPasswordResetBinding binding;
     private AuthViewModel authViewModel;
+    private SettleXProgressBarController progressBarController;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -39,65 +43,71 @@ public class PasswordResetActivity extends AppCompatActivity {
         progressBarController = new SettleXProgressBarController(binding.getRoot());
 
         setupStatusBar();
-        setupUiActions();
-
-        sendEmailResetOtpObserver();
+        setupUiComponents();
+        observeOtpRequestResult();
     }
 
+    // ====================== CORE FLOW ======================
+
     /**
-     * Observes the LiveData for sending a password reset OTP.
-     * It handles loading, success, and error states.
+     * Monitors OTP request state changes (loading/success/error)
      */
-    private void sendEmailResetOtpObserver (){
+    private void observeOtpRequestResult() {
         authViewModel.getSendEmailResetOtpResult().observe(this, event -> {
             AuthResult<String> result = event.getContentIfNotHandled();
-            if (result != null) {
-                switch (result.getStatus()) {
-                    case LOADING -> progressBarController.show();
-                    case SUCCESS -> handleResetOtpSuccess();
-                    case ERROR -> handleResetError(result.getMessage());
-                }
+            if (result == null) return;
+
+            switch (result.getStatus()) {
+                case LOADING -> progressBarController.show();
+                case SUCCESS -> handleOtpRequestSuccess();
+                case ERROR -> handleOtpRequestError(result.getMessage());
             }
         });
     }
 
-    private void handleResetOtpSuccess() {
+    private void handleOtpRequestSuccess() {
         String email = binding.editTxtEmail.getText().toString().trim();
-
-        Intent intent = new Intent(this, OtpVerificationActivity.class);
-        intent.putExtra("email", email);
-        startActivity(intent);
-
+        startActivity(new Intent(this, OtpVerificationActivity.class).putExtra("email", email));
         progressBarController.hide();
     }
 
-    private void handleResetError(String errorMessage) {
-        binding.txtErrorFeedback.setText(errorMessage);
+    private void handleOtpRequestError(String error) {
+        binding.txtErrorFeedback.setText(error);
         binding.txtErrorFeedback.setVisibility(View.VISIBLE);
         progressBarController.hide();
     }
 
+    // ====================== UI CONFIGURATION ======================
+
     /**
-     * Initializes and sets up all UI-related actions and listeners.
+     * Configures all interactive UI elements
      */
-    private void setupUiActions() {
-        setupEmailInputObserver();
-        reEnableEditTextFocus();
-        setupEmailBackgroundFocusListener();
+    private void setupUiComponents() {
+        configureEmailValidation();
+        setupFocusHandlers();
 
         binding.imgBackBefore.setOnClickListener(v -> finish());
-        binding.btnContinue.setOnClickListener(v -> sendPasswordResetOtp());
+        binding.btnContinue.setOnClickListener(v -> requestPasswordResetOtp());
     }
 
-    private void sendPasswordResetOtp() {
-        String email = binding.editTxtEmail.getText().toString().trim();
-        authViewModel.sendPasswordResetOtp(email);
+    /**
+     * Initiates password reset OTP request
+     */
+    private void requestPasswordResetOtp() {
+        authViewModel.sendPasswordResetOtp(
+                binding.editTxtEmail.getText().toString().trim()
+        );
     }
 
-    private void setupEmailInputObserver() {
+    /**
+     * Sets up real-time email validation
+     */
+    private void configureEmailValidation() {
         binding.editTxtEmail.addTextChangedListener(new TextWatcher() {
             @Override
-            public void afterTextChanged(Editable editable) {
+            public void onTextChanged(CharSequence s, int start, int before, int count) {
+                binding.txtErrorFeedback.setVisibility(View.GONE);
+                updateContinueButtonState();
             }
 
             @Override
@@ -105,24 +115,28 @@ public class PasswordResetActivity extends AppCompatActivity {
             }
 
             @Override
-            public void onTextChanged(CharSequence s, int start, int before, int count) {
-                binding.txtErrorFeedback.setVisibility(View.GONE);
-                updateResetButtonState();
+            public void afterTextChanged(Editable s) {
             }
         });
     }
 
-    private void updateResetButtonState() {
+    /**
+     * Updates button state based on email validity
+     */
+    private void updateContinueButtonState() {
         String email = binding.editTxtEmail.getText().toString().trim();
-        boolean isValidEmail = Patterns.EMAIL_ADDRESS.matcher(email).matches();
+        boolean emailValid = (Patterns.EMAIL_ADDRESS.matcher(email).matches());
 
-        binding.btnContinue.setEnabled(isValidEmail);
+        binding.btnContinue.setEnabled(emailValid);
     }
 
+    // ====================== FOCUS MANAGEMENT ======================
+
     /**
-     * Re-enables focus on EditTexts when it's clicked.
+     * Handles EditText focus and background changes
      */
-    private void reEnableEditTextFocus() {
+    private void setupFocusHandlers() {
+        // Focus restoration
         binding.editTxtEmail.setOnClickListener(v -> {
             if (v instanceof EditText) {
                 v.setFocusable(true);
@@ -130,51 +144,46 @@ public class PasswordResetActivity extends AppCompatActivity {
                 v.requestFocus();
             }
         });
+
+        // Background changes
+        binding.editTxtEmail.setOnFocusChangeListener((v, hasFocus) ->
+                binding.editTxtEmailBackground.setBackgroundResource(
+                        hasFocus ? R.drawable.bg_edit_txt_custom_gray_focused
+                                : R.drawable.bg_edit_txt_custom_gray_not_focused));
     }
 
-    private void setupEmailBackgroundFocusListener() {
-        binding.editTxtEmail.setOnFocusChangeListener((v, hasFocus) -> {
-            int backgroundRes = hasFocus ? R.drawable.bg_edit_txt_custom_gray_focused : R.drawable.bg_edit_txt_custom_gray_not_focused;
-            binding.editTxtEmailBackground.setBackgroundResource(backgroundRes);
-        });
-    }
-
-    /**
-     * Intercepts touch events to hide the keyboard
-     * and clear focus if the user taps outside an EditText.
-     */
-    @Override
-    public boolean dispatchTouchEvent(MotionEvent event) {
-        if (event.getAction() == MotionEvent.ACTION_DOWN) {
-            clearFocusAndHideKeyboardOnOutsideTap(event);
-        }
-        return super.dispatchTouchEvent(event);
-    }
-
-    private void clearFocusAndHideKeyboardOnOutsideTap(MotionEvent event) {
-        View currentFocus = getCurrentFocus();
-        if (currentFocus instanceof EditText) {
-            Rect viewRect = new Rect();
-            currentFocus.getGlobalVisibleRect(viewRect);
-
-            if (!viewRect.contains((int) event.getRawX(), (int) event.getRawY())) {
-                currentFocus.clearFocus();
-                hideKeyboard(currentFocus);
-                binding.main.requestFocus();
-            }
-        }
-    }
-
-    private void hideKeyboard(View view) {
-        InputMethodManager imm = (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
-        imm.hideSoftInputFromWindow(view.getWindowToken(), 0);
-    }
+    // ====================== UTILITIES ======================
 
     private void setupStatusBar() {
         Window window = getWindow();
         window.setStatusBarColor(ContextCompat.getColor(this, R.color.white));
+        window.getDecorView().setSystemUiVisibility(
+                window.getDecorView().getSystemUiVisibility() |
+                        View.SYSTEM_UI_FLAG_LIGHT_STATUS_BAR);
+    }
 
-        View decorView = window.getDecorView();
-        decorView.setSystemUiVisibility(decorView.getSystemUiVisibility() | View.SYSTEM_UI_FLAG_LIGHT_STATUS_BAR);
+    /**
+     * Handles keyboard dismissal on outside taps
+     */
+    @Override
+    public boolean dispatchTouchEvent(MotionEvent event) {
+        if (event.getAction() == MotionEvent.ACTION_DOWN) {
+            handleOutsideTap(event);
+        }
+        return super.dispatchTouchEvent(event);
+    }
+
+    private void handleOutsideTap(MotionEvent event) {
+        View focus = getCurrentFocus();
+        if (focus instanceof EditText) {
+            Rect rect = new Rect();
+            focus.getGlobalVisibleRect(rect);
+            if (!rect.contains((int) event.getRawX(), (int) event.getRawY())) {
+                focus.clearFocus();
+                ((InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE))
+                        .hideSoftInputFromWindow(focus.getWindowToken(), 0);
+                binding.main.requestFocus();
+            }
+        }
     }
 }

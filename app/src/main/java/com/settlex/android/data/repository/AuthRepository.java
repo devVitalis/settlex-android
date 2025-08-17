@@ -159,7 +159,7 @@ public class AuthRepository {
      */
     private void storeUserProfileAndVerify(UserModel user, RegisterCallback callback) {
         Map<String, Object> data = new HashMap<>();
-        data.put("user", user.toMap());
+        data.put("user", new Gson().toJson(user));
         functions.getHttpsCallable("storeUserProfile")
                 .call(data)
                 .addOnSuccessListener(result -> {

@@ -6,37 +6,46 @@ import android.content.Context;
 import com.google.firebase.FirebaseApp;
 import com.settlex.android.util.NetworkMonitor;
 
+/**
+ * Core application class managing global dependencies and context.
+ * Initializes essential services (Firebase, NetworkMonitor) at app launch.
+ */
 public class SettleXApp extends Application {
-
+    // SINGLETON PATTERN
     private static SettleXApp instance;
     private static Context appContext;
 
-    @Override
-    public void onCreate() {
-        super.onCreate();
-
-        // Initialize global references
-        instance = this;
-        appContext = getApplicationContext();
-
-        // Initialize Firebase Core SDK
-        FirebaseApp.initializeApp(this);
-
-        // Initialize network state monitor
-        NetworkMonitor.startNetworkCallback();
+    public static SettleXApp getInstance() {
+        return instance;
     }
 
-    /*-------------------------------
-    Retrieve global app context
-    -------------------------------*/
     public static Context getAppContext() {
         return appContext;
     }
 
-    /*-------------------------------
-    Retrieve application instance
-    -------------------------------*/
-    public static SettleXApp getInstance() {
-        return instance;
+    // LIFECYCLE
+    @Override
+    public void onCreate() {
+        super.onCreate();
+        initializeGlobals();
+        initializeServices();
+    }
+
+    // INITIALIZATION
+
+    /**
+     * Sets up global application references
+     */
+    private void initializeGlobals() {
+        instance = this;
+        appContext = getApplicationContext();
+    }
+
+    /**
+     * Starts essential background services
+     */
+    private void initializeServices() {
+        FirebaseApp.initializeApp(this);
+        NetworkMonitor.startNetworkCallback();
     }
 }

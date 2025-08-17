@@ -6,7 +6,7 @@ import androidx.appcompat.app.AppCompatActivity;
 
 import com.settlex.android.R;
 
-public class PasscodeLoginActivity extends AppCompatActivity {
+public class PinLoginActivity extends AppCompatActivity {
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {

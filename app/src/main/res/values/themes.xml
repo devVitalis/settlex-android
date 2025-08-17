@@ -10,8 +10,8 @@
 
     <!-- Splash Theme -->
     <style name="Theme.SettleX.Splash" parent="Theme.SplashScreen">
-        <item name="windowSplashScreenBackground">@color/white</item>
-        <item name="windowSplashScreenAnimatedIcon">@drawable/logo_inset</item>
+        <item name="windowSplashScreenBackground">@color/blue_navy</item>
+        <item name="windowSplashScreenAnimatedIcon">@drawable/logo_splash_inset</item>
         <item name="postSplashScreenTheme">@style/Theme.SettleX</item>
     </style>
 </resources>

@@ -37,7 +37,7 @@
             android:name=".ui.activities.help.AuthHelpActivity"
             android:exported="false" />
         <activity
-            android:name=".ui.auth.activity.PasscodeLoginActivity"
+            android:name=".ui.auth.activity.PinLoginActivity"
             android:exported="false" />
         <activity
             android:name=".ui.auth.activity.SignInActivity"
