@@ -22,9 +22,10 @@ import androidx.lifecycle.ViewModelProvider;
 
 import com.settlex.android.R;
 import com.settlex.android.databinding.ActivitySignInBinding;
+import com.settlex.android.ui.activities.help.AuthHelpActivity;
 import com.settlex.android.ui.auth.viewmodel.AuthViewModel;
 import com.settlex.android.ui.common.SettleXProgressBarController;
-import com.settlex.android.ui.dashboard.DashboardActivity;
+import com.settlex.android.ui.dashboard.activity.DashboardActivity;
 import com.settlex.android.util.StringUtil;
 
 import java.util.Objects;
@@ -93,28 +94,34 @@ public class SignInActivity extends AppCompatActivity {
         authViewModel.loginWithEmail(email, password);
     }
 
-    private void showLoggedInLayout(String firstName, String email){
-        binding.userAccount.setText("Hi, " + firstName + "\n" + StringUtil.maskEmail(email));
+    private void showLoggedInLayout(String firstName, String email) {
+        binding.userAccount.setText(getString(R.string.greeting_with_email, firstName, StringUtil.maskEmail(email)));
+        binding.editTxtEmail.setText(email);
         // Show
         binding.showUserInfoLayout.setVisibility(View.VISIBLE);
         binding.showBiometricsLayout.setVisibility(View.VISIBLE);
+        binding.btnSwitchAccount.setVisibility(View.VISIBLE);
         // Hide
-        binding.editTxtEmailBg.setVisibility(View.GONE);
         binding.logo.setVisibility(View.GONE);
+        binding.editTxtEmailBg.setVisibility(View.GONE);
+        binding.btnSignUp.setVisibility(View.GONE);
     }
 
-    private void showLoggedOutLayout(){
+    private void showLoggedOutLayout() {
         // Hide
         binding.showUserInfoLayout.setVisibility(View.GONE);
         binding.showBiometricsLayout.setVisibility(View.GONE);
+        binding.btnSwitchAccount.setVisibility(View.GONE);
         // Show
         binding.editTxtEmailBg.setVisibility(View.VISIBLE);
+        binding.btnSignUp.setVisibility(View.VISIBLE);
+        binding.logo.setVisibility(View.VISIBLE);
     }
 
     // ====================== UI ACTIONS ======================
     private void setupUiActions() {
         setupFocusHandlers();
-        formatSignUpText();
+        setupAuthActionTexts();
         setupInputValidation();
 
         // Initial UI states
@@ -123,14 +130,18 @@ public class SignInActivity extends AppCompatActivity {
         // Click listeners
         binding.imgBackBefore.setOnClickListener(v -> getOnBackPressedDispatcher().onBackPressed());
         binding.btnSignUp.setOnClickListener(v -> navigateTo(SignUpActivity.class));
-        binding.btnHelp.setOnClickListener(v -> navigateTo(PasswordChangeActivity.class));
+        binding.btnHelp.setOnClickListener(v -> navigateTo(AuthHelpActivity.class));
+        binding.btnSwitchAccount.setOnClickListener(view -> showLoggedOutLayout());
         binding.btnForgotPassword.setOnClickListener(v -> navigateTo(PasswordResetActivity.class));
         binding.btnSignIn.setOnClickListener(v -> attemptLogin());
     }
 
-    private void formatSignUpText() {
-        String signUpText = "Don't have an account yet? <font color='#0044CC'><br>Click here to register</font>";
-        binding.btnSignUp.setText(Html.fromHtml(signUpText, Html.FROM_HTML_MODE_LEGACY));
+    private void setupAuthActionTexts() {
+        String signUpActionText = "Don't have an account yet? <font color='#0044CC'><br>Click here to register</font>";
+        binding.btnSignUp.setText(Html.fromHtml(signUpActionText, Html.FROM_HTML_MODE_LEGACY));
+
+        String switchAccountActionText = "Not you? <font color='#0044CC'><br>Switch Account</font>";
+        binding.btnSwitchAccount.setText(Html.fromHtml(switchAccountActionText, Html.FROM_HTML_MODE_LEGACY));
     }
 
     // ====================== INPUT HANDLING ======================

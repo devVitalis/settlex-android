@@ -4,9 +4,11 @@
     <!-- Authentication Flow -->
     <string name="terms_privacy_agreement">I have read, understood and agreed to the Terms &amp; Conditions and Privacy Policy.</string>
     <string name="resend_otp_countdown">Resend in %1$d</string>
+    <string name="greeting_with_email">Hi, %1$s\n%2$s</string>
 
     <!-- Error Messages -->
     <string name="error_password_mismatch">Passwords do not match!</string>
-    <string name="app_logo">Logo</string>
 
+    <!-- Ui Layouts -->
+    <string name="app_logo">Logo</string>
 </resources>

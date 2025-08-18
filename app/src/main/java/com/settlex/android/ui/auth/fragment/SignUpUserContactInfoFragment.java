@@ -1,6 +1,7 @@
 package com.settlex.android.ui.auth.fragment;
 
 import android.annotation.SuppressLint;
+import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
@@ -29,8 +30,10 @@ import androidx.lifecycle.ViewModelProvider;
 
 import com.settlex.android.R;
 import com.settlex.android.databinding.FragmentSignUpUserContactInfoBinding;
+import com.settlex.android.ui.activities.help.AuthHelpActivity;
 import com.settlex.android.ui.activities.legal.PrivacyPolicyActivity;
 import com.settlex.android.ui.activities.legal.TermsAndConditionsActivity;
+import com.settlex.android.ui.auth.activity.SignInActivity;
 import com.settlex.android.ui.auth.util.AuthResult;
 import com.settlex.android.ui.auth.viewmodel.AuthViewModel;
 import com.settlex.android.ui.common.SettleXProgressBarController;
@@ -102,14 +105,21 @@ public class SignUpUserContactInfoFragment extends Fragment {
         clearFocusAndHideKeyboardOnOutsideTap(binding.getRoot());
 
         binding.imgBackBefore.setOnClickListener(v -> navigateBack());
+        binding.btnSignIn.setOnClickListener(view -> navigateToActivity(SignInActivity.class));
         binding.btnContinue.setOnClickListener(v -> validateAndRequestOtp());
-        binding.btnHelp.setOnClickListener(v -> navigateToFragment(new SignUpUserPasswordFragment()));
+        binding.btnHelp.setOnClickListener(v -> navigateToActivity(AuthHelpActivity.class));
     }
 
     private void setupInputValidation() {
         TextWatcher validationWatcher = new TextWatcher() {
-            @Override public void beforeTextChanged(CharSequence s, int start, int count, int after) {}
-            @Override public void afterTextChanged(Editable s) {}
+            @Override
+            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+            }
+
+            @Override
+            public void afterTextChanged(Editable s) {
+            }
+
             @Override
             public void onTextChanged(CharSequence s, int start, int before, int count) {
                 binding.txtErrorFeedback.setVisibility(View.GONE);
@@ -122,8 +132,14 @@ public class SignUpUserContactInfoFragment extends Fragment {
         binding.checkBoxTermsPrivacy.setOnCheckedChangeListener((buttonView, isChecked) -> updateContinueButtonState());
 
         binding.editTxtEmail.addTextChangedListener(new TextWatcher() {
-            @Override public void beforeTextChanged(CharSequence s, int start, int count, int after) {}
-            @Override public void afterTextChanged(Editable s) {}
+            @Override
+            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+            }
+
+            @Override
+            public void afterTextChanged(Editable s) {
+            }
+
             @Override
             public void onTextChanged(CharSequence s, int start, int before, int count) {
                 binding.emailSectionHeader.setVisibility(!TextUtils.isEmpty(s) ? View.VISIBLE : View.INVISIBLE);
@@ -136,20 +152,26 @@ public class SignUpUserContactInfoFragment extends Fragment {
         SpannableStringBuilder span = new SpannableStringBuilder(legalText);
 
         ClickableSpan termsSpan = new ClickableSpan() {
-            @Override public void onClick(@NonNull View widget) {
+            @Override
+            public void onClick(@NonNull View widget) {
                 startActivity(new Intent(requireActivity(), TermsAndConditionsActivity.class));
             }
-            @Override public void updateDrawState(@NonNull TextPaint ds) {
+
+            @Override
+            public void updateDrawState(@NonNull TextPaint ds) {
                 ds.setColor(ContextCompat.getColor(requireContext(), R.color.blue));
                 ds.setUnderlineText(false);
             }
         };
 
         ClickableSpan privacySpan = new ClickableSpan() {
-            @Override public void onClick(@NonNull View widget) {
+            @Override
+            public void onClick(@NonNull View widget) {
                 startActivity(new Intent(requireActivity(), PrivacyPolicyActivity.class));
             }
-            @Override public void updateDrawState(@NonNull TextPaint ds) {
+
+            @Override
+            public void updateDrawState(@NonNull TextPaint ds) {
                 ds.setColor(ContextCompat.getColor(requireContext(), R.color.blue));
                 ds.setUnderlineText(false);
             }
@@ -170,19 +192,12 @@ public class SignUpUserContactInfoFragment extends Fragment {
                 v.requestFocus();
             }
         };
-
         binding.editTxtEmail.setOnClickListener(focusListener);
         binding.editTxtPhoneNumber.setOnClickListener(focusListener);
 
-        binding.editTxtPhoneNumber.setOnFocusChangeListener((v, hasFocus) ->
-                binding.editTxtPhoneNumberBg.setBackgroundResource(hasFocus
-                        ? R.drawable.bg_edit_txt_custom_white_focused
-                        : R.drawable.bg_edit_txt_custom_white_not_focused));
-
-        binding.editTxtEmail.setOnFocusChangeListener((v, hasFocus) ->
-                binding.editTxtEmailBg.setBackgroundResource(hasFocus
-                        ? R.drawable.bg_edit_txt_custom_white_focused
-                        : R.drawable.bg_edit_txt_custom_white_not_focused));
+        // Background changes
+        binding.editTxtPhoneNumber.setOnFocusChangeListener((v, hasFocus) -> binding.editTxtPhoneNumberBg.setBackgroundResource(hasFocus ? R.drawable.bg_edit_txt_custom_white_focused : R.drawable.bg_edit_txt_custom_white_not_focused));
+        binding.editTxtEmail.setOnFocusChangeListener((v, hasFocus) -> binding.editTxtEmailBg.setBackgroundResource(hasFocus ? R.drawable.bg_edit_txt_custom_white_focused : R.drawable.bg_edit_txt_custom_white_not_focused));
     }
 
     private void validateAndRequestOtp() {
@@ -210,8 +225,11 @@ public class SignUpUserContactInfoFragment extends Fragment {
         requireActivity().getSupportFragmentManager()
                 .beginTransaction()
                 .replace(R.id.fragment_container, fragment)
-                .addToBackStack(null)
-                .commit();
+                .addToBackStack(null).commit();
+    }
+
+    private void navigateToActivity(Class<? extends Activity> activityClass) {
+        startActivity(new Intent(requireActivity(), activityClass));
     }
 
     private void navigateBack() {

@@ -35,9 +35,6 @@ public class TermsAndConditionsActivity extends AppCompatActivity {
     }
 
     private String getTermsHtml() {
-        return "<b>1. Acceptance of Terms</b><br>" +
-                "By accessing or using SettleX...<br><br>" +
-                // ... (rest of your HTML content) ...
-                "<a href=\"mailto:support@settlex.com\">support@settlex.com</a>";
+        return "Content";
     }
 }

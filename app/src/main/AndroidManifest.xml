@@ -25,7 +25,7 @@
             android:name=".ui.auth.activity.PasswordResetActivity"
             android:exported="false" />
         <activity
-            android:name=".ui.dashboard.DashboardActivity"
+            android:name=".ui.dashboard.activity.DashboardActivity"
             android:exported="false" />
         <activity
             android:name=".ui.activities.legal.PrivacyPolicyActivity"

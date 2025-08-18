@@ -31,7 +31,7 @@ import com.settlex.android.databinding.FragmentSignUpUserPasswordBinding;
 import com.settlex.android.ui.activities.help.AuthHelpActivity;
 import com.settlex.android.ui.auth.viewmodel.AuthViewModel;
 import com.settlex.android.ui.common.SettleXProgressBarController;
-import com.settlex.android.ui.dashboard.DashboardActivity;
+import com.settlex.android.ui.dashboard.activity.DashboardActivity;
 
 import java.util.Objects;
 

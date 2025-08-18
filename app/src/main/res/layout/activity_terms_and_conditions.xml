@@ -61,7 +61,7 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:fontFamily="@font/poppins_regular"
-                    android:text="Effective Date: May 4, 2025"
+                    android:text="Date"
                     android:textColor="@color/black"
                     android:textSize="14sp" />
             </LinearLayout>
@@ -72,7 +72,7 @@
                 android:layout_height="wrap_content"
                 android:layout_marginTop="10dp"
                 android:fontFamily="@font/poppins_regular"
-                android:text="TextView"
+                android:text="Content"
                 android:textColor="@color/black"
                 android:textSize="13sp" />
         </LinearLayout>

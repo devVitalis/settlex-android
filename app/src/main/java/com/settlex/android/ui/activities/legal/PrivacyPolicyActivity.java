@@ -35,9 +35,6 @@ public class PrivacyPolicyActivity extends AppCompatActivity {
     }
 
     private String getPolicyHtml() {
-        return "<b>1. Introduction</b><br>" +
-                "SettleX is committed to protecting your privacy...<br><br>" +
-                // TODO... (rest of your HTML content) ...
-                "<a href=\"mailto:support@settlex.com\">support@settlex.com</a>";
+        return "Content";
     }
 }

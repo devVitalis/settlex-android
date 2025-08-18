@@ -29,7 +29,7 @@ import com.settlex.android.databinding.ActivityPasswordChangeBinding;
 import com.settlex.android.ui.auth.util.AuthResult;
 import com.settlex.android.ui.auth.viewmodel.AuthViewModel;
 import com.settlex.android.ui.common.SettleXProgressBarController;
-import com.settlex.android.ui.dashboard.DashboardActivity;
+import com.settlex.android.ui.dashboard.activity.DashboardActivity;
 
 import java.util.Objects;
 

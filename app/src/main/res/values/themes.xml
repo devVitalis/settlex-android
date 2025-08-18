@@ -6,7 +6,8 @@
     </style>
 
     <!-- Main App Theme -->
-    <style name="Theme.SettleX" parent="Base.Theme.SettleX" />
+    <style name="Theme.SettleX" parent="Base.Theme.SettleX">
+    </style>
 
     <!-- Splash Theme -->
     <style name="Theme.SettleX.Splash" parent="Theme.SplashScreen">

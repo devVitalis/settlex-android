@@ -189,7 +189,7 @@
                     android:layout_height="wrap_content"
                     android:layout_gravity="end"
                     android:layout_marginTop="10dp"
-                    android:fontFamily="@font/poppins_light"
+                    android:fontFamily="@font/poppins_regular"
                     android:gravity="center"
                     android:includeFontPadding="false"
                     android:text="Forgot Password?"
@@ -229,12 +229,12 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_marginStart="5dp"
+                        android:fontFamily="@font/poppins_regular"
                         android:gravity="center"
                         android:includeFontPadding="false"
                         android:text="Use Biometrics"
                         android:textColor="@color/blue"
-                        android:textSize="14sp"
-                        android:textStyle="bold" />
+                        android:textSize="14sp" />
                 </LinearLayout>
             </LinearLayout>
         </ScrollView>
@@ -246,19 +246,34 @@
             android:layout_alignParentBottom="true"
             android:padding="5dp">
 
-            <!--Sign Up TxT-->
+            <!--Sign up navigation-->
             <TextView
                 android:id="@+id/btnSignUp"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_centerInParent="true"
                 android:layout_marginBottom="10dp"
-                android:fontFamily="@font/poppins_light"
+                android:fontFamily="@font/poppins_regular"
                 android:gravity="center"
                 android:includeFontPadding="false"
                 android:text="Don't have an account yet?\nClick here to register"
                 android:textColor="@color/black"
                 android:textSize="13sp" />
+
+            <!--Switch account navigation-->
+            <TextView
+                android:id="@+id/btnSwitchAccount"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_centerInParent="true"
+                android:layout_marginBottom="10dp"
+                android:fontFamily="@font/poppins_regular"
+                android:gravity="center"
+                android:includeFontPadding="false"
+                android:text="Not you? Switch Account"
+                android:textColor="@color/black"
+                android:textSize="13sp"
+                android:visibility="gone" />
         </RelativeLayout>
     </RelativeLayout>
 

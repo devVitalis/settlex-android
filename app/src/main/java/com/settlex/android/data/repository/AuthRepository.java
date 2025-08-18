@@ -6,6 +6,7 @@ import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseAuthInvalidCredentialsException;
 import com.google.firebase.auth.FirebaseAuthUserCollisionException;
 import com.google.firebase.auth.FirebaseUser;
+import com.google.firebase.auth.UserProfileChangeRequest;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.functions.FirebaseFunctions;
 import com.google.gson.Gson;
@@ -176,6 +177,7 @@ public class AuthRepository {
                             markEmailAsUnverified(user.getUid());
                         }
                     });
+                    setUserDisplayName(user.getFirstName());
                 })
                 .addOnFailureListener(e -> callback.onFailure(e.getMessage()));
     }
@@ -196,6 +198,20 @@ public class AuthRepository {
         firestore.collection("users")
                 .document(uid)
                 .update("emailVerified", false);
+    }
+
+    /**
+     * Updates user display name in Firebase Auth during registration
+     * with user firstName
+     */
+    private void setUserDisplayName(String firstName) {
+        FirebaseUser user = getCurrentUser();
+        if (user != null) {
+            UserProfileChangeRequest displayName = new UserProfileChangeRequest.Builder()
+                    .setDisplayName(firstName)
+                    .build();
+            user.updateProfile(displayName);
+        }
     }
 
     // ============================ State Management ============================

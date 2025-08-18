@@ -21,10 +21,10 @@ public class SignUpActivity extends AppCompatActivity {
         setContentView(R.layout.activity_sign_up);
 
         // Load default fragment on start
-        if (savedInstanceState == null) loadFragment(new SignUpUserContactInfoFragment());
+        if (savedInstanceState == null) navigateToFragment(new SignUpUserContactInfoFragment());
     }
 
-    private void loadFragment(Fragment fragment) {
+    private void navigateToFragment(Fragment fragment) {
         getSupportFragmentManager()
                 .beginTransaction()
                 .replace(R.id.fragment_container, fragment)

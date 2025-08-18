@@ -27,7 +27,7 @@
         android:includeFontPadding="false"
         android:text="Secure By Design"
         android:textColor="@color/black"
-        android:textSize="22sp"
+        android:textSize="20sp"
         android:textStyle="bold" />
 
     <!--Image Background-->

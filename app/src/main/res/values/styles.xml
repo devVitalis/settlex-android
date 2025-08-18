@@ -113,4 +113,12 @@
         <item name="android:gravity">center</item>
         <item name="android:includeFontPadding">false</item>
     </style>
+
+    /*-------------------------------------------
+    Custom Active Indicator M3 - SettleXApp
+    -------------------------------------------*/
+    <style name="Widget.SettleX.BottomNav.ActiveIndicator" parent="Widget.Material3.BottomNavigationView.ActiveIndicator">
+        <item name="android:color">@color/blue_light</item>
+    </style>
+
 </resources>
