@@ -13,10 +13,15 @@ import com.settlex.android.R;
 import com.settlex.android.data.local.OnboardingPrefs;
 import com.settlex.android.databinding.ActivityOnboardingBinding;
 import com.settlex.android.ui.Onboarding.adapter.OnboardingAdapter;
+import com.settlex.android.ui.auth.activity.SignInActivity;
 import com.settlex.android.ui.auth.activity.SignUpActivity;
 
+/**
+ * Handles onboarding flow:
+ * - Displays intro screens via ViewPager2
+ * - Tracks onboarding completion in preferences
+ */
 public class OnboardingActivity extends AppCompatActivity {
-
     private ActivityOnboardingBinding binding;
     private OnboardingPrefs prefs;
 
@@ -30,41 +35,31 @@ public class OnboardingActivity extends AppCompatActivity {
 
         setupStatusBar();
         setupViewPager();
-        setupUIActions();
+        setupUiActions();
     }
 
-    /*------------------------------------
-    Setup onboarding ViewPager2 and dots
-    -------------------------------------*/
+    // ====================== CORE UI FLOW ======================
     private void setupViewPager() {
         OnboardingAdapter adapter = new OnboardingAdapter(this);
         binding.viewPager.setAdapter(adapter);
         binding.dotsIndicator.attachTo(binding.viewPager);
     }
 
-    /*------------------------------
-    Setup & Handle Event Listeners
-    -------------------------------*/
-    private void setupUIActions() {
-        binding.btnCreateAccount.setOnClickListener(v -> {
-            prefs.setIntroViewed(true);
-            startActivity(new Intent(this, SignUpActivity.class));
-            finish();
-        });
+    private void setupUiActions() {
+        attachNavigation(binding.btnCreateAccount, SignUpActivity.class);
+        attachNavigation(binding.btnLogin, SignInActivity.class);
+        attachNavigation(binding.btnSkip, SignUpActivity.class);
+    }
 
-        binding.btnLogin.setOnClickListener(v -> {
+    private void attachNavigation(View button, Class<? extends AppCompatActivity> targetActivity) {
+        button.setOnClickListener(v -> {
             prefs.setIntroViewed(true);
-            startActivity(new Intent(this, SignUpActivity.class));
-            finish();
-        });
-
-        binding.btnSkip.setOnClickListener(v -> {
-            prefs.setIntroViewed(true);
-            startActivity(new Intent(this, SignUpActivity.class));
+            startActivity(new Intent(this, targetActivity));
             finish();
         });
     }
 
+    // ====================== UTILITIES ======================
     private void setupStatusBar() {
         Window window = getWindow();
         window.setStatusBarColor(ContextCompat.getColor(this, R.color.white));

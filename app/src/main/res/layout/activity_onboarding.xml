@@ -26,43 +26,38 @@
         android:textColor="@color/gray"
         android:textSize="15sp" />
 
-    <RelativeLayout
+    <!--ViewPager2 (Fragment Container)-->
+    <androidx.viewpager2.widget.ViewPager2
+        android:id="@+id/viewPager"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:layout_above="@id/btnContainer"
+        android:layout_height="wrap_content"
+        android:layout_above="@id/dotsIndicator"
         android:layout_below="@id/btnSkip"
-        android:orientation="vertical">
+        android:layout_centerInParent="true"
+        android:layout_marginTop="30dp"
+        android:scrollbars="none" />
 
-        <!--ViewPager2 (Fragment Container)-->
-        <androidx.viewpager2.widget.ViewPager2
-            android:id="@+id/viewPager"
-            android:layout_centerInParent="true"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:scrollbars="none"/>
-
-        <!--Dots Indicator-->
-        <com.tbuonomo.viewpagerdotsindicator.DotsIndicator
-            android:id="@+id/dotsIndicator"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_gravity="center"
-            android:layout_centerHorizontal="true"
-            android:layout_below="@id/viewPager"
-            android:layout_marginTop="15dp"
-            app:dotsColor="@color/blue_light"
-            app:dotsSize="5dp"
-            app:dotsSpacing="2dp"
-            app:dotsWidthFactor="2.5"
-            app:progressMode="false"
-            app:selectedDotColor="@color/blue" />
-    </RelativeLayout>
+    <!--Dots Indicator-->
+    <com.tbuonomo.viewpagerdotsindicator.DotsIndicator
+        android:id="@+id/dotsIndicator"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_above="@id/btnContainer"
+        android:layout_centerHorizontal="true"
+        android:layout_marginTop="20dp"
+        app:dotsColor="@color/blue_light"
+        app:dotsSize="5dp"
+        app:dotsSpacing="2dp"
+        app:dotsWidthFactor="2.5"
+        app:progressMode="false"
+        app:selectedDotColor="@color/blue" />
 
     <LinearLayout
         android:id="@+id/btnContainer"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_alignParentBottom="true"
+        android:layout_marginTop="25dp"
         android:gravity="center_horizontal"
         android:orientation="vertical"
         android:paddingHorizontal="15dp"
@@ -73,7 +68,7 @@
             android:id="@+id/btnCreateAccount"
             style="@style/Widget.SettleXApp.Button.Filled.Blue"
             android:layout_width="match_parent"
-            android:layout_height="55dp"
+            android:layout_height="60dp"
             android:text="Get Started"
             android:textColor="@color/white" />
 
@@ -82,7 +77,7 @@
             android:id="@+id/btnLogin"
             style="@style/Widget.SettleXApp.Button.Filled.LightBlue"
             android:layout_width="match_parent"
-            android:layout_height="55dp"
+            android:layout_height="60dp"
             android:layout_marginTop="2dp"
             android:text="Login" />
     </LinearLayout>

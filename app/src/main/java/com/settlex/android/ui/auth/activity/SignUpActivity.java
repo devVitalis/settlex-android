@@ -9,6 +9,10 @@ import androidx.fragment.app.Fragment;
 import com.settlex.android.R;
 import com.settlex.android.ui.auth.fragment.SignUpUserContactInfoFragment;
 
+/**
+ * Hosts the multi-step user registration flow using fragments.
+ * Manages fragment transactions between registration steps.
+ */
 public class SignUpActivity extends AppCompatActivity {
 
     @Override

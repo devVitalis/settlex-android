@@ -25,18 +25,14 @@ import com.settlex.android.databinding.ActivitySignInBinding;
 import com.settlex.android.ui.auth.viewmodel.AuthViewModel;
 import com.settlex.android.ui.common.SettleXProgressBarController;
 import com.settlex.android.ui.dashboard.DashboardActivity;
+import com.settlex.android.util.StringUtil;
 
 import java.util.Objects;
 
 /**
- * Handles user authentication flow including:
- * - Email/password validation
- * - Login API communication
- * - Navigation to related auth screens
+ * Handles user sign-in flow including:
  */
 public class SignInActivity extends AppCompatActivity {
-
-    // ====================== DEPENDENCIES ======================
     private AuthViewModel authViewModel;
     private ActivitySignInBinding binding;
     private SettleXProgressBarController progressBarController;
@@ -52,42 +48,70 @@ public class SignInActivity extends AppCompatActivity {
 
         setupStatusBar();
         setupUiActions();
+        observeUserState();
         observeLoginResult();
     }
 
-    // ====================== CORE FLOW ======================
+    // ====================== CORE LOGIN FLOW ======================
+    private void observeUserState() {
+        authViewModel.getUserState().observe(this, currentUser -> {
+            if (currentUser != null) {
+                showLoggedInLayout(currentUser.getDisplayName(), currentUser.getEmail());
+            } else {
+                showLoggedOutLayout();
+            }
+        });
+    }
 
-    /**
-     * Observes login API call states (loading/success/error)
-     */
     private void observeLoginResult() {
         authViewModel.getLoginResult().observe(this, result -> {
             if (result != null) {
                 switch (result.getStatus()) {
                     case LOADING -> progressBarController.show();
-                    case SUCCESS -> handleLoginSuccess();
-                    case ERROR -> handleLoginError(result.getMessage());
+                    case SUCCESS -> onLoginSuccess();
+                    case ERROR -> onLoginFailure(result.getMessage());
                 }
             }
         });
     }
 
-    private void handleLoginSuccess() {
+    private void onLoginSuccess() {
         startActivity(new Intent(this, DashboardActivity.class));
         finish();
         progressBarController.hide();
     }
 
-    private void handleLoginError(String errorMessage) {
-        Toast.makeText(this, errorMessage, Toast.LENGTH_LONG).show();
+    private void onLoginFailure(String error) {
+        Toast.makeText(this, error, Toast.LENGTH_LONG).show();
         progressBarController.hide();
     }
 
-    // ====================== UI BEHAVIORS ======================
+    private void attemptLogin() {
+        String email = Objects.requireNonNull(binding.editTxtEmail.getText()).toString().trim();
+        String password = Objects.requireNonNull(binding.editTxtPassword.getText()).toString().trim();
 
-    /**
-     * Configures all interactive UI elements and click listeners
-     */
+        authViewModel.loginWithEmail(email, password);
+    }
+
+    private void showLoggedInLayout(String firstName, String email){
+        binding.userAccount.setText("Hi, " + firstName + "\n" + StringUtil.maskEmail(email));
+        // Show
+        binding.showUserInfoLayout.setVisibility(View.VISIBLE);
+        binding.showBiometricsLayout.setVisibility(View.VISIBLE);
+        // Hide
+        binding.editTxtEmailBg.setVisibility(View.GONE);
+        binding.logo.setVisibility(View.GONE);
+    }
+
+    private void showLoggedOutLayout(){
+        // Hide
+        binding.showUserInfoLayout.setVisibility(View.GONE);
+        binding.showBiometricsLayout.setVisibility(View.GONE);
+        // Show
+        binding.editTxtEmailBg.setVisibility(View.VISIBLE);
+    }
+
+    // ====================== UI ACTIONS ======================
     private void setupUiActions() {
         setupFocusHandlers();
         formatSignUpText();
@@ -104,21 +128,12 @@ public class SignInActivity extends AppCompatActivity {
         binding.btnSignIn.setOnClickListener(v -> attemptLogin());
     }
 
-    /**
-     * Validates inputs and initiates login API call
-     */
-    private void attemptLogin() {
-        String email = Objects.requireNonNull(binding.editTxtEmail.getText()).toString().trim();
-        String password = Objects.requireNonNull(binding.editTxtPassword.getText()).toString().trim();
-
-        authViewModel.loginWithEmail(email, password);
+    private void formatSignUpText() {
+        String signUpText = "Don't have an account yet? <font color='#0044CC'><br>Click here to register</font>";
+        binding.btnSignUp.setText(Html.fromHtml(signUpText, Html.FROM_HTML_MODE_LEGACY));
     }
 
     // ====================== INPUT HANDLING ======================
-
-    /**
-     * Manages real-time input validation for both email and password fields
-     */
     private void setupInputValidation() {
         TextWatcher validationWatcher = new TextWatcher() {
             @Override
@@ -142,8 +157,7 @@ public class SignInActivity extends AppCompatActivity {
         binding.editTxtPassword.addTextChangedListener(new TextWatcher() {
             @Override
             public void onTextChanged(CharSequence s, int start, int before, int count) {
-                boolean isEmpty = TextUtils.isEmpty(s);
-                binding.txtInputLayoutPassword.setEndIconVisible(!isEmpty);
+                binding.txtInputLayoutPassword.setEndIconVisible(!TextUtils.isEmpty(s));
             }
 
             @Override
@@ -167,10 +181,6 @@ public class SignInActivity extends AppCompatActivity {
     }
 
     // ====================== FOCUS MANAGEMENT ======================
-
-    /**
-     * Handles EditText focus restoration and visual feedback
-     */
     private void setupFocusHandlers() {
         View.OnClickListener focusListener = v -> {
             if (v instanceof EditText editText) {
@@ -182,7 +192,6 @@ public class SignInActivity extends AppCompatActivity {
         binding.editTxtEmail.setOnClickListener(focusListener);
         binding.editTxtPassword.setOnClickListener(focusListener);
 
-        // Email field background changes
         binding.editTxtEmail.setOnFocusChangeListener((v, hasFocus) -> {
             int backgroundRes = hasFocus ? R.drawable.bg_edit_txt_custom_gray_focused : R.drawable.bg_edit_txt_custom_gray_not_focused;
             binding.editTxtEmailBg.setBackgroundResource(backgroundRes);
@@ -191,17 +200,6 @@ public class SignInActivity extends AppCompatActivity {
 
     // ====================== UTILITIES ======================
 
-    /**
-     * Applies HTML styling to sign-up prompt text
-     */
-    private void formatSignUpText() {
-        String signUpText = "Don't have an account yet? <font color='#0044CC'><br>Click here to register</font>";
-        binding.btnSignUp.setText(Html.fromHtml(signUpText, Html.FROM_HTML_MODE_LEGACY));
-    }
-
-    /**
-     * Handles navigation to target activity
-     */
     private void navigateTo(Class<? extends Activity> activityClass) {
         startActivity(new Intent(this, activityClass));
     }

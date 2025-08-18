@@ -28,125 +28,110 @@ import com.settlex.android.ui.common.SettleXProgressBarController;
 import com.settlex.android.util.StringUtil;
 
 public class OtpVerificationActivity extends AppCompatActivity {
-    private EditText[] otpCodeInputs;
+    private String userEmail;
+    private EditText[] otpInputs;
     private AuthViewModel authViewModel;
     private ActivityOtpVerificationBinding binding;
     private SettleXProgressBarController progressBarController;
 
+    // ====================== LIFECYCLE ======================
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_otp_verification);
         binding = ActivityOtpVerificationBinding.inflate(getLayoutInflater());
         setContentView(binding.getRoot());
 
+        userEmail = getIntent().getStringExtra("email");
         authViewModel = new ViewModelProvider(this).get(AuthViewModel.class);
         progressBarController = new SettleXProgressBarController(binding.getRoot());
 
         setupStatusBar();
         setupUiActions();
 
-        verifyEmailResetOtpObserver();
-        sendEmailResetOtpObserver();
+        observeVerifyOtpResult();
+        observeSendOtpResult();
     }
 
-
-    private void verifyEmailResetOtpObserver() {
+    // ====================== OBSERVERS ======================
+    private void observeVerifyOtpResult() {
         authViewModel.getVerifyEmailResetOtpResult().observe(this, event -> {
             AuthResult<String> result = event.getContentIfNotHandled();
             if (result != null) {
                 switch (result.getStatus()) {
                     case LOADING -> progressBarController.show();
-                    case SUCCESS -> handleVerifyEmailResetSuccess();
-                    case ERROR -> handleOtpError(result.getMessage());
+                    case SUCCESS -> onVerifyOtpSuccess();
+                    case ERROR -> showOtpError(result.getMessage());
                 }
             }
         });
     }
 
-    private void sendEmailResetOtpObserver() {
+    private void observeSendOtpResult() {
         authViewModel.getSendEmailResetOtpResult().observe(this, event -> {
             AuthResult<String> result = event.getContentIfNotHandled();
             if (result != null) {
                 switch (result.getStatus()) {
                     case LOADING -> progressBarController.show();
-                    case SUCCESS -> handleSendEmailResetSuccess();
-                    case ERROR -> handleOtpError(result.getMessage());
+                    case SUCCESS -> onSendOtpSuccess();
+                    case ERROR -> showOtpError(result.getMessage());
                 }
             }
         });
     }
 
-    private void handleVerifyEmailResetSuccess() {
-        String email = getIntent().getStringExtra("email");
-
-        Intent intent = new Intent(this, PasswordChangeActivity.class);
-        intent.putExtra("email", email);
-        startActivity(intent);
+    // ====================== HANDLERS ======================
+    private void onVerifyOtpSuccess() {
+        startActivity(new Intent(this, PasswordChangeActivity.class).putExtra("email", userEmail));
         finish();
-
         progressBarController.hide();
     }
 
-    private void handleSendEmailResetSuccess() {
+    private void onSendOtpSuccess() {
         startResendOtpCooldown();
         progressBarController.hide();
     }
 
-    /**
-     * Sets up UI elements and event handlers for the activity.
-     */
+    private void showOtpError(String message) {
+        binding.txtOtpFeedback.setText(message);
+        binding.txtOtpFeedback.setVisibility(View.VISIBLE);
+        progressBarController.hide();
+    }
+
+    // ====================== UI SETUP ======================
     private void setupUiActions() {
         setupOtpInputBehavior();
         startResendOtpCooldown();
         maskAndDisplayUserEmail();
 
         binding.imgBackBefore.setOnClickListener(v -> finish());
-        binding.btnResendOtp.setOnClickListener(view -> resendPasswordResetOtp());
-        binding.btnConfirm.setOnClickListener(view -> verifyPasswordResetOtp());
+        binding.btnResendOtp.setOnClickListener(v -> resendOtp());
+        binding.btnConfirm.setOnClickListener(v -> verifyOtp());
     }
 
-    /**
-     * Verifies the OTP entered by the user.
-     */
-    private void verifyPasswordResetOtp() {
-        String email = getIntent().getStringExtra("email");
-        String otp = getEnteredOtpCode();
-
-        authViewModel.verifyPasswordResetOtp(email, otp);
+    private void setupStatusBar() {
+        Window window = getWindow();
+        window.setStatusBarColor(ContextCompat.getColor(this, R.color.white));
+        View decorView = window.getDecorView();
+        decorView.setSystemUiVisibility(decorView.getSystemUiVisibility() | View.SYSTEM_UI_FLAG_LIGHT_STATUS_BAR);
     }
 
-    /**
-     * Resends the password reset OTP to the user's email.
-     */
-    private void resendPasswordResetOtp() {
-        String email = getIntent().getStringExtra("email");
-        authViewModel.sendPasswordResetOtp(email);
+    // ====================== ACTIONS ======================
+    private void verifyOtp() {
+        authViewModel.verifyPasswordResetOtp(userEmail, getEnteredOtpCode());
     }
 
-    /**
-     * Displays an error message to the user.
-     */
-    private void handleOtpError(String message) {
-        binding.txtOtpFeedback.setText(message);
-        binding.txtOtpFeedback.setVisibility(View.VISIBLE);
-
-        progressBarController.hide();
+    private void resendOtp() {
+        authViewModel.sendPasswordResetOtp(userEmail);
     }
 
-    /**
-     * Configures the OTP input fields with chaining logic for a smooth user experience.
-     */
+    // ====================== OTP INPUT ======================
     private void setupOtpInputBehavior() {
-        otpCodeInputs = new EditText[]{
-                binding.otpDigit1, binding.otpDigit2, binding.otpDigit3,
-                binding.otpDigit4, binding.otpDigit5, binding.otpDigit6
-        };
+        otpInputs = new EditText[]{binding.otpDigit1, binding.otpDigit2, binding.otpDigit3, binding.otpDigit4, binding.otpDigit5, binding.otpDigit6};
 
-        for (int i = 0; i < otpCodeInputs.length; i++) {
-            EditText current = otpCodeInputs[i];
-            EditText next = (i < otpCodeInputs.length - 1) ? otpCodeInputs[i + 1] : null;
-            EditText prev = (i > 0) ? otpCodeInputs[i - 1] : null;
+        for (int i = 0; i < otpInputs.length; i++) {
+            EditText current = otpInputs[i];
+            EditText next = (i < otpInputs.length - 1) ? otpInputs[i + 1] : null;
+            EditText prev = (i > 0) ? otpInputs[i - 1] : null;
 
             current.setLongClickable(false);
             current.setTextIsSelectable(false);
@@ -158,8 +143,12 @@ public class OtpVerificationActivity extends AppCompatActivity {
                 }
 
                 @Override
+                public void afterTextChanged(Editable s) {
+                }
+
+                @Override
                 public void onTextChanged(CharSequence s, int start, int before, int count) {
-                    if (isOtpFullyEntered()) hideSoftKeyboard();
+                    if (isOtpComplete()) hideSoftKeyboard();
                     if (TextUtils.isEmpty(s)) binding.txtOtpFeedback.setVisibility(View.GONE);
 
                     if (s.length() == 1 && next != null) {
@@ -167,19 +156,7 @@ public class OtpVerificationActivity extends AppCompatActivity {
                         next.requestFocus();
                         next.setText("");
                     }
-
-                    boolean isFilled = true;
-                    for (EditText pin : otpCodeInputs) {
-                        if (TextUtils.isEmpty(pin.getText())) {
-                            isFilled = false;
-                            break;
-                        }
-                    }
-                    binding.btnConfirm.setEnabled(isFilled);
-                }
-
-                @Override
-                public void afterTextChanged(Editable s) {
+                    binding.btnConfirm.setEnabled(isOtpComplete());
                 }
             });
 
@@ -199,38 +176,27 @@ public class OtpVerificationActivity extends AppCompatActivity {
         }
     }
 
-    /**
-     * Checks if all OTP input fields have been filled.
-     */
-    private boolean isOtpFullyEntered() {
-        for (EditText input : otpCodeInputs) {
-            if (TextUtils.isEmpty(input.getText())) {
-                return false;
-            }
+    private boolean isOtpComplete() {
+        for (EditText input : otpInputs) {
+            if (TextUtils.isEmpty(input.getText())) return false;
         }
         return true;
     }
 
-    /**
-     * Reads the values from the OTP fields and combines them into a single string.
-     */
     private String getEnteredOtpCode() {
         StringBuilder pin = new StringBuilder();
-        for (EditText input : otpCodeInputs) {
+        for (EditText input : otpInputs) {
             pin.append(input.getText().toString().trim());
         }
         return pin.toString();
     }
 
-    /**
-     * Starts a 60-second cooldown timer for the OTP resend button.
-     */
+    // ====================== HELPERS ======================
     private void startResendOtpCooldown() {
         binding.btnResendOtp.setEnabled(false);
         binding.btnResendOtp.setTag(binding.btnResendOtp.getText());
 
         new CountDownTimer(60000, 1000) {
-
             public void onTick(long millisUntilFinished) {
                 int seconds = (int) (millisUntilFinished / 1000);
                 if (seconds > 0) {
@@ -239,24 +205,17 @@ public class OtpVerificationActivity extends AppCompatActivity {
             }
 
             public void onFinish() {
-                CharSequence defaultTxt = (CharSequence) binding.btnResendOtp.getTag();
-                if (defaultTxt != null) binding.btnResendOtp.setText(defaultTxt);
+                binding.btnResendOtp.setText((CharSequence) binding.btnResendOtp.getTag());
                 binding.btnResendOtp.setEnabled(true);
             }
         }.start();
     }
 
-    /**
-     * Masks the user's email address and displays it on the screen.
-     */
     private void maskAndDisplayUserEmail() {
-        String email = StringUtil.maskEmail(getIntent().getStringExtra("email"));
-        binding.txtUserEmail.setText(email);
+        String maskedEmail = StringUtil.maskEmail(userEmail);
+        binding.txtUserEmail.setText(maskedEmail);
     }
 
-    /**
-     * Hides the software keyboard.
-     */
     private void hideSoftKeyboard() {
         InputMethodManager imm = (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
         View view = getCurrentFocus();
@@ -265,9 +224,7 @@ public class OtpVerificationActivity extends AppCompatActivity {
         }
     }
 
-    /**
-     * Dismisses the keyboard and clears focus if the user taps outside an EditText.
-     */
+    // ====================== OVERRIDES ======================
     @Override
     public boolean dispatchTouchEvent(MotionEvent event) {
         if (event.getAction() == MotionEvent.ACTION_DOWN) {
@@ -278,29 +235,12 @@ public class OtpVerificationActivity extends AppCompatActivity {
 
                 if (!outRect.contains((int) event.getRawX(), (int) event.getRawY())) {
                     currentFocus.clearFocus();
-
                     InputMethodManager imm = (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
-                    if (imm != null) {
-                        imm.hideSoftInputFromWindow(currentFocus.getWindowToken(), 0);
-                    }
-
+                    if (imm != null) imm.hideSoftInputFromWindow(currentFocus.getWindowToken(), 0);
                     binding.main.requestFocus();
                 }
             }
         }
         return super.dispatchTouchEvent(event);
-    }
-
-    /**
-     * Configures the status bar to match the activity's design.
-     */
-    private void setupStatusBar() {
-        Window window = getWindow();
-        window.setStatusBarColor(ContextCompat.getColor(this, R.color.white));
-
-        View decor = window.getDecorView();
-        int flags = decor.getSystemUiVisibility();
-        flags |= View.SYSTEM_UI_FLAG_LIGHT_STATUS_BAR;
-        decor.setSystemUiVisibility(flags);
     }
 }

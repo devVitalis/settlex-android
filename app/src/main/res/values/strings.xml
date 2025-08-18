@@ -7,5 +7,6 @@
 
     <!-- Error Messages -->
     <string name="error_password_mismatch">Passwords do not match!</string>
+    <string name="app_logo">Logo</string>
 
 </resources>

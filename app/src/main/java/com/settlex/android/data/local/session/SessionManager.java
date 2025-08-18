@@ -56,7 +56,6 @@ public class SessionManager {
         editor.putBoolean(KEY_HAS_PIN, hasPin);
         editor.apply();
 
-        // Re-initialize onboarding prefs for the new/updated user
         onboardingPrefs = new UserOnboardPrefs(SettleXApp.getInstance(), uid);
     }
 

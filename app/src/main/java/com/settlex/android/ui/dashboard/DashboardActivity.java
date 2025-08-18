@@ -19,6 +19,7 @@ public class DashboardActivity extends AppCompatActivity {
 
     }
 
+    // ============================= UTILITIES ============================
     private void setupStatusBar() {
         Window window = getWindow();
         window.setStatusBarColor(ContextCompat.getColor(this, R.color.white));

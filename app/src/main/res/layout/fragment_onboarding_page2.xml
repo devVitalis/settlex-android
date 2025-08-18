@@ -3,50 +3,65 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:background="@color/white"
     tools:context=".ui.Onboarding.fragment.OnboardingPage2Fragment">
 
-    <LinearLayout
-        android:id="@+id/img"
+    <!--Logo-->
+    <ImageView
+        android:id="@+id/logo"
+        android:layout_width="70dp"
+        android:layout_height="70dp"
+        android:layout_above="@id/sectionHeader"
+        android:layout_centerHorizontal="true"
+        android:contentDescription="@string/app_logo"
+        android:src="@mipmap/ic_launcher" />
+
+    <TextView
+        android:id="@+id/sectionHeader"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:layout_above="@id/imageContainer"
         android:layout_centerHorizontal="true"
         android:layout_marginTop="20dp"
+        android:fontFamily="@font/poppins_medium"
+        android:includeFontPadding="false"
+        android:text="Never Miss Your Shows"
+        android:textColor="@color/black"
+        android:textSize="22sp"
+        android:textStyle="bold" />
+
+    <!--Image Background-->
+    <LinearLayout
+        android:id="@+id/imageContainer"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_centerInParent="true"
+        android:layout_marginTop="25dp"
         android:background="@drawable/bg_oval_light_blue">
 
         <com.google.android.material.imageview.ShapeableImageView
-            android:id="@+id/img_intro_slide_2"
-            android:layout_width="290dp"
-            android:layout_height="290dp"
+            android:id="@+id/ImgIntroSlide2"
+            android:layout_width="295dp"
+            android:layout_height="295dp"
             android:scaleType="centerCrop"
             android:src="@drawable/img_intro_slide_2" />
     </LinearLayout>
 
-    <LinearLayout
+    <!--Content Txt-->
+    <TextView
+        android:id="@+id/txtContent"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_below="@+id/img"
+        android:layout_below="@id/imageContainer"
         android:layout_centerHorizontal="true"
         android:layout_marginHorizontal="10dp"
         android:layout_marginTop="20dp"
-        android:gravity="center_horizontal"
-        android:orientation="vertical">
-
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:fontFamily="sans-serif-black"
-            android:text="NEVER MISS YOUR SHOWS"
-            android:textColor="@color/black"
-            android:textSize="16sp" />
-
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:fontFamily="sans-serif"
-            android:gravity="center"
-            android:text="Stay connected to your favorite TV and streaming services. Renew your subscriptions on time and keep the entertainment going.."
-            android:textAlignment="center"
-            android:textColor="@color/gray"
-            android:textSize="15sp" />
-    </LinearLayout>
+        android:fontFamily="@font/poppins_regular"
+        android:gravity="center"
+        android:text="Stay connected to your favorite TV and streaming services. Renew your subscriptions on time and keep the entertainment going.."
+        android:textAlignment="center"
+        android:textColor="@color/gray"
+        android:textSize="15sp" />
 </RelativeLayout>
+
+

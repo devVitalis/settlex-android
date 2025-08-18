@@ -10,9 +10,7 @@ public final class LiveDataUtils {
         // Prevent instantiation
     }
 
-    /*------------------------------------
-    Observe LiveData once and auto-remove
-    -------------------------------------*/
+    // Observe LiveData once and auto-remove
     public static <T> void observeOnce(LiveData<T> liveData, LifecycleOwner owner, Observer<T> observer) {
         liveData.observe(owner, new Observer<T>() {
             @Override

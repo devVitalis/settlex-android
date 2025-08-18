@@ -3,15 +3,18 @@ package com.settlex.android.util;
 import java.text.NumberFormat;
 import java.util.Locale;
 
+/**
+ * Utility class for string formatting and masking
+ */
 public class StringUtil {
 
+    // ====================== CONSTRUCTOR ======================
     private StringUtil() {
         // Prevent instantiation
     }
 
-    /*-----------------------------------------------------
-    Mask user's email for display (e.g., b***k@gmail.com)
-    -----------------------------------------------------*/
+    // ====================== EMAIL UTIL ======================
+    // Example: b***k@gmail.com)
     public static String maskEmail(String email) {
         if (email == null || !email.contains("@")) return "";
 
@@ -27,30 +30,30 @@ public class StringUtil {
         return masked + "@" + domain;
     }
 
-    /*------------------------------------------------
-    Capitalize each word(e.g., settle x -> Settle X)
-    -------------------------------------------------*/
+    // ====================== TEXT UTIL ======================
+    // Example: "settle x" → "Settle X"
     public static String capitalizeEachWord(String input) {
         if (input == null || input.isEmpty()) return input;
+
         String[] words = input.toLowerCase().trim().split("\\s+");
         StringBuilder result = new StringBuilder();
         for (String word : words) {
             if (!word.isEmpty()) {
-                result.append(Character.toUpperCase(word.charAt(0)))
-                        .append(word.substring(1))
-                        .append(" ");
+                result.append(Character.toUpperCase(word.charAt(0))).append(word.substring(1)).append(" ");
             }
         }
         return result.toString().trim();
     }
-    /*------------------------------------------------
-    Normalize Nigerian phone number to +234XXXX
-    Accepts: 08012345678, 8012345678
-    ------------------------------------------------*/
+
+    // ====================== PHONE UTIL ======================
+
+    /**
+     * Normalizes Nigerian phone number to +234XXXX format
+     * Accepts: 0X0, X0
+     */
     public static String formatPhoneNumber(String phone) {
         if (phone == null) return null;
 
-        // Remove leading zero if present
         if (phone.startsWith("0")) {
             phone = phone.substring(1);
         }
@@ -58,38 +61,43 @@ public class StringUtil {
         return "+234" + phone;
     }
 
-    /*-----------------------------------------------------
-    Format amount to ₦ with commas e.g. 1500 → ₦1,500.00
-    -----------------------------------------------------*/
+    // ====================== CURRENCY UTIL ======================
+
+    /**
+     * Formats amount to ₦ with commas e.g. 1500 → ₦1,500.00
+     */
     public static String formatToNaira(double amount) {
         NumberFormat formatter = NumberFormat.getCurrencyInstance(new Locale("en", "NG"));
         return formatter.format(amount);
     }
 
-    /*------------------------------------------------
-    Format amount into short Naira string:
-    e.g. 950 → ₦950, 1500 → ₦1.5K, 1_000_000 → ₦1M
-    ------------------------------------------------*/
+    /**
+     * Formats amount into a short Naira string
+     * Examples:
+     * 950 → ₦950
+     * 1_500 → ₦1.5K
+     * 1_000_000 → ₦1M
+     */
     public static String formatToNairaShort(double amount) {
         String symbol = "₦";
 
         if (amount < 1_000) {
             return symbol + ((int) amount);
         } else if (amount < 1_000_000) {
-            double value = amount / 1_000.0;
-            return symbol + trimTrailingZeros(value) + "K";
+            return symbol + trimTrailingZeros(amount / 1_000.0) + "K";
         } else if (amount < 1_000_000_000) {
-            double value = amount / 1_000_000.0;
-            return symbol + trimTrailingZeros(value) + "M";
+            return symbol + trimTrailingZeros(amount / 1_000_000.0) + "M";
         } else {
-            double value = amount / 1_000_000_000.0;
-            return symbol + trimTrailingZeros(value) + "B";
+            return symbol + trimTrailingZeros(amount / 1_000_000_000.0) + "B";
         }
     }
 
-    /*--------------------------------------------
-    Strip trailing .0 from doubles like 2.0 → 2
-    --------------------------------------------*/
+    // ====================== PRIVATE HELPERS ======================
+
+    /**
+     * Removes unnecessary trailing .0 from doubles
+     * Example: 2.0 → 2
+     */
     private static String trimTrailingZeros(double value) {
         if (value == (long) value) {
             return String.valueOf((long) value);

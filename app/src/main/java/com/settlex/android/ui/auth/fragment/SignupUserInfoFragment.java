@@ -28,9 +28,11 @@ import com.settlex.android.util.StringUtil;
 import java.util.Objects;
 
 public class SignupUserInfoFragment extends Fragment {
+
     private FragmentSignupUserInfoBinding binding;
     private AuthViewModel authViewModel;
 
+    // ====================== LIFECYCLE ======================
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         binding = FragmentSignupUserInfoBinding.inflate(inflater, container, false);
@@ -48,44 +50,15 @@ public class SignupUserInfoFragment extends Fragment {
         super.onDestroyView();
     }
 
+    // ====================== UI SETUP ======================
     private void setupUiActions() {
         reEnableEditTextFocus();
         setupInputValidation();
         clearFocusAndHideKeyboardOnOutsideTap(binding.getRoot());
 
         binding.imgBackBefore.setOnClickListener(v -> navigateBack());
-        binding.btnHelp.setOnClickListener(v -> launchHelpActivity());
-        binding.btnContinue.setOnClickListener(v -> validateUserInfoAndNext());
-    }
-
-    /**==============================================================
-     Validates and saves user information before proceeding:
-        - Capitalizes first and last names
-        - Updates ViewModel with formatted names
-     =============================================================*/
-    private void validateUserInfoAndNext() {
-        String firstName = StringUtil.capitalizeEachWord(Objects.requireNonNull(binding.editTxtFirstName.getText()).toString().trim());
-        String lastName = StringUtil.capitalizeEachWord(Objects.requireNonNull(binding.editTxtLastName.getText()).toString().trim());
-
-        authViewModel.updateFirstName(firstName);
-        authViewModel.updateLastName(lastName);
-
-        navigateToFragment(new SignUpUserPasswordFragment());
-    }
-
-    /**=============================================================
-     Updates continue button state based on:
-        - Non-empty first and last names
-        - Valid name format (letters only, minimum 2 characters)
-     =============================================================*/
-    private void updateContinueButtonState() {
-        String firstName = Objects.requireNonNull(binding.editTxtFirstName.getText()).toString().trim();
-        String lastName = Objects.requireNonNull(binding.editTxtLastName.getText()).toString().trim();
-
-        boolean isValidFirstName = !firstName.isEmpty() && firstName.matches("^[a-zA-Z]{2,}(?:\\s[a-zA-Z]{2,})*$");
-        boolean isValidLastName = !lastName.isEmpty() && lastName.matches("^[a-zA-Z]{2,}(?:\\s[a-zA-Z]{2,})*$");
-
-        binding.btnContinue.setEnabled(isValidFirstName && isValidLastName);
+        binding.btnHelp.setOnClickListener(v -> navigateToHelpActivity());
+        binding.btnContinue.setOnClickListener(v -> validateUserInfoAndProceed());
     }
 
     private void reEnableEditTextFocus() {
@@ -105,7 +78,9 @@ public class SignupUserInfoFragment extends Fragment {
         TextWatcher validationWatcher = new TextWatcher() {
             @Override public void beforeTextChanged(CharSequence s, int start, int count, int after) {}
             @Override public void afterTextChanged(Editable s) {}
-            @Override public void onTextChanged(CharSequence s, int start, int before, int count) {
+
+            @Override
+            public void onTextChanged(CharSequence s, int start, int before, int count) {
                 updateContinueButtonState();
             }
         };
@@ -114,6 +89,39 @@ public class SignupUserInfoFragment extends Fragment {
         binding.editTxtLastName.addTextChangedListener(validationWatcher);
     }
 
+    // ====================== BUSINESS LOGIC ======================
+
+    /**
+     * Validates user info, updates ViewModel, and navigates to password setup.
+     */
+    private void validateUserInfoAndProceed() {
+        String firstName = StringUtil.capitalizeEachWord(
+                Objects.requireNonNull(binding.editTxtFirstName.getText()).toString().trim()
+        );
+        String lastName = StringUtil.capitalizeEachWord(
+                Objects.requireNonNull(binding.editTxtLastName.getText()).toString().trim()
+        );
+
+        authViewModel.updateFirstName(firstName);
+        authViewModel.updateLastName(lastName);
+
+        navigateToFragment(new SignUpUserPasswordFragment());
+    }
+
+    /**
+     * Enables/disables Continue button based on name validation.
+     */
+    private void updateContinueButtonState() {
+        String firstName = Objects.requireNonNull(binding.editTxtFirstName.getText()).toString().trim();
+        String lastName = Objects.requireNonNull(binding.editTxtLastName.getText()).toString().trim();
+
+        boolean isValidFirstName = !firstName.isEmpty() && firstName.matches("^[a-zA-Z]{2,}(?:\\s[a-zA-Z]{2,})*$");
+        boolean isValidLastName = !lastName.isEmpty() && lastName.matches("^[a-zA-Z]{2,}(?:\\s[a-zA-Z]{2,})*$");
+
+        binding.btnContinue.setEnabled(isValidFirstName && isValidLastName);
+    }
+
+    // ====================== NAVIGATION ======================
     private void navigateToFragment(Fragment fragment) {
         requireActivity().getSupportFragmentManager()
                 .beginTransaction()
@@ -126,10 +134,11 @@ public class SignupUserInfoFragment extends Fragment {
         requireActivity().getSupportFragmentManager().popBackStack();
     }
 
-    private void launchHelpActivity() {
+    private void navigateToHelpActivity() {
         startActivity(new Intent(requireActivity(), AuthHelpActivity.class));
     }
 
+    // ====================== KEYBOARD HANDLING ======================
     @SuppressLint("ClickableViewAccessibility")
     private void clearFocusAndHideKeyboardOnOutsideTap(View root) {
         if (!(root instanceof EditText)) {

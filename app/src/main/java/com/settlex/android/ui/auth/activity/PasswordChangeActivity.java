@@ -43,6 +43,8 @@ public class PasswordChangeActivity extends AppCompatActivity {
     private AuthViewModel authViewModel;
     private boolean isPasswordVisible = false;
 
+
+    // ====================== LIFECYCLE ======================
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -57,53 +59,42 @@ public class PasswordChangeActivity extends AppCompatActivity {
         observePasswordResetResult();
     }
 
-    // ====================== CORE FLOW ======================
 
-    /**
-     * Observes password reset API call states (loading/success/error)
-     */
+    // ====================== CORE FLOW ======================
     private void observePasswordResetResult() {
         authViewModel.getPasswordResetResult().observe(this, event -> {
             AuthResult<String> result = event.getContentIfNotHandled();
             if (result != null) {
                 switch (result.getStatus()) {
                     case LOADING -> progressBarController.show();
-                    case SUCCESS -> handleResetSuccess();
-                    case ERROR -> handleResetError(result.getMessage());
+                    case SUCCESS -> onResetSuccess();
+                    case ERROR -> onResetFailure(result.getMessage());
                 }
             }
         });
     }
 
-    private void handleResetSuccess() {
+    private void onResetSuccess() {
         startActivity(new Intent(this, DashboardActivity.class).addFlags(FLAG_ACTIVITY_CLEAR_TASK));
-        finish();
+        finishAffinity();
         progressBarController.hide();
     }
 
-    private void handleResetError(String error) {
+    private void onResetFailure(String error) {
         binding.txtErrorFeedback.setText(error);
         binding.txtErrorFeedback.setVisibility(View.VISIBLE);
         progressBarController.hide();
     }
 
-    // ====================== UI BEHAVIORS ======================
-
-    /**
-     * Configures all interactive UI elements
-     */
-    private void setupUiActions() {
-        setupEditTextFocusHandlers();
-        setupPasswordValidation();
-        setupPasswordVisibilityToggle();
-
-        binding.imgBackBefore.setOnClickListener(v -> finish());
-        binding.btnResetPassword.setOnClickListener(v -> attemptPasswordReset());
+    private void attemptPasswordReset() {
+        authViewModel.requestPasswordReset(
+                getIntent().getStringExtra("email"),
+                Objects.requireNonNull(binding.editTxtPassword.getText()).toString().trim()
+        );
     }
 
-    /**
-     * Validates password against security requirements in real-time
-     */
+
+    // ====================== PASSWORD VALIDATION ======================
     private void validatePassword() {
         String password = Objects.requireNonNull(binding.editTxtPassword.getText()).toString().trim();
         String confirm = Objects.requireNonNull(binding.editTxtConfirmPassword.getText()).toString().trim();
@@ -112,21 +103,6 @@ public class PasswordChangeActivity extends AppCompatActivity {
         updateResetButtonState(isValid);
     }
 
-    /**
-     * Handles password reset API request
-     */
-    private void attemptPasswordReset() {
-        authViewModel.requestPasswordReset(
-                getIntent().getStringExtra("email"),
-                Objects.requireNonNull(binding.editTxtPassword.getText()).toString().trim()
-        );
-    }
-
-    // ====================== PASSWORD VALIDATION HELPERS ======================
-
-    /**
-     * Checks 4 security criteria + confirmation match
-     */
     private boolean validatePasswordRequirements(String password, String confirm) {
         boolean hasLength = password.length() >= 8;
         boolean hasUpper = password.matches(".*[A-Z].*");
@@ -145,9 +121,6 @@ public class PasswordChangeActivity extends AppCompatActivity {
         return hasLength && hasUpper && hasLower && hasSpecial && matches;
     }
 
-    /**
-     * Visual feedback for password requirements
-     */
     private void showPasswordRequirements(boolean hasLength, boolean hasUpper, boolean hasLower, boolean hasSpecial, String password) {
         SpannableStringBuilder requirements = new SpannableStringBuilder();
         appendRequirement(requirements, hasLength, "At least 8 characters");
@@ -160,9 +133,6 @@ public class PasswordChangeActivity extends AppCompatActivity {
         binding.txtPasswordPrompt.setText(requirements);
     }
 
-    /**
-     * Appends requirement line with icon
-     */
     private void appendRequirement(SpannableStringBuilder builder, boolean isMet, String text) {
         Drawable icon = ContextCompat.getDrawable(this, isMet ? R.drawable.ic_checkbox_checked : R.drawable.ic_checkbox_unchecked);
         if (icon != null) {
@@ -175,11 +145,17 @@ public class PasswordChangeActivity extends AppCompatActivity {
         }
     }
 
-    // ====================== UTILITIES ======================
 
-    /**
-     * Toggles password field visibility
-     */
+    // ====================== UI SETUP ======================
+    private void setupUiActions() {
+        setupEditTextFocusHandlers();
+        setupPasswordValidation();
+        setupPasswordVisibilityToggle();
+
+        binding.imgBackBefore.setOnClickListener(v -> finish());
+        binding.btnResetPassword.setOnClickListener(v -> attemptPasswordReset());
+    }
+
     private void setupPasswordVisibilityToggle() {
         binding.togglePasswordVisibility.setOnClickListener(v -> {
             Typeface currentTypeface = binding.editTxtPassword.getTypeface();
@@ -189,21 +165,16 @@ public class PasswordChangeActivity extends AppCompatActivity {
 
             binding.editTxtPassword.setInputType(InputType.TYPE_CLASS_TEXT | inputType);
             binding.editTxtConfirmPassword.setInputType(InputType.TYPE_CLASS_TEXT | inputType);
-
-            binding.togglePasswordVisibility.setImageResource(isPasswordVisible ? R.drawable.ic_visibility_on : R.drawable.ic_visibility_lock);
+            binding.togglePasswordVisibility.setImageResource(isPasswordVisible ? R.drawable.ic_visibility_on : R.drawable.ic_visibility_off);
 
             binding.editTxtPassword.setTypeface(currentTypeface);
             binding.editTxtConfirmPassword.setTypeface(currentTypeface);
-            // Maintain cursor position
+
             binding.editTxtPassword.setSelection(binding.editTxtPassword.getText().length());
         });
     }
 
-    /**
-     * Handles focus changes for EditText backgrounds
-     */
     private void setupEditTextFocusHandlers() {
-        // Focus restoration
         View.OnClickListener focusListener = v -> {
             if (v instanceof EditText) {
                 v.setFocusable(true);
@@ -214,7 +185,6 @@ public class PasswordChangeActivity extends AppCompatActivity {
         binding.editTxtPassword.setOnClickListener(focusListener);
         binding.editTxtConfirmPassword.setOnClickListener(focusListener);
 
-        // Background changes
         binding.editTxtPassword.setOnFocusChangeListener((v, hasFocus) ->
                 binding.editTxtPasswordBg.setBackgroundResource(
                         hasFocus ? R.drawable.bg_edit_txt_custom_white_focused
@@ -226,9 +196,6 @@ public class PasswordChangeActivity extends AppCompatActivity {
                                 : R.drawable.bg_edit_txt_custom_gray_not_focused));
     }
 
-    /**
-     * Real-time password validation
-     */
     private void setupPasswordValidation() {
         TextWatcher watcher = new TextWatcher() {
             @Override
@@ -238,21 +205,20 @@ public class PasswordChangeActivity extends AppCompatActivity {
 
                 boolean shouldShowToggle = !password.isEmpty() || !confirmPassword.isEmpty();
                 binding.togglePasswordVisibility.setVisibility(shouldShowToggle ? View.VISIBLE : View.INVISIBLE);
+
                 validatePassword();
             }
 
-            @Override
-            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
-            }
-
-            @Override
-            public void afterTextChanged(Editable s) {
-            }
+            @Override public void beforeTextChanged(CharSequence s, int start, int count, int after) {}
+            @Override public void afterTextChanged(Editable s) {}
         };
+
         binding.editTxtPassword.addTextChangedListener(watcher);
         binding.editTxtConfirmPassword.addTextChangedListener(watcher);
     }
 
+
+    // ====================== UTILITIES ======================
     private void setupStatusBar() {
         Window window = getWindow();
         window.setStatusBarColor(ContextCompat.getColor(this, R.color.white));
@@ -260,9 +226,6 @@ public class PasswordChangeActivity extends AppCompatActivity {
                 window.getDecorView().getSystemUiVisibility() | View.SYSTEM_UI_FLAG_LIGHT_STATUS_BAR);
     }
 
-    /**
-     * Dismisses keyboard when tapping outside EditText
-     */
     @Override
     public boolean dispatchTouchEvent(MotionEvent event) {
         if (event.getAction() == MotionEvent.ACTION_DOWN) {

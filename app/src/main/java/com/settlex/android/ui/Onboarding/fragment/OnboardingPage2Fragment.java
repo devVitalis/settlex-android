@@ -1,6 +1,7 @@
 package com.settlex.android.ui.Onboarding.fragment;
 
 import android.os.Bundle;
+import android.text.Html;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -14,7 +15,6 @@ import com.settlex.android.R;
 import com.settlex.android.databinding.FragmentOnboardingPage2Binding;
 
 public class OnboardingPage2Fragment extends Fragment {
-
     private FragmentOnboardingPage2Binding binding;
 
     @Nullable
@@ -22,28 +22,27 @@ public class OnboardingPage2Fragment extends Fragment {
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         binding = FragmentOnboardingPage2Binding.inflate(inflater, container, false);
 
+        styleHeaderTxt();
         loadOptimizedImage();
 
         return binding.getRoot();
     }
 
-    /*------------------------
-    Clear binding reference
-    ------------------------*/
     @Override
     public void onDestroyView() {
         super.onDestroyView();
         binding = null;
     }
 
+    private void styleHeaderTxt() {
+        String htmlText = "Never <font color='#0044CC'>Miss</font> Your <font color='#0044CC'>Shows</font>";
+        binding.sectionHeader.setText(Html.fromHtml(htmlText, Html.FROM_HTML_MODE_LEGACY));
+    }
 
-    /*----------------------------
-    Load image with downscaling
-    -----------------------------*/
     private void loadOptimizedImage() {
         Glide.with(this)
                 .load(R.drawable.img_intro_slide_2)
                 .centerCrop()
-                .into(binding.imgIntroSlide2);
+                .into(binding.ImgIntroSlide2);
     }
 }

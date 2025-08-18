@@ -80,26 +80,27 @@
 
                 <!--Logo-->
                 <ImageView
-                    android:layout_width="100dp"
-                    android:layout_height="40dp"
+                    android:id="@+id/logo"
+                    android:layout_width="70dp"
+                    android:layout_height="70dp"
                     android:layout_gravity="center"
                     android:layout_marginTop="40dp"
                     android:contentDescription="Logo"
                     android:scaleType="fitCenter"
-                    android:src="@drawable/logo" />
+                    android:src="@mipmap/ic_launcher" />
 
                 <!--User Account Layout-->
                 <RelativeLayout
                     android:id="@+id/showUserInfoLayout"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_marginTop="10dp"
-                    android:layout_marginBottom="30dp"
+                    android:layout_marginTop="20dp"
+                    android:layout_marginBottom="20dp"
                     android:visibility="gone">
 
                     <!--Avatar-->
                     <ImageView
-                        android:id="@+id/avatar"
+                        android:id="@+id/userAvatar"
                         android:layout_width="80dp"
                         android:layout_height="80dp"
                         android:layout_centerHorizontal="true"
@@ -111,7 +112,7 @@
                         android:id="@+id/userAccount"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:layout_below="@id/avatar"
+                        android:layout_below="@id/userAvatar"
                         android:layout_centerHorizontal="true"
                         android:layout_marginTop="10dp"
                         android:fontFamily="@font/poppins_regular"
@@ -193,8 +194,7 @@
                     android:includeFontPadding="false"
                     android:text="Forgot Password?"
                     android:textColor="@color/blue"
-                    android:textSize="12sp"
-                    android:textStyle="bold" />
+                    android:textSize="12sp" />
 
                 <!--Login Btn-->
                 <com.google.android.material.button.MaterialButton

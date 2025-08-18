@@ -1,5 +1,7 @@
 package com.settlex.android.data.repository;
 
+import androidx.annotation.Nullable;
+
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseAuthInvalidCredentialsException;
 import com.google.firebase.auth.FirebaseAuthUserCollisionException;
@@ -14,11 +16,9 @@ import java.util.HashMap;
 import java.util.Map;
 
 /**
- * Repository layer handling authentication-related operations.
- * Centralizes interactions with Firebase Authentication, Firestore, and Cloud Functions.
+ * Centralizes all authentication operations
  */
 public class AuthRepository {
-
     private final FirebaseAuth firebaseAuth;
     private final FirebaseFirestore firestore;
     private final FirebaseFunctions functions;
@@ -26,12 +26,13 @@ public class AuthRepository {
     public AuthRepository() {
         firebaseAuth = FirebaseAuth.getInstance();
         firestore = FirebaseFirestore.getInstance();
-        // Cloud Functions are deployed to 'europe-west2' for data residency and latency optimization.
+        // Using europe-west2 lower latency
         functions = FirebaseFunctions.getInstance("europe-west2");
     }
 
     /**
-     * Authenticates a user with email and password.
+     * Handles email/password authentication with Firebase Auth
+     * Includes specific error handling for invalid credentials
      */
     public void loginWithEmail(String email, String password, LoginCallback callback) {
         firebaseAuth.signInWithEmailAndPassword(email, password)
@@ -46,7 +47,8 @@ public class AuthRepository {
     }
 
     /**
-     * Registers a new user with Firebase and then stores their profile in Firestore.
+     * Registers new user with Firebase Auth and stores profile data
+     * Includes collision detection for existing accounts
      */
     public void registerUser(UserModel user, String email, String password, RegisterCallback callback) {
         firebaseAuth.createUserWithEmailAndPassword(email, password)
@@ -69,7 +71,8 @@ public class AuthRepository {
     }
 
     /**
-     * Checks if an email is already registered by calling a Cloud Function.
+     * Checks email availability via Cloud Function
+     * Used during registration to prevent duplicate accounts
      */
     public void checkEmailExistence(String email, EmailExistenceCallback callback) {
         Map<String, Object> data = new HashMap<>();
@@ -88,7 +91,10 @@ public class AuthRepository {
     }
 
     /**
-     * Sends a one-time password (OTP) for email verification.
+     * Manages the complete OTP verification flow:
+     * 1. Sends verification code
+     * 2. Validates entered code
+     * 3. Handles success/failure states
      */
     public void sendEmailVerificationOtp(String email, SendOtpCallback callback) {
         Map<String, Object> data = new HashMap<>();
@@ -99,9 +105,6 @@ public class AuthRepository {
                 .addOnFailureListener(e -> callback.onFailure(e.getMessage()));
     }
 
-    /**
-     * Verifies the OTP entered for email verification.
-     */
     public void verifyEmailVerificationOtp(String email, String otp, VerifyOtpCallback callback) {
         Map<String, Object> data = new HashMap<>();
         data.put("email", email);
@@ -113,7 +116,10 @@ public class AuthRepository {
     }
 
     /**
-     * Sends an OTP for password reset.
+     * Handles password reset flow including:
+     * - OTP generation
+     * - OTP verification
+     * - Secure password update
      */
     public void sendEmailPasswordResetOtp(String email, SendOtpCallback callback) {
         Map<String, Object> data = new HashMap<>();
@@ -124,9 +130,6 @@ public class AuthRepository {
                 .addOnFailureListener(e -> callback.onFailure(e.getMessage()));
     }
 
-    /**
-     * Verifies the OTP for password reset.
-     */
     public void verifyEmailPasswordResetOtp(String email, String otp, VerifyOtpCallback callback) {
         Map<String, Object> data = new HashMap<>();
         data.put("email", email);
@@ -138,14 +141,14 @@ public class AuthRepository {
     }
 
     /**
-     * Changes user password via backend API with security metadata.
+     * Securely updates password with device metadata for fraud detection
      */
     public void resetPassword(String email, String newPassword, ChangePasswordCallback callback) {
         RequestMetadataService.collectAsync(metadata -> {
             Map<String, Object> data = new HashMap<>();
             data.put("email", email);
             data.put("newPassword", newPassword);
-            data.put("metadata", new Gson().toJson(metadata)); // (Convert to JSON safe)
+            data.put("metadata", new Gson().toJson(metadata));
 
             functions.getHttpsCallable("resetPassword")
                     .call(data)
@@ -155,24 +158,21 @@ public class AuthRepository {
     }
 
     /**
-     * Saves user profile in backend and marks email as verified.
+     * Stores user profile and initiates email verification
+     * Maintains data consistency with rollback on failure
      */
     private void storeUserProfileAndVerify(UserModel user, RegisterCallback callback) {
         Map<String, Object> data = new HashMap<>();
         data.put("user", new Gson().toJson(user));
+
         functions.getHttpsCallable("storeUserProfile")
                 .call(data)
                 .addOnSuccessListener(result -> {
-                    // Save the user profile, then attempt to mark the email as verified.
                     callback.onSuccess();
-                    markEmailVerified(user.getUid(), new RegisterCallback() {
-                        @Override
-                        public void onSuccess() {
-                        }
 
-                        @Override
-                        public void onFailure(String reason) {
-                            // If failed, flag the profile to maintain a consistent state.
+                    markEmailVerified(user.getUid(), new RegisterCallback() {
+                        @Override public void onSuccess() {}
+                        @Override public void onFailure(String reason) {
                             markEmailAsUnverified(user.getUid());
                         }
                     });
@@ -180,9 +180,6 @@ public class AuthRepository {
                 .addOnFailureListener(e -> callback.onFailure(e.getMessage()));
     }
 
-    /**
-     * Marks the user's email as verified in the backend.
-     */
     private void markEmailVerified(String uid, RegisterCallback callback) {
         Map<String, Object> data = new HashMap<>();
         data.put("uid", uid);
@@ -193,7 +190,7 @@ public class AuthRepository {
     }
 
     /**
-     * Flags a user's email as unverified in Firestore if the verification process fails.
+     * Fallback method to maintain data consistency when verification fails
      */
     private void markEmailAsUnverified(String uid) {
         firestore.collection("users")
@@ -201,40 +198,40 @@ public class AuthRepository {
                 .update("emailVerified", false);
     }
 
+    // ============================ State Management ============================
+    @Nullable
+    public FirebaseUser getCurrentUser(){
+        return FirebaseAuth.getInstance().getCurrentUser();
+    }
+
     // ===== Callback Interfaces =====
     public interface LoginCallback {
         void onSuccess();
-
         void onFailure(String reason);
     }
 
     public interface RegisterCallback {
         void onSuccess();
-
         void onFailure(String reason);
     }
 
     public interface EmailExistenceCallback {
         void onSuccess(boolean exists);
-
         void onFailure(String reason);
     }
 
     public interface SendOtpCallback {
         void onSuccess();
-
         void onFailure(String reason);
     }
 
     public interface VerifyOtpCallback {
         void onSuccess();
-
         void onFailure(String reason);
     }
 
     public interface ChangePasswordCallback {
         void onSuccess();
-
         void onFailure(String reason);
     }
 }

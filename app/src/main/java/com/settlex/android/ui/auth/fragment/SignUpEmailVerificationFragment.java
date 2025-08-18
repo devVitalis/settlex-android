@@ -26,23 +26,28 @@ import com.settlex.android.databinding.FragmentSignUpEmailVerificationBinding;
 import com.settlex.android.ui.auth.util.AuthResult;
 import com.settlex.android.ui.auth.viewmodel.AuthViewModel;
 import com.settlex.android.ui.common.SettleXProgressBarController;
+import com.settlex.android.util.StringUtil;
 
 public class SignUpEmailVerificationFragment extends Fragment {
+
     private static final int OTP_RESEND_COOLDOWN_MS = 60000;
     private static final int COUNTDOWN_INTERVAL_MS = 1000;
 
+    private String userEmail;
     private AuthViewModel authViewModel;
     private CountDownTimer resendOtpCountdownTimer;
     private EditText[] otpDigitViews;
-    private SettleXProgressBarController progressController;
+    private SettleXProgressBarController progressBarController;
     private FragmentSignUpEmailVerificationBinding binding;
 
+    // ====================== LIFECYCLE ======================
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         binding = FragmentSignUpEmailVerificationBinding.inflate(getLayoutInflater(), container, false);
 
-        progressController = new SettleXProgressBarController(binding.getRoot());
+        progressBarController = new SettleXProgressBarController(binding.getRoot());
         authViewModel = new ViewModelProvider(requireActivity()).get(AuthViewModel.class);
+        userEmail = authViewModel.getEmail();
 
         setupStatusBar();
         setupUiActions();
@@ -53,93 +58,96 @@ public class SignUpEmailVerificationFragment extends Fragment {
     @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
+
         startResendOtpCooldown();
-        sendEmailVerificationOtpObserver();
-        verifyEmailVerificationOtpObserver();
+        observeSendEmailVerificationOtp();
+        observeVerifyEmailVerificationOtp();
     }
 
     @Override
     public void onDestroyView() {
-        resendOtpCountdownTimer.cancel();
+        if (resendOtpCountdownTimer != null) {
+            resendOtpCountdownTimer.cancel();
+        }
         binding = null;
         super.onDestroyView();
     }
 
-    /**
-     * Observes the LiveData for verifying an email verification OTP.
-     * It handles loading, success, and error states.
-     */
-    private void verifyEmailVerificationOtpObserver() {
+    // ====================== OBSERVERS ======================
+    private void observeVerifyEmailVerificationOtp() {
         authViewModel.getVerifyEmailVerificationOtpResult().observe(getViewLifecycleOwner(), event -> {
             AuthResult<String> result = event.getContentIfNotHandled();
-            if (result != null) {
-                switch (result.getStatus()) {
-                    case LOADING -> progressController.show();
-                    case SUCCESS -> {
-                        navigateToFragment(new SignupUserInfoFragment());
-                        progressController.hide();
-                    }
-                    case ERROR -> {
-                        showOtpError(result.getMessage());
-                        progressController.hide();
-                    }
-                }
+            if (result == null) return;
+
+            switch (result.getStatus()) {
+                case LOADING -> progressBarController.show();
+                case SUCCESS -> onOtpVerificationSuccess();
+                case ERROR -> onSendOrVerifyOtpFailure(result.getMessage());
             }
         });
     }
 
-    /**
-     * Observes the LiveData for sending an email verification OTP.
-     * It handles loading, success, and error states.
-     */
-    private void sendEmailVerificationOtpObserver() {
+    private void observeSendEmailVerificationOtp() {
         authViewModel.getSendEmailVerificationOtpResult().observe(getViewLifecycleOwner(), event -> {
             AuthResult<String> result = event.getContentIfNotHandled();
-            if (result != null) {
-                switch (result.getStatus()) {
-                    case LOADING -> progressController.show();
-                    case SUCCESS -> {
-                        startResendOtpCooldown();
-                        progressController.hide();
-                    }
-                    case ERROR -> {
-                        showOtpError(result.getMessage());
-                        progressController.hide();
-                    }
-                }
+            if (result == null) return;
+
+            switch (result.getStatus()) {
+                case LOADING -> progressBarController.show();
+                case SUCCESS -> startResendOtpCooldown();
+                case ERROR -> onSendOrVerifyOtpFailure(result.getMessage());
             }
         });
     }
 
-    private void showOtpError(String message) {
-        binding.txtOtpFeedback.setText(message);
-        binding.txtOtpFeedback.setVisibility(View.VISIBLE);
+    private void onOtpVerificationSuccess() {
+        navigateToFragment(new SignupUserInfoFragment());
+        progressBarController.hide();
     }
 
-    /**
-     * Initializes and sets up all UI-related actions and listeners.
-     */
+    private void onSendOrVerifyOtpFailure(String reason) {
+        binding.txtOtpFeedback.setText(reason);
+        binding.txtOtpFeedback.setVisibility(View.VISIBLE);
+        progressBarController.hide();
+    }
+
+    // ====================== CORE FLOW ======================
+    private void verifyOtp() {
+        authViewModel.verifyEmailOtp(userEmail, getEnteredOtpDigits());
+    }
+
+    private void resendOtp() {
+        authViewModel.sendEmailVerificationOtp(userEmail);
+    }
+
+    // ====================== UI SETUP ======================
     private void setupUiActions() {
         formatInfoText();
         setupOtpInputBehavior();
-        displayEmail();
+        maskAndDisplayEmail();
 
         binding.imgBackBefore.setOnClickListener(v -> navigateBack());
-        binding.btnVerify.setOnClickListener(v -> verifyEmailVerificationOtp());
-        binding.btnResendOtp.setOnClickListener(v -> requestEmailVerificationOtp());
+        binding.btnVerify.setOnClickListener(v -> verifyOtp());
+        binding.btnResendOtp.setOnClickListener(v -> resendOtp());
     }
 
-    private void verifyEmailVerificationOtp() {
-        authViewModel.verifyEmailOtp(authViewModel.getEmail(), getEnteredOtpDigits());
+    private void setupStatusBar() {
+        Window window = requireActivity().getWindow();
+        window.setStatusBarColor(ContextCompat.getColor(requireContext(), R.color.white));
+        View decorView = window.getDecorView();
+        decorView.setSystemUiVisibility(decorView.getSystemUiVisibility() | View.SYSTEM_UI_FLAG_LIGHT_STATUS_BAR);
     }
 
-    private void requestEmailVerificationOtp() {
-        authViewModel.sendEmailVerificationOtp(authViewModel.getEmail());
+    private void formatInfoText() {
+        String infoText = "Didn’t get the email? Make sure to also " + "<font color='#FFA500'><b>check your spam/junk folder</b></font> " + "if you can't find the email in your inbox.";
+        binding.txtInfo.setText(Html.fromHtml(infoText, Html.FROM_HTML_MODE_LEGACY));
     }
 
-    /**
-     * Starts a cooldown timer for the OTP resend button.
-     */
+    private void maskAndDisplayEmail() {
+        binding.txtUserEmail.setText(StringUtil.maskEmail(userEmail));
+    }
+
+    // ====================== OTP HANDLING ======================
     private void startResendOtpCooldown() {
         binding.btnResendOtp.setEnabled(false);
         final CharSequence originalText = binding.btnResendOtp.getText();
@@ -157,29 +165,29 @@ public class SignUpEmailVerificationFragment extends Fragment {
                 }
             }
         }.start();
+
+        progressBarController.hide();
     }
 
-    /**
-     * Configures OTP input fields with chaining behavior.
-     */
     private void setupOtpInputBehavior() {
-        otpDigitViews = new EditText[]{
-                binding.otpDigit1, binding.otpDigit2, binding.otpDigit3,
-                binding.otpDigit4, binding.otpDigit5, binding.otpDigit6
-        };
+        otpDigitViews = new EditText[]{binding.otpDigit1, binding.otpDigit2, binding.otpDigit3, binding.otpDigit4, binding.otpDigit5, binding.otpDigit6};
 
         for (int i = 0; i < otpDigitViews.length; i++) {
-            EditText currentDigitView = otpDigitViews[i];
-            EditText nextDigitView = (i < otpDigitViews.length - 1) ? otpDigitViews[i + 1] : null;
-            EditText previousDigitView = (i > 0) ? otpDigitViews[i - 1] : null;
+            EditText current = otpDigitViews[i];
+            EditText next = (i < otpDigitViews.length - 1) ? otpDigitViews[i + 1] : null;
+            EditText previous = (i > 0) ? otpDigitViews[i - 1] : null;
 
-            currentDigitView.setLongClickable(false);
-            currentDigitView.setTextIsSelectable(false);
-            currentDigitView.setEnabled(i == 0);
+            current.setLongClickable(false);
+            current.setTextIsSelectable(false);
+            current.setEnabled(i == 0);
 
-            currentDigitView.addTextChangedListener(new TextWatcher() {
+            current.addTextChangedListener(new TextWatcher() {
                 @Override
                 public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+                }
+
+                @Override
+                public void afterTextChanged(Editable s) {
                 }
 
                 @Override
@@ -187,27 +195,23 @@ public class SignUpEmailVerificationFragment extends Fragment {
                     if (isOtpDigitsFilled()) hideKeyboard();
                     if (TextUtils.isEmpty(s)) binding.txtOtpFeedback.setVisibility(View.GONE);
 
-                    if (s.length() == 1 && nextDigitView != null) {
-                        nextDigitView.setEnabled(true);
-                        nextDigitView.requestFocus();
+                    if (s.length() == 1 && next != null) {
+                        next.setEnabled(true);
+                        next.requestFocus();
                     }
 
                     binding.btnVerify.setEnabled(isOtpDigitsFilled());
                 }
-
-                @Override
-                public void afterTextChanged(Editable s) {
-                }
             });
 
-            currentDigitView.setOnKeyListener((v, keyCode, event) -> {
+            current.setOnKeyListener((v, keyCode, event) -> {
                 if (event.getAction() == KeyEvent.ACTION_DOWN && keyCode == KeyEvent.KEYCODE_DEL) {
-                    if (!TextUtils.isEmpty(currentDigitView.getText())) {
-                        currentDigitView.setText("");
-                    } else if (previousDigitView != null) {
-                        previousDigitView.setText("");
-                        previousDigitView.requestFocus();
-                        currentDigitView.setEnabled(false);
+                    if (!TextUtils.isEmpty(current.getText())) {
+                        current.setText("");
+                    } else if (previous != null) {
+                        previous.setText("");
+                        previous.requestFocus();
+                        current.setEnabled(false);
                     }
                     return true;
                 }
@@ -216,45 +220,28 @@ public class SignUpEmailVerificationFragment extends Fragment {
         }
     }
 
-    /**
-     * Checks if all OTP digit input fields are filled.
-     * @return True if all fields are filled, otherwise false.
-     */
     private boolean isOtpDigitsFilled() {
-        for (EditText digitView : otpDigitViews) {
-            if (TextUtils.isEmpty(digitView.getText())) {
-                return false;
-            }
+        for (EditText digit : otpDigitViews) {
+            if (TextUtils.isEmpty(digit.getText())) return false;
         }
         return true;
     }
 
-    /**
-     * Concatenates the digits from the OTP input fields into a single string.
-     * @return The complete OTP string.
-     */
     private String getEnteredOtpDigits() {
-        StringBuilder otpBuilder = new StringBuilder();
-        for (EditText digitView : otpDigitViews) {
-            otpBuilder.append(digitView.getText().toString().trim());
+        StringBuilder otp = new StringBuilder();
+        for (EditText digit : otpDigitViews) {
+            otp.append(digit.getText().toString().trim());
         }
-        return otpBuilder.toString();
+        return otp.toString();
     }
 
-    /**
-     * Displays the user's email address on the screen.
-     */
-    private void displayEmail() {
-        binding.txtUserEmail.setText(authViewModel.getEmail());
+    // ====================== NAVIGATION ======================
+    private void navigateToFragment(Fragment fragment) {
+        requireActivity().getSupportFragmentManager().beginTransaction().replace(R.id.fragment_container, fragment).commit();
     }
 
-    /**
-     * Formats informational text with HTML.
-     */
-    private void formatInfoText() {
-        String infoText = "Didn’t get the email? Make sure to also "
-                + "<font color='#FFA500'><b>check your spam/junk folder</b></font> " + "if you can't find the email in your inbox.";
-        binding.txtInfo.setText(Html.fromHtml(infoText, Html.FROM_HTML_MODE_LEGACY));
+    private void navigateBack() {
+        requireActivity().getSupportFragmentManager().popBackStack();
     }
 
     private void hideKeyboard() {
@@ -263,23 +250,5 @@ public class SignUpEmailVerificationFragment extends Fragment {
         if (focusedView != null) {
             imm.hideSoftInputFromWindow(focusedView.getWindowToken(), 0);
         }
-    }
-
-    private void navigateToFragment(Fragment fragment) {
-        requireActivity().getSupportFragmentManager()
-                .beginTransaction()
-                .replace(R.id.fragment_container, fragment)
-                .commit();
-    }
-
-    private void navigateBack() {
-        requireActivity().getSupportFragmentManager().popBackStack();
-    }
-
-    private void setupStatusBar() {
-        Window window = requireActivity().getWindow();
-        window.setStatusBarColor(ContextCompat.getColor(requireContext(), R.color.white));
-        View decorView = window.getDecorView();
-        decorView.setSystemUiVisibility(decorView.getSystemUiVisibility() | View.SYSTEM_UI_FLAG_LIGHT_STATUS_BAR);
     }
 }

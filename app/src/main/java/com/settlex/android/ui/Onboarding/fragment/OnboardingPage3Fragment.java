@@ -1,6 +1,7 @@
 package com.settlex.android.ui.Onboarding.fragment;
 
 import android.os.Bundle;
+import android.text.Html;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -14,7 +15,6 @@ import com.settlex.android.R;
 import com.settlex.android.databinding.FragmentOnboardingPage3Binding;
 
 public class OnboardingPage3Fragment extends Fragment {
-
     private FragmentOnboardingPage3Binding binding;
 
     @Nullable
@@ -22,27 +22,28 @@ public class OnboardingPage3Fragment extends Fragment {
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         binding = FragmentOnboardingPage3Binding.inflate(inflater, container, false);
 
+        styleHeaderTxt();
         loadOptimizedImage();
 
         return binding.getRoot();
     }
 
-    /*------------------------
-    Clear binding reference
-    ------------------------*/
     @Override
     public void onDestroyView() {
         super.onDestroyView();
         binding = null;
     }
 
-    /*----------------------------
-    Load image with downscaling
-    -----------------------------*/
+    private void styleHeaderTxt() {
+        String htmlText = "<font color='#0044CC'>Secure</font> By Design";
+        binding.sectionHeader.setText(Html.fromHtml(htmlText, Html.FROM_HTML_MODE_LEGACY));
+    }
+
+
     private void loadOptimizedImage() {
         Glide.with(this)
                 .load(R.drawable.img_intro_slide_3)
                 .centerCrop()
-                .into(binding.imgIntroSlide3);
+                .into(binding.ImgIntroSlide3);
     }
 }
