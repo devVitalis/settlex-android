@@ -135,7 +135,7 @@ public class AuthRepository {
         Map<String, Object> data = new HashMap<>();
         data.put("email", email);
         data.put("otp", otp);
-        functions.getHttpsCallable("verifyPasswordResetEmail")
+        functions.getHttpsCallable("verifyPasswordResetOtp")
                 .call(data)
                 .addOnSuccessListener(result -> callback.onSuccess())
                 .addOnFailureListener(e -> callback.onFailure(e.getMessage()));
@@ -201,8 +201,7 @@ public class AuthRepository {
     }
 
     /**
-     * Updates user display name in Firebase Auth during registration
-     * with user firstName
+     * Updates user display name in Firebase Auth during registration with user firstName
      */
     private void setUserDisplayName(String firstName) {
         FirebaseUser user = getCurrentUser();

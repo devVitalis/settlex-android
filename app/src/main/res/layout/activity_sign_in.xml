@@ -98,26 +98,46 @@
                     android:layout_marginBottom="20dp"
                     android:visibility="gone">
 
-                    <!--Avatar-->
-                    <ImageView
-                        android:id="@+id/userAvatar"
-                        android:layout_width="80dp"
-                        android:layout_height="80dp"
-                        android:layout_centerHorizontal="true"
-                        android:contentDescription="Avatar"
-                        android:src="@drawable/ic_avatar" />
-
-                    <!--User Account-->
-                    <TextView
-                        android:id="@+id/userAccount"
+                    <LinearLayout
+                        android:id="@+id/userProfileBackground"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:layout_below="@id/userAvatar"
+                        android:layout_centerHorizontal="true"
+                        android:background="@drawable/bg_oval_light_blue">
+
+                        <!--Avatar-->
+                        <ImageView
+                            android:id="@+id/userProfile"
+                            android:layout_width="80dp"
+                            android:layout_height="80dp"
+                            android:contentDescription="Avatar"
+                            android:src="@drawable/ic_avatar" />
+                    </LinearLayout>
+
+                    <!--User DisplayName-->
+                    <TextView
+                        android:id="@+id/userDisplayName"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_below="@id/userProfileBackground"
                         android:layout_centerHorizontal="true"
                         android:layout_marginTop="10dp"
                         android:fontFamily="@font/poppins_regular"
                         android:includeFontPadding="false"
-                        android:text="Hi, メ • Ʋɨȶǟʟɨֆ\n(b***k@gmail.com)"
+                        android:text="Hi, メ • Ʋɨȶǟʟɨֆ"
+                        android:textAlignment="center"
+                        android:textColor="@color/black"
+                        android:textSize="15sp" />
+
+                    <TextView
+                        android:id="@+id/userEmail"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_below="@id/userDisplayName"
+                        android:layout_centerHorizontal="true"
+                        android:fontFamily="@font/poppins_regular"
+                        android:includeFontPadding="false"
+                        android:text="(b***k@gmail.com)"
                         android:textAlignment="center"
                         android:textColor="@color/black"
                         android:textSize="15sp"
@@ -126,7 +146,7 @@
 
                 <!--Email field Background-->
                 <RelativeLayout
-                    android:id="@+id/edit_txt_email_bg"
+                    android:id="@+id/editTxtEmailBackground"
                     android:layout_width="match_parent"
                     android:layout_height="55dp"
                     android:layout_marginTop="30dp"

@@ -97,7 +97,7 @@ public class SignUpUserPasswordFragment extends Fragment {
 
     private void onRegistrationSuccess() {
         startActivity(new Intent(requireContext(), DashboardActivity.class));
-        requireActivity().finish();
+        requireActivity().finishAffinity();
 
         progressBarController.hide();
     }

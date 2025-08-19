@@ -104,10 +104,10 @@ public class SignUpUserContactInfoFragment extends Fragment {
         reEnableEditTextFocus();
         clearFocusAndHideKeyboardOnOutsideTap(binding.getRoot());
 
+        binding.btnSignIn.setOnClickListener(view -> navigateToActivity(SignInActivity.class, true));
+        binding.btnHelp.setOnClickListener(v -> navigateToActivity(AuthHelpActivity.class, false));
         binding.imgBackBefore.setOnClickListener(v -> navigateBack());
-        binding.btnSignIn.setOnClickListener(view -> navigateToActivity(SignInActivity.class));
         binding.btnContinue.setOnClickListener(v -> validateAndRequestOtp());
-        binding.btnHelp.setOnClickListener(v -> navigateToActivity(AuthHelpActivity.class));
     }
 
     private void setupInputValidation() {
@@ -196,7 +196,7 @@ public class SignUpUserContactInfoFragment extends Fragment {
         binding.editTxtPhoneNumber.setOnClickListener(focusListener);
 
         // Background changes
-        binding.editTxtPhoneNumber.setOnFocusChangeListener((v, hasFocus) -> binding.editTxtPhoneNumberBg.setBackgroundResource(hasFocus ? R.drawable.bg_edit_txt_custom_white_focused : R.drawable.bg_edit_txt_custom_white_not_focused));
+        binding.editTxtPhoneNumber.setOnFocusChangeListener((v, hasFocus) -> binding.editTxtPhoneNumberBackground.setBackgroundResource(hasFocus ? R.drawable.bg_edit_txt_custom_white_focused : R.drawable.bg_edit_txt_custom_white_not_focused));
         binding.editTxtEmail.setOnFocusChangeListener((v, hasFocus) -> binding.editTxtEmailBg.setBackgroundResource(hasFocus ? R.drawable.bg_edit_txt_custom_white_focused : R.drawable.bg_edit_txt_custom_white_not_focused));
     }
 
@@ -228,8 +228,13 @@ public class SignUpUserContactInfoFragment extends Fragment {
                 .addToBackStack(null).commit();
     }
 
-    private void navigateToActivity(Class<? extends Activity> activityClass) {
-        startActivity(new Intent(requireActivity(), activityClass));
+    private void navigateToActivity(Class<? extends Activity> activityClass, boolean clearBackStack) {
+        if (clearBackStack){
+            startActivity(new Intent(requireActivity(), activityClass));
+            requireActivity().finish();
+        } else {
+            startActivity(new Intent(requireActivity(), activityClass));
+        }
     }
 
     private void navigateBack() {

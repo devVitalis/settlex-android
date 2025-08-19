@@ -78,7 +78,7 @@ public class SignInActivity extends AppCompatActivity {
 
     private void onLoginSuccess() {
         startActivity(new Intent(this, DashboardActivity.class));
-        finish();
+        finishAffinity();
         progressBarController.hide();
     }
 
@@ -95,7 +95,8 @@ public class SignInActivity extends AppCompatActivity {
     }
 
     private void showLoggedInLayout(String firstName, String email) {
-        binding.userAccount.setText(getString(R.string.greeting_with_email, firstName, StringUtil.maskEmail(email)));
+        binding.userDisplayName.setText(getString(R.string.greeting_with_firstName, firstName));
+        binding.userEmail.setText(getString(R.string.mask_email, StringUtil.maskEmail(email)));
         binding.editTxtEmail.setText(email);
         // Show
         binding.showUserInfoLayout.setVisibility(View.VISIBLE);
@@ -103,7 +104,7 @@ public class SignInActivity extends AppCompatActivity {
         binding.btnSwitchAccount.setVisibility(View.VISIBLE);
         // Hide
         binding.logo.setVisibility(View.GONE);
-        binding.editTxtEmailBg.setVisibility(View.GONE);
+        binding.editTxtEmailBackground.setVisibility(View.GONE);
         binding.btnSignUp.setVisibility(View.GONE);
     }
 
@@ -113,7 +114,7 @@ public class SignInActivity extends AppCompatActivity {
         binding.showBiometricsLayout.setVisibility(View.GONE);
         binding.btnSwitchAccount.setVisibility(View.GONE);
         // Show
-        binding.editTxtEmailBg.setVisibility(View.VISIBLE);
+        binding.editTxtEmailBackground.setVisibility(View.VISIBLE);
         binding.btnSignUp.setVisibility(View.VISIBLE);
         binding.logo.setVisibility(View.VISIBLE);
     }
@@ -140,7 +141,7 @@ public class SignInActivity extends AppCompatActivity {
         String signUpActionText = "Don't have an account yet? <font color='#0044CC'><br>Click here to register</font>";
         binding.btnSignUp.setText(Html.fromHtml(signUpActionText, Html.FROM_HTML_MODE_LEGACY));
 
-        String switchAccountActionText = "Not you? <font color='#0044CC'><br>Switch Account</font>";
+        String switchAccountActionText = "Not you? <font color='#0044CC'>Switch Account</font>";
         binding.btnSwitchAccount.setText(Html.fromHtml(switchAccountActionText, Html.FROM_HTML_MODE_LEGACY));
     }
 
@@ -205,7 +206,7 @@ public class SignInActivity extends AppCompatActivity {
 
         binding.editTxtEmail.setOnFocusChangeListener((v, hasFocus) -> {
             int backgroundRes = hasFocus ? R.drawable.bg_edit_txt_custom_gray_focused : R.drawable.bg_edit_txt_custom_gray_not_focused;
-            binding.editTxtEmailBg.setBackgroundResource(backgroundRes);
+            binding.editTxtEmailBackground.setBackgroundResource(backgroundRes);
         });
     }
 
