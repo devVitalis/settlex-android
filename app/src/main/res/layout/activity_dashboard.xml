@@ -23,7 +23,7 @@
         android:layout_height="75dp"
         android:layout_alignParentBottom="true"
         android:background="@color/white"
-        app:itemActiveIndicatorStyle="@style/Widget.SettleX.BottomNav.ActiveIndicator"
+        app:itemActiveIndicatorStyle="@style/Widget.SettleX.BottomNavigation.ActiveIndicator"
         app:itemTextColor="@color/bottom_nav_color_selector"
         app:labelVisibilityMode="labeled"
         app:menu="@menu/bottom_nav_menu" />

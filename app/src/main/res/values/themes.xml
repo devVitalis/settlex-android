@@ -7,6 +7,7 @@
 
     <!-- Main App Theme -->
     <style name="Theme.SettleX" parent="Base.Theme.SettleX">
+        <item name="bottomSheetDialogTheme">@style/Widget_SettleX_BottomSheetDialog</item>
     </style>
 
     <!-- Splash Theme -->
@@ -15,4 +16,6 @@
         <item name="windowSplashScreenAnimatedIcon">@drawable/logo_splash_inset</item>
         <item name="postSplashScreenTheme">@style/Theme.SettleX</item>
     </style>
+
+
 </resources>

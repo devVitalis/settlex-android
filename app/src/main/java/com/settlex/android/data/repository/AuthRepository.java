@@ -2,6 +2,7 @@ package com.settlex.android.data.repository;
 
 import androidx.annotation.Nullable;
 
+import com.google.firebase.FirebaseNetworkException;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseAuthInvalidCredentialsException;
 import com.google.firebase.auth.FirebaseAuthUserCollisionException;
@@ -13,6 +14,7 @@ import com.google.gson.Gson;
 import com.settlex.android.data.model.UserModel;
 import com.settlex.android.util.network.RequestMetadataService;
 
+import java.io.IOException;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -41,6 +43,8 @@ public class AuthRepository {
                 .addOnFailureListener(e -> {
                     if (e instanceof FirebaseAuthInvalidCredentialsException) {
                         callback.onFailure("Invalid email or password");
+                    } else if (e instanceof FirebaseNetworkException || e instanceof IOException) {
+                        callback.onFailure("Network request failed. Please try again");
                     } else {
                         callback.onFailure(e.getMessage());
                     }
@@ -65,6 +69,8 @@ public class AuthRepository {
                 .addOnFailureListener(e -> {
                     if (e instanceof FirebaseAuthUserCollisionException) {
                         callback.onFailure("This user already exists. Kindly log in.");
+                    } else if (e instanceof FirebaseNetworkException || e instanceof IOException) {
+                        callback.onFailure("Network request failed. Please try again");
                     } else {
                         callback.onFailure(e.getMessage());
                     }
@@ -88,7 +94,13 @@ public class AuthRepository {
                         callback.onFailure("Invalid response from server.");
                     }
                 })
-                .addOnFailureListener(e -> callback.onFailure(e.getMessage()));
+                .addOnFailureListener(e -> {
+                    if (e instanceof FirebaseNetworkException || e instanceof IOException) {
+                        callback.onFailure("Network request failed. Please try again");
+                    } else {
+                        callback.onFailure(e.getMessage());
+                    }
+                });
     }
 
     /**
@@ -100,20 +112,34 @@ public class AuthRepository {
     public void sendEmailVerificationOtp(String email, SendOtpCallback callback) {
         Map<String, Object> data = new HashMap<>();
         data.put("email", email);
+
         functions.getHttpsCallable("sendVerifyEmail")
                 .call(data)
                 .addOnSuccessListener(result -> callback.onSuccess())
-                .addOnFailureListener(e -> callback.onFailure(e.getMessage()));
+                .addOnFailureListener(e -> {
+                    if (e instanceof FirebaseNetworkException || e instanceof IOException) {
+                        callback.onFailure("Network request failed. Please try again");
+                    } else {
+                        callback.onFailure(e.getMessage());
+                    }
+                });
     }
 
     public void verifyEmailVerificationOtp(String email, String otp, VerifyOtpCallback callback) {
         Map<String, Object> data = new HashMap<>();
         data.put("email", email);
         data.put("otp", otp);
+
         functions.getHttpsCallable("verifyEmailOtp")
                 .call(data)
                 .addOnSuccessListener(result -> callback.onSuccess())
-                .addOnFailureListener(e -> callback.onFailure(e.getMessage()));
+                .addOnFailureListener(e -> {
+                    if (e instanceof FirebaseNetworkException || e instanceof IOException) {
+                        callback.onFailure("Network request failed. Please try again");
+                    } else {
+                        callback.onFailure(e.getMessage());
+                    }
+                });
     }
 
     /**
@@ -125,20 +151,34 @@ public class AuthRepository {
     public void sendEmailPasswordResetOtp(String email, SendOtpCallback callback) {
         Map<String, Object> data = new HashMap<>();
         data.put("email", email);
+
         functions.getHttpsCallable("sendPasswordResetEmail")
                 .call(data)
                 .addOnSuccessListener(result -> callback.onSuccess())
-                .addOnFailureListener(e -> callback.onFailure(e.getMessage()));
+                .addOnFailureListener(e -> {
+                    if (e instanceof FirebaseNetworkException || e instanceof IOException) {
+                        callback.onFailure("Network request failed. Please try again");
+                    } else {
+                        callback.onFailure(e.getMessage());
+                    }
+                });
     }
 
     public void verifyEmailPasswordResetOtp(String email, String otp, VerifyOtpCallback callback) {
         Map<String, Object> data = new HashMap<>();
         data.put("email", email);
         data.put("otp", otp);
+
         functions.getHttpsCallable("verifyPasswordResetOtp")
                 .call(data)
                 .addOnSuccessListener(result -> callback.onSuccess())
-                .addOnFailureListener(e -> callback.onFailure(e.getMessage()));
+                .addOnFailureListener(e -> {
+                    if (e instanceof FirebaseNetworkException || e instanceof IOException) {
+                        callback.onFailure("Network request failed. Please try again");
+                    } else {
+                        callback.onFailure(e.getMessage());
+                    }
+                });
     }
 
     /**
@@ -154,7 +194,13 @@ public class AuthRepository {
             functions.getHttpsCallable("resetPassword")
                     .call(data)
                     .addOnSuccessListener(result -> callback.onSuccess())
-                    .addOnFailureListener(e -> callback.onFailure(e.getMessage()));
+                    .addOnFailureListener(e -> {
+                        if (e instanceof FirebaseNetworkException || e instanceof IOException) {
+                            callback.onFailure("Network request failed. Please try again");
+                        } else {
+                            callback.onFailure(e.getMessage());
+                        }
+                    });
         });
     }
 
@@ -172,14 +218,22 @@ public class AuthRepository {
                     callback.onSuccess();
 
                     markEmailVerified(user.getUid(), new RegisterCallback() {
-                        @Override public void onSuccess() {}
-                        @Override public void onFailure(String reason) {
+                        @Override
+                        public void onSuccess() {}
+                        @Override
+                        public void onFailure(String reason) {
                             markEmailAsUnverified(user.getUid());
                         }
                     });
                     setUserDisplayName(user.getFirstName());
                 })
-                .addOnFailureListener(e -> callback.onFailure(e.getMessage()));
+                .addOnFailureListener(e -> {
+                    if (e instanceof FirebaseNetworkException || e instanceof IOException) {
+                        callback.onFailure("Network request failed. Please try again");
+                    } else {
+                        callback.onFailure(e.getMessage());
+                    }
+                });
     }
 
     private void markEmailVerified(String uid, RegisterCallback callback) {
@@ -215,38 +269,44 @@ public class AuthRepository {
 
     // ============================ State Management ============================
     @Nullable
-    public FirebaseUser getCurrentUser(){
+    public FirebaseUser getCurrentUser() {
         return FirebaseAuth.getInstance().getCurrentUser();
     }
 
     // ===== Callback Interfaces =====
     public interface LoginCallback {
         void onSuccess();
+
         void onFailure(String reason);
     }
 
     public interface RegisterCallback {
         void onSuccess();
+
         void onFailure(String reason);
     }
 
     public interface EmailExistenceCallback {
         void onSuccess(boolean exists);
+
         void onFailure(String reason);
     }
 
     public interface SendOtpCallback {
         void onSuccess();
+
         void onFailure(String reason);
     }
 
     public interface VerifyOtpCallback {
         void onSuccess();
+
         void onFailure(String reason);
     }
 
     public interface ChangePasswordCallback {
         void onSuccess();
+
         void onFailure(String reason);
     }
 }

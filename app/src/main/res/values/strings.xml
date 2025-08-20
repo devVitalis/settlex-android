@@ -6,11 +6,12 @@
     <string name="resend_otp_countdown">Resend in %d</string>
     <!-- Sign in UI -->
     <string name="greeting_with_firstName">Hi, %s</string>
-    <string name="mask_email">[%s]</string>
+    <string name="mask_email">(%s)</string>
 
     <!-- Error Messages -->
     <string name="error_password_mismatch">Passwords do not match!</string>
 
     <!-- Ui Layouts -->
     <string name="app_logo">Logo</string>
+    <string name="password_update_success">Your password has been changed successfully. You will now need to use your new password to sign in on all your devices.</string>
 </resources>

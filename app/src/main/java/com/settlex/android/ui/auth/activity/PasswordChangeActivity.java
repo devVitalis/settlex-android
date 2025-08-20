@@ -1,7 +1,5 @@
 package com.settlex.android.ui.auth.activity;
 
-import static android.content.Intent.FLAG_ACTIVITY_CLEAR_TASK;
-
 import android.content.Context;
 import android.content.Intent;
 import android.graphics.Rect;
@@ -26,10 +24,11 @@ import androidx.lifecycle.ViewModelProvider;
 
 import com.settlex.android.R;
 import com.settlex.android.databinding.ActivityPasswordChangeBinding;
+import com.settlex.android.databinding.BottomSheetSuccessBinding;
 import com.settlex.android.ui.auth.util.AuthResult;
 import com.settlex.android.ui.auth.viewmodel.AuthViewModel;
 import com.settlex.android.ui.common.SettleXProgressBarController;
-import com.settlex.android.ui.dashboard.activity.DashboardActivity;
+import com.settlex.android.util.UiUtil;
 
 import java.util.Objects;
 
@@ -75,8 +74,7 @@ public class PasswordChangeActivity extends AppCompatActivity {
     }
 
     private void onResetSuccess() {
-        startActivity(new Intent(this, DashboardActivity.class).addFlags(FLAG_ACTIVITY_CLEAR_TASK));
-        finishAffinity();
+        showSuccessDialog();
         progressBarController.hide();
     }
 
@@ -86,13 +84,20 @@ public class PasswordChangeActivity extends AppCompatActivity {
         progressBarController.hide();
     }
 
+    private void showSuccessDialog() {
+        UiUtil.showBottomSheet(this, BottomSheetSuccessBinding::inflate, (dialogView, dialog)
+                -> dialogView.btnLogin.setOnClickListener(view -> {
+                    startActivity(new Intent(this, SignInActivity.class)); finishAffinity();
+                    dialog.dismiss();
+                }));
+    }
+
     private void attemptPasswordReset() {
         authViewModel.requestPasswordReset(
                 getIntent().getStringExtra("email"),
                 Objects.requireNonNull(binding.editTxtPassword.getText()).toString().trim()
         );
     }
-
 
     // ====================== PASSWORD VALIDATION ======================
     private void validatePassword() {
@@ -186,14 +191,12 @@ public class PasswordChangeActivity extends AppCompatActivity {
         binding.editTxtConfirmPassword.setOnClickListener(focusListener);
 
         binding.editTxtPassword.setOnFocusChangeListener((v, hasFocus) ->
-                binding.editTxtPasswordBg.setBackgroundResource(
-                        hasFocus ? R.drawable.bg_edit_txt_custom_white_focused
-                                : R.drawable.bg_edit_txt_custom_gray_not_focused));
+                binding.editTxtPasswordBackground.setBackgroundResource(
+                        hasFocus ? R.drawable.bg_edit_txt_custom_white_focused : R.drawable.bg_edit_txt_custom_gray_not_focused));
 
         binding.editTxtConfirmPassword.setOnFocusChangeListener((v, hasFocus) ->
-                binding.editTxtConfirmPasswordBg.setBackgroundResource(
-                        hasFocus ? R.drawable.bg_edit_txt_custom_white_focused
-                                : R.drawable.bg_edit_txt_custom_gray_not_focused));
+                binding.editTxtConfirmPasswordBackground.setBackgroundResource(
+                        hasFocus ? R.drawable.bg_edit_txt_custom_white_focused : R.drawable.bg_edit_txt_custom_gray_not_focused));
     }
 
     private void setupPasswordValidation() {
@@ -209,8 +212,13 @@ public class PasswordChangeActivity extends AppCompatActivity {
                 validatePassword();
             }
 
-            @Override public void beforeTextChanged(CharSequence s, int start, int count, int after) {}
-            @Override public void afterTextChanged(Editable s) {}
+            @Override
+            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+            }
+
+            @Override
+            public void afterTextChanged(Editable s) {
+            }
         };
 
         binding.editTxtPassword.addTextChangedListener(watcher);

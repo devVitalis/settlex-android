@@ -4,9 +4,11 @@ import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 import android.graphics.Rect;
+import android.graphics.Typeface;
 import android.os.Bundle;
 import android.text.Editable;
 import android.text.Html;
+import android.text.InputType;
 import android.text.TextUtils;
 import android.text.TextWatcher;
 import android.view.MotionEvent;
@@ -34,6 +36,7 @@ import java.util.Objects;
  * Handles user sign-in flow including:
  */
 public class SignInActivity extends AppCompatActivity {
+    private boolean isPasswordVisible = false;
     private AuthViewModel authViewModel;
     private ActivitySignInBinding binding;
     private SettleXProgressBarController progressBarController;
@@ -124,9 +127,7 @@ public class SignInActivity extends AppCompatActivity {
         setupFocusHandlers();
         setupAuthActionTexts();
         setupInputValidation();
-
-        // Initial UI states
-        binding.txtInputLayoutPassword.setEndIconVisible(false);
+        setupPasswordVisibilityToggle();
 
         // Click listeners
         binding.imgBackBefore.setOnClickListener(v -> getOnBackPressedDispatcher().onBackPressed());
@@ -169,7 +170,7 @@ public class SignInActivity extends AppCompatActivity {
         binding.editTxtPassword.addTextChangedListener(new TextWatcher() {
             @Override
             public void onTextChanged(CharSequence s, int start, int before, int count) {
-                binding.txtInputLayoutPassword.setEndIconVisible(!TextUtils.isEmpty(s));
+                binding.passwordToggle.setVisibility(!TextUtils.isEmpty(s) ? View.VISIBLE : View.GONE);
             }
 
             @Override
@@ -205,10 +206,32 @@ public class SignInActivity extends AppCompatActivity {
         binding.editTxtPassword.setOnClickListener(focusListener);
 
         binding.editTxtEmail.setOnFocusChangeListener((v, hasFocus) -> {
-            int backgroundRes = hasFocus ? R.drawable.bg_edit_txt_custom_gray_focused : R.drawable.bg_edit_txt_custom_gray_not_focused;
-            binding.editTxtEmailBackground.setBackgroundResource(backgroundRes);
+            int emailBackgroundRes = hasFocus ? R.drawable.bg_edit_txt_custom_gray_focused : R.drawable.bg_edit_txt_custom_gray_not_focused;
+            binding.editTxtEmailBackground.setBackgroundResource(emailBackgroundRes);
+        });
+
+        binding.editTxtPassword.setOnFocusChangeListener((v, hasFocus) -> {
+            int passwordBackgroundRes = (hasFocus) ? R.drawable.bg_edit_txt_custom_white_focused : R.drawable.bg_edit_txt_custom_gray_not_focused;
+            binding.editTxtPasswordBackground.setBackgroundResource(passwordBackgroundRes);
+        });
+
+    }
+
+    private void setupPasswordVisibilityToggle() {
+        binding.passwordToggle.setOnClickListener(v -> {
+            Typeface currentTypeface = binding.editTxtPassword.getTypeface();
+            isPasswordVisible = !isPasswordVisible;
+
+            int inputType = isPasswordVisible ? InputType.TYPE_TEXT_VARIATION_VISIBLE_PASSWORD : InputType.TYPE_TEXT_VARIATION_PASSWORD;
+
+            binding.editTxtPassword.setInputType(InputType.TYPE_CLASS_TEXT | inputType);
+            binding.passwordToggle.setImageResource(isPasswordVisible ? R.drawable.ic_visibility_on : R.drawable.ic_visibility_off);
+
+            binding.editTxtPassword.setTypeface(currentTypeface);
+            binding.editTxtPassword.setSelection(binding.editTxtPassword.getText().length());
         });
     }
+
 
     // ====================== UTILITIES ======================
 

@@ -172,35 +172,43 @@
                         android:textSize="14sp" />
                 </RelativeLayout>
 
-                <!--Password Field-->
-                <com.google.android.material.textfield.TextInputLayout
-                    android:id="@+id/txtInputLayoutPassword"
-                    style="@style/Widget.SettleXApp.TextInputLayout.Outlined"
+                <!--Password Field Background-->
+                <RelativeLayout
+                    android:id="@+id/editTxtPasswordBackground"
                     android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_gravity="center"
+                    android:layout_height="55dp"
                     android:layout_marginTop="10dp"
-                    android:gravity="center"
-                    android:hint="Enter your password"
-                    android:orientation="horizontal"
-                    app:endIconMode="password_toggle">
+                    android:background="@drawable/bg_edit_txt_custom_gray_not_focused"
+                    android:focusable="true"
+                    android:focusableInTouchMode="true">
 
-                    <com.google.android.material.textfield.TextInputEditText
+                    <!--Password field-->
+                    <EditText
                         android:id="@+id/editTxtPassword"
                         android:layout_width="match_parent"
-                        android:layout_height="55dp"
+                        android:layout_height="match_parent"
+                        android:background="@android:color/transparent"
                         android:focusable="false"
                         android:focusableInTouchMode="false"
                         android:fontFamily="@font/poppins_regular"
-                        android:gravity="start|center_vertical"
-                        android:imeOptions="actionNext"
+                        android:hint="Enter your password"
                         android:includeFontPadding="false"
                         android:inputType="textPassword"
-                        android:paddingHorizontal="20dp"
+                        android:paddingHorizontal="15dp"
                         android:textColor="@color/black"
                         android:textColorHint="@color/gray"
                         android:textSize="14sp" />
-                </com.google.android.material.textfield.TextInputLayout>
+
+                    <ImageView
+                        android:id="@+id/passwordToggle"
+                        android:layout_width="20dp"
+                        android:layout_height="20dp"
+                        android:layout_alignParentEnd="true"
+                        android:layout_centerVertical="true"
+                        android:layout_marginEnd="10dp"
+                        android:visibility="gone"
+                        android:src="@drawable/ic_visibility_off" />
+                </RelativeLayout>
 
                 <!--Forgot Password TxT-->
                 <TextView
