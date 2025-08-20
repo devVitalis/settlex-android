@@ -26,7 +26,9 @@ import com.settlex.android.databinding.FragmentSignUpEmailVerificationBinding;
 import com.settlex.android.ui.auth.util.AuthResult;
 import com.settlex.android.ui.auth.viewmodel.AuthViewModel;
 import com.settlex.android.ui.common.SettleXProgressBarController;
+import com.settlex.android.util.NetworkMonitor;
 import com.settlex.android.util.StringUtil;
+import com.settlex.android.util.UiUtil;
 
 public class SignUpEmailVerificationFragment extends Fragment {
 
@@ -34,6 +36,8 @@ public class SignUpEmailVerificationFragment extends Fragment {
     private static final int COUNTDOWN_INTERVAL_MS = 1000;
 
     private String userEmail;
+    private boolean isConnected = false;
+
     private AuthViewModel authViewModel;
     private CountDownTimer resendOtpCountdownTimer;
     private EditText[] otpDigitViews;
@@ -60,6 +64,7 @@ public class SignUpEmailVerificationFragment extends Fragment {
         super.onViewCreated(view, savedInstanceState);
 
         startResendOtpCooldown();
+        observeNetworkStatus();
         observeSendEmailVerificationOtp();
         observeVerifyEmailVerificationOtp();
     }
@@ -100,6 +105,11 @@ public class SignUpEmailVerificationFragment extends Fragment {
         });
     }
 
+    private void observeNetworkStatus() {
+        NetworkMonitor.getNetworkStatus().observe(requireActivity(), isConnected ->
+                this.isConnected = isConnected);
+    }
+
     private void onOtpVerificationSuccess() {
         navigateToFragment(new SignupUserInfoFragment());
         progressBarController.hide();
@@ -111,13 +121,26 @@ public class SignUpEmailVerificationFragment extends Fragment {
         progressBarController.hide();
     }
 
+    private void onNoInternetConnection() {
+        binding.txtOtpFeedback.setText(getString(R.string.error_no_internet));
+        binding.txtOtpFeedback.setVisibility(View.VISIBLE);
+    }
+
     // ====================== CORE FLOW ======================
     private void verifyOtp() {
-        authViewModel.verifyEmailOtp(userEmail, getEnteredOtpDigits());
+        if (isConnected) {
+            authViewModel.verifyEmailOtp(userEmail, getEnteredOtpDigits());
+        } else {
+            onNoInternetConnection();
+        }
     }
 
     private void resendOtp() {
-        authViewModel.sendEmailVerificationOtp(userEmail);
+        if (isConnected) {
+            authViewModel.sendEmailVerificationOtp(userEmail);
+        } else {
+            onNoInternetConnection();
+        }
     }
 
     // ====================== UI SETUP ======================

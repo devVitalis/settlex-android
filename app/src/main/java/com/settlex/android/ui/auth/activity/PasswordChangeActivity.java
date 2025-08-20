@@ -28,6 +28,7 @@ import com.settlex.android.databinding.BottomSheetSuccessBinding;
 import com.settlex.android.ui.auth.util.AuthResult;
 import com.settlex.android.ui.auth.viewmodel.AuthViewModel;
 import com.settlex.android.ui.common.SettleXProgressBarController;
+import com.settlex.android.util.NetworkMonitor;
 import com.settlex.android.util.UiUtil;
 
 import java.util.Objects;
@@ -36,11 +37,12 @@ import java.util.Objects;
  * Handles password reset flow
  */
 public class PasswordChangeActivity extends AppCompatActivity {
+    private boolean isPasswordVisible = false;
+    private boolean isConnected = false;
 
     private SettleXProgressBarController progressBarController;
     private ActivityPasswordChangeBinding binding;
     private AuthViewModel authViewModel;
-    private boolean isPasswordVisible = false;
 
 
     // ====================== LIFECYCLE ======================
@@ -55,6 +57,7 @@ public class PasswordChangeActivity extends AppCompatActivity {
 
         setupStatusBar();
         setupUiActions();
+        observeNetworkStatus();
         observePasswordResetResult();
     }
 
@@ -73,9 +76,25 @@ public class PasswordChangeActivity extends AppCompatActivity {
         });
     }
 
+    private void observeNetworkStatus() {
+        NetworkMonitor.getNetworkStatus().observe(this, isConnected -> this.isConnected = isConnected);
+    }
+
     private void onResetSuccess() {
         showSuccessDialog();
         progressBarController.hide();
+    }
+
+    private void showSuccessDialog() {
+        UiUtil.showBottomSheet(this, BottomSheetSuccessBinding::inflate, (dialogView, dialog) -> dialogView.btnLogin.setOnClickListener(v -> {
+            navigateToSignInActivity();
+            dialog.dismiss();
+        }));
+    }
+
+    private void navigateToSignInActivity() {
+        startActivity(new Intent(this, SignInActivity.class));
+        finishAffinity();
     }
 
     private void onResetFailure(String error) {
@@ -84,22 +103,22 @@ public class PasswordChangeActivity extends AppCompatActivity {
         progressBarController.hide();
     }
 
-    private void showSuccessDialog() {
-        UiUtil.showBottomSheet(this, BottomSheetSuccessBinding::inflate, (dialogView, dialog)
-                -> dialogView.btnLogin.setOnClickListener(view -> {
-                    startActivity(new Intent(this, SignInActivity.class)); finishAffinity();
-                    dialog.dismiss();
-                }));
-    }
-
     private void attemptPasswordReset() {
-        authViewModel.requestPasswordReset(
-                getIntent().getStringExtra("email"),
-                Objects.requireNonNull(binding.editTxtPassword.getText()).toString().trim()
-        );
+        String email = getIntent().getStringExtra("email");
+        String newPassword = binding.editTxtPassword.getText().toString().trim();
+
+        if (isConnected) {
+            authViewModel.requestPasswordReset(email, newPassword);
+        } else {
+            onNoInternetConnection();
+        }
     }
 
-    // ====================== PASSWORD VALIDATION ======================
+    private void onNoInternetConnection() {
+        binding.txtErrorFeedback.setText(getString(R.string.error_no_internet));
+        binding.txtErrorFeedback.setVisibility(View.VISIBLE);
+    }
+
     private void validatePassword() {
         String password = Objects.requireNonNull(binding.editTxtPassword.getText()).toString().trim();
         String confirm = Objects.requireNonNull(binding.editTxtConfirmPassword.getText()).toString().trim();
@@ -108,6 +127,7 @@ public class PasswordChangeActivity extends AppCompatActivity {
         updateResetButtonState(isValid);
     }
 
+    // ====================== PASSWORD VALIDATION ======================
     private boolean validatePasswordRequirements(String password, String confirm) {
         boolean hasLength = password.length() >= 8;
         boolean hasUpper = password.matches(".*[A-Z].*");
@@ -144,12 +164,10 @@ public class PasswordChangeActivity extends AppCompatActivity {
             int size = (int) (binding.txtPasswordPrompt.getTextSize() * 1.2f);
             icon.setBounds(0, 0, size, size);
             builder.append(" ");
-            builder.setSpan(new ImageSpan(icon, ImageSpan.ALIGN_BOTTOM),
-                    builder.length() - 1, builder.length(), Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
+            builder.setSpan(new ImageSpan(icon, ImageSpan.ALIGN_BOTTOM), builder.length() - 1, builder.length(), Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
             builder.append(" ").append(text).append("\n");
         }
     }
-
 
     // ====================== UI SETUP ======================
     private void setupUiActions() {
@@ -190,13 +208,15 @@ public class PasswordChangeActivity extends AppCompatActivity {
         binding.editTxtPassword.setOnClickListener(focusListener);
         binding.editTxtConfirmPassword.setOnClickListener(focusListener);
 
-        binding.editTxtPassword.setOnFocusChangeListener((v, hasFocus) ->
-                binding.editTxtPasswordBackground.setBackgroundResource(
-                        hasFocus ? R.drawable.bg_edit_txt_custom_white_focused : R.drawable.bg_edit_txt_custom_gray_not_focused));
+        binding.editTxtPassword.setOnFocusChangeListener((v, hasFocus) -> {
+            int backgroundRes = hasFocus ? R.drawable.bg_edit_txt_custom_white_focused : R.drawable.bg_edit_txt_custom_gray_not_focused;
+            binding.editTxtPasswordBackground.setBackgroundResource(backgroundRes);
+        });
 
-        binding.editTxtConfirmPassword.setOnFocusChangeListener((v, hasFocus) ->
-                binding.editTxtConfirmPasswordBackground.setBackgroundResource(
-                        hasFocus ? R.drawable.bg_edit_txt_custom_white_focused : R.drawable.bg_edit_txt_custom_gray_not_focused));
+        binding.editTxtConfirmPassword.setOnFocusChangeListener((v, hasFocus) -> {
+            int backgroundRes = hasFocus ? R.drawable.bg_edit_txt_custom_white_focused : R.drawable.bg_edit_txt_custom_gray_not_focused;
+            binding.editTxtConfirmPasswordBackground.setBackgroundResource(backgroundRes);
+        });
     }
 
     private void setupPasswordValidation() {
@@ -230,8 +250,7 @@ public class PasswordChangeActivity extends AppCompatActivity {
     private void setupStatusBar() {
         Window window = getWindow();
         window.setStatusBarColor(ContextCompat.getColor(this, R.color.white));
-        window.getDecorView().setSystemUiVisibility(
-                window.getDecorView().getSystemUiVisibility() | View.SYSTEM_UI_FLAG_LIGHT_STATUS_BAR);
+        window.getDecorView().setSystemUiVisibility(window.getDecorView().getSystemUiVisibility() | View.SYSTEM_UI_FLAG_LIGHT_STATUS_BAR);
     }
 
     @Override

@@ -144,33 +144,35 @@
                         android:textStyle="bold" />
                 </RelativeLayout>
 
-                <!--Email field Background-->
-                <RelativeLayout
-                    android:id="@+id/editTxtEmailBackground"
+                <!--Email Field Background-->
+                <com.google.android.material.textfield.TextInputLayout
+                    android:id="@+id/txtInputLayoutEmail"
+                    style="@style/Widget.SettleXApp.TextInputLayout.Outlined"
                     android:layout_width="match_parent"
-                    android:layout_height="55dp"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center"
                     android:layout_marginTop="30dp"
-                    android:background="@drawable/bg_edit_txt_custom_gray_not_focused"
-                    android:focusable="true"
-                    android:focusableInTouchMode="true">
+                    android:gravity="center"
+                    android:hint="Enter your email address"
+                    android:orientation="horizontal"
+                    app:endIconMode="clear_text">
 
-                    <!--Email field-->
-                    <EditText
+                    <com.google.android.material.textfield.TextInputEditText
                         android:id="@+id/editTxtEmail"
                         android:layout_width="match_parent"
-                        android:layout_height="match_parent"
-                        android:background="@android:color/transparent"
+                        android:layout_height="55dp"
                         android:focusable="false"
                         android:focusableInTouchMode="false"
                         android:fontFamily="@font/poppins_regular"
-                        android:hint="Enter your email address"
+                        android:gravity="start|center_vertical"
+                        android:imeOptions="actionNext"
                         android:includeFontPadding="false"
                         android:inputType="textEmailAddress"
-                        android:paddingHorizontal="15dp"
+                        android:paddingHorizontal="20dp"
                         android:textColor="@color/black"
                         android:textColorHint="@color/gray"
                         android:textSize="14sp" />
-                </RelativeLayout>
+                </com.google.android.material.textfield.TextInputLayout>
 
                 <!--Password Field Background-->
                 <RelativeLayout
@@ -205,10 +207,28 @@
                         android:layout_height="20dp"
                         android:layout_alignParentEnd="true"
                         android:layout_centerVertical="true"
-                        android:layout_marginEnd="10dp"
-                        android:visibility="gone"
-                        android:src="@drawable/ic_visibility_off" />
+                        app:tint="@color/gray"
+                        android:layout_marginEnd="15dp"
+                        android:src="@drawable/ic_visibility_off"
+                        android:visibility="gone" />
                 </RelativeLayout>
+
+                <!--Feedback-->
+                <TextView
+                    android:id="@+id/txtErrorFeedback"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="start"
+                    android:layout_marginTop="5dp"
+                    android:drawablePadding="2dp"
+                    android:fontFamily="@font/poppins_regular"
+                    android:gravity="center_vertical"
+                    android:includeFontPadding="false"
+                    android:text="message"
+                    android:textColor="@color/red"
+                    android:textSize="13sp"
+                    android:visibility="gone"
+                    app:drawableStartCompat="@drawable/ic_error" />
 
                 <!--Forgot Password TxT-->
                 <TextView

@@ -16,7 +16,6 @@ import android.view.View;
 import android.view.Window;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.EditText;
-import android.widget.Toast;
 
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.content.ContextCompat;
@@ -28,7 +27,9 @@ import com.settlex.android.ui.activities.help.AuthHelpActivity;
 import com.settlex.android.ui.auth.viewmodel.AuthViewModel;
 import com.settlex.android.ui.common.SettleXProgressBarController;
 import com.settlex.android.ui.dashboard.activity.DashboardActivity;
+import com.settlex.android.util.NetworkMonitor;
 import com.settlex.android.util.StringUtil;
+import com.settlex.android.util.UiUtil;
 
 import java.util.Objects;
 
@@ -37,6 +38,8 @@ import java.util.Objects;
  */
 public class SignInActivity extends AppCompatActivity {
     private boolean isPasswordVisible = false;
+    private boolean isConnected = false;
+
     private AuthViewModel authViewModel;
     private ActivitySignInBinding binding;
     private SettleXProgressBarController progressBarController;
@@ -53,10 +56,11 @@ public class SignInActivity extends AppCompatActivity {
         setupStatusBar();
         setupUiActions();
         observeUserState();
+        observeNetworkStatus();
         observeLoginResult();
     }
 
-    // ====================== CORE LOGIN FLOW ======================
+    // ====================== NETWORK & DATA OBSERVERS ======================
     private void observeUserState() {
         authViewModel.getUserState().observe(this, currentUser -> {
             if (currentUser != null) {
@@ -65,6 +69,11 @@ public class SignInActivity extends AppCompatActivity {
                 showLoggedOutLayout();
             }
         });
+    }
+
+    private void observeNetworkStatus() {
+        NetworkMonitor.getNetworkStatus().observe(this, isConnected ->
+                this.isConnected = isConnected);
     }
 
     private void observeLoginResult() {
@@ -79,6 +88,7 @@ public class SignInActivity extends AppCompatActivity {
         });
     }
 
+    // ====================== LOGIN FLOW ======================
     private void onLoginSuccess() {
         startActivity(new Intent(this, DashboardActivity.class));
         finishAffinity();
@@ -86,20 +96,34 @@ public class SignInActivity extends AppCompatActivity {
     }
 
     private void onLoginFailure(String error) {
-        Toast.makeText(this, error, Toast.LENGTH_LONG).show();
+        binding.txtErrorFeedback.setText(error);
+        binding.txtErrorFeedback.setVisibility(View.VISIBLE);
+
         progressBarController.hide();
     }
 
-    private void attemptLogin() {
-        String email = Objects.requireNonNull(binding.editTxtEmail.getText()).toString().trim();
-        String password = Objects.requireNonNull(binding.editTxtPassword.getText()).toString().trim();
+    private void onNoInternetConnection() {
+        UiUtil.showInfoDialog(
+                this,
+                "Network Unavailable",
+                "Please check your network connection and try again",
+                null);
+    }
 
-        authViewModel.loginWithEmail(email, password);
+    private void attemptLogin() {
+        if (isConnected) {
+            String email = Objects.requireNonNull(binding.editTxtEmail.getText()).toString().trim();
+            String password = Objects.requireNonNull(binding.editTxtPassword.getText()).toString().trim();
+
+            authViewModel.loginWithEmail(email, password);
+        } else {
+            onNoInternetConnection();
+        }
     }
 
     private void showLoggedInLayout(String firstName, String email) {
         binding.userDisplayName.setText(getString(R.string.greeting_with_firstName, firstName));
-        binding.userEmail.setText(getString(R.string.mask_email, StringUtil.maskEmail(email)));
+        binding.userEmail.setText(getString(R.string.mask_email_with_parathesis, StringUtil.maskEmail(email)));
         binding.editTxtEmail.setText(email);
         // Show
         binding.showUserInfoLayout.setVisibility(View.VISIBLE);
@@ -107,7 +131,7 @@ public class SignInActivity extends AppCompatActivity {
         binding.btnSwitchAccount.setVisibility(View.VISIBLE);
         // Hide
         binding.logo.setVisibility(View.GONE);
-        binding.editTxtEmailBackground.setVisibility(View.GONE);
+        binding.txtInputLayoutEmail.setVisibility(View.GONE);
         binding.btnSignUp.setVisibility(View.GONE);
     }
 
@@ -117,12 +141,12 @@ public class SignInActivity extends AppCompatActivity {
         binding.showBiometricsLayout.setVisibility(View.GONE);
         binding.btnSwitchAccount.setVisibility(View.GONE);
         // Show
-        binding.editTxtEmailBackground.setVisibility(View.VISIBLE);
+        binding.txtInputLayoutEmail.setVisibility(View.VISIBLE);
         binding.btnSignUp.setVisibility(View.VISIBLE);
         binding.logo.setVisibility(View.VISIBLE);
     }
 
-    // ====================== UI ACTIONS ======================
+    // ====================== UI COMPONENT SETUP ======================
     private void setupUiActions() {
         setupFocusHandlers();
         setupAuthActionTexts();
@@ -146,54 +170,10 @@ public class SignInActivity extends AppCompatActivity {
         binding.btnSwitchAccount.setText(Html.fromHtml(switchAccountActionText, Html.FROM_HTML_MODE_LEGACY));
     }
 
-    // ====================== INPUT HANDLING ======================
-    private void setupInputValidation() {
-        TextWatcher validationWatcher = new TextWatcher() {
-            @Override
-            public void onTextChanged(CharSequence s, int start, int before, int count) {
-                validateInputFields();
-            }
-
-            @Override
-            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
-            }
-
-            @Override
-            public void afterTextChanged(Editable s) {
-            }
-        };
-
-        binding.editTxtEmail.addTextChangedListener(validationWatcher);
-        binding.editTxtPassword.addTextChangedListener(validationWatcher);
-
-        // Password visibility icon toggle
-        binding.editTxtPassword.addTextChangedListener(new TextWatcher() {
-            @Override
-            public void onTextChanged(CharSequence s, int start, int before, int count) {
-                binding.passwordToggle.setVisibility(!TextUtils.isEmpty(s) ? View.VISIBLE : View.GONE);
-            }
-
-            @Override
-            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
-            }
-
-            @Override
-            public void afterTextChanged(Editable s) {
-            }
-        });
+    private void navigateTo(Class<? extends Activity> activityClass) {
+        startActivity(new Intent(this, activityClass));
     }
 
-    /**
-     * Validates both email and password fields to enable/disable login button
-     */
-    private void validateInputFields() {
-        String email = Objects.requireNonNull(binding.editTxtEmail.getText()).toString().trim();
-        String password = Objects.requireNonNull(binding.editTxtPassword.getText()).toString().trim();
-
-        binding.btnSignIn.setEnabled(!email.isEmpty() && !password.isEmpty());
-    }
-
-    // ====================== FOCUS MANAGEMENT ======================
     private void setupFocusHandlers() {
         View.OnClickListener focusListener = v -> {
             if (v instanceof EditText editText) {
@@ -205,16 +185,51 @@ public class SignInActivity extends AppCompatActivity {
         binding.editTxtEmail.setOnClickListener(focusListener);
         binding.editTxtPassword.setOnClickListener(focusListener);
 
-        binding.editTxtEmail.setOnFocusChangeListener((v, hasFocus) -> {
-            int emailBackgroundRes = hasFocus ? R.drawable.bg_edit_txt_custom_gray_focused : R.drawable.bg_edit_txt_custom_gray_not_focused;
-            binding.editTxtEmailBackground.setBackgroundResource(emailBackgroundRes);
-        });
-
         binding.editTxtPassword.setOnFocusChangeListener((v, hasFocus) -> {
-            int passwordBackgroundRes = (hasFocus) ? R.drawable.bg_edit_txt_custom_white_focused : R.drawable.bg_edit_txt_custom_gray_not_focused;
-            binding.editTxtPasswordBackground.setBackgroundResource(passwordBackgroundRes);
+            int backgroundRes = (hasFocus) ? R.drawable.bg_edit_txt_custom_white_focused : R.drawable.bg_edit_txt_custom_gray_not_focused;
+            binding.editTxtPasswordBackground.setBackgroundResource(backgroundRes);
         });
+    }
 
+    // ====================== PASSWORD VALIDATION ======================
+    private void updateSignInButtonState() {
+        String email = Objects.requireNonNull(binding.editTxtEmail.getText()).toString().trim();
+        String password = Objects.requireNonNull(binding.editTxtPassword.getText()).toString().trim();
+
+        binding.btnSignIn.setEnabled(!email.isEmpty() && !password.isEmpty());
+    }
+
+    private void setupInputValidation() {
+        TextWatcher validationWatcher = new TextWatcher() {
+            @Override
+            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+            }
+            @Override
+            public void afterTextChanged(Editable s) {
+            }
+            @Override
+            public void onTextChanged(CharSequence s, int start, int before, int count) {
+                binding.txtErrorFeedback.setVisibility(View.GONE);
+                updateSignInButtonState();
+            }
+        };
+
+        binding.editTxtEmail.addTextChangedListener(validationWatcher);
+        binding.editTxtPassword.addTextChangedListener(validationWatcher);
+        setupPasswordToggleVisibility();
+    }
+
+    private void setupPasswordToggleVisibility(){
+        binding.editTxtPassword.addTextChangedListener(new TextWatcher() {
+            @Override
+            public void beforeTextChanged(CharSequence s, int start, int count, int after) {}
+            @Override
+            public void afterTextChanged(Editable s) {}
+            @Override
+            public void onTextChanged(CharSequence s, int start, int before, int count) {
+                binding.passwordToggle.setVisibility(!TextUtils.isEmpty(s) ? View.VISIBLE : View.GONE);
+            }
+        });
     }
 
     private void setupPasswordVisibilityToggle() {
@@ -232,13 +247,7 @@ public class SignInActivity extends AppCompatActivity {
         });
     }
 
-
     // ====================== UTILITIES ======================
-
-    private void navigateTo(Class<? extends Activity> activityClass) {
-        startActivity(new Intent(this, activityClass));
-    }
-
     private void setupStatusBar() {
         Window window = getWindow();
         window.setStatusBarColor(ContextCompat.getColor(this, R.color.white));
@@ -246,9 +255,6 @@ public class SignInActivity extends AppCompatActivity {
         decorView.setSystemUiVisibility(decorView.getSystemUiVisibility() | View.SYSTEM_UI_FLAG_LIGHT_STATUS_BAR);
     }
 
-    /**
-     * Handles keyboard dismissal when tapping outside EditText fields
-     */
     @Override
     public boolean dispatchTouchEvent(MotionEvent event) {
         if (event.getAction() == MotionEvent.ACTION_DOWN) {

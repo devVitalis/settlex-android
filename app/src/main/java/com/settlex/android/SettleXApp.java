@@ -29,6 +29,7 @@ public class SettleXApp extends Application {
         super.onCreate();
         initializeGlobals();
         initializeServices();
+        NetworkMonitor.startNetworkCallback();
     }
 
     // INITIALIZATION

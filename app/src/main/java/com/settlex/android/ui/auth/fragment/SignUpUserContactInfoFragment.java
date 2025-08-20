@@ -37,11 +37,14 @@ import com.settlex.android.ui.auth.activity.SignInActivity;
 import com.settlex.android.ui.auth.util.AuthResult;
 import com.settlex.android.ui.auth.viewmodel.AuthViewModel;
 import com.settlex.android.ui.common.SettleXProgressBarController;
+import com.settlex.android.util.NetworkMonitor;
 import com.settlex.android.util.StringUtil;
+import com.settlex.android.util.UiUtil;
 
 import java.util.Objects;
 
 public class SignUpUserContactInfoFragment extends Fragment {
+    private boolean isConnected = false;
 
     private AuthViewModel authViewModel;
     private SettleXProgressBarController progressController;
@@ -63,6 +66,8 @@ public class SignUpUserContactInfoFragment extends Fragment {
     @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
+
+        observeNetworkStatus();
         observeSendVerificationOtp();
     }
 
@@ -86,6 +91,11 @@ public class SignUpUserContactInfoFragment extends Fragment {
         });
     }
 
+    private void observeNetworkStatus() {
+        NetworkMonitor.getNetworkStatus().observe(requireActivity(), isConnected ->
+                this.isConnected = isConnected);
+    }
+
     private void onSendVerificationOtpSuccess() {
         navigateToFragment(new SignUpEmailVerificationFragment());
         progressController.hide();
@@ -107,7 +117,28 @@ public class SignUpUserContactInfoFragment extends Fragment {
         binding.btnSignIn.setOnClickListener(view -> navigateToActivity(SignInActivity.class, true));
         binding.btnHelp.setOnClickListener(v -> navigateToActivity(AuthHelpActivity.class, false));
         binding.imgBackBefore.setOnClickListener(v -> navigateBack());
-        binding.btnContinue.setOnClickListener(v -> validateAndRequestOtp());
+        binding.btnContinue.setOnClickListener(v -> validateUserInfoAndSendOtp());
+    }
+
+    private void validateUserInfoAndSendOtp() {
+        if (isConnected) {
+            String email = Objects.requireNonNull(binding.editTxtEmail.getText()).toString().trim();
+            String phone = StringUtil.formatPhoneNumber(binding.editTxtPhoneNumber.getText().toString().trim());
+
+            authViewModel.updateEmail(email);
+            authViewModel.updatePhone(phone);
+            authViewModel.sendEmailVerificationOtp(email);
+        } else {
+            onNoInternetConnection();
+        }
+    }
+
+    private void onNoInternetConnection() {
+        UiUtil.showInfoDialog(
+                requireActivity(),
+                "Network Unavailable",
+                "Please check your network connection and try again",
+                null);
     }
 
     private void setupInputValidation() {
@@ -198,15 +229,6 @@ public class SignUpUserContactInfoFragment extends Fragment {
         // Background changes
         binding.editTxtPhoneNumber.setOnFocusChangeListener((v, hasFocus) -> binding.editTxtPhoneNumberBackground.setBackgroundResource(hasFocus ? R.drawable.bg_edit_txt_custom_white_focused : R.drawable.bg_edit_txt_custom_white_not_focused));
         binding.editTxtEmail.setOnFocusChangeListener((v, hasFocus) -> binding.editTxtEmailBg.setBackgroundResource(hasFocus ? R.drawable.bg_edit_txt_custom_white_focused : R.drawable.bg_edit_txt_custom_white_not_focused));
-    }
-
-    private void validateAndRequestOtp() {
-        String email = Objects.requireNonNull(binding.editTxtEmail.getText()).toString().trim();
-        String phone = StringUtil.formatPhoneNumber(binding.editTxtPhoneNumber.getText().toString().trim());
-
-        authViewModel.updateEmail(email);
-        authViewModel.updatePhone(phone);
-        authViewModel.sendEmailVerificationOtp(email);
     }
 
     private void updateContinueButtonState() {

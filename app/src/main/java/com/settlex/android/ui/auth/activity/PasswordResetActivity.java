@@ -23,11 +23,13 @@ import com.settlex.android.ui.auth.components.OtpVerificationActivity;
 import com.settlex.android.ui.auth.util.AuthResult;
 import com.settlex.android.ui.auth.viewmodel.AuthViewModel;
 import com.settlex.android.ui.common.SettleXProgressBarController;
+import com.settlex.android.util.NetworkMonitor;
 
 /**
  * Handles password reset initiation flow:
  */
 public class PasswordResetActivity extends AppCompatActivity {
+    private boolean isConnected = false;
 
     private ActivityPasswordResetBinding binding;
     private AuthViewModel authViewModel;
@@ -43,15 +45,12 @@ public class PasswordResetActivity extends AppCompatActivity {
         progressBarController = new SettleXProgressBarController(binding.getRoot());
 
         setupStatusBar();
-        setupUiComponents();
+        setupUiActions();
+        observeNetworkStatus();
         observeOtpRequestResult();
     }
 
-    // ====================== CORE FLOW ======================
-
-    /**
-     * Monitors OTP request state changes (loading/success/error)
-     */
+    // ====================== OBSERVERS ======================
     private void observeOtpRequestResult() {
         authViewModel.getSendEmailResetOtpResult().observe(this, event -> {
             AuthResult<String> result = event.getContentIfNotHandled();
@@ -63,6 +62,10 @@ public class PasswordResetActivity extends AppCompatActivity {
                 case ERROR -> handleOtpRequestError(result.getMessage());
             }
         });
+    }
+
+    private void observeNetworkStatus() {
+        NetworkMonitor.getNetworkStatus().observe(this, isConnected -> this.isConnected = isConnected);
     }
 
     private void handleOtpRequestSuccess() {
@@ -77,32 +80,31 @@ public class PasswordResetActivity extends AppCompatActivity {
         progressBarController.hide();
     }
 
+    private void onNoInternetConnection() {
+        binding.txtErrorFeedback.setText(getString(R.string.error_no_internet));
+        binding.txtErrorFeedback.setVisibility(View.VISIBLE);
+    }
+
+    private void requestPasswordResetOtp() {
+        if (isConnected) {
+            authViewModel.sendPasswordResetOtp(binding.editTxtEmail.getText().toString().trim());
+        } else {
+            onNoInternetConnection();
+        }
+    }
+
     // ====================== UI CONFIGURATION ======================
 
-    /**
-     * Configures all interactive UI elements
-     */
-    private void setupUiComponents() {
-        configureEmailValidation();
+    private void setupUiActions() {
+        setupEmailInputValidation();
         setupFocusHandlers();
 
         binding.imgBackBefore.setOnClickListener(v -> finish());
         binding.btnContinue.setOnClickListener(v -> requestPasswordResetOtp());
     }
 
-    /**
-     * Initiates password reset OTP request
-     */
-    private void requestPasswordResetOtp() {
-        authViewModel.sendPasswordResetOtp(
-                binding.editTxtEmail.getText().toString().trim()
-        );
-    }
 
-    /**
-     * Sets up real-time email validation
-     */
-    private void configureEmailValidation() {
+    private void setupEmailInputValidation() {
         binding.editTxtEmail.addTextChangedListener(new TextWatcher() {
             @Override
             public void onTextChanged(CharSequence s, int start, int before, int count) {
@@ -120,9 +122,6 @@ public class PasswordResetActivity extends AppCompatActivity {
         });
     }
 
-    /**
-     * Updates button state based on email validity
-     */
     private void updateContinueButtonState() {
         String email = binding.editTxtEmail.getText().toString().trim();
         boolean emailValid = (Patterns.EMAIL_ADDRESS.matcher(email).matches());
@@ -131,25 +130,21 @@ public class PasswordResetActivity extends AppCompatActivity {
     }
 
     // ====================== FOCUS MANAGEMENT ======================
-
-    /**
-     * Handles EditText focus and background changes
-     */
     private void setupFocusHandlers() {
-        // Focus restoration
-        binding.editTxtEmail.setOnClickListener(v -> {
+        View.OnClickListener focusListener = (v -> {
             if (v instanceof EditText) {
                 v.setFocusable(true);
                 v.setFocusableInTouchMode(true);
                 v.requestFocus();
             }
         });
+        binding.editTxtEmail.setOnClickListener(focusListener);
 
         // Background changes
-        binding.editTxtEmail.setOnFocusChangeListener((v, hasFocus) ->
-                binding.editTxtEmailBackground.setBackgroundResource(
-                        hasFocus ? R.drawable.bg_edit_txt_custom_gray_focused
-                                : R.drawable.bg_edit_txt_custom_gray_not_focused));
+        binding.editTxtEmail.setOnFocusChangeListener((v, hasFocus) -> {
+            int emailBackgroundRes = (hasFocus) ? R.drawable.bg_edit_txt_custom_gray_focused : R.drawable.bg_edit_txt_custom_gray_not_focused;
+            binding.editTxtEmailBackground.setBackgroundResource(emailBackgroundRes);
+        });
     }
 
     // ====================== UTILITIES ======================
@@ -157,9 +152,7 @@ public class PasswordResetActivity extends AppCompatActivity {
     private void setupStatusBar() {
         Window window = getWindow();
         window.setStatusBarColor(ContextCompat.getColor(this, R.color.white));
-        window.getDecorView().setSystemUiVisibility(
-                window.getDecorView().getSystemUiVisibility() |
-                        View.SYSTEM_UI_FLAG_LIGHT_STATUS_BAR);
+        window.getDecorView().setSystemUiVisibility(window.getDecorView().getSystemUiVisibility() | View.SYSTEM_UI_FLAG_LIGHT_STATUS_BAR);
     }
 
     /**
@@ -180,8 +173,7 @@ public class PasswordResetActivity extends AppCompatActivity {
             focus.getGlobalVisibleRect(rect);
             if (!rect.contains((int) event.getRawX(), (int) event.getRawY())) {
                 focus.clearFocus();
-                ((InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE))
-                        .hideSoftInputFromWindow(focus.getWindowToken(), 0);
+                ((InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE)).hideSoftInputFromWindow(focus.getWindowToken(), 0);
                 binding.main.requestFocus();
             }
         }

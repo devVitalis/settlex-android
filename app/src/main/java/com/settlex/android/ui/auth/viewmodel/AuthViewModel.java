@@ -24,16 +24,16 @@ public class AuthViewModel extends ViewModel {
     }
 
     // ====================== LIVEDATA STATE HOLDERS ======================
+    private final MutableLiveData<UserDto> userState = new MutableLiveData<>();
     private final MutableLiveData<UserModel> userLiveData = new MutableLiveData<>();
     private final MutableLiveData<AuthResult<String>> loginResult = new MutableLiveData<>();
     private final MutableLiveData<AuthResult<String>> registerResult = new MutableLiveData<>();
     private final MutableLiveData<AuthResult<Boolean>> emailExistenceResult = new MutableLiveData<>();
+    private final MutableLiveData<Event<AuthResult<String>>> passwordResetResult = new MutableLiveData<>();
     private final MutableLiveData<Event<AuthResult<String>>> sendEmailResetOtpResult = new MutableLiveData<>();
     private final MutableLiveData<Event<AuthResult<String>>> verifyEmailResetOtpResult = new MutableLiveData<>();
     private final MutableLiveData<Event<AuthResult<String>>> sendEmailVerificationOtpResult = new MutableLiveData<>();
     private final MutableLiveData<Event<AuthResult<String>>> verifyEmailVerificationOtpResult = new MutableLiveData<>();
-    private final MutableLiveData<Event<AuthResult<String>>> passwordResetResult = new MutableLiveData<>();
-    private final MutableLiveData<UserDto> userState = new MutableLiveData<>();
 
     // ====================== LIVEDATA GETTERS ======================
     public LiveData<UserModel> getUser() { return userLiveData; }

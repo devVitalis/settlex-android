@@ -28,7 +28,6 @@ public class UserOnboardPrefs {
     }
 
     // --- User-specific onboarding states ---
-
     public boolean isNotificationPromptShown() {
         return prefs.getBoolean(KEY_NOTIFICATION_PROMPT_SHOWN, false);
     }

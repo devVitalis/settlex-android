@@ -32,15 +32,16 @@ import com.settlex.android.ui.activities.help.AuthHelpActivity;
 import com.settlex.android.ui.auth.viewmodel.AuthViewModel;
 import com.settlex.android.ui.common.SettleXProgressBarController;
 import com.settlex.android.ui.dashboard.activity.DashboardActivity;
+import com.settlex.android.util.NetworkMonitor;
 
 import java.util.Objects;
 
 public class SignUpUserPasswordFragment extends Fragment {
+    private boolean isConnected = false;
 
     private FragmentSignUpUserPasswordBinding binding;
     private SettleXProgressBarController progressBarController;
     private AuthViewModel authViewModel;
-
 
     // ====================== LIFECYCLE ======================
     @Override
@@ -60,6 +61,7 @@ public class SignUpUserPasswordFragment extends Fragment {
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
 
+        observeNetworkStatus();
         observeRegistrationResult();
     }
 
@@ -85,14 +87,19 @@ public class SignUpUserPasswordFragment extends Fragment {
 
     private void observeRegistrationResult() {
         authViewModel.getRegisterResult().observe(getViewLifecycleOwner(), result -> {
-            if (result == null) return;
-
-            switch (result.getStatus()) {
-                case LOADING -> progressBarController.show();
-                case SUCCESS -> onRegistrationSuccess();
-                case ERROR -> onRegistrationFailure(result.getMessage());
+            if (result != null) {
+                switch (result.getStatus()) {
+                    case LOADING -> progressBarController.show();
+                    case SUCCESS -> onRegistrationSuccess();
+                    case ERROR -> onRegistrationFailure(result.getMessage());
+                }
             }
         });
+    }
+
+    private void observeNetworkStatus() {
+        NetworkMonitor.getNetworkStatus().observe(requireActivity(), isConnected ->
+                this.isConnected = isConnected);
     }
 
     private void onRegistrationSuccess() {
@@ -109,16 +116,24 @@ public class SignUpUserPasswordFragment extends Fragment {
         progressBarController.hide();
     }
 
+    private void onNoInternetConnection() {
+        binding.txtErrorFeedback.setText(getString(R.string.error_no_internet));
+        binding.txtErrorFeedback.setVisibility(View.VISIBLE);
+    }
+
     // ====================== BUSINESS LOGIC ======================
     private void validateAndCreateAccount() {
-        // Gather user input
-        String password = Objects.requireNonNull(binding.editTxtPassword.getText()).toString().trim();
-        String invitationCode = Objects.requireNonNull(binding.editTxtInvitationCode.getText()).toString().trim();
+       if (isConnected) {
+           String password = Objects.requireNonNull(binding.editTxtPassword.getText()).toString().trim();
+           String invitationCode = Objects.requireNonNull(binding.editTxtInvitationCode.getText()).toString().trim();
 
-        // Apply default values and trigger registration
-        authViewModel.applyDefaultUserValues(invitationCode);
-        UserModel user = authViewModel.getUser().getValue();
-        authViewModel.registerUser(authViewModel.getEmail(), password, user);
+           // Apply default values and trigger registration
+           authViewModel.applyDefaultUserValues(invitationCode);
+           UserModel user = authViewModel.getUser().getValue();
+           authViewModel.registerUser(authViewModel.getEmail(), password, user);
+       } else {
+           onNoInternetConnection();
+       }
     }
 
     // ====================== PASSWORD VALIDATION ======================

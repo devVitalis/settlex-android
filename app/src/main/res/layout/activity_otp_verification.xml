@@ -71,7 +71,6 @@
             android:orientation="vertical"
             android:paddingHorizontal="15dp">
 
-            <!--Container-->
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
@@ -89,7 +88,6 @@
                     android:textColor="@color/black"
                     android:textSize="16sp" />
 
-                <!--Container for Message and Icon-->
                 <RelativeLayout
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
@@ -128,7 +126,7 @@
                 </RelativeLayout>
             </LinearLayout>
 
-            <!--Enter OTP field-->
+            <!--OTP field-->
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
@@ -197,21 +195,24 @@
                     android:maxLength="1" />
             </LinearLayout>
 
-            <!--Success/Failure TxT-->
+            <!--Display Error (Hidden)-->
             <TextView
                 android:id="@+id/txtOtpFeedback"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_gravity="start"
                 android:layout_marginTop="5dp"
-                android:fontFamily="@font/poppins_light"
+                android:drawablePadding="2dp"
+                android:fontFamily="@font/poppins_regular"
+                android:gravity="center_vertical"
                 android:includeFontPadding="false"
                 android:text="message"
                 android:textColor="@color/red"
-                android:textSize="12sp"
-                android:visibility="gone" />
+                android:textSize="13sp"
+                android:visibility="gone"
+                app:drawableStartCompat="@drawable/ic_error" />
 
-            <!--Container-->
+            <!--Resend (OTP) Container-->
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
@@ -228,7 +229,6 @@
                     android:textColor="@color/black"
                     android:textSize="13sp" />
 
-                <!--Resend (OTP) Btn-->
                 <com.google.android.material.button.MaterialButton
                     android:id="@+id/btnResendOtp"
                     style="@style/Widget.SettleXApp.Button.Outlined"

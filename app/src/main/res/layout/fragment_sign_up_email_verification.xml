@@ -81,7 +81,6 @@
                 android:paddingStart="15dp"
                 android:paddingEnd="15dp">
 
-                <!--TxT-->
                 <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
@@ -161,7 +160,6 @@
                     android:scaleType="fitCenter"
                     android:src="@drawable/img_email_sent" />
 
-                <!--TxT-->
                 <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
@@ -209,7 +207,7 @@
                     android:textColor="@color/black"
                     android:textSize="13sp" />
 
-                <!--Enter OTP field-->
+                <!--OTP field-->
                 <LinearLayout
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
@@ -283,7 +281,7 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content">
 
-                    <!--Success anim-->
+                    <!--Success anim (Hidden)-->
                     <com.airbnb.lottie.LottieAnimationView
                         android:id="@+id/anim"
                         android:layout_width="20dp"
@@ -295,24 +293,25 @@
                         app:lottie_fileName="success_anim.json"
                         app:lottie_loop="false" />
 
-
-                    <!--Success/Failure TxT-->
+                    <!--Display Success/Error-->
                     <TextView
                         android:id="@+id/txtOtpFeedback"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:layout_centerVertical="true"
                         android:layout_gravity="start"
                         android:layout_marginTop="5dp"
-                        android:layout_toEndOf="@+id/successAnim"
-                        android:fontFamily="@font/poppins_light"
+                        android:drawablePadding="2dp"
+                        android:fontFamily="@font/poppins_regular"
+                        android:gravity="center_vertical"
                         android:includeFontPadding="false"
                         android:text="message"
                         android:textColor="@color/red"
-                        android:textSize="12sp"
-                        android:visibility="gone" />
+                        android:textSize="13sp"
+                        android:visibility="gone"
+                        app:drawableStartCompat="@drawable/ic_error" />
                 </RelativeLayout>
 
+                <!--OTP Field-->
                 <LinearLayout
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
@@ -329,7 +328,6 @@
                         android:textColor="@color/black"
                         android:textSize="13sp" />
 
-                    <!--Resend (OTP) Btn-->
                     <com.google.android.material.button.MaterialButton
                         android:id="@+id/btnResendOtp"
                         style="@style/Widget.SettleXApp.Button.Outlined"
@@ -357,13 +355,11 @@
                     android:textColor="@color/gray_dark"
                     android:textSize="11sp" />
 
-
                 <Space
                     android:layout_width="0dp"
                     android:layout_height="0dp"
                     android:layout_weight="1" />
 
-                <!--Verify Btn-->
                 <com.google.android.material.button.MaterialButton
                     android:id="@+id/btnVerify"
                     style="@style/Widget.SettleXApp.Button.Filled.Rounded8.Blue"
