@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <!--Black && White-->
+    <color name="black">#FF000000</color>
+    <color name="white">#FFFFFFFF</color>
+
+    <!--Gray-->
+    <color name="gray">#9E9E9E</color>
+    <color name="gray_dark">#4A4A4A</color>
+    <color name="gray_light">#F5F5F5</color>
+    <color name="gray_whitish_blue">#EBEEF3</color> <!--// TODO: delete-->
+    <color name="gray_blue_tone">#F8FAFF</color>
+
+    <!--Blue-->
+    <color name="blue">#0044CC</color>
+    <color name="blue_deep">#004A91</color>
+    <color name="blue_light">#94A4DBFF</color>
+    <color name="blue_very_light">#EDF2FE</color>
+    <color name="blue_navy">#0A1E33</color> <!--// TODO: Unused-->
+
+    <!--Red-->
+    <color name="red">#FF0A0A</color>
+
+    <!--Orange-->
+    <color name="orange_light">#FFF4E0</color>
+
+</resources>

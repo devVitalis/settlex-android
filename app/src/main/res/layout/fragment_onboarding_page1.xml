@@ -1,0 +1,65 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/white"
+    tools:context=".ui.Onboarding.fragment.OnboardingPage1Fragment">
+
+    <!--Logo-->
+    <ImageView
+        android:id="@+id/logo"
+        android:layout_width="70dp"
+        android:layout_height="70dp"
+        android:layout_above="@id/sectionHeader"
+        android:layout_centerHorizontal="true"
+        android:contentDescription="@string/app_logo"
+        android:src="@mipmap/ic_launcher" />
+
+    <TextView
+        android:id="@+id/sectionHeader"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_above="@id/imageContainer"
+        android:layout_centerHorizontal="true"
+        android:layout_marginTop="20dp"
+        android:fontFamily="@font/poppins_medium"
+        android:includeFontPadding="false"
+        android:text="Pay Bills Without Stress"
+        android:textColor="@color/black"
+        android:textSize="20sp"
+        android:textStyle="bold" />
+
+    <!--Image Background-->
+    <LinearLayout
+        android:id="@+id/imageContainer"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_centerInParent="true"
+        android:layout_marginTop="25dp"
+        android:background="@drawable/bg_oval_light_blue">
+
+        <com.google.android.material.imageview.ShapeableImageView
+            android:id="@+id/ImgIntroSlide1"
+            android:layout_width="295dp"
+            android:layout_height="295dp"
+            android:scaleType="centerCrop"
+            android:src="@drawable/img_intro_slide_1" />
+    </LinearLayout>
+
+    <!--Content Txt-->
+    <TextView
+        android:id="@+id/txtContent"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/imageContainer"
+        android:layout_centerHorizontal="true"
+        android:layout_marginHorizontal="10dp"
+        android:layout_marginTop="20dp"
+        android:fontFamily="@font/poppins_regular"
+        android:gravity="center"
+        android:text="Handle your electricity, airtime, internet, and more all in one place. Fast, secure, and stress-free bill payments at your fingertips.."
+        android:textAlignment="center"
+        android:textColor="@color/gray"
+        android:textSize="15sp" />
+</RelativeLayout>
