@@ -1,20 +1,28 @@
+# Ignore IntelliJ/Android Studio project files
+.idea/
 *.iml
-.gradle
-/local.properties
-/.idea/caches
-/.idea/libraries
-/.idea/modules.xml
-/.idea/workspace.xml
-/.idea/navEditor.xml
-/.idea/assetWizardSettings.xml
-.DS_Store
-/build
-/captures
-.externalNativeBuild
-.cxx
-local.properties
 
-# Firebase and Google Services (never commit secrets)
+# Gradle
+.gradle/
+build/
+
+# Local configuration
+/local.properties
+
+# Captures and miscellaneous
+captures/
+.DS_Store
+Thumbs.db
+*.swp
+*.swo
+*.log
+*.stacktrace
+
+# Native/External build outputs
+.externalNativeBuild/
+.cxx/
+
+# Firebase & Google services (never commit secrets)
 google-services.json
 firebase-debug.log
 
@@ -25,17 +33,10 @@ firebase-debug.log
 # Jetpack Compose previews
 *.preview
 
-# OS/editor junk
-Thumbs.db
-*.swp
-*.swo
-*.log
-*.stacktrace
-
 # Kotlin/Java compiler outputs
+*.class
 *.jar
 *.war
 *.ear
-*.class
 *.apk
 *.ap_
