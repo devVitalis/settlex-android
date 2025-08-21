@@ -1,0 +1,64 @@
+<?xml version="1.0" encoding="utf-8"?>
+<manifest xmlns:android="http://schemas.android.com/apk/res/android">
+    <!-- Required permissions -->
+    <uses-permission android:name="android.permission.INTERNET" />
+    <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
+    <uses-permission android:name="android.permission.ACCESS_WIFI_STATE" />
+
+    <application
+        android:name=".SettleXApp"
+        android:allowBackup="true"
+        android:dataExtractionRules="@xml/data_extraction_rules"
+        android:fullBackupContent="@xml/backup_rules"
+        android:icon="@mipmap/ic_launcher"
+        android:label="@string/app_name"
+        android:roundIcon="@mipmap/ic_launcher_round"
+        android:supportsRtl="true"
+        android:theme="@style/Theme.SettleX">
+
+        <activity
+            android:name=".ui.auth.activity.PasswordChangeActivity"
+            android:exported="false" />
+        <activity
+            android:name=".ui.auth.components.OtpVerificationActivity"
+            android:exported="false" />
+        <activity
+            android:name=".ui.auth.activity.PasswordResetActivity"
+            android:exported="false" />
+        <activity
+            android:name=".ui.dashboard.activity.DashboardActivity"
+            android:exported="false" />
+        <activity
+            android:name=".ui.activities.legal.PrivacyPolicyActivity"
+            android:exported="false" />
+        <activity
+            android:name=".ui.activities.legal.TermsAndConditionsActivity"
+            android:exported="false" />
+        <activity
+            android:name=".ui.activities.help.AuthHelpActivity"
+            android:exported="false" />
+        <activity
+            android:name=".ui.auth.activity.PinLoginActivity"
+            android:exported="false" />
+        <activity
+            android:name=".ui.auth.activity.SignInActivity"
+            android:exported="false" />
+        <activity
+            android:name=".ui.auth.activity.SignUpActivity"
+            android:exported="false" />
+        <activity
+            android:name=".ui.Onboarding.activity.OnboardingActivity"
+            android:exported="false" />
+        <activity
+            android:name=".ui.activities.splash.SplashActivity"
+            android:exported="true"
+            android:theme="@style/Theme.SettleX.Splash">
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN" />
+
+                <category android:name="android.intent.category.LAUNCHER" />
+            </intent-filter>
+        </activity>
+    </application>
+
+</manifest>
