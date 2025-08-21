@@ -14,9 +14,10 @@
     <!--Blue-->
     <color name="blue">#0044CC</color>
     <color name="blue_deep">#004A91</color>
+    <color name="blue_400">#42A5F5</color>
     <color name="blue_light">#94A4DBFF</color>
     <color name="blue_very_light">#EDF2FE</color>
-    <color name="blue_navy">#0A1E33</color> <!--// TODO: Unused-->
+    <color name="blue_navy">#0A1E33</color>
 
     <!--Red-->
     <color name="red">#FF0A0A</color>
