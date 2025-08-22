@@ -207,10 +207,10 @@
                         android:layout_height="20dp"
                         android:layout_alignParentEnd="true"
                         android:layout_centerVertical="true"
-                        app:tint="@color/gray"
                         android:layout_marginEnd="15dp"
                         android:src="@drawable/ic_visibility_off"
-                        android:visibility="gone" />
+                        android:visibility="gone"
+                        app:tint="@color/gray" />
                 </RelativeLayout>
 
                 <!--Feedback-->
@@ -282,7 +282,8 @@
                         android:includeFontPadding="false"
                         android:text="Use Biometrics"
                         android:textColor="@color/blue"
-                        android:textSize="14sp" />
+                        android:textSize="14sp"
+                        android:textStyle="bold" />
                 </LinearLayout>
             </LinearLayout>
         </ScrollView>

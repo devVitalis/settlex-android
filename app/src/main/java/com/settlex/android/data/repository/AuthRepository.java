@@ -5,6 +5,7 @@ import androidx.annotation.Nullable;
 import com.google.firebase.FirebaseNetworkException;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseAuthInvalidCredentialsException;
+import com.google.firebase.auth.FirebaseAuthInvalidUserException;
 import com.google.firebase.auth.FirebaseAuthUserCollisionException;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.auth.UserProfileChangeRequest;
@@ -29,7 +30,7 @@ public class AuthRepository {
     public AuthRepository() {
         firebaseAuth = FirebaseAuth.getInstance();
         firestore = FirebaseFirestore.getInstance();
-        // Using europe-west2 lower latency
+        // Using europe-west2 for lower latency
         functions = FirebaseFunctions.getInstance("europe-west2");
     }
 
@@ -45,6 +46,8 @@ public class AuthRepository {
                         callback.onFailure("Invalid email or password");
                     } else if (e instanceof FirebaseNetworkException || e instanceof IOException) {
                         callback.onFailure("Network request failed. Please try again");
+                    } else if (((FirebaseAuthInvalidUserException) e).getErrorCode().equals("ERROR_USER_DISABLED")) {
+                        callback.onFailure("Your account has been disabled, contact support.");
                     } else {
                         callback.onFailure(e.getMessage());
                     }
@@ -219,7 +222,9 @@ public class AuthRepository {
 
                     markEmailVerified(user.getUid(), new RegisterCallback() {
                         @Override
-                        public void onSuccess() {}
+                        public void onSuccess() {
+                        }
+
                         @Override
                         public void onFailure(String reason) {
                             markEmailAsUnverified(user.getUid());

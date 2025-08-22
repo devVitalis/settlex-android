@@ -1,9 +1,11 @@
 <?xml version="1.0" encoding="utf-8"?>
 <FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@color/white"
+    android:background="@color/gray_blue_tone"
+    android:fitsSystemWindows="true"
     android:orientation="vertical"
     tools:context=".ui.dashboard.fragments.HomeDashboardFragment">
 
@@ -15,13 +17,16 @@
         <RelativeLayout
             android:id="@+id/header"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content">
+            android:layout_height="wrap_content"
+            android:paddingHorizontal="15dp"
+            android:paddingTop="5dp">
 
             <ImageView
                 android:id="@+id/userProfilePic"
-                android:layout_width="70dp"
-                android:layout_height="70dp"
+                android:layout_width="65dp"
+                android:layout_height="65dp"
                 android:layout_alignParentStart="true"
+                android:layout_alignParentTop="true"
                 android:layout_centerVertical="true"
                 android:src="@drawable/ic_avatar" />
 
@@ -55,8 +60,7 @@
                 android:layout_width="25dp"
                 android:layout_height="25dp"
                 android:layout_alignParentEnd="true"
-                android:layout_centerVertical="true"
-                android:layout_marginEnd="15dp">
+                android:layout_centerVertical="true">
 
                 <ImageView
                     android:id="@+id/notification"
@@ -95,50 +99,264 @@
                 android:paddingHorizontal="15dp"
                 android:paddingVertical="10dp">
 
+                <!--Marquee Container-->
+                <LinearLayout
+                    android:id="@+id/marqueeContainer"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginBottom="10dp"
+                    android:background="@drawable/bg_8dp_light_orange"
+                    android:gravity="center_vertical"
+                    android:orientation="horizontal"
+                    android:paddingHorizontal="10dp"
+                    android:paddingVertical="2dp"
+                    android:visibility="visible">
+
+                    <ImageView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:src="@drawable/ic_brand_awareness"
+                        app:tint="@color/orange" />
+
+                    <TextView
+                        android:id="@+id/awareness"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:ellipsize="marquee"
+                        android:focusable="true"
+                        android:focusableInTouchMode="true"
+                        android:fontFamily="@font/poppins_light"
+                        android:includeFontPadding="false"
+                        android:marqueeRepeatLimit="marquee_forever"
+                        android:scrollHorizontally="true"
+                        android:singleLine="true"
+                        android:text="Network Issue Alert: Airtime purchases are currently unavailable due to a service outage. We're working urgently to fix this."
+                        android:textColor="@color/orange"
+                        android:textSize="12sp" />
+                </LinearLayout>
+
+                <!--Container-->
                 <RelativeLayout
                     android:layout_width="match_parent"
-                    android:layout_height="200dp"
+                    android:layout_height="wrap_content"
                     android:background="@drawable/bg_16dp_gradient"
                     android:padding="15dp">
 
-                    <TextView
-                        android:id="@+id/wallet"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_alignParentStart="true"
-                        android:layout_alignParentTop="true"
-                        android:includeFontPadding="false"
-                        android:text="Wallet"
-                        android:textColor="@color/white"
-                        android:textSize="12sp" />
-
+                    <!--Wallet Container-->
                     <RelativeLayout
+                        android:id="@+id/walletContainer"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:layout_below="@id/wallet"
-                        android:layout_marginTop="25dp">
+                        android:layout_alignParentTop="true">
 
                         <TextView
-                            android:id="@+id/balance"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
+                            android:layout_alignParentStart="true"
+                            android:layout_centerVertical="true"
+                            android:includeFontPadding="false"
+                            android:text="Wallet"
+                            android:textColor="@color/gray"
+                            android:textSize="12sp" />
+
+                        <TextView
+                            android:id="@+id/transactionsHistory"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_centerVertical="true"
+                            android:layout_toStartOf="@id/arrowForward"
+                            android:gravity="center"
+                            android:includeFontPadding="false"
+                            android:text="Transactions History"
+                            android:textColor="#666666"
+                            android:textSize="15sp" />
+
+                        <ImageView
+                            android:id="@+id/arrowForward"
+                            android:layout_width="10dp"
+                            android:layout_height="10dp"
+                            android:layout_alignParentEnd="true"
+                            android:layout_centerVertical="true"
+                            android:layout_marginStart="2dp"
+                            android:layout_marginEnd="10dp"
+                            android:src="@drawable/ic_arrow_forward"
+                            app:tint="#666666" />
+
+                    </RelativeLayout>
+
+                    <!--Balance Container-->
+                    <RelativeLayout
+                        android:id="@+id/balanceContainer"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_below="@id/walletContainer"
+                        android:layout_marginTop="15dp">
+
+                        <TextView
+                            android:id="@+id/balanceTxt"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_alignParentStart="true"
+                            android:layout_alignParentTop="true"
                             android:includeFontPadding="false"
                             android:text="Balance"
                             android:textColor="@color/white"
                             android:textSize="14sp" />
 
+                        <ImageView
+                            android:id="@+id/balanceToggle"
+                            android:layout_width="18dp"
+                            android:layout_height="18dp"
+                            android:layout_alignParentTop="true"
+                            android:layout_marginStart="5dp"
+                            android:layout_toEndOf="@id/balanceTxt"
+                            android:src="@drawable/ic_visibility_on"
+                            app:tint="@color/white" />
+
                         <TextView
+                            android:id="@+id/userBalance"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
-                            android:layout_marginStart="150dp"
-                            android:layout_toEndOf="@id/balance"
+                            android:layout_below="@id/balanceTxt"
+                            android:layout_alignParentStart="true"
+                            android:layout_marginTop="5dp"
+                            android:includeFontPadding="false"
+                            android:text="₦2,540.00"
+                            android:textColor="@color/white"
+                            android:textSize="20sp"
+                            android:textStyle="bold" />
+
+                        <TextView
+                            android:id="@+id/commissionTxt"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_alignParentTop="true"
+                            android:layout_alignParentEnd="true"
+                            android:layout_marginEnd="80dp"
                             android:includeFontPadding="false"
                             android:text="Commission"
                             android:textColor="@color/white"
                             android:textSize="14sp" />
+
+                        <TextView
+                            android:id="@+id/userCommissionBalance"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_below="@id/commissionTxt"
+                            android:layout_alignParentEnd="true"
+                            android:layout_marginTop="5dp"
+                            android:layout_marginEnd="80dp"
+                            android:includeFontPadding="false"
+                            android:text="₦534.18"
+                            android:textColor="@color/white"
+                            android:textSize="20sp"
+                            android:textStyle="bold" />
                     </RelativeLayout>
 
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_below="@id/balanceContainer"
+                        android:layout_marginTop="15dp"
+                        android:gravity="center_vertical"
+                        android:orientation="horizontal">
 
+                        <!--Add Money-->
+                        <LinearLayout
+                            android:layout_width="100dp"
+                            android:layout_height="wrap_content"
+                            android:background="@drawable/bg_16dp_transparent_white"
+                            android:gravity="center"
+                            android:orientation="vertical"
+                            android:paddingVertical="5dp">
+
+                            <ImageView
+                                android:layout_width="20dp"
+                                android:layout_height="20dp"
+                                android:src="@drawable/ic_add_money" />
+
+                            <TextView
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:fontFamily="@font/poppins_regular"
+                                android:includeFontPadding="false"
+                                android:text="Add Money"
+                                android:textColor="@color/white"
+                                android:textSize="12sp" />
+                        </LinearLayout>
+
+                        <Space
+                            android:layout_width="0dp"
+                            android:layout_height="0dp"
+                            android:layout_weight="1" />
+
+                        <!--Receive Money-->
+                        <LinearLayout
+                            android:layout_width="100dp"
+                            android:layout_height="wrap_content"
+                            android:background="@drawable/bg_16dp_transparent_white"
+                            android:gravity="center"
+                            android:orientation="vertical"
+                            android:paddingVertical="5dp">
+
+                            <ImageView
+                                android:layout_width="20dp"
+                                android:layout_height="20dp"
+                                android:src="@drawable/ic_receive_money" />
+
+                            <TextView
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:fontFamily="@font/poppins_regular"
+                                android:includeFontPadding="false"
+                                android:text="Receive"
+                                android:textColor="@color/white"
+                                android:textSize="12sp" />
+                        </LinearLayout>
+
+                        <Space
+                            android:layout_width="0dp"
+                            android:layout_height="0dp"
+                            android:layout_weight="1" />
+
+                        <!--Send Money-->
+                        <LinearLayout
+                            android:layout_width="100dp"
+                            android:layout_height="wrap_content"
+                            android:background="@drawable/bg_16dp_transparent_white"
+                            android:gravity="center"
+                            android:orientation="vertical"
+                            android:paddingVertical="5dp">
+
+                            <ImageView
+                                android:layout_width="20dp"
+                                android:layout_height="20dp"
+                                android:src="@drawable/ic_send_money" />
+
+                            <TextView
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:fontFamily="@font/poppins_regular"
+                                android:includeFontPadding="false"
+                                android:text="Send"
+                                android:textColor="@color/white"
+                                android:textSize="12sp" />
+                        </LinearLayout>
+                    </LinearLayout>
+                </RelativeLayout>
+
+                <RelativeLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="20dp"
+                    android:background="@drawable/bg_8dp_white"
+                    android:padding="10dp">
+
+                    <androidx.recyclerview.widget.RecyclerView
+                        android:id="@+id/servicesRecyclerView"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:clipToPadding="false" />
                 </RelativeLayout>
             </LinearLayout>
         </ScrollView>

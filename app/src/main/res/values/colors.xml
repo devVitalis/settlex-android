@@ -23,6 +23,11 @@
     <color name="red">#FF0A0A</color>
 
     <!--Orange-->
+    <color name="orange">#FFA500</color>
     <color name="orange_light">#FFF4E0</color>
+
+    <!--Overlay Colors-->
+    <color name="semi_transparent_white">#80FFFFFF</color>
+    <color name="semi_transparent_black">#80000000</color>
 
 </resources>
