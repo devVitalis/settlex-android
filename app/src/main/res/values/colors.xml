@@ -8,16 +8,16 @@
     <color name="gray">#9E9E9E</color>
     <color name="gray_dark">#4A4A4A</color>
     <color name="gray_light">#F5F5F5</color>
-    <color name="gray_whitish_blue">#EBEEF3</color> <!--// TODO: delete-->
+    <color name="gray_whitish">#E0E0E0</color>
     <color name="gray_blue_tone">#F8FAFF</color>
 
     <!--Blue-->
     <color name="blue">#0044CC</color>
     <color name="blue_deep">#004A91</color>
-    <color name="blue_400">#42A5F5</color>
+    <color name="blue_400">#42A5F5</color> // Gradient
     <color name="blue_light">#94A4DBFF</color>
     <color name="blue_very_light">#EDF2FE</color>
-    <color name="blue_navy">#0A1E33</color>
+    <color name="blue_navy">#0A1E33</color> // Splash screen
 
     <!--Red-->
     <color name="red">#FF0A0A</color>
@@ -28,6 +28,10 @@
 
     <!--Overlay Colors-->
     <color name="semi_transparent_white">#80FFFFFF</color>
-    <color name="semi_transparent_black">#80000000</color>
+    <color name="semi_transparent_black50">#80000000</color>
+    <color name="semi_transparent_black10">#1A000000</color>
+
+    <color name="cyan">#00E5FF</color> <!--// TODO: delete-->
+
 
 </resources>

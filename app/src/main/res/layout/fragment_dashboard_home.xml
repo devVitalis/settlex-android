@@ -4,17 +4,19 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@color/gray_blue_tone"
+    android:background="@color/gray_light"
     android:fitsSystemWindows="true"
     android:orientation="vertical"
     tools:context=".ui.dashboard.fragments.HomeDashboardFragment">
 
-    <RelativeLayout
+    <!--Parent Container-->
+    <LinearLayout
         android:layout_width="match_parent"
-        android:layout_height="wrap_content">
+        android:layout_height="match_parent"
+        android:orientation="vertical">
 
         <!--Header-->
-        <RelativeLayout
+        <androidx.constraintlayout.widget.ConstraintLayout
             android:id="@+id/header"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
@@ -25,47 +27,55 @@
                 android:id="@+id/userProfilePic"
                 android:layout_width="65dp"
                 android:layout_height="65dp"
-                android:layout_alignParentStart="true"
-                android:layout_alignParentTop="true"
-                android:layout_centerVertical="true"
-                android:src="@drawable/ic_avatar" />
+                android:src="@drawable/ic_avatar"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent" />
 
-            <TextView
-                android:id="@+id/greeting"
+            <LinearLayout
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="15dp"
-                android:layout_toEndOf="@id/userProfilePic"
-                android:fontFamily="@font/poppins_regular"
-                android:includeFontPadding="false"
-                android:text="Hello 👋"
-                android:textColor="@color/black"
-                android:textSize="14sp" />
+                android:orientation="vertical"
+                app:layout_constraintBottom_toBottomOf="@id/userProfilePic"
+                app:layout_constraintStart_toEndOf="@id/userProfilePic"
+                app:layout_constraintTop_toTopOf="@id/userProfilePic">
 
-            <TextView
-                android:id="@id/userDisplayName"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_below="@+id/greeting"
-                android:layout_toEndOf="@id/userProfilePic"
-                android:fontFamily="@font/poppins_regular"
-                android:includeFontPadding="false"
-                android:text="Nnaemeka Benjamin"
-                android:textColor="@color/black"
-                android:textSize="14sp"
-                android:textStyle="bold" />
+                <TextView
+                    android:id="@+id/greeting"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:fontFamily="@font/poppins_regular"
+                    android:includeFontPadding="false"
+                    android:text="Hello 👋"
+                    android:textColor="@color/black"
+                    android:textSize="14sp" />
+
+                <TextView
+                    android:id="@id/userDisplayName"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:fontFamily="@font/poppins_regular"
+                    android:includeFontPadding="false"
+                    android:text="Nnaemeka Benjamin"
+                    android:textColor="@color/black"
+                    android:textSize="14sp"
+                    android:textStyle="bold" />
+            </LinearLayout>
 
             <!--Notification Layout-->
             <FrameLayout
-                android:layout_width="25dp"
-                android:layout_height="25dp"
-                android:layout_alignParentEnd="true"
-                android:layout_centerVertical="true">
+                android:layout_width="40dp"
+                android:layout_height="40dp"
+                android:background="@drawable/bg_oval_semi_transparent_black"
+                android:padding="5dp"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintTop_toTopOf="parent">
 
                 <ImageView
                     android:id="@+id/notification"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
+                    android:layout_width="30dp"
+                    android:layout_height="30dp"
                     android:src="@drawable/ic_notifications" />
 
                 <TextView
@@ -82,14 +92,14 @@
                     android:textColor="@color/white"
                     android:textSize="9sp" />
             </FrameLayout>
-        </RelativeLayout>
+        </androidx.constraintlayout.widget.ConstraintLayout>
 
         <!--Scroll Layout-->
         <ScrollView
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:layout_below="@id/header"
             android:fillViewport="true"
+            android:overScrollMode="always"
             android:scrollbars="none">
 
             <LinearLayout
@@ -135,145 +145,130 @@
                         android:textSize="12sp" />
                 </LinearLayout>
 
-                <!--Container-->
-                <RelativeLayout
+                <!--Wallet Layout-->
+                <LinearLayout
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:background="@drawable/bg_16dp_gradient"
+                    android:gravity="center_vertical"
+                    android:orientation="vertical"
                     android:padding="15dp">
 
-                    <!--Wallet Container-->
-                    <RelativeLayout
-                        android:id="@+id/walletContainer"
+                    <!-- Header Row -->
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:includeFontPadding="false"
+                        android:text="Wallet"
+                        android:textColor="@color/gray_whitish"
+                        android:textSize="12sp"
+                        app:layout_constraintBottom_toBottomOf="parent"
+                        app:layout_constraintStart_toStartOf="parent"
+                        app:layout_constraintTop_toTopOf="parent" />
+
+                    <!-- Balance Section -->
+                    <androidx.constraintlayout.widget.ConstraintLayout
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:layout_alignParentTop="true">
-
-                        <TextView
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:layout_alignParentStart="true"
-                            android:layout_centerVertical="true"
-                            android:includeFontPadding="false"
-                            android:text="Wallet"
-                            android:textColor="@color/gray"
-                            android:textSize="12sp" />
-
-                        <TextView
-                            android:id="@+id/transactionsHistory"
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:layout_centerVertical="true"
-                            android:layout_toStartOf="@id/arrowForward"
-                            android:gravity="center"
-                            android:includeFontPadding="false"
-                            android:text="Transactions History"
-                            android:textColor="#666666"
-                            android:textSize="15sp" />
-
-                        <ImageView
-                            android:id="@+id/arrowForward"
-                            android:layout_width="10dp"
-                            android:layout_height="10dp"
-                            android:layout_alignParentEnd="true"
-                            android:layout_centerVertical="true"
-                            android:layout_marginStart="2dp"
-                            android:layout_marginEnd="10dp"
-                            android:src="@drawable/ic_arrow_forward"
-                            app:tint="#666666" />
-
-                    </RelativeLayout>
-
-                    <!--Balance Container-->
-                    <RelativeLayout
-                        android:id="@+id/balanceContainer"
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:layout_below="@id/walletContainer"
                         android:layout_marginTop="15dp">
 
+                        <ImageView
+                            android:id="@+id/protection"
+                            android:layout_width="15dp"
+                            android:layout_height="15dp"
+                            android:contentDescription="@null"
+                            android:src="@drawable/ic_protection"
+                            app:layout_constraintStart_toStartOf="parent"
+                            app:layout_constraintTop_toTopOf="parent" />
+
                         <TextView
-                            android:id="@+id/balanceTxt"
+                            android:id="@+id/balanceTitle"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
-                            android:layout_alignParentStart="true"
-                            android:layout_alignParentTop="true"
+                            android:layout_marginStart="2dp"
                             android:includeFontPadding="false"
                             android:text="Balance"
                             android:textColor="@color/white"
-                            android:textSize="14sp" />
+                            android:textSize="14sp"
+                            app:layout_constraintStart_toEndOf="@id/protection"
+                            app:layout_constraintTop_toTopOf="parent" />
 
                         <ImageView
                             android:id="@+id/balanceToggle"
                             android:layout_width="18dp"
                             android:layout_height="18dp"
-                            android:layout_alignParentTop="true"
                             android:layout_marginStart="5dp"
-                            android:layout_toEndOf="@id/balanceTxt"
+                            android:contentDescription="Hide Balance"
                             android:src="@drawable/ic_visibility_on"
+                            app:layout_constraintStart_toEndOf="@id/balanceTitle"
+                            app:layout_constraintTop_toTopOf="parent"
                             app:tint="@color/white" />
 
                         <TextView
                             android:id="@+id/userBalance"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
-                            android:layout_below="@id/balanceTxt"
-                            android:layout_alignParentStart="true"
-                            android:layout_marginTop="5dp"
+                            android:layout_marginTop="10dp"
                             android:includeFontPadding="false"
                             android:text="₦2,540.00"
                             android:textColor="@color/white"
                             android:textSize="20sp"
-                            android:textStyle="bold" />
+                            android:textStyle="bold"
+                            app:layout_constraintStart_toStartOf="@id/protection"
+                            app:layout_constraintTop_toBottomOf="@id/balanceTitle" />
 
-                        <TextView
-                            android:id="@+id/commissionTxt"
+                        <!-- Commission stack -->
+                        <LinearLayout
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
-                            android:layout_alignParentTop="true"
-                            android:layout_alignParentEnd="true"
                             android:layout_marginEnd="80dp"
-                            android:includeFontPadding="false"
-                            android:text="Commission"
-                            android:textColor="@color/white"
-                            android:textSize="14sp" />
+                            android:orientation="vertical"
+                            app:layout_constraintEnd_toEndOf="parent"
+                            app:layout_constraintTop_toTopOf="parent">
 
-                        <TextView
-                            android:id="@+id/userCommissionBalance"
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:layout_below="@id/commissionTxt"
-                            android:layout_alignParentEnd="true"
-                            android:layout_marginTop="5dp"
-                            android:layout_marginEnd="80dp"
-                            android:includeFontPadding="false"
-                            android:text="₦534.18"
-                            android:textColor="@color/white"
-                            android:textSize="20sp"
-                            android:textStyle="bold" />
-                    </RelativeLayout>
+                            <TextView
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:includeFontPadding="false"
+                                android:text="Commission"
+                                android:textColor="@color/white"
+                                android:textSize="14sp" />
 
-                    <LinearLayout
+                            <TextView
+                                android:id="@+id/userCommissionBalance"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:layout_marginTop="10dp"
+                                android:includeFontPadding="false"
+                                android:text="₦534.18"
+                                android:textColor="@color/white"
+                                android:textSize="20sp"
+                                android:textStyle="bold" />
+                        </LinearLayout>
+                    </androidx.constraintlayout.widget.ConstraintLayout>
+
+                    <!-- Action Buttons -->
+                    <androidx.constraintlayout.widget.ConstraintLayout
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:layout_below="@id/balanceContainer"
-                        android:layout_marginTop="15dp"
-                        android:gravity="center_vertical"
-                        android:orientation="horizontal">
+                        android:layout_marginTop="15dp">
 
-                        <!--Add Money-->
+                        <!-- Add Money -->
                         <LinearLayout
+                            android:id="@+id/addMoneyLayout"
                             android:layout_width="100dp"
                             android:layout_height="wrap_content"
-                            android:background="@drawable/bg_16dp_transparent_white"
+                            android:background="@drawable/bg_8dp_transparent_white"
                             android:gravity="center"
                             android:orientation="vertical"
-                            android:paddingVertical="5dp">
+                            android:paddingVertical="3dp"
+                            app:layout_constraintStart_toStartOf="parent"
+                            app:layout_constraintTop_toTopOf="parent">
 
                             <ImageView
                                 android:layout_width="20dp"
                                 android:layout_height="20dp"
-                                android:src="@drawable/ic_add_money" />
+                                android:src="@drawable/ic_add" />
 
                             <TextView
                                 android:layout_width="wrap_content"
@@ -282,85 +277,166 @@
                                 android:includeFontPadding="false"
                                 android:text="Add Money"
                                 android:textColor="@color/white"
-                                android:textSize="12sp" />
+                                android:textSize="11sp" />
                         </LinearLayout>
 
-                        <Space
-                            android:layout_width="0dp"
-                            android:layout_height="0dp"
-                            android:layout_weight="1" />
-
-                        <!--Receive Money-->
+                        <!-- Receive Money -->
                         <LinearLayout
+                            android:id="@+id/receiveMoneyLayout"
                             android:layout_width="100dp"
                             android:layout_height="wrap_content"
-                            android:background="@drawable/bg_16dp_transparent_white"
+                            android:background="@drawable/bg_8dp_transparent_white"
                             android:gravity="center"
                             android:orientation="vertical"
-                            android:paddingVertical="5dp">
+                            android:paddingVertical="3dp"
+                            app:layout_constraintEnd_toEndOf="parent"
+                            app:layout_constraintStart_toStartOf="parent"
+                            app:layout_constraintTop_toTopOf="parent">
 
                             <ImageView
                                 android:layout_width="20dp"
                                 android:layout_height="20dp"
-                                android:src="@drawable/ic_receive_money" />
+                                android:src="@drawable/ic_receive" />
 
                             <TextView
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
                                 android:fontFamily="@font/poppins_regular"
                                 android:includeFontPadding="false"
-                                android:text="Receive"
+                                android:text="Receive Money"
                                 android:textColor="@color/white"
-                                android:textSize="12sp" />
+                                android:textSize="11sp" />
                         </LinearLayout>
 
-                        <Space
-                            android:layout_width="0dp"
-                            android:layout_height="0dp"
-                            android:layout_weight="1" />
-
-                        <!--Send Money-->
+                        <!-- Send Money -->
                         <LinearLayout
+                            android:id="@+id/sendMoneyLayout"
                             android:layout_width="100dp"
                             android:layout_height="wrap_content"
-                            android:background="@drawable/bg_16dp_transparent_white"
+                            android:background="@drawable/bg_8dp_transparent_white"
                             android:gravity="center"
                             android:orientation="vertical"
-                            android:paddingVertical="5dp">
+                            android:paddingVertical="3dp"
+                            app:layout_constraintEnd_toEndOf="parent"
+                            app:layout_constraintTop_toTopOf="parent">
 
                             <ImageView
                                 android:layout_width="20dp"
                                 android:layout_height="20dp"
-                                android:src="@drawable/ic_send_money" />
+                                android:src="@drawable/ic_send" />
 
                             <TextView
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
                                 android:fontFamily="@font/poppins_regular"
                                 android:includeFontPadding="false"
-                                android:text="Send"
+                                android:text="Pay A Friend"
                                 android:textColor="@color/white"
-                                android:textSize="12sp" />
+                                android:textSize="11sp" />
                         </LinearLayout>
-                    </LinearLayout>
-                </RelativeLayout>
+                    </androidx.constraintlayout.widget.ConstraintLayout>
+                </LinearLayout>
 
-                <RelativeLayout
+                <!--Services-->
+                <androidx.recyclerview.widget.RecyclerView
+                    android:id="@+id/serviceRecyclerView"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_marginTop="20dp"
-                    android:background="@drawable/bg_8dp_white"
-                    android:padding="10dp">
+                    android:layout_marginTop="15dp"
+                    android:background="@drawable/bg_16dp_white"
+                    android:clipToPadding="false"
+                    android:nestedScrollingEnabled="false"
+                    android:padding="8dp" />
 
-                    <androidx.recyclerview.widget.RecyclerView
-                        android:id="@+id/servicesRecyclerView"
+                <!--Recent Transaction-->
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="15dp"
+                    android:background="@drawable/bg_16dp_white"
+                    android:orientation="vertical"
+                    android:paddingHorizontal="8dp"
+                    android:paddingVertical="10dp">
+
+                    <LinearLayout
+                        android:id="@+id/transactionContainer"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:clipToPadding="false" />
-                </RelativeLayout>
+                        android:gravity="center_vertical"
+                        android:orientation="horizontal">
+
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_gravity="start"
+                            android:fontFamily="@font/poppins_regular"
+                            android:includeFontPadding="false"
+                            android:text="Recent Transactions"
+                            android:textColor="@color/gray"
+                            android:textSize="12sp" />
+
+                        <Space
+                            android:layout_width="0dp"
+                            android:layout_height="0dp"
+                            android:layout_weight="1" />
+
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="match_parent"
+                            android:layout_marginEnd="4dp"
+                            android:fontFamily="@font/poppins_regular"
+                            android:includeFontPadding="false"
+                            android:text="View ALL"
+                            android:textColor="@color/gray"
+                            android:textSize="12sp" />
+
+                        <ImageView
+                            android:layout_width="12dp"
+                            android:layout_height="12dp"
+                            android:contentDescription="@null"
+                            android:src="@drawable/ic_arrow_forward"
+                            app:tint="@color/gray" />
+                    </LinearLayout>
+
+                    <androidx.recyclerview.widget.RecyclerView
+                        android:id="@+id/transactionsRecyclerView"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="5dp"
+                        android:clipToPadding="false"
+                        android:nestedScrollingEnabled="false" />
+                </LinearLayout>
+
+                <!--Promotion-->
+                <FrameLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="100dp"
+                    android:layout_marginTop="15dp"
+                    android:background="@drawable/bg_16dp_white">
+
+                    <androidx.viewpager2.widget.ViewPager2
+                        android:id="@+id/promoViewPager"
+                        android:layout_width="match_parent"
+                        android:layout_height="100dp" />
+
+                    <!--Dots Indicator-->
+                    <com.tbuonomo.viewpagerdotsindicator.DotsIndicator
+                        android:id="@+id/dotsIndicator"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="bottom|center_horizontal"
+                        android:layout_marginBottom="10dp"
+                        app:dotsColor="@color/gray"
+                        app:dotsSize="6dp"
+                        app:dotsSpacing="2dp"
+                        app:dotsWidthFactor="2.5"
+                        app:progressMode="false"
+                        app:selectedDotColor="@color/blue" />
+                </FrameLayout>
+
             </LinearLayout>
         </ScrollView>
-    </RelativeLayout>
+    </LinearLayout>
 
     <include
         layout="@layout/progressbar_overlay"

@@ -7,7 +7,7 @@ import androidx.lifecycle.ViewModel;
 import com.google.firebase.auth.FirebaseUser;
 import com.settlex.android.data.model.UserModel;
 import com.settlex.android.data.repository.AuthRepository;
-import com.settlex.android.dto.UserDto;
+import com.settlex.android.ui.auth.model.UserUiModel;
 import com.settlex.android.ui.auth.util.AuthResult;
 import com.settlex.android.ui.auth.util.Event;
 
@@ -24,7 +24,7 @@ public class AuthViewModel extends ViewModel {
     }
 
     // ====================== LIVEDATA STATE HOLDERS ======================
-    private final MutableLiveData<UserDto> userState = new MutableLiveData<>();
+    private final MutableLiveData<UserUiModel> userState = new MutableLiveData<>();
     private final MutableLiveData<UserModel> userLiveData = new MutableLiveData<>();
     private final MutableLiveData<AuthResult<String>> loginResult = new MutableLiveData<>();
     private final MutableLiveData<AuthResult<String>> registerResult = new MutableLiveData<>();
@@ -45,7 +45,7 @@ public class AuthViewModel extends ViewModel {
     public LiveData<Event<AuthResult<String>>> getVerifyEmailResetOtpResult() { return verifyEmailResetOtpResult; }
     public LiveData<Event<AuthResult<String>>> getSendEmailVerificationOtpResult() { return sendEmailVerificationOtpResult; }
     public LiveData<Event<AuthResult<String>>> getVerifyEmailVerificationOtpResult() { return verifyEmailVerificationOtpResult; }
-    public LiveData<UserDto> getUserState () {return userState; }
+    public LiveData<UserUiModel> getUserState () {return userState; }
 
     /**
      * Handles user registration flow including:
@@ -167,7 +167,7 @@ public class AuthViewModel extends ViewModel {
 
     public void updateUserState() {
         FirebaseUser currentUser = authRepo.getCurrentUser();
-        userState.setValue((currentUser != null) ? new UserDto(currentUser.getEmail(), currentUser.getDisplayName()) : null);
+        userState.setValue((currentUser != null) ? new UserUiModel(currentUser.getEmail(), currentUser.getDisplayName()) : null);
     }
 
     /**

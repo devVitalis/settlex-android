@@ -1,10 +1,10 @@
-package com.settlex.android.dto;
+package com.settlex.android.ui.auth.model;
 
-public class UserDto {
+public class UserUiModel {
     private final String email;
     private final String displayName;
 
-    public UserDto(String email, String displayName) {
+    public UserUiModel(String email, String displayName) {
         this.email = email;
         this.displayName = displayName;
     }

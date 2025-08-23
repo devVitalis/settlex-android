@@ -1,10 +1,13 @@
 package com.settlex.android.ui.dashboard.model;
 
-public class ServicesModel {
-    private String name;
-    private int iconResId;
+/**
+ * Data model representing a service item with display name and icon resource
+ */
+public class ServiceModel {
+    private final String name;
+    private final int iconResId;
 
-    public ServicesModel(String name, int iconResId) {
+    public ServiceModel(String name, int iconResId) {
         this.name = name;
         this.iconResId = iconResId;
     }

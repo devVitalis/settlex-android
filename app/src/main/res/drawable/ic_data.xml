@@ -1,15 +1,19 @@
-<vector xmlns:android="http://schemas.android.com/apk/res/android" android:height="24dp" android:viewportHeight="28" android:viewportWidth="28" android:width="24dp">
-      
-    <group>
-            
-        <clip-path android:pathData="M2,2h24v24h-24z"/>
-            
-        <path android:fillColor="#AF3ED6" android:pathData="M14,8C13.204,8 12.441,8.316 11.879,8.879C11.316,9.441 11,10.204 11,11V23C11,23.796 11.316,24.559 11.879,25.121C12.441,25.684 13.204,26 14,26C14.796,26 15.559,25.684 16.121,25.121C16.684,24.559 17,23.796 17,23V11C17,10.204 16.684,9.441 16.121,8.879C15.559,8.316 14.796,8 14,8Z"/>
-            
-        <path android:fillColor="#AF3ED6" android:pathData="M23,2C22.204,2 21.441,2.316 20.879,2.879C20.316,3.441 20,4.204 20,5V23C20,23.796 20.316,24.559 20.879,25.121C21.441,25.684 22.204,26 23,26C23.796,26 24.559,25.684 25.121,25.121C25.684,24.559 26,23.796 26,23V5C26,4.204 25.684,3.441 25.121,2.879C24.559,2.316 23.796,2 23,2Z"/>
-            
-        <path android:fillColor="#AF3ED6" android:pathData="M5,14C4.204,14 3.441,14.316 2.879,14.879C2.316,15.441 2,16.204 2,17L2,23C2,23.796 2.316,24.559 2.879,25.121C3.441,25.684 4.204,26 5,26C5.796,26 6.559,25.684 7.121,25.121C7.684,24.559 8,23.796 8,23V17C8,16.204 7.684,15.441 7.121,14.879C6.559,14.316 5.796,14 5,14Z"/>
-          
-    </group>
-    
+<vector xmlns:android="http://schemas.android.com/apk/res/android"
+    android:width="24dp"
+    android:height="24dp"
+    android:viewportWidth="32"
+    android:viewportHeight="32">
+
+    <path
+        android:fillColor="#AF3ED6"
+        android:pathData="M24.41,16.59a2,2 0,0 0,-2.83 0l-0.14,0.14L21,17.83V10a2,2 0,0 0,-4 0V22a2,2 0,0 0,3.41 1.41l4,-4A2,2 0,0 0,24.41 16.59Z" />
+
+    <path
+        android:fillColor="#AF3ED6"
+        android:pathData="M13.77,8.15a2,2 0,0 0,-2.18 0.43l-4,4a2,2 0,0 0,2.83 2.83l0.19,-0.19L11,14.1V22a2,2 0,0 0,4 0V10A2,2 0,0 0,13.77 8.15Z" />
+
+    <path
+        android:fillColor="#AF3ED6"
+        android:pathData="M16,1A15,15 0,1 0,31 16,15 15,0 0,0 16,1ZM16,27A11,11 0,1 1,27 16,11 11,0 0,1 16,27Z" />
+
 </vector>
