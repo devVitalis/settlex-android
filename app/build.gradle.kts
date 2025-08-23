@@ -67,9 +67,9 @@ dependencies {
     // Gson
     implementation(libs.gson)
 
-    // Retrofit
+    /** Retrofit
     implementation(libs.retrofit)
-    implementation(libs.converter.gson)
+    implementation(libs.converter.gson) */
 
     // Lottie
     implementation(libs.lottie)

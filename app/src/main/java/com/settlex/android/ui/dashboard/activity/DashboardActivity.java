@@ -10,10 +10,10 @@ import androidx.fragment.app.Fragment;
 
 import com.settlex.android.R;
 import com.settlex.android.databinding.ActivityDashboardBinding;
-import com.settlex.android.ui.dashboard.fragments.AccountFragment;
-import com.settlex.android.ui.dashboard.fragments.HomeFragment;
-import com.settlex.android.ui.dashboard.fragments.RewardsFragment;
-import com.settlex.android.ui.dashboard.fragments.ServicesFragment;
+import com.settlex.android.ui.dashboard.fragments.AccountDashboardFragment;
+import com.settlex.android.ui.dashboard.fragments.HomeDashboardFragment;
+import com.settlex.android.ui.dashboard.fragments.RewardsDashboardFragment;
+import com.settlex.android.ui.dashboard.fragments.ServicesDashboardFragment;
 
 public class DashboardActivity extends AppCompatActivity {
     private ActivityDashboardBinding binding;
@@ -24,25 +24,24 @@ public class DashboardActivity extends AppCompatActivity {
        binding = ActivityDashboardBinding.inflate(getLayoutInflater());
         setContentView(binding.getRoot());
 
-        setupStatusBar();
         disableItemColorTint();
 
         // Load default fragment
-        if (savedInstanceState == null) navigateToFragment(new HomeFragment());
+        if (savedInstanceState == null) navigateToFragment(new HomeDashboardFragment());
 
         // Navigation bar listener
         binding.bottomNavigationView.setOnItemSelectedListener(item -> {
             if (item.getItemId() == R.id.home) {
-                navigateToFragment(new HomeFragment());
+                navigateToFragment(new HomeDashboardFragment());
 
             } else if (item.getItemId() == R.id.services) {
-                navigateToFragment(new ServicesFragment());
+                navigateToFragment(new ServicesDashboardFragment());
 
             } else if (item.getItemId() == R.id.rewards) {
-                navigateToFragment(new RewardsFragment());
+                navigateToFragment(new RewardsDashboardFragment());
 
             } else if (item.getItemId() == R.id.account) {
-                navigateToFragment(new AccountFragment());
+                navigateToFragment(new AccountDashboardFragment());
             }
             return true;
         });
@@ -59,12 +58,5 @@ public class DashboardActivity extends AppCompatActivity {
                 .beginTransaction()
                 .replace(R.id.fragment_container, fragment)
                 .commit();
-    }
-
-    private void setupStatusBar() {
-        Window window = getWindow();
-        window.setStatusBarColor(ContextCompat.getColor(this, R.color.white));
-        View decorView = window.getDecorView();
-        decorView.setSystemUiVisibility(decorView.getSystemUiVisibility() | View.SYSTEM_UI_FLAG_LIGHT_STATUS_BAR);
     }
 }

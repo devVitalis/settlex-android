@@ -15,6 +15,7 @@ import com.settlex.android.data.local.session.SessionManager;
 import com.settlex.android.ui.Onboarding.activity.OnboardingActivity;
 import com.settlex.android.ui.auth.activity.PinLoginActivity;
 import com.settlex.android.ui.auth.activity.SignInActivity;
+import com.settlex.android.ui.dashboard.activity.DashboardActivity;
 
 /**
  * Handles app cold-start routing with splash screen animation.
@@ -47,7 +48,7 @@ public class SplashActivity extends AppCompatActivity {
 
         Class<? extends Activity> destination =
                 !prefs.isIntroViewed() ? OnboardingActivity.class :
-                        !session.isUserLoggedIn() || !session.hasPin() ? SignInActivity.class :
+                        !session.isUserLoggedIn() || !session.hasPin() ? DashboardActivity.class :
                                 PinLoginActivity.class;
 
         startActivity(new Intent(this, destination));

@@ -87,7 +87,7 @@
                     android:layout_gravity="start"
                     android:fontFamily="@font/poppins_regular"
                     android:includeFontPadding="false"
-                    android:text="Email Verification"
+                    android:text="Verify Your Email"
                     android:textColor="@color/black"
                     android:textSize="20sp"
                     android:textStyle="bold" />

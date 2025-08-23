@@ -36,8 +36,8 @@ public class OnboardingPage1Fragment extends Fragment {
     }
 
     private void styleHeaderTxt(){
-        String htmlText = "Pay <font color='#0044CC'>Bills</font> Without <font color='#0044CC'>Stress</font>";
-        binding.sectionHeader.setText(Html.fromHtml(htmlText, Html.FROM_HTML_MODE_LEGACY));
+        String htmlText = "PAY <font color='#0044CC'>BILLS</font> WITHOUT <font color='#0044CC'>STRESS</font>";
+        binding.header.setText(Html.fromHtml(htmlText, Html.FROM_HTML_MODE_LEGACY));
     }
 
     private void loadOptimizedImage() {

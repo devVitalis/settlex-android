@@ -35,8 +35,8 @@ public class OnboardingPage3Fragment extends Fragment {
     }
 
     private void styleHeaderTxt() {
-        String htmlText = "<font color='#0044CC'>Secure</font> By Design";
-        binding.sectionHeader.setText(Html.fromHtml(htmlText, Html.FROM_HTML_MODE_LEGACY));
+        String htmlText = "<font color='#0044CC'>SECURE</font> BY DESIGN";
+        binding.header.setText(Html.fromHtml(htmlText, Html.FROM_HTML_MODE_LEGACY));
     }
 
 

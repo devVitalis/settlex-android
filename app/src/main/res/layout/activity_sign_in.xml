@@ -11,45 +11,48 @@
     android:focusableInTouchMode="true"
     tools:context=".ui.auth.activity.SignInActivity">
 
-    <RelativeLayout
+    <!-- Main container -->
+    <LinearLayout
         android:layout_width="match_parent"
-        android:layout_height="match_parent">
+        android:layout_height="match_parent"
+        android:orientation="vertical">
 
-        <!--Header-->
-        <RelativeLayout
+        <!-- Header -->
+        <androidx.constraintlayout.widget.ConstraintLayout
             android:id="@+id/header"
             android:layout_width="match_parent"
             android:layout_height="35dp"
-            android:layout_alignParentTop="true">
+            android:paddingHorizontal="15dp">
 
+            <!-- Back button -->
             <ImageView
                 android:id="@+id/imgBackBefore"
                 android:layout_width="20dp"
                 android:layout_height="20dp"
-                android:layout_alignParentStart="true"
-                android:layout_centerVertical="true"
-                android:layout_marginStart="15dp"
-                android:contentDescription="Arrow Back"
-                android:scaleType="centerCrop"
-                android:src="@drawable/ic_arrow_back" />
+                android:contentDescription="Back"
+                android:src="@drawable/ic_arrow_back"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent" />
 
+            <!-- Help button -->
             <LinearLayout
                 android:id="@+id/btnHelp"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_alignParentEnd="true"
-                android:layout_centerVertical="true"
-                android:layout_marginEnd="15dp"
                 android:background="@drawable/bg_24dp_blue"
                 android:gravity="center"
                 android:orientation="horizontal"
                 android:paddingHorizontal="5dp"
-                android:paddingVertical="2dp">
+                android:paddingVertical="2dp"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintTop_toTopOf="parent">
 
                 <ImageView
                     android:layout_width="15dp"
                     android:layout_height="15dp"
-                    android:contentDescription="Help"
+                    android:contentDescription="@null"
                     android:src="@drawable/ic_help" />
 
                 <TextView
@@ -61,13 +64,13 @@
                     android:textColor="@color/white"
                     android:textSize="12sp" />
             </LinearLayout>
-        </RelativeLayout>
+        </androidx.constraintlayout.widget.ConstraintLayout>
 
-        <!--Scroll Layout-->
+        <!-- Scrollable content -->
         <ScrollView
             android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:layout_below="@+id/header"
+            android:layout_height="0dp"
+            android:layout_weight="1"
             android:fillViewport="true"
             android:scrollbars="none">
 
@@ -75,94 +78,79 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:orientation="vertical"
-                android:paddingStart="15dp"
-                android:paddingEnd="15dp">
+                android:paddingHorizontal="15dp">
 
-                <!--Logo-->
+                <!-- Logo -->
                 <ImageView
                     android:id="@+id/logo"
                     android:layout_width="70dp"
                     android:layout_height="70dp"
                     android:layout_gravity="center"
                     android:layout_marginTop="40dp"
-                    android:contentDescription="Logo"
-                    android:scaleType="fitCenter"
+                    android:contentDescription="@null"
                     android:src="@mipmap/ic_launcher" />
 
-                <!--User Account Layout-->
-                <RelativeLayout
+                <!-- User Info (Hidden)-->
+                <LinearLayout
                     android:id="@+id/showUserInfoLayout"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_marginTop="20dp"
-                    android:layout_marginBottom="20dp"
+                    android:layout_marginVertical="20dp"
+                    android:gravity="center"
+                    android:orientation="vertical"
                     android:visibility="gone">
 
                     <LinearLayout
                         android:id="@+id/userProfileBackground"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:layout_centerHorizontal="true"
                         android:background="@drawable/bg_oval_light_blue">
 
-                        <!--Avatar-->
                         <ImageView
                             android:id="@+id/userProfile"
                             android:layout_width="80dp"
                             android:layout_height="80dp"
-                            android:contentDescription="Avatar"
+                            android:contentDescription="Profile Picture"
                             android:src="@drawable/ic_avatar" />
                     </LinearLayout>
 
-                    <!--User DisplayName-->
                     <TextView
                         android:id="@+id/userDisplayName"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:layout_below="@id/userProfileBackground"
-                        android:layout_centerHorizontal="true"
                         android:layout_marginTop="10dp"
                         android:fontFamily="@font/poppins_regular"
                         android:includeFontPadding="false"
-                        android:text="Hi, メ • Ʋɨȶǟʟɨֆ"
-                        android:textAlignment="center"
                         android:textColor="@color/black"
-                        android:textSize="15sp" />
+                        android:textSize="15sp"
+                        tools:text="Hi, メ • Ʋɨȶǟʟɨֆ" />
 
                     <TextView
                         android:id="@+id/userEmail"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:layout_below="@id/userDisplayName"
-                        android:layout_centerHorizontal="true"
                         android:fontFamily="@font/poppins_regular"
                         android:includeFontPadding="false"
-                        android:text="(b***k@gmail.com)"
-                        android:textAlignment="center"
                         android:textColor="@color/black"
                         android:textSize="15sp"
-                        android:textStyle="bold" />
-                </RelativeLayout>
+                        android:textStyle="bold"
+                        tools:text="(b***k@gmail.com)" />
+                </LinearLayout>
 
-                <!--Email Field Background-->
+                <!-- Email -->
                 <com.google.android.material.textfield.TextInputLayout
                     android:id="@+id/txtInputLayoutEmail"
                     style="@style/Widget.SettleXApp.TextInputLayout.Outlined"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_gravity="center"
                     android:layout_marginTop="30dp"
-                    android:gravity="center"
                     android:hint="Enter your email address"
-                    android:orientation="horizontal"
                     app:endIconMode="clear_text">
 
                     <com.google.android.material.textfield.TextInputEditText
                         android:id="@+id/editTxtEmail"
                         android:layout_width="match_parent"
                         android:layout_height="55dp"
-                        android:focusable="false"
-                        android:focusableInTouchMode="false"
                         android:fontFamily="@font/poppins_regular"
                         android:gravity="start|center_vertical"
                         android:imeOptions="actionNext"
@@ -174,24 +162,19 @@
                         android:textSize="14sp" />
                 </com.google.android.material.textfield.TextInputLayout>
 
-                <!--Password Field Background-->
-                <RelativeLayout
+                <!-- Password -->
+                <FrameLayout
                     android:id="@+id/editTxtPasswordBackground"
                     android:layout_width="match_parent"
                     android:layout_height="55dp"
                     android:layout_marginTop="10dp"
-                    android:background="@drawable/bg_edit_txt_custom_gray_not_focused"
-                    android:focusable="true"
-                    android:focusableInTouchMode="true">
+                    android:background="@drawable/bg_edit_txt_custom_gray_not_focused">
 
-                    <!--Password field-->
                     <EditText
                         android:id="@+id/editTxtPassword"
                         android:layout_width="match_parent"
                         android:layout_height="match_parent"
                         android:background="@android:color/transparent"
-                        android:focusable="false"
-                        android:focusableInTouchMode="false"
                         android:fontFamily="@font/poppins_regular"
                         android:hint="Enter your password"
                         android:includeFontPadding="false"
@@ -205,20 +188,18 @@
                         android:id="@+id/passwordToggle"
                         android:layout_width="20dp"
                         android:layout_height="20dp"
-                        android:layout_alignParentEnd="true"
-                        android:layout_centerVertical="true"
-                        app:tint="@color/gray"
+                        android:layout_gravity="end|center_vertical"
                         android:layout_marginEnd="15dp"
                         android:src="@drawable/ic_visibility_off"
-                        android:visibility="gone" />
-                </RelativeLayout>
+                        android:visibility="gone"
+                        app:tint="@color/gray" />
+                </FrameLayout>
 
-                <!--Feedback-->
+                <!-- Error -->
                 <TextView
                     android:id="@+id/txtErrorFeedback"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_gravity="start"
                     android:layout_marginTop="5dp"
                     android:drawablePadding="2dp"
                     android:fontFamily="@font/poppins_regular"
@@ -230,7 +211,7 @@
                     android:visibility="gone"
                     app:drawableStartCompat="@drawable/ic_error" />
 
-                <!--Forgot Password TxT-->
+                <!-- Forgot Password -->
                 <TextView
                     android:id="@+id/btnForgotPassword"
                     android:layout_width="wrap_content"
@@ -238,25 +219,22 @@
                     android:layout_gravity="end"
                     android:layout_marginTop="10dp"
                     android:fontFamily="@font/poppins_regular"
-                    android:gravity="center"
-                    android:includeFontPadding="false"
                     android:text="Forgot Password?"
                     android:textColor="@color/blue"
                     android:textSize="12sp" />
 
-                <!--Login Btn-->
+                <!-- Login -->
                 <com.google.android.material.button.MaterialButton
                     android:id="@+id/btnSignIn"
                     style="@style/Widget.SettleXApp.Button.Filled.Blue"
                     android:layout_width="match_parent"
                     android:layout_height="55dp"
-                    android:layout_gravity="center"
-                    android:layout_marginHorizontal="15dp"
                     android:layout_marginTop="30dp"
                     android:enabled="false"
                     android:text="Sign in"
                     android:textSize="14sp" />
 
+                <!-- Biometrics -->
                 <LinearLayout
                     android:id="@+id/showBiometricsLayout"
                     android:layout_width="match_parent"
@@ -269,7 +247,7 @@
                     <ImageView
                         android:layout_width="20dp"
                         android:layout_height="20dp"
-                        android:contentDescription="Biometrics"
+                        android:contentDescription="@null"
                         android:src="@drawable/ic_biometrics"
                         app:tint="@color/blue" />
 
@@ -278,56 +256,49 @@
                         android:layout_height="wrap_content"
                         android:layout_marginStart="5dp"
                         android:fontFamily="@font/poppins_regular"
-                        android:gravity="center"
-                        android:includeFontPadding="false"
                         android:text="Use Biometrics"
                         android:textColor="@color/blue"
-                        android:textSize="14sp" />
+                        android:textSize="14sp"
+                        android:textStyle="bold" />
                 </LinearLayout>
             </LinearLayout>
         </ScrollView>
 
-        <!--Footer-->
-        <RelativeLayout
+        <!-- Footer -->
+        <FrameLayout
             android:layout_width="match_parent"
-            android:layout_height="100dp"
-            android:layout_alignParentBottom="true"
-            android:padding="5dp">
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:paddingVertical="20dp">
 
-            <!--Sign up navigation-->
             <TextView
                 android:id="@+id/btnSignUp"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_centerInParent="true"
-                android:layout_marginBottom="10dp"
+                android:layout_gravity="center"
                 android:fontFamily="@font/poppins_regular"
                 android:gravity="center"
-                android:includeFontPadding="false"
                 android:text="Don't have an account yet?\nClick here to register"
                 android:textColor="@color/black"
                 android:textSize="13sp" />
 
-            <!--Switch account navigation-->
             <TextView
                 android:id="@+id/btnSwitchAccount"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_centerInParent="true"
-                android:layout_marginBottom="10dp"
+                android:layout_gravity="center"
                 android:fontFamily="@font/poppins_regular"
                 android:gravity="center"
-                android:includeFontPadding="false"
                 android:text="Not you? Switch Account"
                 android:textColor="@color/black"
                 android:textSize="13sp"
                 android:visibility="gone" />
-        </RelativeLayout>
-    </RelativeLayout>
+        </FrameLayout>
+    </LinearLayout>
 
+    <!-- Progress overlay -->
     <include
         layout="@layout/progressbar_overlay"
         android:layout_width="match_parent"
         android:layout_height="match_parent" />
 </FrameLayout>
-

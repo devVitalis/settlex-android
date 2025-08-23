@@ -256,7 +256,7 @@
                 android:text="For your security, do not disclose this code to anyone; even if they claim to be from SettleX."
                 android:textColor="@color/gray_dark"
                 android:textSize="11sp"
-                app:drawableStartCompat="@drawable/ic_shield_check_protection"
+                app:drawableStartCompat="@drawable/ic_privacy_tip"
                 app:drawableTint="@color/blue" />
 
             <com.google.android.material.button.MaterialButton
