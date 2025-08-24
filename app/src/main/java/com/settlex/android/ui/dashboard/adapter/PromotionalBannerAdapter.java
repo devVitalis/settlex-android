@@ -12,10 +12,10 @@ import com.settlex.android.R;
 
 import java.util.List;
 
-public class PromoAdapter extends RecyclerView.Adapter<PromoAdapter.PromoViewHolder> {
+public class PromotionalBannerAdapter extends RecyclerView.Adapter<PromotionalBannerAdapter.PromoViewHolder> {
     private final List<Integer> promoBanners;
 
-    public PromoAdapter(List<Integer> promoBanners) {
+    public PromotionalBannerAdapter(List<Integer> promoBanners) {
         this.promoBanners = promoBanners;
     }
 

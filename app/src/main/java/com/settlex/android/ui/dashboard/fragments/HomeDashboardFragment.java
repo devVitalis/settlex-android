@@ -16,7 +16,7 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 
 import com.settlex.android.R;
 import com.settlex.android.databinding.FragmentDashboardHomeBinding;
-import com.settlex.android.ui.dashboard.adapter.PromoAdapter;
+import com.settlex.android.ui.dashboard.adapter.PromotionalBannerAdapter;
 import com.settlex.android.ui.dashboard.adapter.ServicesAdapter;
 import com.settlex.android.ui.dashboard.adapter.TransactionsAdapter;
 import com.settlex.android.ui.dashboard.components.GridSpacingItemDecoration;
@@ -109,7 +109,7 @@ public class HomeDashboardFragment extends Fragment {
                 R.drawable.promo_banner
         );
 
-        PromoAdapter adapter = new PromoAdapter(promos);
+        PromotionalBannerAdapter adapter = new PromotionalBannerAdapter(promos);
         binding.promoViewPager.setAdapter(adapter);
 
         // attach dots
