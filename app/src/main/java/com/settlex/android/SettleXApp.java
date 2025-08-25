@@ -4,7 +4,7 @@ import android.app.Application;
 import android.content.Context;
 
 import com.google.firebase.FirebaseApp;
-import com.settlex.android.util.NetworkMonitor;
+import com.settlex.android.util.network.NetworkMonitor;
 
 /**
  * Core application class managing global dependencies and context.

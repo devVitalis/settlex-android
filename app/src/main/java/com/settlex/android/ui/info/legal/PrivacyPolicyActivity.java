@@ -1,4 +1,4 @@
-package com.settlex.android.ui.activities.legal;
+package com.settlex.android.ui.info.legal;
 
 import android.os.Bundle;
 import android.text.Html;
@@ -7,23 +7,23 @@ import android.view.Window;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.content.ContextCompat;
 import com.settlex.android.R;
-import com.settlex.android.databinding.ActivityTermsAndConditionsBinding;
+import com.settlex.android.databinding.ActivityPrivacyPolicyBinding;
 
 /**
- * Displays the app's Terms & Conditions with HTML formatting.
- * Maintains consistent UI behavior with PrivacyPolicyActivity.
+ * Displays HTML-formatted privacy policy with light-themed status bar.
  */
-public class TermsAndConditionsActivity extends AppCompatActivity {
+public class PrivacyPolicyActivity extends AppCompatActivity {
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        ActivityTermsAndConditionsBinding binding = ActivityTermsAndConditionsBinding.inflate(getLayoutInflater());
+        ActivityPrivacyPolicyBinding binding = ActivityPrivacyPolicyBinding.inflate(getLayoutInflater());
         setContentView(binding.getRoot());
 
         setupStatusBar();
+
         binding.imgBackBefore.setOnClickListener(v -> finish());
-        binding.txtTermsAndConditions.setText(Html.fromHtml(getTermsHtml(), Html.FROM_HTML_MODE_LEGACY));
+        binding.txtPrivacyPolicy.setText(Html.fromHtml(getPolicyHtml(), Html.FROM_HTML_MODE_LEGACY));
     }
 
     private void setupStatusBar() {
@@ -34,7 +34,7 @@ public class TermsAndConditionsActivity extends AppCompatActivity {
         );
     }
 
-    private String getTermsHtml() {
+    private String getPolicyHtml() {
         return "Content";
     }
 }

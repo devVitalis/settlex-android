@@ -26,13 +26,13 @@ import androidx.fragment.app.Fragment;
 import androidx.lifecycle.ViewModelProvider;
 
 import com.settlex.android.R;
-import com.settlex.android.data.model.UserModel;
+import com.settlex.android.domain.model.UserModel;
 import com.settlex.android.databinding.FragmentSignUpUserPasswordBinding;
-import com.settlex.android.ui.activities.help.AuthHelpActivity;
+import com.settlex.android.ui.info.help.AuthHelpActivity;
 import com.settlex.android.ui.auth.viewmodel.AuthViewModel;
-import com.settlex.android.ui.common.SettleXProgressBarController;
+import com.settlex.android.ui.common.util.SettleXProgressBarController;
 import com.settlex.android.ui.dashboard.activity.DashboardActivity;
-import com.settlex.android.util.NetworkMonitor;
+import com.settlex.android.util.network.NetworkMonitor;
 
 import java.util.Objects;
 

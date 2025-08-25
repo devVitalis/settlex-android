@@ -1,4 +1,4 @@
-package com.settlex.android.ui.activities.splash;
+package com.settlex.android.ui.splash;
 
 import android.annotation.SuppressLint;
 import android.app.Activity;
@@ -14,7 +14,6 @@ import com.settlex.android.data.local.OnboardingPrefs;
 import com.settlex.android.data.local.session.SessionManager;
 import com.settlex.android.ui.Onboarding.activity.OnboardingActivity;
 import com.settlex.android.ui.auth.activity.PinLoginActivity;
-import com.settlex.android.ui.auth.activity.SignInActivity;
 import com.settlex.android.ui.dashboard.activity.DashboardActivity;
 
 /**

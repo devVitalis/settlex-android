@@ -1,4 +1,4 @@
-package com.settlex.android.ui.auth.components;
+package com.settlex.android.ui.common.components;
 
 import android.content.Context;
 import android.content.Intent;
@@ -24,8 +24,8 @@ import com.settlex.android.databinding.ActivityOtpVerificationBinding;
 import com.settlex.android.ui.auth.activity.PasswordChangeActivity;
 import com.settlex.android.ui.auth.util.AuthResult;
 import com.settlex.android.ui.auth.viewmodel.AuthViewModel;
-import com.settlex.android.ui.common.SettleXProgressBarController;
-import com.settlex.android.util.StringUtil;
+import com.settlex.android.ui.common.util.SettleXProgressBarController;
+import com.settlex.android.util.string.StringUtil;
 
 public class OtpVerificationActivity extends AppCompatActivity {
     private String userEmail;

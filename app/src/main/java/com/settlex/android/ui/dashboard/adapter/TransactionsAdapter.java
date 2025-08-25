@@ -10,8 +10,8 @@ import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.settlex.android.R;
-import com.settlex.android.ui.dashboard.model.TransactionModel;
-import com.settlex.android.util.StringUtil;
+import com.settlex.android.ui.dashboard.model.TransactionUiModel;
+import com.settlex.android.util.string.StringUtil;
 
 import java.util.List;
 
@@ -20,9 +20,9 @@ import java.util.List;
  */
 public class TransactionsAdapter extends RecyclerView.Adapter<TransactionsAdapter.TransactionViewHolder> {
 
-    private final List<TransactionModel> transactions;
+    private final List<TransactionUiModel> transactions;
 
-    public TransactionsAdapter(List<TransactionModel> transactions) {
+    public TransactionsAdapter(List<TransactionUiModel> transactions) {
         this.transactions = transactions;
     }
 
@@ -35,7 +35,7 @@ public class TransactionsAdapter extends RecyclerView.Adapter<TransactionsAdapte
 
     @Override
     public void onBindViewHolder(@NonNull TransactionViewHolder holder, int position) {
-        TransactionModel transaction = transactions.get(position);
+        TransactionUiModel transaction = transactions.get(position);
 
         // Set icon based on transaction type
         if ("credit".equalsIgnoreCase(transaction.getOperation())) {

@@ -7,7 +7,7 @@
     android:layout_height="match_parent"
     android:background="@color/white"
     android:fitsSystemWindows="true"
-    tools:context=".ui.auth.components.OtpVerificationActivity">
+    tools:context=".ui.common.components.OtpVerificationActivity">
 
     <!--Header-->
     <RelativeLayout
@@ -133,7 +133,7 @@
                 android:layout_marginTop="15dp"
                 android:orientation="horizontal">
 
-                <com.settlex.android.ui.custom.PinBoxEditText
+                <com.settlex.android.ui.common.custom.PinBoxEditText
                     android:id="@+id/otpDigit1"
                     style="@style/Widget.SettleXApp.EditText.PinBox"
                     android:inputType="number"
@@ -144,7 +144,7 @@
                     android:layout_height="0dp"
                     android:layout_weight="1" />
 
-                <com.settlex.android.ui.custom.PinBoxEditText
+                <com.settlex.android.ui.common.custom.PinBoxEditText
                     android:id="@+id/otpDigit2"
                     style="@style/Widget.SettleXApp.EditText.PinBox"
                     android:inputType="number"
@@ -155,7 +155,7 @@
                     android:layout_height="0dp"
                     android:layout_weight="1" />
 
-                <com.settlex.android.ui.custom.PinBoxEditText
+                <com.settlex.android.ui.common.custom.PinBoxEditText
                     android:id="@+id/otpDigit3"
                     style="@style/Widget.SettleXApp.EditText.PinBox"
                     android:inputType="number"
@@ -166,7 +166,7 @@
                     android:layout_height="0dp"
                     android:layout_weight="1" />
 
-                <com.settlex.android.ui.custom.PinBoxEditText
+                <com.settlex.android.ui.common.custom.PinBoxEditText
                     android:id="@+id/otpDigit4"
                     style="@style/Widget.SettleXApp.EditText.PinBox"
                     android:inputType="number"
@@ -177,7 +177,7 @@
                     android:layout_height="0dp"
                     android:layout_weight="1" />
 
-                <com.settlex.android.ui.custom.PinBoxEditText
+                <com.settlex.android.ui.common.custom.PinBoxEditText
                     android:id="@+id/otpDigit5"
                     style="@style/Widget.SettleXApp.EditText.PinBox"
                     android:inputType="number"
@@ -188,7 +188,7 @@
                     android:layout_height="0dp"
                     android:layout_weight="1" />
 
-                <com.settlex.android.ui.custom.PinBoxEditText
+                <com.settlex.android.ui.common.custom.PinBoxEditText
                     android:id="@+id/otpDigit6"
                     style="@style/Widget.SettleXApp.EditText.PinBox"
                     android:inputType="number"

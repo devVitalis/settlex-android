@@ -1,11 +1,11 @@
-package com.settlex.android.util.network;
+package com.settlex.android.data.remote.api;
 
 import android.os.Build;
 import android.os.Handler;
 import android.os.Looper;
 import android.util.Log;
 
-import com.settlex.android.util.network.dto.RequestMetadata;
+import com.settlex.android.data.remote.dto.MetadataDto;
 
 import org.json.JSONObject;
 
@@ -20,11 +20,11 @@ import java.net.URL;
  * Collects device information, network details, and geolocation data to provide
  * context for server-side request processing and analytics.
  */
-public class RequestMetadataService {
+public class MetadataService {
     private static final String TAG = "RequestMetadataService";
 
     public interface RequestMetadataServiceCallback {
-        void onResult(RequestMetadata metadata);
+        void onResult(MetadataDto metadata);
     }
 
     /**
@@ -38,7 +38,7 @@ public class RequestMetadataService {
      */
     public static void collectAsync(RequestMetadataServiceCallback callback) {
         new Thread(() -> {
-            RequestMetadata metadata = new RequestMetadata();
+            MetadataDto metadata = new MetadataDto();
 
             // Device information (always available)
             metadata.deviceBrand = safeValue(Build.BRAND);

@@ -23,13 +23,13 @@ import androidx.lifecycle.ViewModelProvider;
 
 import com.settlex.android.R;
 import com.settlex.android.databinding.ActivitySignInBinding;
-import com.settlex.android.ui.activities.help.AuthHelpActivity;
+import com.settlex.android.ui.info.help.AuthHelpActivity;
 import com.settlex.android.ui.auth.viewmodel.AuthViewModel;
-import com.settlex.android.ui.common.SettleXProgressBarController;
+import com.settlex.android.ui.common.util.SettleXProgressBarController;
 import com.settlex.android.ui.dashboard.activity.DashboardActivity;
-import com.settlex.android.util.NetworkMonitor;
-import com.settlex.android.util.StringUtil;
-import com.settlex.android.util.UiUtil;
+import com.settlex.android.util.network.NetworkMonitor;
+import com.settlex.android.util.string.StringUtil;
+import com.settlex.android.util.ui.UiUtil;
 
 import java.util.Objects;
 

@@ -25,10 +25,9 @@ import com.settlex.android.R;
 import com.settlex.android.databinding.FragmentSignUpEmailVerificationBinding;
 import com.settlex.android.ui.auth.util.AuthResult;
 import com.settlex.android.ui.auth.viewmodel.AuthViewModel;
-import com.settlex.android.ui.common.SettleXProgressBarController;
-import com.settlex.android.util.NetworkMonitor;
-import com.settlex.android.util.StringUtil;
-import com.settlex.android.util.UiUtil;
+import com.settlex.android.ui.common.util.SettleXProgressBarController;
+import com.settlex.android.util.network.NetworkMonitor;
+import com.settlex.android.util.string.StringUtil;
 
 public class SignUpEmailVerificationFragment extends Fragment {
 

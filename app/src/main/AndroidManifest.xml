@@ -20,7 +20,7 @@
             android:name=".ui.auth.activity.PasswordChangeActivity"
             android:exported="false" />
         <activity
-            android:name=".ui.auth.components.OtpVerificationActivity"
+            android:name=".ui.common.components.OtpVerificationActivity"
             android:exported="false" />
         <activity
             android:name=".ui.auth.activity.PasswordResetActivity"
@@ -29,13 +29,13 @@
             android:name=".ui.dashboard.activity.DashboardActivity"
             android:exported="false" />
         <activity
-            android:name=".ui.activities.legal.PrivacyPolicyActivity"
+            android:name=".ui.info.legal.PrivacyPolicyActivity"
             android:exported="false" />
         <activity
-            android:name=".ui.activities.legal.TermsAndConditionsActivity"
+            android:name=".ui.info.legal.TermsAndConditionsActivity"
             android:exported="false" />
         <activity
-            android:name=".ui.activities.help.AuthHelpActivity"
+            android:name=".ui.info.help.AuthHelpActivity"
             android:exported="false" />
         <activity
             android:name=".ui.auth.activity.PinLoginActivity"
@@ -50,7 +50,7 @@
             android:name=".ui.Onboarding.activity.OnboardingActivity"
             android:exported="false" />
         <activity
-            android:name=".ui.activities.splash.SplashActivity"
+            android:name=".ui.splash.SplashActivity"
             android:exported="true"
             android:theme="@style/Theme.SettleX.Splash">
             <intent-filter>

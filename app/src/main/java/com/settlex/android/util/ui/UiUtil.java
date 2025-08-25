@@ -1,4 +1,4 @@
-package com.settlex.android.util;
+package com.settlex.android.util.ui;
 
 import android.content.Context;
 import android.view.LayoutInflater;

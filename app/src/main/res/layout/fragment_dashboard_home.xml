@@ -25,8 +25,8 @@
 
             <ImageView
                 android:id="@+id/userProfilePic"
-                android:layout_width="65dp"
-                android:layout_height="65dp"
+                android:layout_width="55dp"
+                android:layout_height="55dp"
                 android:src="@drawable/ic_avatar"
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
@@ -56,14 +56,14 @@
                     android:layout_height="wrap_content"
                     android:fontFamily="@font/poppins_regular"
                     android:includeFontPadding="false"
-                    android:text="Nnaemeka Benjamin"
                     android:textColor="@color/black"
                     android:textSize="14sp"
-                    android:textStyle="bold" />
+                    android:textStyle="bold"
+                    tools:text="Nnaemeka Benjamin" />
             </LinearLayout>
 
             <!--Notification Layout-->
-            <FrameLayout
+            <androidx.constraintlayout.widget.ConstraintLayout
                 android:layout_width="40dp"
                 android:layout_height="40dp"
                 android:background="@drawable/bg_oval_semi_transparent_black"
@@ -72,17 +72,22 @@
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintTop_toTopOf="parent">
 
+                <!-- Bell Icon -->
                 <ImageView
                     android:id="@+id/notification"
-                    android:layout_width="30dp"
-                    android:layout_height="30dp"
-                    android:src="@drawable/ic_notifications" />
+                    android:layout_width="25dp"
+                    android:layout_height="25dp"
+                    android:src="@drawable/ic_notifications"
+                    app:layout_constraintBottom_toBottomOf="parent"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toTopOf="parent" />
 
+                <!-- Red Badge -->
                 <TextView
                     android:id="@+id/unreadNotificationBadge"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_gravity="top|end"
                     android:background="@drawable/bg_oval_red"
                     android:gravity="center"
                     android:includeFontPadding="false"
@@ -90,8 +95,10 @@
                     android:minHeight="12dp"
                     android:text="1"
                     android:textColor="@color/white"
-                    android:textSize="9sp" />
-            </FrameLayout>
+                    android:textSize="9sp"
+                    app:layout_constraintEnd_toEndOf="@id/notification"
+                    app:layout_constraintTop_toTopOf="@id/notification" />
+            </androidx.constraintlayout.widget.ConstraintLayout>
         </androidx.constraintlayout.widget.ConstraintLayout>
 
         <!--Scroll Layout-->
@@ -210,12 +217,12 @@
                             android:layout_height="wrap_content"
                             android:layout_marginTop="10dp"
                             android:includeFontPadding="false"
-                            android:text="₦2,540.00"
                             android:textColor="@color/white"
                             android:textSize="20sp"
                             android:textStyle="bold"
                             app:layout_constraintStart_toStartOf="@id/protection"
-                            app:layout_constraintTop_toBottomOf="@id/balanceTitle" />
+                            app:layout_constraintTop_toBottomOf="@id/balanceTitle"
+                            tools:text="₦2,540.00" />
 
                         <!-- Commission stack -->
                         <LinearLayout
@@ -240,10 +247,10 @@
                                 android:layout_height="wrap_content"
                                 android:layout_marginTop="10dp"
                                 android:includeFontPadding="false"
-                                android:text="₦534.18"
                                 android:textColor="@color/white"
                                 android:textSize="20sp"
-                                android:textStyle="bold" />
+                                android:textStyle="bold"
+                                tools:text="₦534.18" />
                         </LinearLayout>
                     </androidx.constraintlayout.widget.ConstraintLayout>
 

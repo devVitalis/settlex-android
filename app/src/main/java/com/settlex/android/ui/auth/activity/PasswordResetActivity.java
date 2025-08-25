@@ -19,11 +19,11 @@ import androidx.lifecycle.ViewModelProvider;
 
 import com.settlex.android.R;
 import com.settlex.android.databinding.ActivityPasswordResetBinding;
-import com.settlex.android.ui.auth.components.OtpVerificationActivity;
+import com.settlex.android.ui.common.components.OtpVerificationActivity;
 import com.settlex.android.ui.auth.util.AuthResult;
 import com.settlex.android.ui.auth.viewmodel.AuthViewModel;
-import com.settlex.android.ui.common.SettleXProgressBarController;
-import com.settlex.android.util.NetworkMonitor;
+import com.settlex.android.ui.common.util.SettleXProgressBarController;
+import com.settlex.android.util.network.NetworkMonitor;
 
 /**
  * Handles password reset initiation flow:

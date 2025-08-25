@@ -21,9 +21,9 @@ import androidx.lifecycle.ViewModelProvider;
 
 import com.settlex.android.R;
 import com.settlex.android.databinding.FragmentSignupUserInfoBinding;
-import com.settlex.android.ui.activities.help.AuthHelpActivity;
+import com.settlex.android.ui.info.help.AuthHelpActivity;
 import com.settlex.android.ui.auth.viewmodel.AuthViewModel;
-import com.settlex.android.util.StringUtil;
+import com.settlex.android.util.string.StringUtil;
 
 import java.util.Objects;
 

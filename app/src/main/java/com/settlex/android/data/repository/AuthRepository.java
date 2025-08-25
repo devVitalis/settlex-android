@@ -12,8 +12,8 @@ import com.google.firebase.auth.UserProfileChangeRequest;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.functions.FirebaseFunctions;
 import com.google.gson.Gson;
-import com.settlex.android.data.model.UserModel;
-import com.settlex.android.util.network.RequestMetadataService;
+import com.settlex.android.domain.model.UserModel;
+import com.settlex.android.data.remote.api.MetadataService;
 
 import java.io.IOException;
 import java.util.HashMap;
@@ -188,7 +188,7 @@ public class AuthRepository {
      * Securely updates password with device metadata for fraud detection
      */
     public void resetPassword(String email, String newPassword, ChangePasswordCallback callback) {
-        RequestMetadataService.collectAsync(metadata -> {
+        MetadataService.collectAsync(metadata -> {
             Map<String, Object> data = new HashMap<>();
             data.put("email", email);
             data.put("newPassword", newPassword);

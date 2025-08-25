@@ -1,4 +1,4 @@
-package com.settlex.android.ui.common;
+package com.settlex.android.ui.common.util;
 
 import android.animation.AnimatorSet;
 import android.animation.ObjectAnimator;

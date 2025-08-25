@@ -1,4 +1,4 @@
-package com.settlex.android.data.model;
+package com.settlex.android.domain.model;
 
 /**
  * Represents a user entity with personal and security data.

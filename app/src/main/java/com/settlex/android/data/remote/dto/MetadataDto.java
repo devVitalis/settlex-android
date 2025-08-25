@@ -1,6 +1,6 @@
-package com.settlex.android.util.network.dto;
+package com.settlex.android.data.remote.dto;
 
-public class RequestMetadata {
+public class MetadataDto {
     public String publicIp;
     public String city;
     public String country;

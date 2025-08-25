@@ -3,13 +3,13 @@ package com.settlex.android.ui.dashboard.model;
 /**
  * Record class model representing a transaction item
  */
-public class TransactionModel {
+public class TransactionUiModel {
 
     private String title, operation, status;
     double amount;
     long dateTime;
 
-    public TransactionModel(String title, String operation, double amount, String status, long dateTime) {
+    public TransactionUiModel(String title, String operation, double amount, String status, long dateTime) {
         this.title = title;
         this.operation = operation;
         this.amount = amount;

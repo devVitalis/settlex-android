@@ -1,5 +1,6 @@
-package com.settlex.android.util;
+package com.settlex.android.util.string;
 
+import java.text.DecimalFormat;
 import java.text.NumberFormat;
 import java.text.SimpleDateFormat;
 import java.util.Date;
@@ -67,18 +68,18 @@ public class StringUtil {
         return formatter.format(amount);
     }
 
-
     public static String formatToNairaShort(double amount) {
         String symbol = "₦";
 
         if (amount < 1_000) {
-            return symbol + ((int) amount);
+            // Show up to 2 decimals for small amounts
+            return symbol + new DecimalFormat("#.##").format(amount);
         } else if (amount < 1_000_000) {
-            return symbol + trimTrailingZeros(amount / 1_000.0) + "K";
+            return symbol + new DecimalFormat("#.##").format(amount / 1_000.0) + "K";
         } else if (amount < 1_000_000_000) {
-            return symbol + trimTrailingZeros(amount / 1_000_000.0) + "M";
+            return symbol + new DecimalFormat("#.##").format(amount / 1_000_000.0) + "M";
         } else {
-            return symbol + trimTrailingZeros(amount / 1_000_000_000.0) + "B";
+            return symbol + new DecimalFormat("#.##").format(amount / 1_000_000_000.0) + "B";
         }
     }
 
@@ -86,14 +87,5 @@ public class StringUtil {
     public static String formatTimeStamp(long dateTime) {
         return new SimpleDateFormat("dd MMM yyyy, HH:mm", Locale.US)
                 .format(new Date(dateTime));
-    }
-
-    // ====================== PRIVATE HELPERS ======================
-    private static String trimTrailingZeros(double value) {
-        if (value == (long) value) {
-            return String.valueOf((long) value);
-        } else {
-            return String.format(Locale.ENGLISH, "%.1f", value);
-        }
     }
 }
