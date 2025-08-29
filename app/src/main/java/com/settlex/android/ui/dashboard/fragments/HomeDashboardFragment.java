@@ -1,6 +1,7 @@
 package com.settlex.android.ui.dashboard.fragments;
 
 import android.os.Bundle;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -9,6 +10,7 @@ import android.widget.Toast;
 
 import androidx.activity.OnBackPressedCallback;
 import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
 import androidx.core.content.ContextCompat;
 import androidx.fragment.app.Fragment;
 import androidx.lifecycle.ViewModelProvider;
@@ -18,21 +20,23 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import com.settlex.android.R;
 import com.settlex.android.databinding.FragmentDashboardHomeBinding;
 import com.settlex.android.ui.auth.viewmodel.AuthViewModel;
+import com.settlex.android.ui.common.util.SettleXProgressBarController;
 import com.settlex.android.ui.dashboard.adapter.PromotionalBannerAdapter;
 import com.settlex.android.ui.dashboard.adapter.ServicesAdapter;
 import com.settlex.android.ui.dashboard.adapter.TransactionsAdapter;
 import com.settlex.android.ui.dashboard.components.GridSpacingItemDecoration;
 import com.settlex.android.ui.dashboard.model.ServiceUiModel;
-import com.settlex.android.ui.dashboard.model.TransactionUiModel;
+import com.settlex.android.ui.dashboard.util.TxnIdGenerator;
 import com.settlex.android.ui.dashboard.viewmodel.DashboardViewModel;
+import com.settlex.android.util.event.Result;
 
 import java.util.Arrays;
-import java.util.Date;
 import java.util.List;
 
 public class HomeDashboardFragment extends Fragment {
     private long backPressedTime;
-
+    private String currentUserUid;
+    private SettleXProgressBarController progressBarController;
     private FragmentDashboardHomeBinding binding;
     private DashboardViewModel dashboardViewModel;
     private AuthViewModel authViewModel;
@@ -54,6 +58,7 @@ public class HomeDashboardFragment extends Fragment {
 
         dashboardViewModel = new ViewModelProvider(requireActivity()).get(DashboardViewModel.class);
         authViewModel = new ViewModelProvider(requireActivity()).get(AuthViewModel.class);
+        progressBarController = new SettleXProgressBarController(binding.getRoot());
 
         setupStatusBar();
         setupUiActions();
@@ -61,52 +66,97 @@ public class HomeDashboardFragment extends Fragment {
         return binding.getRoot();
     }
 
+    @Override
+    public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
+        super.onViewCreated(view, savedInstanceState);
+
+        observePayFriendResult();
+    }
+
     // ======================= SETUP UI COMPONENTS =======================
     private void setupUiActions() {
-        setupDoubleBackToExit();
-        loadServices();
-        loadPromoBanners();
-        loadRecentTransactions();
-
         observeUserState();
+
+        loadServices();
+        loadPromotionalBanners();
+        setupTxnRecyclerViewLayoutManager();
+        setupDoubleBackToExit();
+
+        binding.payAFriend.setOnClickListener(view -> dashboardViewModel.payFriend(
+                currentUserUid,
+                "benjamin213",
+                TxnIdGenerator.generate("benjamin213"),
+                150000,
+                "SEND_MONEY",
+                "Payment"
+        ));
     }
 
     // ========================== OBSERVERS ============================
     private void observeUserState() {
         authViewModel.getUserState().observe(getViewLifecycleOwner(), userState -> {
             if (userState == null) {
-                Toast.makeText(requireActivity(), "User is null", Toast.LENGTH_LONG).show();
                 // Show logged out layout
                 return;
             }
-            Toast.makeText(requireActivity(), "User is initialize", Toast.LENGTH_LONG).show();
             // User is logged in fetch data
-            observeUserData(userState.getUid());
+            currentUserUid = userState.getUid();
+            observeAndDisplayUserData(currentUserUid);
+            observeAndLoadRecentTransactions(currentUserUid);
         });
-
     }
 
-    private void observeUserData(String uid) {
+    private void observeAndDisplayUserData(String uid) {
         dashboardViewModel.getUser(uid).observe(getViewLifecycleOwner(), userData -> {
             if (userData != null) {
-                showUserDetails(
-                        userData.getFirstName() + " " + userData.getLastName(),
-                        userData.getBalance(),
-                        userData.getCommissionBalance()
-                );
+                binding.userDisplayName.setText(userData.getUserFullName());
+                binding.userBalance.setText(userData.getBalance());
+                binding.userCommissionBalance.setText(userData.getCommissionBalance());
             }
         });
-
     }
 
-    private void showUserDetails(String name, String balance, String commissionBalance) {
-        binding.userDisplayName.setText(name);
-        binding.userBalance.setText(balance);
-        binding.userCommissionBalance.setText(commissionBalance);
+    private void observeAndLoadRecentTransactions(String uid) {
+        int MAX_TXN_DISPLAY = 5;
+        dashboardViewModel.getTransactions(uid, MAX_TXN_DISPLAY).observe(getViewLifecycleOwner(), transactions -> {
+            if (transactions != null && !transactions.isEmpty()) {
+                TransactionsAdapter adapter = new TransactionsAdapter(transactions);
+                binding.transactionsRecyclerView.setAdapter(adapter);
+                binding.transactionContainer.setVisibility(View.VISIBLE);
+            }
+        });
     }
 
+    private void observePayFriendResult() {
+        dashboardViewModel.getPayFriendResult().observe(getViewLifecycleOwner(), event -> {
+            Result<String> result = event.getContentIfNotHandled();
+            if (result != null) {
+                switch (result.getStatus()) {
+                    case LOADING -> progressBarController.hide();
+                    case SUCCESS -> onPaySuccess();
+                    case ERROR -> onPayFailure(result.getMessage());
+                }
+            }
+        });
+    }
+
+    private void onPaySuccess() {
+        Toast.makeText(requireContext(), "Payment success", Toast.LENGTH_LONG).show();
+        progressBarController.hide();
+    }
+
+    private void onPayFailure(String error) {
+        Toast.makeText(requireContext(), error, Toast.LENGTH_LONG).show();
+        progressBarController.hide();
+    }
 
     // ======================== PREVIEW TOOLS (DELETE LATER) ==========================
+    private void setupTxnRecyclerViewLayoutManager() {
+        LinearLayoutManager txnLayoutManager = new LinearLayoutManager(getContext());
+        txnLayoutManager.setOrientation(LinearLayoutManager.VERTICAL);
+        binding.transactionsRecyclerView.setLayoutManager(txnLayoutManager);
+    }
+
     private void loadServices() {
         binding.awareness.setSelected(true);
 
@@ -120,7 +170,7 @@ public class HomeDashboardFragment extends Fragment {
                 new ServiceUiModel("Airtime", R.drawable.ic_airtime),
                 new ServiceUiModel("Data", R.drawable.ic_data),
                 new ServiceUiModel("Betting", R.drawable.ic_betting),
-                new ServiceUiModel("TV", R.drawable.ic_tv),
+                new ServiceUiModel("TV", R.drawable.ic_cable_tv),
                 new ServiceUiModel("Electricity", R.drawable.ic_electricity),
                 new ServiceUiModel("Internet", R.drawable.ic_internet),
                 new ServiceUiModel("Gift Card", R.drawable.ic_gift_card),
@@ -130,24 +180,8 @@ public class HomeDashboardFragment extends Fragment {
         binding.serviceRecyclerView.setAdapter(adapter);
     }
 
-    private void loadRecentTransactions() {
-        LinearLayoutManager layoutManager = new LinearLayoutManager(requireActivity());
-        layoutManager.setOrientation(LinearLayoutManager.VERTICAL);
-        binding.transactionsRecyclerView.setLayoutManager(layoutManager);
-
-        List<TransactionUiModel> transactions = Arrays.asList(
-                new TransactionUiModel("Add Money", "credit", 200000, "Success", new Date().getTime()),
-                new TransactionUiModel("Send Money", "debit/send", 3000, "Success", new Date().getTime()),
-                new TransactionUiModel("Receive Money", "received", 1567.34, "Success", new Date().getTime())
-        );
-        TransactionsAdapter adapter = new TransactionsAdapter(transactions);
-        binding.transactionsRecyclerView.setAdapter(adapter);
-    }
-
-    private void loadPromoBanners() {
-        // Example images in drawable
+    private void loadPromotionalBanners() {
         List<Integer> promos = Arrays.asList(
-                R.drawable.promo_banner,
                 R.drawable.promo_banner,
                 R.drawable.promo_banner,
                 R.drawable.promo_banner
@@ -159,7 +193,6 @@ public class HomeDashboardFragment extends Fragment {
         // attach dots
         binding.dotsIndicator.attachTo(binding.promoViewPager);
     }
-
 
     private void setupDoubleBackToExit() {
         requireActivity().getOnBackPressedDispatcher().addCallback(getViewLifecycleOwner(), new OnBackPressedCallback(true) {

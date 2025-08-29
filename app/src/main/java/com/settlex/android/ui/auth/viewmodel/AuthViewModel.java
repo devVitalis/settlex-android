@@ -8,8 +8,8 @@ import com.google.firebase.auth.FirebaseUser;
 import com.settlex.android.domain.model.UserModel;
 import com.settlex.android.data.repository.AuthRepository;
 import com.settlex.android.ui.auth.model.AuthUserUiModel;
-import com.settlex.android.ui.auth.util.AuthResult;
-import com.settlex.android.ui.auth.util.Event;
+import com.settlex.android.util.event.Result;
+import com.settlex.android.util.event.Event;
 
 /**
  * Manages authentication state and coordinates between UI and data layer.
@@ -26,25 +26,25 @@ public class AuthViewModel extends ViewModel {
     // ====================== LIVEDATA STATE HOLDERS ======================
     private final MutableLiveData<AuthUserUiModel> userState = new MutableLiveData<>();
     private final MutableLiveData<UserModel> userLiveData = new MutableLiveData<>();
-    private final MutableLiveData<AuthResult<String>> loginResult = new MutableLiveData<>();
-    private final MutableLiveData<AuthResult<String>> registerResult = new MutableLiveData<>();
-    private final MutableLiveData<AuthResult<Boolean>> emailExistenceResult = new MutableLiveData<>();
-    private final MutableLiveData<Event<AuthResult<String>>> passwordResetResult = new MutableLiveData<>();
-    private final MutableLiveData<Event<AuthResult<String>>> sendEmailResetOtpResult = new MutableLiveData<>();
-    private final MutableLiveData<Event<AuthResult<String>>> verifyEmailResetOtpResult = new MutableLiveData<>();
-    private final MutableLiveData<Event<AuthResult<String>>> sendEmailVerificationOtpResult = new MutableLiveData<>();
-    private final MutableLiveData<Event<AuthResult<String>>> verifyEmailVerificationOtpResult = new MutableLiveData<>();
+    private final MutableLiveData<Result<String>> loginResult = new MutableLiveData<>();
+    private final MutableLiveData<Result<String>> registerResult = new MutableLiveData<>();
+    private final MutableLiveData<Result<Boolean>> emailExistenceResult = new MutableLiveData<>();
+    private final MutableLiveData<Event<Result<String>>> passwordResetResult = new MutableLiveData<>();
+    private final MutableLiveData<Event<Result<String>>> sendEmailResetOtpResult = new MutableLiveData<>();
+    private final MutableLiveData<Event<Result<String>>> verifyEmailResetOtpResult = new MutableLiveData<>();
+    private final MutableLiveData<Event<Result<String>>> sendEmailVerificationOtpResult = new MutableLiveData<>();
+    private final MutableLiveData<Event<Result<String>>> verifyEmailVerificationOtpResult = new MutableLiveData<>();
 
     // ====================== LIVEDATA GETTERS ======================
     public LiveData<UserModel> getUser() { return userLiveData; }
-    public LiveData<AuthResult<String>> getRegisterResult() { return registerResult; }
-    public LiveData<AuthResult<String>> getLoginResult() { return loginResult; }
-    public LiveData<Event<AuthResult<String>>> getPasswordResetResult() { return passwordResetResult; }
-    public LiveData<Event<AuthResult<String>>> getSendEmailResetOtpResult() { return sendEmailResetOtpResult; }
-    public LiveData<AuthResult<Boolean>> getEmailExistenceResult() { return emailExistenceResult; }
-    public LiveData<Event<AuthResult<String>>> getVerifyEmailResetOtpResult() { return verifyEmailResetOtpResult; }
-    public LiveData<Event<AuthResult<String>>> getSendEmailVerificationOtpResult() { return sendEmailVerificationOtpResult; }
-    public LiveData<Event<AuthResult<String>>> getVerifyEmailVerificationOtpResult() { return verifyEmailVerificationOtpResult; }
+    public LiveData<Result<String>> getRegisterResult() { return registerResult; }
+    public LiveData<Result<String>> getLoginResult() { return loginResult; }
+    public LiveData<Event<Result<String>>> getPasswordResetResult() { return passwordResetResult; }
+    public LiveData<Event<Result<String>>> getSendEmailResetOtpResult() { return sendEmailResetOtpResult; }
+    public LiveData<Result<Boolean>> getEmailExistenceResult() { return emailExistenceResult; }
+    public LiveData<Event<Result<String>>> getVerifyEmailResetOtpResult() { return verifyEmailResetOtpResult; }
+    public LiveData<Event<Result<String>>> getSendEmailVerificationOtpResult() { return sendEmailVerificationOtpResult; }
+    public LiveData<Event<Result<String>>> getVerifyEmailVerificationOtpResult() { return verifyEmailVerificationOtpResult; }
     public LiveData<AuthUserUiModel> getUserState () {return userState; }
 
     /**
@@ -54,10 +54,10 @@ public class AuthViewModel extends ViewModel {
      * - Error state management
      */
     public void registerUser(String email, String password, UserModel user) {
-        registerResult.postValue(AuthResult.loading());
+        registerResult.postValue(Result.loading());
         authRepo.registerUser(user, email, password, new AuthRepository.RegisterCallback() {
-            @Override public void onSuccess() { registerResult.postValue(AuthResult.success("")); }
-            @Override public void onFailure(String reason) { registerResult.postValue(AuthResult.error(reason)); }
+            @Override public void onSuccess() { registerResult.postValue(Result.success("")); }
+            @Override public void onFailure(String reason) { registerResult.postValue(Result.error(reason)); }
         });
     }
 
@@ -68,10 +68,10 @@ public class AuthViewModel extends ViewModel {
      * - Error handling for invalid attempts
      */
     public void loginWithEmail(String email, String password) {
-        loginResult.postValue(AuthResult.loading());
+        loginResult.postValue(Result.loading());
         authRepo.loginWithEmail(email, password, new AuthRepository.LoginCallback() {
-            @Override public void onSuccess() { loginResult.postValue(AuthResult.success("")); }
-            @Override public void onFailure(String reason) { loginResult.postValue(AuthResult.error(reason)); }
+            @Override public void onSuccess() { loginResult.postValue(Result.success("")); }
+            @Override public void onFailure(String reason) { loginResult.postValue(Result.error(reason)); }
         });
     }
 
@@ -82,26 +82,26 @@ public class AuthViewModel extends ViewModel {
      * 3. Secure password update
      */
     public void sendPasswordResetOtp(String email) {
-        sendEmailResetOtpResult.postValue(new Event<>(AuthResult.loading()));
+        sendEmailResetOtpResult.postValue(new Event<>(Result.loading()));
         authRepo.sendEmailPasswordResetOtp(email, new AuthRepository.SendOtpCallback() {
-            @Override public void onSuccess() { sendEmailResetOtpResult.postValue(new Event<>(AuthResult.success("OTP Sent"))); }
-            @Override public void onFailure(String reason) { sendEmailResetOtpResult.postValue(new Event<>(AuthResult.error(reason))); }
+            @Override public void onSuccess() { sendEmailResetOtpResult.postValue(new Event<>(Result.success("OTP Sent"))); }
+            @Override public void onFailure(String reason) { sendEmailResetOtpResult.postValue(new Event<>(Result.error(reason))); }
         });
     }
 
     public void verifyPasswordResetOtp(String email, String otp) {
-        verifyEmailResetOtpResult.postValue(new Event<>(AuthResult.loading()));
+        verifyEmailResetOtpResult.postValue(new Event<>(Result.loading()));
         authRepo.verifyEmailPasswordResetOtp(email, otp, new AuthRepository.VerifyOtpCallback() {
-            @Override public void onSuccess() { verifyEmailResetOtpResult.postValue(new Event<>(AuthResult.success(""))); }
-            @Override public void onFailure(String reason) { verifyEmailResetOtpResult.postValue(new Event<>(AuthResult.error(reason))); }
+            @Override public void onSuccess() { verifyEmailResetOtpResult.postValue(new Event<>(Result.success(""))); }
+            @Override public void onFailure(String reason) { verifyEmailResetOtpResult.postValue(new Event<>(Result.error(reason))); }
         });
     }
 
     public void requestPasswordReset(String email, String newPassword) {
-        passwordResetResult.postValue(new Event<>(AuthResult.loading()));
+        passwordResetResult.postValue(new Event<>(Result.loading()));
         authRepo.resetPassword(email, newPassword, new AuthRepository.ChangePasswordCallback() {
-            @Override public void onSuccess() { passwordResetResult.postValue(new Event<>(AuthResult.success(""))); }
-            @Override public void onFailure(String reason) { passwordResetResult.postValue(new Event<>(AuthResult.error(reason))); }
+            @Override public void onSuccess() { passwordResetResult.postValue(new Event<>(Result.success(""))); }
+            @Override public void onFailure(String reason) { passwordResetResult.postValue(new Event<>(Result.error(reason))); }
         });
     }
 
@@ -109,18 +109,18 @@ public class AuthViewModel extends ViewModel {
      * Manages email verification flow for new registrations
      */
     public void sendEmailVerificationOtp(String email) {
-        sendEmailVerificationOtpResult.postValue(new Event<>(AuthResult.loading()));
+        sendEmailVerificationOtpResult.postValue(new Event<>(Result.loading()));
         authRepo.sendEmailVerificationOtp(email, new AuthRepository.SendOtpCallback() {
-            @Override public void onSuccess() { sendEmailVerificationOtpResult.postValue(new Event<>(AuthResult.success(""))); }
-            @Override public void onFailure(String reason) { sendEmailVerificationOtpResult.postValue(new Event<>(AuthResult.error(reason))); }
+            @Override public void onSuccess() { sendEmailVerificationOtpResult.postValue(new Event<>(Result.success(""))); }
+            @Override public void onFailure(String reason) { sendEmailVerificationOtpResult.postValue(new Event<>(Result.error(reason))); }
         });
     }
 
     public void verifyEmailOtp(String email, String otp) {
-        verifyEmailVerificationOtpResult.postValue(new Event<>(AuthResult.loading()));
+        verifyEmailVerificationOtpResult.postValue(new Event<>(Result.loading()));
         authRepo.verifyEmailVerificationOtp(email, otp, new AuthRepository.VerifyOtpCallback() {
-            @Override public void onSuccess() { verifyEmailVerificationOtpResult.postValue(new Event<>(AuthResult.success(""))); }
-            @Override public void onFailure(String reason) { verifyEmailVerificationOtpResult.postValue(new Event<>(AuthResult.error(reason))); }
+            @Override public void onSuccess() { verifyEmailVerificationOtpResult.postValue(new Event<>(Result.success(""))); }
+            @Override public void onFailure(String reason) { verifyEmailVerificationOtpResult.postValue(new Event<>(Result.error(reason))); }
         });
     }
 
@@ -128,10 +128,10 @@ public class AuthViewModel extends ViewModel {
      * Checks email uniqueness during registration
      */
     public void checkEmailExistence(String email) {
-        emailExistenceResult.postValue(AuthResult.loading());
+        emailExistenceResult.postValue(Result.loading());
         authRepo.checkEmailExistence(email, new AuthRepository.EmailExistenceCallback() {
-            @Override public void onSuccess(boolean exists) { emailExistenceResult.postValue(AuthResult.success(exists)); }
-            @Override public void onFailure(String reason) { emailExistenceResult.postValue(AuthResult.error(reason)); }
+            @Override public void onSuccess(boolean exists) { emailExistenceResult.postValue(Result.success(exists)); }
+            @Override public void onFailure(String reason) { emailExistenceResult.postValue(Result.error(reason)); }
         });
     }
 

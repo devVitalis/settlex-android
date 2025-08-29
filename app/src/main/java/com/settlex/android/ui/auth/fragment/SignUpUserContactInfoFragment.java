@@ -34,7 +34,7 @@ import com.settlex.android.ui.info.help.AuthHelpActivity;
 import com.settlex.android.ui.info.legal.PrivacyPolicyActivity;
 import com.settlex.android.ui.info.legal.TermsAndConditionsActivity;
 import com.settlex.android.ui.auth.activity.SignInActivity;
-import com.settlex.android.ui.auth.util.AuthResult;
+import com.settlex.android.util.event.Result;
 import com.settlex.android.ui.auth.viewmodel.AuthViewModel;
 import com.settlex.android.ui.common.util.SettleXProgressBarController;
 import com.settlex.android.util.network.NetworkMonitor;
@@ -80,7 +80,7 @@ public class SignUpUserContactInfoFragment extends Fragment {
     // ====================== OBSERVERS ======================
     private void observeSendVerificationOtp() {
         authViewModel.getSendEmailVerificationOtpResult().observe(getViewLifecycleOwner(), event -> {
-            AuthResult<String> result = event.getContentIfNotHandled();
+            Result<String> result = event.getContentIfNotHandled();
             if (result != null) {
                 switch (result.getStatus()) {
                     case LOADING -> progressController.show();

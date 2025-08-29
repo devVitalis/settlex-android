@@ -11,7 +11,6 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.settlex.android.R;
 import com.settlex.android.ui.dashboard.model.TransactionUiModel;
-import com.settlex.android.util.string.StringUtil;
 
 import java.util.List;
 
@@ -24,6 +23,7 @@ public class TransactionsAdapter extends RecyclerView.Adapter<TransactionsAdapte
 
     public TransactionsAdapter(List<TransactionUiModel> transactions) {
         this.transactions = transactions;
+        notifyDataSetChanged();
     }
 
     @NonNull
@@ -35,27 +35,19 @@ public class TransactionsAdapter extends RecyclerView.Adapter<TransactionsAdapte
 
     @Override
     public void onBindViewHolder(@NonNull TransactionViewHolder holder, int position) {
-        TransactionUiModel transaction = transactions.get(position);
+        TransactionUiModel txn = transactions.get(position);
 
-        // Set icon based on transaction type
-        if ("credit".equalsIgnoreCase(transaction.getOperation())) {
-            holder.icon.setImageResource(R.drawable.ic_money_added);
-            holder.operation.setText("+");
+        holder.serviceIcon.setImageResource(txn.getServiceTypeIcon());
+        holder.serviceName.setText(txn.getServiceTypeName());
 
-        } else if ("debit/send".equalsIgnoreCase(transaction.getOperation())) {
-            holder.icon.setImageResource(R.drawable.ic_money_sent);
-            holder.operation.setText("-");
+        holder.operation.setText(txn.getOperationSymbol());
+        holder.operation.setTextColor(txn.getOperationColor());
 
-        } else {
-            holder.icon.setImageResource(R.drawable.ic_money_received);
-            holder.operation.setText("-");
-        }
+        holder.amount.setText(txn.getAmount());
+        holder.dateTime.setText(txn.getTimestamp());
 
-        // Bind transaction data to views
-        holder.title.setText(transaction.getTitle());
-        holder.amount.setText(StringUtil.formatToNaira(transaction.getAmount()));
-        holder.dateTime.setText(StringUtil.formatTimeStamp(transaction.getDateTime()));
-        holder.status.setText(transaction.getStatus());
+        holder.status.setText(txn.getStatus());
+        holder.status.setTextColor(txn.getStatusColor());
     }
 
     @Override
@@ -67,13 +59,13 @@ public class TransactionsAdapter extends RecyclerView.Adapter<TransactionsAdapte
      * ViewHolder for transaction items containing all transaction display elements
      */
     public static class TransactionViewHolder extends RecyclerView.ViewHolder {
-        ImageView icon;
-        TextView title, operation, amount, status, dateTime;
+        ImageView serviceIcon;
+        TextView serviceName, operation, amount, status, dateTime;
 
         public TransactionViewHolder(@NonNull View itemView) {
             super(itemView);
-            icon = itemView.findViewById(R.id.icon);
-            title = itemView.findViewById(R.id.title);
+            serviceIcon = itemView.findViewById(R.id.serviceIcon);
+            serviceName = itemView.findViewById(R.id.serviceName);
             operation = itemView.findViewById(R.id.operation);
             amount = itemView.findViewById(R.id.amount);
             dateTime = itemView.findViewById(R.id.dateTime);

@@ -22,7 +22,7 @@ import androidx.lifecycle.ViewModelProvider;
 import com.settlex.android.R;
 import com.settlex.android.databinding.ActivityOtpVerificationBinding;
 import com.settlex.android.ui.auth.activity.PasswordChangeActivity;
-import com.settlex.android.ui.auth.util.AuthResult;
+import com.settlex.android.util.event.Result;
 import com.settlex.android.ui.auth.viewmodel.AuthViewModel;
 import com.settlex.android.ui.common.util.SettleXProgressBarController;
 import com.settlex.android.util.string.StringUtil;
@@ -55,7 +55,7 @@ public class OtpVerificationActivity extends AppCompatActivity {
     // ====================== OBSERVERS ======================
     private void observeVerifyOtpResult() {
         authViewModel.getVerifyEmailResetOtpResult().observe(this, event -> {
-            AuthResult<String> result = event.getContentIfNotHandled();
+            Result<String> result = event.getContentIfNotHandled();
             if (result != null) {
                 switch (result.getStatus()) {
                     case LOADING -> progressBarController.show();
@@ -68,7 +68,7 @@ public class OtpVerificationActivity extends AppCompatActivity {
 
     private void observeSendOtpResult() {
         authViewModel.getSendEmailResetOtpResult().observe(this, event -> {
-            AuthResult<String> result = event.getContentIfNotHandled();
+            Result<String> result = event.getContentIfNotHandled();
             if (result != null) {
                 switch (result.getStatus()) {
                     case LOADING -> progressBarController.show();

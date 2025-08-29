@@ -1,5 +1,7 @@
 package com.settlex.android.util.string;
 
+import com.google.firebase.Timestamp;
+
 import java.text.DecimalFormat;
 import java.text.NumberFormat;
 import java.text.SimpleDateFormat;
@@ -84,8 +86,8 @@ public class StringUtil {
     }
 
     // ====================== DATE FORMATTING ======================
-    public static String formatTimeStamp(long dateTime) {
-        return new SimpleDateFormat("dd MMM yyyy, HH:mm", Locale.US)
-                .format(new Date(dateTime));
+    public static String formatTimeStamp(Timestamp timestamp) {
+        return new SimpleDateFormat("EEE, dd MMM yyyy, HH:mm", Locale.US)
+                .format(timestamp.toDate());
     }
 }

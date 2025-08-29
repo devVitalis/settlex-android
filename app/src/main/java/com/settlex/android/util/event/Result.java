@@ -1,4 +1,4 @@
-package com.settlex.android.ui.auth.util;
+package com.settlex.android.util.event;
 
 /**
  * Generic wrapper for authentication-related results.
@@ -7,7 +7,7 @@ package com.settlex.android.ui.auth.util;
  *
  * @param <T> The type of data returned on success.
  */
-public class AuthResult<T> {
+public class Result<T> {
 
     public enum Status {
         LOADING,
@@ -19,7 +19,7 @@ public class AuthResult<T> {
     private final T data;
     private final String message;
 
-    private AuthResult(Status status, T data, String message) {
+    private Result(Status status, T data, String message) {
         this.status = status;
         this.data = data;
         this.message = message;
@@ -28,24 +28,24 @@ public class AuthResult<T> {
     /**
      * Factory method for a loading state.
      */
-    public static <T> AuthResult<T> loading() {
-        return new AuthResult<>(Status.LOADING, null, null);
+    public static <T> Result<T> loading() {
+        return new Result<>(Status.LOADING, null, null);
     }
 
     /**
      * Factory method for a success state.
      * @param data The data returned by the operation.
      */
-    public static <T> AuthResult<T> success(T data) {
-        return new AuthResult<>(Status.SUCCESS, data, null);
+    public static <T> Result<T> success(T data) {
+        return new Result<>(Status.SUCCESS, data, null);
     }
 
     /**
      * Factory method for an error state.
      * @param message Error message describing the failure.
      */
-    public static <T> AuthResult<T> error(String message) {
-        return new AuthResult<>(Status.ERROR, null, message);
+    public static <T> Result<T> error(String message) {
+        return new Result<>(Status.ERROR, null, message);
     }
 
     public Status getStatus() {

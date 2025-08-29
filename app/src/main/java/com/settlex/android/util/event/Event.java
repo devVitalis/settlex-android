@@ -1,4 +1,4 @@
-package com.settlex.android.ui.auth.util;
+package com.settlex.android.util.event;
 
 /**
  * Wrapper for data that is exposed via LiveData representing a single-use event.

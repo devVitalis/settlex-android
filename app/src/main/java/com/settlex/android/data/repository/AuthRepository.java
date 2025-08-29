@@ -44,13 +44,17 @@ public class AuthRepository {
                 .addOnFailureListener(e -> {
                     if (e instanceof FirebaseAuthInvalidCredentialsException) {
                         callback.onFailure("Invalid email or password");
-                    } else if (e instanceof FirebaseNetworkException || e instanceof IOException) {
-                        callback.onFailure("Network request failed. Please try again");
-                    } else if (((FirebaseAuthInvalidUserException) e).getErrorCode().equals("ERROR_USER_DISABLED")) {
-                        callback.onFailure("Your account has been disabled, contact support.");
-                    } else {
-                        callback.onFailure(e.getMessage());
+                        return;
                     }
+                    if (e instanceof FirebaseNetworkException || e instanceof IOException) {
+                        callback.onFailure("Network request failed. Please try again");
+                        return;
+                    }
+                    if (((FirebaseAuthInvalidUserException) e).getErrorCode().equals("ERROR_USER_DISABLED")) {
+                        callback.onFailure("Your account has been disabled, contact support.");
+                        return;
+                    }
+                    callback.onFailure(e.getMessage());
                 });
     }
 
@@ -224,7 +228,6 @@ public class AuthRepository {
                         @Override
                         public void onSuccess() {
                         }
-
                         @Override
                         public void onFailure(String reason) {
                             markEmailAsUnverified(user.getUid());
@@ -235,9 +238,9 @@ public class AuthRepository {
                 .addOnFailureListener(e -> {
                     if (e instanceof FirebaseNetworkException || e instanceof IOException) {
                         callback.onFailure("Network request failed. Please try again");
-                    } else {
-                        callback.onFailure(e.getMessage());
+                        return;
                     }
+                    callback.onFailure(e.getMessage());
                 });
     }
 

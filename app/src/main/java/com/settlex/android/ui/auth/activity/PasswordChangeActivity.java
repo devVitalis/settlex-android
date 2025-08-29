@@ -25,7 +25,7 @@ import androidx.lifecycle.ViewModelProvider;
 import com.settlex.android.R;
 import com.settlex.android.databinding.ActivityPasswordChangeBinding;
 import com.settlex.android.databinding.BottomSheetSuccessBinding;
-import com.settlex.android.ui.auth.util.AuthResult;
+import com.settlex.android.util.event.Result;
 import com.settlex.android.ui.auth.viewmodel.AuthViewModel;
 import com.settlex.android.ui.common.util.SettleXProgressBarController;
 import com.settlex.android.util.network.NetworkMonitor;
@@ -65,7 +65,7 @@ public class PasswordChangeActivity extends AppCompatActivity {
     // ====================== CORE FLOW ======================
     private void observePasswordResetResult() {
         authViewModel.getPasswordResetResult().observe(this, event -> {
-            AuthResult<String> result = event.getContentIfNotHandled();
+            Result<String> result = event.getContentIfNotHandled();
             if (result != null) {
                 switch (result.getStatus()) {
                     case LOADING -> progressBarController.show();

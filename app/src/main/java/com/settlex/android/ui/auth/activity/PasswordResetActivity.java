@@ -20,7 +20,7 @@ import androidx.lifecycle.ViewModelProvider;
 import com.settlex.android.R;
 import com.settlex.android.databinding.ActivityPasswordResetBinding;
 import com.settlex.android.ui.common.components.OtpVerificationActivity;
-import com.settlex.android.ui.auth.util.AuthResult;
+import com.settlex.android.util.event.Result;
 import com.settlex.android.ui.auth.viewmodel.AuthViewModel;
 import com.settlex.android.ui.common.util.SettleXProgressBarController;
 import com.settlex.android.util.network.NetworkMonitor;
@@ -53,7 +53,7 @@ public class PasswordResetActivity extends AppCompatActivity {
     // ====================== OBSERVERS ======================
     private void observeOtpRequestResult() {
         authViewModel.getSendEmailResetOtpResult().observe(this, event -> {
-            AuthResult<String> result = event.getContentIfNotHandled();
+            Result<String> result = event.getContentIfNotHandled();
             if (result == null) return;
 
             switch (result.getStatus()) {

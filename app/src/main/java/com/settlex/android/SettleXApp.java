@@ -4,6 +4,8 @@ import android.app.Application;
 import android.content.Context;
 
 import com.google.firebase.FirebaseApp;
+import com.settlex.android.data.enums.TransactionStatus;
+import com.settlex.android.data.enums.TransactionOperation;
 import com.settlex.android.util.network.NetworkMonitor;
 
 /**
@@ -11,7 +13,6 @@ import com.settlex.android.util.network.NetworkMonitor;
  * Initializes essential services (Firebase, NetworkMonitor) at app launch.
  */
 public class SettleXApp extends Application {
-    // SINGLETON PATTERN
     private static SettleXApp instance;
     private static Context appContext;
 
@@ -29,11 +30,9 @@ public class SettleXApp extends Application {
         super.onCreate();
         initializeGlobals();
         initializeServices();
-        NetworkMonitor.startNetworkCallback();
     }
 
     // INITIALIZATION
-
     /**
      * Sets up global application references
      */
@@ -48,5 +47,7 @@ public class SettleXApp extends Application {
     private void initializeServices() {
         FirebaseApp.initializeApp(this);
         NetworkMonitor.startNetworkCallback();
+        TransactionStatus.init(this);
+        TransactionOperation.init(this);
     }
 }

@@ -1,59 +1,77 @@
 package com.settlex.android.ui.dashboard.model;
 
 /**
- * Record class model representing a transaction item
+ * UI model representing a transaction for display purposes
  */
 public class TransactionUiModel {
+    private String txnId;
+    private String txnReference;
+    private final String senderName;
+    private final String receiverName;
+    private String description;
+    private final String amount;
+    private final String timestamp;
+    private final String serviceTypeName;
+    private final int serviceTypeIcon;
+    private final String status;
+    private final int statusColor;
+    private final String operationSymbol;
+    private final int operationColor;
 
-    private String title, operation, status;
-    double amount;
-    long dateTime;
-
-    public TransactionUiModel(String title, String operation, double amount, String status, long dateTime) {
-        this.title = title;
-        this.operation = operation;
+    /**
+     * Constructor for basic transaction display (minimal required fields)
+     */
+    public TransactionUiModel(String senderName, String receiverName, String serviceTypeName, int serviceTypeIcon, String operationSymbol, int operationColor, String amount, String timestamp, String status, int statusColor) {
+        this.senderName = senderName;
+        this.receiverName = receiverName;
+        this.serviceTypeName = serviceTypeName;
+        this.serviceTypeIcon = serviceTypeIcon;
+        this.operationSymbol = operationSymbol;
+        this.operationColor = operationColor;
         this.amount = amount;
+        this.timestamp = timestamp;
         this.status = status;
-        this.dateTime = dateTime;
+        this.statusColor = statusColor;
     }
 
-    public String getTitle() {
-        return title;
+    // GETTERS
+    public String getSenderName() {
+        return senderName;
     }
 
-    public void setTitle(String title) {
-        this.title = title;
+    public String getReceiverName() {
+        return receiverName;
     }
 
-    public String getOperation() {
-        return operation;
+    public String getServiceTypeName() {
+        return serviceTypeName;
     }
 
-    public void setOperation(String operation) {
-        this.operation = operation;
+    public int getServiceTypeIcon() {
+        return serviceTypeIcon;
     }
 
-    public double getAmount() {
+    public String getOperationSymbol() {
+        return operationSymbol;
+    }
+
+    public int getOperationColor() {
+        return operationColor;
+    }
+
+    public String getAmount() {
         return amount;
     }
 
-    public void setAmount(double amount) {
-        this.amount = amount;
+    public String getTimestamp() {
+        return timestamp;
     }
 
     public String getStatus() {
         return status;
     }
 
-    public void setStatus(String status) {
-        this.status = status;
-    }
-
-    public long getDateTime() {
-        return dateTime;
-    }
-
-    public void setDateTime(long dateTime) {
-        this.dateTime = dateTime;
+    public int getStatusColor() {
+        return statusColor;
     }
 }

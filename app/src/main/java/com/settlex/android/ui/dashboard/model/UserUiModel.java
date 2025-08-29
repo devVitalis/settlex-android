@@ -26,4 +26,8 @@ public class UserUiModel {
     public String getLastName() {
         return lastName;
     }
+
+    public String getUserFullName() {
+        return firstName + " " + lastName;
+    }
 }
