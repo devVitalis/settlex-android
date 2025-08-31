@@ -23,7 +23,6 @@ public class TransactionsAdapter extends RecyclerView.Adapter<TransactionsAdapte
 
     public TransactionsAdapter(List<TransactionUiModel> transactions) {
         this.transactions = transactions;
-        notifyDataSetChanged();
     }
 
     @NonNull
@@ -44,7 +43,10 @@ public class TransactionsAdapter extends RecyclerView.Adapter<TransactionsAdapte
         holder.operation.setTextColor(txn.getOperationColor());
 
         holder.amount.setText(txn.getAmount());
+        holder.amount.setTextColor(txn.getOperationColor());
+
         holder.dateTime.setText(txn.getTimestamp());
+        holder.recipientOrSender.setText(txn.getRecipientOrSender());
 
         holder.status.setText(txn.getStatus());
         holder.status.setTextColor(txn.getStatusColor());
@@ -60,7 +62,7 @@ public class TransactionsAdapter extends RecyclerView.Adapter<TransactionsAdapte
      */
     public static class TransactionViewHolder extends RecyclerView.ViewHolder {
         ImageView serviceIcon;
-        TextView serviceName, operation, amount, status, dateTime;
+        TextView serviceName, operation, amount, dateTime, recipientOrSender, status;
 
         public TransactionViewHolder(@NonNull View itemView) {
             super(itemView);
@@ -69,6 +71,7 @@ public class TransactionsAdapter extends RecyclerView.Adapter<TransactionsAdapte
             operation = itemView.findViewById(R.id.operation);
             amount = itemView.findViewById(R.id.amount);
             dateTime = itemView.findViewById(R.id.dateTime);
+            recipientOrSender = itemView.findViewById(R.id.recipientOrSender);
             status = itemView.findViewById(R.id.status);
         }
     }

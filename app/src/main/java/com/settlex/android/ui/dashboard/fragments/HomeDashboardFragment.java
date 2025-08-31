@@ -1,5 +1,6 @@
 package com.settlex.android.ui.dashboard.fragments;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -21,6 +22,7 @@ import com.settlex.android.R;
 import com.settlex.android.databinding.FragmentDashboardHomeBinding;
 import com.settlex.android.ui.auth.viewmodel.AuthViewModel;
 import com.settlex.android.ui.common.util.SettleXProgressBarController;
+import com.settlex.android.ui.dashboard.activity.PayAFriendActivity;
 import com.settlex.android.ui.dashboard.adapter.PromotionalBannerAdapter;
 import com.settlex.android.ui.dashboard.adapter.ServicesAdapter;
 import com.settlex.android.ui.dashboard.adapter.TransactionsAdapter;
@@ -82,14 +84,9 @@ public class HomeDashboardFragment extends Fragment {
         setupTxnRecyclerViewLayoutManager();
         setupDoubleBackToExit();
 
-        binding.payAFriend.setOnClickListener(view -> dashboardViewModel.payFriend(
-                currentUserUid,
-                "benjamin213",
-                TxnIdGenerator.generate("benjamin213"),
-                150000,
-                "SEND_MONEY",
-                "Payment"
-        ));
+        binding.payAFriend.setOnClickListener(view -> {
+            startActivity(new Intent(requireActivity(), PayAFriendActivity.class));
+        });
     }
 
     // ========================== OBSERVERS ============================
@@ -117,7 +114,7 @@ public class HomeDashboardFragment extends Fragment {
     }
 
     private void observeAndLoadRecentTransactions(String uid) {
-        int MAX_TXN_DISPLAY = 5;
+        int MAX_TXN_DISPLAY = 3;
         dashboardViewModel.getTransactions(uid, MAX_TXN_DISPLAY).observe(getViewLifecycleOwner(), transactions -> {
             if (transactions != null && !transactions.isEmpty()) {
                 TransactionsAdapter adapter = new TransactionsAdapter(transactions);
@@ -132,7 +129,7 @@ public class HomeDashboardFragment extends Fragment {
             Result<String> result = event.getContentIfNotHandled();
             if (result != null) {
                 switch (result.getStatus()) {
-                    case LOADING -> progressBarController.hide();
+                    case LOADING -> progressBarController.show();
                     case SUCCESS -> onPaySuccess();
                     case ERROR -> onPayFailure(result.getMessage());
                 }

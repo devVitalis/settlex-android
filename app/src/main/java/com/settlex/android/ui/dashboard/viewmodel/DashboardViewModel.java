@@ -4,7 +4,8 @@ import androidx.lifecycle.LiveData;
 import androidx.lifecycle.MutableLiveData;
 import androidx.lifecycle.ViewModel;
 
-import com.settlex.android.data.enums.TransactionServiceType;
+import com.settlex.android.data.enums.TransactionOperation;
+import com.settlex.android.data.enums.TransactionStatus;
 import com.settlex.android.data.remote.dto.TransactionDto;
 import com.settlex.android.data.repository.UserRepository;
 import com.settlex.android.ui.dashboard.model.TransactionUiModel;
@@ -57,27 +58,33 @@ public class DashboardViewModel extends ViewModel {
     /**
      * Expose transactions LiveData
      */
-    public LiveData<List<TransactionUiModel>> getTransactions(String uid, int limit) {
-        // Observe DTOs and map to UI
-        userRepo.getRecentTransactions(uid, limit).observeForever(transactionDto -> {
-            if (transactionDto == null || transactionDto.isEmpty()) {
+    public LiveData<List<TransactionUiModel>> getTransactions(String currentUserUid, int limit) {
+        userRepo.getRecentTransactions(currentUserUid, limit).observeForever(transaction -> {
+            if (transaction == null || transaction.isEmpty()) {
                 transactionsLiveData.setValue(Collections.emptyList());
                 return;
             }
+
             List<TransactionUiModel> uiList = new ArrayList<>();
-            for (TransactionDto dto : transactionDto) {
-                // Format to UI ready
+            for (TransactionDto dto : transaction) {
+                boolean isSender = currentUserUid.equals(dto.senderUid);
+
+                TransactionOperation operation;
+                if (dto.status == TransactionStatus.REVERSED) {
+                    operation = isSender ? TransactionOperation.CREDIT : TransactionOperation.DEBIT;
+                } else {
+                    operation = isSender ? TransactionOperation.DEBIT : TransactionOperation.CREDIT;
+                }
+
+                // Build UI model
                 uiList.add(new TransactionUiModel(
                         dto.sender.toUpperCase(),
                         dto.recipient.toUpperCase(),
-                        dto.serviceType == TransactionServiceType.SEND_MONEY
-                                ? dto.serviceType.getDisplayName() + dto.recipient
-                                : dto.serviceType == TransactionServiceType.RECEIVE_MONEY
-                                ? dto.serviceType.getDisplayName() + dto.sender
-                                : dto.serviceType.getDisplayName(),
+                        isSender ? dto.recipient.toUpperCase() : dto.sender.toUpperCase(),
+                        isSender ? dto.serviceType.getDisplayName() : "Transfer received",
                         dto.serviceType.getIconRes(),
-                        dto.operation.getSymbol(),
-                        dto.operation.getColorRes(),
+                        operation.getSymbol(),
+                        operation.getColorRes(),
                         StringUtil.formatToNaira(dto.amount),
                         StringUtil.formatTimeStamp(dto.createdAt),
                         dto.status.getDisplayName(),
@@ -99,6 +106,7 @@ public class DashboardViewModel extends ViewModel {
             public void onTransferSuccess() {
                 payFriendLiveData.postValue(new Event<>(Result.success("Transfer Success")));
             }
+
             @Override
             public void onTransferFailed(String reason) {
                 payFriendLiveData.postValue(new Event<>(Result.error(reason)));

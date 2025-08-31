@@ -87,7 +87,7 @@ public class StringUtil {
 
     // ====================== DATE FORMATTING ======================
     public static String formatTimeStamp(Timestamp timestamp) {
-        return new SimpleDateFormat("EEE, dd MMM yyyy, HH:mm", Locale.US)
+        return new SimpleDateFormat("dd MMM yyyy, hh:mm a", Locale.US)
                 .format(timestamp.toDate());
     }
 }

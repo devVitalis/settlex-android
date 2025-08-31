@@ -6,8 +6,9 @@ package com.settlex.android.ui.dashboard.model;
 public class TransactionUiModel {
     private String txnId;
     private String txnReference;
-    private final String senderName;
-    private final String receiverName;
+    private final String sender;
+    private final String recipient;
+    private final String recipientOrSender;
     private String description;
     private final String amount;
     private final String timestamp;
@@ -21,9 +22,12 @@ public class TransactionUiModel {
     /**
      * Constructor for basic transaction display (minimal required fields)
      */
-    public TransactionUiModel(String senderName, String receiverName, String serviceTypeName, int serviceTypeIcon, String operationSymbol, int operationColor, String amount, String timestamp, String status, int statusColor) {
-        this.senderName = senderName;
-        this.receiverName = receiverName;
+    public TransactionUiModel(String sender, String recipient, String recipientOrSender,
+                              String serviceTypeName, int serviceTypeIcon, String operationSymbol,
+                              int operationColor, String amount, String timestamp, String status, int statusColor) {
+        this.sender = sender;
+        this.recipient = recipient;
+        this.recipientOrSender = recipientOrSender;
         this.serviceTypeName = serviceTypeName;
         this.serviceTypeIcon = serviceTypeIcon;
         this.operationSymbol = operationSymbol;
@@ -35,12 +39,16 @@ public class TransactionUiModel {
     }
 
     // GETTERS
-    public String getSenderName() {
-        return senderName;
+    public String getSender() {
+        return sender;
     }
 
-    public String getReceiverName() {
-        return receiverName;
+    public String getRecipient() {
+        return recipient;
+    }
+
+    public String getRecipientOrSender() {
+        return recipientOrSender;
     }
 
     public String getServiceTypeName() {

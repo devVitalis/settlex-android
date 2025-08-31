@@ -7,11 +7,10 @@ import com.settlex.android.R;
  */
 public enum TransactionServiceType {
     ADD_MONEY("Wallet Funding", R.drawable.ic_money_received),
-    SEND_MONEY("Pay a friend ", R.drawable.ic_money_sent),
-    RECEIVE_MONEY("Received from ", R.drawable.ic_money_received),
+    PAY_A_FRIEND("Transfer sent", R.drawable.ic_money_sent),
     AIRTIME_RECHARGE("Airtime Recharge", R.drawable.ic_airtime),
     DATA_RECHARGE("Data Recharge", R.drawable.ic_data),
-    CABLE_TV_SUBSCRIPTION("Cable TV Recharge", R.drawable.ic_cable_tv),
+    CABLE_TV_SUBSCRIPTION("Cable TV Subscription", R.drawable.ic_cable_tv),
     ELECTRICITY_BILL("Electricity Bill Payment", R.drawable.ic_electricity),
     BETTING_TOPUP("Betting Topup", R.drawable.ic_betting),
     VOUCHER("Redeem Voucher" ,R.drawable.ic_voucher);

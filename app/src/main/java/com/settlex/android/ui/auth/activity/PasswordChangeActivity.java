@@ -77,7 +77,8 @@ public class PasswordChangeActivity extends AppCompatActivity {
     }
 
     private void observeNetworkStatus() {
-        NetworkMonitor.getNetworkStatus().observe(this, isConnected -> this.isConnected = isConnected);
+        NetworkMonitor.getNetworkStatus().observe(this, isConnected ->
+                this.isConnected = isConnected);
     }
 
     private void onResetSuccess() {
@@ -86,9 +87,9 @@ public class PasswordChangeActivity extends AppCompatActivity {
     }
 
     private void showSuccessDialog() {
-        UiUtil.showBottomSheet(this, BottomSheetSuccessBinding::inflate, (dialogView, dialog) -> dialogView.btnLogin.setOnClickListener(v -> {
-            navigateToSignInActivity();
-            dialog.dismiss();
+        UiUtil.showBottomSheet(this, BottomSheetSuccessBinding::inflate,
+                (dialogView, dialog) ->
+                        dialogView.btnLogin.setOnClickListener(v -> { navigateToSignInActivity(); dialog.dismiss();
         }));
     }
 

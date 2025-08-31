@@ -12,6 +12,7 @@ import com.settlex.android.R;
  */
 public enum TransactionStatus {
     PENDING("Pending", R.color.orange),
+    REVERSED("Reversed", R.color.orange),
     SUCCESS("Successful", R.color.green),
     FAILED("Failed", R.color.red);
 

@@ -27,7 +27,8 @@
     <color name="orange_light">#FFF4E0</color>
 
     <!--Green-->
-    <color name="green">#4CAF50</color>
+    <color name="green">#00C48C</color>
+    <color name="green_light">#E0FAF3</color>
 
     <!--Overlay Colors-->
     <color name="semi_transparent_white">#80FFFFFF</color>

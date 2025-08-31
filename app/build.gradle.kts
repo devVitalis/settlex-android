@@ -77,6 +77,8 @@ dependencies {
     // ViewModel (MVVM)
     implementation(libs.lifecycle.viewmodel)
     implementation(libs.lifecycle.livedata)
+
+    // Currency EditText
 }
 
 tasks.withType<JavaCompile>().configureEach {
