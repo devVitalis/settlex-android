@@ -1,16 +1,17 @@
 package com.settlex.android.data.repository;
 
-import android.util.Log;
-
 import androidx.lifecycle.LiveData;
 import androidx.lifecycle.MutableLiveData;
 
 import com.google.firebase.FirebaseNetworkException;
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.ListenerRegistration;
 import com.google.firebase.firestore.Query;
 import com.google.firebase.functions.FirebaseFunctions;
+import com.settlex.android.data.remote.dto.SuggestionsDto;
 import com.settlex.android.data.remote.dto.TransactionDto;
 import com.settlex.android.data.remote.dto.UserDto;
 
@@ -27,16 +28,35 @@ import java.util.Map;
 public class UserRepository {
     private final FirebaseFunctions functions;
     private final FirebaseFirestore firestore;
+    private final FirebaseAuth auth;
 
     private ListenerRegistration userListener;
     private ListenerRegistration transactionsListener;
+    private final FirebaseAuth.AuthStateListener authStateListener;
 
+    // LIVEDATA HOLDER
+    private final MutableLiveData<FirebaseUser> authStateLiveData = new MutableLiveData<>();
     private final MutableLiveData<UserDto> userLiveData = new MutableLiveData<>();
     private final MutableLiveData<List<TransactionDto>> transactionsLiveData = new MutableLiveData<>();
 
     public UserRepository() {
         functions = FirebaseFunctions.getInstance("europe-west2");
         firestore = FirebaseFirestore.getInstance();
+        auth = FirebaseAuth.getInstance();
+
+        // Listen to auth changes
+        authStateListener = firebaseAuth -> {
+            FirebaseUser currentUser = firebaseAuth.getCurrentUser();
+            authStateLiveData.postValue(currentUser);
+
+            if (currentUser == null) {
+                removeListener();
+                userLiveData.postValue(null);
+                return;
+            }
+            getUser(firebaseAuth.getUid());
+        };
+        auth.addAuthStateListener(authStateListener);
     }
 
     /**
@@ -87,6 +107,7 @@ public class UserRepository {
     public void removeListener() {
         if (userListener != null) userListener.remove();
         if (transactionsListener != null) transactionsListener.remove();
+        if (authStateListener != null) auth.removeAuthStateListener(authStateListener);
     }
 
     /**
@@ -101,9 +122,6 @@ public class UserRepository {
         data.put("serviceType", serviceType);
         data.put("description", description); // Nullable
 
-        // logging to see what client is sending
-        Log.d("TransferFunds", "Sending data:" + data);
-
         functions.getHttpsCallable("transferFunds")
                 .call(data)
                 .addOnSuccessListener(result -> callback.onTransferSuccess())
@@ -114,12 +132,59 @@ public class UserRepository {
                     }
                     callback.onTransferFailed(e.getMessage());
                 });
+    }
 
+    /**
+     * Finds matching usernames in db
+     * used when user is initiating a transfer, entering userTag(Username)
+     */
+    public void searchUsername(String input, SearchUsernameCallback callback) {
+        functions.getHttpsCallable("usernameLookup")
+                .call(Collections.singletonMap("input", input))
+                .addOnSuccessListener(result -> {
+                    List<SuggestionsDto> suggestionsDto = new ArrayList<>();
+                    //noinspection unchecked
+                    Map<String, Object> data = (Map<String, Object>) result.getData();
+                    if (data != null && Boolean.TRUE.equals(data.get("success"))) {
+                        //noinspection unchecked
+                        List<Map<String, Object>> suggestions = (List<Map<String, Object>>) data.get("suggestions");
+
+                        if (suggestions != null) {
+                            for (Map<String, Object> suggestion : suggestions) {
+                                String username = (String) suggestion.get("username");
+                                String firstName = (String) suggestion.get("firstName");
+                                String lastName = (String) suggestion.get("lastName");
+                                String profileUrl = (String) suggestion.get("profileUrl");
+                                suggestionsDto.add(new SuggestionsDto(username, firstName, lastName, profileUrl));
+                            }
+                        }
+                    }
+                    callback.onResult(suggestionsDto);
+                })
+                .addOnFailureListener(e -> callback.onFailure(e.getMessage()));
+    }
+
+    /**
+     * Logs out signed in User
+     */
+    public void signOut() {
+        FirebaseAuth.getInstance().signOut();
+    }
+
+    public LiveData<FirebaseUser> getAuthState() {
+        return authStateLiveData;
     }
 
     // ============== Callbacks Interfaces
     public interface TransferCallback {
         void onTransferSuccess();
+
         void onTransferFailed(String reason);
+    }
+
+    public interface SearchUsernameCallback {
+        void onResult(List<SuggestionsDto> suggestionsDto);
+
+        void onFailure(String reason);
     }
 }

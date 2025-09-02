@@ -10,6 +10,7 @@ import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.settlex.android.R;
+import com.settlex.android.databinding.ItemTransactionBinding;
 import com.settlex.android.ui.dashboard.model.TransactionUiModel;
 
 import java.util.List;
@@ -28,7 +29,7 @@ public class TransactionsAdapter extends RecyclerView.Adapter<TransactionsAdapte
     @NonNull
     @Override
     public TransactionViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
-        View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.item_transactions, parent, false);
+        View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.item_transaction, parent, false);
         return new TransactionViewHolder(view);
     }
 
@@ -36,8 +37,8 @@ public class TransactionsAdapter extends RecyclerView.Adapter<TransactionsAdapte
     public void onBindViewHolder(@NonNull TransactionViewHolder holder, int position) {
         TransactionUiModel txn = transactions.get(position);
 
-        holder.serviceIcon.setImageResource(txn.getServiceTypeIcon());
-        holder.serviceName.setText(txn.getServiceTypeName());
+        holder.icon.setImageResource(txn.getServiceTypeIcon());
+        holder.name.setText(txn.getServiceTypeName());
 
         holder.operation.setText(txn.getOperationSymbol());
         holder.operation.setTextColor(txn.getOperationColor());
@@ -61,18 +62,19 @@ public class TransactionsAdapter extends RecyclerView.Adapter<TransactionsAdapte
      * ViewHolder for transaction items containing all transaction display elements
      */
     public static class TransactionViewHolder extends RecyclerView.ViewHolder {
-        ImageView serviceIcon;
-        TextView serviceName, operation, amount, dateTime, recipientOrSender, status;
+        ImageView icon;
+        TextView name, operation, amount, dateTime, recipientOrSender, status;
 
         public TransactionViewHolder(@NonNull View itemView) {
             super(itemView);
-            serviceIcon = itemView.findViewById(R.id.serviceIcon);
-            serviceName = itemView.findViewById(R.id.serviceName);
-            operation = itemView.findViewById(R.id.operation);
-            amount = itemView.findViewById(R.id.amount);
-            dateTime = itemView.findViewById(R.id.dateTime);
-            recipientOrSender = itemView.findViewById(R.id.recipientOrSender);
-            status = itemView.findViewById(R.id.status);
+            ItemTransactionBinding binding = ItemTransactionBinding.bind(itemView);
+            icon = binding.icon;
+            name = binding.name;
+            operation = binding.operation;
+            amount = binding.amount;
+            dateTime = binding.dateTime;
+            recipientOrSender = binding.recipientOrSender;
+            status = binding.status;
         }
     }
 }

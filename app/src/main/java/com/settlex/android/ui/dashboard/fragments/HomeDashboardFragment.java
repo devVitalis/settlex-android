@@ -2,7 +2,6 @@ package com.settlex.android.ui.dashboard.fragments;
 
 import android.content.Intent;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -20,6 +19,7 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 
 import com.settlex.android.R;
 import com.settlex.android.databinding.FragmentDashboardHomeBinding;
+import com.settlex.android.ui.auth.activity.SignInActivity;
 import com.settlex.android.ui.auth.viewmodel.AuthViewModel;
 import com.settlex.android.ui.common.util.SettleXProgressBarController;
 import com.settlex.android.ui.dashboard.activity.PayAFriendActivity;
@@ -28,7 +28,6 @@ import com.settlex.android.ui.dashboard.adapter.ServicesAdapter;
 import com.settlex.android.ui.dashboard.adapter.TransactionsAdapter;
 import com.settlex.android.ui.dashboard.components.GridSpacingItemDecoration;
 import com.settlex.android.ui.dashboard.model.ServiceUiModel;
-import com.settlex.android.ui.dashboard.util.TxnIdGenerator;
 import com.settlex.android.ui.dashboard.viewmodel.DashboardViewModel;
 import com.settlex.android.util.event.Result;
 
@@ -65,6 +64,9 @@ public class HomeDashboardFragment extends Fragment {
         setupStatusBar();
         setupUiActions();
 
+//        UserRepository u = new UserRepository();
+//        u.searchUsername("vit");
+
         return binding.getRoot();
     }
 
@@ -84,20 +86,20 @@ public class HomeDashboardFragment extends Fragment {
         setupTxnRecyclerViewLayoutManager();
         setupDoubleBackToExit();
 
-        binding.payAFriend.setOnClickListener(view -> {
-            startActivity(new Intent(requireActivity(), PayAFriendActivity.class));
-        });
+        binding.payAFriend.setOnClickListener(v -> startActivity(new Intent(requireActivity(), PayAFriendActivity.class)));
+        binding.addMoney.setOnClickListener(v -> dashboardViewModel.signOut());
     }
 
     // ========================== OBSERVERS ============================
     private void observeUserState() {
-        authViewModel.getUserState().observe(getViewLifecycleOwner(), userState -> {
-            if (userState == null) {
+        dashboardViewModel.getAuthState().observe(getViewLifecycleOwner(), authState -> {
+            if (authState == null) {
                 // Show logged out layout
+                onNoLoggedUser();
                 return;
             }
             // User is logged in fetch data
-            currentUserUid = userState.getUid();
+            currentUserUid = authState.getUid();
             observeAndDisplayUserData(currentUserUid);
             observeAndLoadRecentTransactions(currentUserUid);
         });
@@ -145,6 +147,12 @@ public class HomeDashboardFragment extends Fragment {
     private void onPayFailure(String error) {
         Toast.makeText(requireContext(), error, Toast.LENGTH_LONG).show();
         progressBarController.hide();
+    }
+
+    private void onNoLoggedUser() {
+        Toast.makeText(requireContext(), "Session expired", Toast.LENGTH_SHORT).show();
+        startActivity(new Intent(requireActivity(), SignInActivity.class));
+        requireActivity().finishAffinity();
     }
 
     // ======================== PREVIEW TOOLS (DELETE LATER) ==========================

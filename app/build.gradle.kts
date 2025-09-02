@@ -78,7 +78,11 @@ dependencies {
     implementation(libs.lifecycle.viewmodel)
     implementation(libs.lifecycle.livedata)
 
-    // Currency EditText
+    // Blur
+    implementation(libs.blurry)
+
+    // Shimmer Loading
+    implementation(libs.shimmer)
 }
 
 tasks.withType<JavaCompile>().configureEach {

@@ -50,7 +50,7 @@ public class DashboardActivity extends AppCompatActivity {
         binding.bottomNavigationView.setItemIconTintList(null);
     }
 
-    // Add all fragments once, then hide/show
+    // Add all fragments once, then hide/showPayConfirmation
     private void setupFragments() {
         getSupportFragmentManager().beginTransaction()
                 .add(R.id.fragment_container, accountFragment, "account")

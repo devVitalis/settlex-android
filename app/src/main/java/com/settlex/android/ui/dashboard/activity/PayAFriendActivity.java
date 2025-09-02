@@ -14,9 +14,14 @@ import android.widget.EditText;
 
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.content.ContextCompat;
+import androidx.lifecycle.ViewModelProvider;
+import androidx.recyclerview.widget.LinearLayoutManager;
 
 import com.settlex.android.R;
 import com.settlex.android.databinding.ActivityPayAfriendBinding;
+import com.settlex.android.ui.dashboard.adapter.SuggestionAdapter;
+import com.settlex.android.ui.dashboard.util.DashboardUiUtil;
+import com.settlex.android.ui.dashboard.viewmodel.DashboardViewModel;
 
 import java.math.BigInteger;
 import java.text.DecimalFormat;
@@ -25,6 +30,8 @@ import java.util.Locale;
 
 public class PayAFriendActivity extends AppCompatActivity {
     private ActivityPayAfriendBinding binding;
+    private DashboardViewModel dashboardViewModel;
+    private SuggestionAdapter suggestionAdapter;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -32,10 +39,38 @@ public class PayAFriendActivity extends AppCompatActivity {
         binding = ActivityPayAfriendBinding.inflate(getLayoutInflater());
         setContentView(binding.getRoot());
 
+        dashboardViewModel = new ViewModelProvider(this).get(DashboardViewModel.class);
+        suggestionAdapter = new SuggestionAdapter();
+
         setupStatusBar();
         setupUiActions();
+        setupRecyclerViewLayout();
+
+        // OBSERVERS
+        observeUserSuggestions();
     }
 
+    private void observeUserSuggestions() {
+        dashboardViewModel.getUsernameSuggestion().observe(this, suggestions -> {
+            if (suggestions != null) {
+                switch (suggestions.getStatus()) {
+                    case LOADING -> binding.shimmerLayout.setVisibility(View.VISIBLE);
+                    case SUCCESS -> {
+                        suggestionAdapter.submitList(suggestions.getData());
+                        binding.shimmerLayout.setVisibility(View.GONE);
+                        binding.suggestionsRecyclerView.setVisibility(View.VISIBLE);
+                    }
+                    case ERROR -> binding.shimmerLayout.setVisibility(View.GONE);
+                }
+            }
+        });
+    }
+
+    private void setupRecyclerViewLayout() {
+        LinearLayoutManager layoutManager = new LinearLayoutManager(this);
+        layoutManager.setOrientation(LinearLayoutManager.VERTICAL);
+        binding.suggestionsRecyclerView.setLayoutManager(layoutManager);
+    }
 
     private void setupUiActions() {
         setupEditTextFocusHandlers();
@@ -43,6 +78,25 @@ public class PayAFriendActivity extends AppCompatActivity {
         attachCurrencyFormatter(binding.editTxtAmount);
 
         binding.imgBackBefore.setOnClickListener(view -> getOnBackPressedDispatcher().onBackPressed());
+        binding.btnNext.setOnClickListener(view -> {
+            DashboardUiUtil.showPayConfirmation(
+                    this,
+                    "@vitalis",
+                    R.drawable.ic_avatar,
+                    "BENJAMIN NNAEMEKA",
+                    "₦50,500.00",
+                    "₦198,535.57",
+                    "(₦201,000.32)",
+                    "(₦201,000.32)",
+                    "(₦456.78)",
+                    new Runnable() {
+                        @Override
+                        public void run() {
+
+                        }
+                    }
+            );
+        });
     }
 
     private void setupTextInputWatcher() {
@@ -53,6 +107,9 @@ public class PayAFriendActivity extends AppCompatActivity {
 
             @Override
             public void afterTextChanged(Editable editable) {
+                boolean shouldSearch = editable.length() >= 3;
+                if (shouldSearch) dashboardViewModel.searchUsername(editable.toString());
+                binding.suggestionsRecyclerView.setVisibility(shouldSearch ? View.VISIBLE : View.GONE);
             }
 
             @Override

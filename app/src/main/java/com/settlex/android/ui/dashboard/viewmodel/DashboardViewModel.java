@@ -4,10 +4,13 @@ import androidx.lifecycle.LiveData;
 import androidx.lifecycle.MutableLiveData;
 import androidx.lifecycle.ViewModel;
 
+import com.google.firebase.auth.FirebaseUser;
 import com.settlex.android.data.enums.TransactionOperation;
 import com.settlex.android.data.enums.TransactionStatus;
+import com.settlex.android.data.remote.dto.SuggestionsDto;
 import com.settlex.android.data.remote.dto.TransactionDto;
 import com.settlex.android.data.repository.UserRepository;
+import com.settlex.android.ui.dashboard.model.SuggestionsUiModel;
 import com.settlex.android.ui.dashboard.model.TransactionUiModel;
 import com.settlex.android.ui.dashboard.model.UserUiModel;
 import com.settlex.android.util.event.Event;
@@ -25,6 +28,8 @@ public class DashboardViewModel extends ViewModel {
     private final MutableLiveData<UserUiModel> userLiveData = new MutableLiveData<>();
     private final MutableLiveData<List<TransactionUiModel>> transactionsLiveData = new MutableLiveData<>();
     private final MutableLiveData<Event<Result<String>>> payFriendLiveData = new MutableLiveData<>();
+    private final MutableLiveData<Result<List<SuggestionsUiModel>>> suggestionsLiveData = new MutableLiveData<>();
+
 
     public DashboardViewModel() {
         this.userRepo = new UserRepository();
@@ -35,8 +40,12 @@ public class DashboardViewModel extends ViewModel {
         return payFriendLiveData;
     }
 
+    public LiveData<Result<List<SuggestionsUiModel>>> getUsernameSuggestion() {
+        return suggestionsLiveData;
+    }
+
     /**
-     * Update the UI model for user info
+     * Update the UI model for current user info
      */
     public LiveData<UserUiModel> getUser(String uid) {
         double MILLION_THRESHOLD = 999_999_999;
@@ -112,6 +121,37 @@ public class DashboardViewModel extends ViewModel {
                 payFriendLiveData.postValue(new Event<>(Result.error(reason)));
             }
         });
+    }
+
+    /**
+     * Returns username query results.
+     */
+    public void searchUsername(String query){
+        suggestionsLiveData.postValue(Result.loading());
+        userRepo.searchUsername(query, new UserRepository.SearchUsernameCallback() {
+            @Override
+            public void onResult(List<SuggestionsDto> suggestionsDto) {
+                // Map DTO -> UI Model
+                List<SuggestionsUiModel> suggestionsUiModelList = new ArrayList<>();
+                for (SuggestionsDto dto : suggestionsDto) {
+                    suggestionsUiModelList.add(new SuggestionsUiModel("@" + dto.username, dto.firstName + " " + dto.lastName, dto.profileUrl));
+                }
+                suggestionsLiveData.postValue(Result.success(suggestionsUiModelList));
+            }
+
+            @Override
+            public void onFailure(String reason) {
+                suggestionsLiveData.postValue(Result.success(Collections.emptyList()));
+            }
+        });
+    }
+
+    public void signOut() {
+        userRepo.signOut();
+    }
+
+    public LiveData<FirebaseUser> getAuthState() {
+        return userRepo.getAuthState();
     }
 
     @Override

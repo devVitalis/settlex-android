@@ -1,40 +1,63 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:orientation="vertical"
     android:padding="20dp">
 
+    <com.google.android.material.imageview.ShapeableImageView
+        android:id="@+id/btnClose"
+        android:layout_width="20dp"
+        android:layout_height="20dp"
+        android:layout_gravity="end"
+        android:contentDescription="Close"
+        android:src="@drawable/ic_close"
+        app:tint="@color/gray" />
+
+    <TextView
+        android:id="@+id/amountToSendHeader"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center"
+        android:fontFamily="@font/poppins_regular"
+        android:includeFontPadding="false"
+        android:textColor="@color/black"
+        android:textSize="25sp"
+        android:textStyle="bold"
+        tools:text="₦100,000" />
+
     <!--Recipient Tag-->
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:layout_marginTop="20dp"
         android:gravity="center_vertical"
         android:orientation="horizontal">
 
         <TextView
             android:layout_width="0dp"
             android:layout_height="wrap_content"
-            android:layout_marginEnd="10dp"
+            android:layout_marginEnd="15dp"
             android:layout_weight="1"
             android:fontFamily="@font/poppins_regular"
             android:includeFontPadding="false"
-            android:text="Recipient Tag"
+            android:text="Recipient"
             android:textColor="@color/gray"
-            android:textSize="12sp" />
+            android:textSize="14sp" />
 
         <TextView
-            android:id="@+id/recipientTag"
+            android:id="@+id/recipient"
             android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
+            android:layout_height="20dp"
             android:ellipsize="end"
             android:fontFamily="@font/poppins_regular"
             android:includeFontPadding="false"
             android:maxLines="1"
             android:textColor="@color/black"
-            android:textSize="12sp"
-            tools:text="vitalis" />
+            android:textSize="14sp"
+            tools:text="\@vitalis" />
     </LinearLayout>
 
     <!--Recipient Name-->
@@ -54,7 +77,7 @@
             android:includeFontPadding="false"
             android:text="Recipient Name"
             android:textColor="@color/gray"
-            android:textSize="12sp" />
+            android:textSize="14sp" />
 
         <ImageView
             android:id="@+id/recipientProfilePic"
@@ -72,8 +95,8 @@
             android:includeFontPadding="false"
             android:maxLines="1"
             android:textColor="@color/black"
-            android:textSize="12sp"
-            tools:text="BENJAMIN NNAEMEKA CHISOM" />
+            android:textSize="14sp"
+            tools:text="BENJAMIN CHISOM NNAEMEKA" />
     </LinearLayout>
 
     <!--Amount-->
@@ -93,7 +116,7 @@
             android:includeFontPadding="false"
             android:text="Amount"
             android:textColor="@color/gray"
-            android:textSize="12sp" />
+            android:textSize="14sp" />
 
         <TextView
             android:id="@+id/amountToSend"
@@ -104,29 +127,36 @@
             android:includeFontPadding="false"
             android:maxLines="1"
             android:textColor="@color/black"
-            android:textSize="12sp"
+            android:textSize="14sp"
             tools:text="₦100,000.00" />
     </LinearLayout>
+
+    <!--Divider-->
+    <com.google.android.material.divider.MaterialDivider
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginVertical="7.5dp"
+        app:dividerColor="@color/gray_light"
+        app:dividerThickness="1dp" />
 
     <TextView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginTop="15dp"
         android:fontFamily="@font/poppins_regular"
         android:includeFontPadding="false"
         android:text="Payment Method"
         android:textColor="@color/black"
-        android:textSize="12sp" />
+        android:textSize="14sp" />
 
     <!--Sender Balance-->
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginTop="5dp"
-        android:background="@drawable/bg_8dp_light_gray"
+        android:background="@drawable/bg_8dp_gray_light"
         android:orientation="vertical"
-        android:paddingHorizontal="5dp"
-        android:paddingVertical="10dp">
+        android:paddingHorizontal="10dp"
+        android:paddingVertical="15dp">
 
         <LinearLayout
             android:layout_width="match_parent"
@@ -136,13 +166,13 @@
 
             <TextView
                 android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginEnd="10dp"
+                android:layout_height="match_parent"
+                android:layout_marginEnd="5dp"
                 android:fontFamily="@font/poppins_regular"
                 android:includeFontPadding="false"
                 android:text="Available Balance"
                 android:textColor="@color/black"
-                android:textSize="12sp" />
+                android:textSize="14sp" />
 
             <TextView
                 android:id="@+id/senderTotalBalance"
@@ -153,16 +183,17 @@
                 android:includeFontPadding="false"
                 android:maxLines="1"
                 android:textColor="@color/black"
-                android:textSize="12sp"
+                android:textSize="14sp"
                 tools:text="(₦198,535.57)" />
         </LinearLayout>
 
         <!--Divider-->
-        <View
+        <com.google.android.material.divider.MaterialDivider
             android:layout_width="match_parent"
-            android:layout_height="1dp"
+            android:layout_height="wrap_content"
             android:layout_marginVertical="7.5dp"
-            android:background="@color/gray" />
+            app:dividerColor="@color/gray_whitish"
+            app:dividerThickness="1dp" />
 
         <!--Balance-->
         <LinearLayout
@@ -174,21 +205,21 @@
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginEnd="10dp"
+                android:layout_marginEnd="5dp"
                 android:fontFamily="@font/poppins_regular"
                 android:includeFontPadding="false"
                 android:text="Wallet Balance"
                 android:textColor="@color/gray"
-                android:textSize="10sp" />
+                android:textSize="12sp" />
 
             <TextView
-                android:id="@+id/senderBalance"
+                android:id="@+id/senderWalletBalance"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:fontFamily="@font/poppins_regular"
                 android:includeFontPadding="false"
                 android:textColor="@color/gray"
-                android:textSize="10sp"
+                android:textSize="12sp"
                 tools:text="(₦198,000.32)" />
         </LinearLayout>
 
@@ -203,12 +234,12 @@
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginEnd="10dp"
+                android:layout_marginEnd="5dp"
                 android:fontFamily="@font/poppins_regular"
                 android:includeFontPadding="false"
                 android:text="Commission Balance"
                 android:textColor="@color/gray"
-                android:textSize="10sp" />
+                android:textSize="12sp" />
 
             <TextView
                 android:id="@+id/senderCommissionBalance"
@@ -217,7 +248,7 @@
                 android:fontFamily="@font/poppins_regular"
                 android:includeFontPadding="false"
                 android:textColor="@color/gray"
-                android:textSize="10sp"
+                android:textSize="12sp"
                 tools:text="(₦535.25)" />
         </LinearLayout>
     </LinearLayout>

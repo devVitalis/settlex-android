@@ -264,7 +264,7 @@
 
                         <!-- Add Money -->
                         <LinearLayout
-                            android:id="@+id/addMoneyLayout"
+                            android:id="@+id/addMoney"
                             android:layout_width="100dp"
                             android:layout_height="wrap_content"
                             android:background="@drawable/bg_8dp_transparent_white"
