@@ -129,12 +129,12 @@ public class HomeDashboardFragment extends Fragment {
     private void observePayFriendResult() {
         dashboardViewModel.getPayFriendResult().observe(getViewLifecycleOwner(), event -> {
             Result<String> result = event.getContentIfNotHandled();
-            if (result != null) {
-                switch (result.getStatus()) {
-                    case LOADING -> progressBarController.show();
-                    case SUCCESS -> onPaySuccess();
-                    case ERROR -> onPayFailure(result.getMessage());
-                }
+            if (result == null) return;
+
+            switch (result.getStatus()) {
+                case LOADING -> progressBarController.show();
+                case SUCCESS -> onPaySuccess();
+                case ERROR -> onPayFailure(result.getMessage());
             }
         });
     }

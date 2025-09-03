@@ -1,5 +1,7 @@
 package com.settlex.android.ui.dashboard.model;
 
+import java.util.Objects;
+
 public class SuggestionsUiModel {
     private final String username;
     private final String fullName;
@@ -21,5 +23,18 @@ public class SuggestionsUiModel {
 
     public String getProfileUrl() {
         return profileUrl;
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        SuggestionsUiModel that = (SuggestionsUiModel) o;
+        return Objects.equals(getUsername(), that.getUsername()) && Objects.equals(getFullName(), that.getFullName()) && Objects.equals(getProfileUrl(), that.getProfileUrl());
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(getUsername(), getFullName(), getProfileUrl());
     }
 }

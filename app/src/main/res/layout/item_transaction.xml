@@ -123,7 +123,7 @@
                     android:id="@+id/status"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:background="@drawable/bg_8dp_green_light"
+                    android:background="@drawable/bg_3dp_green_light"
                     android:fontFamily="@font/poppins_regular"
                     android:includeFontPadding="false"
                     android:maxLines="1"

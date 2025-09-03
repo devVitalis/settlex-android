@@ -20,18 +20,21 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import com.settlex.android.R;
 import com.settlex.android.databinding.ActivityPayAfriendBinding;
 import com.settlex.android.ui.dashboard.adapter.SuggestionAdapter;
+import com.settlex.android.ui.dashboard.model.SuggestionsUiModel;
 import com.settlex.android.ui.dashboard.util.DashboardUiUtil;
 import com.settlex.android.ui.dashboard.viewmodel.DashboardViewModel;
 
 import java.math.BigInteger;
 import java.text.DecimalFormat;
 import java.text.NumberFormat;
+import java.util.Collections;
+import java.util.List;
 import java.util.Locale;
 
 public class PayAFriendActivity extends AppCompatActivity {
     private ActivityPayAfriendBinding binding;
-    private DashboardViewModel dashboardViewModel;
     private SuggestionAdapter suggestionAdapter;
+    private DashboardViewModel dashboardViewModel;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -44,7 +47,7 @@ public class PayAFriendActivity extends AppCompatActivity {
 
         setupStatusBar();
         setupUiActions();
-        setupRecyclerViewLayout();
+        setupSuggestionRecyclerView();
 
         // OBSERVERS
         observeUserSuggestions();
@@ -52,24 +55,68 @@ public class PayAFriendActivity extends AppCompatActivity {
 
     private void observeUserSuggestions() {
         dashboardViewModel.getUsernameSuggestion().observe(this, suggestions -> {
-            if (suggestions != null) {
-                switch (suggestions.getStatus()) {
-                    case LOADING -> binding.shimmerLayout.setVisibility(View.VISIBLE);
-                    case SUCCESS -> {
-                        suggestionAdapter.submitList(suggestions.getData());
-                        binding.shimmerLayout.setVisibility(View.GONE);
-                        binding.suggestionsRecyclerView.setVisibility(View.VISIBLE);
-                    }
-                    case ERROR -> binding.shimmerLayout.setVisibility(View.GONE);
-                }
+            if (suggestions == null) return;
+
+            switch (suggestions.getStatus()) {
+                case LOADING -> onSuggestionResultLoading();
+                case SUCCESS -> onSuggestionResultSuccess(suggestions.getData());
+                case ERROR -> onSuggestionResultError();
             }
         });
     }
 
-    private void setupRecyclerViewLayout() {
+    private void searchUsername(String query) {
+        dashboardViewModel.searchUsername(query);
+    }
+
+    private void onSuggestionResultLoading() {
+        suggestionAdapter.submitList(Collections.emptyList());
+        binding.suggestionsRecyclerView.setVisibility(View.GONE);
+
+        binding.selectedRecipient.setVisibility(View.GONE);
+        binding.txtUsernameFeedback.setVisibility(View.GONE);
+
+        binding.shimmerLayout.startShimmer();
+        binding.shimmerLayout.setVisibility(View.VISIBLE);
+    }
+
+    private void onSuggestionResultSuccess(List<SuggestionsUiModel> suggestions) {
+        if (suggestions == null || suggestions.isEmpty()) {
+            binding.txtUsernameFeedback.setText("No user found with tag @" + binding.editTxtUsername.getText().toString().trim().toLowerCase());
+            binding.txtUsernameFeedback.setVisibility(View.VISIBLE);
+        }
+
+        binding.shimmerLayout.stopShimmer();
+        binding.shimmerLayout.setVisibility(View.GONE);
+
+        suggestionAdapter.submitList(suggestions);
+        binding.suggestionsRecyclerView.setVisibility(View.VISIBLE);
+        binding.suggestionsRecyclerView.setAdapter(suggestionAdapter);
+    }
+
+    private void onSuggestionResultError() {
+        binding.shimmerLayout.stopShimmer();
+        binding.shimmerLayout.setVisibility(View.GONE);
+    }
+
+    private void setupSuggestionRecyclerView() {
         LinearLayoutManager layoutManager = new LinearLayoutManager(this);
         layoutManager.setOrientation(LinearLayoutManager.VERTICAL);
         binding.suggestionsRecyclerView.setLayoutManager(layoutManager);
+
+        handleOnSuggestionClick();
+    }
+
+    private void handleOnSuggestionClick() {
+        suggestionAdapter.setOnItemClickListener(model -> {
+            binding.editTxtUsername.setText("vitalis");
+
+            suggestionAdapter.submitList(Collections.emptyList());
+            binding.suggestionsRecyclerView.setVisibility(View.GONE);
+
+            binding.selectedRecipientName.setText(model.getFullName().toUpperCase());
+            binding.selectedRecipient.setVisibility(View.VISIBLE);
+        });
     }
 
     private void setupUiActions() {
@@ -77,7 +124,10 @@ public class PayAFriendActivity extends AppCompatActivity {
         setupTextInputWatcher();
         attachCurrencyFormatter(binding.editTxtAmount);
 
+        // Listeners
         binding.imgBackBefore.setOnClickListener(view -> getOnBackPressedDispatcher().onBackPressed());
+        binding.btnVerify.setOnClickListener(v -> searchUsername(binding.editTxtUsername.getText().toString().trim().toLowerCase()));
+
         binding.btnNext.setOnClickListener(view -> {
             DashboardUiUtil.showPayConfirmation(
                     this,
@@ -107,14 +157,17 @@ public class PayAFriendActivity extends AppCompatActivity {
 
             @Override
             public void afterTextChanged(Editable editable) {
-                boolean shouldSearch = editable.length() >= 3;
-                if (shouldSearch) dashboardViewModel.searchUsername(editable.toString());
-                binding.suggestionsRecyclerView.setVisibility(shouldSearch ? View.VISIBLE : View.GONE);
+                boolean shouldSearch = editable.toString().trim().length() >= 3;
+                if (shouldSearch) searchUsername(editable.toString().trim().toLowerCase());
+                binding.suggestionsRecyclerView.setVisibility((shouldSearch) ? View.VISIBLE : View.GONE);
+                binding.btnVerify.setVisibility((shouldSearch) ? View.VISIBLE : View.GONE);
             }
 
             @Override
             public void onTextChanged(CharSequence s, int start, int before, int count) {
-                binding.txtUsernameFeedback.setVisibility((!validateUsername(s.toString().toLowerCase()) && !s.toString().isEmpty()) ? View.VISIBLE : View.GONE);
+                binding.txtUsernameFeedback.setVisibility(View.GONE);
+                binding.selectedRecipientName.setText("");
+                binding.selectedRecipient.setVisibility(View.GONE);
                 setupInputValidation();
             }
         });
