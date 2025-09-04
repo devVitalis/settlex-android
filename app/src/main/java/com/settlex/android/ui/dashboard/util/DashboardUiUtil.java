@@ -2,25 +2,23 @@ package com.settlex.android.ui.dashboard.util;
 
 import android.content.Context;
 import android.view.LayoutInflater;
-import android.view.View;
 
 import com.google.android.material.bottomsheet.BottomSheetDialog;
 import com.settlex.android.R;
 import com.settlex.android.databinding.BottomSheetConfirmPaymentBinding;
+import com.settlex.android.util.string.StringUtil;
 
 public class DashboardUiUtil {
 
     private DashboardUiUtil() {
     }
 
-    public static void showPayConfirmation(Context context, String recipient,
+    public static void showPayConfirmation(Context context, String recipientUsername,
                                            int profilePic,
                                            String recipientName,
-                                           String amountToSendHeader,
-                                           String amountToSend,
-                                           String senderTotalBalance,
-                                           String senderWalletBalance,
-                                           String senderCommissionBalance,
+                                           double amountToSend,
+                                           double senderWalletBalance,
+                                           double senderCommissionBalance,
                                            final Runnable onPay) {
         BottomSheetConfirmPaymentBinding binding = BottomSheetConfirmPaymentBinding.inflate(LayoutInflater.from(context));
         BottomSheetDialog dialog = new BottomSheetDialog(context, R.style.Widget_SettleX_BottomSheetDialog);
@@ -28,21 +26,23 @@ public class DashboardUiUtil {
         dialog.setCancelable(false);
         dialog.setCanceledOnTouchOutside(false);
 
+        //Format data for UI display
+        String formattedAmountToSend = StringUtil.formatToNaira(amountToSend);
+        String formattedUsername = StringUtil.addAtToUsername(recipientUsername);
+        String formattedRecipientName = recipientName.toUpperCase();
+        double senderTotalBalance = senderWalletBalance + senderCommissionBalance;
+
         // Recipient details
-        binding.amountToSendHeader.setText(amountToSendHeader);
-        binding.recipient.setText(recipient);
+        binding.amountToSendHeader.setText(formattedAmountToSend);
+        binding.amountToSend.setText(formattedAmountToSend);
+        binding.recipientUsername.setText(formattedUsername);
+        binding.recipientName.setText(formattedRecipientName);
         binding.recipientProfilePic.setImageResource(profilePic);
-        binding.recipientName.setText(recipientName);
-        binding.amountToSend.setText(amountToSend);
 
         // Sender details
-        binding.senderTotalBalance.setText(senderTotalBalance);
-        binding.senderWalletBalance.setText(senderWalletBalance);
-        binding.senderCommissionBalance.setText(senderCommissionBalance);
-
-        if (amountToSendHeader == null || amountToSendHeader.isEmpty()) {
-            binding.amountToSendHeader.setVisibility(View.GONE);
-        }
+        binding.senderTotalBalance.setText(StringUtil.formatToNaira(senderTotalBalance));
+        binding.senderWalletBalance.setText(StringUtil.formatToNaira(senderWalletBalance));
+        binding.senderCommissionBalance.setText(StringUtil.formatToNaira(senderCommissionBalance));
 
         // Handle buttons
         binding.btnClose.setOnClickListener(v -> dialog.dismiss());

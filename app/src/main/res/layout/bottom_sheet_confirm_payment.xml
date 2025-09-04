@@ -48,7 +48,7 @@
             android:textSize="14sp" />
 
         <TextView
-            android:id="@+id/recipient"
+            android:id="@+id/recipientUsername"
             android:layout_width="wrap_content"
             android:layout_height="20dp"
             android:ellipsize="end"

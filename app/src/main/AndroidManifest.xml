@@ -16,6 +16,9 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.SettleX">
         <activity
+            android:name=".ui.dashboard.activity.TxnStatusActivity"
+            android:exported="false" />
+        <activity
             android:name=".ui.dashboard.activity.PayAFriendActivity"
             android:exported="false" />
         <activity

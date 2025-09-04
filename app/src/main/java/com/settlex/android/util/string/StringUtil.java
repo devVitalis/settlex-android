@@ -5,7 +5,6 @@ import com.google.firebase.Timestamp;
 import java.text.DecimalFormat;
 import java.text.NumberFormat;
 import java.text.SimpleDateFormat;
-import java.util.Date;
 import java.util.Locale;
 
 /**
@@ -52,14 +51,27 @@ public class StringUtil {
         return result.toString().trim();
     }
 
+    public static String removeAtInUsername(String username) {
+        if (username == null || username.isEmpty()) return username;
+
+        if (username.startsWith("@")) return username.substring(1).toLowerCase();
+
+        return username;
+    }
+
+    public static String addAtToUsername(String username) {
+        if (username == null || username.isEmpty()) return username;
+
+        if (username.startsWith("@")) return username.toLowerCase();
+
+        return "@" + username;
+    }
+
     // ====================== PHONE NUMBER FORMATTING ======================
     public static String formatPhoneNumber(String phone) {
-        if (phone == null) return null;
+        if (phone == null || phone.isEmpty()) return phone;
 
-        // Remove leading zero from numbers
-        if (phone.startsWith("0")) {
-            phone = phone.substring(1);
-        }
+        if (phone.startsWith("0")) phone = phone.substring(1);
 
         return "+234" + phone;
     }
@@ -74,7 +86,6 @@ public class StringUtil {
         String symbol = "₦";
 
         if (amount < 1_000) {
-            // Show up to 2 decimals for small amounts
             return symbol + new DecimalFormat("#.##").format(amount);
         } else if (amount < 1_000_000) {
             return symbol + new DecimalFormat("#.##").format(amount / 1_000.0) + "K";

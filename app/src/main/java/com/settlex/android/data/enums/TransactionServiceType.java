@@ -6,7 +6,7 @@ import com.settlex.android.R;
  * Enum representing different transaction services with their associated icons
  */
 public enum TransactionServiceType {
-    ADD_MONEY("Wallet Funding", R.drawable.ic_money_received),
+    ADD_MONEY("Wallet Funding", R.drawable.ic_money_sent),  //TODO: update with icon
     PAY_A_FRIEND("Transfer sent", R.drawable.ic_money_sent),
     AIRTIME_RECHARGE("Airtime Recharge", R.drawable.ic_airtime),
     DATA_RECHARGE("Data Recharge", R.drawable.ic_data),

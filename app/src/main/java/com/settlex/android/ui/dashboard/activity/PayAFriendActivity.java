@@ -1,6 +1,7 @@
 package com.settlex.android.ui.dashboard.activity;
 
 import android.content.Context;
+import android.content.Intent;
 import android.graphics.Rect;
 import android.os.Bundle;
 import android.text.Editable;
@@ -18,11 +19,17 @@ import androidx.lifecycle.ViewModelProvider;
 import androidx.recyclerview.widget.LinearLayoutManager;
 
 import com.settlex.android.R;
+import com.settlex.android.data.enums.TransactionServiceType;
 import com.settlex.android.databinding.ActivityPayAfriendBinding;
+import com.settlex.android.ui.common.util.SettleXProgressBarController;
 import com.settlex.android.ui.dashboard.adapter.SuggestionAdapter;
 import com.settlex.android.ui.dashboard.model.SuggestionsUiModel;
+import com.settlex.android.ui.dashboard.model.UserUiModel;
 import com.settlex.android.ui.dashboard.util.DashboardUiUtil;
+import com.settlex.android.ui.dashboard.util.TxnIdGenerator;
 import com.settlex.android.ui.dashboard.viewmodel.DashboardViewModel;
+import com.settlex.android.util.event.Result;
+import com.settlex.android.util.string.StringUtil;
 
 import java.math.BigInteger;
 import java.text.DecimalFormat;
@@ -33,8 +40,10 @@ import java.util.Locale;
 
 public class PayAFriendActivity extends AppCompatActivity {
     private ActivityPayAfriendBinding binding;
+    private SettleXProgressBarController progressBarController;
     private SuggestionAdapter suggestionAdapter;
     private DashboardViewModel dashboardViewModel;
+    private UserUiModel currentUser;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -42,6 +51,7 @@ public class PayAFriendActivity extends AppCompatActivity {
         binding = ActivityPayAfriendBinding.inflate(getLayoutInflater());
         setContentView(binding.getRoot());
 
+        progressBarController = new SettleXProgressBarController(binding.getRoot());
         dashboardViewModel = new ViewModelProvider(this).get(DashboardViewModel.class);
         suggestionAdapter = new SuggestionAdapter();
 
@@ -50,7 +60,67 @@ public class PayAFriendActivity extends AppCompatActivity {
         setupSuggestionRecyclerView();
 
         // OBSERVERS
+        observeUserData();
+        observeSendMoney();
         observeUserSuggestions();
+    }
+
+    private void observeUserData() {
+        dashboardViewModel.getAuthState().observe(this, authState -> {
+            if (authState == null) return;
+            dashboardViewModel.getUserData(authState.getUid()).observe(this, user -> this.currentUser = user);
+        });
+    }
+
+    private void observeSendMoney() {
+        dashboardViewModel.getPayFriendResult().observe(this, event -> {
+            Result<String> result = event.getContentIfNotHandled();
+            if (result == null) return;
+            switch (result.getStatus()) {
+                case LOADING -> progressBarController.show();
+                case SUCCESS -> onSendMoneySuccess();
+                case ERROR -> onSendMoneyFailed();
+            }
+        });
+    }
+
+    private void onSendMoneySuccess() {
+        startActivity(new Intent(this, TxnStatusActivity.class));
+        finish();
+        progressBarController.hide();
+    }
+
+    private void onSendMoneyFailed() {
+        progressBarController.hide();
+    }
+
+    private void showPayConfirmation(double senderBalance, double senderCommBalance, String senderUid, String senderUsername) {
+        String recipientName = binding.selectedRecipientName.getText().toString();
+        String recipientUsername = StringUtil.removeAtInUsername(binding.selectedRecipientUsername.getText().toString().trim());
+        double amountToSend = Double.parseDouble(binding.editTxtAmount.getText().toString().replaceAll(",", ""));
+        String description = binding.editTxtDescription.getText().toString().trim();
+
+        DashboardUiUtil.showPayConfirmation(
+                this,
+                recipientUsername,
+                R.drawable.ic_avatar, // TODO: setup profile pic with real data
+                recipientName,
+                amountToSend,
+                senderBalance,
+                senderCommBalance,
+                () -> initPayAFriend(senderUid, recipientUsername, amountToSend, senderUsername, description)
+        );
+    }
+
+    private void initPayAFriend(String senderUid, String recipientUsername, double amountToSend, String senderUsername, String description) {
+        dashboardViewModel.payFriend(
+                senderUid,
+                recipientUsername,
+                TxnIdGenerator.generate(senderUsername),
+                amountToSend,
+                String.valueOf(TransactionServiceType.PAY_A_FRIEND),
+                description
+        );
     }
 
     private void observeUserSuggestions() {
@@ -82,7 +152,8 @@ public class PayAFriendActivity extends AppCompatActivity {
 
     private void onSuggestionResultSuccess(List<SuggestionsUiModel> suggestions) {
         if (suggestions == null || suggestions.isEmpty()) {
-            binding.txtUsernameFeedback.setText("No user found with tag @" + binding.editTxtUsername.getText().toString().trim().toLowerCase());
+            String username = StringUtil.addAtToUsername(binding.editTxtUsername.getText().toString().trim().toLowerCase());
+            binding.txtUsernameFeedback.setText(getString(R.string.No_user_found_with_tag, username));
             binding.txtUsernameFeedback.setVisibility(View.VISIBLE);
         }
 
@@ -109,12 +180,14 @@ public class PayAFriendActivity extends AppCompatActivity {
 
     private void handleOnSuggestionClick() {
         suggestionAdapter.setOnItemClickListener(model -> {
-            binding.editTxtUsername.setText("vitalis");
+            binding.editTxtUsername.setText(StringUtil.removeAtInUsername(model.getUsername()));
+            binding.editTxtUsername.setSelection(binding.editTxtUsername.getText().length());
 
             suggestionAdapter.submitList(Collections.emptyList());
             binding.suggestionsRecyclerView.setVisibility(View.GONE);
 
             binding.selectedRecipientName.setText(model.getFullName().toUpperCase());
+            binding.selectedRecipientUsername.setText(model.getUsername());
             binding.selectedRecipient.setVisibility(View.VISIBLE);
         });
     }
@@ -125,28 +198,13 @@ public class PayAFriendActivity extends AppCompatActivity {
         attachCurrencyFormatter(binding.editTxtAmount);
 
         // Listeners
-        binding.imgBackBefore.setOnClickListener(view -> getOnBackPressedDispatcher().onBackPressed());
+        binding.imgBackBefore.setOnClickListener(v -> getOnBackPressedDispatcher().onBackPressed());
         binding.btnVerify.setOnClickListener(v -> searchUsername(binding.editTxtUsername.getText().toString().trim().toLowerCase()));
-
-        binding.btnNext.setOnClickListener(view -> {
-            DashboardUiUtil.showPayConfirmation(
-                    this,
-                    "@vitalis",
-                    R.drawable.ic_avatar,
-                    "BENJAMIN NNAEMEKA",
-                    "₦50,500.00",
-                    "₦198,535.57",
-                    "(₦201,000.32)",
-                    "(₦201,000.32)",
-                    "(₦456.78)",
-                    new Runnable() {
-                        @Override
-                        public void run() {
-
-                        }
-                    }
-            );
-        });
+        binding.btnNext.setOnClickListener(v -> showPayConfirmation(
+                currentUser.getBalance(),
+                currentUser.getCommissionBalance(),
+                currentUser.getUid(),
+                currentUser.getUsername()));
     }
 
     private void setupTextInputWatcher() {
@@ -158,15 +216,12 @@ public class PayAFriendActivity extends AppCompatActivity {
             @Override
             public void afterTextChanged(Editable editable) {
                 boolean shouldSearch = editable.toString().trim().length() >= 3;
-                if (shouldSearch) searchUsername(editable.toString().trim().toLowerCase());
-                binding.suggestionsRecyclerView.setVisibility((shouldSearch) ? View.VISIBLE : View.GONE);
                 binding.btnVerify.setVisibility((shouldSearch) ? View.VISIBLE : View.GONE);
             }
 
             @Override
             public void onTextChanged(CharSequence s, int start, int before, int count) {
                 binding.txtUsernameFeedback.setVisibility(View.GONE);
-                binding.selectedRecipientName.setText("");
                 binding.selectedRecipient.setVisibility(View.GONE);
                 setupInputValidation();
             }
@@ -192,8 +247,9 @@ public class PayAFriendActivity extends AppCompatActivity {
     private void setupInputValidation() {
         String username = binding.editTxtUsername.getText().toString().trim().toLowerCase();
         String amountText = binding.editTxtAmount.getText().toString().trim();
+        boolean recipientConfirmed = binding.selectedRecipient.getVisibility() == View.VISIBLE;
 
-        updateNextButtonState(validateUsername(username) && validateAmount(amountText));
+        updateNextButtonState(validateUsername(username) && validateAmount(amountText) && recipientConfirmed);
     }
 
     private boolean validateUsername(String username) {

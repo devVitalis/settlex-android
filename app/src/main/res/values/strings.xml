@@ -6,14 +6,11 @@
     <string name="resend_otp_countdown">Resend in %d</string>
     <string name="greeting_with_firstName">Hi, %s</string>
     <string name="mask_email_with_parathesis">(%s)</string>
-
-    <!-- Transaction History -->
-    <string name="send_money">%s</string>
-    <string name="receive_money">%s</string>
-
-    <!-- Error Messages -->
     <string name="error_password_mismatch">Passwords do not match!</string>
-    <string name="error_no_internet">"Connection lost. Please check your Wi-Fi or cellular data and try again"</string>
+    <string name="error_no_internet">Connection lost. Please check your Wi-Fi or cellular data and try again</string>
+
+    <!-- Dashboard -->
+    <string name="No_user_found_with_tag">No user found with tag, %s</string>
 
     <!-- XML Layouts -->
     <string name="password_update_success">Your password has been changed successfully. You will now need to use your new password to sign in on all your devices.</string>

@@ -30,6 +30,7 @@ import com.settlex.android.ui.dashboard.components.GridSpacingItemDecoration;
 import com.settlex.android.ui.dashboard.model.ServiceUiModel;
 import com.settlex.android.ui.dashboard.viewmodel.DashboardViewModel;
 import com.settlex.android.util.event.Result;
+import com.settlex.android.util.string.StringUtil;
 
 import java.util.Arrays;
 import java.util.List;
@@ -106,11 +107,12 @@ public class HomeDashboardFragment extends Fragment {
     }
 
     private void observeAndDisplayUserData(String uid) {
-        dashboardViewModel.getUser(uid).observe(getViewLifecycleOwner(), userData -> {
+        double MILLION_THRESHOLD = 999_999_999;
+        dashboardViewModel.getUserData(uid).observe(getViewLifecycleOwner(), userData -> {
             if (userData != null) {
                 binding.userDisplayName.setText(userData.getUserFullName());
-                binding.userBalance.setText(userData.getBalance());
-                binding.userCommissionBalance.setText(userData.getCommissionBalance());
+                binding.userBalance.setText((userData.getBalance() > MILLION_THRESHOLD) ? StringUtil.formatToNairaShort(userData.getBalance()) : StringUtil.formatToNaira(userData.getBalance()));
+                binding.userCommissionBalance.setText(StringUtil.formatToNairaShort(userData.getCommissionBalance()));
             }
         });
     }

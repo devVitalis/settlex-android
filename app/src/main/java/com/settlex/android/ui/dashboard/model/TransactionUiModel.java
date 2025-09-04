@@ -22,9 +22,7 @@ public class TransactionUiModel {
     /**
      * Constructor for basic transaction display (minimal required fields)
      */
-    public TransactionUiModel(String sender, String recipient, String recipientOrSender,
-                              String serviceTypeName, int serviceTypeIcon, String operationSymbol,
-                              int operationColor, String amount, String timestamp, String status, int statusColor) {
+    public TransactionUiModel(String sender, String recipient, String recipientOrSender, String serviceTypeName, int serviceTypeIcon, String operationSymbol, int operationColor, String amount, String timestamp, String status, int statusColor) {
         this.sender = sender;
         this.recipient = recipient;
         this.recipientOrSender = recipientOrSender;

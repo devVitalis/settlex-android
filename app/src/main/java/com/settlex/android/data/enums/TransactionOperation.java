@@ -11,7 +11,7 @@ import com.settlex.android.R;
  */
 public enum TransactionOperation {
     CREDIT("+", R.color.green),
-    DEBIT("-", R.color.red);
+    DEBIT("-", R.color.black);
 
     private final String symbol;
     private int symbolColorRes;

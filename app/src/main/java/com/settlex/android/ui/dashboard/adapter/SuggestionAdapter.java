@@ -68,13 +68,7 @@ public class SuggestionAdapter extends ListAdapter<SuggestionsUiModel, Suggestio
             binding.username.setText(model.getUsername());
 
             //Handle click
-            binding.getRoot().setOnClickListener(v -> {
-                listener.onItemClick(model);
-                // getCurrentList() is immutable, so use submitList
-                if (SuggestionsViewHolder.this.getBindingAdapter() != null) {
-                    ((ListAdapter<?, ?>) SuggestionsViewHolder.this.getBindingAdapter()).submitList(Collections.emptyList());
-                }
-            });
+            binding.getRoot().setOnClickListener(v -> listener.onItemClick(model));
         }
     }
 }

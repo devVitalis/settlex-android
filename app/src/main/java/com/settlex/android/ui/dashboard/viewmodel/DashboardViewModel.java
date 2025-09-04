@@ -5,6 +5,7 @@ import androidx.lifecycle.MutableLiveData;
 import androidx.lifecycle.ViewModel;
 
 import com.google.firebase.auth.FirebaseUser;
+import com.settlex.android.R;
 import com.settlex.android.data.enums.TransactionOperation;
 import com.settlex.android.data.enums.TransactionStatus;
 import com.settlex.android.data.remote.dto.SuggestionsDto;
@@ -47,18 +48,19 @@ public class DashboardViewModel extends ViewModel {
     /**
      * Update the UI model for current user info
      */
-    public LiveData<UserUiModel> getUser(String uid) {
-        double MILLION_THRESHOLD = 999_999_999;
+    public LiveData<UserUiModel> getUserData(String uid) {
         userRepo.getUser(uid).observeForever(userDto -> {
             if (userDto == null) {
                 userLiveData.setValue(null);
                 return;
             }
             userLiveData.setValue(new UserUiModel(
+                    userDto.uid,
                     userDto.firstName,
                     userDto.lastName,
-                    userDto.balance > MILLION_THRESHOLD ? StringUtil.formatToNairaShort(userDto.balance) : StringUtil.formatToNaira(userDto.balance),
-                    StringUtil.formatToNairaShort(userDto.commissionBalance)
+                    userDto.username,
+                    userDto.balance,
+                   userDto.commissionBalance
             ));
         });
         return userLiveData;
@@ -126,7 +128,7 @@ public class DashboardViewModel extends ViewModel {
     /**
      * Returns username query results.
      */
-    public void searchUsername(String query){
+    public void searchUsername(String query) {
         suggestionsLiveData.postValue(Result.loading());
         userRepo.searchUsername(query, new UserRepository.SearchUsernameCallback() {
             @Override

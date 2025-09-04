@@ -97,7 +97,7 @@
                         android:focusable="false"
                         android:focusableInTouchMode="false"
                         android:fontFamily="@font/poppins_regular"
-                        android:hint="Enter @usertag e.g., \@john_123"
+                        android:hint="Enter recipient username"
                         android:imeOptions="actionDone"
                         android:includeFontPadding="false"
                         android:inputType="text"
@@ -111,11 +111,11 @@
                         style="@style/Widget.SettleXApp.Button.Filled.Blue"
                         android:layout_width="50dp"
                         android:layout_height="30dp"
-                        android:visibility="gone"
                         android:layout_marginEnd="10dp"
                         android:paddingHorizontal="0dp"
                         android:text="Verify"
-                        android:textSize="9sp" />
+                        android:textSize="9sp"
+                        android:visibility="gone" />
                 </LinearLayout>
 
                 <!-- Feedback -->
@@ -157,6 +157,15 @@
                         android:textSize="14sp"
                         tools:text="BENJAMIN NNAEMEKA" />
 
+                    <TextView
+                        android:id="@+id/selectedRecipientUsername"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginStart="5dp"
+                        android:includeFontPadding="false"
+                        android:textColor="@color/blue"
+                        android:textSize="14sp"
+                        tools:text="\@vitalis" />
                 </LinearLayout>
 
                 <FrameLayout
