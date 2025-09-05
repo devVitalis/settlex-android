@@ -7,6 +7,17 @@
     android:orientation="vertical"
     android:padding="20dp">
 
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center"
+        android:fontFamily="@font/poppins_regular"
+        android:includeFontPadding="false"
+        android:textColor="@color/black"
+        android:textSize="18sp"
+        android:textStyle="bold"
+        android:text="Payment Confirmation" />
+
     <com.google.android.material.imageview.ShapeableImageView
         android:id="@+id/btnClose"
         android:layout_width="20dp"

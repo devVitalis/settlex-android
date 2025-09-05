@@ -259,7 +259,10 @@ public class SignUpEmailVerificationFragment extends Fragment {
 
     // ====================== NAVIGATION ======================
     private void navigateToFragment(Fragment fragment) {
-        requireActivity().getSupportFragmentManager().beginTransaction().replace(R.id.fragment_container, fragment).commit();
+        requireActivity().getSupportFragmentManager()
+                .beginTransaction()
+                .replace(R.id.fragment_container, fragment)
+                .commit();
     }
 
     private void navigateBack() {

@@ -5,7 +5,6 @@ import androidx.lifecycle.MutableLiveData;
 import androidx.lifecycle.ViewModel;
 
 import com.google.firebase.auth.FirebaseUser;
-import com.settlex.android.R;
 import com.settlex.android.data.enums.TransactionOperation;
 import com.settlex.android.data.enums.TransactionStatus;
 import com.settlex.android.data.remote.dto.SuggestionsDto;
@@ -60,7 +59,7 @@ public class DashboardViewModel extends ViewModel {
                     userDto.lastName,
                     userDto.username,
                     userDto.balance,
-                   userDto.commissionBalance
+                    userDto.commissionBalance
             ));
         });
         return userLiveData;
@@ -111,8 +110,13 @@ public class DashboardViewModel extends ViewModel {
      * Initiates a peer-to-peer payment transaction from one user to another.
      */
     public void payFriend(String senderUid, String receiverUserName, String transactionId, double amount, String serviceType, String description) {
-        payFriendLiveData.setValue(new Event<>(Result.loading()));
+        payFriendLiveData.postValue(new Event<>(Result.loading()));
         userRepo.payFriend(senderUid, receiverUserName, transactionId, amount, serviceType, description, new UserRepository.TransferCallback() {
+            @Override
+            public void onTransferPending() {
+                payFriendLiveData.postValue(new Event<>(Result.Pending()));
+            }
+
             @Override
             public void onTransferSuccess() {
                 payFriendLiveData.postValue(new Event<>(Result.success("Transfer Success")));

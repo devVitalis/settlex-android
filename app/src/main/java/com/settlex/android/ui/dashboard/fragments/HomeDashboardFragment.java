@@ -22,14 +22,13 @@ import com.settlex.android.databinding.FragmentDashboardHomeBinding;
 import com.settlex.android.ui.auth.activity.SignInActivity;
 import com.settlex.android.ui.auth.viewmodel.AuthViewModel;
 import com.settlex.android.ui.common.util.SettleXProgressBarController;
-import com.settlex.android.ui.dashboard.activity.PayAFriendActivity;
+import com.settlex.android.ui.dashboard.activity.TransactionActivity;
 import com.settlex.android.ui.dashboard.adapter.PromotionalBannerAdapter;
 import com.settlex.android.ui.dashboard.adapter.ServicesAdapter;
 import com.settlex.android.ui.dashboard.adapter.TransactionsAdapter;
 import com.settlex.android.ui.dashboard.components.GridSpacingItemDecoration;
 import com.settlex.android.ui.dashboard.model.ServiceUiModel;
 import com.settlex.android.ui.dashboard.viewmodel.DashboardViewModel;
-import com.settlex.android.util.event.Result;
 import com.settlex.android.util.string.StringUtil;
 
 import java.util.Arrays;
@@ -41,7 +40,6 @@ public class HomeDashboardFragment extends Fragment {
     private SettleXProgressBarController progressBarController;
     private FragmentDashboardHomeBinding binding;
     private DashboardViewModel dashboardViewModel;
-    private AuthViewModel authViewModel;
 
     public HomeDashboardFragment() {
         // Required empty public constructor
@@ -59,14 +57,10 @@ public class HomeDashboardFragment extends Fragment {
         binding = FragmentDashboardHomeBinding.inflate(inflater, container, false);
 
         dashboardViewModel = new ViewModelProvider(requireActivity()).get(DashboardViewModel.class);
-        authViewModel = new ViewModelProvider(requireActivity()).get(AuthViewModel.class);
         progressBarController = new SettleXProgressBarController(binding.getRoot());
 
         setupStatusBar();
         setupUiActions();
-
-//        UserRepository u = new UserRepository();
-//        u.searchUsername("vit");
 
         return binding.getRoot();
     }
@@ -75,7 +69,6 @@ public class HomeDashboardFragment extends Fragment {
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
 
-        observePayFriendResult();
     }
 
     // ======================= SETUP UI COMPONENTS =======================
@@ -87,7 +80,7 @@ public class HomeDashboardFragment extends Fragment {
         setupTxnRecyclerViewLayoutManager();
         setupDoubleBackToExit();
 
-        binding.payAFriend.setOnClickListener(v -> startActivity(new Intent(requireActivity(), PayAFriendActivity.class)));
+        binding.payAFriend.setOnClickListener(v -> startActivity(new Intent(requireActivity(), TransactionActivity.class)));
         binding.addMoney.setOnClickListener(v -> dashboardViewModel.signOut());
     }
 
@@ -126,29 +119,6 @@ public class HomeDashboardFragment extends Fragment {
                 binding.transactionContainer.setVisibility(View.VISIBLE);
             }
         });
-    }
-
-    private void observePayFriendResult() {
-        dashboardViewModel.getPayFriendResult().observe(getViewLifecycleOwner(), event -> {
-            Result<String> result = event.getContentIfNotHandled();
-            if (result == null) return;
-
-            switch (result.getStatus()) {
-                case LOADING -> progressBarController.show();
-                case SUCCESS -> onPaySuccess();
-                case ERROR -> onPayFailure(result.getMessage());
-            }
-        });
-    }
-
-    private void onPaySuccess() {
-        Toast.makeText(requireContext(), "Payment success", Toast.LENGTH_LONG).show();
-        progressBarController.hide();
-    }
-
-    private void onPayFailure(String error) {
-        Toast.makeText(requireContext(), error, Toast.LENGTH_LONG).show();
-        progressBarController.hide();
     }
 
     private void onNoLoggedUser() {
@@ -214,6 +184,13 @@ public class HomeDashboardFragment extends Fragment {
                 backPressedTime = System.currentTimeMillis();
             }
         });
+    }
+
+    private void navigateToFragment(Fragment fragment) {
+        requireActivity().getSupportFragmentManager()
+                .beginTransaction()
+                .replace(R.id.fragment_container, fragment)
+                .addToBackStack(null).commit();
     }
 
     private void setupStatusBar() {

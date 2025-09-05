@@ -10,9 +10,7 @@ package com.settlex.android.util.event;
 public class Result<T> {
 
     public enum Status {
-        LOADING,
-        SUCCESS,
-        ERROR
+        LOADING, PENDING, SUCCESS, ERROR
     }
 
     private final Status status;
@@ -33,7 +31,15 @@ public class Result<T> {
     }
 
     /**
+     * Factory method for a Pending state.
+     */
+    public static <T> Result<T> Pending() {
+        return new Result<>(Status.PENDING, null, null);
+    }
+
+    /**
      * Factory method for a success state.
+     *
      * @param data The data returned by the operation.
      */
     public static <T> Result<T> success(T data) {
@@ -42,6 +48,7 @@ public class Result<T> {
 
     /**
      * Factory method for an error state.
+     *
      * @param message Error message describing the failure.
      */
     public static <T> Result<T> error(String message) {

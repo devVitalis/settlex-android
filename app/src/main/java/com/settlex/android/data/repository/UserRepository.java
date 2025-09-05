@@ -1,5 +1,8 @@
 package com.settlex.android.data.repository;
 
+import android.os.Handler;
+import android.os.Looper;
+
 import androidx.lifecycle.LiveData;
 import androidx.lifecycle.MutableLiveData;
 
@@ -113,26 +116,51 @@ public class UserRepository {
     /**
      * Performs an Internal transfer btw users
      */
-    public void payFriend(String senderUid, String receiverUsername, String transactionId, double amount, String serviceType, String description, TransferCallback callback) {
+    public void payFriend(String senderUid, String receiverUsername, String transactionId,
+                          double amount, String serviceType, String description, TransferCallback callback) {
+
         Map<String, Object> data = new HashMap<>();
         data.put("senderUid", senderUid);
         data.put("receiverUsername", receiverUsername);
         data.put("transactionId", transactionId);
         data.put("amount", amount);
         data.put("serviceType", serviceType);
-        data.put("description", description); // Nullable
+        data.put("description", description);
+
+        Handler handler = new Handler(Looper.getMainLooper());
+        final boolean[] finished = {false};
+
+        Runnable timeoutRunnable = () -> {
+            if (!finished[0]) {
+                finished[0] = true;
+                callback.onTransferPending();
+            }
+        };
+
+        handler.postDelayed(timeoutRunnable, 10_000); // 10s timeout
 
         functions.getHttpsCallable("transferFunds")
                 .call(data)
-                .addOnSuccessListener(result -> callback.onTransferSuccess())
-                .addOnFailureListener(e -> {
-                    if (e instanceof FirebaseNetworkException || e instanceof IOException) {
-                        callback.onTransferFailed("Network request failed. Please check your network and try again");
-                        return;
+                .addOnSuccessListener(result -> {
+                    if (!finished[0]) {
+                        finished[0] = true;
+                        handler.removeCallbacks(timeoutRunnable);
+                        callback.onTransferSuccess();
                     }
-                    callback.onTransferFailed(e.getMessage());
+                })
+                .addOnFailureListener(e -> {
+                    if (!finished[0]) {
+                        finished[0] = true;
+                        handler.removeCallbacks(timeoutRunnable);
+                        if (e instanceof FirebaseNetworkException || e instanceof IOException) {
+                            callback.onTransferFailed("Network request failed. Please check your connection.");
+                        } else {
+                            callback.onTransferFailed(e.getMessage());
+                        }
+                    }
                 });
     }
+
 
     /**
      * Finds matching usernames in db
@@ -143,8 +171,7 @@ public class UserRepository {
                 .call(Collections.singletonMap("input", input))
                 .addOnSuccessListener(result -> {
                     List<SuggestionsDto> suggestionsDto = new ArrayList<>();
-                    //noinspection unchecked
-                    Map<String, Object> data = (Map<String, Object>) result.getData();
+                    Map<?, ?> data = (Map<?, ?>) result.getData();
                     if (data != null && Boolean.TRUE.equals(data.get("success"))) {
                         //noinspection unchecked
                         List<Map<String, Object>> suggestions = (List<Map<String, Object>>) data.get("suggestions");
@@ -161,7 +188,13 @@ public class UserRepository {
                     }
                     callback.onResult(suggestionsDto);
                 })
-                .addOnFailureListener(e -> callback.onFailure(e.getMessage()));
+                .addOnFailureListener(e -> {
+                    if (e instanceof FirebaseNetworkException || e instanceof IOException) {
+                        callback.onFailure("Network request failed. Please check your network and try again");
+                        return;
+                    }
+                    callback.onFailure(e.getMessage());
+                });
     }
 
     /**
@@ -177,6 +210,7 @@ public class UserRepository {
 
     // ============== Callbacks Interfaces
     public interface TransferCallback {
+        void onTransferPending();
         void onTransferSuccess();
 
         void onTransferFailed(String reason);

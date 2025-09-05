@@ -7,7 +7,7 @@
     android:layout_height="match_parent"
     android:background="@color/white"
     android:fitsSystemWindows="true"
-    tools:context=".ui.dashboard.activity.PayAFriendActivity">
+    tools:context=".ui.dashboard.fragments.PayAFriendFragment">
 
     <!--Header-->
     <LinearLayout
@@ -135,17 +135,17 @@
                 <LinearLayout
                     android:id="@+id/selectedRecipient"
                     android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
+                    android:layout_height="match_parent"
                     android:layout_marginTop="5dp"
-                    android:background="@drawable/bg_8dp_light_blue"
+                    android:background="@drawable/bg_8dp_fill_stroke_light_blue_and_blue"
                     android:gravity="center_vertical"
-                    android:padding="5dp"
                     android:visibility="gone">
 
                     <ImageView
                         android:layout_width="20dp"
                         android:layout_height="20dp"
-                        android:layout_marginEnd="5dp"
+                        android:layout_marginStart="5dp"
+                        android:contentDescription="@null"
                         android:src="@drawable/ic_checkbox_checked" />
 
                     <TextView
@@ -153,19 +153,32 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:includeFontPadding="false"
+                        android:padding="5dp"
                         android:textColor="@color/blue"
                         android:textSize="14sp"
+                        android:textStyle="bold"
                         tools:text="BENJAMIN NNAEMEKA" />
 
-                    <TextView
-                        android:id="@+id/selectedRecipientUsername"
-                        android:layout_width="wrap_content"
+                    <LinearLayout
+                        android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:layout_marginStart="5dp"
-                        android:includeFontPadding="false"
-                        android:textColor="@color/blue"
-                        android:textSize="14sp"
-                        tools:text="\@vitalis" />
+                        android:background="@drawable/bg_20dp_start_rounded_blue"
+                        android:gravity="center_vertical">
+
+                        <TextView
+                            android:id="@+id/selectedRecipientUsername"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:ellipsize="end"
+                            android:includeFontPadding="false"
+                            android:maxLines="1"
+                            android:padding="5dp"
+                            android:textColor="@color/white"
+                            android:textSize="14sp"
+                            android:textStyle="bold"
+                            tools:text="\@vitalis" />
+                    </LinearLayout>
                 </LinearLayout>
 
                 <FrameLayout
@@ -257,7 +270,7 @@
                         android:focusable="false"
                         android:focusableInTouchMode="false"
                         android:fontFamily="@font/poppins_regular"
-                        android:hint="100.00 - 500,000.00"
+                        android:hint="100.00 - 500,000,000.00"
                         android:imeOptions="actionDone"
                         android:includeFontPadding="false"
                         android:inputType="numberDecimal"

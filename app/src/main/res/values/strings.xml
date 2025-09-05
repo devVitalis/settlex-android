@@ -9,9 +9,14 @@
     <string name="error_password_mismatch">Passwords do not match!</string>
     <string name="error_no_internet">Connection lost. Please check your Wi-Fi or cellular data and try again</string>
 
-    <!-- Dashboard -->
+    <!-- Transaction -->
     <string name="No_user_found_with_tag">No user found with tag, %s</string>
+    <string name="pending">Transaction Pending</string>
+    <string name="success">Transaction Successful</string>
+    <string name="failed">Transaction Failed</string>
 
     <!-- XML Layouts -->
     <string name="password_update_success">Your password has been changed successfully. You will now need to use your new password to sign in on all your devices.</string>
+    <!-- TODO: Remove or change this placeholder text -->
+    <string name="hello_blank_fragment">Hello blank fragment</string>
 </resources>

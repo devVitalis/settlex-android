@@ -13,13 +13,7 @@ public class DashboardUiUtil {
     private DashboardUiUtil() {
     }
 
-    public static void showPayConfirmation(Context context, String recipientUsername,
-                                           int profilePic,
-                                           String recipientName,
-                                           double amountToSend,
-                                           double senderWalletBalance,
-                                           double senderCommissionBalance,
-                                           final Runnable onPay) {
+    public static void showPayConfirmation(Context context, String recipientUsername, int profilePic, String recipientName, double amountToSend, double senderWalletBalance, double senderCommissionBalance, final Runnable onPay) {
         BottomSheetConfirmPaymentBinding binding = BottomSheetConfirmPaymentBinding.inflate(LayoutInflater.from(context));
         BottomSheetDialog dialog = new BottomSheetDialog(context, R.style.Widget_SettleX_BottomSheetDialog);
         dialog.setContentView(binding.getRoot());

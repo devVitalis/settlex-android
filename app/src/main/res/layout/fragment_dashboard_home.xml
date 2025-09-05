@@ -291,7 +291,7 @@
 
                         <!-- Receive Money -->
                         <LinearLayout
-                            android:id="@+id/receiveMoneyLayout"
+                            android:id="@+id/receiveMoney"
                             android:layout_width="100dp"
                             android:layout_height="wrap_content"
                             android:background="@drawable/bg_8dp_transparent_white"

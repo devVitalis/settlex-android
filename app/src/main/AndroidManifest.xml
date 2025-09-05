@@ -16,10 +16,7 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.SettleX">
         <activity
-            android:name=".ui.dashboard.activity.TxnStatusActivity"
-            android:exported="false" />
-        <activity
-            android:name=".ui.dashboard.activity.PayAFriendActivity"
+            android:name=".ui.dashboard.activity.TransactionActivity"
             android:exported="false" />
         <activity
             android:name=".ui.auth.activity.PasswordChangeActivity"

@@ -1,26 +1,29 @@
-package com.settlex.android.ui.dashboard.activity;
+package com.settlex.android.ui.dashboard.fragments;
 
+import android.annotation.SuppressLint;
 import android.content.Context;
-import android.content.Intent;
-import android.graphics.Rect;
 import android.os.Bundle;
 import android.text.Editable;
 import android.text.InputType;
 import android.text.TextWatcher;
+import android.view.LayoutInflater;
 import android.view.MotionEvent;
 import android.view.View;
+import android.view.ViewGroup;
 import android.view.Window;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.EditText;
 
-import androidx.appcompat.app.AppCompatActivity;
+import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
 import androidx.core.content.ContextCompat;
+import androidx.fragment.app.Fragment;
 import androidx.lifecycle.ViewModelProvider;
 import androidx.recyclerview.widget.LinearLayoutManager;
 
 import com.settlex.android.R;
 import com.settlex.android.data.enums.TransactionServiceType;
-import com.settlex.android.databinding.ActivityPayAfriendBinding;
+import com.settlex.android.databinding.FragmentPayAFriendBinding;
 import com.settlex.android.ui.common.util.SettleXProgressBarController;
 import com.settlex.android.ui.dashboard.adapter.SuggestionAdapter;
 import com.settlex.android.ui.dashboard.model.SuggestionsUiModel;
@@ -38,26 +41,38 @@ import java.util.Collections;
 import java.util.List;
 import java.util.Locale;
 
-public class PayAFriendActivity extends AppCompatActivity {
-    private ActivityPayAfriendBinding binding;
+public class PayAFriendFragment extends Fragment {
+
+    public PayAFriendFragment() {
+        // Required empty public constructor
+    }
+
+    private double amount;
+    private Bundle bundle;
+    private FragmentPayAFriendBinding binding;
     private SettleXProgressBarController progressBarController;
     private SuggestionAdapter suggestionAdapter;
     private DashboardViewModel dashboardViewModel;
     private UserUiModel currentUser;
 
     @Override
-    protected void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-        binding = ActivityPayAfriendBinding.inflate(getLayoutInflater());
-        setContentView(binding.getRoot());
+    public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
+        binding = FragmentPayAFriendBinding.inflate(inflater, container, false);
 
-        progressBarController = new SettleXProgressBarController(binding.getRoot());
-        dashboardViewModel = new ViewModelProvider(this).get(DashboardViewModel.class);
+        dashboardViewModel = new ViewModelProvider(requireActivity()).get(DashboardViewModel.class);
         suggestionAdapter = new SuggestionAdapter();
+        bundle = new Bundle();
 
         setupStatusBar();
         setupUiActions();
         setupSuggestionRecyclerView();
+
+        return binding.getRoot();
+    }
+
+    @Override
+    public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
+        super.onViewCreated(view, savedInstanceState);
 
         // OBSERVERS
         observeUserData();
@@ -66,31 +81,54 @@ public class PayAFriendActivity extends AppCompatActivity {
     }
 
     private void observeUserData() {
-        dashboardViewModel.getAuthState().observe(this, authState -> {
+        dashboardViewModel.getAuthState().observe(getViewLifecycleOwner(), authState -> {
             if (authState == null) return;
-            dashboardViewModel.getUserData(authState.getUid()).observe(this, user -> this.currentUser = user);
+            dashboardViewModel.getUserData(authState.getUid()).observe(getViewLifecycleOwner(), user -> this.currentUser = user);
         });
     }
 
     private void observeSendMoney() {
-        dashboardViewModel.getPayFriendResult().observe(this, event -> {
+        dashboardViewModel.getPayFriendResult().observe(getViewLifecycleOwner(), event -> {
             Result<String> result = event.getContentIfNotHandled();
             if (result == null) return;
+            progressBarController = new SettleXProgressBarController(binding.getRoot());
+
             switch (result.getStatus()) {
                 case LOADING -> progressBarController.show();
+                case PENDING -> onSendMoneyPending();
                 case SUCCESS -> onSendMoneySuccess();
                 case ERROR -> onSendMoneyFailed();
             }
         });
     }
 
+    private void onSendMoneyPending() {
+        bundle.putString("txn_amount", StringUtil.formatToNaira(amount));
+
+        TxnStatusFragment txnStatusFragment = new TxnStatusFragment();
+        txnStatusFragment.setArguments(bundle);
+
+        navigateToFragment(txnStatusFragment);
+        progressBarController.hide();
+    }
+
     private void onSendMoneySuccess() {
-        startActivity(new Intent(this, TxnStatusActivity.class));
-        finish();
+        bundle.putString("txn_amount", StringUtil.formatToNaira(amount));
+
+        TxnStatusFragment txnStatusFragment = new TxnStatusFragment();
+        txnStatusFragment.setArguments(bundle);
+
+        navigateToFragment(txnStatusFragment);
         progressBarController.hide();
     }
 
     private void onSendMoneyFailed() {
+        bundle.putString("txn_amount", StringUtil.formatToNaira(amount));
+
+        TxnStatusFragment txnStatusFragment = new TxnStatusFragment();
+        txnStatusFragment.setArguments(bundle);
+
+        navigateToFragment(txnStatusFragment);
         progressBarController.hide();
     }
 
@@ -100,31 +138,16 @@ public class PayAFriendActivity extends AppCompatActivity {
         double amountToSend = Double.parseDouble(binding.editTxtAmount.getText().toString().replaceAll(",", ""));
         String description = binding.editTxtDescription.getText().toString().trim();
 
-        DashboardUiUtil.showPayConfirmation(
-                this,
-                recipientUsername,
-                R.drawable.ic_avatar, // TODO: setup profile pic with real data
-                recipientName,
-                amountToSend,
-                senderBalance,
-                senderCommBalance,
-                () -> initPayAFriend(senderUid, recipientUsername, amountToSend, senderUsername, description)
-        );
+        DashboardUiUtil.showPayConfirmation(requireActivity(), recipientUsername, R.drawable.ic_avatar, // TODO: setup profile pic with real data
+                recipientName, amountToSend, senderBalance, senderCommBalance, () -> initPayAFriend(senderUid, recipientUsername, amountToSend, senderUsername, description));
     }
 
     private void initPayAFriend(String senderUid, String recipientUsername, double amountToSend, String senderUsername, String description) {
-        dashboardViewModel.payFriend(
-                senderUid,
-                recipientUsername,
-                TxnIdGenerator.generate(senderUsername),
-                amountToSend,
-                String.valueOf(TransactionServiceType.PAY_A_FRIEND),
-                description
-        );
+        dashboardViewModel.payFriend(senderUid, recipientUsername, TxnIdGenerator.generate(senderUsername), amountToSend, String.valueOf(TransactionServiceType.PAY_A_FRIEND), description);
     }
 
     private void observeUserSuggestions() {
-        dashboardViewModel.getUsernameSuggestion().observe(this, suggestions -> {
+        dashboardViewModel.getUsernameSuggestion().observe(requireActivity(), suggestions -> {
             if (suggestions == null) return;
 
             switch (suggestions.getStatus()) {
@@ -136,7 +159,7 @@ public class PayAFriendActivity extends AppCompatActivity {
     }
 
     private void searchUsername(String query) {
-        dashboardViewModel.searchUsername(query);
+        dashboardViewModel.searchUsername(StringUtil.removeAtInUsername(query));
     }
 
     private void onSuggestionResultLoading() {
@@ -145,6 +168,7 @@ public class PayAFriendActivity extends AppCompatActivity {
 
         binding.selectedRecipient.setVisibility(View.GONE);
         binding.txtUsernameFeedback.setVisibility(View.GONE);
+        setupInputValidation();
 
         binding.shimmerLayout.startShimmer();
         binding.shimmerLayout.setVisibility(View.VISIBLE);
@@ -171,7 +195,7 @@ public class PayAFriendActivity extends AppCompatActivity {
     }
 
     private void setupSuggestionRecyclerView() {
-        LinearLayoutManager layoutManager = new LinearLayoutManager(this);
+        LinearLayoutManager layoutManager = new LinearLayoutManager(requireActivity());
         layoutManager.setOrientation(LinearLayoutManager.VERTICAL);
         binding.suggestionsRecyclerView.setLayoutManager(layoutManager);
 
@@ -182,6 +206,7 @@ public class PayAFriendActivity extends AppCompatActivity {
         suggestionAdapter.setOnItemClickListener(model -> {
             binding.editTxtUsername.setText(StringUtil.removeAtInUsername(model.getUsername()));
             binding.editTxtUsername.setSelection(binding.editTxtUsername.getText().length());
+            binding.btnVerify.setVisibility(View.GONE);
 
             suggestionAdapter.submitList(Collections.emptyList());
             binding.suggestionsRecyclerView.setVisibility(View.GONE);
@@ -189,6 +214,7 @@ public class PayAFriendActivity extends AppCompatActivity {
             binding.selectedRecipientName.setText(model.getFullName().toUpperCase());
             binding.selectedRecipientUsername.setText(model.getUsername());
             binding.selectedRecipient.setVisibility(View.VISIBLE);
+            setupInputValidation();
         });
     }
 
@@ -196,15 +222,12 @@ public class PayAFriendActivity extends AppCompatActivity {
         setupEditTextFocusHandlers();
         setupTextInputWatcher();
         attachCurrencyFormatter(binding.editTxtAmount);
+        clearFocusAndHideKeyboardOnOutsideTap(binding.getRoot());
 
         // Listeners
-        binding.imgBackBefore.setOnClickListener(v -> getOnBackPressedDispatcher().onBackPressed());
+        binding.imgBackBefore.setOnClickListener(v -> requireActivity().getOnBackPressedDispatcher().onBackPressed());
         binding.btnVerify.setOnClickListener(v -> searchUsername(binding.editTxtUsername.getText().toString().trim().toLowerCase()));
-        binding.btnNext.setOnClickListener(v -> showPayConfirmation(
-                currentUser.getBalance(),
-                currentUser.getCommissionBalance(),
-                currentUser.getUid(),
-                currentUser.getUsername()));
+        binding.btnNext.setOnClickListener(v -> showPayConfirmation(currentUser.getBalance(), currentUser.getCommissionBalance(), currentUser.getUid(), currentUser.getUsername()));
     }
 
     private void setupTextInputWatcher() {
@@ -238,6 +261,9 @@ public class PayAFriendActivity extends AppCompatActivity {
 
             @Override
             public void onTextChanged(CharSequence s, int start, int before, int count) {
+                if (!s.toString().isEmpty()){
+                    amount = Double.parseDouble(binding.editTxtAmount.getText().toString().replaceAll(",", ""));
+                }
                 binding.txtAmountFeedback.setVisibility((!validateAmount(s.toString()) && !s.toString().isEmpty()) ? View.VISIBLE : View.GONE);
                 setupInputValidation();
             }
@@ -262,7 +288,7 @@ public class PayAFriendActivity extends AppCompatActivity {
 
         try {
             double amount = Double.parseDouble(cleanAmount);
-            return amount >= 100 && amount <= 500_000;
+            return amount >= 100 && amount <= 500_000_000;
         } catch (NumberFormatException ignored) {
             return false;
         }
@@ -319,9 +345,7 @@ public class PayAFriendActivity extends AppCompatActivity {
                     BigInteger bigInt = new BigInteger(integerPart.isEmpty() ? "0" : integerPart);
                     String groupedInteger = integerFormatter.format(bigInt);
 
-                    String formattedValue = (decimalPart != null)
-                            ? (groupedInteger + "." + decimalPart)
-                            : groupedInteger;
+                    String formattedValue = (decimalPart != null) ? (groupedInteger + "." + decimalPart) : groupedInteger;
 
                     if (!formattedValue.equals(rawInput)) {
                         isEditing = true;
@@ -399,28 +423,42 @@ public class PayAFriendActivity extends AppCompatActivity {
         });
     }
 
+    private void navigateToFragment(Fragment fragment) {
+        requireActivity().getSupportFragmentManager()
+                .beginTransaction()
+                .replace(R.id.fragment_container, fragment)
+                .commit();
+    }
+
     private void setupStatusBar() {
-        Window window = getWindow();
-        window.setStatusBarColor(ContextCompat.getColor(this, R.color.white));
+        Window window = requireActivity().getWindow();
+        window.setStatusBarColor(ContextCompat.getColor(requireContext(), R.color.gray_light));
         View decorView = window.getDecorView();
         decorView.setSystemUiVisibility(decorView.getSystemUiVisibility() | View.SYSTEM_UI_FLAG_LIGHT_STATUS_BAR);
     }
 
-    @Override
-    public boolean dispatchTouchEvent(MotionEvent event) {
-        if (event.getAction() == MotionEvent.ACTION_DOWN) {
-            View focus = getCurrentFocus();
-            if (focus instanceof EditText) {
-                Rect rect = new Rect();
-                focus.getGlobalVisibleRect(rect);
-                if (!rect.contains((int) event.getRawX(), (int) event.getRawY())) {
-                    focus.clearFocus();
-                    InputMethodManager imm = (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
-                    if (imm != null) imm.hideSoftInputFromWindow(focus.getWindowToken(), 0);
-                    binding.main.requestFocus();
-                }
+    @SuppressLint("ClickableViewAccessibility")
+    private void clearFocusAndHideKeyboardOnOutsideTap(View root) {
+        if (!(root instanceof EditText)) {
+            root.setOnTouchListener((v, event) -> {
+                if (event.getAction() == MotionEvent.ACTION_DOWN) hideKeyboard();
+                return false;
+            });
+        }
+
+        if (root instanceof ViewGroup) {
+            for (int i = 0; i < ((ViewGroup) root).getChildCount(); i++) {
+                clearFocusAndHideKeyboardOnOutsideTap(((ViewGroup) root).getChildAt(i));
             }
         }
-        return super.dispatchTouchEvent(event);
+    }
+
+    private void hideKeyboard() {
+        View focusedView = requireActivity().getCurrentFocus();
+        if (focusedView != null) {
+            InputMethodManager imm = (InputMethodManager) requireContext().getSystemService(Context.INPUT_METHOD_SERVICE);
+            imm.hideSoftInputFromWindow(focusedView.getWindowToken(), 0);
+            focusedView.clearFocus();
+        }
     }
 }
