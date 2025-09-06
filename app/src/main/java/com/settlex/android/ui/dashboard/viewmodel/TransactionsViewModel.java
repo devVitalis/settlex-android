@@ -4,13 +4,11 @@ import androidx.lifecycle.LiveData;
 import androidx.lifecycle.MutableLiveData;
 import androidx.lifecycle.ViewModel;
 
-import com.google.firebase.auth.FirebaseUser;
 import com.settlex.android.data.enums.TransactionOperation;
 import com.settlex.android.data.enums.TransactionStatus;
-import com.settlex.android.data.remote.dto.SuggestionsDto;
 import com.settlex.android.data.remote.dto.TransactionDto;
-import com.settlex.android.data.repository.UserRepository;
-import com.settlex.android.ui.dashboard.model.SuggestionsUiModel;
+import com.settlex.android.data.repository.TransactionRepository;
+import com.settlex.android.ui.dashboard.model.RecipientUiModel;
 import com.settlex.android.ui.dashboard.model.TransactionUiModel;
 import com.settlex.android.ui.dashboard.model.UserUiModel;
 import com.settlex.android.util.event.Event;
@@ -21,55 +19,31 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
-public class DashboardViewModel extends ViewModel {
-    private final UserRepository userRepo;
+public class TransactionsViewModel extends ViewModel {
+
+    private final TransactionRepository transactionRepo;
 
     // LiveData holders
     private final MutableLiveData<UserUiModel> userLiveData = new MutableLiveData<>();
     private final MutableLiveData<List<TransactionUiModel>> transactionsLiveData = new MutableLiveData<>();
     private final MutableLiveData<Event<Result<String>>> payFriendLiveData = new MutableLiveData<>();
-    private final MutableLiveData<Result<List<SuggestionsUiModel>>> suggestionsLiveData = new MutableLiveData<>();
+    private final MutableLiveData<Result<List<RecipientUiModel>>> usernameSearchLiveData = new MutableLiveData<>();
 
 
-    public DashboardViewModel() {
-        this.userRepo = new UserRepository();
+    public TransactionsViewModel() {
+        this.transactionRepo = new TransactionRepository();
     }
 
-    // ====================== LIVEDATA GETTERS ======================
-    public LiveData<Event<Result<String>>> getPayFriendResult() {
+    //  GETTERS ====================
+    public LiveData<Event<Result<String>>> getPayFriendLiveData() {
         return payFriendLiveData;
-    }
-
-    public LiveData<Result<List<SuggestionsUiModel>>> getUsernameSuggestion() {
-        return suggestionsLiveData;
-    }
-
-    /**
-     * Update the UI model for current user info
-     */
-    public LiveData<UserUiModel> getUserData(String uid) {
-        userRepo.getUser(uid).observeForever(userDto -> {
-            if (userDto == null) {
-                userLiveData.setValue(null);
-                return;
-            }
-            userLiveData.setValue(new UserUiModel(
-                    userDto.uid,
-                    userDto.firstName,
-                    userDto.lastName,
-                    userDto.username,
-                    userDto.balance,
-                    userDto.commissionBalance
-            ));
-        });
-        return userLiveData;
     }
 
     /**
      * Expose transactions LiveData
      */
     public LiveData<List<TransactionUiModel>> getTransactions(String currentUserUid, int limit) {
-        userRepo.getRecentTransactions(currentUserUid, limit).observeForever(transaction -> {
+        transactionRepo.getRecentTransactions(currentUserUid, limit).observeForever(transaction -> {
             if (transaction == null || transaction.isEmpty()) {
                 transactionsLiveData.setValue(Collections.emptyList());
                 return;
@@ -111,58 +85,27 @@ public class DashboardViewModel extends ViewModel {
      */
     public void payFriend(String senderUid, String receiverUserName, String transactionId, double amount, String serviceType, String description) {
         payFriendLiveData.postValue(new Event<>(Result.loading()));
-        userRepo.payFriend(senderUid, receiverUserName, transactionId, amount, serviceType, description, new UserRepository.TransferCallback() {
+        transactionRepo.payFriend(senderUid, receiverUserName, transactionId, amount, serviceType, description, new TransactionRepository.TransferCallback() {
             @Override
             public void onTransferPending() {
-                payFriendLiveData.postValue(new Event<>(Result.Pending()));
+                payFriendLiveData.postValue(new Event<>(Result.Pending("Transaction Pending")));
             }
 
             @Override
             public void onTransferSuccess() {
-                payFriendLiveData.postValue(new Event<>(Result.success("Transfer Success")));
+                payFriendLiveData.postValue(new Event<>(Result.success("Transaction Successful")));
             }
 
             @Override
             public void onTransferFailed(String reason) {
-                payFriendLiveData.postValue(new Event<>(Result.error(reason)));
+                payFriendLiveData.postValue(new Event<>(Result.error("Transaction Failed")));
             }
         });
-    }
-
-    /**
-     * Returns username query results.
-     */
-    public void searchUsername(String query) {
-        suggestionsLiveData.postValue(Result.loading());
-        userRepo.searchUsername(query, new UserRepository.SearchUsernameCallback() {
-            @Override
-            public void onResult(List<SuggestionsDto> suggestionsDto) {
-                // Map DTO -> UI Model
-                List<SuggestionsUiModel> suggestionsUiModelList = new ArrayList<>();
-                for (SuggestionsDto dto : suggestionsDto) {
-                    suggestionsUiModelList.add(new SuggestionsUiModel("@" + dto.username, dto.firstName + " " + dto.lastName, dto.profileUrl));
-                }
-                suggestionsLiveData.postValue(Result.success(suggestionsUiModelList));
-            }
-
-            @Override
-            public void onFailure(String reason) {
-                suggestionsLiveData.postValue(Result.success(Collections.emptyList()));
-            }
-        });
-    }
-
-    public void signOut() {
-        userRepo.signOut();
-    }
-
-    public LiveData<FirebaseUser> getAuthState() {
-        return userRepo.getAuthState();
     }
 
     @Override
     protected void onCleared() {
         super.onCleared();
-        userRepo.removeListener();
+        transactionRepo.removeListener();
     }
 }

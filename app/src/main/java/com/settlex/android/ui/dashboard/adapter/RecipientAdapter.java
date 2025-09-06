@@ -10,14 +10,12 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.settlex.android.R;
 import com.settlex.android.databinding.ItemSuggestionBinding;
-import com.settlex.android.ui.dashboard.model.SuggestionsUiModel;
+import com.settlex.android.ui.dashboard.model.RecipientUiModel;
 
-import java.util.Collections;
-
-public class SuggestionAdapter extends ListAdapter<SuggestionsUiModel, SuggestionAdapter.SuggestionsViewHolder> {
+public class RecipientAdapter extends ListAdapter<RecipientUiModel, RecipientAdapter.SuggestionsViewHolder> {
 
     public interface OnItemClickListener {
-        void onItemClick(SuggestionsUiModel model);
+        void onItemClick(RecipientUiModel model);
     }
 
     private OnItemClickListener onItemClickListener;
@@ -26,18 +24,18 @@ public class SuggestionAdapter extends ListAdapter<SuggestionsUiModel, Suggestio
         this.onItemClickListener = listener;
     }
 
-    public SuggestionAdapter() {
+    public RecipientAdapter() {
         super(DIFF_CALLBACK);
     }
 
-    private static final DiffUtil.ItemCallback<SuggestionsUiModel> DIFF_CALLBACK = new DiffUtil.ItemCallback<>() {
+    private static final DiffUtil.ItemCallback<RecipientUiModel> DIFF_CALLBACK = new DiffUtil.ItemCallback<>() {
         @Override
-        public boolean areItemsTheSame(@NonNull SuggestionsUiModel oldItem, @NonNull SuggestionsUiModel newItem) {
+        public boolean areItemsTheSame(@NonNull RecipientUiModel oldItem, @NonNull RecipientUiModel newItem) {
             return oldItem.getUsername().equals(newItem.getUsername());
         }
 
         @Override
-        public boolean areContentsTheSame(@NonNull SuggestionsUiModel oldItem, @NonNull SuggestionsUiModel newItem) {
+        public boolean areContentsTheSame(@NonNull RecipientUiModel oldItem, @NonNull RecipientUiModel newItem) {
             return oldItem.equals(newItem);
         }
     };
@@ -62,7 +60,7 @@ public class SuggestionAdapter extends ListAdapter<SuggestionsUiModel, Suggestio
             this.binding = binding;
         }
 
-        public void bind(SuggestionsUiModel model, OnItemClickListener listener) {
+        public void bind(RecipientUiModel model, OnItemClickListener listener) {
             binding.userProfilePic.setImageResource(R.drawable.ic_avatar);
             binding.userFullName.setText(model.getFullName());
             binding.username.setText(model.getUsername());

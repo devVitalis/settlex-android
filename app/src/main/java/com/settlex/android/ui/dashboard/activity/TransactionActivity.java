@@ -6,7 +6,7 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.fragment.app.Fragment;
 
 import com.settlex.android.R;
-import com.settlex.android.ui.dashboard.fragments.PayAFriendFragment;
+import com.settlex.android.ui.dashboard.fragments.transactions.PayAFriendFragment;
 
 public class TransactionActivity extends AppCompatActivity {
 

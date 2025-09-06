@@ -264,12 +264,26 @@
         </LinearLayout>
     </LinearLayout>
 
+    <TextView
+        android:id="@+id/txtFeedback"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center"
+        android:fontFamily="@font/poppins_regular"
+        android:includeFontPadding="false"
+        android:layout_marginTop="20dp"
+        android:textColor="@color/red"
+        android:visibility="gone"
+        android:textSize="12sp"
+        android:text="Insufficient Balance" />
+
     <com.google.android.material.button.MaterialButton
         android:id="@+id/btnPay"
         style="@style/Widget.SettleXApp.Button.Filled.Blue"
         android:layout_width="match_parent"
         android:layout_height="55dp"
-        android:layout_marginTop="20dp"
+        android:layout_marginTop="5dp"
+        android:enabled="false"
         android:text="Pay"
         android:textSize="15sp" />
 </LinearLayout>

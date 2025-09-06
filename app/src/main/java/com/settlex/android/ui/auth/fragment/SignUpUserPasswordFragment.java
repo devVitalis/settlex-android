@@ -37,7 +37,7 @@ import com.settlex.android.util.network.NetworkMonitor;
 import java.util.Objects;
 
 public class SignUpUserPasswordFragment extends Fragment {
-    private boolean isConnected = false;
+    private boolean isConnected = false; // Network connection
 
     private FragmentSignUpUserPasswordBinding binding;
     private SettleXProgressBarController progressBarController;
@@ -91,7 +91,7 @@ public class SignUpUserPasswordFragment extends Fragment {
                 switch (result.getStatus()) {
                     case LOADING -> progressBarController.show();
                     case SUCCESS -> onRegistrationSuccess();
-                    case ERROR -> onRegistrationFailure(result.getMessage());
+                    case FAILED -> onRegistrationFailure(result.getMessage());
                 }
             }
         });

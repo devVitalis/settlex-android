@@ -8,30 +8,30 @@ import java.util.UUID;
 
 /**
  * Transaction ID Generator
- * Combines: username hash + timestamp + UUID
+ * Compact + unique:
+ * - 8-char username hash
+ * - Base36 timestamp (~8 chars)
+ * - 16-char UUID slice
  */
-public class TxnIdGenerator {
+public class TransactionIdGenerator {
 
-    // Generate unique transaction ID
+    // Generate compact unique transaction ID
     public static String generate(String username) {
-        String userHash = hashUsername(username);
-        long timestamp = System.currentTimeMillis();
+        String userHash = hashUsername(username); // 8 chars
+        String tsBase36 = Long.toString(System.currentTimeMillis(), 36); // ~8 chars
+        String uuidShort = UUID.randomUUID().toString().replace("-", "").substring(0, 16); // 16 chars
 
-        // UUID without dashes to keep ID compact
-        String uuid = UUID.randomUUID().toString().replace("-", "").toLowerCase(Locale.ROOT);
-
-        return userHash + timestamp + uuid;
+        return userHash + tsBase36 + uuidShort; // ~32 chars total
     }
 
-    // Hash the username into lowercase hex (first 8 chars for compactness)
+    // Hash the username into lowercase hex (first 4 bytes -> 8 chars)
     private static String hashUsername(String username) {
         try {
             MessageDigest digest = MessageDigest.getInstance("SHA-256");
             byte[] hash = digest.digest(username.toLowerCase(Locale.ROOT).getBytes(StandardCharsets.UTF_8));
 
-            // Convert first 8 bytes to hex string
             StringBuilder hexString = new StringBuilder();
-            for (int i = 0; i < 8; i++) {
+            for (int i = 0; i < 4; i++) { // 4 bytes = 8 hex chars
                 String hex = Integer.toHexString(0xff & hash[i]);
                 if (hex.length() == 1) hexString.append('0');
                 hexString.append(hex);

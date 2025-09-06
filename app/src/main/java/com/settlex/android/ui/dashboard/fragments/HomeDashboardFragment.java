@@ -20,7 +20,6 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import com.settlex.android.R;
 import com.settlex.android.databinding.FragmentDashboardHomeBinding;
 import com.settlex.android.ui.auth.activity.SignInActivity;
-import com.settlex.android.ui.auth.viewmodel.AuthViewModel;
 import com.settlex.android.ui.common.util.SettleXProgressBarController;
 import com.settlex.android.ui.dashboard.activity.TransactionActivity;
 import com.settlex.android.ui.dashboard.adapter.PromotionalBannerAdapter;
@@ -28,7 +27,8 @@ import com.settlex.android.ui.dashboard.adapter.ServicesAdapter;
 import com.settlex.android.ui.dashboard.adapter.TransactionsAdapter;
 import com.settlex.android.ui.dashboard.components.GridSpacingItemDecoration;
 import com.settlex.android.ui.dashboard.model.ServiceUiModel;
-import com.settlex.android.ui.dashboard.viewmodel.DashboardViewModel;
+import com.settlex.android.ui.dashboard.viewmodel.TransactionsViewModel;
+import com.settlex.android.ui.dashboard.viewmodel.UserViewModel;
 import com.settlex.android.util.string.StringUtil;
 
 import java.util.Arrays;
@@ -39,7 +39,8 @@ public class HomeDashboardFragment extends Fragment {
     private String currentUserUid;
     private SettleXProgressBarController progressBarController;
     private FragmentDashboardHomeBinding binding;
-    private DashboardViewModel dashboardViewModel;
+    private UserViewModel userViewModel;
+    private TransactionsViewModel transactionsViewModel;
 
     public HomeDashboardFragment() {
         // Required empty public constructor
@@ -56,7 +57,8 @@ public class HomeDashboardFragment extends Fragment {
     public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         binding = FragmentDashboardHomeBinding.inflate(inflater, container, false);
 
-        dashboardViewModel = new ViewModelProvider(requireActivity()).get(DashboardViewModel.class);
+        userViewModel = new ViewModelProvider(requireActivity()).get(UserViewModel.class);
+        transactionsViewModel = new ViewModelProvider(requireActivity()).get(TransactionsViewModel.class);
         progressBarController = new SettleXProgressBarController(binding.getRoot());
 
         setupStatusBar();
@@ -81,12 +83,12 @@ public class HomeDashboardFragment extends Fragment {
         setupDoubleBackToExit();
 
         binding.payAFriend.setOnClickListener(v -> startActivity(new Intent(requireActivity(), TransactionActivity.class)));
-        binding.addMoney.setOnClickListener(v -> dashboardViewModel.signOut());
+        binding.addMoney.setOnClickListener(v -> userViewModel.signOut());
     }
 
     // ========================== OBSERVERS ============================
     private void observeUserState() {
-        dashboardViewModel.getAuthState().observe(getViewLifecycleOwner(), authState -> {
+        userViewModel.getAuthStateLiveData().observe(getViewLifecycleOwner(), authState -> {
             if (authState == null) {
                 // Show logged out layout
                 onNoLoggedUser();
@@ -101,7 +103,7 @@ public class HomeDashboardFragment extends Fragment {
 
     private void observeAndDisplayUserData(String uid) {
         double MILLION_THRESHOLD = 999_999_999;
-        dashboardViewModel.getUserData(uid).observe(getViewLifecycleOwner(), userData -> {
+        userViewModel.getUserData(uid).observe(getViewLifecycleOwner(), userData -> {
             if (userData != null) {
                 binding.userDisplayName.setText(userData.getUserFullName());
                 binding.userBalance.setText((userData.getBalance() > MILLION_THRESHOLD) ? StringUtil.formatToNairaShort(userData.getBalance()) : StringUtil.formatToNaira(userData.getBalance()));
@@ -112,7 +114,7 @@ public class HomeDashboardFragment extends Fragment {
 
     private void observeAndLoadRecentTransactions(String uid) {
         int MAX_TXN_DISPLAY = 3;
-        dashboardViewModel.getTransactions(uid, MAX_TXN_DISPLAY).observe(getViewLifecycleOwner(), transactions -> {
+        transactionsViewModel.getTransactions(uid, MAX_TXN_DISPLAY).observe(getViewLifecycleOwner(), transactions -> {
             if (transactions != null && !transactions.isEmpty()) {
                 TransactionsAdapter adapter = new TransactionsAdapter(transactions);
                 binding.transactionsRecyclerView.setAdapter(adapter);

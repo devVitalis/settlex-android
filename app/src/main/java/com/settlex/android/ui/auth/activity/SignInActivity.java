@@ -62,7 +62,7 @@ public class SignInActivity extends AppCompatActivity {
 
     // ====================== NETWORK & DATA OBSERVERS ======================
     private void observeUserState() {
-        authViewModel.getUserState().observe(this, currentUser -> {
+        authViewModel.getUserStateLiveData().observe(this, currentUser -> {
             if (currentUser != null) {
                 showLoggedInLayout(currentUser.getDisplayName(), currentUser.getEmail());
             } else {
@@ -82,7 +82,7 @@ public class SignInActivity extends AppCompatActivity {
                 switch (result.getStatus()) {
                     case LOADING -> progressBarController.show();
                     case SUCCESS -> onLoginSuccess();
-                    case ERROR -> onLoginFailure(result.getMessage());
+                    case FAILED -> onLoginFailure(result.getMessage());
                 }
             }
         });

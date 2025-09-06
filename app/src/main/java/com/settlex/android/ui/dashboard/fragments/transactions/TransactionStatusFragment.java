@@ -1,4 +1,4 @@
-package com.settlex.android.ui.dashboard.fragments;
+package com.settlex.android.ui.dashboard.fragments.transactions;
 
 import android.os.Bundle;
 import android.view.LayoutInflater;
@@ -14,25 +14,28 @@ import androidx.lifecycle.ViewModelProvider;
 
 import com.airbnb.lottie.RenderMode;
 import com.settlex.android.R;
-import com.settlex.android.databinding.FragmentTxnStatusBinding;
-import com.settlex.android.ui.dashboard.viewmodel.DashboardViewModel;
+import com.settlex.android.databinding.FragmentTransactionStatusBinding;
+import com.settlex.android.ui.dashboard.viewmodel.TransactionsViewModel;
 import com.settlex.android.util.event.Result;
 
-public class TxnStatusFragment extends Fragment {
+/**
+ * This screen displays the outcome of a transaction (Pending, Success, Failed).
+ * Animations are used to give real-time feedback to the user about the status.
+ */
+public class TransactionStatusFragment extends Fragment {
+    private FragmentTransactionStatusBinding binding;
+    private TransactionsViewModel transactionsViewModel;
 
-    public TxnStatusFragment() {
-        // Required empty public constructor
+    public TransactionStatusFragment() {
+        // Default empty constructor required by Fragment
     }
-
-    private FragmentTxnStatusBinding binding;
-    private DashboardViewModel dashboardViewModel;
 
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-        binding = FragmentTxnStatusBinding.inflate(inflater, container, false);
-        dashboardViewModel = new ViewModelProvider(requireActivity()).get(DashboardViewModel.class);
+        binding = FragmentTransactionStatusBinding.inflate(inflater, container, false);
+        transactionsViewModel = new ViewModelProvider(requireActivity()).get(TransactionsViewModel.class);
 
-        setupStatusBar();
+        customizeStatusBar();
         setupUiActions();
 
         return binding.getRoot();
@@ -42,53 +45,58 @@ public class TxnStatusFragment extends Fragment {
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
 
-        observeTxnStatus();
+        observeTransactionStatus();
     }
 
     private void setupUiActions() {
-        // Get transaction amount
         Bundle args = getArguments();
-        if (args != null){
+        if (args != null) {
             binding.txnAmount.setText(args.getString("txn_amount"));
         }
+
         binding.btnDone.setOnClickListener(v -> requireActivity().finish());
     }
 
-    private void observeTxnStatus() {
-        dashboardViewModel.getPayFriendResult().observe(getViewLifecycleOwner(), event -> {
-            Result<String> result = event.peekContent();
-            if (result != null) {
-                switch (result.getStatus()) {
-                    case PENDING -> onTxnPending();
-                    case SUCCESS -> onTxnSuccess();
-                    case ERROR -> onTxnFailed();
+    /**
+     * Observes the result of the "Pay a Friend" transaction and updates
+     * the UI accordingly based on the status: PENDING, SUCCESS, or ERROR.
+     */
+    private void observeTransactionStatus() {
+        transactionsViewModel.getPayFriendLiveData().observe(getViewLifecycleOwner(), event -> {
+            Result<String> transactionResult = event.peekContent();
+            if (transactionResult != null) {
+                switch (transactionResult.getStatus()) {
+                    case PENDING -> showPendingState();
+                    case SUCCESS -> showSuccessState();
+                    case FAILED -> showFailedState();
                 }
             }
         });
     }
 
-    private void onTxnPending() {
+
+    private void showPendingState() {
         binding.txnPendingAnim.setVisibility(View.VISIBLE);
         binding.txnPendingAnim.setRenderMode(RenderMode.SOFTWARE);
         binding.txnPendingAnim.playAnimation();
         binding.txnStatus.setText(getString(R.string.pending));
     }
 
-    private void onTxnSuccess() {
+    private void showSuccessState() {
         binding.txnSuccessAnim.setVisibility(View.VISIBLE);
         binding.txnSuccessAnim.setRenderMode(RenderMode.SOFTWARE);
         binding.txnSuccessAnim.playAnimation();
         binding.txnStatus.setText(getString(R.string.success));
     }
 
-    private void onTxnFailed() {
+    private void showFailedState() {
         binding.txnFailedAnim.setVisibility(View.VISIBLE);
         binding.txnFailedAnim.setRenderMode(RenderMode.SOFTWARE);
         binding.txnFailedAnim.playAnimation();
         binding.txnStatus.setText(getString(R.string.failed));
     }
 
-    private void setupStatusBar() {
+    private void customizeStatusBar() {
         Window window = requireActivity().getWindow();
         window.setStatusBarColor(ContextCompat.getColor(requireActivity(), R.color.white));
         View decorView = window.getDecorView();

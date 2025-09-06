@@ -1,27 +1,20 @@
 package com.settlex.android.data.repository;
 
-import android.os.Handler;
-import android.os.Looper;
-
 import androidx.lifecycle.LiveData;
 import androidx.lifecycle.MutableLiveData;
 
 import com.google.firebase.FirebaseNetworkException;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
-import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.ListenerRegistration;
-import com.google.firebase.firestore.Query;
 import com.google.firebase.functions.FirebaseFunctions;
 import com.settlex.android.data.remote.dto.SuggestionsDto;
-import com.settlex.android.data.remote.dto.TransactionDto;
 import com.settlex.android.data.remote.dto.UserDto;
 
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Collections;
-import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -34,13 +27,11 @@ public class UserRepository {
     private final FirebaseAuth auth;
 
     private ListenerRegistration userListener;
-    private ListenerRegistration transactionsListener;
     private final FirebaseAuth.AuthStateListener authStateListener;
 
     // LIVEDATA HOLDER
     private final MutableLiveData<FirebaseUser> authStateLiveData = new MutableLiveData<>();
     private final MutableLiveData<UserDto> userLiveData = new MutableLiveData<>();
-    private final MutableLiveData<List<TransactionDto>> transactionsLiveData = new MutableLiveData<>();
 
     public UserRepository() {
         functions = FirebaseFunctions.getInstance("europe-west2");
@@ -80,89 +71,6 @@ public class UserRepository {
     }
 
     /**
-     * Listens to recent transactions of a user
-     */
-    public LiveData<List<TransactionDto>> getRecentTransactions(String uid, int limit) {
-        transactionsListener = firestore.collection("users")
-                .document(uid)
-                .collection("transactions")
-                .orderBy("createdAt", Query.Direction.DESCENDING)
-                .limit(limit)
-                .addSnapshotListener((snapshots, error) -> {
-                    if (error != null || snapshots == null) {
-                        transactionsLiveData.setValue(Collections.emptyList());
-                        return;
-                    }
-                    List<TransactionDto> transactions = new ArrayList<>();
-                    for (DocumentSnapshot doc : snapshots.getDocuments()) {
-                        TransactionDto txn = doc.toObject(TransactionDto.class);
-                        if (txn != null) transactions.add(txn);
-                    }
-                    transactionsLiveData.setValue(transactions);
-                });
-
-        return transactionsLiveData;
-    }
-
-    /**
-     * Remove all Firestore listeners
-     */
-    public void removeListener() {
-        if (userListener != null) userListener.remove();
-        if (transactionsListener != null) transactionsListener.remove();
-        if (authStateListener != null) auth.removeAuthStateListener(authStateListener);
-    }
-
-    /**
-     * Performs an Internal transfer btw users
-     */
-    public void payFriend(String senderUid, String receiverUsername, String transactionId,
-                          double amount, String serviceType, String description, TransferCallback callback) {
-
-        Map<String, Object> data = new HashMap<>();
-        data.put("senderUid", senderUid);
-        data.put("receiverUsername", receiverUsername);
-        data.put("transactionId", transactionId);
-        data.put("amount", amount);
-        data.put("serviceType", serviceType);
-        data.put("description", description);
-
-        Handler handler = new Handler(Looper.getMainLooper());
-        final boolean[] finished = {false};
-
-        Runnable timeoutRunnable = () -> {
-            if (!finished[0]) {
-                finished[0] = true;
-                callback.onTransferPending();
-            }
-        };
-
-        handler.postDelayed(timeoutRunnable, 10_000); // 10s timeout
-
-        functions.getHttpsCallable("transferFunds")
-                .call(data)
-                .addOnSuccessListener(result -> {
-                    if (!finished[0]) {
-                        finished[0] = true;
-                        handler.removeCallbacks(timeoutRunnable);
-                        callback.onTransferSuccess();
-                    }
-                })
-                .addOnFailureListener(e -> {
-                    if (!finished[0]) {
-                        finished[0] = true;
-                        handler.removeCallbacks(timeoutRunnable);
-                        if (e instanceof FirebaseNetworkException || e instanceof IOException) {
-                            callback.onTransferFailed("Network request failed. Please check your connection.");
-                        } else {
-                            callback.onTransferFailed(e.getMessage());
-                        }
-                    }
-                });
-    }
-
-
-    /**
      * Finds matching usernames in db
      * used when user is initiating a transfer, entering userTag(Username)
      */
@@ -197,20 +105,27 @@ public class UserRepository {
                 });
     }
 
-    /**
-     * Logs out signed in User
-     */
-    public void signOut() {
-        FirebaseAuth.getInstance().signOut();
-    }
-
+    // GETTERS =================
     public LiveData<FirebaseUser> getAuthState() {
         return authStateLiveData;
+    }
+
+    /**
+     * Remove all Firestore listeners
+     */
+    public void removeListener() {
+        if (userListener != null) userListener.remove();
+        if (authStateListener != null) auth.removeAuthStateListener(authStateListener);
+    }
+
+    public void signOut() {
+        FirebaseAuth.getInstance().signOut();
     }
 
     // ============== Callbacks Interfaces
     public interface TransferCallback {
         void onTransferPending();
+
         void onTransferSuccess();
 
         void onTransferFailed(String reason);

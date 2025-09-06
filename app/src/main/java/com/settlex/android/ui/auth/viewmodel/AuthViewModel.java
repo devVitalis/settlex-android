@@ -24,7 +24,7 @@ public class AuthViewModel extends ViewModel {
     }
 
     // ====================== LIVEDATA STATE HOLDERS ======================
-    private final MutableLiveData<AuthUserUiModel> userState = new MutableLiveData<>();
+    private final MutableLiveData<AuthUserUiModel> userStateLiveData = new MutableLiveData<>();
     private final MutableLiveData<UserModel> userLiveData = new MutableLiveData<>();
     private final MutableLiveData<Result<String>> loginResult = new MutableLiveData<>();
     private final MutableLiveData<Result<String>> registerResult = new MutableLiveData<>();
@@ -45,7 +45,7 @@ public class AuthViewModel extends ViewModel {
     public LiveData<Event<Result<String>>> getVerifyEmailResetOtpResult() { return verifyEmailResetOtpResult; }
     public LiveData<Event<Result<String>>> getSendEmailVerificationOtpResult() { return sendEmailVerificationOtpResult; }
     public LiveData<Event<Result<String>>> getVerifyEmailVerificationOtpResult() { return verifyEmailVerificationOtpResult; }
-    public LiveData<AuthUserUiModel> getUserState () {return userState; }
+    public LiveData<AuthUserUiModel> getUserStateLiveData() {return userStateLiveData; }
 
     /**
      * Handles user registration flow including:
@@ -167,7 +167,7 @@ public class AuthViewModel extends ViewModel {
 
     public void updateUserState() {
         FirebaseUser currentUser = authRepo.getCurrentUser();
-        userState.setValue((currentUser != null) ? new AuthUserUiModel(
+        userStateLiveData.setValue((currentUser != null) ? new AuthUserUiModel(
                 currentUser.getUid(),
                 currentUser.getEmail(),
                 currentUser.getDisplayName()) : null);

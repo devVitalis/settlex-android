@@ -30,13 +30,13 @@ import androidx.lifecycle.ViewModelProvider;
 
 import com.settlex.android.R;
 import com.settlex.android.databinding.FragmentSignUpUserContactInfoBinding;
+import com.settlex.android.ui.auth.activity.SignInActivity;
+import com.settlex.android.ui.auth.viewmodel.AuthViewModel;
+import com.settlex.android.ui.common.util.SettleXProgressBarController;
 import com.settlex.android.ui.info.help.AuthHelpActivity;
 import com.settlex.android.ui.info.legal.PrivacyPolicyActivity;
 import com.settlex.android.ui.info.legal.TermsAndConditionsActivity;
-import com.settlex.android.ui.auth.activity.SignInActivity;
 import com.settlex.android.util.event.Result;
-import com.settlex.android.ui.auth.viewmodel.AuthViewModel;
-import com.settlex.android.ui.common.util.SettleXProgressBarController;
 import com.settlex.android.util.network.NetworkMonitor;
 import com.settlex.android.util.string.StringUtil;
 import com.settlex.android.util.ui.UiUtil;
@@ -44,13 +44,12 @@ import com.settlex.android.util.ui.UiUtil;
 import java.util.Objects;
 
 public class SignUpUserContactInfoFragment extends Fragment {
-    private boolean isConnected = false;
+    private boolean isConnected = false; // Network connection
 
     private AuthViewModel authViewModel;
     private SettleXProgressBarController progressController;
     private FragmentSignUpUserContactInfoBinding binding;
 
-    // ====================== LIFECYCLE ======================
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         binding = FragmentSignUpUserContactInfoBinding.inflate(inflater, container, false);
@@ -78,6 +77,11 @@ public class SignUpUserContactInfoFragment extends Fragment {
     }
 
     // ====================== OBSERVERS ======================
+
+    private void observeNetworkStatus() {
+        NetworkMonitor.getNetworkStatus().observe(requireActivity(), isConnected -> this.isConnected = isConnected);
+    }
+
     private void observeSendVerificationOtp() {
         authViewModel.getSendEmailVerificationOtpResult().observe(getViewLifecycleOwner(), event -> {
             Result<String> result = event.getContentIfNotHandled();
@@ -85,15 +89,10 @@ public class SignUpUserContactInfoFragment extends Fragment {
                 switch (result.getStatus()) {
                     case LOADING -> progressController.show();
                     case SUCCESS -> onSendVerificationOtpSuccess();
-                    case ERROR -> onSendOtpFailure(result.getMessage());
+                    case FAILED -> onSendOtpFailure(result.getMessage());
                 }
             }
         });
-    }
-
-    private void observeNetworkStatus() {
-        NetworkMonitor.getNetworkStatus().observe(requireActivity(), isConnected ->
-                this.isConnected = isConnected);
     }
 
     private void onSendVerificationOtpSuccess() {
@@ -128,16 +127,16 @@ public class SignUpUserContactInfoFragment extends Fragment {
             authViewModel.updateEmail(email);
             authViewModel.updatePhone(phone);
             authViewModel.sendEmailVerificationOtp(email);
-        } else {
-            onNoInternetConnection();
+            return;
         }
+        showNoInternetConnection();
     }
 
-    private void onNoInternetConnection() {
+    private void showNoInternetConnection() {
         UiUtil.showInfoDialog(
                 requireActivity(),
                 "Network Unavailable",
-                "Please check your network connection and try again",
+                getString(R.string.error_no_internet),
                 null);
     }
 
@@ -251,7 +250,7 @@ public class SignUpUserContactInfoFragment extends Fragment {
     }
 
     private void navigateToActivity(Class<? extends Activity> activityClass, boolean clearBackStack) {
-        if (clearBackStack){
+        if (clearBackStack) {
             startActivity(new Intent(requireActivity(), activityClass));
             requireActivity().finish();
         } else {

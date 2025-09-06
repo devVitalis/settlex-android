@@ -59,7 +59,7 @@ public class PasswordResetActivity extends AppCompatActivity {
             switch (result.getStatus()) {
                 case LOADING -> progressBarController.show();
                 case SUCCESS -> handleOtpRequestSuccess();
-                case ERROR -> handleOtpRequestError(result.getMessage());
+                case FAILED -> handleOtpRequestError(result.getMessage());
             }
         });
     }

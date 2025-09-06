@@ -7,7 +7,7 @@
     android:layout_height="match_parent"
     android:background="@color/white"
     android:fitsSystemWindows="true"
-    tools:context=".ui.dashboard.fragments.TxnStatusFragment">
+    tools:context=".ui.dashboard.fragments.transactions.TransactionStatusFragment">
 
     <!-- Header -->
     <LinearLayout

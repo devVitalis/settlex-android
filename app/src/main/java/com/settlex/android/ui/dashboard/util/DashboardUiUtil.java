@@ -2,6 +2,7 @@ package com.settlex.android.ui.dashboard.util;
 
 import android.content.Context;
 import android.view.LayoutInflater;
+import android.view.View;
 
 import com.google.android.material.bottomsheet.BottomSheetDialog;
 import com.settlex.android.R;
@@ -26,6 +27,13 @@ public class DashboardUiUtil {
         String formattedRecipientName = recipientName.toUpperCase();
         double senderTotalBalance = senderWalletBalance + senderCommissionBalance;
 
+        // Conditions
+        if (senderWalletBalance >= amountToSend){
+            binding.btnPay.setEnabled(true);
+        } else {
+            binding.txtFeedback.setVisibility(View.VISIBLE);
+        }
+
         // Recipient details
         binding.amountToSendHeader.setText(formattedAmountToSend);
         binding.amountToSend.setText(formattedAmountToSend);
@@ -41,6 +49,7 @@ public class DashboardUiUtil {
         // Handle buttons
         binding.btnClose.setOnClickListener(v -> dialog.dismiss());
         binding.btnPay.setOnClickListener(v -> {
+            binding.btnPay.setEnabled(false);
             dialog.dismiss();
             if (onPay != null) onPay.run();
         });
