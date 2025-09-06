@@ -14,7 +14,7 @@
         android:layout_width="45dp"
         android:layout_height="45dp"
         android:padding="8dp"
-        android:background="@drawable/bg_oval_light_blue"
+        android:background="@drawable/bg_oval_blue_light"
         android:src="@drawable/ic_signal_disconnected" />
 
     <TextView

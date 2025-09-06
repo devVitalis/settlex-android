@@ -1,0 +1,26 @@
+<?xml version="1.0" encoding="utf-8"?>
+<navigation xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:id="@+id/dashboard_nav_graph"
+    app:startDestination="@id/homeFragment">
+
+    <!-- Home Dashboard Fragment-->
+    <fragment
+        android:id="@+id/homeFragment"
+        android:name="com.settlex.android.ui.dashboard.fragments.HomeDashboardFragment" />
+
+    <!-- Services Dashboard Fragment-->
+    <fragment
+        android:id="@+id/servicesFragment"
+        android:name="com.settlex.android.ui.dashboard.fragments.ServicesDashboardFragment" />
+
+    <!-- Rewards Dashboard Fragment-->
+    <fragment
+        android:id="@+id/rewardsFragment"
+        android:name="com.settlex.android.ui.dashboard.fragments.RewardsDashboardFragment" />
+
+    <!-- Account Dashboard Fragment-->
+    <fragment
+        android:id="@+id/accountFragment"
+        android:name="com.settlex.android.ui.dashboard.fragments.AccountDashboardFragment" />
+</navigation>

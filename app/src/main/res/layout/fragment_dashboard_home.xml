@@ -359,15 +359,13 @@
 
                 <!--Recent Transaction-->
                 <LinearLayout
-                    android:id="@+id/transactionContainer"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_marginTop="15dp"
                     android:background="@drawable/bg_16dp_white"
                     android:orientation="vertical"
                     android:paddingHorizontal="8dp"
-                    android:paddingVertical="10dp"
-                    android:visibility="gone">
+                    android:paddingVertical="10dp">
 
                     <LinearLayout
                         android:layout_width="match_parent"
@@ -376,19 +374,15 @@
                         android:orientation="horizontal">
 
                         <TextView
-                            android:layout_width="wrap_content"
+                            android:layout_width="0dp"
                             android:layout_height="wrap_content"
                             android:layout_gravity="start"
+                            android:layout_weight="1"
                             android:fontFamily="@font/poppins_regular"
                             android:includeFontPadding="false"
                             android:text="Recent Transactions"
                             android:textColor="@color/gray"
                             android:textSize="12sp" />
-
-                        <Space
-                            android:layout_width="0dp"
-                            android:layout_height="0dp"
-                            android:layout_weight="1" />
 
                         <TextView
                             android:layout_width="wrap_content"
@@ -408,17 +402,39 @@
                             app:tint="@color/gray" />
                     </LinearLayout>
 
-                    <androidx.recyclerview.widget.RecyclerView
-                        android:id="@+id/transactionsRecyclerView"
+                    <FrameLayout
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:layout_marginTop="5dp"
-                        android:clipToPadding="false"
-                        android:nestedScrollingEnabled="false" />
+                        android:layout_marginTop="5dp">
+
+                        <androidx.recyclerview.widget.RecyclerView
+                            android:id="@+id/transactionsRecyclerView"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:clipToPadding="false"
+                            android:nestedScrollingEnabled="false" />
+
+                        <com.facebook.shimmer.ShimmerFrameLayout
+                            android:id="@+id/txnShimmerEffect"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:layout_marginTop="10dp"
+                            android:padding="8dp"
+                            android:visibility="gone"
+                            app:shimmer_auto_start="false"
+                            app:shimmer_duration="1500">
+
+                            <include
+                                layout="@layout/item_transaction_shimmer"
+                                android:layout_width="match_parent"
+                                android:layout_height="match_parent" />
+                        </com.facebook.shimmer.ShimmerFrameLayout>
+                    </FrameLayout>
                 </LinearLayout>
 
                 <!--Promotion-->
                 <FrameLayout
+                    android:id="@+id/promoBannerContainer"
                     android:layout_width="match_parent"
                     android:layout_height="100dp"
                     android:layout_marginTop="15dp"

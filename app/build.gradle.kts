@@ -1,6 +1,6 @@
 plugins {
     alias(libs.plugins.android.application)
-    id("com.google.gms.google-services")
+    id("com.google.gms.google-services") // Firebase / Google services
 }
 
 android {
@@ -54,6 +54,7 @@ dependencies {
     implementation(libs.firebase.functions)
     implementation(libs.firebase.storage)
     implementation(libs.firebase.messaging)
+    implementation(libs.firebase.config)
 
     // Dots Indicator
     implementation(libs.dotsindicator)
@@ -78,11 +79,16 @@ dependencies {
     implementation(libs.lifecycle.viewmodel)
     implementation(libs.lifecycle.livedata)
 
-    // Blur
-    implementation(libs.blurry)
+    // Blur TODO: remove
+    // implementation(libs.blurry)
 
     // Shimmer Loading
     implementation(libs.shimmer)
+
+    // Navigation Component
+    implementation(libs.navigation.fragment.ktx)
+    implementation(libs.navigation.ui.ktx)
+
 }
 
 tasks.withType<JavaCompile>().configureEach {

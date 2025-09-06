@@ -2,6 +2,9 @@ package com.settlex.android.ui.dashboard.fragments;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.os.Handler;
+import android.os.Looper;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -27,6 +30,7 @@ import com.settlex.android.ui.dashboard.adapter.ServicesAdapter;
 import com.settlex.android.ui.dashboard.adapter.TransactionsAdapter;
 import com.settlex.android.ui.dashboard.components.GridSpacingItemDecoration;
 import com.settlex.android.ui.dashboard.model.ServiceUiModel;
+import com.settlex.android.ui.dashboard.viewmodel.PromoBannerViewModel;
 import com.settlex.android.ui.dashboard.viewmodel.TransactionsViewModel;
 import com.settlex.android.ui.dashboard.viewmodel.UserViewModel;
 import com.settlex.android.util.string.StringUtil;
@@ -36,17 +40,21 @@ import java.util.List;
 
 public class HomeDashboardFragment extends Fragment {
     private long backPressedTime;
+    private final Handler autoScrollHandler = new Handler(Looper.getMainLooper());
+    private Runnable autoScrollRunnable;
+
     private String currentUserUid;
+
     private SettleXProgressBarController progressBarController;
     private FragmentDashboardHomeBinding binding;
     private UserViewModel userViewModel;
     private TransactionsViewModel transactionsViewModel;
+    private PromoBannerViewModel promoBannerViewModel;
 
     public HomeDashboardFragment() {
         // Required empty public constructor
     }
 
-    // ========================== LIFECYCLE ============================
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -59,10 +67,13 @@ public class HomeDashboardFragment extends Fragment {
 
         userViewModel = new ViewModelProvider(requireActivity()).get(UserViewModel.class);
         transactionsViewModel = new ViewModelProvider(requireActivity()).get(TransactionsViewModel.class);
+        promoBannerViewModel = new ViewModelProvider(requireActivity()).get(PromoBannerViewModel.class);
         progressBarController = new SettleXProgressBarController(binding.getRoot());
 
         setupStatusBar();
         setupUiActions();
+        binding.promoViewPager.setUserInputEnabled(true); // allow swiping
+        binding.promoViewPager.setClickable(false);
 
         return binding.getRoot();
     }
@@ -73,20 +84,26 @@ public class HomeDashboardFragment extends Fragment {
 
     }
 
+    @Override
+    public void onDestroyView() {
+        super.onDestroyView();
+        stopAutoScroll();
+        binding = null;
+    }
+
     // ======================= SETUP UI COMPONENTS =======================
     private void setupUiActions() {
         observeUserState();
 
         loadServices();
-        loadPromotionalBanners();
-        setupTxnRecyclerViewLayoutManager();
+        setupTransactionsRecyclerView();
         setupDoubleBackToExit();
 
         binding.payAFriend.setOnClickListener(v -> startActivity(new Intent(requireActivity(), TransactionActivity.class)));
         binding.addMoney.setOnClickListener(v -> userViewModel.signOut());
     }
 
-    // ========================== OBSERVERS ============================
+    //  OBSERVERS ===========
     private void observeUserState() {
         userViewModel.getAuthStateLiveData().observe(getViewLifecycleOwner(), authState -> {
             if (authState == null) {
@@ -98,29 +115,79 @@ public class HomeDashboardFragment extends Fragment {
             currentUserUid = authState.getUid();
             observeAndDisplayUserData(currentUserUid);
             observeAndLoadRecentTransactions(currentUserUid);
+            Log.d("UID", currentUserUid);
+            observeAndLoadPromoBanners();
         });
     }
 
     private void observeAndDisplayUserData(String uid) {
         double MILLION_THRESHOLD = 999_999_999;
+        Log.d("Fragment", "Observing new transaction LiveData");
         userViewModel.getUserData(uid).observe(getViewLifecycleOwner(), userData -> {
-            if (userData != null) {
-                binding.userDisplayName.setText(userData.getUserFullName());
-                binding.userBalance.setText((userData.getBalance() > MILLION_THRESHOLD) ? StringUtil.formatToNairaShort(userData.getBalance()) : StringUtil.formatToNaira(userData.getBalance()));
-                binding.userCommissionBalance.setText(StringUtil.formatToNairaShort(userData.getCommissionBalance()));
-            }
+            if (userData == null) return;
+
+            binding.userDisplayName.setText(userData.getUserFullName());
+            binding.userBalance.setText((userData.getBalance() > MILLION_THRESHOLD) ? StringUtil.formatToNairaShort(userData.getBalance()) : StringUtil.formatToNaira(userData.getBalance()));
+            binding.userCommissionBalance.setText(StringUtil.formatToNairaShort(userData.getCommissionBalance()));
         });
     }
 
     private void observeAndLoadRecentTransactions(String uid) {
-        int MAX_TXN_DISPLAY = 3;
-        transactionsViewModel.getTransactions(uid, MAX_TXN_DISPLAY).observe(getViewLifecycleOwner(), transactions -> {
-            if (transactions != null && !transactions.isEmpty()) {
-                TransactionsAdapter adapter = new TransactionsAdapter(transactions);
-                binding.transactionsRecyclerView.setAdapter(adapter);
-                binding.transactionContainer.setVisibility(View.VISIBLE);
+        int QUERY_LIMIT = 3;
+        transactionsViewModel.getTransactions().observe(getViewLifecycleOwner(), transactions -> {
+            if (transactions == null || transactions.isEmpty()) {
+                binding.txnShimmerEffect.setVisibility(View.VISIBLE);
+                binding.txnShimmerEffect.startShimmer();
+                return;
             }
+
+            TransactionsAdapter adapter = new TransactionsAdapter(transactions);
+            binding.transactionsRecyclerView.setAdapter(adapter);
+            binding.txnShimmerEffect.stopShimmer();
+            binding.txnShimmerEffect.setVisibility(View.GONE);
         });
+    }
+
+    private void observeAndLoadPromoBanners() {
+        promoBannerViewModel.getPromoBanners().observe(getViewLifecycleOwner(), banner -> {
+            if (banner == null || banner.isEmpty()) {
+                binding.promoBannerContainer.setVisibility(View.GONE);
+                return;
+            }
+
+            PromotionalBannerAdapter adapter = new PromotionalBannerAdapter(banner);
+            binding.promoViewPager.setAdapter(adapter);
+
+            // Attach dots
+            binding.dotsIndicator.attachTo(binding.promoViewPager);
+            setAutoScrollForPromoBanner(banner.size());
+        });
+    }
+
+    private void setAutoScrollForPromoBanner(int size) {
+        if (size <= 1) return;
+
+        autoScrollRunnable = new Runnable() {
+            int currentPosition = 0;
+
+            @Override
+            public void run() {
+                if (binding.promoViewPager.getAdapter() == null) return;
+
+                currentPosition = (currentPosition + 1) % size; // loop back to 0
+                binding.promoViewPager.setCurrentItem(currentPosition, true);
+
+                // schedule next slide
+                autoScrollHandler.postDelayed(this, 4000);
+            }
+        };
+        autoScrollHandler.postDelayed(autoScrollRunnable, 4000);
+    }
+
+    private void stopAutoScroll() {
+        if (autoScrollRunnable != null) {
+            autoScrollHandler.removeCallbacks(autoScrollRunnable);
+        }
     }
 
     private void onNoLoggedUser() {
@@ -129,12 +196,14 @@ public class HomeDashboardFragment extends Fragment {
         requireActivity().finishAffinity();
     }
 
-    // ======================== PREVIEW TOOLS (DELETE LATER) ==========================
-    private void setupTxnRecyclerViewLayoutManager() {
+    private void setupTransactionsRecyclerView() {
         LinearLayoutManager txnLayoutManager = new LinearLayoutManager(getContext());
         txnLayoutManager.setOrientation(LinearLayoutManager.VERTICAL);
         binding.transactionsRecyclerView.setLayoutManager(txnLayoutManager);
     }
+
+    // ======================== PREVIEW TOOLS (DELETE LATER) ==========================
+
 
     private void loadServices() {
         binding.awareness.setSelected(true);
@@ -159,19 +228,6 @@ public class HomeDashboardFragment extends Fragment {
         binding.serviceRecyclerView.setAdapter(adapter);
     }
 
-    private void loadPromotionalBanners() {
-        List<Integer> promos = Arrays.asList(
-                R.drawable.promo_banner,
-                R.drawable.promo_banner,
-                R.drawable.promo_banner
-        );
-
-        PromotionalBannerAdapter adapter = new PromotionalBannerAdapter(promos);
-        binding.promoViewPager.setAdapter(adapter);
-
-        // attach dots
-        binding.dotsIndicator.attachTo(binding.promoViewPager);
-    }
 
     private void setupDoubleBackToExit() {
         requireActivity().getOnBackPressedDispatcher().addCallback(getViewLifecycleOwner(), new OnBackPressedCallback(true) {

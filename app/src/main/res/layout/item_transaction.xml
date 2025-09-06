@@ -17,7 +17,7 @@
         <FrameLayout
             android:layout_width="30dp"
             android:layout_height="30dp"
-            android:background="@drawable/bg_oval_light_blue">
+            android:background="@drawable/bg_oval_blue_light">
 
             <ImageView
                 android:id="@+id/icon"

@@ -5,6 +5,19 @@
     <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
     <uses-permission android:name="android.permission.ACCESS_WIFI_STATE" />
 
+    <!-- package visibility declarations -->
+    <!-- Browsers for opening promo links -->
+    <queries>
+        <intent>
+            <action android:name="android.intent.action.VIEW" />
+            <data android:scheme="http" />
+        </intent>
+        <intent>
+            <action android:name="android.intent.action.VIEW" />
+            <data android:scheme="https" />
+        </intent>
+    </queries>
+
     <application
         android:name=".SettleXApp"
         android:allowBackup="true"
@@ -16,6 +29,23 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.SettleX">
         <activity
+            android:name=".ui.dashboard.activity.DashboardActivity"
+            android:exported="true">
+
+            <!-- Handles app:// URLs -->
+            <intent-filter>
+                <action android:name="android.intent.action.VIEW" />
+
+                <category android:name="android.intent.category.DEFAULT" />
+                <category android:name="android.intent.category.BROWSABLE" />
+
+                <data
+                    android:host="settlex"
+                    android:scheme="app" />
+            </intent-filter>
+        </activity>
+
+        <activity
             android:name=".ui.dashboard.activity.TransactionActivity"
             android:exported="false" />
         <activity
@@ -26,9 +56,6 @@
             android:exported="false" />
         <activity
             android:name=".ui.auth.activity.PasswordResetActivity"
-            android:exported="false" />
-        <activity
-            android:name=".ui.dashboard.activity.DashboardActivity"
             android:exported="false" />
         <activity
             android:name=".ui.info.legal.PrivacyPolicyActivity"

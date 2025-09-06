@@ -25,9 +25,8 @@ public class UserRepository {
     private final FirebaseFunctions functions;
     private final FirebaseFirestore firestore;
     private final FirebaseAuth auth;
-
     private ListenerRegistration userListener;
-    private final FirebaseAuth.AuthStateListener authStateListener;
+    private FirebaseAuth.AuthStateListener authStateListener;
 
     // LIVEDATA HOLDER
     private final MutableLiveData<FirebaseUser> authStateLiveData = new MutableLiveData<>();
@@ -38,7 +37,11 @@ public class UserRepository {
         firestore = FirebaseFirestore.getInstance();
         auth = FirebaseAuth.getInstance();
 
-        // Listen to auth changes
+        setAuthStateListener();
+    }
+
+    // Listen to auth changes
+    private void setAuthStateListener() {
         authStateListener = firebaseAuth -> {
             FirebaseUser currentUser = firebaseAuth.getCurrentUser();
             authStateLiveData.postValue(currentUser);
@@ -123,14 +126,6 @@ public class UserRepository {
     }
 
     // ============== Callbacks Interfaces
-    public interface TransferCallback {
-        void onTransferPending();
-
-        void onTransferSuccess();
-
-        void onTransferFailed(String reason);
-    }
-
     public interface SearchUsernameCallback {
         void onResult(List<SuggestionsDto> suggestionsDto);
 

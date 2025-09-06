@@ -12,7 +12,7 @@
         android:layout_height="wrap_content"
         android:layout_centerInParent="true"
         android:layout_marginTop="25dp"
-        android:background="@drawable/bg_oval_light_blue">
+        android:background="@drawable/bg_oval_blue_light">
 
         <com.google.android.material.imageview.ShapeableImageView
             android:id="@+id/ImgIntroSlide1"

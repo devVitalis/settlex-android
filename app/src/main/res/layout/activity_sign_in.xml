@@ -104,7 +104,7 @@
                         android:id="@+id/userProfileBackground"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:background="@drawable/bg_oval_light_blue">
+                        android:background="@drawable/bg_oval_blue_light">
 
                         <ImageView
                             android:id="@+id/userProfile"

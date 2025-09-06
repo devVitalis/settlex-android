@@ -27,11 +27,9 @@ import java.util.Map;
 public class TransactionRepository {
     private final FirebaseFunctions functions;
     private final FirebaseFirestore firestore;
-
     private ListenerRegistration transactionsListener;
 
     // LIVEDATA HOLDER
-    private final MutableLiveData<List<TransactionDto>> transactionsLiveData = new MutableLiveData<>();
 
     public TransactionRepository() {
         functions = FirebaseFunctions.getInstance("europe-west2");
@@ -41,14 +39,14 @@ public class TransactionRepository {
     /**
      * Listens to recent transactions of a user
      */
-    public LiveData<List<TransactionDto>> getRecentTransactions(String uid, int limit) {
+    public void getRecentTransactions(String uid, int limit, TransactionsCallback callback) {
         transactionsListener = firestore.collection("users")
                 .document(uid)
                 .collection("transactions")
                 .orderBy("createdAt", Query.Direction.DESCENDING)
                 .limit(limit).addSnapshotListener((snapshots, error) -> {
                     if (error != null || snapshots == null) {
-                        transactionsLiveData.setValue(Collections.emptyList());
+                        callback.onResult(Collections.emptyList());
                         return;
                     }
                     List<TransactionDto> transactions = new ArrayList<>();
@@ -56,9 +54,8 @@ public class TransactionRepository {
                         TransactionDto txn = doc.toObject(TransactionDto.class);
                         if (txn != null) transactions.add(txn);
                     }
-                    transactionsLiveData.setValue(transactions);
+                    callback.onResult(transactions);
                 });
-        return transactionsLiveData;
     }
 
     /**
@@ -112,6 +109,12 @@ public class TransactionRepository {
     }
 
     // ============== Callbacks Interfaces
+    public interface TransactionsCallback {
+        void onResult(List<TransactionDto> list);
+
+        void onFailure(String reason);
+    }
+
     public interface TransferCallback {
         void onTransferPending();
 
