@@ -1,4 +1,4 @@
-package com.settlex.android.data.local;
+package com.settlex.android.data.local.prefs;
 
 import android.content.Context;
 import android.content.SharedPreferences;

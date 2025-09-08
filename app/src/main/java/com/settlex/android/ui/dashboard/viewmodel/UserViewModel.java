@@ -1,10 +1,12 @@
 package com.settlex.android.ui.dashboard.viewmodel;
 
+import android.util.Log;
+
 import androidx.lifecycle.LiveData;
 import androidx.lifecycle.MutableLiveData;
 import androidx.lifecycle.ViewModel;
 
-import com.google.firebase.auth.FirebaseUser;
+import com.settlex.android.data.local.SessionManager;
 import com.settlex.android.data.remote.dto.SuggestionsDto;
 import com.settlex.android.data.repository.UserRepository;
 import com.settlex.android.ui.dashboard.model.RecipientUiModel;
@@ -21,28 +23,39 @@ public class UserViewModel extends ViewModel {
 
     // LiveData holders
     private final MutableLiveData<UserUiModel> userLiveData = new MutableLiveData<>();
+    private final MutableLiveData<String> authStateLiveData = new MutableLiveData<>();
     private final MutableLiveData<Result<List<RecipientUiModel>>> usernameSearchLiveData = new MutableLiveData<>();
 
 
     public UserViewModel() {
         this.userRepo = new UserRepository();
+        listToUserAuthState();
     }
 
-    // ========== LIVEDATA GETTERS ============
-
-    public LiveData<FirebaseUser> getAuthStateLiveData() {
-        return userRepo.getAuthState();
+    //  GETTERS ============
+    public LiveData<String> getAuthStateLiveData() {
+        return authStateLiveData;
     }
 
     public LiveData<Result<List<RecipientUiModel>>> getUsernameSearchLiveData() {
         return usernameSearchLiveData;
     }
 
+    public LiveData<UserUiModel> getUserData() {
+        return userLiveData;
+    }
+
+    public UserUiModel getCacheUserData(){
+        return SessionManager.getInstance().getUser();
+    }
+
     /**
      * Update the UI model for current user details
      */
-    public LiveData<UserUiModel> getUserData(String uid) {
-        userRepo.getUser(uid).observeForever(userDto -> {
+    public void fetchUserData(String uid) {
+        if (userLiveData.getValue() != null) return;
+        Log.d("ViewModel", "Fetching user data");
+        userRepo.getUserData(uid, userDto -> {
             if (userDto == null) {
                 userLiveData.setValue(null);
                 return;
@@ -55,8 +68,23 @@ public class UserViewModel extends ViewModel {
                     userDto.balance,
                     userDto.commissionBalance
             ));
+            SessionManager.getInstance().cacheUserData(userLiveData.getValue());
         });
-        return userLiveData;
+    }
+
+    /**
+     * Monitor user session
+     */
+    private void listToUserAuthState() {
+        Log.d("ViewModel", "Listening to auth state");
+        userRepo.listenToUserAuthState(user -> {
+            if (user == null) {
+                authStateLiveData.setValue(null);
+                return;
+            }
+            fetchUserData(user.getUid());
+            authStateLiveData.setValue(user.getUid());
+        });
     }
 
     /**

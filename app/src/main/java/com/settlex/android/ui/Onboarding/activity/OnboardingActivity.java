@@ -10,7 +10,7 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.content.ContextCompat;
 
 import com.settlex.android.R;
-import com.settlex.android.data.local.OnboardingPrefs;
+import com.settlex.android.data.local.prefs.OnboardingPrefs;
 import com.settlex.android.databinding.ActivityOnboardingBinding;
 import com.settlex.android.ui.Onboarding.adapter.OnboardingAdapter;
 import com.settlex.android.ui.auth.activity.SignInActivity;

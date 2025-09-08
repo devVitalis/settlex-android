@@ -20,7 +20,7 @@
         <View
             android:layout_width="30dp"
             android:layout_height="30dp"
-            android:background="@color/gray_light" />
+            android:background="@drawable/bg_oval_gray_whitish" />
 
         <!--Text Containers-->
         <LinearLayout
@@ -37,20 +37,14 @@
                 <View
                     android:layout_width="0dp"
                     android:layout_height="12dp"
-                    android:layout_marginEnd="10dp"
+                    android:layout_marginEnd="80dp"
                     android:layout_weight="1"
-                    android:background="@color/gray_light" />
+                    android:background="@drawable/bg_8dp_gray_whitish" />
 
                 <View
-                    android:layout_width="40dp"
+                    android:layout_width="90dp"
                     android:layout_height="12dp"
-                    android:layout_marginEnd="2dp"
-                    android:background="@color/gray_light" />
-
-                <View
-                    android:layout_width="60dp"
-                    android:layout_height="12dp"
-                    android:background="@color/gray_light" />
+                    android:background="@drawable/bg_8dp_gray_whitish" />
             </LinearLayout>
 
             <LinearLayout
@@ -62,27 +56,27 @@
 
                 <View
                     android:layout_width="80dp"
-                    android:layout_height="10dp"
+                    android:layout_height="8dp"
                     android:layout_marginEnd="4dp"
-                    android:background="@color/gray_light" />
+                    android:background="@drawable/bg_8dp_gray_whitish" />
 
                 <View
                     android:layout_width="3dp"
                     android:layout_height="3dp"
                     android:layout_marginEnd="4dp"
-                    android:background="@color/gray_light" />
+                    android:background="@drawable/bg_oval_gray_whitish" />
 
                 <View
                     android:layout_width="0dp"
-                    android:layout_height="10dp"
-                    android:layout_marginEnd="25dp"
+                    android:layout_height="8dp"
+                    android:layout_marginEnd="70dp"
                     android:layout_weight="1"
-                    android:background="@color/gray_light" />
+                    android:background="@drawable/bg_8dp_gray_whitish" />
 
                 <View
-                    android:layout_width="60dp"
-                    android:layout_height="14dp"
-                    android:background="@color/gray_light" />
+                    android:layout_width="50dp"
+                    android:layout_height="5dp"
+                    android:background="@drawable/bg_8dp_gray_whitish" />
             </LinearLayout>
         </LinearLayout>
     </LinearLayout>
@@ -92,7 +86,87 @@
         android:layout_width="match_parent"
         android:layout_height="1dp"
         android:layout_marginTop="1.5dp"
-        android:background="@color/gray_light" />
+        android:background="@color/gray_whitish" />
+    <!--Icon & Divider Container-->
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:gravity="center_vertical"
+        android:orientation="horizontal"
+        android:paddingHorizontal="4dp"
+        android:paddingVertical="8dp">
+
+        <!-- Shimmer icon -->
+        <View
+            android:layout_width="30dp"
+            android:layout_height="30dp"
+            android:background="@drawable/bg_oval_gray_whitish" />
+
+        <!--Text Containers-->
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="8dp"
+            android:orientation="vertical">
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal">
+
+                <View
+                    android:layout_width="0dp"
+                    android:layout_height="12dp"
+                    android:layout_marginEnd="80dp"
+                    android:layout_weight="1"
+                    android:background="@drawable/bg_8dp_gray_whitish" />
+
+                <View
+                    android:layout_width="90dp"
+                    android:layout_height="12dp"
+                    android:background="@drawable/bg_8dp_gray_whitish" />
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="4dp"
+                android:gravity="center_vertical"
+                android:orientation="horizontal">
+
+                <View
+                    android:layout_width="80dp"
+                    android:layout_height="8dp"
+                    android:layout_marginEnd="4dp"
+                    android:background="@drawable/bg_8dp_gray_whitish" />
+
+                <View
+                    android:layout_width="3dp"
+                    android:layout_height="3dp"
+                    android:layout_marginEnd="4dp"
+                    android:background="@drawable/bg_oval_gray_whitish" />
+
+                <View
+                    android:layout_width="0dp"
+                    android:layout_height="8dp"
+                    android:layout_marginEnd="70dp"
+                    android:layout_weight="1"
+                    android:background="@drawable/bg_8dp_gray_whitish" />
+
+                <View
+                    android:layout_width="50dp"
+                    android:layout_height="5dp"
+                    android:background="@drawable/bg_8dp_gray_whitish" />
+            </LinearLayout>
+        </LinearLayout>
+    </LinearLayout>
+
+    <!--Divider-->
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="1dp"
+        android:layout_marginTop="1.5dp"
+        android:background="@color/gray_whitish" />
 
     <!--Icon & Divider Container-->
     <LinearLayout
@@ -107,7 +181,7 @@
         <View
             android:layout_width="30dp"
             android:layout_height="30dp"
-            android:background="@color/gray_light" />
+            android:background="@drawable/bg_oval_gray_whitish" />
 
         <!--Text Containers-->
         <LinearLayout
@@ -124,20 +198,14 @@
                 <View
                     android:layout_width="0dp"
                     android:layout_height="12dp"
-                    android:layout_marginEnd="10dp"
+                    android:layout_marginEnd="80dp"
                     android:layout_weight="1"
-                    android:background="@color/gray_light" />
+                    android:background="@drawable/bg_8dp_gray_whitish" />
 
                 <View
-                    android:layout_width="40dp"
+                    android:layout_width="90dp"
                     android:layout_height="12dp"
-                    android:layout_marginEnd="2dp"
-                    android:background="@color/gray_light" />
-
-                <View
-                    android:layout_width="60dp"
-                    android:layout_height="12dp"
-                    android:background="@color/gray_light" />
+                    android:background="@drawable/bg_8dp_gray_whitish" />
             </LinearLayout>
 
             <LinearLayout
@@ -149,27 +217,27 @@
 
                 <View
                     android:layout_width="80dp"
-                    android:layout_height="10dp"
+                    android:layout_height="8dp"
                     android:layout_marginEnd="4dp"
-                    android:background="@color/gray_light" />
+                    android:background="@drawable/bg_8dp_gray_whitish" />
 
                 <View
                     android:layout_width="3dp"
                     android:layout_height="3dp"
                     android:layout_marginEnd="4dp"
-                    android:background="@color/gray_light" />
+                    android:background="@drawable/bg_oval_gray_whitish" />
 
                 <View
                     android:layout_width="0dp"
-                    android:layout_height="10dp"
-                    android:layout_marginEnd="25dp"
+                    android:layout_height="8dp"
+                    android:layout_marginEnd="70dp"
                     android:layout_weight="1"
-                    android:background="@color/gray_light" />
+                    android:background="@drawable/bg_8dp_gray_whitish" />
 
                 <View
-                    android:layout_width="60dp"
-                    android:layout_height="14dp"
-                    android:background="@color/gray_light" />
+                    android:layout_width="50dp"
+                    android:layout_height="5dp"
+                    android:background="@drawable/bg_8dp_gray_whitish" />
             </LinearLayout>
         </LinearLayout>
     </LinearLayout>
@@ -179,92 +247,5 @@
         android:layout_width="match_parent"
         android:layout_height="1dp"
         android:layout_marginTop="1.5dp"
-        android:background="@color/gray_light" />
-
-    <!--Icon & Divider Container-->
-    <LinearLayout
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:gravity="center_vertical"
-        android:orientation="horizontal"
-        android:paddingHorizontal="4dp"
-        android:paddingVertical="8dp">
-
-        <!-- Shimmer icon -->
-        <View
-            android:layout_width="30dp"
-            android:layout_height="30dp"
-            android:background="@color/gray_light" />
-
-        <!--Text Containers-->
-        <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginStart="8dp"
-            android:orientation="vertical">
-
-            <LinearLayout
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:orientation="horizontal">
-
-                <View
-                    android:layout_width="0dp"
-                    android:layout_height="12dp"
-                    android:layout_marginEnd="10dp"
-                    android:layout_weight="1"
-                    android:background="@color/gray_light" />
-
-                <View
-                    android:layout_width="40dp"
-                    android:layout_height="12dp"
-                    android:layout_marginEnd="2dp"
-                    android:background="@color/gray_light" />
-
-                <View
-                    android:layout_width="60dp"
-                    android:layout_height="12dp"
-                    android:background="@color/gray_light" />
-            </LinearLayout>
-
-            <LinearLayout
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="4dp"
-                android:gravity="center_vertical"
-                android:orientation="horizontal">
-
-                <View
-                    android:layout_width="80dp"
-                    android:layout_height="10dp"
-                    android:layout_marginEnd="4dp"
-                    android:background="@color/gray_light" />
-
-                <View
-                    android:layout_width="3dp"
-                    android:layout_height="3dp"
-                    android:layout_marginEnd="4dp"
-                    android:background="@color/gray_light" />
-
-                <View
-                    android:layout_width="0dp"
-                    android:layout_height="10dp"
-                    android:layout_marginEnd="25dp"
-                    android:layout_weight="1"
-                    android:background="@color/gray_light" />
-
-                <View
-                    android:layout_width="60dp"
-                    android:layout_height="14dp"
-                    android:background="@color/gray_light" />
-            </LinearLayout>
-        </LinearLayout>
-    </LinearLayout>
-
-    <!--Divider-->
-    <View
-        android:layout_width="match_parent"
-        android:layout_height="1dp"
-        android:layout_marginTop="1.5dp"
-        android:background="@color/gray_light" />
+        android:background="@color/gray_whitish" />
 </LinearLayout>

@@ -6,6 +6,7 @@ import android.os.Bundle;
 import android.text.Editable;
 import android.text.InputType;
 import android.text.TextWatcher;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.MotionEvent;
 import android.view.View;
@@ -80,16 +81,24 @@ public class PayAFriendFragment extends Fragment {
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
 
-        observeUserData();
+        observeAndGetUserData();
         observePayFriend();
         observeUsernameSearch();
     }
 
     // ---------- Observers ----------
-    private void observeUserData() {
-        userViewModel.getAuthStateLiveData().observe(getViewLifecycleOwner(), authState -> {
-            if (authState == null) return;
-            userViewModel.getUserData(authState.getUid()).observe(getViewLifecycleOwner(), user -> this.currentUser = user);
+    private void observeAndGetUserData() {
+        UserUiModel currentUser = userViewModel.getCacheUserData();
+        if (currentUser != null) {
+            this.currentUser = currentUser;
+            Log.d("Fragment", "Current user is known");
+            return;
+        }
+        //Fetch new data
+        Log.d("Fragment", "Current user not known");
+        userViewModel.getUserData().observe(getViewLifecycleOwner(), user -> {
+            if (user == null) return;
+            this.currentUser = user;
         });
     }
 
@@ -173,7 +182,13 @@ public class PayAFriendFragment extends Fragment {
         binding.shimmerEffect.setVisibility(View.GONE);
     }
 
-    private void showPayConfirmation(double senderBalance, double senderCommBalance, String senderUid, String senderUsername) {
+    private void showPayConfirmation() {
+        Log.d("Fragment", currentUser.toString());
+        if (currentUser == null) return;
+        double senderBalance = currentUser.getBalance();
+        double senderCommBalance = currentUser.getCommissionBalance();
+        String senderUid = currentUser.getUid();
+        String senderUsername = currentUser.getUsername();
         String recipientUsername = StringUtil.removeAtInUsername(binding.selectedRecipientUsername.getText().toString());
         String recipientName = binding.selectedRecipientName.getText().toString();
         String description = binding.editTxtDescription.getText().toString().trim();
@@ -211,11 +226,7 @@ public class PayAFriendFragment extends Fragment {
 
         binding.imgBackBefore.setOnClickListener(v -> requireActivity().getOnBackPressedDispatcher().onBackPressed());
         binding.btnVerify.setOnClickListener(v -> searchUsername(username));
-        binding.btnNext.setOnClickListener(v -> showPayConfirmation(
-                currentUser.getBalance(),
-                currentUser.getCommissionBalance(),
-                currentUser.getUid(),
-                currentUser.getUsername()));
+        binding.btnNext.setOnClickListener(v -> showPayConfirmation());
     }
 
     private void setupRecipientRecyclerView() {

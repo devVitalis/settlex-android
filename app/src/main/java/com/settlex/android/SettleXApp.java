@@ -3,9 +3,13 @@ package com.settlex.android;
 import android.app.Application;
 import android.content.Context;
 
+import com.google.crypto.tink.Aead;
+import com.google.crypto.tink.KeysetHandle;
+import com.google.crypto.tink.aead.AeadConfig;
+import com.google.crypto.tink.aead.AeadFactory;
 import com.google.firebase.FirebaseApp;
-import com.settlex.android.data.enums.TransactionStatus;
 import com.settlex.android.data.enums.TransactionOperation;
+import com.settlex.android.data.enums.TransactionStatus;
 import com.settlex.android.util.network.NetworkMonitor;
 
 /**
@@ -15,6 +19,7 @@ import com.settlex.android.util.network.NetworkMonitor;
 public class SettleXApp extends Application {
     private static SettleXApp instance;
     private static Context appContext;
+    private Aead aead;
 
     public static SettleXApp getInstance() {
         return instance;
@@ -22,6 +27,10 @@ public class SettleXApp extends Application {
 
     public static Context getAppContext() {
         return appContext;
+    }
+
+    public Aead getAead() {
+        return aead;
     }
 
     // LIFECYCLE
@@ -33,6 +42,7 @@ public class SettleXApp extends Application {
     }
 
     // INITIALIZATION
+
     /**
      * Sets up global application references
      */
@@ -49,5 +59,15 @@ public class SettleXApp extends Application {
         NetworkMonitor.startNetworkCallback();
         TransactionStatus.init(this);
         TransactionOperation.init(this);
+
+        try {
+            AeadConfig.register(); // Initialize Tink
+            KeysetHandle keysetHandle = KeysetHandle.generateNew(
+                    com.google.crypto.tink.aead.AeadKeyTemplates.AES256_GCM
+            );
+            aead = AeadFactory.getPrimitive(keysetHandle);
+        } catch (Exception e) {
+            throw new RuntimeException("Tink init failed", e);
+        }
     }
 }

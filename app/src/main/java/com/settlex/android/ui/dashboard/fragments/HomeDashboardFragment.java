@@ -72,8 +72,6 @@ public class HomeDashboardFragment extends Fragment {
 
         setupStatusBar();
         setupUiActions();
-        binding.promoViewPager.setUserInputEnabled(true); // allow swiping
-        binding.promoViewPager.setClickable(false);
 
         return binding.getRoot();
     }
@@ -81,6 +79,7 @@ public class HomeDashboardFragment extends Fragment {
     @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
+
 
     }
 
@@ -93,7 +92,7 @@ public class HomeDashboardFragment extends Fragment {
 
     // ======================= SETUP UI COMPONENTS =======================
     private void setupUiActions() {
-        observeUserState();
+        observeCurrentUserState();
 
         loadServices();
         setupTransactionsRecyclerView();
@@ -104,26 +103,25 @@ public class HomeDashboardFragment extends Fragment {
     }
 
     //  OBSERVERS ===========
-    private void observeUserState() {
-        userViewModel.getAuthStateLiveData().observe(getViewLifecycleOwner(), authState -> {
-            if (authState == null) {
+    private void observeCurrentUserState() {
+        userViewModel.getAuthStateLiveData().observe(getViewLifecycleOwner(), currentUserUid -> {
+            if (currentUserUid == null) {
                 // Show logged out layout
                 onNoLoggedUser();
                 return;
             }
             // User is logged in fetch data
-            currentUserUid = authState.getUid();
-            observeAndDisplayUserData(currentUserUid);
-            observeAndLoadRecentTransactions(currentUserUid);
-            Log.d("UID", currentUserUid);
+            int TXN_QUERY_LIMIT = 3;
+            observeAndDisplayUserData();
+            transactionsViewModel.fetchTransactions(currentUserUid, TXN_QUERY_LIMIT);
+            observeAndLoadRecentTransactions();
             observeAndLoadPromoBanners();
         });
     }
 
-    private void observeAndDisplayUserData(String uid) {
+    private void observeAndDisplayUserData() {
         double MILLION_THRESHOLD = 999_999_999;
-        Log.d("Fragment", "Observing new transaction LiveData");
-        userViewModel.getUserData(uid).observe(getViewLifecycleOwner(), userData -> {
+        userViewModel.getUserData().observe(getViewLifecycleOwner(), userData -> {
             if (userData == null) return;
 
             binding.userDisplayName.setText(userData.getUserFullName());
@@ -132,10 +130,10 @@ public class HomeDashboardFragment extends Fragment {
         });
     }
 
-    private void observeAndLoadRecentTransactions(String uid) {
-        int QUERY_LIMIT = 3;
+    private void observeAndLoadRecentTransactions() {
         transactionsViewModel.getTransactions().observe(getViewLifecycleOwner(), transactions -> {
-            if (transactions == null || transactions.isEmpty()) {
+            if (transactions == null || transactions.isEmpty()){
+                binding.transactionsRecyclerView.setVisibility(View.GONE);
                 binding.txnShimmerEffect.setVisibility(View.VISIBLE);
                 binding.txnShimmerEffect.startShimmer();
                 return;
@@ -145,6 +143,7 @@ public class HomeDashboardFragment extends Fragment {
             binding.transactionsRecyclerView.setAdapter(adapter);
             binding.txnShimmerEffect.stopShimmer();
             binding.txnShimmerEffect.setVisibility(View.GONE);
+            binding.transactionsRecyclerView.setVisibility(View.VISIBLE);
         });
     }
 

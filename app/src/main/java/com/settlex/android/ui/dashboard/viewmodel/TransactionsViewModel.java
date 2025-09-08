@@ -31,7 +31,6 @@ public class TransactionsViewModel extends ViewModel {
     public TransactionsViewModel() {
         this.transactionRepo = new TransactionRepository();
 
-        fetchTransactions("rzZJ1HI3aWXjX5vj2Uq9dFIOA802", 3);
     }
 
     //  GETTERS ====================
@@ -47,7 +46,7 @@ public class TransactionsViewModel extends ViewModel {
      * Expose transactions LiveData
      */
     public void fetchTransactions(String currentUserUid, int limit) {
-        Log.d("ViewModel", "Fetching new transaction LiveData");
+        if (transactionsLiveData.getValue() != null && !transactionsLiveData.getValue().isEmpty()) return;
         transactionRepo.getRecentTransactions(currentUserUid, limit, new TransactionRepository.TransactionsCallback() {
             @Override
             public void onResult(List<TransactionDto> transaction) {

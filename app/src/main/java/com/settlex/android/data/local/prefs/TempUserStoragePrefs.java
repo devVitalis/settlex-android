@@ -1,4 +1,4 @@
-package com.settlex.android.data.local;
+package com.settlex.android.data.local.prefs;
 
 import android.content.Context;
 import android.content.SharedPreferences;
@@ -10,13 +10,13 @@ import com.settlex.android.domain.model.UserModel;
  * Acts as a fallback for retrying failed saves (e.g., network issues).
  * Data is persisted locally via SharedPreferences until successfully synced.
  */
-public class TempUserStorage {
+public class TempUserStoragePrefs {
     private static final String PREFS_NAME = "temp_user_data";
     private static final String KEY_USER_JSON = "user_json";
 
     private SharedPreferences prefs;
 
-    public TempUserStorage(Context context) {
+    public TempUserStoragePrefs(Context context) {
         this.prefs = context.getSharedPreferences(PREFS_NAME, Context.MODE_PRIVATE);
     }
 

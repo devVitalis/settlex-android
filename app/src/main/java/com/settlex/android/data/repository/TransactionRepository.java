@@ -3,9 +3,6 @@ package com.settlex.android.data.repository;
 import android.os.Handler;
 import android.os.Looper;
 
-import androidx.lifecycle.LiveData;
-import androidx.lifecycle.MutableLiveData;
-
 import com.google.firebase.FirebaseNetworkException;
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
@@ -82,7 +79,7 @@ public class TransactionRepository {
 
         handler.postDelayed(timeoutRunnable, 10_000); // 10s timeout
 
-        functions.getHttpsCallable("transferFunds").call(data).addOnSuccessListener(result -> {
+        functions.getHttpsCallable("payAFriend").call(data).addOnSuccessListener(result -> {
             if (!finished[0]) {
                 finished[0] = true;
                 handler.removeCallbacks(timeoutRunnable);

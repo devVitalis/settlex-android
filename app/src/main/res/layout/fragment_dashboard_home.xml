@@ -411,6 +411,7 @@
                             android:id="@+id/transactionsRecyclerView"
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
+                            android:visibility="gone"
                             android:clipToPadding="false"
                             android:nestedScrollingEnabled="false" />
 
@@ -418,8 +419,6 @@
                             android:id="@+id/txnShimmerEffect"
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
-                            android:layout_marginTop="10dp"
-                            android:padding="8dp"
                             android:visibility="gone"
                             app:shimmer_auto_start="false"
                             app:shimmer_duration="1500">

@@ -1,14 +1,12 @@
 package com.settlex.android.data.repository;
 
-import androidx.lifecycle.LiveData;
-import androidx.lifecycle.MutableLiveData;
-
 import com.google.firebase.FirebaseNetworkException;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.ListenerRegistration;
 import com.google.firebase.functions.FirebaseFunctions;
+import com.settlex.android.data.local.SessionManager;
 import com.settlex.android.data.remote.dto.SuggestionsDto;
 import com.settlex.android.data.remote.dto.UserDto;
 
@@ -28,30 +26,22 @@ public class UserRepository {
     private ListenerRegistration userListener;
     private FirebaseAuth.AuthStateListener authStateListener;
 
-    // LIVEDATA HOLDER
-    private final MutableLiveData<FirebaseUser> authStateLiveData = new MutableLiveData<>();
-    private final MutableLiveData<UserDto> userLiveData = new MutableLiveData<>();
-
     public UserRepository() {
         functions = FirebaseFunctions.getInstance("europe-west2");
         firestore = FirebaseFirestore.getInstance();
         auth = FirebaseAuth.getInstance();
-
-        setAuthStateListener();
     }
 
     // Listen to auth changes
-    private void setAuthStateListener() {
+    public void listenToUserAuthState(GetUserAuthStateCallback callback) {
         authStateListener = firebaseAuth -> {
             FirebaseUser currentUser = firebaseAuth.getCurrentUser();
-            authStateLiveData.postValue(currentUser);
+            callback.onResult(currentUser);
 
             if (currentUser == null) {
                 removeListener();
-                userLiveData.postValue(null);
-                return;
+                callback.onResult(null);
             }
-            getUser(firebaseAuth.getUid());
         };
         auth.addAuthStateListener(authStateListener);
     }
@@ -59,18 +49,17 @@ public class UserRepository {
     /**
      * Listens to user doc in Firestore database
      */
-    public LiveData<UserDto> getUser(String uid) {
+    public void getUserData(String uid, GetUserCallback callback) {
         userListener = firestore.collection("users")
                 .document(uid)
                 .addSnapshotListener((snapshot, error) -> {
                     if (error != null || snapshot == null || !snapshot.exists()) {
-                        userLiveData.setValue(null);
+                        callback.onResult(null);
                         return;
                     }
                     UserDto userDoc = snapshot.toObject(UserDto.class);
-                    userLiveData.setValue(userDoc);
+                    callback.onResult(userDoc);
                 });
-        return userLiveData;
     }
 
     /**
@@ -78,7 +67,7 @@ public class UserRepository {
      * used when user is initiating a transfer, entering userTag(Username)
      */
     public void searchUsername(String input, SearchUsernameCallback callback) {
-        functions.getHttpsCallable("usernameLookup")
+        functions.getHttpsCallable("searchUsername")
                 .call(Collections.singletonMap("input", input))
                 .addOnSuccessListener(result -> {
                     List<SuggestionsDto> suggestionsDto = new ArrayList<>();
@@ -108,11 +97,6 @@ public class UserRepository {
                 });
     }
 
-    // GETTERS =================
-    public LiveData<FirebaseUser> getAuthState() {
-        return authStateLiveData;
-    }
-
     /**
      * Remove all Firestore listeners
      */
@@ -130,5 +114,13 @@ public class UserRepository {
         void onResult(List<SuggestionsDto> suggestionsDto);
 
         void onFailure(String reason);
+    }
+
+    public interface GetUserCallback {
+        void onResult(UserDto userDto);
+    }
+
+    public interface GetUserAuthStateCallback {
+        void onResult(FirebaseUser user);
     }
 }

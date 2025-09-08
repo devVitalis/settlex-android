@@ -89,6 +89,12 @@ dependencies {
     implementation(libs.navigation.fragment.ktx)
     implementation(libs.navigation.ui.ktx)
 
+    // DataStore (Preferences)
+    implementation(libs.datastore.preferences)
+
+    // Tink for encryption
+    implementation(libs.tink.android)
+
 }
 
 tasks.withType<JavaCompile>().configureEach {

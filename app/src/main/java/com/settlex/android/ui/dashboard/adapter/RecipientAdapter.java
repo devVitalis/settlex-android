@@ -9,7 +9,7 @@ import androidx.recyclerview.widget.ListAdapter;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.settlex.android.R;
-import com.settlex.android.databinding.ItemSuggestionBinding;
+import com.settlex.android.databinding.ItemRecipientBinding;
 import com.settlex.android.ui.dashboard.model.RecipientUiModel;
 
 public class RecipientAdapter extends ListAdapter<RecipientUiModel, RecipientAdapter.SuggestionsViewHolder> {
@@ -20,7 +20,7 @@ public class RecipientAdapter extends ListAdapter<RecipientUiModel, RecipientAda
 
     private OnItemClickListener onItemClickListener;
 
-    public void setOnItemClickListener(OnItemClickListener listener){
+    public void setOnItemClickListener(OnItemClickListener listener) {
         this.onItemClickListener = listener;
     }
 
@@ -43,7 +43,7 @@ public class RecipientAdapter extends ListAdapter<RecipientUiModel, RecipientAda
     @NonNull
     @Override
     public SuggestionsViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
-        ItemSuggestionBinding binding = ItemSuggestionBinding.inflate(LayoutInflater.from(parent.getContext()), parent, false);
+        ItemRecipientBinding binding = ItemRecipientBinding.inflate(LayoutInflater.from(parent.getContext()), parent, false);
         return new SuggestionsViewHolder(binding);
     }
 
@@ -53,9 +53,9 @@ public class RecipientAdapter extends ListAdapter<RecipientUiModel, RecipientAda
     }
 
     public static class SuggestionsViewHolder extends RecyclerView.ViewHolder {
-        private final ItemSuggestionBinding binding;
+        private final ItemRecipientBinding binding;
 
-        public SuggestionsViewHolder(@NonNull ItemSuggestionBinding binding) {
+        public SuggestionsViewHolder(@NonNull ItemRecipientBinding binding) {
             super(binding.getRoot());
             this.binding = binding;
         }
