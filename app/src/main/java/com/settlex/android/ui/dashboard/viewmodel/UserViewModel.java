@@ -15,7 +15,6 @@ import com.settlex.android.util.event.Result;
 import com.settlex.android.util.string.StringUtil;
 
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.List;
 
 public class UserViewModel extends ViewModel {
@@ -45,30 +44,35 @@ public class UserViewModel extends ViewModel {
         return userLiveData;
     }
 
-    public UserUiModel getCacheUserData(){
-        return SessionManager.getInstance().getUser();
-    }
-
     /**
      * Update the UI model for current user details
      */
     public void fetchUserData(String uid) {
-        if (userLiveData.getValue() != null) return;
-        Log.d("ViewModel", "Fetching user data");
+        UserUiModel cachedData = SessionManager.getInstance().getUser();
+        if (cachedData != null && cachedData.getUid().equals(uid)) {
+            userLiveData.setValue(cachedData);
+        }
+
+        // Fetch new data
         userRepo.getUserData(uid, userDto -> {
             if (userDto == null) {
-                userLiveData.setValue(null);
+                // If fetching new data fails, do not clear the LiveData.
+                // The UI will continue to show the cached data,
+                // which is better than showing an empty state on network failure.
+                // You could also post an error state here if needed.
                 return;
             }
-            userLiveData.setValue(new UserUiModel(
+
+            UserUiModel updatedData = new UserUiModel(
                     userDto.uid,
                     userDto.firstName,
                     userDto.lastName,
                     userDto.username,
                     userDto.balance,
-                    userDto.commissionBalance
-            ));
-            SessionManager.getInstance().cacheUserData(userLiveData.getValue());
+                    userDto.commissionBalance);
+
+            userLiveData.setValue(updatedData);
+            SessionManager.getInstance().cacheUserData(updatedData);
         });
     }
 
@@ -76,16 +80,19 @@ public class UserViewModel extends ViewModel {
      * Monitor user session
      */
     private void listToUserAuthState() {
-        Log.d("ViewModel", "Listening to auth state");
         userRepo.listenToUserAuthState(user -> {
             if (user == null) {
+                // If user logs out or session expires, clear the data.
                 authStateLiveData.setValue(null);
+                userLiveData.setValue(null);
                 return;
             }
-            fetchUserData(user.getUid());
+            // User is logged in
             authStateLiveData.setValue(user.getUid());
+            fetchUserData(user.getUid());
         });
     }
+
 
     /**
      * Returns username query results.
@@ -99,16 +106,16 @@ public class UserViewModel extends ViewModel {
                 List<RecipientUiModel> suggestionsUiModelList = new ArrayList<>();
                 for (SuggestionsDto dto : suggestionsDto) {
                     suggestionsUiModelList.add(new RecipientUiModel(
-                            StringUtil.addAtToUsername(dto.username),
-                            dto.firstName + " " + dto.lastName,
-                            dto.profileUrl));
+                            StringUtil.addAtToUsername(dto.username), dto.firstName + " " + dto.lastName,
+                            dto.profileUrl)); // Null on default
                 }
                 usernameSearchLiveData.postValue(Result.success(suggestionsUiModelList));
             }
 
             @Override
             public void onFailure(String reason) {
-                usernameSearchLiveData.postValue(Result.success(Collections.emptyList()));
+                // Post a dedicated error state.
+                usernameSearchLiveData.postValue(Result.error(reason));
             }
         });
     }
@@ -119,6 +126,7 @@ public class UserViewModel extends ViewModel {
 
     @Override
     protected void onCleared() {
+        Log.d("ViewModel", "Cleared");
         super.onCleared();
         userRepo.removeListener();
     }

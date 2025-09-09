@@ -55,7 +55,7 @@ public class TransactionsAdapter extends RecyclerView.Adapter<TransactionsAdapte
 
     @Override
     public int getItemCount() {
-        return transactions.size();
+        return transactions != null ? transactions.size() : 0;
     }
 
     /**

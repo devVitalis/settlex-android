@@ -52,6 +52,7 @@ public class PromotionalBannerAdapter extends RecyclerView.Adapter<PromotionalBa
             Glide.with(binding.promoBanner.getContext())
                     .load(bannerUiModel.getImageUrl())
                     .centerCrop()
+//                    .placeholder(R.mipmap.ic_launcher)
                     .into(binding.promoBanner);
 
             //

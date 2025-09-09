@@ -23,18 +23,23 @@
             android:paddingHorizontal="15dp"
             android:paddingTop="5dp">
 
-            <ImageView
+            <com.google.android.material.imageview.ShapeableImageView
                 android:id="@+id/userProfilePic"
-                android:layout_width="55dp"
-                android:layout_height="55dp"
-                android:src="@drawable/ic_avatar"
+                android:layout_width="45dp"
+                android:layout_height="45dp"
+                android:background="@color/blue_light"
+                android:contentDescription="@null"
+                android:src="@mipmap/ic_launcher"
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toTopOf="parent" />
+                app:layout_constraintTop_toTopOf="parent"
+                app:shapeAppearance="@style/CircleImage" />
 
             <LinearLayout
+                android:id="@+id/greetingContainer"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
+                android:layout_marginStart="5dp"
                 android:orientation="vertical"
                 app:layout_constraintBottom_toBottomOf="@id/userProfilePic"
                 app:layout_constraintStart_toEndOf="@id/userProfilePic"
@@ -61,6 +66,19 @@
                     android:textStyle="bold"
                     tools:text="Nnaemeka Benjamin" />
             </LinearLayout>
+
+            <com.google.android.material.button.MaterialButton
+                android:id="@+id/btnLogin"
+                style="@style/Widget.SettleXApp.Button.Outlined"
+                android:layout_width="80dp"
+                android:layout_height="40dp"
+                android:layout_marginStart="5dp"
+                android:paddingHorizontal="0dp"
+                android:text="Login"
+                android:visibility="gone"
+                app:layout_constraintBottom_toBottomOf="@id/userProfilePic"
+                app:layout_constraintStart_toEndOf="@id/userProfilePic"
+                app:layout_constraintTop_toTopOf="@id/userProfilePic" />
 
             <!--Notification Layout-->
             <androidx.constraintlayout.widget.ConstraintLayout
@@ -138,7 +156,7 @@
                         app:tint="@color/orange" />
 
                     <TextView
-                        android:id="@+id/awareness"
+                        android:id="@+id/brandAwareness"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:ellipsize="marquee"
@@ -243,21 +261,36 @@
                                 android:textColor="@color/white"
                                 android:textSize="14sp" />
 
-                            <TextView
-                                android:id="@+id/userCommissionBalance"
+                            <LinearLayout
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
                                 android:layout_marginTop="10dp"
-                                android:includeFontPadding="false"
-                                android:textColor="@color/white"
-                                android:textSize="20sp"
-                                android:textStyle="bold"
-                                tools:text="₦534.18" />
+                                android:gravity="center_vertical"
+                                android:orientation="horizontal">
+
+                                <TextView
+                                    android:id="@+id/userCommissionBalance"
+                                    android:layout_width="wrap_content"
+                                    android:layout_height="wrap_content"
+                                    android:includeFontPadding="false"
+                                    android:textColor="@color/white"
+                                    android:textSize="20sp"
+                                    android:textStyle="bold"
+                                    tools:text="₦534.18" />
+
+                                <ImageView
+                                    android:layout_width="15dp"
+                                    android:layout_height="15dp"
+                                    android:contentDescription="@null"
+                                    android:src="@drawable/ic_arrow_forward"
+                                    app:tint="@color/white" />
+                            </LinearLayout>
                         </LinearLayout>
                     </androidx.constraintlayout.widget.ConstraintLayout>
 
                     <!-- Action Buttons -->
                     <androidx.constraintlayout.widget.ConstraintLayout
+                        android:id="@+id/actionButtons"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:layout_marginTop="15dp">
@@ -359,6 +392,7 @@
 
                 <!--Recent Transaction-->
                 <LinearLayout
+                    android:id="@+id/transactionContainer"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_marginTop="15dp"
@@ -408,12 +442,12 @@
                         android:layout_marginTop="5dp">
 
                         <androidx.recyclerview.widget.RecyclerView
-                            android:id="@+id/transactionsRecyclerView"
+                            android:id="@+id/transactionRecyclerView"
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
-                            android:visibility="gone"
                             android:clipToPadding="false"
-                            android:nestedScrollingEnabled="false" />
+                            android:nestedScrollingEnabled="false"
+                            android:visibility="gone" />
 
                         <com.facebook.shimmer.ShimmerFrameLayout
                             android:id="@+id/txnShimmerEffect"
@@ -426,7 +460,7 @@
                             <include
                                 layout="@layout/item_transaction_shimmer"
                                 android:layout_width="match_parent"
-                                android:layout_height="match_parent" />
+                                android:layout_height="wrap_content" />
                         </com.facebook.shimmer.ShimmerFrameLayout>
                     </FrameLayout>
                 </LinearLayout>

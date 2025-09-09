@@ -2,14 +2,17 @@ package com.settlex.android.data.local;
 
 import android.content.Context;
 import android.content.SharedPreferences;
+import android.util.Log;
 
 import com.google.crypto.tink.Aead;
 import com.google.gson.Gson;
+import com.google.gson.JsonSyntaxException;
 import com.settlex.android.SettleXApp;
 import com.settlex.android.data.local.prefs.UserOnboardPrefs;
 import com.settlex.android.ui.dashboard.model.UserUiModel;
 
 import java.nio.charset.StandardCharsets;
+import java.security.GeneralSecurityException;
 import java.util.Base64;
 
 /**
@@ -75,7 +78,8 @@ public class SessionManager {
 
             return gson.fromJson(json, UserUiModel.class);
 
-        } catch (Exception ignored) {
+        } catch (GeneralSecurityException | JsonSyntaxException e) {
+            Log.e("ViewModel", "Failed to decrypt or parse user data", e);
             return null;
         }
     }
@@ -87,11 +91,8 @@ public class SessionManager {
     }
 
     public boolean hasPin() {
+        // return getUser()!= null && getUser().getHasPin();
         return prefs.getBoolean(KEY_HAS_PIN, false);
-    }
-    public void setHasPin(boolean hasPin) {
-        editor.putBoolean(KEY_HAS_PIN, hasPin);
-        editor.apply();
     }
 
     /**
@@ -100,12 +101,5 @@ public class SessionManager {
     public void clearSession() {
         prefs.edit().clear().apply();
         onboardingPrefs = null;
-    }
-
-    /**
-     * Access user-scoped onboarding preferences
-     */
-    public UserOnboardPrefs getOnboardingPrefs() {
-        return onboardingPrefs;
     }
 }

@@ -1,7 +1,6 @@
 package com.settlex.android.ui.dashboard.activity;
 
 import android.os.Bundle;
-import android.util.Log;
 
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.navigation.NavController;
@@ -20,18 +19,14 @@ public class DashboardActivity extends AppCompatActivity {
         binding = ActivityDashboardBinding.inflate(getLayoutInflater());
         setContentView(binding.getRoot());
 
+        // Get the single, shared ViewModel instance from the Application class.
+        // userViewModel = ((SettleXApp) getApplication()).getSharedUserViewModel();
         disableItemColorTint();
 
-        NavHostFragment navHostFragment = (NavHostFragment) getSupportFragmentManager()
-                .findFragmentById(R.id.dashboardNavHost);
-
-        // Add a null check to prevent the crash
+        NavHostFragment navHostFragment = (NavHostFragment) getSupportFragmentManager().findFragmentById(R.id.dashboardNavHost);
         if (navHostFragment != null) {
             NavController navController = navHostFragment.getNavController();
             NavigationUI.setupWithNavController(binding.bottomNavigationView, navController);
-        } else {
-            // Log an error or handle the case where the fragment isn't found
-            Log.e("DashboardActivity", "NavHostFragment not found");
         }
     }
 

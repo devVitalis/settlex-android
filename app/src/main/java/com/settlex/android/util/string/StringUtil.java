@@ -67,6 +67,10 @@ public class StringUtil {
         return "@" + username;
     }
 
+    public static String setAsterisks(){
+        return "****";
+    }
+
     // ====================== PHONE NUMBER FORMATTING ======================
     public static String formatPhoneNumber(String phone) {
         if (phone == null || phone.isEmpty()) return phone;

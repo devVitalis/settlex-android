@@ -22,7 +22,9 @@ import androidx.fragment.app.Fragment;
 import androidx.lifecycle.ViewModelProvider;
 import androidx.recyclerview.widget.LinearLayoutManager;
 
+import com.google.gson.Gson;
 import com.settlex.android.R;
+import com.settlex.android.SettleXApp;
 import com.settlex.android.data.enums.TransactionServiceType;
 import com.settlex.android.databinding.FragmentPayAFriendBinding;
 import com.settlex.android.ui.common.util.SettleXProgressBarController;
@@ -66,7 +68,7 @@ public class PayAFriendFragment extends Fragment {
         binding = FragmentPayAFriendBinding.inflate(inflater, container, false);
 
         progressBarController = new SettleXProgressBarController(binding.getRoot());
-        userViewModel = new ViewModelProvider(requireActivity()).get(UserViewModel.class);
+        userViewModel = ((SettleXApp) requireActivity().getApplication()).getSharedUserViewModel();
         transactionsViewModel = new ViewModelProvider(requireActivity()).get(TransactionsViewModel.class);
         recipientAdapter = new RecipientAdapter();
         bundle = new Bundle();
@@ -86,28 +88,32 @@ public class PayAFriendFragment extends Fragment {
         observeUsernameSearch();
     }
 
+    @Override
+    public void onDestroyView() {
+        super.onDestroyView();
+        // Remove binding
+        binding = null;
+    }
+
     // ---------- Observers ----------
     private void observeAndGetUserData() {
-        UserUiModel currentUser = userViewModel.getCacheUserData();
-        if (currentUser != null) {
-            this.currentUser = currentUser;
-            Log.d("Fragment", "Current user is known");
-            return;
-        }
-        //Fetch new data
-        Log.d("Fragment", "Current user not known");
         userViewModel.getUserData().observe(getViewLifecycleOwner(), user -> {
-            if (user == null) return;
+            if (user == null && this.currentUser != null) {
+                this.currentUser = null;
+                return;
+            }
             this.currentUser = user;
         });
     }
 
     private void observePayFriend() {
-        transactionsViewModel.getPayFriendLiveData().observe(getViewLifecycleOwner(), this::handlePayFriendResult);
+        transactionsViewModel.getPayFriendLiveData().observe(getViewLifecycleOwner(),
+                this::handlePayFriendResult);
     }
 
     private void observeUsernameSearch() {
-        userViewModel.getUsernameSearchLiveData().observe(getViewLifecycleOwner(), this::handleUsernameSearchResult);
+        userViewModel.getUsernameSearchLiveData().observe(getViewLifecycleOwner(),
+                this::handleUsernameSearchResult);
     }
 
     private void handlePayFriendResult(Event<Result<String>> event) {

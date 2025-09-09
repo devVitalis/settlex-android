@@ -24,7 +24,7 @@ public class TransactionsViewModel extends ViewModel {
     private final TransactionRepository transactionRepo;
 
     // LiveData holders
-    private final MutableLiveData<List<TransactionUiModel>> transactionsLiveData = new MutableLiveData<>();
+    private final MutableLiveData<Result<List<TransactionUiModel>>> transactionsLiveData = new MutableLiveData<>();
     private final MutableLiveData<Event<Result<String>>> payFriendLiveData = new MutableLiveData<>();
 
 
@@ -38,7 +38,7 @@ public class TransactionsViewModel extends ViewModel {
         return payFriendLiveData;
     }
 
-    public LiveData<List<TransactionUiModel>> getTransactions() {
+    public LiveData<Result<List<TransactionUiModel>>> getTransactions() {
         return transactionsLiveData;
     }
 
@@ -46,12 +46,14 @@ public class TransactionsViewModel extends ViewModel {
      * Expose transactions LiveData
      */
     public void fetchTransactions(String currentUserUid, int limit) {
-        if (transactionsLiveData.getValue() != null && !transactionsLiveData.getValue().isEmpty()) return;
+        if (transactionsLiveData.getValue() != null) return;
+
+        transactionsLiveData.setValue(Result.loading());
         transactionRepo.getRecentTransactions(currentUserUid, limit, new TransactionRepository.TransactionsCallback() {
             @Override
             public void onResult(List<TransactionDto> transaction) {
                 if (transaction == null || transaction.isEmpty()) {
-                    transactionsLiveData.setValue(Collections.emptyList());
+                    transactionsLiveData.setValue(Result.success(Collections.emptyList()));
                     return;
                 }
 
@@ -81,12 +83,13 @@ public class TransactionsViewModel extends ViewModel {
                             dto.status.getColorRes()
                     ));
                 }
-                transactionsLiveData.setValue(uiList);
+                transactionsLiveData.setValue(Result.success(uiList));
             }
 
             @Override
             public void onFailure(String reason) {
-                transactionsLiveData.setValue(Collections.emptyList());
+                transactionsLiveData.setValue(Result.success(Collections.emptyList()));
+                // TODO: handle error
             }
         });
     }

@@ -6,7 +6,6 @@ import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.ListenerRegistration;
 import com.google.firebase.functions.FirebaseFunctions;
-import com.settlex.android.data.local.SessionManager;
 import com.settlex.android.data.remote.dto.SuggestionsDto;
 import com.settlex.android.data.remote.dto.UserDto;
 
@@ -35,13 +34,8 @@ public class UserRepository {
     // Listen to auth changes
     public void listenToUserAuthState(GetUserAuthStateCallback callback) {
         authStateListener = firebaseAuth -> {
-            FirebaseUser currentUser = firebaseAuth.getCurrentUser();
-            callback.onResult(currentUser);
-
-            if (currentUser == null) {
-                removeListener();
-                callback.onResult(null);
-            }
+            FirebaseUser user = firebaseAuth.getCurrentUser();
+            callback.onResult(user);
         };
         auth.addAuthStateListener(authStateListener);
     }

@@ -79,8 +79,8 @@ dependencies {
     implementation(libs.lifecycle.viewmodel)
     implementation(libs.lifecycle.livedata)
 
-    // Blur TODO: remove
-    // implementation(libs.blurry)
+    /** Blur TODO: remove
+    // implementation(libs.blurry) */
 
     // Shimmer Loading
     implementation(libs.shimmer)
@@ -94,7 +94,6 @@ dependencies {
 
     // Tink for encryption
     implementation(libs.tink.android)
-
 }
 
 tasks.withType<JavaCompile>().configureEach {
