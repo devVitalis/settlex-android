@@ -21,6 +21,7 @@
 
     <!--Red-->
     <color name="red">#FF0A0A</color>
+    <color name="red_light">#FDE2E1</color>
 
     <!--Orange-->
     <color name="orange">#FFA500</color>

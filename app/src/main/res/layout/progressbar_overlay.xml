@@ -4,8 +4,7 @@
     android:layout_height="match_parent"
     android:background="@android:color/transparent"
     android:clickable="true"
-    android:focusable="true"
-    android:visibility="gone">
+    android:focusable="true">
 
     <include
         layout="@layout/progress_bar"

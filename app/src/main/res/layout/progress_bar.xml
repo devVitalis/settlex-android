@@ -17,6 +17,6 @@
         android:layout_width="45dp"
         android:layout_height="45dp"
         android:layout_gravity="center"
-        android:contentDescription="Logo"
+        android:contentDescription="@null"
         android:src="@drawable/logo_circle" />
 </FrameLayout>

@@ -30,7 +30,7 @@ import com.settlex.android.domain.model.UserModel;
 import com.settlex.android.databinding.FragmentSignUpUserPasswordBinding;
 import com.settlex.android.ui.info.help.AuthHelpActivity;
 import com.settlex.android.ui.auth.viewmodel.AuthViewModel;
-import com.settlex.android.ui.common.util.SettleXProgressBarController;
+import com.settlex.android.ui.common.util.ProgressLoaderController;
 import com.settlex.android.ui.dashboard.activity.DashboardActivity;
 import com.settlex.android.util.network.NetworkMonitor;
 
@@ -40,7 +40,7 @@ public class SignUpUserPasswordFragment extends Fragment {
     private boolean isConnected = false; // Network connection
 
     private FragmentSignUpUserPasswordBinding binding;
-    private SettleXProgressBarController progressBarController;
+    private ProgressLoaderController progressLoader;
     private AuthViewModel authViewModel;
 
     // ====================== LIFECYCLE ======================
@@ -48,7 +48,7 @@ public class SignUpUserPasswordFragment extends Fragment {
     public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         binding = FragmentSignUpUserPasswordBinding.inflate(inflater, container, false);
 
-        progressBarController = new SettleXProgressBarController(binding.fragmentContainer);
+        progressLoader = new ProgressLoaderController(requireActivity());
         authViewModel = new ViewModelProvider(requireActivity()).get(AuthViewModel.class);
 
         setupStatusBar();
@@ -89,7 +89,7 @@ public class SignUpUserPasswordFragment extends Fragment {
         authViewModel.getRegisterResult().observe(getViewLifecycleOwner(), result -> {
             if (result != null) {
                 switch (result.getStatus()) {
-                    case LOADING -> progressBarController.show();
+                    case LOADING -> progressLoader.show();
                     case SUCCESS -> onRegistrationSuccess();
                     case FAILED -> onRegistrationFailure(result.getMessage());
                 }
@@ -106,14 +106,14 @@ public class SignUpUserPasswordFragment extends Fragment {
         startActivity(new Intent(requireContext(), DashboardActivity.class));
         requireActivity().finishAffinity();
 
-        progressBarController.hide();
+        progressLoader.hide();
     }
 
     private void onRegistrationFailure(String reason) {
         binding.txtErrorFeedback.setText(reason);
         binding.txtErrorFeedback.setVisibility(View.VISIBLE);
 
-        progressBarController.hide();
+        progressLoader.hide();
     }
 
     private void onNoInternetConnection() {

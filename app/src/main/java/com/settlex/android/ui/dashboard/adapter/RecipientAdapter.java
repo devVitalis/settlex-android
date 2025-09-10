@@ -9,16 +9,16 @@ import androidx.recyclerview.widget.ListAdapter;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.settlex.android.R;
+import com.settlex.android.data.remote.avater.AvatarService;
 import com.settlex.android.databinding.ItemRecipientBinding;
 import com.settlex.android.ui.dashboard.model.RecipientUiModel;
 
 public class RecipientAdapter extends ListAdapter<RecipientUiModel, RecipientAdapter.SuggestionsViewHolder> {
+    private OnItemClickListener onItemClickListener;
 
     public interface OnItemClickListener {
         void onItemClick(RecipientUiModel model);
     }
-
-    private OnItemClickListener onItemClickListener;
 
     public void setOnItemClickListener(OnItemClickListener listener) {
         this.onItemClickListener = listener;
@@ -61,7 +61,7 @@ public class RecipientAdapter extends ListAdapter<RecipientUiModel, RecipientAda
         }
 
         public void bind(RecipientUiModel model, OnItemClickListener listener) {
-            binding.userProfilePic.setImageResource(R.drawable.ic_avatar);
+            AvatarService.loadAvatar(model.getFullName(), binding.userProfilePic);
             binding.userFullName.setText(model.getFullName());
             binding.username.setText(model.getUsername());
 

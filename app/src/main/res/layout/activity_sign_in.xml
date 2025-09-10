@@ -11,17 +11,18 @@
     android:focusableInTouchMode="true"
     tools:context=".ui.auth.activity.SignInActivity">
 
-    <!-- Main container -->
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:orientation="vertical">
 
         <!-- Header -->
-        <androidx.constraintlayout.widget.ConstraintLayout
+        <LinearLayout
             android:id="@+id/header"
             android:layout_width="match_parent"
             android:layout_height="35dp"
+            android:gravity="center_vertical"
+            android:orientation="horizontal"
             android:paddingHorizontal="15dp">
 
             <!-- Back button -->
@@ -30,10 +31,12 @@
                 android:layout_width="20dp"
                 android:layout_height="20dp"
                 android:contentDescription="Back"
-                android:src="@drawable/ic_arrow_back"
-                app:layout_constraintBottom_toBottomOf="parent"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toTopOf="parent" />
+                android:src="@drawable/ic_arrow_back" />
+
+            <Space
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                android:layout_weight="1" />
 
             <!-- Help button -->
             <LinearLayout
@@ -44,10 +47,7 @@
                 android:gravity="center"
                 android:orientation="horizontal"
                 android:paddingHorizontal="5dp"
-                android:paddingVertical="2dp"
-                app:layout_constraintBottom_toBottomOf="parent"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintTop_toTopOf="parent">
+                android:paddingVertical="2dp">
 
                 <ImageView
                     android:layout_width="15dp"
@@ -58,20 +58,19 @@
                 <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:fontFamily="@font/poppins_light"
+                    android:fontFamily="@font/poppins_regular"
                     android:includeFontPadding="false"
                     android:text="Help"
                     android:textColor="@color/white"
                     android:textSize="12sp" />
             </LinearLayout>
-        </androidx.constraintlayout.widget.ConstraintLayout>
+        </LinearLayout>
 
         <!-- Scrollable content -->
         <ScrollView
             android:layout_width="match_parent"
             android:layout_height="0dp"
             android:layout_weight="1"
-            android:fillViewport="true"
             android:scrollbars="none">
 
             <LinearLayout
@@ -90,7 +89,7 @@
                     android:contentDescription="@null"
                     android:src="@mipmap/ic_launcher" />
 
-                <!-- User Info (Hidden)-->
+                <!-- User Info (Hidden) -->
                 <LinearLayout
                     android:id="@+id/showUserInfoLayout"
                     android:layout_width="match_parent"
@@ -100,19 +99,13 @@
                     android:orientation="vertical"
                     android:visibility="gone">
 
-                    <LinearLayout
-                        android:id="@+id/userProfileBackground"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:background="@drawable/bg_oval_blue_light">
-
-                        <ImageView
-                            android:id="@+id/userProfile"
-                            android:layout_width="80dp"
-                            android:layout_height="80dp"
-                            android:contentDescription="Profile Picture"
-                            android:src="@drawable/ic_avatar" />
-                    </LinearLayout>
+                    <ImageView
+                        android:id="@+id/userProfile"
+                        android:layout_width="80dp"
+                        android:layout_height="80dp"
+                        android:background="@drawable/bg_oval_blue_light"
+                        android:contentDescription="Profile Picture"
+                        android:src="@drawable/ic_avatar" />
 
                     <TextView
                         android:id="@+id/userDisplayName"
@@ -123,7 +116,7 @@
                         android:includeFontPadding="false"
                         android:textColor="@color/black"
                         android:textSize="15sp"
-                        tools:text="Hi, メ • Ʋɨȶǟʟɨֆ" />
+                        tools:text="Hi, Vitalis" />
 
                     <TextView
                         android:id="@+id/userEmail"
@@ -219,6 +212,7 @@
                     android:layout_gravity="end"
                     android:layout_marginTop="10dp"
                     android:fontFamily="@font/poppins_regular"
+                    android:includeFontPadding="false"
                     android:text="Forgot Password?"
                     android:textColor="@color/blue"
                     android:textSize="12sp" />
@@ -256,6 +250,7 @@
                         android:layout_height="wrap_content"
                         android:layout_marginStart="5dp"
                         android:fontFamily="@font/poppins_regular"
+                        android:includeFontPadding="false"
                         android:text="Use Biometrics"
                         android:textColor="@color/blue"
                         android:textSize="14sp"
@@ -265,9 +260,10 @@
         </ScrollView>
 
         <!-- Footer -->
-        <FrameLayout
+        <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:gravity="center"
             android:orientation="vertical"
             android:paddingVertical="20dp">
 
@@ -275,9 +271,9 @@
                 android:id="@+id/btnSignUp"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_gravity="center"
                 android:fontFamily="@font/poppins_regular"
                 android:gravity="center"
+                android:includeFontPadding="false"
                 android:text="Don't have an account yet?\nClick here to register"
                 android:textColor="@color/black"
                 android:textSize="13sp" />
@@ -286,19 +282,13 @@
                 android:id="@+id/btnSwitchAccount"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_gravity="center"
                 android:fontFamily="@font/poppins_regular"
                 android:gravity="center"
+                android:includeFontPadding="false"
                 android:text="Not you? Switch Account"
                 android:textColor="@color/black"
                 android:textSize="13sp"
                 android:visibility="gone" />
-        </FrameLayout>
+        </LinearLayout>
     </LinearLayout>
-
-    <!-- Progress overlay -->
-    <include
-        layout="@layout/progressbar_overlay"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent" />
 </FrameLayout>

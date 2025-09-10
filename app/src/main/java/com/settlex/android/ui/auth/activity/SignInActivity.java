@@ -25,7 +25,7 @@ import com.settlex.android.R;
 import com.settlex.android.databinding.ActivitySignInBinding;
 import com.settlex.android.ui.info.help.AuthHelpActivity;
 import com.settlex.android.ui.auth.viewmodel.AuthViewModel;
-import com.settlex.android.ui.common.util.SettleXProgressBarController;
+import com.settlex.android.ui.common.util.ProgressLoaderController;
 import com.settlex.android.ui.dashboard.activity.DashboardActivity;
 import com.settlex.android.util.network.NetworkMonitor;
 import com.settlex.android.util.string.StringUtil;
@@ -42,7 +42,7 @@ public class SignInActivity extends AppCompatActivity {
 
     private AuthViewModel authViewModel;
     private ActivitySignInBinding binding;
-    private SettleXProgressBarController progressBarController;
+    private ProgressLoaderController progressLoader;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -51,7 +51,8 @@ public class SignInActivity extends AppCompatActivity {
         setContentView(binding.getRoot());
 
         authViewModel = new ViewModelProvider(this).get(AuthViewModel.class);
-        progressBarController = new SettleXProgressBarController(binding.getRoot());
+        progressLoader = new ProgressLoaderController(this);
+
 
         setupStatusBar();
         setupUiActions();
@@ -60,7 +61,7 @@ public class SignInActivity extends AppCompatActivity {
         observeLoginResult();
     }
 
-    // ====================== NETWORK & DATA OBSERVERS ======================
+    // NETWORK & DATA OBSERVERS ==============
     private void observeUserState() {
         authViewModel.getUserStateLiveData().observe(this, currentUser -> {
             if (currentUser != null) {
@@ -80,7 +81,7 @@ public class SignInActivity extends AppCompatActivity {
         authViewModel.getLoginResult().observe(this, result -> {
             if (result != null) {
                 switch (result.getStatus()) {
-                    case LOADING -> progressBarController.show();
+                    case LOADING -> caseLoginLoading();
                     case SUCCESS -> onLoginSuccess();
                     case FAILED -> onLoginFailure(result.getMessage());
                 }
@@ -89,24 +90,27 @@ public class SignInActivity extends AppCompatActivity {
     }
 
     // ====================== LOGIN FLOW ======================
+    private void caseLoginLoading(){
+        progressLoader.show();
+    }
     private void onLoginSuccess() {
         startActivity(new Intent(this, DashboardActivity.class));
         finishAffinity();
-        progressBarController.hide();
+        progressLoader.hide();
     }
 
     private void onLoginFailure(String error) {
         binding.txtErrorFeedback.setText(error);
         binding.txtErrorFeedback.setVisibility(View.VISIBLE);
 
-        progressBarController.hide();
+        progressLoader.hide();
     }
 
-    private void onNoInternetConnection() {
+    private void showNoInternetConnection() {
         UiUtil.showInfoDialog(
                 this,
                 "Network Unavailable",
-                "Please check your network connection and try again",
+                getString(R.string.error_no_internet),
                 null);
     }
 
@@ -117,7 +121,7 @@ public class SignInActivity extends AppCompatActivity {
 
             authViewModel.loginWithEmail(email, password);
         } else {
-            onNoInternetConnection();
+            showNoInternetConnection();
         }
     }
 

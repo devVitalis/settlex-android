@@ -27,7 +27,7 @@ import com.settlex.android.databinding.ActivityPasswordChangeBinding;
 import com.settlex.android.databinding.BottomSheetSuccessBinding;
 import com.settlex.android.util.event.Result;
 import com.settlex.android.ui.auth.viewmodel.AuthViewModel;
-import com.settlex.android.ui.common.util.SettleXProgressBarController;
+import com.settlex.android.ui.common.util.ProgressLoaderController;
 import com.settlex.android.util.network.NetworkMonitor;
 import com.settlex.android.util.ui.UiUtil;
 
@@ -40,7 +40,7 @@ public class PasswordChangeActivity extends AppCompatActivity {
     private boolean isPasswordVisible = false;
     private boolean isConnected = false;
 
-    private SettleXProgressBarController progressBarController;
+    private ProgressLoaderController progressLoader;
     private ActivityPasswordChangeBinding binding;
     private AuthViewModel authViewModel;
 
@@ -53,7 +53,7 @@ public class PasswordChangeActivity extends AppCompatActivity {
         setContentView(binding.getRoot());
 
         authViewModel = new ViewModelProvider(this).get(AuthViewModel.class);
-        progressBarController = new SettleXProgressBarController(binding.getRoot());
+        progressLoader = new ProgressLoaderController(this);
 
         setupStatusBar();
         setupUiActions();
@@ -68,7 +68,7 @@ public class PasswordChangeActivity extends AppCompatActivity {
             Result<String> result = event.getContentIfNotHandled();
             if (result != null) {
                 switch (result.getStatus()) {
-                    case LOADING -> progressBarController.show();
+                    case LOADING -> progressLoader.show();
                     case SUCCESS -> onResetSuccess();
                     case FAILED -> onResetFailure(result.getMessage());
                 }
@@ -83,7 +83,7 @@ public class PasswordChangeActivity extends AppCompatActivity {
 
     private void onResetSuccess() {
         showSuccessDialog();
-        progressBarController.hide();
+        progressLoader.hide();
     }
 
     private void showSuccessDialog() {
@@ -101,7 +101,7 @@ public class PasswordChangeActivity extends AppCompatActivity {
     private void onResetFailure(String error) {
         binding.txtErrorFeedback.setText(error);
         binding.txtErrorFeedback.setVisibility(View.VISIBLE);
-        progressBarController.hide();
+        progressLoader.hide();
     }
 
     private void attemptPasswordReset() {

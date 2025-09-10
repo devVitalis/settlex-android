@@ -1,27 +1,24 @@
 package com.settlex.android.data.enums;
 
-import android.content.Context;
-
-import androidx.annotation.ColorRes;
-import androidx.core.content.ContextCompat;
-
 import com.settlex.android.R;
 
 /**
  * Enum representing transaction status states with display names and color coding
  */
 public enum TransactionStatus {
-    PENDING("Pending", R.color.orange),
-    REVERSED("Reversed", R.color.orange),
-    SUCCESS("Successful", R.color.green),
-    FAILED("Failed", R.color.red);
+    PENDING("Pending", R.color.orange, R.drawable.bg_3dp_orange_light),
+    REVERSED("Reversed", R.color.blue, R.drawable.bg_3dp_blue_light),
+    SUCCESS("Successful", R.color.green, R.drawable.bg_3dp_green_light),
+    FAILED("Failed", R.color.red, R.drawable.bg_3dp_red_light);
 
     private final String displayName;
-    private int textColorRes;
+    private final int textColorRes;
+    private final int bgColorRes;
 
-    TransactionStatus(String displayName, @ColorRes int textColorRes) {
+    TransactionStatus(String displayName, int textColorRes, int bgColorRes) {
         this.displayName = displayName;
         this.textColorRes = textColorRes;
+        this.bgColorRes = bgColorRes;
     }
 
     public String getDisplayName() {
@@ -32,9 +29,7 @@ public enum TransactionStatus {
         return textColorRes;
     }
 
-    public static void init(Context context) {
-        for (TransactionStatus status : values()) {
-            status.textColorRes = ContextCompat.getColor(context, status.textColorRes);
-        }
+    public int getBgColorRes() {
+        return bgColorRes;
     }
 }

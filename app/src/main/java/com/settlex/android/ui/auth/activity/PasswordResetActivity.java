@@ -19,10 +19,10 @@ import androidx.lifecycle.ViewModelProvider;
 
 import com.settlex.android.R;
 import com.settlex.android.databinding.ActivityPasswordResetBinding;
-import com.settlex.android.ui.common.components.OtpVerificationActivity;
-import com.settlex.android.util.event.Result;
 import com.settlex.android.ui.auth.viewmodel.AuthViewModel;
-import com.settlex.android.ui.common.util.SettleXProgressBarController;
+import com.settlex.android.ui.common.components.OtpVerificationActivity;
+import com.settlex.android.ui.common.util.ProgressLoaderController;
+import com.settlex.android.util.event.Result;
 import com.settlex.android.util.network.NetworkMonitor;
 
 /**
@@ -33,7 +33,7 @@ public class PasswordResetActivity extends AppCompatActivity {
 
     private ActivityPasswordResetBinding binding;
     private AuthViewModel authViewModel;
-    private SettleXProgressBarController progressBarController;
+    private ProgressLoaderController progressLoader;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -42,7 +42,8 @@ public class PasswordResetActivity extends AppCompatActivity {
         setContentView(binding.getRoot());
 
         authViewModel = new ViewModelProvider(this).get(AuthViewModel.class);
-        progressBarController = new SettleXProgressBarController(binding.getRoot());
+        progressLoader = new ProgressLoaderController(this);
+        progressLoader.setOverlayColor(ContextCompat.getColor(this, R.color.semi_transparent_white));
 
         setupStatusBar();
         setupUiActions();
@@ -50,14 +51,14 @@ public class PasswordResetActivity extends AppCompatActivity {
         observeOtpRequestResult();
     }
 
-    // ====================== OBSERVERS ======================
+    // OBSERVERS ===============
     private void observeOtpRequestResult() {
         authViewModel.getSendEmailResetOtpResult().observe(this, event -> {
             Result<String> result = event.getContentIfNotHandled();
             if (result == null) return;
 
             switch (result.getStatus()) {
-                case LOADING -> progressBarController.show();
+                case LOADING -> progressLoader.show();
                 case SUCCESS -> handleOtpRequestSuccess();
                 case FAILED -> handleOtpRequestError(result.getMessage());
             }
@@ -71,16 +72,16 @@ public class PasswordResetActivity extends AppCompatActivity {
     private void handleOtpRequestSuccess() {
         String email = binding.editTxtEmail.getText().toString().trim();
         startActivity(new Intent(this, OtpVerificationActivity.class).putExtra("email", email));
-        progressBarController.hide();
+        progressLoader.hide();
     }
 
     private void handleOtpRequestError(String error) {
         binding.txtErrorFeedback.setText(error);
         binding.txtErrorFeedback.setVisibility(View.VISIBLE);
-        progressBarController.hide();
+        progressLoader.hide();
     }
 
-    private void onNoInternetConnection() {
+    private void showNoInternetConnection() {
         binding.txtErrorFeedback.setText(getString(R.string.error_no_internet));
         binding.txtErrorFeedback.setVisibility(View.VISIBLE);
     }
@@ -89,11 +90,11 @@ public class PasswordResetActivity extends AppCompatActivity {
         if (isConnected) {
             authViewModel.sendPasswordResetOtp(binding.editTxtEmail.getText().toString().trim());
         } else {
-            onNoInternetConnection();
+            showNoInternetConnection();
         }
     }
 
-    // ====================== UI CONFIGURATION ======================
+    //  UI CONFIGURATION ===============
 
     private void setupUiActions() {
         setupEmailInputValidation();
@@ -129,7 +130,7 @@ public class PasswordResetActivity extends AppCompatActivity {
         binding.btnContinue.setEnabled(emailValid);
     }
 
-    // ====================== FOCUS MANAGEMENT ======================
+    // FOCUS MANAGEMENT =================
     private void setupFocusHandlers() {
         View.OnClickListener focusListener = (v -> {
             if (v instanceof EditText) {
@@ -147,7 +148,7 @@ public class PasswordResetActivity extends AppCompatActivity {
         });
     }
 
-    // ====================== UTILITIES ======================
+    // UTILITIES =============
 
     private void setupStatusBar() {
         Window window = getWindow();
@@ -155,9 +156,7 @@ public class PasswordResetActivity extends AppCompatActivity {
         window.getDecorView().setSystemUiVisibility(window.getDecorView().getSystemUiVisibility() | View.SYSTEM_UI_FLAG_LIGHT_STATUS_BAR);
     }
 
-    /**
-     * Handles keyboard dismissal on outside taps
-     */
+    // Dismiss keyboard on outside taps
     @Override
     public boolean dispatchTouchEvent(MotionEvent event) {
         if (event.getAction() == MotionEvent.ACTION_DOWN) {

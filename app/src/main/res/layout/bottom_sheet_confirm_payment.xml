@@ -13,10 +13,10 @@
         android:layout_gravity="center"
         android:fontFamily="@font/poppins_regular"
         android:includeFontPadding="false"
+        android:text="Payment Confirmation"
         android:textColor="@color/black"
         android:textSize="18sp"
-        android:textStyle="bold"
-        android:text="Payment Confirmation" />
+        android:textStyle="bold" />
 
     <com.google.android.material.imageview.ShapeableImageView
         android:id="@+id/btnClose"
@@ -39,7 +39,7 @@
         android:textStyle="bold"
         tools:text="₦100,000" />
 
-    <!--Recipient Tag-->
+    <!--Recipient username-->
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
@@ -225,13 +225,24 @@
 
             <TextView
                 android:id="@+id/senderWalletBalance"
-                android:layout_width="wrap_content"
+                android:layout_width="0dp"
                 android:layout_height="wrap_content"
+                android:layout_weight="1"
                 android:fontFamily="@font/poppins_regular"
                 android:includeFontPadding="false"
                 android:textColor="@color/gray"
                 android:textSize="12sp"
                 tools:text="(₦198,000.32)" />
+
+            <TextView
+                android:id="@+id/debitFromSenderWalletBalance"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:fontFamily="@font/poppins_regular"
+                android:includeFontPadding="false"
+                android:textColor="@color/black"
+                android:textSize="12sp"
+                tools:text="-₦5,230.00" />
         </LinearLayout>
 
         <!--Commission Balance-->
@@ -254,13 +265,24 @@
 
             <TextView
                 android:id="@+id/senderCommissionBalance"
-                android:layout_width="wrap_content"
+                android:layout_width="0dp"
                 android:layout_height="wrap_content"
+                android:layout_weight="1"
                 android:fontFamily="@font/poppins_regular"
                 android:includeFontPadding="false"
                 android:textColor="@color/gray"
                 android:textSize="12sp"
                 tools:text="(₦535.25)" />
+
+            <TextView
+                android:id="@+id/debitFromSenderCommissionBalance"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:fontFamily="@font/poppins_regular"
+                android:includeFontPadding="false"
+                android:textColor="@color/black"
+                android:textSize="12sp"
+                tools:text="-₦10,230.00" />
         </LinearLayout>
     </LinearLayout>
 
@@ -269,13 +291,13 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_gravity="center"
+        android:layout_marginTop="20dp"
         android:fontFamily="@font/poppins_regular"
         android:includeFontPadding="false"
-        android:layout_marginTop="20dp"
+        android:text="Insufficient Balance"
         android:textColor="@color/red"
-        android:visibility="gone"
         android:textSize="12sp"
-        android:text="Insufficient Balance" />
+        android:visibility="gone" />
 
     <com.google.android.material.button.MaterialButton
         android:id="@+id/btnPay"

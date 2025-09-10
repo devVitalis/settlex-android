@@ -32,7 +32,7 @@ import com.settlex.android.R;
 import com.settlex.android.databinding.FragmentSignUpUserContactInfoBinding;
 import com.settlex.android.ui.auth.activity.SignInActivity;
 import com.settlex.android.ui.auth.viewmodel.AuthViewModel;
-import com.settlex.android.ui.common.util.SettleXProgressBarController;
+import com.settlex.android.ui.common.util.ProgressLoaderController;
 import com.settlex.android.ui.info.help.AuthHelpActivity;
 import com.settlex.android.ui.info.legal.PrivacyPolicyActivity;
 import com.settlex.android.ui.info.legal.TermsAndConditionsActivity;
@@ -47,13 +47,14 @@ public class SignUpUserContactInfoFragment extends Fragment {
     private boolean isConnected = false; // Network connection
 
     private AuthViewModel authViewModel;
-    private SettleXProgressBarController progressController;
+    private ProgressLoaderController progressLoader;
     private FragmentSignUpUserContactInfoBinding binding;
 
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         binding = FragmentSignUpUserContactInfoBinding.inflate(inflater, container, false);
-        progressController = new SettleXProgressBarController(binding.getRoot());
+
+        progressLoader = new ProgressLoaderController(requireActivity());
         authViewModel = new ViewModelProvider(requireActivity()).get(AuthViewModel.class);
 
         setupStatusBar();
@@ -87,7 +88,7 @@ public class SignUpUserContactInfoFragment extends Fragment {
             Result<String> result = event.getContentIfNotHandled();
             if (result != null) {
                 switch (result.getStatus()) {
-                    case LOADING -> progressController.show();
+                    case LOADING -> progressLoader.show();
                     case SUCCESS -> onSendVerificationOtpSuccess();
                     case FAILED -> onSendOtpFailure(result.getMessage());
                 }
@@ -97,13 +98,13 @@ public class SignUpUserContactInfoFragment extends Fragment {
 
     private void onSendVerificationOtpSuccess() {
         navigateToFragment(new SignUpEmailVerificationFragment());
-        progressController.hide();
+        progressLoader.hide();
     }
 
     private void onSendOtpFailure(String reason) {
         binding.txtErrorFeedback.setText(reason);
         binding.txtErrorFeedback.setVisibility(View.VISIBLE);
-        progressController.hide();
+        progressLoader.hide();
     }
 
     // ====================== UI ACTIONS ======================

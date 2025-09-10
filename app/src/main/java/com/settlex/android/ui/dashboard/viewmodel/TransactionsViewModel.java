@@ -1,7 +1,5 @@
 package com.settlex.android.ui.dashboard.viewmodel;
 
-import android.util.Log;
-
 import androidx.lifecycle.LiveData;
 import androidx.lifecycle.MutableLiveData;
 import androidx.lifecycle.ViewModel;
@@ -70,6 +68,7 @@ public class TransactionsViewModel extends ViewModel {
 
                     // Build UI model
                     uiList.add(new TransactionUiModel(
+                            dto.transactionId,
                             dto.sender.toUpperCase(),
                             dto.recipient.toUpperCase(),
                             isSender ? dto.recipient.toUpperCase() : dto.sender.toUpperCase(),
@@ -80,16 +79,16 @@ public class TransactionsViewModel extends ViewModel {
                             StringUtil.formatToNaira(dto.amount),
                             StringUtil.formatTimeStamp(dto.createdAt),
                             dto.status.getDisplayName(),
-                            dto.status.getColorRes()
+                            dto.status.getColorRes(),
+                            dto.status.getBgColorRes()
                     ));
                 }
                 transactionsLiveData.setValue(Result.success(uiList));
             }
 
             @Override
-            public void onFailure(String reason) {
-                transactionsLiveData.setValue(Result.success(Collections.emptyList()));
-                // TODO: handle error
+            public void onError(String reason) {
+                transactionsLiveData.setValue(Result.error("Failed to load transactions"));
             }
         });
     }
@@ -98,23 +97,30 @@ public class TransactionsViewModel extends ViewModel {
      * Initiates a peer-to-peer payment transaction from one user to another.
      */
     public void payFriend(String senderUid, String receiverUserName, String transactionId, double amount, String serviceType, String description) {
-        payFriendLiveData.postValue(new Event<>(Result.loading()));
-        transactionRepo.payFriend(senderUid, receiverUserName, transactionId, amount, serviceType, description, new TransactionRepository.TransferCallback() {
-            @Override
-            public void onTransferPending() {
-                payFriendLiveData.postValue(new Event<>(Result.Pending("Transaction Pending")));
-            }
+        payFriendLiveData.setValue(new Event<>(Result.loading()));
+        transactionRepo.payFriend(
+                senderUid,
+                receiverUserName,
+                transactionId,
+                amount,
+                serviceType,
+                description,
+                new TransactionRepository.TransferCallback() {
+                    @Override
+                    public void onTransferPending() {
+                        payFriendLiveData.setValue(new Event<>(Result.Pending("Transaction Pending")));
+                    }
 
-            @Override
-            public void onTransferSuccess() {
-                payFriendLiveData.postValue(new Event<>(Result.success("Transaction Successful")));
-            }
+                    @Override
+                    public void onTransferSuccess() {
+                        payFriendLiveData.setValue(new Event<>(Result.success("Transaction Successful")));
+                    }
 
-            @Override
-            public void onTransferFailed(String reason) {
-                payFriendLiveData.postValue(new Event<>(Result.error("Transaction Failed")));
-            }
-        });
+                    @Override
+                    public void onTransferFailed(String reason) {
+                        payFriendLiveData.setValue(new Event<>(Result.error("Transaction Failed")));
+                    }
+                });
     }
 
     @Override

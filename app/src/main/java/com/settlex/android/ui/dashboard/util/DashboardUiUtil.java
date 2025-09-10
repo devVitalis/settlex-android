@@ -28,10 +28,43 @@ public class DashboardUiUtil {
         double senderTotalBalance = senderWalletBalance + senderCommissionBalance;
 
         // Conditions
-        if (senderWalletBalance >= amountToSend){
-            binding.btnPay.setEnabled(true);
-        } else {
+        if (senderTotalBalance < amountToSend) {
+            // Not enough money at all
             binding.txtFeedback.setVisibility(View.VISIBLE);
+
+            // Hide debit breakdowns
+            binding.debitFromSenderWalletBalance.setVisibility(View.GONE);
+            binding.debitFromSenderCommissionBalance.setVisibility(View.GONE);
+
+        } else if (senderWalletBalance >= amountToSend) {
+            // Wallet balance alone is enough
+            binding.debitFromSenderWalletBalance.setVisibility(View.VISIBLE);
+            binding.debitFromSenderWalletBalance.setText(binding.getRoot().getContext().getString(R.string.formattedAmountToSend, formattedAmountToSend));
+
+            binding.btnPay.setEnabled(true);
+
+            // Hide commission since not used
+            binding.debitFromSenderCommissionBalance.setVisibility(View.GONE);
+
+        } else {
+            // Wallet not enough, but wallet + commission is sufficient
+            double fromWallet;
+            fromWallet = senderWalletBalance;
+            double fromCommission = amountToSend - senderWalletBalance;
+
+            if (senderWalletBalance != 0) {
+                binding.debitFromSenderWalletBalance.setVisibility(View.VISIBLE);
+                binding.debitFromSenderWalletBalance.setText(binding.getRoot().getContext().getString(R.string.debitFromSenderWalletBalance, StringUtil.formatToNaira(fromWallet)));
+            }
+
+            binding.debitFromSenderCommissionBalance.setVisibility(View.VISIBLE);
+            binding.debitFromSenderCommissionBalance.setText(binding.getRoot().getContext().getString(R.string.debitFromSenderCommissionBalance, StringUtil.formatToNaira(fromCommission)));
+
+            // Enable pay button
+            binding.btnPay.setEnabled(true);
+
+            // Hide feedback since covered
+            binding.txtFeedback.setVisibility(View.GONE);
         }
 
         // Recipient details
@@ -43,17 +76,18 @@ public class DashboardUiUtil {
 
         // Sender details
         binding.senderTotalBalance.setText(StringUtil.formatToNaira(senderTotalBalance));
-        binding.senderWalletBalance.setText(StringUtil.formatToNaira(senderWalletBalance));
-        binding.senderCommissionBalance.setText(StringUtil.formatToNaira(senderCommissionBalance));
+        binding.senderWalletBalance.setText("(" + StringUtil.formatToNaira(senderWalletBalance) + ")");
+        binding.senderCommissionBalance.setText("(" + StringUtil.formatToNaira(senderCommissionBalance) + ")");
 
         // Handle buttons
         binding.btnClose.setOnClickListener(v -> dialog.dismiss());
         binding.btnPay.setOnClickListener(v -> {
             binding.btnPay.setEnabled(false);
-            dialog.dismiss();
-            if (onPay != null) onPay.run();
+            if (onPay != null) {
+                onPay.run();
+                dialog.dismiss();
+            }
         });
-
         dialog.show();
     }
 }

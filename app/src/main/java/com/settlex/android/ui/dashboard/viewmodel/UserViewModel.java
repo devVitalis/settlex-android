@@ -7,6 +7,7 @@ import androidx.lifecycle.MutableLiveData;
 import androidx.lifecycle.ViewModel;
 
 import com.settlex.android.data.local.SessionManager;
+import com.settlex.android.data.local.prefs.UserPrefs;
 import com.settlex.android.data.remote.dto.SuggestionsDto;
 import com.settlex.android.data.repository.UserRepository;
 import com.settlex.android.ui.dashboard.model.RecipientUiModel;
@@ -18,17 +19,20 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class UserViewModel extends ViewModel {
+    private final UserPrefs userPrefs;
     private final UserRepository userRepo;
 
     // LiveData holders
     private final MutableLiveData<UserUiModel> userLiveData = new MutableLiveData<>();
     private final MutableLiveData<String> authStateLiveData = new MutableLiveData<>();
     private final MutableLiveData<Result<List<RecipientUiModel>>> usernameSearchLiveData = new MutableLiveData<>();
-
+    private final MutableLiveData<Boolean> hideBalanceLiveData = new MutableLiveData<>();
 
     public UserViewModel() {
+        this.userPrefs = UserPrefs.getInstance();
         this.userRepo = new UserRepository();
         listToUserAuthState();
+        hideBalanceLiveData.setValue(userPrefs.isBalanceHidden());
     }
 
     //  GETTERS ============
@@ -42,6 +46,17 @@ public class UserViewModel extends ViewModel {
 
     public LiveData<UserUiModel> getUserData() {
         return userLiveData;
+    }
+
+    public LiveData<Boolean> getHideBalanceLiveData() {
+        return hideBalanceLiveData;
+    }
+
+    public void toggleBalanceVisibility() {
+        boolean current = Boolean.TRUE.equals(hideBalanceLiveData.getValue());
+        boolean newValue = !current;
+        userPrefs.setBalanceHidden(newValue);
+        hideBalanceLiveData.setValue(newValue);
     }
 
     /**
@@ -92,7 +107,6 @@ public class UserViewModel extends ViewModel {
             fetchUserData(user.getUid());
         });
     }
-
 
     /**
      * Returns username query results.

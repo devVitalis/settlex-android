@@ -38,22 +38,16 @@ public class SettleXProgressBar extends View {
 
     private void init() {
 
-        /*------------------------------------
-        Setup base ring paint with gradient
-        -------------------------------------*/
+        // Setup base ring paint with gradient
         ringPaint = new Paint(Paint.ANTI_ALIAS_FLAG);
         ringPaint.setStyle(Paint.Style.STROKE);
 
-        /*------------------------------------
-        Setup flash paint with soft blur
-        -------------------------------------*/
+        // Setup flash paint with soft blur
         flashPaint = new Paint(Paint.ANTI_ALIAS_FLAG);
         flashPaint.setStyle(Paint.Style.STROKE);
         flashPaint.setMaskFilter(new BlurMaskFilter(20, BlurMaskFilter.Blur.NORMAL));
 
-        /*------------------------------------
-        Animate rotation angle for flash
-        -------------------------------------*/
+        // Animate rotation angle for flash
         rotationAnimator = ValueAnimator.ofFloat(0f, 360f);
         rotationAnimator.setDuration(800);
         rotationAnimator.setRepeatCount(ValueAnimator.INFINITE);
@@ -64,9 +58,7 @@ public class SettleXProgressBar extends View {
         });
         rotationAnimator.start();
 
-        /*------------------------------------
-        Animate flash alpha pulsing effect
-        -------------------------------------*/
+        // Animate flash alpha pulsing effect
         pulseAnimator = ValueAnimator.ofInt(100, 255);
         pulseAnimator.setDuration(800);
         pulseAnimator.setRepeatCount(ValueAnimator.INFINITE);
@@ -80,9 +72,7 @@ public class SettleXProgressBar extends View {
     protected void onSizeChanged(int w, int h, int oldw, int oldh) {
         super.onSizeChanged(w, h, oldw, oldh);
 
-        /*------------------------------------
-          Dynamically size ring based on view
-        -------------------------------------*/
+        // Dynamically size ring based on view
         float ringWidth = 20f;
         ringPaint.setStrokeWidth(ringWidth);
         flashPaint.setStrokeWidth(ringWidth);
@@ -90,9 +80,7 @@ public class SettleXProgressBar extends View {
         float padding = ringWidth / 2f;
         ringBounds = new RectF(padding, padding, w - padding, h - padding);
 
-        /*----------------------------------
-        Soft radial gradient ring shader
-        ----------------------------------*/
+        // Soft radial gradient ring shader
         Shader radialRingShader = new SweepGradient(
                 w / 2f, h / 2f,
                 new int[]{
@@ -105,9 +93,7 @@ public class SettleXProgressBar extends View {
         );
         ringPaint.setShader(radialRingShader);
 
-        /*------------------------------------
-        Transparent blue flash shader
-        -------------------------------------*/
+        // Transparent blue flash shader
         Shader flashShader = new SweepGradient(
                 w / 2f, h / 2f,
                 new int[]{
@@ -125,14 +111,10 @@ public class SettleXProgressBar extends View {
     protected void onDraw(@NonNull Canvas canvas) {
         super.onDraw(canvas);
 
-        /*------------------------------------
-        Draw soft gradient ring
-        -------------------------------------*/
+        // Draw soft gradient ring
         canvas.drawArc(ringBounds, 0, 360, false, ringPaint);
 
-        /*------------------------------------
-        Draw rotating flash overlay
-        -------------------------------------*/
+        // Draw rotating flash overlay
         flashPaint.setAlpha(flashAlpha); // apply pulsing alpha here
 
         canvas.save();

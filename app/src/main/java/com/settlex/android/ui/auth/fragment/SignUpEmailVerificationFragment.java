@@ -24,7 +24,7 @@ import androidx.lifecycle.ViewModelProvider;
 import com.settlex.android.R;
 import com.settlex.android.databinding.FragmentSignUpEmailVerificationBinding;
 import com.settlex.android.ui.auth.viewmodel.AuthViewModel;
-import com.settlex.android.ui.common.util.SettleXProgressBarController;
+import com.settlex.android.ui.common.util.ProgressLoaderController;
 import com.settlex.android.util.event.Event;
 import com.settlex.android.util.event.Result;
 import com.settlex.android.util.network.NetworkMonitor;
@@ -41,7 +41,7 @@ public class SignUpEmailVerificationFragment extends Fragment {
     private AuthViewModel authViewModel;
     private CountDownTimer resendOtpCountdownTimer;
     private EditText[] otpDigitViews;
-    private SettleXProgressBarController progressBarController;
+    private ProgressLoaderController progressLoader;
     private FragmentSignUpEmailVerificationBinding binding;
 
     // LIFECYCLE ===========
@@ -49,7 +49,7 @@ public class SignUpEmailVerificationFragment extends Fragment {
     public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         binding = FragmentSignUpEmailVerificationBinding.inflate(getLayoutInflater(), container, false);
 
-        progressBarController = new SettleXProgressBarController(binding.getRoot());
+        progressLoader = new ProgressLoaderController(requireActivity());
         authViewModel = new ViewModelProvider(requireActivity()).get(AuthViewModel.class);
         email = authViewModel.getEmail();
 
@@ -99,7 +99,7 @@ public class SignUpEmailVerificationFragment extends Fragment {
         if (result == null) return;
 
         switch (result.getStatus()) {
-            case LOADING -> progressBarController.show();
+            case LOADING -> progressLoader.show();
             case SUCCESS -> onOtpVerificationSuccess();
             case FAILED -> onSendOrVerifyOtpFailure(result.getMessage());
         }
@@ -110,7 +110,7 @@ public class SignUpEmailVerificationFragment extends Fragment {
         if (result == null) return;
 
         switch (result.getStatus()) {
-            case LOADING -> progressBarController.show();
+            case LOADING -> progressLoader.show();
             case SUCCESS -> onSendNewOtpVerificationSuccess();
             case FAILED -> onSendOrVerifyOtpFailure(result.getMessage());
         }
@@ -118,18 +118,18 @@ public class SignUpEmailVerificationFragment extends Fragment {
 
     private void onOtpVerificationSuccess() {
         navigateToFragment(new SignupUserInfoFragment());
-        progressBarController.hide();
+        progressLoader.hide();
     }
 
     private void onSendNewOtpVerificationSuccess() {
         startResendOtpCooldown();
-        progressBarController.hide();
+        progressLoader.hide();
     }
 
     private void onSendOrVerifyOtpFailure(String reason) {
         binding.txtOtpFeedback.setText(reason);
         binding.txtOtpFeedback.setVisibility(View.VISIBLE);
-        progressBarController.hide();
+        progressLoader.hide();
     }
 
     private void showNoInternetConnection() {

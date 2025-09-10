@@ -38,9 +38,6 @@ public class TempUserStoragePrefs {
         return new Gson().fromJson(json, UserModel.class);
     }
 
-    /**
-     * Clears temporary storage after successful database sync or explicit discard.
-     */
     public void clearUser() {
         prefs.edit().remove(KEY_USER_JSON).apply();
     }

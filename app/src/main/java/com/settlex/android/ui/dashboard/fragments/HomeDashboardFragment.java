@@ -25,7 +25,7 @@ import com.settlex.android.SettleXApp;
 import com.settlex.android.data.remote.avater.AvatarService;
 import com.settlex.android.databinding.FragmentDashboardHomeBinding;
 import com.settlex.android.ui.auth.activity.SignInActivity;
-import com.settlex.android.ui.common.util.SettleXProgressBarController;
+import com.settlex.android.ui.common.util.ProgressLoaderController;
 import com.settlex.android.ui.dashboard.activity.TransactionActivity;
 import com.settlex.android.ui.dashboard.adapter.PromotionalBannerAdapter;
 import com.settlex.android.ui.dashboard.adapter.ServicesAdapter;
@@ -33,6 +33,7 @@ import com.settlex.android.ui.dashboard.adapter.TransactionsAdapter;
 import com.settlex.android.ui.dashboard.components.GridSpacingItemDecoration;
 import com.settlex.android.ui.dashboard.model.ServiceUiModel;
 import com.settlex.android.ui.dashboard.model.TransactionUiModel;
+import com.settlex.android.ui.dashboard.model.UserUiModel;
 import com.settlex.android.ui.dashboard.viewmodel.PromoBannerViewModel;
 import com.settlex.android.ui.dashboard.viewmodel.TransactionsViewModel;
 import com.settlex.android.ui.dashboard.viewmodel.UserViewModel;
@@ -43,10 +44,14 @@ import java.util.Arrays;
 import java.util.List;
 
 public class HomeDashboardFragment extends Fragment {
+    UserUiModel currentUser; // Current logged in user ref TODO: Remove
+
+    private final double MILLION_THRESHOLD = 999_999_999;
     private long backPressedTime;
     private final Handler autoScrollHandler = new Handler(Looper.getMainLooper());
     private Runnable autoScrollRunnable;
-    private SettleXProgressBarController progressBarController;
+
+    private ProgressLoaderController progressLoader;
     private FragmentDashboardHomeBinding binding;
     private UserViewModel userViewModel;
     private TransactionsViewModel transactionsViewModel;
@@ -69,7 +74,7 @@ public class HomeDashboardFragment extends Fragment {
         userViewModel = ((SettleXApp) requireActivity().getApplication()).getSharedUserViewModel();
         transactionsViewModel = new ViewModelProvider(requireActivity()).get(TransactionsViewModel.class);
         promoBannerViewModel = new ViewModelProvider(requireActivity()).get(PromoBannerViewModel.class);
-        progressBarController = new SettleXProgressBarController(binding.getRoot());
+        progressLoader = new ProgressLoaderController(requireActivity());
 
         setupStatusBar();
         setupUiActions();
@@ -93,7 +98,6 @@ public class HomeDashboardFragment extends Fragment {
     // ======================= SETUP UI COMPONENTS =======================
     private void setupUiActions() {
         observeCurrentUserState();
-
         loadServices();
         setupTransactionsRecyclerView();
         setupDoubleBackToExit();
@@ -102,6 +106,7 @@ public class HomeDashboardFragment extends Fragment {
         binding.addMoney.setOnClickListener(v -> userViewModel.signOut());
         binding.receiveMoney.setOnClickListener(v -> {
         });
+        binding.balanceToggle.setOnClickListener(v -> userViewModel.toggleBalanceVisibility());
         binding.payAFriend.setOnClickListener(v -> startActivity(new Intent(requireActivity(), TransactionActivity.class)));
     }
 
@@ -114,22 +119,34 @@ public class HomeDashboardFragment extends Fragment {
                 return;
             }
             // User is logged in fetch data
-            int TXN_QUERY_LIMIT = 3;
+            int TXN_QUERY_LIMIT = 2;
             observeAndDisplayUserData();
             transactionsViewModel.fetchTransactions(currentUserUid, TXN_QUERY_LIMIT);
             observeAndLoadRecentTransactions();
         });
     }
 
+    private void loadDefaultUserPrefs(double balance, double commissionBalance) {
+        userViewModel.getHideBalanceLiveData().observe(getViewLifecycleOwner(), hidden -> {
+            if (hidden) {
+                binding.userBalance.setText(StringUtil.setAsterisks());
+                binding.userCommissionBalance.setText(StringUtil.setAsterisks());
+                return;
+            }
+            binding.userBalance.setText((balance > MILLION_THRESHOLD) ?
+                    StringUtil.formatToNairaShort(balance) : StringUtil.formatToNaira(balance));
+            binding.userCommissionBalance.setText(StringUtil.formatToNairaShort(commissionBalance));
+        });
+    }
+
     private void observeAndDisplayUserData() {
-        double MILLION_THRESHOLD = 999_999_999;
         userViewModel.getUserData().observe(getViewLifecycleOwner(), userData -> {
             if (userData == null) return;
 
             AvatarService.loadAvatar(userData.getUserFullName(), binding.userProfilePic);
             binding.userDisplayName.setText(userData.getUserFullName());
-            binding.userBalance.setText((userData.getBalance() > MILLION_THRESHOLD) ? StringUtil.formatToNairaShort(userData.getBalance()) : StringUtil.formatToNaira(userData.getBalance()));
-            binding.userCommissionBalance.setText(StringUtil.formatToNairaShort(userData.getCommissionBalance()));
+            loadDefaultUserPrefs(userData.getBalance(), userData.getCommissionBalance());
+            this.currentUser = userData;
         });
     }
 
@@ -155,15 +172,18 @@ public class HomeDashboardFragment extends Fragment {
     private void caseTransactionSuccess(Result<List<TransactionUiModel>> transactions) {
         if (transactions.getData().isEmpty()) {
             Log.d("Fragment", "Transaction history is empty");
-            binding.transactionRecyclerView.setVisibility(View.GONE);
             binding.txnShimmerEffect.stopShimmer();
             binding.txnShimmerEffect.setVisibility(View.GONE);
+            binding.transactionRecyclerView.setVisibility(View.GONE);
+            binding.transactionContainer.setVisibility(View.GONE);
             return;
         }
 
         Log.d("Fragment", "Transaction history is not empty");
-        TransactionsAdapter adapter = new TransactionsAdapter(transactions.getData());
+        TransactionsAdapter adapter = new TransactionsAdapter();
+        adapter.submitList(transactions.getData());
         binding.transactionRecyclerView.setAdapter(adapter);
+
         binding.txnShimmerEffect.stopShimmer();
         binding.txnShimmerEffect.setVisibility(View.GONE);
         binding.transactionRecyclerView.setVisibility(View.VISIBLE);

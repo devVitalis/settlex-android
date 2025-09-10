@@ -162,7 +162,7 @@
                         android:ellipsize="marquee"
                         android:focusable="true"
                         android:focusableInTouchMode="true"
-                        android:fontFamily="@font/poppins_light"
+                        android:fontFamily="@font/poppins_regular"
                         android:includeFontPadding="false"
                         android:marqueeRepeatLimit="marquee_forever"
                         android:scrollHorizontally="true"
@@ -281,6 +281,7 @@
                                 <ImageView
                                     android:layout_width="15dp"
                                     android:layout_height="15dp"
+                                    android:layout_marginStart="2dp"
                                     android:contentDescription="@null"
                                     android:src="@drawable/ic_arrow_forward"
                                     app:tint="@color/white" />
@@ -492,13 +493,7 @@
                         app:progressMode="false"
                         app:selectedDotColor="@color/blue" />
                 </FrameLayout>
-
             </LinearLayout>
         </ScrollView>
     </LinearLayout>
-
-    <include
-        layout="@layout/progressbar_overlay"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent" />
 </FrameLayout>

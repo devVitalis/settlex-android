@@ -11,11 +11,8 @@ import androidx.lifecycle.ViewModelStoreOwner;
 import com.google.crypto.tink.Aead;
 import com.google.crypto.tink.KeysetHandle;
 import com.google.crypto.tink.aead.AeadConfig;
-import com.google.crypto.tink.aead.AeadFactory;
 import com.google.crypto.tink.integration.android.AndroidKeysetManager;
 import com.google.firebase.FirebaseApp;
-import com.settlex.android.data.enums.TransactionOperation;
-import com.settlex.android.data.enums.TransactionStatus;
 import com.settlex.android.ui.dashboard.viewmodel.UserViewModel;
 import com.settlex.android.util.network.NetworkMonitor;
 
@@ -77,10 +74,6 @@ public class SettleXApp extends Application implements ViewModelStoreOwner {
     private void initializeServices() {
         FirebaseApp.initializeApp(this);
         NetworkMonitor.startNetworkCallback();
-
-        // Transaction enums colors
-        TransactionStatus.init(this);
-        TransactionOperation.init(this);
 
         // Initialize Tink
         try {

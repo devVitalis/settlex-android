@@ -11,41 +11,45 @@
     android:focusableInTouchMode="true"
     tools:context=".ui.auth.fragment.SignupUserInfoFragment">
 
-    <RelativeLayout
+    <androidx.constraintlayout.widget.ConstraintLayout
         android:id="@+id/parentLayout"
         android:layout_width="match_parent"
         android:layout_height="match_parent">
 
-        <!--Header-->
-        <RelativeLayout
+        <!-- Header -->
+        <androidx.constraintlayout.widget.ConstraintLayout
             android:id="@+id/header"
-            android:layout_width="match_parent"
+            android:layout_width="0dp"
             android:layout_height="35dp"
-            android:layout_alignParentTop="true">
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintEnd_toEndOf="parent">
 
             <ImageView
                 android:id="@+id/imgBackBefore"
                 android:layout_width="20dp"
                 android:layout_height="20dp"
-                android:layout_alignParentStart="true"
-                android:layout_centerVertical="true"
                 android:layout_marginStart="15dp"
                 android:contentDescription="Arrow Back"
                 android:scaleType="centerCrop"
-                android:src="@drawable/ic_arrow_back" />
+                android:src="@drawable/ic_arrow_back"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent"
+                app:layout_constraintBottom_toBottomOf="parent" />
 
             <LinearLayout
                 android:id="@+id/btnHelp"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_alignParentEnd="true"
-                android:layout_centerVertical="true"
                 android:layout_marginEnd="15dp"
                 android:background="@drawable/bg_24dp_blue"
                 android:gravity="center"
                 android:orientation="horizontal"
                 android:paddingHorizontal="5dp"
-                android:paddingVertical="2dp">
+                android:paddingVertical="2dp"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintTop_toTopOf="parent"
+                app:layout_constraintBottom_toBottomOf="parent">
 
                 <ImageView
                     android:layout_width="15dp"
@@ -56,22 +60,24 @@
                 <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:fontFamily="@font/poppins_light"
+                    android:fontFamily="@font/poppins_regular"
                     android:includeFontPadding="false"
                     android:text="Help"
                     android:textColor="@color/white"
                     android:textSize="12sp" />
             </LinearLayout>
+        </androidx.constraintlayout.widget.ConstraintLayout>
 
-        </RelativeLayout>
-
-        <!--Scroll Layout-->
+        <!-- Scroll Layout -->
         <ScrollView
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:layout_below="@+id/header"
+            android:layout_width="0dp"
+            android:layout_height="0dp"
             android:fillViewport="true"
-            android:scrollbars="none">
+            android:scrollbars="none"
+            app:layout_constraintTop_toBottomOf="@id/header"
+            app:layout_constraintBottom_toTopOf="@id/footer"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintEnd_toEndOf="parent">
 
             <LinearLayout
                 android:layout_width="match_parent"
@@ -80,7 +86,6 @@
                 android:paddingStart="15dp"
                 android:paddingEnd="15dp">
 
-                <!--Header-->
                 <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
@@ -93,18 +98,16 @@
                     android:textSize="20sp"
                     android:textStyle="bold" />
 
-                <!--Sub Header-->
                 <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_gravity="start"
-                    android:fontFamily="@font/poppins_light"
+                    android:fontFamily="@font/poppins_regular"
                     android:includeFontPadding="false"
                     android:text="Tell us your name"
                     android:textColor="@color/black"
                     android:textSize="13sp" />
 
-                <!--Pages Count-->
                 <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
@@ -128,31 +131,27 @@
                         android:layout_height="2dp"
                         android:layout_marginEnd="10dp"
                         android:layout_weight="1"
-                        android:background="@drawable/bg_24dp_blue"
-                        android:orientation="horizontal" />
+                        android:background="@drawable/bg_24dp_blue" />
 
                     <View
                         android:layout_width="0dp"
                         android:layout_height="2dp"
                         android:layout_marginEnd="10dp"
                         android:layout_weight="1"
-                        android:background="@drawable/bg_24dp_blue"
-                        android:orientation="horizontal" />
+                        android:background="@drawable/bg_24dp_blue" />
 
                     <View
                         android:layout_width="0dp"
                         android:layout_height="2dp"
                         android:layout_marginEnd="10dp"
                         android:layout_weight="1"
-                        android:background="@drawable/bg_24dp_blue"
-                        android:orientation="horizontal" />
+                        android:background="@drawable/bg_24dp_blue" />
 
                     <View
                         android:layout_width="0dp"
                         android:layout_height="2dp"
                         android:layout_weight="1"
-                        android:background="@drawable/bg_24dp_light_blue"
-                        android:orientation="horizontal" />
+                        android:background="@drawable/bg_24dp_light_blue" />
                 </LinearLayout>
 
                 <TextView
@@ -160,13 +159,13 @@
                     android:layout_height="wrap_content"
                     android:layout_gravity="start"
                     android:layout_marginTop="20dp"
-                    android:fontFamily="@font/poppins_light"
+                    android:fontFamily="@font/poppins_regular"
                     android:includeFontPadding="false"
                     android:text="Please enter your first name and last name as it appears on your NIN"
                     android:textColor="@color/black"
                     android:textSize="13sp" />
 
-                <!--Firstname Field-->
+                <!-- Firstname Field -->
                 <com.google.android.material.textfield.TextInputLayout
                     android:id="@+id/txtInputLayoutFirstname"
                     style="@style/Widget.SettleXApp.TextInputLayout.Outlined"
@@ -176,7 +175,6 @@
                     android:layout_marginTop="20dp"
                     android:gravity="center"
                     android:hint="First Name"
-                    android:orientation="horizontal"
                     app:endIconMode="clear_text">
 
                     <com.google.android.material.textfield.TextInputEditText
@@ -196,7 +194,7 @@
                         android:textSize="14sp" />
                 </com.google.android.material.textfield.TextInputLayout>
 
-                <!--Lastname field-->
+                <!-- Lastname Field -->
                 <com.google.android.material.textfield.TextInputLayout
                     android:id="@+id/txtInputLayoutPassword"
                     style="@style/Widget.SettleXApp.TextInputLayout.Outlined"
@@ -206,7 +204,6 @@
                     android:layout_marginTop="10dp"
                     android:gravity="center"
                     android:hint="Last Name"
-                    android:orientation="horizontal"
                     app:endIconMode="clear_text">
 
                     <com.google.android.material.textfield.TextInputEditText
@@ -228,17 +225,19 @@
             </LinearLayout>
         </ScrollView>
 
-        <!--Footer-->
+        <!-- Footer -->
         <LinearLayout
-            android:layout_width="match_parent"
+            android:id="@+id/footer"
+            android:layout_width="0dp"
             android:layout_height="wrap_content"
-            android:layout_alignParentBottom="true"
             android:gravity="center"
             android:orientation="vertical"
             android:paddingHorizontal="15dp"
-            android:paddingVertical="25dp">
+            android:paddingVertical="25dp"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintEnd_toEndOf="parent">
 
-            <!--Continue Btn-->
             <com.google.android.material.button.MaterialButton
                 android:id="@+id/btnContinue"
                 style="@style/Widget.SettleXApp.Button.Filled.Rounded8.Blue"
@@ -249,5 +248,5 @@
                 android:text="Continue"
                 android:textSize="14sp" />
         </LinearLayout>
-    </RelativeLayout>
+    </androidx.constraintlayout.widget.ConstraintLayout>
 </FrameLayout>

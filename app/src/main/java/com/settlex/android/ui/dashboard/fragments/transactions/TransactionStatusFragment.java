@@ -79,21 +79,21 @@ public class TransactionStatusFragment extends Fragment {
         binding.txnPendingAnim.setVisibility(View.VISIBLE);
         binding.txnPendingAnim.setRenderMode(RenderMode.SOFTWARE);
         binding.txnPendingAnim.playAnimation();
-        binding.txnStatus.setText(getString(R.string.pending));
+        binding.txnStatus.setText(getString(R.string.txn_pending));
     }
 
     private void showSuccessState() {
         binding.txnSuccessAnim.setVisibility(View.VISIBLE);
         binding.txnSuccessAnim.setRenderMode(RenderMode.SOFTWARE);
         binding.txnSuccessAnim.playAnimation();
-        binding.txnStatus.setText(getString(R.string.success));
+        binding.txnStatus.setText(getString(R.string.txn_success));
     }
 
     private void showFailedState() {
         binding.txnFailedAnim.setVisibility(View.VISIBLE);
         binding.txnFailedAnim.setRenderMode(RenderMode.SOFTWARE);
         binding.txnFailedAnim.playAnimation();
-        binding.txnStatus.setText(getString(R.string.failed));
+        binding.txnStatus.setText(getString(R.string.txn_failed));
     }
 
     private void customizeStatusBar() {

@@ -42,10 +42,16 @@ public class TransactionRepository {
                 .collection("transactions")
                 .orderBy("createdAt", Query.Direction.DESCENDING)
                 .limit(limit).addSnapshotListener((snapshots, error) -> {
-                    if (error != null || snapshots == null) {
+                    if (error != null) {
+                        callback.onError(error.getMessage());
+                        return;
+                    }
+
+                    if (snapshots == null || snapshots.isEmpty()) {
                         callback.onResult(Collections.emptyList());
                         return;
                     }
+
                     List<TransactionDto> transactions = new ArrayList<>();
                     for (DocumentSnapshot doc : snapshots.getDocuments()) {
                         TransactionDto txn = doc.toObject(TransactionDto.class);
@@ -109,7 +115,7 @@ public class TransactionRepository {
     public interface TransactionsCallback {
         void onResult(List<TransactionDto> list);
 
-        void onFailure(String reason);
+        void onError(String reason);
     }
 
     public interface TransferCallback {

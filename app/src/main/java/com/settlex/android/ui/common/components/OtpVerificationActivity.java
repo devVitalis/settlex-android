@@ -24,7 +24,7 @@ import com.settlex.android.databinding.ActivityOtpVerificationBinding;
 import com.settlex.android.ui.auth.activity.PasswordChangeActivity;
 import com.settlex.android.util.event.Result;
 import com.settlex.android.ui.auth.viewmodel.AuthViewModel;
-import com.settlex.android.ui.common.util.SettleXProgressBarController;
+import com.settlex.android.ui.common.util.ProgressLoaderController;
 import com.settlex.android.util.string.StringUtil;
 
 public class OtpVerificationActivity extends AppCompatActivity {
@@ -32,7 +32,7 @@ public class OtpVerificationActivity extends AppCompatActivity {
     private EditText[] otpInputs;
     private AuthViewModel authViewModel;
     private ActivityOtpVerificationBinding binding;
-    private SettleXProgressBarController progressBarController;
+    private ProgressLoaderController progressLoader;
 
     // ====================== LIFECYCLE ======================
     @Override
@@ -43,7 +43,7 @@ public class OtpVerificationActivity extends AppCompatActivity {
 
         userEmail = getIntent().getStringExtra("email");
         authViewModel = new ViewModelProvider(this).get(AuthViewModel.class);
-        progressBarController = new SettleXProgressBarController(binding.getRoot());
+        progressLoader = new ProgressLoaderController(this);
 
         setupStatusBar();
         setupUiActions();
@@ -58,7 +58,7 @@ public class OtpVerificationActivity extends AppCompatActivity {
             Result<String> result = event.getContentIfNotHandled();
             if (result != null) {
                 switch (result.getStatus()) {
-                    case LOADING -> progressBarController.show();
+                    case LOADING -> progressLoader.show();
                     case SUCCESS -> onVerifyOtpSuccess();
                     case FAILED -> showOtpError(result.getMessage());
                 }
@@ -71,7 +71,7 @@ public class OtpVerificationActivity extends AppCompatActivity {
             Result<String> result = event.getContentIfNotHandled();
             if (result != null) {
                 switch (result.getStatus()) {
-                    case LOADING -> progressBarController.show();
+                    case LOADING -> progressLoader.show();
                     case SUCCESS -> onSendOtpSuccess();
                     case FAILED -> showOtpError(result.getMessage());
                 }
@@ -83,18 +83,18 @@ public class OtpVerificationActivity extends AppCompatActivity {
     private void onVerifyOtpSuccess() {
         startActivity(new Intent(this, PasswordChangeActivity.class).putExtra("email", userEmail));
         finish();
-        progressBarController.hide();
+        progressLoader.hide();
     }
 
     private void onSendOtpSuccess() {
         startResendOtpCooldown();
-        progressBarController.hide();
+        progressLoader.hide();
     }
 
     private void showOtpError(String message) {
         binding.txtOtpFeedback.setText(message);
         binding.txtOtpFeedback.setVisibility(View.VISIBLE);
-        progressBarController.hide();
+        progressLoader.hide();
     }
 
     // ====================== UI SETUP ======================

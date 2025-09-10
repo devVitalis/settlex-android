@@ -1,10 +1,12 @@
 package com.settlex.android.ui.dashboard.model;
 
+import java.util.Objects;
+
 /**
  * UI model representing a transaction for display purposes
  */
 public class TransactionUiModel {
-    private String txnId;
+    private final String transactionId;
     private String txnReference;
     private final String sender;
     private final String recipient;
@@ -16,13 +18,15 @@ public class TransactionUiModel {
     private final int serviceTypeIcon;
     private final String status;
     private final int statusColor;
+    private final int statusBgColor;
     private final String operationSymbol;
     private final int operationColor;
 
     /**
      * Constructor for basic transaction display (minimal required fields)
      */
-    public TransactionUiModel(String sender, String recipient, String recipientOrSender, String serviceTypeName, int serviceTypeIcon, String operationSymbol, int operationColor, String amount, String timestamp, String status, int statusColor) {
+    public TransactionUiModel(String transactionId, String sender, String recipient, String recipientOrSender, String serviceTypeName, int serviceTypeIcon, String operationSymbol, int operationColor, String amount, String timestamp, String status, int statusColor, int statusBgColor) {
+        this.transactionId = transactionId;
         this.sender = sender;
         this.recipient = recipient;
         this.recipientOrSender = recipientOrSender;
@@ -34,9 +38,15 @@ public class TransactionUiModel {
         this.timestamp = timestamp;
         this.status = status;
         this.statusColor = statusColor;
+        this.statusBgColor = statusBgColor;
     }
 
     // GETTERS
+
+    public String getTransactionId() {
+        return transactionId;
+    }
+
     public String getSender() {
         return sender;
     }
@@ -79,5 +89,22 @@ public class TransactionUiModel {
 
     public int getStatusColor() {
         return statusColor;
+    }
+
+    public int getStatusBgColor() {
+        return statusBgColor;
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        TransactionUiModel that = (TransactionUiModel) o;
+        return getServiceTypeIcon() == that.getServiceTypeIcon() && getStatusColor() == that.getStatusColor() && getStatusBgColor() == that.getStatusBgColor() && getOperationColor() == that.getOperationColor() && Objects.equals(getTransactionId(), that.getTransactionId()) && Objects.equals(txnReference, that.txnReference) && Objects.equals(getSender(), that.getSender()) && Objects.equals(getRecipient(), that.getRecipient()) && Objects.equals(getRecipientOrSender(), that.getRecipientOrSender()) && Objects.equals(description, that.description) && Objects.equals(getAmount(), that.getAmount()) && Objects.equals(getTimestamp(), that.getTimestamp()) && Objects.equals(getServiceTypeName(), that.getServiceTypeName()) && Objects.equals(getStatus(), that.getStatus()) && Objects.equals(getOperationSymbol(), that.getOperationSymbol());
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(getTransactionId(), txnReference, getSender(), getRecipient(), getRecipientOrSender(), description, getAmount(), getTimestamp(), getServiceTypeName(), getServiceTypeIcon(), getStatus(), getStatusColor(), getStatusBgColor(), getOperationSymbol(), getOperationColor());
     }
 }

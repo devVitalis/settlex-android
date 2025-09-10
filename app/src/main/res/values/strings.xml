@@ -11,9 +11,12 @@
 
     <!-- Transaction -->
     <string name="No_user_found_with_tag">No user found with tag, %s</string>
-    <string name="pending">Transaction Pending</string>
-    <string name="success">Transaction Successful</string>
-    <string name="failed">Transaction Failed</string>
+    <string name="txn_pending">Transaction Pending</string>
+    <string name="txn_success">Transaction Successful</string>
+    <string name="txn_failed">Transaction Failed</string>
+    <string name="debitFromSenderWalletBalance">"-" %s</string>
+    <string name="debitFromSenderCommissionBalance">"-" %s</string>
+    <string name="formattedAmountToSend">"-" %s</string>
 
     <!-- XML Layouts -->
     <string name="password_update_success">Your password has been changed successfully. You will now need to use your new password to sign in on all your devices.</string>

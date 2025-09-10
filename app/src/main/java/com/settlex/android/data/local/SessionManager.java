@@ -79,15 +79,14 @@ public class SessionManager {
             return gson.fromJson(json, UserUiModel.class);
 
         } catch (GeneralSecurityException | JsonSyntaxException e) {
-            Log.e("ViewModel", "Failed to decrypt or parse user data", e);
+            Log.e("SessionManager", "Failed to decrypt or parse user data", e);
             return null;
         }
     }
 
     // --- Session state checks ---
     public boolean isUserLoggedIn() {
-        UserUiModel user = getUser();
-        return user != null && user.getUid() != null;
+        return getUser() != null && getUser().getUid() != null;
     }
 
     public boolean hasPin() {

@@ -22,12 +22,11 @@ import androidx.fragment.app.Fragment;
 import androidx.lifecycle.ViewModelProvider;
 import androidx.recyclerview.widget.LinearLayoutManager;
 
-import com.google.gson.Gson;
 import com.settlex.android.R;
 import com.settlex.android.SettleXApp;
 import com.settlex.android.data.enums.TransactionServiceType;
 import com.settlex.android.databinding.FragmentPayAFriendBinding;
-import com.settlex.android.ui.common.util.SettleXProgressBarController;
+import com.settlex.android.ui.common.util.ProgressLoaderController;
 import com.settlex.android.ui.dashboard.adapter.RecipientAdapter;
 import com.settlex.android.ui.dashboard.model.RecipientUiModel;
 import com.settlex.android.ui.dashboard.model.UserUiModel;
@@ -52,7 +51,7 @@ public class PayAFriendFragment extends Fragment {
     private Bundle bundle; // bundle to pass the amount to next screen
 
     private FragmentPayAFriendBinding binding;
-    private SettleXProgressBarController progressBarController;
+    private ProgressLoaderController progressLoader;
     private RecipientAdapter recipientAdapter;
     private UserViewModel userViewModel;
     private TransactionsViewModel transactionsViewModel;
@@ -67,7 +66,7 @@ public class PayAFriendFragment extends Fragment {
     public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         binding = FragmentPayAFriendBinding.inflate(inflater, container, false);
 
-        progressBarController = new SettleXProgressBarController(binding.getRoot());
+        progressLoader = new ProgressLoaderController(requireActivity());
         userViewModel = ((SettleXApp) requireActivity().getApplication()).getSharedUserViewModel();
         transactionsViewModel = new ViewModelProvider(requireActivity()).get(TransactionsViewModel.class);
         recipientAdapter = new RecipientAdapter();
@@ -120,7 +119,7 @@ public class PayAFriendFragment extends Fragment {
         Result<String> result = event.getContentIfNotHandled();
         if (result == null) return;
         switch (result.getStatus()) {
-            case LOADING -> progressBarController.show();
+            case LOADING -> progressLoader.show();
             case PENDING -> onTransactionPending();
             case SUCCESS -> onTransactionSuccess();
             case FAILED -> onTransactionFailed();
@@ -141,19 +140,19 @@ public class PayAFriendFragment extends Fragment {
     private void onTransactionPending() {
         bundle.putString("txn_amount", StringUtil.formatToNaira(amount));
         navigateToFragment(new TransactionStatusFragment(), bundle);
-        progressBarController.hide();
+        progressLoader.hide();
     }
 
     private void onTransactionSuccess() {
         bundle.putString("txn_amount", StringUtil.formatToNaira(amount));
         navigateToFragment(new TransactionStatusFragment(), bundle);
-        progressBarController.hide();
+        progressLoader.hide();
     }
 
     private void onTransactionFailed() {
         bundle.putString("txn_amount", StringUtil.formatToNaira(amount));
         navigateToFragment(new TransactionStatusFragment(), bundle);
-        progressBarController.hide();
+        progressLoader.hide();
     }
 
     private void onUsernameSearchLoading() {

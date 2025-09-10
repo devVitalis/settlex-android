@@ -131,7 +131,7 @@
                     android:textSize="12sp"
                     android:visibility="gone" />
 
-                <!-- Selected recipient -->
+                <!-- Selected recipient (Hidden)-->
                 <LinearLayout
                     android:id="@+id/selectedRecipient"
                     android:layout_width="match_parent"
@@ -192,7 +192,6 @@
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:layout_marginTop="10dp"
-                        android:padding="8dp"
                         android:visibility="gone"
                         app:shimmer_auto_start="false"
                         app:shimmer_duration="1500">
@@ -203,7 +202,7 @@
                             android:layout_height="wrap_content" />
                     </com.facebook.shimmer.ShimmerFrameLayout>
 
-                    <!-- Suggestion -->
+                    <!-- Recipient -->
                     <androidx.recyclerview.widget.RecyclerView
                         android:id="@+id/recipientRecyclerView"
                         android:layout_width="match_parent"
@@ -250,12 +249,12 @@
                         app:layout_constraintTop_toTopOf="parent" />
 
                     <!-- Divider -->
-                    <View
+                    <com.google.android.material.divider.MaterialDivider
                         android:id="@+id/divider"
                         android:layout_width="1dp"
                         android:layout_height="15dp"
                         android:layout_marginStart="15dp"
-                        android:background="@color/gray"
+                        app:dividerColor="@color/gray"
                         app:layout_constraintBottom_toBottomOf="@id/naira"
                         app:layout_constraintStart_toEndOf="@id/naira"
                         app:layout_constraintTop_toTopOf="@id/naira" />

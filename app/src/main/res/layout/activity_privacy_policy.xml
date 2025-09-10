@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/main"
@@ -9,74 +9,78 @@
     android:fitsSystemWindows="true"
     tools:context=".ui.info.legal.PrivacyPolicyActivity">
 
-    <RelativeLayout
-        android:id="@+id/header"
-        android:layout_width="match_parent"
-        android:layout_height="35dp"
-        android:layout_alignParentTop="true">
-
-        <ImageView
-            android:id="@+id/imgBackBefore"
-            android:layout_width="20dp"
-            android:layout_height="20dp"
-            android:layout_alignParentStart="true"
-            android:layout_centerInParent="true"
-            android:layout_marginStart="15dp"
-            android:contentDescription="Arrow Back"
-            app:srcCompat="@drawable/ic_arrow_back" />
-
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_centerInParent="true"
-            android:layout_centerVertical="true"
-            android:fontFamily="@font/poppins_regular"
-            android:includeFontPadding="false"
-            android:text="Privacy Policy"
-            android:textColor="@color/black"
-            android:textSize="15sp"
-            android:textStyle="bold" />
-    </RelativeLayout>
-
-    <ScrollView
+    <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:layout_below="@+id/header"
-        android:fillViewport="true"
-        android:scrollbars="none">
+        android:orientation="vertical">
 
-        <LinearLayout
+        <!--Header-->
+        <androidx.constraintlayout.widget.ConstraintLayout
+            android:id="@+id/header"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:orientation="vertical"
-            android:padding="15dp">
+            android:layout_height="35dp">
+
+            <ImageView
+                android:id="@+id/imgBackBefore"
+                android:layout_width="20dp"
+                android:layout_height="20dp"
+                android:layout_marginStart="15dp"
+                android:contentDescription="Arrow Back"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent"
+                app:srcCompat="@drawable/ic_arrow_back" />
+
+            <TextView
+                android:id="@+id/txtHeaderTitle"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:fontFamily="@font/poppins_regular"
+                android:includeFontPadding="false"
+                android:text="Privacy Policy"
+                android:textColor="@color/black"
+                android:textSize="15sp"
+                android:textStyle="bold"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent" />
+        </androidx.constraintlayout.widget.ConstraintLayout>
+
+        <!--Scrollable Content-->
+        <ScrollView
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            android:layout_weight="1"
+            android:fillViewport="true"
+            android:scrollbars="none">
 
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:gravity="center"
-                android:orientation="horizontal">
+                android:orientation="vertical"
+                android:padding="15dp">
 
                 <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:fontFamily="@font/poppins_regular"
+                    android:gravity="center"
                     android:includeFontPadding="false"
                     android:text="Date"
                     android:textColor="@color/black"
                     android:textSize="14sp" />
+
+                <TextView
+                    android:id="@+id/txtPrivacyPolicy"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="10dp"
+                    android:fontFamily="@font/poppins_regular"
+                    android:text="Content"
+                    android:textColor="@color/black"
+                    android:textSize="13sp" />
             </LinearLayout>
-
-            <TextView
-                android:id="@+id/txtPrivacyPolicy"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="10dp"
-                android:fontFamily="@font/poppins_regular"
-                android:text="Content"
-                android:textColor="@color/black"
-                android:textSize="13sp" />
-        </LinearLayout>
-    </ScrollView>
-</RelativeLayout>
-
+        </ScrollView>
+    </LinearLayout>
+</FrameLayout>
