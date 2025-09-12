@@ -94,8 +94,7 @@
             android:id="@+id/recipientProfilePic"
             android:layout_width="25dp"
             android:layout_height="25dp"
-            android:layout_marginEnd="3dp"
-            android:src="@drawable/ic_avatar" />
+            android:layout_marginEnd="3dp" />
 
         <TextView
             android:id="@+id/recipientName"
@@ -150,20 +149,40 @@
         app:dividerColor="@color/gray_light"
         app:dividerThickness="1dp" />
 
-    <TextView
-        android:layout_width="wrap_content"
+    <!--Payment method-->
+    <LinearLayout
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:fontFamily="@font/poppins_regular"
-        android:includeFontPadding="false"
-        android:text="Payment Method"
-        android:textColor="@color/black"
-        android:textSize="14sp" />
+        android:gravity="center_vertical"
+        android:orientation="horizontal">
 
-    <!--Sender Balance-->
+        <TextView
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:fontFamily="@font/poppins_regular"
+            android:includeFontPadding="false"
+            android:text="Payment Method"
+            android:textColor="@color/black"
+            android:textSize="14sp" />
+
+        <TextView
+            android:id="@+id/paymentMethod"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:fontFamily="@font/poppins_regular"
+            android:includeFontPadding="false"
+            android:textColor="@color/gray"
+            android:textSize="12sp"
+            tools:text="ALL" />
+    </LinearLayout>
+
+    <!--Balance summary-->
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginTop="5dp"
+        android:layout_marginBottom="20dp"
         android:background="@drawable/bg_8dp_gray_light"
         android:orientation="vertical"
         android:paddingHorizontal="10dp"
@@ -187,8 +206,9 @@
 
             <TextView
                 android:id="@+id/senderTotalBalance"
-                android:layout_width="wrap_content"
+                android:layout_width="0dp"
                 android:layout_height="wrap_content"
+                android:layout_weight="1"
                 android:ellipsize="end"
                 android:fontFamily="@font/poppins_regular"
                 android:includeFontPadding="false"
@@ -196,6 +216,12 @@
                 android:textColor="@color/black"
                 android:textSize="14sp"
                 tools:text="(₦198,535.57)" />
+
+            <ImageView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:contentDescription="@null"
+                android:src="@drawable/ic_check" />
         </LinearLayout>
 
         <!--Divider-->
@@ -291,7 +317,6 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_gravity="center"
-        android:layout_marginTop="20dp"
         android:fontFamily="@font/poppins_regular"
         android:includeFontPadding="false"
         android:text="Insufficient Balance"
@@ -304,7 +329,6 @@
         style="@style/Widget.SettleXApp.Button.Filled.Blue"
         android:layout_width="match_parent"
         android:layout_height="55dp"
-        android:layout_marginTop="5dp"
         android:enabled="false"
         android:text="Pay"
         android:textSize="15sp" />

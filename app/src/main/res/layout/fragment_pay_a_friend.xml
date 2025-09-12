@@ -135,51 +135,56 @@
                 <LinearLayout
                     android:id="@+id/selectedRecipient"
                     android:layout_width="match_parent"
-                    android:layout_height="match_parent"
+                    android:layout_height="wrap_content"
                     android:layout_marginTop="5dp"
-                    android:background="@drawable/bg_8dp_fill_stroke_light_blue_and_blue"
+                    android:background="@drawable/bg_8dp_fill_stroke_gray_light_and_blue"
                     android:gravity="center_vertical"
+                    android:orientation="horizontal"
+                    android:padding="8dp"
                     android:visibility="gone">
 
-                    <ImageView
-                        android:layout_width="20dp"
-                        android:layout_height="20dp"
-                        android:layout_marginStart="5dp"
+                    <com.google.android.material.imageview.ShapeableImageView
+                        android:id="@+id/selectedRecipientProfilePic"
+                        android:layout_width="50dp"
+                        android:layout_height="50dp"
+                        android:layout_marginEnd="10dp"
+                        android:background="@color/blue_light"
                         android:contentDescription="@null"
-                        android:src="@drawable/ic_checkbox_checked" />
-
-                    <TextView
-                        android:id="@+id/selectedRecipientName"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:includeFontPadding="false"
-                        android:padding="5dp"
-                        android:textColor="@color/blue"
-                        android:textSize="14sp"
-                        android:textStyle="bold"
-                        tools:text="BENJAMIN NNAEMEKA" />
+                        app:shapeAppearance="@style/CircleImage" />
 
                     <LinearLayout
-                        android:layout_width="match_parent"
+                        android:layout_width="0dp"
                         android:layout_height="wrap_content"
-                        android:layout_marginStart="5dp"
-                        android:background="@drawable/bg_20dp_start_rounded_blue"
-                        android:gravity="center_vertical">
+                        android:layout_weight="1"
+                        android:gravity="center_vertical"
+                        android:orientation="vertical">
+
+                        <TextView
+                            android:id="@+id/selectedRecipientName"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:fontFamily="@font/poppins_regular"
+                            android:includeFontPadding="false"
+                            android:textColor="@color/black"
+                            android:textSize="14sp"
+                            tools:text="Benjamin Nnaemeka" />
 
                         <TextView
                             android:id="@+id/selectedRecipientUsername"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
-                            android:layout_marginStart="5dp"
-                            android:ellipsize="end"
+                            android:fontFamily="@font/poppins_regular"
                             android:includeFontPadding="false"
-                            android:maxLines="1"
-                            android:padding="5dp"
-                            android:textColor="@color/white"
+                            android:textColor="@color/gray"
                             android:textSize="14sp"
-                            android:textStyle="bold"
-                            tools:text="\@vitalis" />
+                            tools:text="\@vitalisdft" />
                     </LinearLayout>
+
+                    <ImageView
+                        android:layout_width="20dp"
+                        android:layout_height="20dp"
+                        android:contentDescription="@null"
+                        android:src="@drawable/ic_checkbox_checked" />
                 </LinearLayout>
 
                 <FrameLayout
@@ -212,17 +217,45 @@
                         android:visibility="gone" />
                 </FrameLayout>
 
-                <!-- Label -->
-                <TextView
-                    android:layout_width="wrap_content"
+                <LinearLayout
+                    android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_gravity="start"
                     android:layout_marginTop="10dp"
-                    android:fontFamily="@font/poppins_regular"
-                    android:includeFontPadding="false"
-                    android:text="Amount"
-                    android:textColor="@color/gray_dark"
-                    android:textSize="12sp" />
+                    android:gravity="center_vertical"
+                    android:orientation="horizontal">
+
+                    <!-- Label -->
+                    <TextView
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="start"
+                        android:layout_weight="1"
+                        android:fontFamily="@font/poppins_regular"
+                        android:includeFontPadding="false"
+                        android:text="Amount"
+                        android:textColor="@color/gray_dark"
+                        android:textSize="12sp" />
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:fontFamily="@font/poppins_regular"
+                        android:includeFontPadding="false"
+                        android:text="Available Balance:"
+                        android:textColor="@color/gray_dark"
+                        android:textSize="12sp" />
+
+                    <TextView
+                        android:id="@+id/availableBalance"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginStart="5dp"
+                        android:fontFamily="@font/poppins_regular"
+                        android:includeFontPadding="false"
+                        android:textColor="@color/gray_dark"
+                        android:textSize="12sp"
+                        tools:text="₦100,000" />
+                </LinearLayout>
 
                 <!-- Amount Field Background -->
                 <androidx.constraintlayout.widget.ConstraintLayout

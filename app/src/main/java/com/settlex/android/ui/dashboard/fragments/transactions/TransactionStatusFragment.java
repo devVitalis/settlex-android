@@ -68,7 +68,7 @@ public class TransactionStatusFragment extends Fragment {
                 switch (transactionResult.getStatus()) {
                     case PENDING -> showPendingState();
                     case SUCCESS -> showSuccessState();
-                    case FAILED -> showFailedState();
+                    case ERROR -> showFailedState();
                 }
             }
         });

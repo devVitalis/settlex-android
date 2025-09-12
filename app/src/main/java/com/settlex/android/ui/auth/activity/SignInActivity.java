@@ -83,7 +83,7 @@ public class SignInActivity extends AppCompatActivity {
                 switch (result.getStatus()) {
                     case LOADING -> caseLoginLoading();
                     case SUCCESS -> onLoginSuccess();
-                    case FAILED -> onLoginFailure(result.getMessage());
+                    case ERROR -> onLoginFailure(result.getMessage());
                 }
             }
         });

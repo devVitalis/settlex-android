@@ -90,7 +90,7 @@ public class SignUpUserContactInfoFragment extends Fragment {
                 switch (result.getStatus()) {
                     case LOADING -> progressLoader.show();
                     case SUCCESS -> onSendVerificationOtpSuccess();
-                    case FAILED -> onSendOtpFailure(result.getMessage());
+                    case ERROR -> onSendOtpFailure(result.getMessage());
                 }
             }
         });

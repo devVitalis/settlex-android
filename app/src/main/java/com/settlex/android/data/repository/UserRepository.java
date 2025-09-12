@@ -6,7 +6,7 @@ import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.ListenerRegistration;
 import com.google.firebase.functions.FirebaseFunctions;
-import com.settlex.android.data.remote.dto.SuggestionsDto;
+import com.settlex.android.data.remote.dto.RecipientDto;
 import com.settlex.android.data.remote.dto.UserDto;
 
 import java.io.IOException;
@@ -47,10 +47,15 @@ public class UserRepository {
         userListener = firestore.collection("users")
                 .document(uid)
                 .addSnapshotListener((snapshot, error) -> {
-                    if (error != null || snapshot == null || !snapshot.exists()) {
+                    if (error != null) {
+                        callback.onError(error.getMessage());
+                        return;
+                    }
+                    if (snapshot == null || !snapshot.exists()){
                         callback.onResult(null);
                         return;
                     }
+
                     UserDto userDoc = snapshot.toObject(UserDto.class);
                     callback.onResult(userDoc);
                 });
@@ -64,23 +69,23 @@ public class UserRepository {
         functions.getHttpsCallable("searchUsername")
                 .call(Collections.singletonMap("input", input))
                 .addOnSuccessListener(result -> {
-                    List<SuggestionsDto> suggestionsDto = new ArrayList<>();
+                    List<RecipientDto> recipientDto = new ArrayList<>();
                     Map<?, ?> data = (Map<?, ?>) result.getData();
                     if (data != null && Boolean.TRUE.equals(data.get("success"))) {
                         //noinspection unchecked
-                        List<Map<String, Object>> suggestions = (List<Map<String, Object>>) data.get("suggestions");
+                        List<Map<String, Object>> recipientDtos = (List<Map<String, Object>>) data.get("suggestions");
 
-                        if (suggestions != null) {
-                            for (Map<String, Object> suggestion : suggestions) {
-                                String username = (String) suggestion.get("username");
-                                String firstName = (String) suggestion.get("firstName");
-                                String lastName = (String) suggestion.get("lastName");
-                                String profileUrl = (String) suggestion.get("profileUrl");
-                                suggestionsDto.add(new SuggestionsDto(username, firstName, lastName, profileUrl));
+                        if (recipientDtos != null) {
+                            for (Map<String, Object> recipient : recipientDtos) {
+                                String username = (String) recipient.get("username");
+                                String firstName = (String) recipient.get("firstName");
+                                String lastName = (String) recipient.get("lastName");
+                                String profileUrl = (String) recipient.get("profileUrl");
+                                recipientDto.add(new RecipientDto(username, firstName, lastName, profileUrl));
                             }
                         }
                     }
-                    callback.onResult(suggestionsDto);
+                    callback.onResult(recipientDto);
                 })
                 .addOnFailureListener(e -> {
                     if (e instanceof FirebaseNetworkException || e instanceof IOException) {
@@ -105,13 +110,14 @@ public class UserRepository {
 
     // ============== Callbacks Interfaces
     public interface SearchUsernameCallback {
-        void onResult(List<SuggestionsDto> suggestionsDto);
+        void onResult(List<RecipientDto> suggestionsDto);
 
         void onFailure(String reason);
     }
 
     public interface GetUserCallback {
         void onResult(UserDto userDto);
+        void onError(String error);
     }
 
     public interface GetUserAuthStateCallback {

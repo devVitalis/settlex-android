@@ -91,7 +91,7 @@ public class SignUpUserPasswordFragment extends Fragment {
                 switch (result.getStatus()) {
                     case LOADING -> progressLoader.show();
                     case SUCCESS -> onRegistrationSuccess();
-                    case FAILED -> onRegistrationFailure(result.getMessage());
+                    case ERROR -> onRegistrationFailure(result.getMessage());
                 }
             }
         });

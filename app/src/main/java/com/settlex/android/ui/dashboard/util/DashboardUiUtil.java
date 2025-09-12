@@ -6,6 +6,7 @@ import android.view.View;
 
 import com.google.android.material.bottomsheet.BottomSheetDialog;
 import com.settlex.android.R;
+import com.settlex.android.data.remote.avater.AvatarService;
 import com.settlex.android.databinding.BottomSheetConfirmPaymentBinding;
 import com.settlex.android.util.string.StringUtil;
 
@@ -14,7 +15,7 @@ public class DashboardUiUtil {
     private DashboardUiUtil() {
     }
 
-    public static void showPayConfirmation(Context context, String recipientUsername, int profilePic, String recipientName, double amountToSend, double senderWalletBalance, double senderCommissionBalance, final Runnable onPay) {
+    public static BottomSheetDialog showPayConfirmation(Context context, String recipientUsername, String recipientName, double amountToSend, double senderWalletBalance, double senderCommissionBalance, final Runnable onPay) {
         BottomSheetConfirmPaymentBinding binding = BottomSheetConfirmPaymentBinding.inflate(LayoutInflater.from(context));
         BottomSheetDialog dialog = new BottomSheetDialog(context, R.style.Widget_SettleX_BottomSheetDialog);
         dialog.setContentView(binding.getRoot());
@@ -31,6 +32,7 @@ public class DashboardUiUtil {
         if (senderTotalBalance < amountToSend) {
             // Not enough money at all
             binding.txtFeedback.setVisibility(View.VISIBLE);
+            binding.paymentMethod.setText("Insufficient");
 
             // Hide debit breakdowns
             binding.debitFromSenderWalletBalance.setVisibility(View.GONE);
@@ -38,6 +40,7 @@ public class DashboardUiUtil {
 
         } else if (senderWalletBalance >= amountToSend) {
             // Wallet balance alone is enough
+            binding.paymentMethod.setText("Wallet");
             binding.debitFromSenderWalletBalance.setVisibility(View.VISIBLE);
             binding.debitFromSenderWalletBalance.setText(binding.getRoot().getContext().getString(R.string.formattedAmountToSend, formattedAmountToSend));
 
@@ -51,6 +54,8 @@ public class DashboardUiUtil {
             double fromWallet;
             fromWallet = senderWalletBalance;
             double fromCommission = amountToSend - senderWalletBalance;
+
+            binding.paymentMethod.setText("ALL");
 
             if (senderWalletBalance != 0) {
                 binding.debitFromSenderWalletBalance.setVisibility(View.VISIBLE);
@@ -72,7 +77,7 @@ public class DashboardUiUtil {
         binding.amountToSend.setText(formattedAmountToSend);
         binding.recipientUsername.setText(formattedUsername);
         binding.recipientName.setText(formattedRecipientName);
-        binding.recipientProfilePic.setImageResource(profilePic);
+        AvatarService.loadAvatar(recipientName, binding.recipientProfilePic); // TODO: replace with real profile pic
 
         // Sender details
         binding.senderTotalBalance.setText(StringUtil.formatToNaira(senderTotalBalance));
@@ -85,9 +90,9 @@ public class DashboardUiUtil {
             binding.btnPay.setEnabled(false);
             if (onPay != null) {
                 onPay.run();
-                dialog.dismiss();
             }
         });
         dialog.show();
+        return dialog;
     }
 }

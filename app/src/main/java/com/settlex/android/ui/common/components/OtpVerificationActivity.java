@@ -60,7 +60,7 @@ public class OtpVerificationActivity extends AppCompatActivity {
                 switch (result.getStatus()) {
                     case LOADING -> progressLoader.show();
                     case SUCCESS -> onVerifyOtpSuccess();
-                    case FAILED -> showOtpError(result.getMessage());
+                    case ERROR -> showOtpError(result.getMessage());
                 }
             }
         });
@@ -73,7 +73,7 @@ public class OtpVerificationActivity extends AppCompatActivity {
                 switch (result.getStatus()) {
                     case LOADING -> progressLoader.show();
                     case SUCCESS -> onSendOtpSuccess();
-                    case FAILED -> showOtpError(result.getMessage());
+                    case ERROR -> showOtpError(result.getMessage());
                 }
             }
         });

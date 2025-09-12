@@ -8,6 +8,7 @@ import androidx.viewpager2.adapter.FragmentStateAdapter;
 import com.settlex.android.ui.Onboarding.fragment.OnboardingPage1Fragment;
 import com.settlex.android.ui.Onboarding.fragment.OnboardingPage2Fragment;
 import com.settlex.android.ui.Onboarding.fragment.OnboardingPage3Fragment;
+import com.settlex.android.ui.Onboarding.fragment.OnboardingPage4Fragment;
 
 
 public class OnboardingAdapter extends FragmentStateAdapter {
@@ -22,12 +23,13 @@ public class OnboardingAdapter extends FragmentStateAdapter {
         return switch (position) {
             case 0 -> new OnboardingPage1Fragment();
             case 1 -> new OnboardingPage2Fragment();
-            default -> new OnboardingPage3Fragment();
+            case 2 -> new OnboardingPage3Fragment();
+            default -> new OnboardingPage4Fragment();
         };
     }
 
     @Override
     public int getItemCount() {
-        return 3;
+        return 4;
     }
 }

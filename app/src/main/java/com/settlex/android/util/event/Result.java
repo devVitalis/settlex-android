@@ -13,7 +13,7 @@ public class Result<T> {
         LOADING,
         PENDING,
         SUCCESS,
-        FAILED
+        ERROR
     }
 
     private final Status status;
@@ -55,7 +55,7 @@ public class Result<T> {
      * @param message Error message describing the failure.
      */
     public static <T> Result<T> error(String message) {
-        return new Result<>(Status.FAILED, null, message);
+        return new Result<>(Status.ERROR, null, message);
     }
 
     public Status getStatus() {

@@ -4,7 +4,6 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Looper;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -44,8 +43,6 @@ import java.util.Arrays;
 import java.util.List;
 
 public class HomeDashboardFragment extends Fragment {
-    UserUiModel currentUser; // Current logged in user ref TODO: Remove
-
     private final double MILLION_THRESHOLD = 999_999_999;
     private long backPressedTime;
     private final Handler autoScrollHandler = new Handler(Looper.getMainLooper());
@@ -56,6 +53,7 @@ public class HomeDashboardFragment extends Fragment {
     private UserViewModel userViewModel;
     private TransactionsViewModel transactionsViewModel;
     private PromoBannerViewModel promoBannerViewModel;
+
 
     public HomeDashboardFragment() {
         // Required empty public constructor
@@ -98,80 +96,128 @@ public class HomeDashboardFragment extends Fragment {
     // ======================= SETUP UI COMPONENTS =======================
     private void setupUiActions() {
         observeCurrentUserState();
-        loadServices();
+        loadAppServices();
         setupTransactionsRecyclerView();
         setupDoubleBackToExit();
 
         binding.btnLogin.setOnClickListener(v -> startActivity(new Intent(requireActivity(), SignInActivity.class)));
         binding.addMoney.setOnClickListener(v -> userViewModel.signOut());
-        binding.receiveMoney.setOnClickListener(v -> {
-        });
         binding.balanceToggle.setOnClickListener(v -> userViewModel.toggleBalanceVisibility());
         binding.payAFriend.setOnClickListener(v -> startActivity(new Intent(requireActivity(), TransactionActivity.class)));
     }
 
     //  OBSERVERS ===========
     private void observeCurrentUserState() {
-        userViewModel.getAuthStateLiveData().observe(getViewLifecycleOwner(), currentUserUid -> {
-            if (currentUserUid == null) {
-                // User is logged out
+        userViewModel.getAuthStateLiveData().observe(getViewLifecycleOwner(), uid -> {
+            if (uid == null) {
+                // logged out/session expired
                 showLoggedOutLayout();
                 return;
             }
-            // User is logged in fetch data
-            int TXN_QUERY_LIMIT = 2;
+            // user is logged in fetch data
             observeAndDisplayUserData();
-            transactionsViewModel.fetchTransactions(currentUserUid, TXN_QUERY_LIMIT);
-            observeAndLoadRecentTransactions();
-        });
-    }
-
-    private void loadDefaultUserPrefs(double balance, double commissionBalance) {
-        userViewModel.getHideBalanceLiveData().observe(getViewLifecycleOwner(), hidden -> {
-            if (hidden) {
-                binding.userBalance.setText(StringUtil.setAsterisks());
-                binding.userCommissionBalance.setText(StringUtil.setAsterisks());
-                return;
-            }
-            binding.userBalance.setText((balance > MILLION_THRESHOLD) ?
-                    StringUtil.formatToNairaShort(balance) : StringUtil.formatToNaira(balance));
-            binding.userCommissionBalance.setText(StringUtil.formatToNairaShort(commissionBalance));
+            observeAndLoadRecentTransactions(uid);
         });
     }
 
     private void observeAndDisplayUserData() {
-        userViewModel.getUserData().observe(getViewLifecycleOwner(), userData -> {
-            if (userData == null) return;
+        userViewModel.getUserData().observe(getViewLifecycleOwner(), user -> {
+            if (user == null) return;
 
-            AvatarService.loadAvatar(userData.getUserFullName(), binding.userProfilePic);
-            binding.userDisplayName.setText(userData.getUserFullName());
-            loadDefaultUserPrefs(userData.getBalance(), userData.getCommissionBalance());
-            this.currentUser = userData;
-        });
-    }
-
-    private void observeAndLoadRecentTransactions() {
-        transactionsViewModel.getTransactions().observe(getViewLifecycleOwner(), transactions -> {
-            if (transactions.getStatus() == null) return;
-
-            switch (transactions.getStatus()) {
-                case LOADING -> caseTransactionLoading();
-                case SUCCESS -> caseTransactionSuccess(transactions);
-                case FAILED -> caseTransactionError();
+            switch (user.getStatus()) {
+                case LOADING -> onUserDataLoading();
+                case SUCCESS -> onUserDataSuccess(user);
+                case ERROR -> onUserDataError(user.getMessage());
             }
         });
     }
 
-    private void caseTransactionLoading() {
-        Log.d("Fragment", "Transaction history is loading");
+    private void onUserDataLoading() {
+        // hide details
+        binding.userFullName.setVisibility(View.GONE);
+        binding.userBalance.setVisibility(View.GONE);
+        binding.userCommissionBalanceLayout.setVisibility(View.GONE);
+
+        // dismiss shimmer
+        binding.userFullNameShimmer.startShimmer();
+        binding.userBalanceShimmer.startShimmer();
+        binding.userCommissionBalanceShimmer.startShimmer();
+
+        binding.userFullNameShimmer.setVisibility(View.VISIBLE);
+        binding.userBalanceShimmer.setVisibility(View.VISIBLE);
+        binding.userCommissionBalanceShimmer.setVisibility(View.VISIBLE);
+    }
+
+    private void onUserDataSuccess(Result<UserUiModel> user) {
+        // dismiss shimmer
+        binding.userFullNameShimmer.stopShimmer();
+        binding.userBalanceShimmer.stopShimmer();
+        binding.userCommissionBalanceShimmer.stopShimmer();
+
+        binding.userFullNameShimmer.setVisibility(View.GONE);
+        binding.userBalanceShimmer.setVisibility(View.GONE);
+        binding.userCommissionBalanceShimmer.setVisibility(View.GONE);
+
+        // show details
+        binding.userFullName.setVisibility(View.VISIBLE);
+        binding.userBalance.setVisibility(View.VISIBLE);
+        binding.userCommissionBalanceLayout.setVisibility(View.VISIBLE);
+
+        AvatarService.loadAvatar(user.getData().getUserFullName(), binding.userProfilePic);
+        binding.userFullName.setText(user.getData().getUserFullName());
+        loadUserPrefs(user.getData().getBalance(), user.getData().getCommissionBalance());
+    }
+
+    private void onUserDataError(String error) {
+        // dismiss shimmer
+        binding.userFullNameShimmer.stopShimmer();
+        binding.userBalanceShimmer.stopShimmer();
+        binding.userCommissionBalanceShimmer.stopShimmer();
+
+        binding.userFullNameShimmer.setVisibility(View.GONE);
+        binding.userBalanceShimmer.setVisibility(View.GONE);
+        binding.userCommissionBalanceShimmer.setVisibility(View.GONE);
+
+        // display error : system busy
+    }
+
+    private void loadUserPrefs(double balance, double commissionBalance) {
+        userViewModel.getHideBalanceLiveData().observe(getViewLifecycleOwner(), hidden -> {  // Get balance state
+            if (hidden) {
+                // balance hidden set asterisk
+                binding.userBalance.setText(StringUtil.setAsterisks());
+                binding.userCommissionBalance.setText(StringUtil.setAsterisks());
+                return;
+            }
+            // show balance
+            binding.userBalance.setText((balance > MILLION_THRESHOLD) ? StringUtil.formatToNairaShort(balance) : StringUtil.formatToNaira(balance));
+            binding.userCommissionBalance.setText(StringUtil.formatToNairaShort(commissionBalance));
+        });
+    }
+
+    private void observeAndLoadRecentTransactions(String uid) {
+        int TXN_QUERY_LIMIT = 2;
+        transactionsViewModel.fetchUserTransactions(uid, TXN_QUERY_LIMIT);
+        transactionsViewModel.getTransactionsLiveData().observe(getViewLifecycleOwner(), transactions -> {
+            if (transactions.getStatus() == null) return;
+
+            switch (transactions.getStatus()) {
+                case LOADING -> onTransactionLoading();
+                case SUCCESS -> onTransactionSuccess(transactions);
+                case ERROR -> onTransactionError();
+            }
+        });
+    }
+
+    private void onTransactionLoading() {
         binding.transactionRecyclerView.setVisibility(View.GONE);
         binding.txnShimmerEffect.setVisibility(View.VISIBLE);
         binding.txnShimmerEffect.startShimmer();
     }
 
-    private void caseTransactionSuccess(Result<List<TransactionUiModel>> transactions) {
+    private void onTransactionSuccess(Result<List<TransactionUiModel>> transactions) {
         if (transactions.getData().isEmpty()) {
-            Log.d("Fragment", "Transaction history is empty");
+            // zero transaction history
             binding.txnShimmerEffect.stopShimmer();
             binding.txnShimmerEffect.setVisibility(View.GONE);
             binding.transactionRecyclerView.setVisibility(View.GONE);
@@ -179,7 +225,7 @@ public class HomeDashboardFragment extends Fragment {
             return;
         }
 
-        Log.d("Fragment", "Transaction history is not empty");
+        // transaction exists
         TransactionsAdapter adapter = new TransactionsAdapter();
         adapter.submitList(transactions.getData());
         binding.transactionRecyclerView.setAdapter(adapter);
@@ -189,7 +235,8 @@ public class HomeDashboardFragment extends Fragment {
         binding.transactionRecyclerView.setVisibility(View.VISIBLE);
     }
 
-    private void caseTransactionError() {
+    private void onTransactionError() {
+        // show error state
         binding.transactionContainer.setVisibility(View.GONE);
     }
 
@@ -210,7 +257,7 @@ public class HomeDashboardFragment extends Fragment {
     }
 
     private void setAutoScrollForPromoBanner(int size) {
-        if (size <= 1) return;
+        if (size <= 1) return; // 1 banner, don't scroll
 
         autoScrollRunnable = new Runnable() {
             int currentPosition = 0;
@@ -230,35 +277,33 @@ public class HomeDashboardFragment extends Fragment {
     }
 
     private void stopAutoScroll() {
-        if (autoScrollRunnable != null) {
+        if (autoScrollRunnable != null) {  // called onDestroyView
             autoScrollHandler.removeCallbacks(autoScrollRunnable);
         }
     }
 
     private void showLoggedOutLayout() {
-        caseTransactionError();
-        // Hide user balances
-
+        onTransactionError();
+        // hide
         binding.userBalance.setText(StringUtil.setAsterisks());
         binding.userCommissionBalance.setText(StringUtil.setAsterisks());
         binding.balanceToggle.setVisibility(View.GONE);
         binding.greetingContainer.setVisibility(View.GONE);
-        binding.actionButtons.setVisibility(View.GONE);
-        binding.brandAwareness.setSelected(false);
+        binding.marqueeTxt.setSelected(false);
         binding.marqueeContainer.setVisibility(View.GONE);
+        binding.actionButtons.setVisibility(View.GONE);
+
+        // show
         binding.btnLogin.setVisibility(View.VISIBLE);
     }
 
     private void setupTransactionsRecyclerView() {
-        LinearLayoutManager txnLayoutManager = new LinearLayoutManager(getContext());
-        txnLayoutManager.setOrientation(LinearLayoutManager.VERTICAL);
-        binding.transactionRecyclerView.setLayoutManager(txnLayoutManager);
+        LinearLayoutManager layoutManager = new LinearLayoutManager(getContext());
+        layoutManager.setOrientation(LinearLayoutManager.VERTICAL);
+        binding.transactionRecyclerView.setLayoutManager(layoutManager);
     }
 
-    // ======================== PREVIEW TOOLS (DELETE LATER) ==========================
-    private void loadServices() {
-        binding.brandAwareness.setSelected(true);
-
+    private void loadAppServices() {
         GridLayoutManager layoutManager = new GridLayoutManager(requireActivity(), 4);
         binding.serviceRecyclerView.setLayoutManager(layoutManager);
         // Set equal spacing
@@ -292,13 +337,6 @@ public class HomeDashboardFragment extends Fragment {
                 backPressedTime = System.currentTimeMillis();
             }
         });
-    }
-
-    private void navigateToFragment(Fragment fragment) {
-        requireActivity().getSupportFragmentManager()
-                .beginTransaction()
-                .replace(R.id.fragment_container, fragment)
-                .addToBackStack(null).commit();
     }
 
     private void setupStatusBar() {

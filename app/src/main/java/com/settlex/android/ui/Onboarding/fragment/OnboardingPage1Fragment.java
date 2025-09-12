@@ -17,7 +17,6 @@ import com.settlex.android.databinding.FragmentOnboardingPage1Binding;
 public class OnboardingPage1Fragment extends Fragment {
     private FragmentOnboardingPage1Binding binding;
 
-    // ====================== LIFECYCLE ======================
     @Nullable
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {

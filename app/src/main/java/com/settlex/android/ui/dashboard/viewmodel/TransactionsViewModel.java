@@ -1,5 +1,7 @@
 package com.settlex.android.ui.dashboard.viewmodel;
 
+import android.util.Log;
+
 import androidx.lifecycle.LiveData;
 import androidx.lifecycle.MutableLiveData;
 import androidx.lifecycle.ViewModel;
@@ -31,20 +33,20 @@ public class TransactionsViewModel extends ViewModel {
 
     }
 
-    //  GETTERS ====================
+    // Getters =========
+    public LiveData<Result<List<TransactionUiModel>>> getTransactionsLiveData() {
+        return transactionsLiveData;
+    }
     public LiveData<Event<Result<String>>> getPayFriendLiveData() {
         return payFriendLiveData;
     }
 
-    public LiveData<Result<List<TransactionUiModel>>> getTransactions() {
-        return transactionsLiveData;
-    }
-
     /**
-     * Expose transactions LiveData
+     * Fetch and set transactions LiveData
      */
-    public void fetchTransactions(String currentUserUid, int limit) {
+    public void fetchUserTransactions(String currentUserUid, int limit) {
         if (transactionsLiveData.getValue() != null) return;
+        Log.d("ViewModel", "fetching transactions data...");
 
         transactionsLiveData.setValue(Result.loading());
         transactionRepo.getRecentTransactions(currentUserUid, limit, new TransactionRepository.TransactionsCallback() {
@@ -55,19 +57,21 @@ public class TransactionsViewModel extends ViewModel {
                     return;
                 }
 
-                List<TransactionUiModel> uiList = new ArrayList<>();
+                List<TransactionUiModel> uiModel = new ArrayList<>();
                 for (TransactionDto dto : transaction) {
-                    boolean isSender = currentUserUid.equals(dto.senderUid);
+                    boolean isSender = currentUserUid.equals(dto.senderUid); // same user
 
                     TransactionOperation operation;
                     if (dto.status == TransactionStatus.REVERSED) {
+                        // reversed transaction is credit
                         operation = isSender ? TransactionOperation.CREDIT : TransactionOperation.DEBIT;
                     } else {
+                        // sender is current user: DEBIT
                         operation = isSender ? TransactionOperation.DEBIT : TransactionOperation.CREDIT;
                     }
 
                     // Build UI model
-                    uiList.add(new TransactionUiModel(
+                    uiModel.add(new TransactionUiModel(
                             dto.transactionId,
                             dto.sender.toUpperCase(),
                             dto.recipient.toUpperCase(),
@@ -83,7 +87,7 @@ public class TransactionsViewModel extends ViewModel {
                             dto.status.getBgColorRes()
                     ));
                 }
-                transactionsLiveData.setValue(Result.success(uiList));
+                transactionsLiveData.setValue(Result.success(uiModel));
             }
 
             @Override
@@ -125,6 +129,8 @@ public class TransactionsViewModel extends ViewModel {
 
     @Override
     protected void onCleared() {
+        Log.d("ViewModel", "Clearing data...");
+
         super.onCleared();
         transactionRepo.removeListener();
     }

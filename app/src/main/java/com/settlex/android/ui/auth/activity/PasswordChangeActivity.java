@@ -70,7 +70,7 @@ public class PasswordChangeActivity extends AppCompatActivity {
                 switch (result.getStatus()) {
                     case LOADING -> progressLoader.show();
                     case SUCCESS -> onResetSuccess();
-                    case FAILED -> onResetFailure(result.getMessage());
+                    case ERROR -> onResetFailure(result.getMessage());
                 }
             }
         });

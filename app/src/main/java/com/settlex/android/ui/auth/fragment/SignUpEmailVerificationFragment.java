@@ -101,7 +101,7 @@ public class SignUpEmailVerificationFragment extends Fragment {
         switch (result.getStatus()) {
             case LOADING -> progressLoader.show();
             case SUCCESS -> onOtpVerificationSuccess();
-            case FAILED -> onSendOrVerifyOtpFailure(result.getMessage());
+            case ERROR -> onSendOrVerifyOtpFailure(result.getMessage());
         }
     }
 
@@ -112,7 +112,7 @@ public class SignUpEmailVerificationFragment extends Fragment {
         switch (result.getStatus()) {
             case LOADING -> progressLoader.show();
             case SUCCESS -> onSendNewOtpVerificationSuccess();
-            case FAILED -> onSendOrVerifyOtpFailure(result.getMessage());
+            case ERROR -> onSendOrVerifyOtpFailure(result.getMessage());
         }
     }
 
