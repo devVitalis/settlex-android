@@ -1,6 +1,9 @@
 plugins {
     alias(libs.plugins.android.application)
+    id("org.jetbrains.kotlin.android") // Kotlin Android plugin
     id("com.google.gms.google-services") // Firebase / Google services
+    id("com.google.devtools.ksp") // KSP
+    id("com.google.dagger.hilt.android") // Dagger / hilt
 }
 
 android {
@@ -94,6 +97,10 @@ dependencies {
 
     // Tink for encryption
     implementation(libs.tink.android)
+
+    // Dependency Injection
+    implementation(libs.hilt.android)
+    ksp(libs.hilt.android.compiler)
 }
 
 tasks.withType<JavaCompile>().configureEach {

@@ -11,22 +11,24 @@ import android.text.TextWatcher;
 import android.view.KeyEvent;
 import android.view.MotionEvent;
 import android.view.View;
-import android.view.Window;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.EditText;
 
 import androidx.appcompat.app.AppCompatActivity;
-import androidx.core.content.ContextCompat;
 import androidx.lifecycle.ViewModelProvider;
 
 import com.settlex.android.R;
 import com.settlex.android.databinding.ActivityOtpVerificationBinding;
 import com.settlex.android.ui.auth.activity.PasswordChangeActivity;
-import com.settlex.android.util.event.Result;
 import com.settlex.android.ui.auth.viewmodel.AuthViewModel;
 import com.settlex.android.ui.common.util.ProgressLoaderController;
+import com.settlex.android.util.event.Result;
 import com.settlex.android.util.string.StringUtil;
+import com.settlex.android.util.ui.StatusBarUtil;
 
+import dagger.hilt.android.AndroidEntryPoint;
+
+@AndroidEntryPoint
 public class OtpVerificationActivity extends AppCompatActivity {
     private String userEmail;
     private EditText[] otpInputs;
@@ -34,7 +36,6 @@ public class OtpVerificationActivity extends AppCompatActivity {
     private ActivityOtpVerificationBinding binding;
     private ProgressLoaderController progressLoader;
 
-    // ====================== LIFECYCLE ======================
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -45,14 +46,14 @@ public class OtpVerificationActivity extends AppCompatActivity {
         authViewModel = new ViewModelProvider(this).get(AuthViewModel.class);
         progressLoader = new ProgressLoaderController(this);
 
-        setupStatusBar();
+        StatusBarUtil.setStatusBarColor(this, R.color.white);
         setupUiActions();
 
         observeVerifyOtpResult();
         observeSendOtpResult();
     }
 
-    // ====================== OBSERVERS ======================
+    // OBSERVERS =========
     private void observeVerifyOtpResult() {
         authViewModel.getVerifyEmailResetOtpResult().observe(this, event -> {
             Result<String> result = event.getContentIfNotHandled();
@@ -67,7 +68,7 @@ public class OtpVerificationActivity extends AppCompatActivity {
     }
 
     private void observeSendOtpResult() {
-        authViewModel.getSendEmailResetOtpResult().observe(this, event -> {
+        authViewModel.getSendPasswordResetOtpResult().observe(this, event -> {
             Result<String> result = event.getContentIfNotHandled();
             if (result != null) {
                 switch (result.getStatus()) {
@@ -79,7 +80,6 @@ public class OtpVerificationActivity extends AppCompatActivity {
         });
     }
 
-    // ====================== HANDLERS ======================
     private void onVerifyOtpSuccess() {
         startActivity(new Intent(this, PasswordChangeActivity.class).putExtra("email", userEmail));
         finish();
@@ -97,7 +97,7 @@ public class OtpVerificationActivity extends AppCompatActivity {
         progressLoader.hide();
     }
 
-    // ====================== UI SETUP ======================
+    // UI ACTIONS ==========
     private void setupUiActions() {
         setupOtpInputBehavior();
         startResendOtpCooldown();
@@ -108,14 +108,6 @@ public class OtpVerificationActivity extends AppCompatActivity {
         binding.btnConfirm.setOnClickListener(v -> verifyOtp());
     }
 
-    private void setupStatusBar() {
-        Window window = getWindow();
-        window.setStatusBarColor(ContextCompat.getColor(this, R.color.white));
-        View decorView = window.getDecorView();
-        decorView.setSystemUiVisibility(decorView.getSystemUiVisibility() | View.SYSTEM_UI_FLAG_LIGHT_STATUS_BAR);
-    }
-
-    // ====================== ACTIONS ======================
     private void verifyOtp() {
         authViewModel.verifyPasswordResetOtp(userEmail, getEnteredOtpCode());
     }
@@ -124,7 +116,6 @@ public class OtpVerificationActivity extends AppCompatActivity {
         authViewModel.sendPasswordResetOtp(userEmail);
     }
 
-    // ====================== OTP INPUT ======================
     private void setupOtpInputBehavior() {
         otpInputs = new EditText[]{binding.otpDigit1, binding.otpDigit2, binding.otpDigit3, binding.otpDigit4, binding.otpDigit5, binding.otpDigit6};
 
@@ -191,7 +182,6 @@ public class OtpVerificationActivity extends AppCompatActivity {
         return pin.toString();
     }
 
-    // ====================== HELPERS ======================
     private void startResendOtpCooldown() {
         binding.btnResendOtp.setEnabled(false);
         binding.btnResendOtp.setTag(binding.btnResendOtp.getText());
@@ -224,7 +214,6 @@ public class OtpVerificationActivity extends AppCompatActivity {
         }
     }
 
-    // ====================== OVERRIDES ======================
     @Override
     public boolean dispatchTouchEvent(MotionEvent event) {
         if (event.getAction() == MotionEvent.ACTION_DOWN) {

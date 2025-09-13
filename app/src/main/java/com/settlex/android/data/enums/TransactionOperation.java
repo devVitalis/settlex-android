@@ -1,9 +1,5 @@
 package com.settlex.android.data.enums;
 
-import android.content.Context;
-
-import androidx.core.content.ContextCompat;
-
 import com.settlex.android.R;
 
 /**
@@ -14,7 +10,7 @@ public enum TransactionOperation {
     DEBIT("-", R.color.black);
 
     private final String symbol;
-    private int symbolColorRes;
+    private final int symbolColorRes;
 
     TransactionOperation(String symbol, int symbolColorRes) {
         this.symbol = symbol;
@@ -27,11 +23,5 @@ public enum TransactionOperation {
 
     public int getColorRes() {
         return symbolColorRes;
-    }
-
-    public static void init(Context context) {
-        for (TransactionOperation type : values()) {
-            type.symbolColorRes = ContextCompat.getColor(context, type.symbolColorRes);
-        }
     }
 }

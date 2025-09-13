@@ -19,7 +19,6 @@ import com.settlex.android.R;
 
 public class ProgressDialogFragment extends DialogFragment {
     private AnimatorSet zoomAnimator;
-    private View overlayView;
     private int overlayColor;
 
     @Override
@@ -57,7 +56,7 @@ public class ProgressDialogFragment extends DialogFragment {
     @Nullable
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
-        overlayView = inflater.inflate(R.layout.progressbar_overlay, container, false);
+        View overlayView = inflater.inflate(R.layout.progressbar_overlay, container, false);
         overlayView.setBackgroundColor(overlayColor);
 
         ImageView logo = overlayView.findViewById(R.id.logo);

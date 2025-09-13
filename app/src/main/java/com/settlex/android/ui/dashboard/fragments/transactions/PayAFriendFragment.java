@@ -6,24 +6,23 @@ import android.os.Bundle;
 import android.text.Editable;
 import android.text.InputType;
 import android.text.TextWatcher;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
-import android.view.Window;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.EditText;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
-import androidx.core.content.ContextCompat;
 import androidx.fragment.app.Fragment;
 import androidx.lifecycle.ViewModelProvider;
 import androidx.recyclerview.widget.LinearLayoutManager;
 
 import com.google.android.material.bottomsheet.BottomSheetDialog;
+import com.google.gson.Gson;
 import com.settlex.android.R;
-import com.settlex.android.SettleXApp;
 import com.settlex.android.data.enums.TransactionServiceType;
 import com.settlex.android.data.remote.avater.AvatarService;
 import com.settlex.android.databinding.FragmentPayAFriendBinding;
@@ -37,6 +36,7 @@ import com.settlex.android.ui.dashboard.viewmodel.TransactionsViewModel;
 import com.settlex.android.ui.dashboard.viewmodel.UserViewModel;
 import com.settlex.android.util.event.Result;
 import com.settlex.android.util.string.StringUtil;
+import com.settlex.android.util.ui.StatusBarUtil;
 
 import java.math.BigInteger;
 import java.text.DecimalFormat;
@@ -45,6 +45,9 @@ import java.util.Collections;
 import java.util.List;
 import java.util.Locale;
 
+import dagger.hilt.android.AndroidEntryPoint;
+
+@AndroidEntryPoint
 public class PayAFriendFragment extends Fragment {
     // Input fields
     private String username;
@@ -65,19 +68,23 @@ public class PayAFriendFragment extends Fragment {
 
     // ---------- Lifecycle ----------
     @Override
+    public void onCreate(@Nullable Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        userViewModel = new ViewModelProvider(this).get(UserViewModel.class);
+        transactionsViewModel = new ViewModelProvider(requireActivity()).get(TransactionsViewModel.class);
+    }
+
+    @Override
     public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         binding = FragmentPayAFriendBinding.inflate(inflater, container, false);
 
         progressLoader = new ProgressLoaderController(requireActivity());
-        userViewModel = ((SettleXApp) requireActivity().getApplication()).getSharedUserViewModel();
-        transactionsViewModel = new ViewModelProvider(requireActivity()).get(TransactionsViewModel.class);
         recipientAdapter = new RecipientAdapter();
         bundle = new Bundle();
 
-        setupStatusBar();
+        StatusBarUtil.setStatusBarColor(requireActivity(), R.color.white);
         observeAndGetUserData();
         setupUiActions();
-
 
         return binding.getRoot();
     }
@@ -103,6 +110,7 @@ public class PayAFriendFragment extends Fragment {
             if (user == null) {
                 return;
             }
+            Log.d("ViewModel", "User: " + new Gson().toJson(user));
             binding.availableBalance.setText(StringUtil.formatToNaira(user.getData().getBalance() + user.getData().getCommissionBalance()));
             this.currentUser = user.getData();
         });
@@ -439,13 +447,6 @@ public class PayAFriendFragment extends Fragment {
                 .beginTransaction()
                 .replace(R.id.fragment_container, fragment)
                 .commit();
-    }
-
-    private void setupStatusBar() {
-        Window window = requireActivity().getWindow();
-        window.setStatusBarColor(ContextCompat.getColor(requireContext(), R.color.gray_light));
-        View decorView = window.getDecorView();
-        decorView.setSystemUiVisibility(decorView.getSystemUiVisibility() | View.SYSTEM_UI_FLAG_LIGHT_STATUS_BAR);
     }
 
     @SuppressLint("ClickableViewAccessibility")

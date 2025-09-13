@@ -10,26 +10,15 @@ import java.lang.reflect.Type;
 import java.util.Collections;
 import java.util.List;
 
+import jakarta.inject.Inject;
+
 public class PromoBannerRepository {
     private final FirebaseRemoteConfig remoteConfig;
 
-    //Constructor
-    public PromoBannerRepository() {
-        remoteConfig = FirebaseRemoteConfig.getInstance();
+    @Inject
+    public PromoBannerRepository(FirebaseRemoteConfig remoteConfig) {
+        this.remoteConfig = remoteConfig;
         setFirebaseRemoteSettings();
-    }
-
-    // Callback interfaces
-    public interface PromoBannersCallback {
-        void onResult(List<PromoBannerUiModel> bannerUiModel);
-    }
-
-    // Firebase Config settings
-    private void setFirebaseRemoteSettings() {
-        FirebaseRemoteConfigSettings settings = new FirebaseRemoteConfigSettings.Builder()
-                .setMinimumFetchIntervalInSeconds(12 * 60 * 60) // fetch once per 12h
-                .build();
-        remoteConfig.setConfigSettingsAsync(settings);
     }
 
     /**
@@ -51,13 +40,25 @@ public class PromoBannerRepository {
 
                     try {
                         Gson gson = new Gson();
-                        Type listType = new TypeToken<List<PromoBannerUiModel>>() {
-                        }.getType();
+                        Type listType = new TypeToken<List<PromoBannerUiModel>>() {}.getType();
                         List<PromoBannerUiModel> promos = gson.fromJson(json, listType);
                         callback.onResult(promos);
                     } catch (Exception e) {
                         callback.onResult(Collections.emptyList());
                     }
                 });
+    }
+
+    // Callback interfaces
+    public interface PromoBannersCallback {
+        void onResult(List<PromoBannerUiModel> bannerUiModel);
+    }
+
+    // Firebase Config settings
+    private void setFirebaseRemoteSettings() {
+        FirebaseRemoteConfigSettings settings = new FirebaseRemoteConfigSettings.Builder()
+                .setMinimumFetchIntervalInSeconds(12 * 60 * 60) // fetch once per 12h
+                .build();
+        remoteConfig.setConfigSettingsAsync(settings);
     }
 }

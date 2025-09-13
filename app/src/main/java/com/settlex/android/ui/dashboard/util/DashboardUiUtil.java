@@ -13,6 +13,7 @@ import com.settlex.android.util.string.StringUtil;
 public class DashboardUiUtil {
 
     private DashboardUiUtil() {
+        // prevent instantiation
     }
 
     public static BottomSheetDialog showPayConfirmation(Context context, String recipientUsername, String recipientName, double amountToSend, double senderWalletBalance, double senderCommissionBalance, final Runnable onPay) {
@@ -59,11 +60,11 @@ public class DashboardUiUtil {
 
             if (senderWalletBalance != 0) {
                 binding.debitFromSenderWalletBalance.setVisibility(View.VISIBLE);
-                binding.debitFromSenderWalletBalance.setText(binding.getRoot().getContext().getString(R.string.debitFromSenderWalletBalance, StringUtil.formatToNaira(fromWallet)));
+                binding.debitFromSenderWalletBalance.setText("-" + StringUtil.formatToNaira(fromWallet));
             }
 
             binding.debitFromSenderCommissionBalance.setVisibility(View.VISIBLE);
-            binding.debitFromSenderCommissionBalance.setText(binding.getRoot().getContext().getString(R.string.debitFromSenderCommissionBalance, StringUtil.formatToNaira(fromCommission)));
+            binding.debitFromSenderCommissionBalance.setText("-" + StringUtil.formatToNaira(fromCommission));
 
             // Enable pay button
             binding.btnPay.setEnabled(true);

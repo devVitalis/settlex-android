@@ -19,6 +19,10 @@ import com.settlex.android.util.string.StringUtil;
 import java.util.ArrayList;
 import java.util.List;
 
+import dagger.hilt.android.lifecycle.HiltViewModel;
+import jakarta.inject.Inject;
+
+@HiltViewModel
 public class UserViewModel extends ViewModel {
     private final UserPrefs userPrefs;
     private final UserRepository userRepo;
@@ -29,10 +33,11 @@ public class UserViewModel extends ViewModel {
     private final MutableLiveData<Result<List<RecipientUiModel>>> usernameSearchLiveData = new MutableLiveData<>();
     private final MutableLiveData<Boolean> hideBalanceLiveData = new MutableLiveData<>();
 
-    public UserViewModel() {
+    @Inject
+    public UserViewModel(UserRepository userRepo) {
         this.userPrefs = UserPrefs.getInstance();
-        this.userRepo = new UserRepository();
-        listToUserAuthState();
+        this.userRepo = userRepo;
+        monitorUserAuthState();
         hideBalanceLiveData.setValue(userPrefs.isBalanceHidden());
     }
 
@@ -64,12 +69,11 @@ public class UserViewModel extends ViewModel {
      * Update the UI model for current user details
      */
     public void fetchUserData(String uid) {
-        Log.d("ViewModel", "fetching user data...");
         userLiveData.setValue(Result.loading());
-        UserUiModel cachedData = SessionManager.getInstance().getUser();
-        if (cachedData != null && cachedData.getUid().equals(uid)) {
-            userLiveData.setValue(Result.success(cachedData));
-        }
+//        UserUiModel cachedData = SessionManager.getInstance().getUser();
+//        if (cachedData != null && cachedData.getUid().equals(uid)) {
+//            userLiveData.setValue(Result.success(cachedData));
+//        }
 
         // Fetch new data
         userRepo.getUserData(uid, new UserRepository.GetUserCallback() {
@@ -105,7 +109,7 @@ public class UserViewModel extends ViewModel {
     /**
      * Monitor user session
      */
-    private void listToUserAuthState() {
+    private void monitorUserAuthState() {
         userRepo.listenToUserAuthState(user -> {
             if (user == null) {
                 // If user logs out or session expires, clear the data.

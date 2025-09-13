@@ -3,29 +3,24 @@ package com.settlex.android;
 import android.app.Application;
 import android.content.Context;
 
-import androidx.annotation.NonNull;
-import androidx.lifecycle.ViewModelProvider;
-import androidx.lifecycle.ViewModelStore;
-import androidx.lifecycle.ViewModelStoreOwner;
-
 import com.google.crypto.tink.Aead;
 import com.google.crypto.tink.KeysetHandle;
 import com.google.crypto.tink.aead.AeadConfig;
 import com.google.crypto.tink.integration.android.AndroidKeysetManager;
 import com.google.firebase.FirebaseApp;
-import com.settlex.android.ui.dashboard.viewmodel.UserViewModel;
 import com.settlex.android.util.network.NetworkMonitor;
+
+import dagger.hilt.android.HiltAndroidApp;
 
 /**
  * Core application class managing global dependencies and context.
  * Initializes essential services (Firebase, NetworkMonitor) at app launch.
  */
-public class SettleXApp extends Application implements ViewModelStoreOwner {
+@HiltAndroidApp
+public class SettleXApp extends Application {
     private static SettleXApp instance;
     private static Context appContext;
     private Aead aead;
-    // The ViewModelStore that will hold our ViewModels for the application scope.
-    private final ViewModelStore appViewModelStore = new ViewModelStore();
 
     public static SettleXApp getInstance() {
         return instance;
@@ -39,18 +34,6 @@ public class SettleXApp extends Application implements ViewModelStoreOwner {
         return aead;
     }
 
-    // A getter for a shared instance of the ViewModel.
-    public UserViewModel getSharedUserViewModel() {
-        return new ViewModelProvider(this).get(UserViewModel.class);
-    }
-
-    @NonNull
-    @Override
-    public ViewModelStore getViewModelStore() {
-        return appViewModelStore;
-    }
-
-    // LIFECYCLE
     @Override
     public void onCreate() {
         super.onCreate();
@@ -59,18 +42,13 @@ public class SettleXApp extends Application implements ViewModelStoreOwner {
     }
 
     // INITIALIZATION
-
-    /**
-     * Sets up global application references
-     */
+    // global application references
     private void initializeGlobals() {
         instance = this;
         appContext = getApplicationContext();
     }
 
-    /**
-     * Starts essential background services
-     */
+    // Starts essential background services
     private void initializeServices() {
         FirebaseApp.initializeApp(this);
         NetworkMonitor.startNetworkCallback();

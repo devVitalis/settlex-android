@@ -4,11 +4,9 @@ import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.view.Window;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
-import androidx.core.content.ContextCompat;
 import androidx.fragment.app.Fragment;
 import androidx.lifecycle.ViewModelProvider;
 
@@ -17,11 +15,14 @@ import com.settlex.android.R;
 import com.settlex.android.databinding.FragmentTransactionStatusBinding;
 import com.settlex.android.ui.dashboard.viewmodel.TransactionsViewModel;
 import com.settlex.android.util.event.Result;
+import com.settlex.android.util.ui.StatusBarUtil;
+
+import dagger.hilt.android.AndroidEntryPoint;
 
 /**
  * This screen displays the outcome of a transaction (Pending, Success, Failed).
- * Animations are used to give real-time feedback to the user about the status.
  */
+@AndroidEntryPoint
 public class TransactionStatusFragment extends Fragment {
     private FragmentTransactionStatusBinding binding;
     private TransactionsViewModel transactionsViewModel;
@@ -31,11 +32,16 @@ public class TransactionStatusFragment extends Fragment {
     }
 
     @Override
+    public void onCreate(@Nullable Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        transactionsViewModel = new ViewModelProvider(requireActivity()).get(TransactionsViewModel.class);
+    }
+
+    @Override
     public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         binding = FragmentTransactionStatusBinding.inflate(inflater, container, false);
-        transactionsViewModel = new ViewModelProvider(requireActivity()).get(TransactionsViewModel.class);
 
-        customizeStatusBar();
+        StatusBarUtil.setStatusBarColor(requireActivity(), R.color.white);
         setupUiActions();
 
         return binding.getRoot();
@@ -94,12 +100,5 @@ public class TransactionStatusFragment extends Fragment {
         binding.txnFailedAnim.setRenderMode(RenderMode.SOFTWARE);
         binding.txnFailedAnim.playAnimation();
         binding.txnStatus.setText(getString(R.string.txn_failed));
-    }
-
-    private void customizeStatusBar() {
-        Window window = requireActivity().getWindow();
-        window.setStatusBarColor(ContextCompat.getColor(requireActivity(), R.color.white));
-        View decorView = window.getDecorView();
-        decorView.setSystemUiVisibility(decorView.getSystemUiVisibility() | View.SYSTEM_UI_FLAG_LIGHT_STATUS_BAR);
     }
 }

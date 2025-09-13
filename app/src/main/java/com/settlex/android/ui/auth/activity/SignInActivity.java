@@ -13,32 +13,34 @@ import android.text.TextUtils;
 import android.text.TextWatcher;
 import android.view.MotionEvent;
 import android.view.View;
-import android.view.Window;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.EditText;
 
 import androidx.appcompat.app.AppCompatActivity;
-import androidx.core.content.ContextCompat;
 import androidx.lifecycle.ViewModelProvider;
 
 import com.settlex.android.R;
 import com.settlex.android.databinding.ActivitySignInBinding;
-import com.settlex.android.ui.info.help.AuthHelpActivity;
 import com.settlex.android.ui.auth.viewmodel.AuthViewModel;
 import com.settlex.android.ui.common.util.ProgressLoaderController;
 import com.settlex.android.ui.dashboard.activity.DashboardActivity;
+import com.settlex.android.ui.info.help.AuthHelpActivity;
 import com.settlex.android.util.network.NetworkMonitor;
 import com.settlex.android.util.string.StringUtil;
+import com.settlex.android.util.ui.StatusBarUtil;
 import com.settlex.android.util.ui.UiUtil;
 
 import java.util.Objects;
 
+import dagger.hilt.android.AndroidEntryPoint;
+
 /**
  * Handles user sign-in flow including:
  */
+@AndroidEntryPoint
 public class SignInActivity extends AppCompatActivity {
     private boolean isPasswordVisible = false;
-    private boolean isConnected = false;
+    private boolean isConnected = false;  // Network connection status
 
     private AuthViewModel authViewModel;
     private ActivitySignInBinding binding;
@@ -54,7 +56,7 @@ public class SignInActivity extends AppCompatActivity {
         progressLoader = new ProgressLoaderController(this);
 
 
-        setupStatusBar();
+        StatusBarUtil.setStatusBarColor(this, R.color.white);
         setupUiActions();
         observeUserState();
         observeNetworkStatus();
@@ -81,7 +83,7 @@ public class SignInActivity extends AppCompatActivity {
         authViewModel.getLoginResult().observe(this, result -> {
             if (result != null) {
                 switch (result.getStatus()) {
-                    case LOADING -> caseLoginLoading();
+                    case LOADING -> onLoginLoading();
                     case SUCCESS -> onLoginSuccess();
                     case ERROR -> onLoginFailure(result.getMessage());
                 }
@@ -89,10 +91,10 @@ public class SignInActivity extends AppCompatActivity {
         });
     }
 
-    // ====================== LOGIN FLOW ======================
-    private void caseLoginLoading(){
+    private void onLoginLoading() {
         progressLoader.show();
     }
+
     private void onLoginSuccess() {
         startActivity(new Intent(this, DashboardActivity.class));
         finishAffinity();
@@ -106,12 +108,15 @@ public class SignInActivity extends AppCompatActivity {
         progressLoader.hide();
     }
 
-    private void showNoInternetConnection() {
-        UiUtil.showInfoDialog(
-                this,
-                "Network Unavailable",
-                getString(R.string.error_no_internet),
-                null);
+    private void showNoInternetDialog() {
+        UiUtil.showAlertDialog(this, (alertDialog, binding) -> {
+            binding.icon.setImageResource(R.drawable.ic_signal_disconnected);
+            binding.title.setText("Network Unavailable");
+            binding.message.setText("Please check your Wi-Fi or cellular data and try again");
+
+            binding.btnOkay.setOnClickListener(view -> alertDialog.dismiss());
+            alertDialog.show();
+        });
     }
 
     private void attemptLogin() {
@@ -121,7 +126,7 @@ public class SignInActivity extends AppCompatActivity {
 
             authViewModel.loginWithEmail(email, password);
         } else {
-            showNoInternetConnection();
+            showNoInternetDialog();
         }
     }
 
@@ -150,7 +155,7 @@ public class SignInActivity extends AppCompatActivity {
         binding.logo.setVisibility(View.VISIBLE);
     }
 
-    // ====================== UI COMPONENT SETUP ======================
+    // UI ACTIONS ==========
     private void setupUiActions() {
         setupFocusHandlers();
         setupAuthActionTexts();
@@ -195,7 +200,6 @@ public class SignInActivity extends AppCompatActivity {
         });
     }
 
-    // ====================== PASSWORD VALIDATION ======================
     private void updateSignInButtonState() {
         String email = Objects.requireNonNull(binding.editTxtEmail.getText()).toString().trim();
         String password = Objects.requireNonNull(binding.editTxtPassword.getText()).toString().trim();
@@ -208,9 +212,11 @@ public class SignInActivity extends AppCompatActivity {
             @Override
             public void beforeTextChanged(CharSequence s, int start, int count, int after) {
             }
+
             @Override
             public void afterTextChanged(Editable s) {
             }
+
             @Override
             public void onTextChanged(CharSequence s, int start, int before, int count) {
                 binding.txtErrorFeedback.setVisibility(View.GONE);
@@ -223,12 +229,16 @@ public class SignInActivity extends AppCompatActivity {
         setupPasswordToggleVisibility();
     }
 
-    private void setupPasswordToggleVisibility(){
+    private void setupPasswordToggleVisibility() {
         binding.editTxtPassword.addTextChangedListener(new TextWatcher() {
             @Override
-            public void beforeTextChanged(CharSequence s, int start, int count, int after) {}
+            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+            }
+
             @Override
-            public void afterTextChanged(Editable s) {}
+            public void afterTextChanged(Editable s) {
+            }
+
             @Override
             public void onTextChanged(CharSequence s, int start, int before, int count) {
                 binding.passwordToggle.setVisibility(!TextUtils.isEmpty(s) ? View.VISIBLE : View.GONE);
@@ -249,14 +259,6 @@ public class SignInActivity extends AppCompatActivity {
             binding.editTxtPassword.setTypeface(currentTypeface);
             binding.editTxtPassword.setSelection(binding.editTxtPassword.getText().length());
         });
-    }
-
-    // ====================== UTILITIES ======================
-    private void setupStatusBar() {
-        Window window = getWindow();
-        window.setStatusBarColor(ContextCompat.getColor(this, R.color.white));
-        View decorView = window.getDecorView();
-        decorView.setSystemUiVisibility(decorView.getSystemUiVisibility() | View.SYSTEM_UI_FLAG_LIGHT_STATUS_BAR);
     }
 
     @Override

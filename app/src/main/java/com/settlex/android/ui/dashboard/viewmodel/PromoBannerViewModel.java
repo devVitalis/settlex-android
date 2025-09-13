@@ -9,13 +9,17 @@ import com.settlex.android.ui.dashboard.model.PromoBannerUiModel;
 
 import java.util.List;
 
+import dagger.hilt.android.lifecycle.HiltViewModel;
+import jakarta.inject.Inject;
+
+@HiltViewModel
 public class PromoBannerViewModel extends ViewModel {
     private final PromoBannerRepository promoBannerRepo;
     private final MutableLiveData<List<PromoBannerUiModel>> promoBannersLiveData = new MutableLiveData<>();
 
-    // Contructor
-    public PromoBannerViewModel() {
-        promoBannerRepo = new PromoBannerRepository();
+    @Inject
+    public PromoBannerViewModel(PromoBannerRepository promoBannerRepo) {
+        this.promoBannerRepo = promoBannerRepo;
         fetchPromoBanners();
     }
 

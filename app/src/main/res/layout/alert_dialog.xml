@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/dialogContainer"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
@@ -11,6 +12,7 @@
     android:paddingVertical="20dp">
 
     <ImageView
+        android:id="@+id/icon"
         android:layout_width="45dp"
         android:layout_height="45dp"
         android:background="@drawable/bg_oval_blue_light"
@@ -26,7 +28,7 @@
         android:fontFamily="@font/poppins_medium"
         android:gravity="center"
         android:includeFontPadding="false"
-        android:text="Title"
+        tools:text="Title"
         android:textAlignment="center"
         android:textColor="@color/black"
         android:textSize="18sp"
@@ -40,7 +42,7 @@
         android:fontFamily="@font/poppins_regular"
         android:gravity="center"
         android:includeFontPadding="false"
-        android:text="Message"
+        tools:text="Message"
         android:textAlignment="center"
         android:textColor="@color/black"
         android:textSize="13sp" />

@@ -3,6 +3,7 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
+    xmlns:tools="http://schemas.android.com/tools"
     android:background="@android:color/transparent"
     android:gravity="center"
     android:orientation="vertical"
@@ -13,17 +14,18 @@
         android:id="@+id/anim"
         android:layout_width="100dp"
         android:layout_height="100dp"
-        app:lottie_autoPlay="true"
+        app:lottie_autoPlay="false"
         app:lottie_fileName="success_anim.json"
         app:lottie_loop="false" />
 
     <TextView
+        android:id="@+id/title"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginTop="10dp"
         android:fontFamily="@font/poppins_regular"
         android:includeFontPadding="false"
-        android:text="Password Updated"
+        tools:text="Password Updated"
         android:textColor="@color/black"
         android:textSize="20sp"
         android:textStyle="bold" />
@@ -35,17 +37,18 @@
         android:layout_marginTop="10dp"
         android:fontFamily="@font/poppins_regular"
         android:includeFontPadding="false"
-        android:text="@string/password_update_success"
+        tools:text="Your password has been changed successfully. You will now need to use your new password to sign in on all your devices."
         android:textAlignment="center"
         android:textColor="@color/black"
         android:textSize="13sp" />
 
     <com.google.android.material.button.MaterialButton
-        android:id="@+id/btnLogin"
+        android:id="@+id/btnContinue"
         style="@style/Widget.SettleXApp.Button.Filled.Rounded8.Blue"
         android:layout_width="match_parent"
+        android:layout_marginHorizontal="30dp"
         android:layout_height="55dp"
         android:layout_marginTop="30dp"
-        android:text="Log in with new password"
+        android:text="Continue"
         android:textSize="15sp" />
 </LinearLayout>

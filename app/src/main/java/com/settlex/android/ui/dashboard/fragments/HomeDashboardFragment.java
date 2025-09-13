@@ -7,20 +7,17 @@ import android.os.Looper;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.view.Window;
 import android.widget.Toast;
 
 import androidx.activity.OnBackPressedCallback;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
-import androidx.core.content.ContextCompat;
 import androidx.fragment.app.Fragment;
 import androidx.lifecycle.ViewModelProvider;
 import androidx.recyclerview.widget.GridLayoutManager;
 import androidx.recyclerview.widget.LinearLayoutManager;
 
 import com.settlex.android.R;
-import com.settlex.android.SettleXApp;
 import com.settlex.android.data.remote.avater.AvatarService;
 import com.settlex.android.databinding.FragmentDashboardHomeBinding;
 import com.settlex.android.ui.auth.activity.SignInActivity;
@@ -38,19 +35,23 @@ import com.settlex.android.ui.dashboard.viewmodel.TransactionsViewModel;
 import com.settlex.android.ui.dashboard.viewmodel.UserViewModel;
 import com.settlex.android.util.event.Result;
 import com.settlex.android.util.string.StringUtil;
+import com.settlex.android.util.ui.StatusBarUtil;
 
 import java.util.Arrays;
 import java.util.List;
 
+import dagger.hilt.android.AndroidEntryPoint;
+
+@AndroidEntryPoint
 public class HomeDashboardFragment extends Fragment {
     private final double MILLION_THRESHOLD = 999_999_999;
     private long backPressedTime;
     private final Handler autoScrollHandler = new Handler(Looper.getMainLooper());
     private Runnable autoScrollRunnable;
 
+    private UserViewModel userViewModel;
     private ProgressLoaderController progressLoader;
     private FragmentDashboardHomeBinding binding;
-    private UserViewModel userViewModel;
     private TransactionsViewModel transactionsViewModel;
     private PromoBannerViewModel promoBannerViewModel;
 
@@ -62,19 +63,17 @@ public class HomeDashboardFragment extends Fragment {
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-
+        userViewModel = new ViewModelProvider(this).get(UserViewModel.class);
+        promoBannerViewModel = new ViewModelProvider(requireActivity()).get(PromoBannerViewModel.class);
+        transactionsViewModel = new ViewModelProvider(requireActivity()).get(TransactionsViewModel.class);
     }
 
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         binding = FragmentDashboardHomeBinding.inflate(inflater, container, false);
-
-        userViewModel = ((SettleXApp) requireActivity().getApplication()).getSharedUserViewModel();
-        transactionsViewModel = new ViewModelProvider(requireActivity()).get(TransactionsViewModel.class);
-        promoBannerViewModel = new ViewModelProvider(requireActivity()).get(PromoBannerViewModel.class);
         progressLoader = new ProgressLoaderController(requireActivity());
 
-        setupStatusBar();
+        StatusBarUtil.setStatusBarColor(requireActivity(), R.color.gray_light);
         setupUiActions();
         observeAndLoadPromoBanners();
 
@@ -93,7 +92,7 @@ public class HomeDashboardFragment extends Fragment {
         binding = null;
     }
 
-    // ======================= SETUP UI COMPONENTS =======================
+    // UI ACTIONS =============
     private void setupUiActions() {
         observeCurrentUserState();
         loadAppServices();
@@ -138,7 +137,7 @@ public class HomeDashboardFragment extends Fragment {
         binding.userBalance.setVisibility(View.GONE);
         binding.userCommissionBalanceLayout.setVisibility(View.GONE);
 
-        // dismiss shimmer
+        // start and show shimmer
         binding.userFullNameShimmer.startShimmer();
         binding.userBalanceShimmer.startShimmer();
         binding.userCommissionBalanceShimmer.startShimmer();
@@ -257,7 +256,7 @@ public class HomeDashboardFragment extends Fragment {
     }
 
     private void setAutoScrollForPromoBanner(int size) {
-        if (size <= 1) return; // 1 banner, don't scroll
+        if (size <= 1) return;
 
         autoScrollRunnable = new Runnable() {
             int currentPosition = 0;
@@ -277,7 +276,8 @@ public class HomeDashboardFragment extends Fragment {
     }
 
     private void stopAutoScroll() {
-        if (autoScrollRunnable != null) {  // called onDestroyView
+        // onDestroyView
+        if (autoScrollRunnable != null) {
             autoScrollHandler.removeCallbacks(autoScrollRunnable);
         }
     }
@@ -337,12 +337,5 @@ public class HomeDashboardFragment extends Fragment {
                 backPressedTime = System.currentTimeMillis();
             }
         });
-    }
-
-    private void setupStatusBar() {
-        Window window = requireActivity().getWindow();
-        window.setStatusBarColor(ContextCompat.getColor(requireContext(), R.color.gray_light));
-        View decorView = window.getDecorView();
-        decorView.setSystemUiVisibility(decorView.getSystemUiVisibility() | View.SYSTEM_UI_FLAG_LIGHT_STATUS_BAR);
     }
 }

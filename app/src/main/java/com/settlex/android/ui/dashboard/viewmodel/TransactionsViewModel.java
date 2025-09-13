@@ -19,18 +19,19 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
-public class TransactionsViewModel extends ViewModel {
+import dagger.hilt.android.lifecycle.HiltViewModel;
+import jakarta.inject.Inject;
 
+@HiltViewModel
+public class TransactionsViewModel extends ViewModel {
     private final TransactionRepository transactionRepo;
 
-    // LiveData holders
     private final MutableLiveData<Result<List<TransactionUiModel>>> transactionsLiveData = new MutableLiveData<>();
     private final MutableLiveData<Event<Result<String>>> payFriendLiveData = new MutableLiveData<>();
 
-
-    public TransactionsViewModel() {
-        this.transactionRepo = new TransactionRepository();
-
+    @Inject
+    public TransactionsViewModel(TransactionRepository transactionRepo) {
+        this.transactionRepo = transactionRepo;
     }
 
     // Getters =========
@@ -49,7 +50,7 @@ public class TransactionsViewModel extends ViewModel {
         Log.d("ViewModel", "fetching transactions data...");
 
         transactionsLiveData.setValue(Result.loading());
-        transactionRepo.getRecentTransactions(currentUserUid, limit, new TransactionRepository.TransactionsCallback() {
+        transactionRepo.getUserTransactions(currentUserUid, limit, new TransactionRepository.TransactionsCallback() {
             @Override
             public void onResult(List<TransactionDto> transaction) {
                 if (transaction == null || transaction.isEmpty()) {
@@ -130,7 +131,6 @@ public class TransactionsViewModel extends ViewModel {
     @Override
     protected void onCleared() {
         Log.d("ViewModel", "Clearing data...");
-
         super.onCleared();
         transactionRepo.removeListener();
     }

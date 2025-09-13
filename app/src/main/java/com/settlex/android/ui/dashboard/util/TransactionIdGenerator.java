@@ -15,6 +15,10 @@ import java.util.UUID;
  */
 public class TransactionIdGenerator {
 
+    private TransactionIdGenerator(){
+        // prevent instantiation
+    }
+
     // Generate compact unique transaction ID
     public static String generate(String uid) {
         String userHash = hashUID(uid); // 8 chars

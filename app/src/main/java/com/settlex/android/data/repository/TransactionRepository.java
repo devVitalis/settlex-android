@@ -18,6 +18,8 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import jakarta.inject.Inject;
+
 /**
  * Manages each user account transactions
  */
@@ -26,17 +28,16 @@ public class TransactionRepository {
     private final FirebaseFirestore firestore;
     private ListenerRegistration transactionsListener;
 
-    // LIVEDATA HOLDER
-
-    public TransactionRepository() {
-        functions = FirebaseFunctions.getInstance("europe-west2");
-        firestore = FirebaseFirestore.getInstance();
+    @Inject
+    public TransactionRepository(FirebaseFunctions functions, FirebaseFirestore firestore) {
+        this.functions = functions;
+        this.firestore = firestore;
     }
 
     /**
      * Listens to recent transactions of a user
      */
-    public void getRecentTransactions(String uid, int limit, TransactionsCallback callback) {
+    public void getUserTransactions(String uid, int limit, TransactionsCallback callback) {
         transactionsListener = firestore.collection("users")
                 .document(uid)
                 .collection("transactions")
@@ -105,7 +106,7 @@ public class TransactionRepository {
     }
 
     /**
-     * Remove all Firestore listeners
+     * Remove Firestore listeners
      */
     public void removeListener() {
         if (transactionsListener != null) transactionsListener.remove();

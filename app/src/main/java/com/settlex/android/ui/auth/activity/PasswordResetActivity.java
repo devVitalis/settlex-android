@@ -9,7 +9,6 @@ import android.text.TextWatcher;
 import android.util.Patterns;
 import android.view.MotionEvent;
 import android.view.View;
-import android.view.Window;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.EditText;
 
@@ -24,12 +23,16 @@ import com.settlex.android.ui.common.components.OtpVerificationActivity;
 import com.settlex.android.ui.common.util.ProgressLoaderController;
 import com.settlex.android.util.event.Result;
 import com.settlex.android.util.network.NetworkMonitor;
+import com.settlex.android.util.ui.StatusBarUtil;
+
+import dagger.hilt.android.AndroidEntryPoint;
 
 /**
  * Handles password reset initiation flow:
  */
+@AndroidEntryPoint
 public class PasswordResetActivity extends AppCompatActivity {
-    private boolean isConnected = false;
+    private boolean isConnected = false; // Network connection status
 
     private ActivityPasswordResetBinding binding;
     private AuthViewModel authViewModel;
@@ -45,7 +48,7 @@ public class PasswordResetActivity extends AppCompatActivity {
         progressLoader = new ProgressLoaderController(this);
         progressLoader.setOverlayColor(ContextCompat.getColor(this, R.color.semi_transparent_white));
 
-        setupStatusBar();
+        StatusBarUtil.setStatusBarColor(this, R.color.white);
         setupUiActions();
         observeNetworkStatus();
         observeOtpRequestResult();
@@ -53,7 +56,7 @@ public class PasswordResetActivity extends AppCompatActivity {
 
     // OBSERVERS ===============
     private void observeOtpRequestResult() {
-        authViewModel.getSendEmailResetOtpResult().observe(this, event -> {
+        authViewModel.getSendPasswordResetOtpResult().observe(this, event -> {
             Result<String> result = event.getContentIfNotHandled();
             if (result == null) return;
 
@@ -146,14 +149,6 @@ public class PasswordResetActivity extends AppCompatActivity {
             int emailBackgroundRes = (hasFocus) ? R.drawable.bg_edit_txt_custom_gray_focused : R.drawable.bg_edit_txt_custom_gray_not_focused;
             binding.editTxtEmailBackground.setBackgroundResource(emailBackgroundRes);
         });
-    }
-
-    // UTILITIES =============
-
-    private void setupStatusBar() {
-        Window window = getWindow();
-        window.setStatusBarColor(ContextCompat.getColor(this, R.color.white));
-        window.getDecorView().setSystemUiVisibility(window.getDecorView().getSystemUiVisibility() | View.SYSTEM_UI_FLAG_LIGHT_STATUS_BAR);
     }
 
     // Dismiss keyboard on outside taps

@@ -18,7 +18,6 @@ import android.view.LayoutInflater;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
-import android.view.Window;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.EditText;
 
@@ -39,25 +38,33 @@ import com.settlex.android.ui.info.legal.TermsAndConditionsActivity;
 import com.settlex.android.util.event.Result;
 import com.settlex.android.util.network.NetworkMonitor;
 import com.settlex.android.util.string.StringUtil;
+import com.settlex.android.util.ui.StatusBarUtil;
 import com.settlex.android.util.ui.UiUtil;
 
 import java.util.Objects;
 
+import dagger.hilt.android.AndroidEntryPoint;
+
+@AndroidEntryPoint
 public class SignUpUserContactInfoFragment extends Fragment {
-    private boolean isConnected = false; // Network connection
+    private boolean isConnected = false; // Network connection status
 
     private AuthViewModel authViewModel;
     private ProgressLoaderController progressLoader;
     private FragmentSignUpUserContactInfoBinding binding;
 
     @Override
+    public void onCreate(@Nullable Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        authViewModel = new ViewModelProvider(requireActivity()).get(AuthViewModel.class);
+        progressLoader = new ProgressLoaderController(requireActivity());
+    }
+
+    @Override
     public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         binding = FragmentSignUpUserContactInfoBinding.inflate(inflater, container, false);
 
-        progressLoader = new ProgressLoaderController(requireActivity());
-        authViewModel = new ViewModelProvider(requireActivity()).get(AuthViewModel.class);
-
-        setupStatusBar();
+        StatusBarUtil.setStatusBarColor(requireActivity(), R.color.white);
         setupUiActions();
 
         return binding.getRoot();
@@ -68,7 +75,7 @@ public class SignUpUserContactInfoFragment extends Fragment {
         super.onViewCreated(view, savedInstanceState);
 
         observeNetworkStatus();
-        observeSendVerificationOtp();
+        observeAndHandleSendVerificationOtpResult();
     }
 
     @Override
@@ -77,13 +84,12 @@ public class SignUpUserContactInfoFragment extends Fragment {
         super.onDestroyView();
     }
 
-    // ====================== OBSERVERS ======================
-
+    // OBSERVERS ==========
     private void observeNetworkStatus() {
         NetworkMonitor.getNetworkStatus().observe(requireActivity(), isConnected -> this.isConnected = isConnected);
     }
 
-    private void observeSendVerificationOtp() {
+    private void observeAndHandleSendVerificationOtpResult() {
         authViewModel.getSendEmailVerificationOtpResult().observe(getViewLifecycleOwner(), event -> {
             Result<String> result = event.getContentIfNotHandled();
             if (result != null) {
@@ -107,7 +113,7 @@ public class SignUpUserContactInfoFragment extends Fragment {
         progressLoader.hide();
     }
 
-    // ====================== UI ACTIONS ======================
+    // UI ACTIONS =========
     private void setupUiActions() {
         setupInputValidation();
         setupLegalLinks();
@@ -117,10 +123,10 @@ public class SignUpUserContactInfoFragment extends Fragment {
         binding.btnSignIn.setOnClickListener(view -> navigateToActivity(SignInActivity.class, true));
         binding.btnHelp.setOnClickListener(v -> navigateToActivity(AuthHelpActivity.class, false));
         binding.imgBackBefore.setOnClickListener(v -> navigateBack());
-        binding.btnContinue.setOnClickListener(v -> validateUserInfoAndSendOtp());
+        binding.btnContinue.setOnClickListener(v -> validateUserInfoAndSendVerificationOtp());
     }
 
-    private void validateUserInfoAndSendOtp() {
+    private void validateUserInfoAndSendVerificationOtp() {
         if (isConnected) {
             String email = Objects.requireNonNull(binding.editTxtEmail.getText()).toString().trim();
             String phone = StringUtil.formatPhoneNumber(binding.editTxtPhoneNumber.getText().toString().trim());
@@ -130,15 +136,18 @@ public class SignUpUserContactInfoFragment extends Fragment {
             authViewModel.sendEmailVerificationOtp(email);
             return;
         }
-        showNoInternetConnection();
+        showNoInternetDialog();
     }
 
-    private void showNoInternetConnection() {
-        UiUtil.showInfoDialog(
-                requireActivity(),
-                "Network Unavailable",
-                getString(R.string.error_no_internet),
-                null);
+    private void showNoInternetDialog() {
+        UiUtil.showAlertDialog(requireActivity(), (alertDialog, binding) -> {
+            binding.icon.setImageResource(R.drawable.ic_signal_disconnected);
+            binding.title.setText("Network Unavailable");
+            binding.message.setText("Please check your Wi-Fi or cellular data and try again");
+
+            binding.btnOkay.setOnClickListener(view -> alertDialog.dismiss());
+            alertDialog.show();
+        });
     }
 
     private void setupInputValidation() {
@@ -288,12 +297,5 @@ public class SignUpUserContactInfoFragment extends Fragment {
             imm.hideSoftInputFromWindow(focusedView.getWindowToken(), 0);
             focusedView.clearFocus();
         }
-    }
-
-    private void setupStatusBar() {
-        Window window = requireActivity().getWindow();
-        window.setStatusBarColor(ContextCompat.getColor(requireContext(), R.color.white));
-        View decorView = window.getDecorView();
-        decorView.setSystemUiVisibility(decorView.getSystemUiVisibility() | View.SYSTEM_UI_FLAG_LIGHT_STATUS_BAR);
     }
 }

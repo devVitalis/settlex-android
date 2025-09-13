@@ -11,13 +11,11 @@ import android.view.KeyEvent;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.view.Window;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.EditText;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
-import androidx.core.content.ContextCompat;
 import androidx.fragment.app.Fragment;
 import androidx.lifecycle.ViewModelProvider;
 
@@ -29,31 +27,41 @@ import com.settlex.android.util.event.Event;
 import com.settlex.android.util.event.Result;
 import com.settlex.android.util.network.NetworkMonitor;
 import com.settlex.android.util.string.StringUtil;
+import com.settlex.android.util.ui.StatusBarUtil;
 
+import dagger.hilt.android.AndroidEntryPoint;
+
+@AndroidEntryPoint
 public class SignUpEmailVerificationFragment extends Fragment {
 
     private static final int OTP_RESEND_COOLDOWN_MS = 60000;
     private static final int COUNTDOWN_INTERVAL_MS = 1000;
+    private CountDownTimer resendOtpCountdownTimer;
+
+    private EditText[] otpDigitViews;
 
     private String email; // The onboarding user email
-    private boolean isConnected = false; // Network connection
+    private boolean isConnected = false; // Network connection status
 
     private AuthViewModel authViewModel;
-    private CountDownTimer resendOtpCountdownTimer;
-    private EditText[] otpDigitViews;
     private ProgressLoaderController progressLoader;
     private FragmentSignUpEmailVerificationBinding binding;
 
     // LIFECYCLE ===========
     @Override
+    public void onCreate(@Nullable Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        authViewModel = new ViewModelProvider(requireActivity()).get(AuthViewModel.class);
+        progressLoader = new ProgressLoaderController(requireActivity());
+    }
+
+    @Override
     public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         binding = FragmentSignUpEmailVerificationBinding.inflate(getLayoutInflater(), container, false);
 
-        progressLoader = new ProgressLoaderController(requireActivity());
-        authViewModel = new ViewModelProvider(requireActivity()).get(AuthViewModel.class);
         email = authViewModel.getEmail();
 
-        customizeStatusBar();
+        StatusBarUtil.setStatusBarColor(requireActivity(), R.color.white);
         setupUiActions();
 
         return binding.getRoot();
@@ -73,9 +81,7 @@ public class SignUpEmailVerificationFragment extends Fragment {
     public void onDestroyView() {
         // Cancel timer
         // Remove binding
-        if (resendOtpCountdownTimer != null) {
-            resendOtpCountdownTimer.cancel();
-        }
+        if (resendOtpCountdownTimer != null) resendOtpCountdownTimer.cancel();
         binding = null;
         super.onDestroyView();
     }
@@ -94,7 +100,7 @@ public class SignUpEmailVerificationFragment extends Fragment {
     }
 
     // HANDLE RESULTS ==========
-    private void handleVerifyOtpResult(Event<Result<String>> event){
+    private void handleVerifyOtpResult(Event<Result<String>> event) {
         Result<String> result = event.getContentIfNotHandled();
         if (result == null) return;
 
@@ -105,7 +111,7 @@ public class SignUpEmailVerificationFragment extends Fragment {
         }
     }
 
-    private void handleSendOtpResult(Event<Result<String>> event){
+    private void handleSendOtpResult(Event<Result<String>> event) {
         Result<String> result = event.getContentIfNotHandled();
         if (result == null) return;
 
@@ -144,8 +150,8 @@ public class SignUpEmailVerificationFragment extends Fragment {
         maskAndDisplayEmail();
 
         binding.imgBackBefore.setOnClickListener(v -> navigateBack());
-        binding.btnVerify.setOnClickListener(v -> verifyOtp());
         binding.btnResendOtp.setOnClickListener(v -> resendOtp());
+        binding.btnVerify.setOnClickListener(v -> verifyOtp());
     }
 
     private void verifyOtp() {
@@ -276,12 +282,5 @@ public class SignUpEmailVerificationFragment extends Fragment {
         if (focusedView != null) {
             imm.hideSoftInputFromWindow(focusedView.getWindowToken(), 0);
         }
-    }
-
-    private void customizeStatusBar() {
-        Window window = requireActivity().getWindow();
-        window.setStatusBarColor(ContextCompat.getColor(requireContext(), R.color.white));
-        View decorView = window.getDecorView();
-        decorView.setSystemUiVisibility(decorView.getSystemUiVisibility() | View.SYSTEM_UI_FLAG_LIGHT_STATUS_BAR);
     }
 }

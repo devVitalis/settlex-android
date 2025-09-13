@@ -1,5 +1,10 @@
 package com.settlex.android.data.repository;
 
+import android.util.Log;
+
+import androidx.lifecycle.LiveData;
+import androidx.lifecycle.MutableLiveData;
+
 import com.google.firebase.FirebaseNetworkException;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
@@ -15,9 +20,14 @@ import java.util.Collections;
 import java.util.List;
 import java.util.Map;
 
+import jakarta.inject.Inject;
+import jakarta.inject.Singleton;
+import kotlinx.coroutines.flow.MutableSharedFlow;
+
 /**
  * Manages each user account
  */
+@Singleton // Ensures a single instance is created
 public class UserRepository {
     private final FirebaseFunctions functions;
     private final FirebaseFirestore firestore;
@@ -25,10 +35,13 @@ public class UserRepository {
     private ListenerRegistration userListener;
     private FirebaseAuth.AuthStateListener authStateListener;
 
-    public UserRepository() {
-        functions = FirebaseFunctions.getInstance("europe-west2");
-        firestore = FirebaseFirestore.getInstance();
-        auth = FirebaseAuth.getInstance();
+    private final MutableLiveData<UserDto> userLiveData = new MutableLiveData<>();
+
+    @Inject
+    public UserRepository(FirebaseAuth auth, FirebaseFirestore firestore, FirebaseFunctions functions) {
+        this.functions = functions;
+        this.firestore = firestore;
+        this.auth = auth;
     }
 
     // Listen to auth changes
@@ -40,24 +53,36 @@ public class UserRepository {
         auth.addAuthStateListener(authStateListener);
     }
 
+    public LiveData<UserDto> getUserLiveData() {
+        return userLiveData;
+    }
+
     /**
      * Listens to user doc in Firestore database
      */
     public void getUserData(String uid, GetUserCallback callback) {
+        if (userLiveData.getValue() != null) {
+            callback.onResult(userLiveData.getValue());
+            return;
+        }
+        Log.d("ViewModel", "fetching user data...");
         userListener = firestore.collection("users")
                 .document(uid)
                 .addSnapshotListener((snapshot, error) -> {
                     if (error != null) {
                         callback.onError(error.getMessage());
+                        userLiveData.setValue(null);
                         return;
                     }
-                    if (snapshot == null || !snapshot.exists()){
+                    if (snapshot == null || !snapshot.exists()) {
                         callback.onResult(null);
+                        userLiveData.setValue(null);
                         return;
                     }
 
                     UserDto userDoc = snapshot.toObject(UserDto.class);
                     callback.onResult(userDoc);
+                    userLiveData.setValue(userDoc);
                 });
     }
 
@@ -69,7 +94,9 @@ public class UserRepository {
         functions.getHttpsCallable("searchUsername")
                 .call(Collections.singletonMap("input", input))
                 .addOnSuccessListener(result -> {
+
                     List<RecipientDto> recipientDto = new ArrayList<>();
+
                     Map<?, ?> data = (Map<?, ?>) result.getData();
                     if (data != null && Boolean.TRUE.equals(data.get("success"))) {
                         //noinspection unchecked
@@ -108,7 +135,7 @@ public class UserRepository {
         FirebaseAuth.getInstance().signOut();
     }
 
-    // ============== Callbacks Interfaces
+    // Callbacks Interfaces =====
     public interface SearchUsernameCallback {
         void onResult(List<RecipientDto> suggestionsDto);
 
@@ -117,6 +144,7 @@ public class UserRepository {
 
     public interface GetUserCallback {
         void onResult(UserDto userDto);
+
         void onError(String error);
     }
 

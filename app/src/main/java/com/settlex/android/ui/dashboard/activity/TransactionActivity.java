@@ -8,6 +8,9 @@ import androidx.fragment.app.Fragment;
 import com.settlex.android.R;
 import com.settlex.android.ui.dashboard.fragments.transactions.PayAFriendFragment;
 
+import dagger.hilt.android.AndroidEntryPoint;
+
+@AndroidEntryPoint
 public class TransactionActivity extends AppCompatActivity {
 
     @Override

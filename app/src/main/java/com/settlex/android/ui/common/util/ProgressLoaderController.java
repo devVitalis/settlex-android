@@ -30,7 +30,6 @@ public class ProgressLoaderController {
         }
     }
 
-    // Set progress overlay color
     public void setOverlayColor(int color) {
         this.overlayColor = color;
     }
