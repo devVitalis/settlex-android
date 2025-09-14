@@ -13,7 +13,7 @@ import androidx.lifecycle.ViewModelProvider;
 import com.airbnb.lottie.RenderMode;
 import com.settlex.android.R;
 import com.settlex.android.databinding.FragmentTransactionStatusBinding;
-import com.settlex.android.ui.dashboard.viewmodel.TransactionsViewModel;
+import com.settlex.android.ui.dashboard.viewmodel.TransactionViewModel;
 import com.settlex.android.util.event.Result;
 import com.settlex.android.util.ui.StatusBarUtil;
 
@@ -25,7 +25,7 @@ import dagger.hilt.android.AndroidEntryPoint;
 @AndroidEntryPoint
 public class TransactionStatusFragment extends Fragment {
     private FragmentTransactionStatusBinding binding;
-    private TransactionsViewModel transactionsViewModel;
+    private TransactionViewModel transactionViewModel;
 
     public TransactionStatusFragment() {
         // Default empty constructor required by Fragment
@@ -34,7 +34,7 @@ public class TransactionStatusFragment extends Fragment {
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        transactionsViewModel = new ViewModelProvider(requireActivity()).get(TransactionsViewModel.class);
+        transactionViewModel = new ViewModelProvider(requireActivity()).get(TransactionViewModel.class);
     }
 
     @Override
@@ -51,7 +51,7 @@ public class TransactionStatusFragment extends Fragment {
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
 
-        observeTransactionStatus();
+        observeTransactionStatusAndHandleResult();
     }
 
     private void setupUiActions() {
@@ -63,23 +63,18 @@ public class TransactionStatusFragment extends Fragment {
         binding.btnDone.setOnClickListener(v -> requireActivity().finish());
     }
 
-    /**
-     * Observes the result of the "Pay a Friend" transaction and updates
-     * the UI accordingly based on the status: PENDING, SUCCESS, or ERROR.
-     */
-    private void observeTransactionStatus() {
-        transactionsViewModel.getPayFriendLiveData().observe(getViewLifecycleOwner(), event -> {
+    private void observeTransactionStatusAndHandleResult() {
+        transactionViewModel.getPayFriendLiveData().observe(getViewLifecycleOwner(), event -> {
             Result<String> transactionResult = event.peekContent();
-            if (transactionResult != null) {
-                switch (transactionResult.getStatus()) {
-                    case PENDING -> showPendingState();
-                    case SUCCESS -> showSuccessState();
-                    case ERROR -> showFailedState();
-                }
+            if (transactionResult == null) return;
+
+            switch (transactionResult.getStatus()) {
+                case PENDING -> showPendingState();
+                case SUCCESS -> showSuccessState();
+                case ERROR -> showFailedState();
             }
         });
     }
-
 
     private void showPendingState() {
         binding.txnPendingAnim.setVisibility(View.VISIBLE);

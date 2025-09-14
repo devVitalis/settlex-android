@@ -8,8 +8,8 @@ import com.google.crypto.tink.Aead;
 import com.google.gson.Gson;
 import com.google.gson.JsonSyntaxException;
 import com.settlex.android.SettleXApp;
-import com.settlex.android.data.local.prefs.UserOnboardPrefs;
-import com.settlex.android.ui.dashboard.model.UserUiModel;
+import com.settlex.android.data.local.preference.UserOnboardPrefs;
+import com.settlex.android.data.remote.dto.UserDto;
 
 import java.nio.charset.StandardCharsets;
 import java.security.GeneralSecurityException;
@@ -50,7 +50,7 @@ public class SessionManager {
     /**
      * Save user securely in SharedPreferences
      */
-    public void cacheUserData(UserUiModel user) {
+    public void cacheUserData(UserDto user) {
         try {
             String json = gson.toJson(user);
             byte[] encrypted = aead.encrypt(json.getBytes(StandardCharsets.UTF_8), null);
@@ -59,7 +59,7 @@ public class SessionManager {
             prefs.edit().putString(KEY_USER, encoded).apply();
 
             // Setup user-scoped onboarding prefs
-            onboardingPrefs = new UserOnboardPrefs(SettleXApp.getInstance(), user.getUid());
+            onboardingPrefs = new UserOnboardPrefs(SettleXApp.getInstance(), user.uid);
 
         } catch (Exception ignored) {
         }
@@ -68,7 +68,7 @@ public class SessionManager {
     /**
      * Get the cached user, decrypting it
      */
-    public UserUiModel getUser() {
+    public UserDto getUser() {
         try {
             String encoded = prefs.getString(KEY_USER, null);
             if (encoded == null) return null;
@@ -76,7 +76,7 @@ public class SessionManager {
             byte[] decrypted = aead.decrypt(Base64.getDecoder().decode(encoded), null);
             String json = new String(decrypted, StandardCharsets.UTF_8);
 
-            return gson.fromJson(json, UserUiModel.class);
+            return gson.fromJson(json, UserDto.class);
 
         } catch (GeneralSecurityException | JsonSyntaxException e) {
             Log.e("SessionManager", "Failed to decrypt or parse user data", e);
@@ -86,7 +86,7 @@ public class SessionManager {
 
     // --- Session state checks ---
     public boolean isUserLoggedIn() {
-        return getUser() != null && getUser().getUid() != null;
+        return getUser() != null && getUser().uid != null;
     }
 
     public boolean hasPin() {

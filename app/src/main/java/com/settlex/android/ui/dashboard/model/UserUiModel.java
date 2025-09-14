@@ -17,22 +17,28 @@ public class UserUiModel {
     public String getUid() {
         return uid;
     }
+
     public String getFirstName() {
         return firstName;
     }
+
     public String getLastName() {
         return lastName;
     }
+
     public String getUsername() {
         return username;
     }
+
     public double getBalance() {
         return balance;
     }
+
     public double getCommissionBalance() {
         return commissionBalance;
     }
+
     public String getUserFullName() {
-        return firstName + " " + lastName;
+        return getFirstName() + " " + getLastName();
     }
 }

@@ -1,19 +1,21 @@
 package com.settlex.android.di;
 
-import com.settlex.android.data.local.SessionManager;
+import com.settlex.android.data.local.preference.UserPrefs;
 
 import dagger.Module;
 import dagger.Provides;
 import dagger.hilt.InstallIn;
 import dagger.hilt.components.SingletonComponent;
+import jakarta.inject.Singleton;
 
 @Module
 @InstallIn(SingletonComponent.class)
 public class AppModule {
 
     @Provides
-    public static SessionManager provideSessionManager() {
-        return SessionManager.getInstance();
+    @Singleton
+    public static UserPrefs provideUserPrefs() {
+        return UserPrefs.getInstance();
     }
 
 }

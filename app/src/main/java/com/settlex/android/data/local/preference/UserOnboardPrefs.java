@@ -1,4 +1,4 @@
-package com.settlex.android.data.local.prefs;
+package com.settlex.android.data.local.preference;
 
 import android.content.Context;
 import android.content.SharedPreferences;
@@ -13,7 +13,7 @@ public class UserOnboardPrefs {
     private static final String PREF_NAME = "user_onboard_prefs";
     private static final String KEY_NOTIFICATION_PROMPT_SHOWN = "onboard_notification_prompt_shown";
     private static final String KEY_PIN_PROMPT_SHOWN = "onboard_pin_prompt_shown";
-    private static final String KEY_FINGERPRINT_ENABLED = "onboard_fingerprint_enabled";
+    private static final String ONBOARD_FINGERPRINT_SHOWN = "onboard_fingerprint_shown";
 
     private final SharedPreferences prefs;
     private final SharedPreferences.Editor editor;
@@ -27,7 +27,7 @@ public class UserOnboardPrefs {
         editor = prefs.edit();
     }
 
-    // --- User-specific onboarding states ---
+    // Getters and Setters
     public boolean isNotificationPromptShown() {
         return prefs.getBoolean(KEY_NOTIFICATION_PROMPT_SHOWN, false);
     }
@@ -44,11 +44,11 @@ public class UserOnboardPrefs {
         editor.putBoolean(KEY_PIN_PROMPT_SHOWN, shown).apply();
     }
 
-    public boolean isFingerprintEnabled() {
-        return prefs.getBoolean(KEY_FINGERPRINT_ENABLED, false);
+    public boolean isFingerprintShown() {
+        return prefs.getBoolean(ONBOARD_FINGERPRINT_SHOWN, false);
     }
 
-    public void setFingerprintEnabled(boolean enabled) {
-        editor.putBoolean(KEY_FINGERPRINT_ENABLED, enabled).apply();
+    public void setFingerprintShown(boolean enabled) {
+        editor.putBoolean(ONBOARD_FINGERPRINT_SHOWN, enabled).apply();
     }
 }

@@ -8,7 +8,7 @@ import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 
 import com.settlex.android.R;
-import com.settlex.android.data.local.prefs.OnboardingPrefs;
+import com.settlex.android.data.local.preference.OnboardingPrefs;
 import com.settlex.android.databinding.ActivityOnboardingBinding;
 import com.settlex.android.ui.Onboarding.adapter.OnboardingAdapter;
 import com.settlex.android.ui.auth.activity.SignInActivity;

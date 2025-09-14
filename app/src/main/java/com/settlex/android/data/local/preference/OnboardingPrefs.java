@@ -1,10 +1,10 @@
-package com.settlex.android.data.local.prefs;
+package com.settlex.android.data.local.preference;
 
 import android.content.Context;
 import android.content.SharedPreferences;
 
 /**
- * Manages device-wide onboarding state (independent of user sessions).
+ * Manages device-wide onboarding state.
  * Tracks if the app intro was ever viewed on this device.
  */
 public class OnboardingPrefs {

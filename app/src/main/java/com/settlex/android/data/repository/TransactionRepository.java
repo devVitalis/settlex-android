@@ -1,7 +1,6 @@
 package com.settlex.android.data.repository;
 
-import android.os.Handler;
-import android.os.Looper;
+import android.util.Log;
 
 import com.google.firebase.FirebaseNetworkException;
 import com.google.firebase.firestore.DocumentSnapshot;
@@ -9,6 +8,7 @@ import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.ListenerRegistration;
 import com.google.firebase.firestore.Query;
 import com.google.firebase.functions.FirebaseFunctions;
+import com.settlex.android.data.remote.dto.RecipientDto;
 import com.settlex.android.data.remote.dto.TransactionDto;
 
 import java.io.IOException;
@@ -20,13 +20,10 @@ import java.util.Map;
 
 import jakarta.inject.Inject;
 
-/**
- * Manages each user account transactions
- */
 public class TransactionRepository {
     private final FirebaseFunctions functions;
     private final FirebaseFirestore firestore;
-    private ListenerRegistration transactionsListener;
+    private ListenerRegistration transactionListener;
 
     @Inject
     public TransactionRepository(FirebaseFunctions functions, FirebaseFirestore firestore) {
@@ -34,11 +31,16 @@ public class TransactionRepository {
         this.firestore = firestore;
     }
 
-    /**
-     * Listens to recent transactions of a user
-     */
-    public void getUserTransactions(String uid, int limit, TransactionsCallback callback) {
-        transactionsListener = firestore.collection("users")
+    public void removeListener() {
+        if (transactionListener != null) transactionListener.remove();
+    }
+
+    public void getUserTransactions(String uid, int limit, TransactionHistoryCallback callback) {
+        if (transactionListener != null) {
+            // Listener is already active, no need to re-attach
+            return;
+        }
+        transactionListener = firestore.collection("users")
                 .document(uid)
                 .collection("transactions")
                 .orderBy("createdAt", Query.Direction.DESCENDING)
@@ -53,7 +55,9 @@ public class TransactionRepository {
                         return;
                     }
 
+                    // Map data to dto
                     List<TransactionDto> transactions = new ArrayList<>();
+
                     for (DocumentSnapshot doc : snapshots.getDocuments()) {
                         TransactionDto txn = doc.toObject(TransactionDto.class);
                         if (txn != null) transactions.add(txn);
@@ -62,68 +66,75 @@ public class TransactionRepository {
                 });
     }
 
-    /**
-     * Performs an Internal transfer btw users
-     */
-    public void payFriend(String senderUid, String receiverUsername, String transactionId, double amount, String serviceType, String description, TransferCallback callback) {
+    public void searchRecipientWithUsername(String input, SearchRecipientCallback callback) {
+        functions.getHttpsCallable("searchUsername")
+                .call(Collections.singletonMap("input", input)) // TODO rename
+                .addOnSuccessListener(result -> {
+
+                    List<RecipientDto> recipientDto = new ArrayList<>();
+                    Map<?, ?> data = (Map<?, ?>) result.getData(); // get res data
+                    if (data != null && Boolean.TRUE.equals(data.get("success"))) {
+                        //noinspection unchecked
+                        List<Map<String, Object>> dto = (List<Map<String, Object>>) data.get("suggestions");
+
+                        if (dto != null) {
+                            for (Map<String, Object> recipient : dto) {
+                                String username = (String) recipient.get("username");
+                                String firstName = (String) recipient.get("firstName");
+                                String lastName = (String) recipient.get("lastName");
+                                String profileUrl = (String) recipient.get("profileUrl");
+                                recipientDto.add(new RecipientDto(username, firstName, lastName, profileUrl));
+                            }
+                        }
+                    }
+                    callback.onResult(recipientDto);
+                }).addOnFailureListener(e -> {
+                    if (e instanceof FirebaseNetworkException || e instanceof IOException) {
+                        callback.onFailure("Network request failed. Please check your network and try again");
+                        return;
+                    }
+                    callback.onFailure(e.getMessage());
+                });
+    }
+
+    public void payFriend(String senderUid, String receiverUsername, String transactionId, double amount,
+                          String serviceType, String description, PayFriendCallback callback) {
         Map<String, Object> data = new HashMap<>();
         data.put("senderUid", senderUid);
-        data.put("receiverUsername", receiverUsername);
+        data.put("receiverUsername", receiverUsername); // TODO rename
         data.put("transactionId", transactionId);
         data.put("amount", amount);
         data.put("serviceType", serviceType);
         data.put("description", description);
 
-        Handler handler = new Handler(Looper.getMainLooper());
-        final boolean[] finished = {false};
-
-        Runnable timeoutRunnable = () -> {
-            if (!finished[0]) {
-                finished[0] = true;
-                callback.onTransferPending();
-            }
-        };
-
-        handler.postDelayed(timeoutRunnable, 10_000); // 10s timeout
-
-        functions.getHttpsCallable("payAFriend").call(data).addOnSuccessListener(result -> {
-            if (!finished[0]) {
-                finished[0] = true;
-                handler.removeCallbacks(timeoutRunnable);
-                callback.onTransferSuccess();
-            }
-        }).addOnFailureListener(e -> {
-            if (!finished[0]) {
-                finished[0] = true;
-                handler.removeCallbacks(timeoutRunnable);
-                if (e instanceof FirebaseNetworkException || e instanceof IOException) {
-                    callback.onTransferFailed("Network request failed. Please check your connection.");
-                } else {
-                    callback.onTransferFailed(e.getMessage());
-                }
-            }
-        });
+        functions.getHttpsCallable("payAFriend")
+                .call(data)
+                .addOnSuccessListener(result -> callback.onPayFriendSuccess())
+                .addOnFailureListener(e -> {
+                    if (e instanceof FirebaseNetworkException || e instanceof IOException) {
+                        callback.onPayFriendFailed("Network request failed. Please check your connection.");
+                        return;
+                    }
+                    callback.onPayFriendFailed(e.getMessage());
+                });
     }
 
-    /**
-     * Remove Firestore listeners
-     */
-    public void removeListener() {
-        if (transactionsListener != null) transactionsListener.remove();
-    }
-
-    // ============== Callbacks Interfaces
-    public interface TransactionsCallback {
-        void onResult(List<TransactionDto> list);
+    // Callbacks Interfaces
+    public interface TransactionHistoryCallback {
+        void onResult(List<TransactionDto> dtolist);
 
         void onError(String reason);
     }
 
-    public interface TransferCallback {
-        void onTransferPending();
+    public interface SearchRecipientCallback {
+        void onResult(List<RecipientDto> dto);
 
-        void onTransferSuccess();
+        void onFailure(String reason);
+    }
 
-        void onTransferFailed(String reason);
+    public interface PayFriendCallback {
+        void onPayFriendSuccess();
+
+        void onPayFriendFailed(String reason);
     }
 }

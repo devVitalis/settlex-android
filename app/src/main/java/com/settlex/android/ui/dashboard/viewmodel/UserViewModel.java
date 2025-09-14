@@ -6,18 +6,10 @@ import androidx.lifecycle.LiveData;
 import androidx.lifecycle.MutableLiveData;
 import androidx.lifecycle.ViewModel;
 
-import com.settlex.android.data.local.SessionManager;
-import com.settlex.android.data.local.prefs.UserPrefs;
-import com.settlex.android.data.remote.dto.RecipientDto;
-import com.settlex.android.data.remote.dto.UserDto;
+import com.settlex.android.data.local.preference.UserPrefs;
 import com.settlex.android.data.repository.UserRepository;
-import com.settlex.android.ui.dashboard.model.RecipientUiModel;
 import com.settlex.android.ui.dashboard.model.UserUiModel;
 import com.settlex.android.util.event.Result;
-import com.settlex.android.util.string.StringUtil;
-
-import java.util.ArrayList;
-import java.util.List;
 
 import dagger.hilt.android.lifecycle.HiltViewModel;
 import jakarta.inject.Inject;
@@ -28,135 +20,77 @@ public class UserViewModel extends ViewModel {
     private final UserRepository userRepo;
 
     // LiveData holders
-    private final MutableLiveData<Result<UserUiModel>> userLiveData = new MutableLiveData<>();
     private final MutableLiveData<String> authStateLiveData = new MutableLiveData<>();
-    private final MutableLiveData<Result<List<RecipientUiModel>>> usernameSearchLiveData = new MutableLiveData<>();
-    private final MutableLiveData<Boolean> hideBalanceLiveData = new MutableLiveData<>();
+    private final MutableLiveData<Result<UserUiModel>> userLiveData = new MutableLiveData<>();
+    private final MutableLiveData<Boolean> isBalanceHiddenLiveData = new MutableLiveData<>();
 
     @Inject
-    public UserViewModel(UserRepository userRepo) {
-        this.userPrefs = UserPrefs.getInstance();
+    public UserViewModel(UserRepository userRepo, UserPrefs userPrefs) {
         this.userRepo = userRepo;
-        monitorUserAuthState();
-        hideBalanceLiveData.setValue(userPrefs.isBalanceHidden());
-    }
+        this.userPrefs = userPrefs;
 
-    //  GETTERS ============
-    public LiveData<String> getAuthStateLiveData() {
-        return authStateLiveData;
-    }
+        initUserAuthState();
+        initUserUiLiveData();
+        initIsBalanceHiddenLiveData();
 
-    public LiveData<Result<List<RecipientUiModel>>> getUsernameSearchLiveData() {
-        return usernameSearchLiveData;
-    }
-
-    public LiveData<Result<UserUiModel>> getUserData() {
-        return userLiveData;
-    }
-
-    public LiveData<Boolean> getHideBalanceLiveData() {
-        return hideBalanceLiveData;
+        Log.d("ViewModel", "creating a new instance.." + this);
     }
 
     public void toggleBalanceVisibility() {
-        boolean current = Boolean.TRUE.equals(hideBalanceLiveData.getValue());
-        boolean newValue = !current;
-        userPrefs.setBalanceHidden(newValue);
-        hideBalanceLiveData.setValue(newValue);
-    }
+        boolean isBalanceCurrentlyHidden = Boolean.TRUE.equals(isBalanceHiddenLiveData.getValue());
+        boolean shouldHideBalance = !isBalanceCurrentlyHidden;
 
-    /**
-     * Update the UI model for current user details
-     */
-    public void fetchUserData(String uid) {
-        userLiveData.setValue(Result.loading());
-//        UserUiModel cachedData = SessionManager.getInstance().getUser();
-//        if (cachedData != null && cachedData.getUid().equals(uid)) {
-//            userLiveData.setValue(Result.success(cachedData));
-//        }
-
-        // Fetch new data
-        userRepo.getUserData(uid, new UserRepository.GetUserCallback() {
-            @Override
-            public void onResult(UserDto userDto) {
-                if (userDto == null) {
-                    // If fetching new data fails, do not clear the LiveData.
-                    // The UI will continue to show the cached data,
-                    // which is better than showing an empty state on network failure.
-                    // You could also post an error state here if needed.
-                    return;
-                }
-
-                UserUiModel updatedData = new UserUiModel(
-                        userDto.uid,
-                        userDto.firstName,
-                        userDto.lastName,
-                        userDto.username,
-                        userDto.balance,
-                        userDto.commissionBalance);
-
-                userLiveData.setValue(Result.success(updatedData));
-                SessionManager.getInstance().cacheUserData(updatedData);
-            }
-
-            @Override
-            public void onError(String error) {
-                userLiveData.setValue(Result.error("System busy, Please try again later"));
-            }
-        });
-    }
-
-    /**
-     * Monitor user session
-     */
-    private void monitorUserAuthState() {
-        userRepo.listenToUserAuthState(user -> {
-            if (user == null) {
-                // If user logs out or session expires, clear the data.
-                authStateLiveData.setValue(null);
-                userLiveData.setValue(null);
-                return;
-            }
-            // User is logged in
-            authStateLiveData.setValue(user.getUid());
-            fetchUserData(user.getUid());
-        });
-    }
-
-    /**
-     * Returns username query results.
-     */
-    public void searchUsername(String query) {
-        usernameSearchLiveData.postValue(Result.loading());
-        userRepo.searchUsername(query, new UserRepository.SearchUsernameCallback() {
-            @Override
-            public void onResult(List<RecipientDto> suggestionsDto) {
-                // Map DTO -> UI Model
-                List<RecipientUiModel> suggestionsUiModelList = new ArrayList<>();
-                for (RecipientDto dto : suggestionsDto) {
-                    suggestionsUiModelList.add(new RecipientUiModel(
-                            StringUtil.addAtToUsername(dto.username), dto.firstName + " " + dto.lastName,
-                            dto.profileUrl)); // Null on default
-                }
-                usernameSearchLiveData.postValue(Result.success(suggestionsUiModelList));
-            }
-
-            @Override
-            public void onFailure(String reason) {
-                // Post a dedicated error state.
-                usernameSearchLiveData.postValue(Result.error(reason));
-            }
-        });
+        // Update new state
+        userPrefs.setBalanceHidden(shouldHideBalance);
+        isBalanceHiddenLiveData.setValue(shouldHideBalance);
     }
 
     public void signOut() {
         userRepo.signOut();
     }
 
-    @Override
-    protected void onCleared() {
-        Log.d("ViewModel", "Cleared");
-        super.onCleared();
-        userRepo.removeListener();
+    // Getters
+    public LiveData<Result<UserUiModel>> getUserLiveData() {
+        return userLiveData;
+    }
+
+    public LiveData<Boolean> getIsBalanceHiddenLiveData() {
+        return isBalanceHiddenLiveData;
+    }
+
+    public LiveData<String> getAuthStateLiveData() {
+        return authStateLiveData;
+    }
+
+    // initialize one-time user services
+    private void initIsBalanceHiddenLiveData() {
+        isBalanceHiddenLiveData.setValue(userPrefs.isBalanceHidden());
+    }
+
+    private void initUserAuthState() {
+        // Set up the listener on repository
+        userRepo.listenToUserAuthState(user -> {
+            if (user == null) {
+                authStateLiveData.setValue(null);
+                userLiveData.setValue(null);
+                userRepo.removeListeners();
+                return;
+            }
+            authStateLiveData.setValue(user.getUid());
+            userRepo.setupUserListener(user.getUid());
+        });
+    }
+
+    private void initUserUiLiveData() {
+        userLiveData.setValue(Result.loading());
+        userRepo.getUserLiveData().observeForever(dto -> {
+            if (dto == null) {
+                userLiveData.setValue(null);
+                return;
+            }
+
+            UserUiModel uiModel = new UserUiModel(dto.uid, dto.firstName, dto.lastName, dto.username, dto.balance, dto.commissionBalance);
+            userLiveData.setValue(Result.success(uiModel));
+        });
     }
 }

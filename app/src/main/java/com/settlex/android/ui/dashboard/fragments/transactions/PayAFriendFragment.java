@@ -6,7 +6,6 @@ import android.os.Bundle;
 import android.text.Editable;
 import android.text.InputType;
 import android.text.TextWatcher;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.MotionEvent;
 import android.view.View;
@@ -21,7 +20,6 @@ import androidx.lifecycle.ViewModelProvider;
 import androidx.recyclerview.widget.LinearLayoutManager;
 
 import com.google.android.material.bottomsheet.BottomSheetDialog;
-import com.google.gson.Gson;
 import com.settlex.android.R;
 import com.settlex.android.data.enums.TransactionServiceType;
 import com.settlex.android.data.remote.avater.AvatarService;
@@ -32,7 +30,7 @@ import com.settlex.android.ui.dashboard.model.RecipientUiModel;
 import com.settlex.android.ui.dashboard.model.UserUiModel;
 import com.settlex.android.ui.dashboard.util.DashboardUiUtil;
 import com.settlex.android.ui.dashboard.util.TransactionIdGenerator;
-import com.settlex.android.ui.dashboard.viewmodel.TransactionsViewModel;
+import com.settlex.android.ui.dashboard.viewmodel.TransactionViewModel;
 import com.settlex.android.ui.dashboard.viewmodel.UserViewModel;
 import com.settlex.android.util.event.Result;
 import com.settlex.android.util.string.StringUtil;
@@ -60,7 +58,7 @@ public class PayAFriendFragment extends Fragment {
     private ProgressLoaderController progressLoader;
     private RecipientAdapter recipientAdapter;
     private UserViewModel userViewModel;
-    private TransactionsViewModel transactionsViewModel;
+    private TransactionViewModel transactionViewModel;
 
     public PayAFriendFragment() {
         // Required empty public constructor
@@ -70,20 +68,21 @@ public class PayAFriendFragment extends Fragment {
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        userViewModel = new ViewModelProvider(this).get(UserViewModel.class);
-        transactionsViewModel = new ViewModelProvider(requireActivity()).get(TransactionsViewModel.class);
+        userViewModel = new ViewModelProvider(requireActivity()).get(UserViewModel.class);
+        transactionViewModel = new ViewModelProvider(requireActivity()).get(TransactionViewModel.class);
     }
 
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         binding = FragmentPayAFriendBinding.inflate(inflater, container, false);
-
         progressLoader = new ProgressLoaderController(requireActivity());
+
         recipientAdapter = new RecipientAdapter();
         bundle = new Bundle();
 
+        observeUserState();
+
         StatusBarUtil.setStatusBarColor(requireActivity(), R.color.white);
-        observeAndGetUserData();
         setupUiActions();
 
         return binding.getRoot();
@@ -92,9 +91,6 @@ public class PayAFriendFragment extends Fragment {
     @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
-
-        observePayFriendAndHandleResult();
-        observeUsernameSearchAndHandleResult();
     }
 
     @Override
@@ -105,21 +101,43 @@ public class PayAFriendFragment extends Fragment {
     }
 
     // ---------- Observers ----------
-    private void observeAndGetUserData() {
-        userViewModel.getUserData().observe(getViewLifecycleOwner(), user -> {
-            if (user == null) {
+    private void observeUserState() {
+        userViewModel.getAuthStateLiveData().observe(getViewLifecycleOwner(), uid -> {
+            if (uid == null) {
+                // logged out/session expired
                 return;
             }
-            Log.d("ViewModel", "User: " + new Gson().toJson(user));
-            binding.availableBalance.setText(StringUtil.formatToNaira(user.getData().getBalance() + user.getData().getCommissionBalance()));
-            this.currentUser = user.getData();
+            // user is logged in fetch data
+            observeUserData();
+            observePayFriendAndHandleResult();
+            observeUsernameSearchAndHandleResult();
+        });
+    }
+
+    private void observeUserData() {
+        userViewModel.getUserLiveData().observe(getViewLifecycleOwner(), userData -> {
+            if (userData == null) return;
+
+            switch (userData.getStatus()) {
+                case SUCCESS -> {
+                    UserUiModel user = userData.getData();
+                    if (user != null) {
+                        binding.availableBalance.setText(StringUtil.formatToNaira(user.getBalance() + user.getCommissionBalance()));
+                        this.currentUser = user;
+                    }
+                }
+                case ERROR -> {
+                    // Handle error
+                }
+            }
         });
     }
 
     private void observePayFriendAndHandleResult() {
-        transactionsViewModel.getPayFriendLiveData().observe(getViewLifecycleOwner(), event -> {
+        transactionViewModel.getPayFriendLiveData().observe(getViewLifecycleOwner(), event -> {
             Result<String> result = event.getContentIfNotHandled();
             if (result == null) return;
+
             switch (result.getStatus()) {
                 case LOADING -> progressLoader.show();
                 case PENDING -> onTransactionPending();
@@ -129,19 +147,6 @@ public class PayAFriendFragment extends Fragment {
         });
     }
 
-    private void observeUsernameSearchAndHandleResult() {
-        userViewModel.getUsernameSearchLiveData().observe(getViewLifecycleOwner(), result -> {
-            if (result != null) {
-                switch (result.getStatus()) {
-                    case LOADING -> onUsernameSearchLoading();
-                    case SUCCESS -> onUsernameSearchSuccess(result.getData());
-                    case ERROR -> onUsernameSearchFailed();
-                }
-            }
-        });
-    }
-
-    // ---------- Business Handlers ----------
     private void onTransactionPending() {
         bundle.putString("txn_amount", StringUtil.formatToNaira(amount));
         navigateToFragment(new TransactionStatusFragment(), bundle);
@@ -161,6 +166,18 @@ public class PayAFriendFragment extends Fragment {
         navigateToFragment(new TransactionStatusFragment(), bundle);
         progressLoader.hide();
         bottomSheetDialog.dismiss();
+    }
+
+    private void observeUsernameSearchAndHandleResult() {
+        transactionViewModel.getRecipientSearchResult().observe(getViewLifecycleOwner(), result -> {
+            if (result == null) return;
+
+            switch (result.getStatus()) {
+                case LOADING -> onUsernameSearchLoading();
+                case SUCCESS -> onUsernameSearchSuccess(result.getData());
+                case ERROR -> onUsernameSearchFailed();
+            }
+        });
     }
 
     private void onUsernameSearchLoading() {
@@ -211,7 +228,8 @@ public class PayAFriendFragment extends Fragment {
                 amount,
                 currentUser.getBalance(),
                 currentUser.getCommissionBalance(),
-                () -> // onPay btn clicked
+                () ->
+                        // onPay btn clicked
                         startPayFriendTransaction(
                                 currentUser.getUid(),
                                 recipientUsername,
@@ -220,17 +238,13 @@ public class PayAFriendFragment extends Fragment {
     }
 
     private void startPayFriendTransaction(String senderUid, String recipientUsername, double amountToSend, String description) {
-        transactionsViewModel.payFriend(
+        transactionViewModel.payFriend(
                 senderUid,
                 recipientUsername,
                 TransactionIdGenerator.generate(senderUid), // UID hash + timestamp + UUID
                 amountToSend,
                 String.valueOf(TransactionServiceType.PAY_A_FRIEND),
                 description);
-    }
-
-    private void searchUsername(String query) {
-        userViewModel.searchUsername(query);
     }
 
     // ---------- UI Setup ----------
@@ -243,18 +257,23 @@ public class PayAFriendFragment extends Fragment {
 
         // Display avail balance
         binding.imgBackBefore.setOnClickListener(v -> requireActivity().getOnBackPressedDispatcher().onBackPressed());
-        binding.btnVerify.setOnClickListener(v -> searchUsername(username.replaceAll("\\s+", "")));
+        binding.btnVerify.setOnClickListener(v -> searchRecipient(username.replaceAll("\\s+", "")));
         binding.btnNext.setOnClickListener(v -> showPayConfirmation());
+    }
+
+    private void searchRecipient(String username) {
+        transactionViewModel.searchRecipientWithUsername(username);
     }
 
     private void setupRecipientRecyclerView() {
         LinearLayoutManager layoutManager = new LinearLayoutManager(requireActivity());
         layoutManager.setOrientation(LinearLayoutManager.VERTICAL);
         binding.recipientRecyclerView.setLayoutManager(layoutManager);
-        handleOnRecipientClick();
+
+        handleOnRecipientItemClick();
     }
 
-    private void handleOnRecipientClick() {
+    private void handleOnRecipientItemClick() {
         recipientAdapter.setOnItemClickListener(model -> {
             // Sender = receiver
             if (StringUtil.removeAtInUsername(model.getUsername()).equals(currentUser.getUsername())) {

@@ -1,15 +1,15 @@
 package com.settlex.android.ui.dashboard.viewmodel;
 
-import android.util.Log;
-
 import androidx.lifecycle.LiveData;
 import androidx.lifecycle.MutableLiveData;
 import androidx.lifecycle.ViewModel;
 
 import com.settlex.android.data.enums.TransactionOperation;
 import com.settlex.android.data.enums.TransactionStatus;
+import com.settlex.android.data.remote.dto.RecipientDto;
 import com.settlex.android.data.remote.dto.TransactionDto;
 import com.settlex.android.data.repository.TransactionRepository;
+import com.settlex.android.ui.dashboard.model.RecipientUiModel;
 import com.settlex.android.ui.dashboard.model.TransactionUiModel;
 import com.settlex.android.util.event.Event;
 import com.settlex.android.util.event.Result;
@@ -23,43 +23,40 @@ import dagger.hilt.android.lifecycle.HiltViewModel;
 import jakarta.inject.Inject;
 
 @HiltViewModel
-public class TransactionsViewModel extends ViewModel {
-    private final TransactionRepository transactionRepo;
-
-    private final MutableLiveData<Result<List<TransactionUiModel>>> transactionsLiveData = new MutableLiveData<>();
+public class TransactionViewModel extends ViewModel {
+    private final MutableLiveData<Result<List<TransactionUiModel>>> transactionLiveData = new MutableLiveData<>();
+    private final MutableLiveData<Result<List<RecipientUiModel>>> recipientSearchResult = new MutableLiveData<>();
     private final MutableLiveData<Event<Result<String>>> payFriendLiveData = new MutableLiveData<>();
 
+    // dependencies
+    private final TransactionRepository transactionRepo;
+
     @Inject
-    public TransactionsViewModel(TransactionRepository transactionRepo) {
+    public TransactionViewModel(TransactionRepository transactionRepo) {
         this.transactionRepo = transactionRepo;
     }
 
-    // Getters =========
-    public LiveData<Result<List<TransactionUiModel>>> getTransactionsLiveData() {
-        return transactionsLiveData;
-    }
-    public LiveData<Event<Result<String>>> getPayFriendLiveData() {
-        return payFriendLiveData;
+    @Override
+    protected void onCleared() {
+        super.onCleared();
+        transactionRepo.removeListener();
     }
 
-    /**
-     * Fetch and set transactions LiveData
-     */
-    public void fetchUserTransactions(String currentUserUid, int limit) {
-        if (transactionsLiveData.getValue() != null) return;
-        Log.d("ViewModel", "fetching transactions data...");
+    public void getUserTransactions(String currentUserUid, int limit) {
+        if (transactionLiveData.getValue() != null) return;
 
-        transactionsLiveData.setValue(Result.loading());
-        transactionRepo.getUserTransactions(currentUserUid, limit, new TransactionRepository.TransactionsCallback() {
+        transactionLiveData.setValue(Result.loading());
+
+        transactionRepo.getUserTransactions(currentUserUid, limit, new TransactionRepository.TransactionHistoryCallback() {
             @Override
-            public void onResult(List<TransactionDto> transaction) {
-                if (transaction == null || transaction.isEmpty()) {
-                    transactionsLiveData.setValue(Result.success(Collections.emptyList()));
+            public void onResult(List<TransactionDto> dtolist) {
+                if (dtolist == null || dtolist.isEmpty()) {
+                    transactionLiveData.setValue(Result.success(Collections.emptyList()));
                     return;
                 }
 
                 List<TransactionUiModel> uiModel = new ArrayList<>();
-                for (TransactionDto dto : transaction) {
+                for (TransactionDto dto : dtolist) {
                     boolean isSender = currentUserUid.equals(dto.senderUid); // same user
 
                     TransactionOperation operation;
@@ -88,19 +85,41 @@ public class TransactionsViewModel extends ViewModel {
                             dto.status.getBgColorRes()
                     ));
                 }
-                transactionsLiveData.setValue(Result.success(uiModel));
+                transactionLiveData.setValue(Result.success(uiModel));
             }
 
             @Override
             public void onError(String reason) {
-                transactionsLiveData.setValue(Result.error("Failed to load transactions"));
+                transactionLiveData.setValue(Result.error("Failed to load transactions"));
             }
         });
     }
 
-    /**
-     * Initiates a peer-to-peer payment transaction from one user to another.
-     */
+    public void searchRecipientWithUsername(String query) {
+        recipientSearchResult.postValue(Result.loading());
+        transactionRepo.searchRecipientWithUsername(query, new TransactionRepository.SearchRecipientCallback() {
+            @Override
+            public void onResult(List<RecipientDto> recipientDto) {
+                // Map DTO -> UI Model
+                List<RecipientUiModel> recipientUiModelList = new ArrayList<>();
+
+                for (RecipientDto dto : recipientDto) {
+                    recipientUiModelList.add(new RecipientUiModel(
+                            StringUtil.addAtToUsername(dto.username),
+                            dto.firstName + " " + dto.lastName,
+                            dto.profileUrl)); // Null on default
+                }
+                recipientSearchResult.postValue(Result.success(recipientUiModelList));
+            }
+
+            @Override
+            public void onFailure(String reason) {
+                // Post a dedicated error state.
+                recipientSearchResult.postValue(Result.error(reason));
+            }
+        });
+    }
+
     public void payFriend(String senderUid, String receiverUserName, String transactionId, double amount, String serviceType, String description) {
         payFriendLiveData.setValue(new Event<>(Result.loading()));
         transactionRepo.payFriend(
@@ -110,28 +129,29 @@ public class TransactionsViewModel extends ViewModel {
                 amount,
                 serviceType,
                 description,
-                new TransactionRepository.TransferCallback() {
+                new TransactionRepository.PayFriendCallback() {
                     @Override
-                    public void onTransferPending() {
-                        payFriendLiveData.setValue(new Event<>(Result.Pending("Transaction Pending")));
-                    }
-
-                    @Override
-                    public void onTransferSuccess() {
+                    public void onPayFriendSuccess() {
                         payFriendLiveData.setValue(new Event<>(Result.success("Transaction Successful")));
                     }
 
                     @Override
-                    public void onTransferFailed(String reason) {
+                    public void onPayFriendFailed(String reason) {
                         payFriendLiveData.setValue(new Event<>(Result.error("Transaction Failed")));
                     }
                 });
     }
 
-    @Override
-    protected void onCleared() {
-        Log.d("ViewModel", "Clearing data...");
-        super.onCleared();
-        transactionRepo.removeListener();
+    // Getters =========
+    public LiveData<Result<List<TransactionUiModel>>> getTransactionLiveData() {
+        return transactionLiveData;
+    }
+
+    public LiveData<Result<List<RecipientUiModel>>> getRecipientSearchResult() {
+        return recipientSearchResult;
+    }
+
+    public LiveData<Event<Result<String>>> getPayFriendLiveData() {
+        return payFriendLiveData;
     }
 }

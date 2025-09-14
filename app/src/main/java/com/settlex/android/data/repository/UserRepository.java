@@ -5,29 +5,20 @@ import android.util.Log;
 import androidx.lifecycle.LiveData;
 import androidx.lifecycle.MutableLiveData;
 
-import com.google.firebase.FirebaseNetworkException;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.ListenerRegistration;
 import com.google.firebase.functions.FirebaseFunctions;
-import com.settlex.android.data.remote.dto.RecipientDto;
 import com.settlex.android.data.remote.dto.UserDto;
-
-import java.io.IOException;
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.List;
-import java.util.Map;
 
 import jakarta.inject.Inject;
 import jakarta.inject.Singleton;
-import kotlinx.coroutines.flow.MutableSharedFlow;
 
 /**
  * Manages each user account
  */
-@Singleton // Ensures a single instance is created
+@Singleton
 public class UserRepository {
     private final FirebaseFunctions functions;
     private final FirebaseFirestore firestore;
@@ -35,7 +26,7 @@ public class UserRepository {
     private ListenerRegistration userListener;
     private FirebaseAuth.AuthStateListener authStateListener;
 
-    private final MutableLiveData<UserDto> userLiveData = new MutableLiveData<>();
+    private final MutableLiveData<UserDto> userLiveData = new MutableLiveData<>();    // Shared Livedata
 
     @Inject
     public UserRepository(FirebaseAuth auth, FirebaseFirestore firestore, FirebaseFunctions functions) {
@@ -45,110 +36,64 @@ public class UserRepository {
     }
 
     // Listen to auth changes
-    public void listenToUserAuthState(GetUserAuthStateCallback callback) {
-        authStateListener = firebaseAuth -> {
-            FirebaseUser user = firebaseAuth.getCurrentUser();
-            callback.onResult(user);
-        };
+    public void listenToUserAuthState(UserAuthStateCallback callback) {
+        if (authStateListener != null) return;
+
+        authStateListener = firebaseAuth -> callback.onResult(firebaseAuth.getCurrentUser());
         auth.addAuthStateListener(authStateListener);
     }
 
-    public LiveData<UserDto> getUserLiveData() {
-        return userLiveData;
-    }
-
     /**
-     * Listens to user doc in Firestore database
+     * Attaches the Firestore listener once per user session.
      */
-    public void getUserData(String uid, GetUserCallback callback) {
-        if (userLiveData.getValue() != null) {
-            callback.onResult(userLiveData.getValue());
+    public void setupUserListener(String uid) {
+        if (userListener != null) {
+            // Listener is already active, no need to re-attach
             return;
         }
-        Log.d("ViewModel", "fetching user data...");
+        Log.d("Repository", "attaching new listener .....");
         userListener = firestore.collection("users")
                 .document(uid)
                 .addSnapshotListener((snapshot, error) -> {
                     if (error != null) {
-                        callback.onError(error.getMessage());
                         userLiveData.setValue(null);
                         return;
                     }
+
                     if (snapshot == null || !snapshot.exists()) {
-                        callback.onResult(null);
                         userLiveData.setValue(null);
                         return;
                     }
-
-                    UserDto userDoc = snapshot.toObject(UserDto.class);
-                    callback.onResult(userDoc);
-                    userLiveData.setValue(userDoc);
+                    userLiveData.setValue((snapshot.toObject(UserDto.class)));
                 });
     }
 
     /**
-     * Finds matching usernames in db
-     * used when user is initiating a transfer, entering userTag(Username)
+     * Exposes the shared LiveData instance.
+     * All ViewModels will observe this same object.
      */
-    public void searchUsername(String input, SearchUsernameCallback callback) {
-        functions.getHttpsCallable("searchUsername")
-                .call(Collections.singletonMap("input", input))
-                .addOnSuccessListener(result -> {
-
-                    List<RecipientDto> recipientDto = new ArrayList<>();
-
-                    Map<?, ?> data = (Map<?, ?>) result.getData();
-                    if (data != null && Boolean.TRUE.equals(data.get("success"))) {
-                        //noinspection unchecked
-                        List<Map<String, Object>> recipientDtos = (List<Map<String, Object>>) data.get("suggestions");
-
-                        if (recipientDtos != null) {
-                            for (Map<String, Object> recipient : recipientDtos) {
-                                String username = (String) recipient.get("username");
-                                String firstName = (String) recipient.get("firstName");
-                                String lastName = (String) recipient.get("lastName");
-                                String profileUrl = (String) recipient.get("profileUrl");
-                                recipientDto.add(new RecipientDto(username, firstName, lastName, profileUrl));
-                            }
-                        }
-                    }
-                    callback.onResult(recipientDto);
-                })
-                .addOnFailureListener(e -> {
-                    if (e instanceof FirebaseNetworkException || e instanceof IOException) {
-                        callback.onFailure("Network request failed. Please check your network and try again");
-                        return;
-                    }
-                    callback.onFailure(e.getMessage());
-                });
-    }
-
-    /**
-     * Remove all Firestore listeners
-     */
-    public void removeListener() {
-        if (userListener != null) userListener.remove();
-        if (authStateListener != null) auth.removeAuthStateListener(authStateListener);
+    public LiveData<UserDto> getUserLiveData() {
+        return userLiveData;
     }
 
     public void signOut() {
         FirebaseAuth.getInstance().signOut();
+        removeListeners();
     }
 
-    // Callbacks Interfaces =====
-    public interface SearchUsernameCallback {
-        void onResult(List<RecipientDto> suggestionsDto);
-
-        void onFailure(String reason);
+    public void removeListeners() {
+        if (authStateListener != null) {
+            auth.removeAuthStateListener(authStateListener);
+            authStateListener = null;
+        }
+        if (userListener != null) {
+            userListener.remove();
+            userListener = null;
+        }
     }
 
-    public interface GetUserCallback {
-        void onResult(UserDto userDto);
-
-        void onError(String error);
-    }
-
-    public interface GetUserAuthStateCallback {
+    // Callbacks Interfaces
+    public interface UserAuthStateCallback {
         void onResult(FirebaseUser user);
     }
 }

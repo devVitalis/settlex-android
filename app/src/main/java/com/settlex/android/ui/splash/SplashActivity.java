@@ -10,7 +10,7 @@ import android.os.Looper;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.splashscreen.SplashScreen;
 
-import com.settlex.android.data.local.prefs.OnboardingPrefs;
+import com.settlex.android.data.local.preference.OnboardingPrefs;
 import com.settlex.android.data.local.SessionManager;
 import com.settlex.android.ui.Onboarding.activity.OnboardingActivity;
 import com.settlex.android.ui.auth.activity.PinLoginActivity;
