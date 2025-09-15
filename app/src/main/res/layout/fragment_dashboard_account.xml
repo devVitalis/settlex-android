@@ -4,7 +4,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="@color/blue_light"
-    tools:context=".ui.dashboard.fragments.AccountDashboardFragment">
+    tools:context=".ui.dashboard.fragments.dashboard.AccountDashboardFragment">
 
 
 </FrameLayout>

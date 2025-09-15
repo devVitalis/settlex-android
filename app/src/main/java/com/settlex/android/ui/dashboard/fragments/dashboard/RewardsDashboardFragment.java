@@ -1,4 +1,4 @@
-package com.settlex.android.ui.dashboard.fragments;
+package com.settlex.android.ui.dashboard.fragments.dashboard;
 
 import android.os.Bundle;
 

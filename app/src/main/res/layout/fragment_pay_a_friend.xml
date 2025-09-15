@@ -7,7 +7,7 @@
     android:layout_height="match_parent"
     android:background="@color/white"
     android:fitsSystemWindows="true"
-    tools:context=".ui.dashboard.fragments.transactions.PayAFriendFragment">
+    tools:context=".ui.dashboard.fragments.transaction.PayAFriendFragment">
 
     <!--Header-->
     <LinearLayout

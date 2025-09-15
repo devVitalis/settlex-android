@@ -25,7 +25,12 @@ public class DashboardActivity extends AppCompatActivity {
 
         disableNavItemColorTint();
 
-        NavHostFragment navHostFragment = (NavHostFragment) getSupportFragmentManager().findFragmentById(R.id.dashboardNavHost);
+        /*
+         NavController navController = Navigation.findNavController(this, R.id.dashboard_nav_host);
+         NavigationUI.setupWithNavController(binding.bottomNavigationView, navController);
+         **/
+
+        NavHostFragment navHostFragment = (NavHostFragment) getSupportFragmentManager().findFragmentById(R.id.dashboard_nav_host);
         if (navHostFragment != null) {
             NavController navController = navHostFragment.getNavController();
             NavigationUI.setupWithNavController(binding.bottomNavigationView, navController);

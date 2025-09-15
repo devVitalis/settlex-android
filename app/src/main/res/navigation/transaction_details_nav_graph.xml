@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="utf-8"?>
+<navigation xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/transaction_details_nav_graph"
+    app:startDestination="@id/transactionReceipt">
+
+    <fragment
+        android:id="@+id/transactionReceipt"
+        android:name="com.settlex.android.ui.dashboard.fragments.transaction_details.TransactionReceiptFragment"
+        android:label="TransactionReceiptFragment"
+        tools:layout="@layout/fragment_transaction_receipt" />
+</navigation>

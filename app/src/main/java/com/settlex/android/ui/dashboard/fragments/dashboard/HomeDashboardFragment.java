@@ -1,4 +1,4 @@
-package com.settlex.android.ui.dashboard.fragments;
+package com.settlex.android.ui.dashboard.fragments.dashboard;
 
 import android.content.Intent;
 import android.os.Bundle;
@@ -18,12 +18,12 @@ import androidx.lifecycle.ViewModelProvider;
 import androidx.recyclerview.widget.GridLayoutManager;
 import androidx.recyclerview.widget.LinearLayoutManager;
 
-import com.google.gson.Gson;
 import com.settlex.android.R;
 import com.settlex.android.data.remote.avater.AvatarService;
 import com.settlex.android.databinding.FragmentDashboardHomeBinding;
 import com.settlex.android.ui.auth.activity.SignInActivity;
 import com.settlex.android.ui.dashboard.activity.TransactionActivity;
+import com.settlex.android.ui.dashboard.activity.TransactionDetailsActivity;
 import com.settlex.android.ui.dashboard.adapter.PromotionalBannerAdapter;
 import com.settlex.android.ui.dashboard.adapter.ServicesAdapter;
 import com.settlex.android.ui.dashboard.adapter.TransactionsAdapter;
@@ -105,6 +105,7 @@ public class HomeDashboardFragment extends Fragment {
 
         binding.btnLogin.setOnClickListener(v -> startActivity(new Intent(requireActivity(), SignInActivity.class)));
         binding.addMoney.setOnClickListener(v -> userViewModel.signOut());
+        binding.receiveMoney.setOnClickListener(v -> startActivity(new Intent(requireActivity(), TransactionDetailsActivity.class)));
         binding.balanceToggle.setOnClickListener(v -> userViewModel.toggleBalanceVisibility());
         binding.payAFriend.setOnClickListener(v -> startActivity(new Intent(requireActivity(), TransactionActivity.class)));
     }

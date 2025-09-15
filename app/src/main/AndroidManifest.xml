@@ -3,17 +3,16 @@
     <!-- Required permissions -->
     <uses-permission android:name="android.permission.INTERNET" />
     <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
-    <uses-permission android:name="android.permission.ACCESS_WIFI_STATE" />
-
-    <!-- package visibility declarations -->
-    <!-- Browsers for opening promo links -->
+    <uses-permission android:name="android.permission.ACCESS_WIFI_STATE" /> <!-- Browsers for opening promo links -->
     <queries>
         <intent>
             <action android:name="android.intent.action.VIEW" />
+
             <data android:scheme="http" />
         </intent>
         <intent>
             <action android:name="android.intent.action.VIEW" />
+
             <data android:scheme="https" />
         </intent>
     </queries>
@@ -28,6 +27,9 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/Theme.SettleX">
+        <activity
+            android:name=".ui.dashboard.activity.TransactionDetailsActivity"
+            android:exported="false" />
         <activity
             android:name=".ui.dashboard.activity.DashboardActivity"
             android:exported="true">
@@ -44,7 +46,6 @@
                     android:scheme="app" />
             </intent-filter>
         </activity>
-
         <activity
             android:name=".ui.dashboard.activity.TransactionActivity"
             android:exported="false" />

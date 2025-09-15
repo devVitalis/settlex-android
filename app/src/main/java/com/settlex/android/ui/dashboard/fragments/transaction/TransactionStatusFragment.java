@@ -1,4 +1,4 @@
-package com.settlex.android.ui.dashboard.fragments.transactions;
+package com.settlex.android.ui.dashboard.fragments.transaction;
 
 import android.os.Bundle;
 import android.view.LayoutInflater;
