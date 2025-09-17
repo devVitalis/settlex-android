@@ -1,5 +1,9 @@
 package com.settlex.android.util.string;
 
+import android.content.ClipData;
+import android.content.ClipboardManager;
+import android.content.Context;
+
 import com.google.firebase.Timestamp;
 
 import java.text.DecimalFormat;
@@ -8,7 +12,7 @@ import java.text.SimpleDateFormat;
 import java.util.Locale;
 
 /**
- * Utility class for string formatting, masking, and data transformations
+ * Utility class for string formatting and data transformations
  */
 public class StringUtil {
 
@@ -67,8 +71,14 @@ public class StringUtil {
         return "@" + username;
     }
 
-    public static String setAsterisks(){
+    public static String setAsterisks() {
         return "****";
+    }
+
+    public static void copyToClipboard(Context context, String label, String text) {
+        ClipboardManager clipboardManager = (ClipboardManager) context.getSystemService(Context.CLIPBOARD_SERVICE);
+        ClipData clipData = ClipData.newPlainText(label, text);
+        clipboardManager.setPrimaryClip(clipData);
     }
 
     // ====================== PHONE NUMBER FORMATTING ======================

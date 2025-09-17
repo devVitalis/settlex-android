@@ -201,7 +201,7 @@ public class AuthRepository {
             data.put("newPassword", newPassword);
             data.put("metadata", new Gson().toJson(metadata));
 
-            functions.getHttpsCallable("resetPassword")
+            functions.getHttpsCallable("changePassword")
                     .call(data)
                     .addOnSuccessListener(result -> callback.onSuccess())
                     .addOnFailureListener(e -> {

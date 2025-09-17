@@ -4,6 +4,7 @@ plugins {
     id("com.google.gms.google-services") // Firebase / Google services
     id("com.google.devtools.ksp") // KSP
     id("com.google.dagger.hilt.android") // Dagger / hilt
+    id("androidx.navigation.safeargs")
 }
 
 android {
@@ -103,6 +104,10 @@ dependencies {
     // Dependency Injection
     implementation(libs.hilt.android)
     ksp(libs.hilt.android.compiler)
+
+    // Object Mapper
+    implementation(libs.jackson.module.kotlin)
+    implementation(libs.jackson.databind)
 }
 
 tasks.withType<JavaCompile>().configureEach {

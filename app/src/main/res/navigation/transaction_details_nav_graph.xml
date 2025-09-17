@@ -3,11 +3,11 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/transaction_details_nav_graph"
-    app:startDestination="@id/transactionReceipt">
+    app:startDestination="@id/transactionReceiptFragment">
 
     <fragment
-        android:id="@+id/transactionReceipt"
+        android:id="@+id/transactionReceiptFragment"
         android:name="com.settlex.android.ui.dashboard.fragments.transaction_details.TransactionReceiptFragment"
         android:label="TransactionReceiptFragment"
-        tools:layout="@layout/fragment_transaction_receipt" />
+        tools:layout="@layout/fragment_transaction_receipt"/>
 </navigation>

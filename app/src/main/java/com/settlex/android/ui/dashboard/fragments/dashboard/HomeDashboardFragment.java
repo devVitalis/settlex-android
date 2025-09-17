@@ -1,5 +1,6 @@
 package com.settlex.android.ui.dashboard.fragments.dashboard;
 
+import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
 import android.os.Handler;
@@ -12,7 +13,6 @@ import android.widget.Toast;
 
 import androidx.activity.OnBackPressedCallback;
 import androidx.annotation.NonNull;
-import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 import androidx.lifecycle.ViewModelProvider;
 import androidx.recyclerview.widget.GridLayoutManager;
@@ -32,7 +32,6 @@ import com.settlex.android.ui.dashboard.model.ServiceUiModel;
 import com.settlex.android.ui.dashboard.model.TransactionUiModel;
 import com.settlex.android.ui.dashboard.model.UserUiModel;
 import com.settlex.android.ui.dashboard.viewmodel.PromoBannerViewModel;
-import com.settlex.android.ui.dashboard.viewmodel.TransactionViewModel;
 import com.settlex.android.ui.dashboard.viewmodel.UserViewModel;
 import com.settlex.android.util.event.Result;
 import com.settlex.android.util.network.NetworkMonitor;
@@ -46,18 +45,18 @@ import dagger.hilt.android.AndroidEntryPoint;
 
 @AndroidEntryPoint
 public class HomeDashboardFragment extends Fragment {
-    private final double MILLION_THRESHOLD = 999_999_999;
     private long backPressedTime;
+    private final double MILLION_THRESHOLD = 999_999_999;
     private final Handler autoScrollHandler = new Handler(Looper.getMainLooper());
     private Runnable autoScrollRunnable;
 
-    private boolean isConnected = false; // Network connection status
+    private boolean isConnected = false;     // Network state
 
+    // dependencies
+    private TransactionsAdapter adapter;
     private FragmentDashboardHomeBinding binding;
-    private TransactionViewModel transactionViewModel;
     private UserViewModel userViewModel;
     private PromoBannerViewModel promoBannerViewModel;
-
 
     public HomeDashboardFragment() {
         // Required empty public constructor
@@ -67,7 +66,6 @@ public class HomeDashboardFragment extends Fragment {
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         userViewModel = new ViewModelProvider(requireActivity()).get(UserViewModel.class);
-        transactionViewModel = new ViewModelProvider(requireActivity()).get(TransactionViewModel.class);
         promoBannerViewModel = new ViewModelProvider(requireActivity()).get(PromoBannerViewModel.class);
     }
 
@@ -75,20 +73,13 @@ public class HomeDashboardFragment extends Fragment {
     public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         binding = FragmentDashboardHomeBinding.inflate(inflater, container, false);
 
-        observeNetworkState();
+        setupUiActions();
         loadAppServices();
-        setupTransactionRecyclerView();
-        observeUserState();
+        observeNetworkState();
+        observeUserAuthState();
         observeAndLoadPromoBanners();
 
-        setupUiActions();
-
         return binding.getRoot();
-    }
-
-    @Override
-    public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
-        super.onViewCreated(view, savedInstanceState);
     }
 
     @Override
@@ -101,13 +92,13 @@ public class HomeDashboardFragment extends Fragment {
     // UI ACTIONS =============
     private void setupUiActions() {
         StatusBarUtil.setStatusBarColor(requireActivity(), R.color.gray_light);
+        setupTransactionRecyclerView();
         setupDoubleBackToExit();
 
-        binding.btnLogin.setOnClickListener(v -> startActivity(new Intent(requireActivity(), SignInActivity.class)));
-        binding.addMoney.setOnClickListener(v -> userViewModel.signOut());
-        binding.receiveMoney.setOnClickListener(v -> startActivity(new Intent(requireActivity(), TransactionDetailsActivity.class)));
+        binding.btnLogin.setOnClickListener(v -> navigateTo(SignInActivity.class));
         binding.balanceToggle.setOnClickListener(v -> userViewModel.toggleBalanceVisibility());
-        binding.payAFriend.setOnClickListener(v -> startActivity(new Intent(requireActivity(), TransactionActivity.class)));
+        binding.addMoney.setOnClickListener(v -> userViewModel.signOut());
+        binding.payAFriend.setOnClickListener(v -> navigateTo(TransactionActivity.class));
     }
 
     //  OBSERVERS ===========
@@ -116,8 +107,9 @@ public class HomeDashboardFragment extends Fragment {
                 this.isConnected = isConnected);
     }
 
-    private void observeUserState() {
+    private void observeUserAuthState() {
         userViewModel.getAuthStateLiveData().observe(getViewLifecycleOwner(), uid -> {
+            Log.d("ViewModel", "Observing auth state");
             if (uid == null) {
                 // logged out/session expired
                 showLoggedOutLayout();
@@ -131,8 +123,8 @@ public class HomeDashboardFragment extends Fragment {
 
     private void observeAndDisplayUserData() {
         userViewModel.getUserLiveData().observe(getViewLifecycleOwner(), result -> {
+            Log.d("ViewModel", "Observing user data");
             if (result == null) {
-                showLoggedOutLayout();
                 return;
             }
 
@@ -194,7 +186,7 @@ public class HomeDashboardFragment extends Fragment {
     }
 
     private void loadUserPrefs(double balance, double commissionBalance) {
-        userViewModel.getIsBalanceHiddenLiveData().observe(getViewLifecycleOwner(), hidden -> {  // Get balance state
+        userViewModel.getIsBalanceHiddenLiveData().observe(getViewLifecycleOwner(), hidden -> {
             if (hidden) {
                 // balance hidden set asterisk
                 binding.userBalance.setText(StringUtil.setAsterisks());
@@ -208,10 +200,8 @@ public class HomeDashboardFragment extends Fragment {
     }
 
     private void observeAndLoadRecentTransactions(String uid) {
-        int TXN_QUERY_LIMIT = 2;
-        transactionViewModel.getUserTransactions(uid, TXN_QUERY_LIMIT);
-        transactionViewModel.getTransactionLiveData().observe(getViewLifecycleOwner(), transactions -> {
-            if (transactions.getStatus() == null) return;
+        userViewModel.getRecentTransactionLiveData(uid, 2).observe(getViewLifecycleOwner(), transactions -> {
+            if (transactions == null) return;
 
             switch (transactions.getStatus()) {
                 case LOADING -> onTransactionLoading();
@@ -239,7 +229,6 @@ public class HomeDashboardFragment extends Fragment {
         }
 
         // transaction exists
-        TransactionsAdapter adapter = new TransactionsAdapter();
         adapter.submitList(transactions.getData());
         binding.transactionRecyclerView.setAdapter(adapter);
 
@@ -251,6 +240,14 @@ public class HomeDashboardFragment extends Fragment {
     private void onTransactionError() {
         // show error state
         binding.transactionContainer.setVisibility(View.GONE);
+    }
+
+    private void onTransactionClick() {
+        adapter.setOnTransactionClickListener(transaction -> {
+            Intent intent = new Intent(requireContext(), TransactionDetailsActivity.class);
+            intent.putExtra("transaction", transaction);
+            startActivity(intent);
+        });
     }
 
     private void observeAndLoadPromoBanners() {
@@ -297,20 +294,21 @@ public class HomeDashboardFragment extends Fragment {
     }
 
     private void showLoggedOutLayout() {
-        // hide
+        // Hide all logged-in UI elements
         binding.marqueeTxt.setSelected(false);
         binding.marqueeContainer.setVisibility(View.GONE);
-
-        binding.userBalance.setText(StringUtil.setAsterisks());
-        binding.userCommissionBalance.setText(StringUtil.setAsterisks());
-
         binding.balanceToggle.setVisibility(View.GONE);
         binding.greetingContainer.setVisibility(View.GONE);
-        Log.d("Fragment", "running...");
         binding.actionButtons.setVisibility(View.GONE);
         binding.transactionContainer.setVisibility(View.GONE);
+        Log.d("Fragment", "running...");
 
-        // show
+        // Explicitly reset the user data UI components
+        binding.userFullName.setText(""); // Clear the full name
+        binding.userBalance.setText(StringUtil.setAsterisks()); // Clear the balance
+        binding.userCommissionBalance.setText(StringUtil.setAsterisks()); // Clear the commission balance
+
+        // Show the logged-out UI elements
         binding.btnLogin.setVisibility(View.VISIBLE);
     }
 
@@ -318,6 +316,9 @@ public class HomeDashboardFragment extends Fragment {
         LinearLayoutManager layoutManager = new LinearLayoutManager(getContext());
         layoutManager.setOrientation(LinearLayoutManager.VERTICAL);
         binding.transactionRecyclerView.setLayoutManager(layoutManager);
+
+        adapter = new TransactionsAdapter();
+        onTransactionClick();
     }
 
     private void loadAppServices() {
@@ -339,6 +340,10 @@ public class HomeDashboardFragment extends Fragment {
         );
         ServicesAdapter adapter = new ServicesAdapter(services);
         binding.serviceRecyclerView.setAdapter(adapter);
+    }
+
+    private void navigateTo(Class<? extends Activity> activityClass) {
+        startActivity(new Intent(requireActivity(), activityClass));
     }
 
     private void setupDoubleBackToExit() {

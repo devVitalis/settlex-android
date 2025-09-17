@@ -6,6 +6,7 @@ import android.os.Bundle;
 import android.text.Editable;
 import android.text.InputType;
 import android.text.TextWatcher;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.MotionEvent;
 import android.view.View;
@@ -20,6 +21,7 @@ import androidx.lifecycle.ViewModelProvider;
 import androidx.recyclerview.widget.LinearLayoutManager;
 
 import com.google.android.material.bottomsheet.BottomSheetDialog;
+import com.google.gson.Gson;
 import com.settlex.android.R;
 import com.settlex.android.data.enums.TransactionServiceType;
 import com.settlex.android.data.remote.avater.AvatarService;
@@ -54,6 +56,7 @@ public class PayAFriendFragment extends Fragment {
     private UserUiModel currentUser; // latest logged in user
     private BottomSheetDialog bottomSheetDialog;
 
+    // dependencies
     private FragmentPayAFriendBinding binding;
     private ProgressLoaderController progressLoader;
     private RecipientAdapter recipientAdapter;
@@ -126,6 +129,7 @@ public class PayAFriendFragment extends Fragment {
                         this.currentUser = user;
                     }
                 }
+
                 case ERROR -> {
                     // Handle error
                 }
@@ -237,10 +241,10 @@ public class PayAFriendFragment extends Fragment {
                                 description));
     }
 
-    private void startPayFriendTransaction(String senderUid, String recipientUsername, double amountToSend, String description) {
+    private void startPayFriendTransaction(String senderUid, String recipient, double amountToSend, String description) {
         transactionViewModel.payFriend(
                 senderUid,
-                recipientUsername,
+                recipient,
                 TransactionIdGenerator.generate(senderUid), // UID hash + timestamp + UUID
                 amountToSend,
                 String.valueOf(TransactionServiceType.PAY_A_FRIEND),

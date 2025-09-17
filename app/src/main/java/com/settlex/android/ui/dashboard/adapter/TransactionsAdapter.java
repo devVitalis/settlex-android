@@ -16,7 +16,11 @@ import com.settlex.android.ui.dashboard.model.TransactionUiModel;
  * Base adapter for displaying transaction items in RecyclerView
  */
 public class TransactionsAdapter extends ListAdapter<TransactionUiModel, TransactionsAdapter.TransactionViewHolder> {
+    private OnTransactionClickListener listener;
 
+    public void setOnTransactionClickListener(OnTransactionClickListener listener) {
+        this.listener = listener;
+    }
 
     public TransactionsAdapter() {
         super(DIFF_CALLBACK);
@@ -44,7 +48,7 @@ public class TransactionsAdapter extends ListAdapter<TransactionUiModel, Transac
 
     @Override
     public void onBindViewHolder(@NonNull TransactionViewHolder holder, int position) {
-        holder.Bind(getItem(position));
+        holder.Bind(getItem(position), listener);
     }
 
     /**
@@ -58,7 +62,7 @@ public class TransactionsAdapter extends ListAdapter<TransactionUiModel, Transac
             this.binding = binding;
         }
 
-        public void Bind(TransactionUiModel transaction) {
+        public void Bind(TransactionUiModel transaction, OnTransactionClickListener listener) {
             binding.icon.setImageResource(transaction.getServiceTypeIcon());
             binding.name.setText(transaction.getServiceTypeName());
 
@@ -74,6 +78,16 @@ public class TransactionsAdapter extends ListAdapter<TransactionUiModel, Transac
             binding.status.setText(transaction.getStatus());
             binding.status.setTextColor(ContextCompat.getColor(binding.getRoot().getContext(), transaction.getStatusColor()));
             binding.status.setBackgroundResource(transaction.getStatusBgColor());
+
+            binding.getRoot().setOnClickListener(v -> {
+                if (listener != null) {
+                    listener.onClick(transaction);
+                }
+            });
         }
+    }
+
+    public interface OnTransactionClickListener {
+        void onClick(TransactionUiModel uiModel);
     }
 }

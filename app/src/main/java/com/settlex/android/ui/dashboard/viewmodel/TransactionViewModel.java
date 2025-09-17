@@ -4,10 +4,7 @@ import androidx.lifecycle.LiveData;
 import androidx.lifecycle.MutableLiveData;
 import androidx.lifecycle.ViewModel;
 
-import com.settlex.android.data.enums.TransactionOperation;
-import com.settlex.android.data.enums.TransactionStatus;
 import com.settlex.android.data.remote.dto.RecipientDto;
-import com.settlex.android.data.remote.dto.TransactionDto;
 import com.settlex.android.data.repository.TransactionRepository;
 import com.settlex.android.ui.dashboard.model.RecipientUiModel;
 import com.settlex.android.ui.dashboard.model.TransactionUiModel;
@@ -16,7 +13,6 @@ import com.settlex.android.util.event.Result;
 import com.settlex.android.util.string.StringUtil;
 
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.List;
 
 import dagger.hilt.android.lifecycle.HiltViewModel;
@@ -39,60 +35,6 @@ public class TransactionViewModel extends ViewModel {
     @Override
     protected void onCleared() {
         super.onCleared();
-        transactionRepo.removeListener();
-    }
-
-    public void getUserTransactions(String currentUserUid, int limit) {
-        if (transactionLiveData.getValue() != null) return;
-
-        transactionLiveData.setValue(Result.loading());
-
-        transactionRepo.getUserTransactions(currentUserUid, limit, new TransactionRepository.TransactionHistoryCallback() {
-            @Override
-            public void onResult(List<TransactionDto> dtolist) {
-                if (dtolist == null || dtolist.isEmpty()) {
-                    transactionLiveData.setValue(Result.success(Collections.emptyList()));
-                    return;
-                }
-
-                List<TransactionUiModel> uiModel = new ArrayList<>();
-                for (TransactionDto dto : dtolist) {
-                    boolean isSender = currentUserUid.equals(dto.senderUid); // same user
-
-                    TransactionOperation operation;
-                    if (dto.status == TransactionStatus.REVERSED) {
-                        // reversed transaction is credit
-                        operation = isSender ? TransactionOperation.CREDIT : TransactionOperation.DEBIT;
-                    } else {
-                        // sender is current user: DEBIT
-                        operation = isSender ? TransactionOperation.DEBIT : TransactionOperation.CREDIT;
-                    }
-
-                    // Build UI model
-                    uiModel.add(new TransactionUiModel(
-                            dto.transactionId,
-                            dto.sender.toUpperCase(),
-                            dto.recipient.toUpperCase(),
-                            isSender ? dto.recipient.toUpperCase() : dto.sender.toUpperCase(),
-                            isSender ? dto.serviceType.getDisplayName() : "Transfer received",
-                            dto.serviceType.getIconRes(),
-                            operation.getSymbol(),
-                            operation.getColorRes(),
-                            StringUtil.formatToNaira(dto.amount),
-                            StringUtil.formatTimeStamp(dto.createdAt),
-                            dto.status.getDisplayName(),
-                            dto.status.getColorRes(),
-                            dto.status.getBgColorRes()
-                    ));
-                }
-                transactionLiveData.setValue(Result.success(uiModel));
-            }
-
-            @Override
-            public void onError(String reason) {
-                transactionLiveData.setValue(Result.error("Failed to load transactions"));
-            }
-        });
     }
 
     public void searchRecipientWithUsername(String query) {
@@ -120,11 +62,11 @@ public class TransactionViewModel extends ViewModel {
         });
     }
 
-    public void payFriend(String senderUid, String receiverUserName, String transactionId, double amount, String serviceType, String description) {
+    public void payFriend(String senderUid, String recipient, String transactionId, double amount, String serviceType, String description) {
         payFriendLiveData.setValue(new Event<>(Result.loading()));
         transactionRepo.payFriend(
                 senderUid,
-                receiverUserName,
+                recipient,
                 transactionId,
                 amount,
                 serviceType,
