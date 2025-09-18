@@ -330,7 +330,7 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_marginTop="10dp"
-                    android:background="@drawable/bg_8dp_light_orange"
+                    android:background="@drawable/bg_8dp_orange_light"
                     android:fontFamily="@font/poppins_regular"
                     android:includeFontPadding="false"
                     android:padding="10dp"

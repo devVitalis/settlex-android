@@ -22,6 +22,8 @@ import com.settlex.android.R;
 import com.settlex.android.data.remote.avater.AvatarService;
 import com.settlex.android.databinding.FragmentDashboardHomeBinding;
 import com.settlex.android.ui.auth.activity.SignInActivity;
+import com.settlex.android.ui.dashboard.activity.CommissionWithdrawalActivity;
+import com.settlex.android.ui.dashboard.activity.ReceiveMoneyActivity;
 import com.settlex.android.ui.dashboard.activity.TransactionActivity;
 import com.settlex.android.ui.dashboard.activity.TransactionDetailsActivity;
 import com.settlex.android.ui.dashboard.adapter.PromotionalBannerAdapter;
@@ -96,9 +98,11 @@ public class HomeDashboardFragment extends Fragment {
         setupDoubleBackToExit();
 
         binding.btnLogin.setOnClickListener(v -> navigateTo(SignInActivity.class));
-        binding.balanceToggle.setOnClickListener(v -> userViewModel.toggleBalanceVisibility());
-        binding.addMoney.setOnClickListener(v -> userViewModel.signOut());
-        binding.payAFriend.setOnClickListener(v -> navigateTo(TransactionActivity.class));
+        binding.btnBalanceToggle.setOnClickListener(v -> userViewModel.toggleBalanceVisibility());
+        binding.btnUserCommissionBalanceLayout.setOnClickListener(v -> navigateTo(CommissionWithdrawalActivity.class));
+        binding.btnAddMoney.setOnClickListener(v -> userViewModel.signOut());
+        binding.btnReceiveMoney.setOnClickListener(v -> navigateTo(ReceiveMoneyActivity.class));
+        binding.btnPayAFriend.setOnClickListener(v -> navigateTo(TransactionActivity.class));
     }
 
     //  OBSERVERS ===========
@@ -138,7 +142,7 @@ public class HomeDashboardFragment extends Fragment {
         // hide details
         binding.userFullName.setVisibility(View.GONE);
         binding.userBalance.setVisibility(View.GONE);
-        binding.userCommissionBalanceLayout.setVisibility(View.GONE);
+        binding.btnUserCommissionBalanceLayout.setVisibility(View.GONE);
 
         // start and show shimmer
         binding.userFullNameShimmer.startShimmer();
@@ -164,7 +168,7 @@ public class HomeDashboardFragment extends Fragment {
         // show details
         binding.userFullName.setVisibility(View.VISIBLE);
         binding.userBalance.setVisibility(View.VISIBLE);
-        binding.userCommissionBalanceLayout.setVisibility(View.VISIBLE);
+        binding.btnUserCommissionBalanceLayout.setVisibility(View.VISIBLE);
 
         AvatarService.loadAvatar(user.getUserFullName(), binding.userProfilePic);
         binding.userFullName.setText(user.getUserFullName());
@@ -294,7 +298,7 @@ public class HomeDashboardFragment extends Fragment {
         // Hide all logged-in UI elements
         binding.marqueeTxt.setSelected(false);
         binding.marqueeContainer.setVisibility(View.GONE);
-        binding.balanceToggle.setVisibility(View.GONE);
+        binding.btnBalanceToggle.setVisibility(View.GONE);
         binding.greetingContainer.setVisibility(View.GONE);
         binding.actionButtons.setVisibility(View.GONE);
         binding.transactionContainer.setVisibility(View.GONE);

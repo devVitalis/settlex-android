@@ -28,6 +28,12 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.SettleX">
         <activity
+            android:name=".ui.dashboard.activity.CommissionWithdrawalActivity"
+            android:exported="false" />
+        <activity
+            android:name=".ui.dashboard.activity.ReceiveMoneyActivity"
+            android:exported="false" />
+        <activity
             android:name=".ui.dashboard.activity.TransactionDetailsActivity"
             android:exported="false" />
         <activity

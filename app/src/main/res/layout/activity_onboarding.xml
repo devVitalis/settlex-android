@@ -77,7 +77,7 @@
             <!--Btn Login-->
             <com.google.android.material.button.MaterialButton
                 android:id="@+id/btnLogin"
-                style="@style/Widget.SettleXApp.Button.Filled.LightBlue"
+                style="@style/Widget.SettleXApp.Button.Filled.BlueLight"
                 android:layout_width="match_parent"
                 android:layout_height="60dp"
                 android:layout_marginTop="2dp"

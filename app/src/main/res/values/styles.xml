@@ -20,7 +20,7 @@
     </style>
 
     <!-- Filled Button - Light Blue -->
-    <style name="Widget.SettleXApp.Button.Filled.LightBlue" parent="Widget.Material3.Button">
+    <style name="Widget.SettleXApp.Button.Filled.BlueLight" parent="Widget.Material3.Button">
         <item name="backgroundTint">@color/btn_filled_color_selector_light_blue</item>
         <item name="android:textColor">@color/blue</item>
         <item name="android:fontFamily">sans-serif</item>
@@ -29,7 +29,7 @@
     </style>
 
     <!-- Filled Button - Light Blue, Rounded corners (8dp) -->
-    <style name="Widget.SettleXApp.Button.Filled.Rounded8.LightBlue" parent="Widget.Material3.Button">
+    <style name="Widget.SettleXApp.Button.Filled.Rounded8.BlueLight" parent="Widget.Material3.Button">
         <item name="backgroundTint">@color/btn_filled_color_selector_light_blue</item>
         <item name="android:textColor">@color/blue</item>
         <item name="android:fontFamily">sans-serif</item>

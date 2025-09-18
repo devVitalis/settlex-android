@@ -182,7 +182,7 @@
                     android:id="@+id/marqueeContainer"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:background="@drawable/bg_8dp_light_orange"
+                    android:background="@drawable/bg_8dp_orange_light"
                     android:gravity="center_vertical"
                     android:orientation="horizontal"
                     android:paddingHorizontal="10dp"
@@ -263,7 +263,7 @@
                             app:layout_constraintTop_toTopOf="parent" />
 
                         <ImageView
-                            android:id="@+id/balanceToggle"
+                            android:id="@+id/btnBalanceToggle"
                             android:layout_width="18dp"
                             android:layout_height="18dp"
                             android:layout_marginStart="5dp"
@@ -330,9 +330,12 @@
                                 android:layout_marginTop="10dp">
 
                                 <LinearLayout
-                                    android:id="@+id/userCommissionBalanceLayout"
+                                    android:id="@+id/btnUserCommissionBalanceLayout"
                                     android:layout_width="wrap_content"
                                     android:layout_height="wrap_content"
+                                    android:clickable="true"
+                                    android:focusable="true"
+                                    android:background="?attr/selectableItemBackground"
                                     android:layout_gravity="center"
                                     android:gravity="center_vertical"
                                     android:orientation="horizontal">
@@ -383,7 +386,7 @@
 
                         <!-- Add Money -->
                         <LinearLayout
-                            android:id="@+id/addMoney"
+                            android:id="@+id/btnAddMoney"
                             android:layout_width="100dp"
                             android:layout_height="wrap_content"
                             android:background="@drawable/bg_8dp_transparent_white"
@@ -410,7 +413,7 @@
 
                         <!-- Receive Money -->
                         <LinearLayout
-                            android:id="@+id/receiveMoney"
+                            android:id="@+id/btnReceiveMoney"
                             android:layout_width="100dp"
                             android:layout_height="wrap_content"
                             android:background="@drawable/bg_8dp_transparent_white"
@@ -438,7 +441,7 @@
 
                         <!-- Send Money -->
                         <LinearLayout
-                            android:id="@+id/payAFriend"
+                            android:id="@+id/btnPayAFriend"
                             android:layout_width="100dp"
                             android:layout_height="wrap_content"
                             android:background="@drawable/bg_8dp_transparent_white"
