@@ -6,6 +6,10 @@ public class RecipientDto {
     public String lastName;
     public String profileUrl;
 
+    public RecipientDto() {
+        // for deserialization
+    }
+
     public RecipientDto(String username, String firstName, String lastName, String profileUrl) {
         this.username = username;
         this.firstName = firstName;

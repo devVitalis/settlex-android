@@ -77,11 +77,13 @@ public class TransactionReceiptFragment extends Fragment {
         binding.recipient.setText(transaction.getRecipient());
         binding.recipientName.setText(transaction.getRecipientName());
 
-        binding.sender.setText(transaction.getSender());
+        binding.sender.setText(transaction.getSenderName());
+
         // show description if there any
-        boolean isThereDescription = transaction.getDescription() != null;
-        binding.descContainer.setVisibility((isThereDescription) ? View.VISIBLE : View.GONE);
-        binding.description.setText(isThereDescription ? transaction.getDescription() : "");
+        if (transaction.getDescription() != null){
+            binding.descriptionContainer.setVisibility(View.VISIBLE);
+            binding.description.setText(transaction.getDescription());
+        }
 
         binding.transactionId.setText(transaction.getTransactionId());
         binding.copyTransactionId.setOnClickListener(v -> {

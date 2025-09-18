@@ -12,8 +12,10 @@ import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.ListenerRegistration;
 import com.google.firebase.firestore.Query;
 import com.google.firebase.functions.FirebaseFunctions;
+import com.settlex.android.data.local.preference.UserPrefs;
 import com.settlex.android.data.remote.dto.TransactionDto;
 import com.settlex.android.data.remote.dto.UserDto;
+import com.settlex.android.util.event.Result;
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -23,86 +25,124 @@ import jakarta.inject.Inject;
 import jakarta.inject.Singleton;
 
 /**
- * Manages each user account
+ * Repository managing user account session and data.
+ * - Owns FirebaseAuth listener
+ * - Owns Firestore snapshot listeners
+ * - Exposes LiveData for auth state and user profile
+ * - Ensures no duplicate listeners or stale data
  */
 @Singleton
 public class UserRepository {
-    private final MutableLiveData<UserDto> userLiveData = new MutableLiveData<>();
+    private final MutableLiveData<Result<UserDto>> sharedUserLiveData = new MutableLiveData<>();
+    private final MutableLiveData<FirebaseUser> sharedUserAuthState = new MutableLiveData<>();
+    private final MutableLiveData<Boolean> isBalanceHiddenLiveData = new MutableLiveData<>();
 
     // Dependencies
     private final FirebaseFunctions functions;
     private final FirebaseFirestore firestore;
     private final FirebaseAuth auth;
+    private final UserPrefs userPrefs;
+
+    // Internal listeners
     private ListenerRegistration userListener;
     private ListenerRegistration transactionListener;
     private FirebaseAuth.AuthStateListener authStateListener;
 
     @Inject
-    public UserRepository(FirebaseAuth auth, FirebaseFirestore firestore, FirebaseFunctions functions) {
+    public UserRepository(FirebaseAuth auth, FirebaseFirestore firestore, FirebaseFunctions functions, UserPrefs userPrefs) {
         this.auth = auth;
         this.firestore = firestore;
         this.functions = functions;
+        this.userPrefs = userPrefs;
+
+        // setup once (single source of truth)
+        initAuthStateListener();
     }
 
-    public void listenToUserAuthState(UserAuthStateCallback callback) {
-        // Ensure only one active listener at a time
-        if (authStateListener != null) {
-//            auth.removeAuthStateListener(authStateListener);
-            return;
-        }
+    private void initAuthStateListener() {
+        if (authStateListener != null) return; // already attached
 
         authStateListener = firebaseAuth -> {
             FirebaseUser currentUser = firebaseAuth.getCurrentUser();
-            callback.onResult(currentUser);
+            sharedUserAuthState.postValue(currentUser);
 
             if (currentUser == null) {
-                // User logged out → clear snapshot listener & data
-                clearUserData();
+                // logged out | clear cached user
+                clearUserSession();
+                sharedUserLiveData.postValue(null);
+                return;
             }
+
+            // logged in → setup user listener
+            initSharedUserListener(currentUser.getUid());
+            initIsBalanceHiddenLiveData();
         };
         auth.addAuthStateListener(authStateListener);
     }
 
+    public LiveData<FirebaseUser> getSharedUserAuthState() {
+        // Expose current user
+        return sharedUserAuthState;
+    }
 
-    public void setupUserListener(String uid) {
-        if (userListener != null) {
-            return;
-        }
-        // Always clear previous listener before attaching new one
-//        removeUserListener();
+    // ---------------- USER ----------------
+    private void initSharedUserListener(String uid) {
+        sharedUserLiveData.postValue(Result.loading());
 
-        Log.d("Repository", "Attaching Firestore listener for user: " + uid);
         userListener = firestore.collection("users")
                 .document(uid)
                 .addSnapshotListener((snapshot, error) -> {
                     if (error != null) {
-                        Log.w("Repository", "User listener error", error);
-                        userLiveData.setValue(null);
+                        Log.e("Repository", "User listener error", error);
+                        sharedUserLiveData.postValue(Result.error(error.getMessage()));
                         return;
                     }
-
                     if (snapshot == null || !snapshot.exists()) {
-                        userLiveData.setValue(null);
+                        sharedUserLiveData.postValue(null);
                         return;
                     }
-
-                    userLiveData.setValue(snapshot.toObject(UserDto.class));
+                    sharedUserLiveData.postValue(Result.success(snapshot.toObject(UserDto.class)));
                 });
     }
 
-    public void getUserTransactions(String uid, int limit, TransactionCallback callback) {
-        if (transactionListener != null) {
-            // Listener is already active, no need to re-attach
-            return;
-        }
-//        removeTransactionListener();
+    public LiveData<Result<UserDto>> getSharedUserLiveData() {
+        // Expose user data
+        return sharedUserLiveData;
+    }
 
-        Log.d("ViewModel", "Fetching new transactions");
+    private void removeUserListener() {
+        if (userListener == null) return;
+        userListener.remove();
+        userListener = null;
+    }
+
+    private void initIsBalanceHiddenLiveData() {
+        isBalanceHiddenLiveData.setValue(userPrefs.isBalanceHidden());
+    }
+
+    public void toggleBalanceVisibility() {
+        boolean isBalanceCurrentlyHidden = userPrefs.isBalanceHidden();
+        boolean shouldHideBalance = !isBalanceCurrentlyHidden;
+
+        userPrefs.setBalanceHidden(shouldHideBalance);
+        isBalanceHiddenLiveData.setValue(shouldHideBalance);
+    }
+
+    public LiveData<Boolean> getIsBalanceHiddenLiveData() {
+        return isBalanceHiddenLiveData;
+    }
+
+    // ---------------- TRANSACTIONS ----------------
+    public void getUserTransactions(String uid, int limit, TransactionCallback callback) {
+        removeTransactionListener(); // avoid multiple listeners
+
+        Log.d("Repository", "Attaching Firestore transaction listener for user: " + uid);
         transactionListener = firestore.collection("users")
                 .document(uid)
                 .collection("transactions")
                 .orderBy("createdAt", Query.Direction.DESCENDING)
-                .limit(limit).addSnapshotListener((snapshots, error) -> {
+                .limit(limit)
+                .addSnapshotListener((snapshots, error) -> {
                     if (error != null) {
                         callback.onError(error.getMessage());
                         return;
@@ -113,9 +153,7 @@ public class UserRepository {
                         return;
                     }
 
-                    // Map data to dto
                     List<TransactionDto> transactions = new ArrayList<>();
-
                     for (DocumentSnapshot doc : snapshots.getDocuments()) {
                         TransactionDto txn = doc.toObject(TransactionDto.class);
                         if (txn != null) transactions.add(txn);
@@ -124,43 +162,25 @@ public class UserRepository {
                 });
     }
 
-
-    public void signOut() {
-        Log.d("Repository", "Signing out user");
-        auth.signOut();
-        clearUserData();
-    }
-
-    private void removeUserListener() {
-        if (userListener != null) {
-            userListener.remove();
-            userListener = null;
-        }
-    }
-
     private void removeTransactionListener() {
-        if (transactionListener != null) {
-            transactionListener.remove();
-            transactionListener = null;
-        }
+        if (transactionListener == null) return;
+        transactionListener.remove();
+        transactionListener = null;
     }
 
-    private void clearUserData() {
+    // ------- SESSION ---------
+    public void signOut() {
+        auth.signOut();
+    }
+
+    private void clearUserSession() {
         removeUserListener();
-        userLiveData.postValue(null);
+        removeTransactionListener();
+        // don’t remove authStateListener,
+        // we want it alive to pick up next login
     }
 
-    // GETTERS
-    public LiveData<UserDto> getUserLiveData() {
-        // Shared user LiveData
-        return userLiveData;
-    }
-
-    // CALLBACK INTERFACE
-    public interface UserAuthStateCallback {
-        void onResult(FirebaseUser user);
-    }
-
+    // -------- CALLBACKS ---------
     public interface TransactionCallback {
         void onResult(List<TransactionDto> dtolist);
 

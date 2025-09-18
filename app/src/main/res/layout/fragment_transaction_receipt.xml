@@ -296,11 +296,12 @@
                     </LinearLayout>
 
                     <LinearLayout
-                        android:id="@+id/descContainer"
+                        android:id="@+id/descriptionContainer"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:layout_marginTop="10dp"
                         android:gravity="center_vertical"
+                        android:visibility="gone"
                         android:orientation="horizontal">
 
                         <TextView
@@ -411,8 +412,7 @@
                             android:fontFamily="@font/poppins_regular"
                             android:includeFontPadding="false"
                             android:text="Download Receipt"
-                            android:textStyle="bold"
-                            android:textColor="@color/blue"
+                            android:textColor="@color/black"
                             android:textSize="12sp" />
                     </LinearLayout>
 
@@ -443,8 +443,7 @@
                             android:fontFamily="@font/poppins_regular"
                             android:includeFontPadding="false"
                             android:text="Pay Again"
-                            android:textStyle="bold"
-                            android:textColor="@color/blue"
+                            android:textColor="@color/black"
                             android:textSize="12sp" />
                     </LinearLayout>
                 </LinearLayout>

@@ -3,6 +3,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
+    android:background="@drawable/bg_8dp_white"
     android:orientation="vertical">
 
     <!--Icon & Divider Container-->
@@ -58,8 +59,8 @@
                     android:id="@+id/operation"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:fontFamily="@font/poppins_regular"
                     android:layout_marginEnd="2dp"
+                    android:fontFamily="@font/poppins_regular"
                     android:includeFontPadding="false"
                     android:textColor="@color/red"
                     android:textSize="13sp"

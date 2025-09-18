@@ -50,9 +50,9 @@ public class HomeDashboardFragment extends Fragment {
     private final Handler autoScrollHandler = new Handler(Looper.getMainLooper());
     private Runnable autoScrollRunnable;
 
-    private boolean isConnected = false;     // Network state
+    private boolean isConnected = false;  // Network state
 
-    // dependencies
+    // Dependencies
     private TransactionsAdapter adapter;
     private FragmentDashboardHomeBinding binding;
     private UserViewModel userViewModel;
@@ -92,7 +92,7 @@ public class HomeDashboardFragment extends Fragment {
     // UI ACTIONS =============
     private void setupUiActions() {
         StatusBarUtil.setStatusBarColor(requireActivity(), R.color.gray_light);
-        setupTransactionRecyclerView();
+        initTransactionRecyclerView();
         setupDoubleBackToExit();
 
         binding.btnLogin.setOnClickListener(v -> navigateTo(SignInActivity.class));
@@ -109,7 +109,6 @@ public class HomeDashboardFragment extends Fragment {
 
     private void observeUserAuthState() {
         userViewModel.getAuthStateLiveData().observe(getViewLifecycleOwner(), uid -> {
-            Log.d("ViewModel", "Observing auth state");
             if (uid == null) {
                 // logged out/session expired
                 showLoggedOutLayout();
@@ -122,15 +121,14 @@ public class HomeDashboardFragment extends Fragment {
     }
 
     private void observeAndDisplayUserData() {
-        userViewModel.getUserLiveData().observe(getViewLifecycleOwner(), result -> {
-            Log.d("ViewModel", "Observing user data");
-            if (result == null) {
+        userViewModel.getUserLiveData().observe(getViewLifecycleOwner(), user -> {
+            if (user == null) {
                 return;
             }
 
-            switch (result.getStatus()) {
+            switch (user.getStatus()) {
                 case LOADING -> onUserDataLoading();
-                case SUCCESS -> onUserDataSuccess(result.getData());
+                case SUCCESS -> onUserDataSuccess(user.getData());
                 case ERROR -> onUserDataError();
             }
         });
@@ -161,6 +159,7 @@ public class HomeDashboardFragment extends Fragment {
         binding.userFullNameShimmer.setVisibility(View.GONE);
         binding.userBalanceShimmer.setVisibility(View.GONE);
         binding.userCommissionBalanceShimmer.setVisibility(View.GONE);
+
 
         // show details
         binding.userFullName.setVisibility(View.VISIBLE);
@@ -221,9 +220,7 @@ public class HomeDashboardFragment extends Fragment {
         if (transactions.getData().isEmpty()) {
             // zero transaction history
             binding.txnShimmerEffect.stopShimmer();
-
             binding.txnShimmerEffect.setVisibility(View.GONE);
-            binding.transactionRecyclerView.setVisibility(View.GONE);
             binding.transactionContainer.setVisibility(View.GONE);
             return;
         }
@@ -242,7 +239,7 @@ public class HomeDashboardFragment extends Fragment {
         binding.transactionContainer.setVisibility(View.GONE);
     }
 
-    private void onTransactionClick() {
+    private void onItemTransactionClick() {
         adapter.setOnTransactionClickListener(transaction -> {
             Intent intent = new Intent(requireContext(), TransactionDetailsActivity.class);
             intent.putExtra("transaction", transaction);
@@ -301,24 +298,23 @@ public class HomeDashboardFragment extends Fragment {
         binding.greetingContainer.setVisibility(View.GONE);
         binding.actionButtons.setVisibility(View.GONE);
         binding.transactionContainer.setVisibility(View.GONE);
-        Log.d("Fragment", "running...");
 
         // Explicitly reset the user data UI components
-        binding.userFullName.setText(""); // Clear the full name
-        binding.userBalance.setText(StringUtil.setAsterisks()); // Clear the balance
-        binding.userCommissionBalance.setText(StringUtil.setAsterisks()); // Clear the commission balance
+        binding.userFullName.setText("");
+        binding.userBalance.setText(StringUtil.setAsterisks());
+        binding.userCommissionBalance.setText(StringUtil.setAsterisks());
 
         // Show the logged-out UI elements
         binding.btnLogin.setVisibility(View.VISIBLE);
     }
 
-    private void setupTransactionRecyclerView() {
+    private void initTransactionRecyclerView() {
         LinearLayoutManager layoutManager = new LinearLayoutManager(getContext());
         layoutManager.setOrientation(LinearLayoutManager.VERTICAL);
         binding.transactionRecyclerView.setLayoutManager(layoutManager);
 
         adapter = new TransactionsAdapter();
-        onTransactionClick();
+        onItemTransactionClick();
     }
 
     private void loadAppServices() {
@@ -351,6 +347,7 @@ public class HomeDashboardFragment extends Fragment {
             @Override
             public void handleOnBackPressed() {
                 if (backPressedTime + 2000 > System.currentTimeMillis()) {
+                    Log.d("ViewModel", "Back pressed time: " + backPressedTime + 2000 + "System time: " + System.currentTimeMillis() + "isGreater: " + (backPressedTime + 2000 > System.currentTimeMillis()));
                     requireActivity().finish();
                     return;
                 } else {

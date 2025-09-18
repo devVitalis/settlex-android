@@ -45,7 +45,8 @@ public class TransactionRepository {
                         }
                     }
                     callback.onResult(recipientDto);
-                }).addOnFailureListener(e -> {
+                })
+                .addOnFailureListener(e -> {
                     if (e instanceof FirebaseNetworkException || e instanceof IOException) {
                         callback.onFailure("Network request failed. Please check your network and try again");
                         return;
@@ -74,7 +75,7 @@ public class TransactionRepository {
                 });
     }
 
-    // Callbacks Interfaces
+    // Callbacks interfaces
     public interface SearchRecipientCallback {
         void onResult(List<RecipientDto> dto);
 

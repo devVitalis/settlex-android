@@ -1,7 +1,5 @@
 package com.settlex.android.ui.dashboard.viewmodel;
 
-import android.util.Log;
-
 import androidx.lifecycle.LiveData;
 import androidx.lifecycle.MediatorLiveData;
 import androidx.lifecycle.MutableLiveData;
@@ -9,8 +7,8 @@ import androidx.lifecycle.ViewModel;
 
 import com.settlex.android.data.enums.TransactionOperation;
 import com.settlex.android.data.enums.TransactionStatus;
-import com.settlex.android.data.local.preference.UserPrefs;
 import com.settlex.android.data.remote.dto.TransactionDto;
+import com.settlex.android.data.remote.dto.UserDto;
 import com.settlex.android.data.repository.UserRepository;
 import com.settlex.android.ui.dashboard.model.TransactionUiModel;
 import com.settlex.android.ui.dashboard.model.UserUiModel;
@@ -26,116 +24,58 @@ import jakarta.inject.Inject;
 
 @HiltViewModel
 public class UserViewModel extends ViewModel {
-    private final MutableLiveData<String> authStateLiveData = new MutableLiveData<>();
+    // LiveData for UI
+    private final MediatorLiveData<String> authStateLiveData = new MediatorLiveData<>();
     private final MediatorLiveData<Result<UserUiModel>> userLiveData = new MediatorLiveData<>();
-    private final MutableLiveData<Result<List<TransactionUiModel>>> transactionsLiveData = new MutableLiveData<>();
-    private final MutableLiveData<Boolean> isBalanceHiddenLiveData = new MutableLiveData<>();
+    private final MutableLiveData<Result<List<TransactionUiModel>>> transactionLiveData = new MutableLiveData<>();
 
     // Dependencies
-    private final UserPrefs userPrefs;
     private final UserRepository userRepo;
 
     @Inject
-    public UserViewModel(UserRepository userRepo, UserPrefs userPrefs) {
+    public UserViewModel(UserRepository userRepo) {
         this.userRepo = userRepo;
-        this.userPrefs = userPrefs;
 
-        initUserAuthState();
-        initUserUiLiveData();
-        initIsBalanceHiddenLiveData();
-
-        Log.d("ViewModel", "new instance created: " + this);
+        initAuthObserver();
+        initUserLiveDataObserver();
     }
 
-    // ---------------- PUBLIC API ----------------
+    // Public APIs
     public void toggleBalanceVisibility() {
-        boolean isBalanceCurrentlyHidden = Boolean.TRUE.equals(isBalanceHiddenLiveData.getValue());
-        boolean shouldHideBalance = !isBalanceCurrentlyHidden;
-
-        userPrefs.setBalanceHidden(shouldHideBalance);
-        isBalanceHiddenLiveData.setValue(shouldHideBalance);
-    }
-
-    public void signOut() {
-        userRepo.signOut();
-    }
-
-    public LiveData<Result<UserUiModel>> getUserLiveData() {
-        return userLiveData;
+        userRepo.toggleBalanceVisibility();
     }
 
     public LiveData<Boolean> getIsBalanceHiddenLiveData() {
-        return isBalanceHiddenLiveData;
+        return userRepo.getIsBalanceHiddenLiveData();
     }
 
-    public LiveData<String> getAuthStateLiveData() {
-        return authStateLiveData;
+    public void signOut() {
+        // Log out current user / end session
+        userRepo.signOut();
     }
 
-    // ---------------- INITIALIZERS ----------------
-    private void initIsBalanceHiddenLiveData() {
-        isBalanceHiddenLiveData.setValue(userPrefs.isBalanceHidden());
-    }
-
-    private void initUserAuthState() {
-        userRepo.listenToUserAuthState(user -> {
-            if (user == null) {
-                authStateLiveData.setValue(null);
-                userLiveData.setValue(null);
-                transactionsLiveData.setValue(null);
-                return;
-            }
-            authStateLiveData.setValue(user.getUid());
-            userRepo.setupUserListener(user.getUid());
-        });
-    }
-
-    private void initUserUiLiveData() {
-        userLiveData.setValue(Result.loading());
-
-        userLiveData.addSource(userRepo.getUserLiveData(), dto -> {
-            if (dto == null) {
-                userLiveData.setValue(null);
-                return;
-            }
-            UserUiModel uiModel = new UserUiModel(
-                    dto.uid,
-                    dto.firstName,
-                    dto.lastName,
-                    dto.username,
-                    dto.balance,
-                    dto.commissionBalance
-            );
-            userLiveData.setValue(Result.success(uiModel));
-        });
-    }
-
-    // Expose transaction LiveData
     public LiveData<Result<List<TransactionUiModel>>> getRecentTransactionLiveData(String uid, int limit) {
-        transactionsLiveData.setValue(Result.loading());
+        transactionLiveData.setValue(Result.loading());
 
         userRepo.getUserTransactions(uid, limit, new UserRepository.TransactionCallback() {
             @Override
             public void onResult(List<TransactionDto> dtolist) {
                 if (dtolist == null || dtolist.isEmpty()) {
-                    transactionsLiveData.setValue(Result.success(Collections.emptyList()));
+                    transactionLiveData.setValue(Result.success(Collections.emptyList()));
                     return;
                 }
 
                 List<TransactionUiModel> uiModel = new ArrayList<>();
                 for (TransactionDto dto : dtolist) {
-                    boolean isSender = uid.equals(dto.senderUid); // same user
+                    boolean isSender = uid.equals(dto.senderUid);
 
                     TransactionOperation operation;
                     if (dto.status == TransactionStatus.REVERSED) {
-                        // reversed transaction is credit
                         operation = isSender ? TransactionOperation.CREDIT : TransactionOperation.DEBIT;
                     } else {
-                        // sender is current user: DEBIT
                         operation = isSender ? TransactionOperation.DEBIT : TransactionOperation.CREDIT;
                     }
 
-                    // Build UI model
                     uiModel.add(new TransactionUiModel(
                             dto.transactionId,
                             dto.description,
@@ -155,14 +95,66 @@ public class UserViewModel extends ViewModel {
                             dto.status.getBgColorRes()
                     ));
                 }
-                transactionsLiveData.setValue(Result.success(uiModel));
+                transactionLiveData.setValue(Result.success(uiModel));
             }
 
             @Override
             public void onError(String reason) {
-                transactionsLiveData.setValue(Result.error("Failed to load transactions"));
+                transactionLiveData.setValue(Result.error("Failed to load transactions"));
             }
         });
-        return transactionsLiveData;
+        return transactionLiveData;
+    }
+
+    /**
+     * Initializes LiveData observers and sets up data flow from repositories.
+     * These setup methods are called once during ViewModel initialization.
+     */
+    private void initAuthObserver() {
+        // Auth state → updates UID
+        authStateLiveData.addSource(userRepo.getSharedUserAuthState(), user -> {
+            if (user == null) {
+                // Logged out
+                authStateLiveData.setValue(null);
+                transactionLiveData.setValue(Result.success(Collections.emptyList()));
+                return;
+            }
+            // Logged in → set UID and attach Firestore listener
+            authStateLiveData.setValue(user.getUid());
+        });
+    }
+
+    public LiveData<String> getAuthStateLiveData() {
+        return authStateLiveData;
+    }
+
+    private void initUserLiveDataObserver() {
+        userLiveData.addSource(userRepo.getSharedUserLiveData(), dto -> {
+            if (dto == null) {
+                return;
+            }
+
+            switch (dto.getStatus()) {
+                case LOADING -> userLiveData.setValue(Result.loading());
+                case SUCCESS -> userLiveData.setValue(Result.success(mapToUiModel(dto.getData())));
+                case ERROR -> userLiveData.setValue(Result.error(dto.getMessage()));
+            }
+        });
+    }
+
+    public LiveData<Result<UserUiModel>> getUserLiveData() {
+        return userLiveData;
+    }
+
+    private UserUiModel mapToUiModel(UserDto dto) {
+        // User DTO → map to UI model
+        return new UserUiModel(
+                dto.uid,
+                dto.firstName,
+                dto.lastName,
+                dto.username,
+                dto.balance,
+                dto.commissionBalance
+        );
     }
 }
