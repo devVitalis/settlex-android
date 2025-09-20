@@ -5,18 +5,21 @@ import androidx.annotation.Nullable;
 import com.google.firebase.FirebaseNetworkException;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseAuthInvalidCredentialsException;
+import com.google.firebase.auth.FirebaseAuthInvalidUserException;
 import com.google.firebase.auth.FirebaseAuthUserCollisionException;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.auth.UserProfileChangeRequest;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.functions.FirebaseFunctions;
 import com.google.gson.Gson;
-import com.settlex.android.data.model.UserModel;
-import com.settlex.android.util.network.RequestMetadataService;
+import com.settlex.android.data.remote.api.MetadataService;
+import com.settlex.android.domain.model.UserModel;
 
 import java.io.IOException;
 import java.util.HashMap;
 import java.util.Map;
+
+import jakarta.inject.Inject;
 
 /**
  * Centralizes all authentication operations
@@ -26,16 +29,15 @@ public class AuthRepository {
     private final FirebaseFirestore firestore;
     private final FirebaseFunctions functions;
 
-    public AuthRepository() {
-        firebaseAuth = FirebaseAuth.getInstance();
-        firestore = FirebaseFirestore.getInstance();
-        // Using europe-west2 lower latency
-        functions = FirebaseFunctions.getInstance("europe-west2");
+    @Inject
+    public AuthRepository(FirebaseAuth firebaseAuth, FirebaseFirestore firestore, FirebaseFunctions functions) {
+        this.firebaseAuth = firebaseAuth;
+        this.firestore = firestore;
+        this.functions = functions;
     }
 
     /**
      * Handles email/password authentication with Firebase Auth
-     * Includes specific error handling for invalid credentials
      */
     public void loginWithEmail(String email, String password, LoginCallback callback) {
         firebaseAuth.signInWithEmailAndPassword(email, password)
@@ -43,11 +45,17 @@ public class AuthRepository {
                 .addOnFailureListener(e -> {
                     if (e instanceof FirebaseAuthInvalidCredentialsException) {
                         callback.onFailure("Invalid email or password");
-                    } else if (e instanceof FirebaseNetworkException || e instanceof IOException) {
-                        callback.onFailure("Network request failed. Please try again");
-                    } else {
-                        callback.onFailure(e.getMessage());
+                        return;
                     }
+                    if (e instanceof FirebaseNetworkException || e instanceof IOException) {
+                        callback.onFailure("Connection lost. Please check your Wi-Fi or cellular data and try again");
+                        return;
+                    }
+                    if (((FirebaseAuthInvalidUserException) e).getErrorCode().equals("ERROR_USER_DISABLED")) {
+                        callback.onFailure("Your account has been disabled, contact support.");
+                        return;
+                    }
+                    callback.onFailure(e.getMessage());
                 });
     }
 
@@ -69,11 +77,14 @@ public class AuthRepository {
                 .addOnFailureListener(e -> {
                     if (e instanceof FirebaseAuthUserCollisionException) {
                         callback.onFailure("This user already exists. Kindly log in.");
-                    } else if (e instanceof FirebaseNetworkException || e instanceof IOException) {
-                        callback.onFailure("Network request failed. Please try again");
-                    } else {
-                        callback.onFailure(e.getMessage());
+                        return;
                     }
+
+                    if (e instanceof FirebaseNetworkException || e instanceof IOException) {
+                        callback.onFailure("Connection lost. Please check your Wi-Fi or cellular data and try again");
+                        return;
+                    }
+                    callback.onFailure(e.getMessage());
                 });
     }
 
@@ -91,23 +102,21 @@ public class AuthRepository {
                         boolean exists = Boolean.TRUE.equals(((Map<?, ?>) result.getData()).get("exists"));
                         callback.onSuccess(exists);
                     } else {
-                        callback.onFailure("Invalid response from server.");
+                        callback.onFailure("Something went wrong. Please try again");
                     }
                 })
                 .addOnFailureListener(e -> {
                     if (e instanceof FirebaseNetworkException || e instanceof IOException) {
-                        callback.onFailure("Network request failed. Please try again");
-                    } else {
-                        callback.onFailure(e.getMessage());
+                        callback.onFailure("Connection lost. Please check your Wi-Fi or cellular data and try again");
+                        return;
                     }
+                    callback.onFailure(e.getMessage());
                 });
     }
 
     /**
-     * Manages the complete OTP verification flow:
+     * Manages the complete email verification flow:
      * 1. Sends verification code
-     * 2. Validates entered code
-     * 3. Handles success/failure states
      */
     public void sendEmailVerificationOtp(String email, SendOtpCallback callback) {
         Map<String, Object> data = new HashMap<>();
@@ -118,13 +127,14 @@ public class AuthRepository {
                 .addOnSuccessListener(result -> callback.onSuccess())
                 .addOnFailureListener(e -> {
                     if (e instanceof FirebaseNetworkException || e instanceof IOException) {
-                        callback.onFailure("Network request failed. Please try again");
-                    } else {
-                        callback.onFailure(e.getMessage());
+                        callback.onFailure("Connection lost. Please check your Wi-Fi or cellular data and try again");
+                        return;
                     }
+                    callback.onFailure(e.getMessage());
                 });
     }
 
+    // 2. Validates entered code
     public void verifyEmailVerificationOtp(String email, String otp, VerifyOtpCallback callback) {
         Map<String, Object> data = new HashMap<>();
         data.put("email", email);
@@ -135,18 +145,16 @@ public class AuthRepository {
                 .addOnSuccessListener(result -> callback.onSuccess())
                 .addOnFailureListener(e -> {
                     if (e instanceof FirebaseNetworkException || e instanceof IOException) {
-                        callback.onFailure("Network request failed. Please try again");
-                    } else {
-                        callback.onFailure(e.getMessage());
+                        callback.onFailure("Connection lost. Please check your Wi-Fi or cellular data and try again");
+                        return;
                     }
+                    callback.onFailure(e.getMessage());
                 });
     }
 
     /**
      * Handles password reset flow including:
-     * - OTP generation
-     * - OTP verification
-     * - Secure password update
+     * 1. Sends OTP code
      */
     public void sendEmailPasswordResetOtp(String email, SendOtpCallback callback) {
         Map<String, Object> data = new HashMap<>();
@@ -157,13 +165,14 @@ public class AuthRepository {
                 .addOnSuccessListener(result -> callback.onSuccess())
                 .addOnFailureListener(e -> {
                     if (e instanceof FirebaseNetworkException || e instanceof IOException) {
-                        callback.onFailure("Network request failed. Please try again");
-                    } else {
-                        callback.onFailure(e.getMessage());
+                        callback.onFailure("Connection lost. Please check your Wi-Fi or cellular data and try again");
+                        return;
                     }
+                    callback.onFailure(e.getMessage());
                 });
     }
 
+    // 2. OTP verification
     public void verifyEmailPasswordResetOtp(String email, String otp, VerifyOtpCallback callback) {
         Map<String, Object> data = new HashMap<>();
         data.put("email", email);
@@ -174,38 +183,39 @@ public class AuthRepository {
                 .addOnSuccessListener(result -> callback.onSuccess())
                 .addOnFailureListener(e -> {
                     if (e instanceof FirebaseNetworkException || e instanceof IOException) {
-                        callback.onFailure("Network request failed. Please try again");
-                    } else {
-                        callback.onFailure(e.getMessage());
+                        callback.onFailure("Connection lost. Please check your Wi-Fi or cellular data and try again");
+                        return;
                     }
+                    callback.onFailure(e.getMessage());
                 });
     }
 
     /**
-     * Securely updates password with device metadata for fraud detection
+     * 3. Password update
+     * Collects device metadata for fraud detection
      */
-    public void resetPassword(String email, String newPassword, ChangePasswordCallback callback) {
-        RequestMetadataService.collectAsync(metadata -> {
+    public void changeUserPassword(String email, String newPassword, ChangePasswordCallback callback) {
+        MetadataService.collectAsync(metadata -> {
             Map<String, Object> data = new HashMap<>();
             data.put("email", email);
             data.put("newPassword", newPassword);
             data.put("metadata", new Gson().toJson(metadata));
 
-            functions.getHttpsCallable("resetPassword")
+            functions.getHttpsCallable("changePassword")
                     .call(data)
                     .addOnSuccessListener(result -> callback.onSuccess())
                     .addOnFailureListener(e -> {
                         if (e instanceof FirebaseNetworkException || e instanceof IOException) {
-                            callback.onFailure("Network request failed. Please try again");
-                        } else {
-                            callback.onFailure(e.getMessage());
+                            callback.onFailure("Connection lost. Please check your Wi-Fi or cellular data and try again");
+                            return;
                         }
+                        callback.onFailure(e.getMessage());
                     });
         });
     }
 
     /**
-     * Stores user profile and initiates email verification
+     * Stores user profile and mark email as verify
      * Maintains data consistency with rollback on failure
      */
     private void storeUserProfileAndVerify(UserModel user, RegisterCallback callback) {
@@ -215,24 +225,25 @@ public class AuthRepository {
         functions.getHttpsCallable("storeUserProfile")
                 .call(data)
                 .addOnSuccessListener(result -> {
-                    callback.onSuccess();
-
+                    callback.onSuccess(); // return
                     markEmailVerified(user.getUid(), new RegisterCallback() {
                         @Override
-                        public void onSuccess() {}
+                        public void onSuccess() {
+                        }
+
                         @Override
                         public void onFailure(String reason) {
                             markEmailAsUnverified(user.getUid());
                         }
                     });
-                    setUserDisplayName(user.getFirstName());
+                    setUserDisplayName(user.getFirstName()); // Set display name in firebase auth
                 })
                 .addOnFailureListener(e -> {
                     if (e instanceof FirebaseNetworkException || e instanceof IOException) {
-                        callback.onFailure("Network request failed. Please try again");
-                    } else {
-                        callback.onFailure(e.getMessage());
+                        callback.onFailure("Connection lost. Please check your Wi-Fi or cellular data and try again");
+                        return;
                     }
+                    callback.onFailure(e.getMessage());
                 });
     }
 
@@ -246,7 +257,7 @@ public class AuthRepository {
     }
 
     /**
-     * Fallback method to maintain data consistency when verification fails
+     * Fallback method to maintain data consistency when markEmailVerified fails
      */
     private void markEmailAsUnverified(String uid) {
         firestore.collection("users")
@@ -259,21 +270,21 @@ public class AuthRepository {
      */
     private void setUserDisplayName(String firstName) {
         FirebaseUser user = getCurrentUser();
-        if (user != null) {
-            UserProfileChangeRequest displayName = new UserProfileChangeRequest.Builder()
-                    .setDisplayName(firstName)
-                    .build();
-            user.updateProfile(displayName);
-        }
+        if (user == null) return;
+
+        UserProfileChangeRequest displayName = new UserProfileChangeRequest.Builder()
+                .setDisplayName(firstName)
+                .build();
+        user.updateProfile(displayName);
     }
 
-    // ============================ State Management ============================
     @Nullable
     public FirebaseUser getCurrentUser() {
+        // Get current signed in user
         return FirebaseAuth.getInstance().getCurrentUser();
     }
 
-    // ===== Callback Interfaces =====
+    // Callback Interfaces =====
     public interface LoginCallback {
         void onSuccess();
 

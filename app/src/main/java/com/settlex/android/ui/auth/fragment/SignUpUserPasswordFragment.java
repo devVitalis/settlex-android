@@ -15,7 +15,6 @@ import android.view.LayoutInflater;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
-import android.view.Window;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.EditText;
 
@@ -26,32 +25,37 @@ import androidx.fragment.app.Fragment;
 import androidx.lifecycle.ViewModelProvider;
 
 import com.settlex.android.R;
-import com.settlex.android.data.model.UserModel;
 import com.settlex.android.databinding.FragmentSignUpUserPasswordBinding;
-import com.settlex.android.ui.activities.help.AuthHelpActivity;
+import com.settlex.android.domain.model.UserModel;
 import com.settlex.android.ui.auth.viewmodel.AuthViewModel;
-import com.settlex.android.ui.common.SettleXProgressBarController;
+import com.settlex.android.ui.common.util.ProgressLoaderController;
 import com.settlex.android.ui.dashboard.activity.DashboardActivity;
-import com.settlex.android.util.NetworkMonitor;
+import com.settlex.android.ui.info.help.AuthHelpActivity;
+import com.settlex.android.util.network.NetworkMonitor;
+import com.settlex.android.util.ui.StatusBarUtil;
 
 import java.util.Objects;
 
 public class SignUpUserPasswordFragment extends Fragment {
-    private boolean isConnected = false;
+    private boolean isConnected = false; // Network connection status
 
     private FragmentSignUpUserPasswordBinding binding;
-    private SettleXProgressBarController progressBarController;
+    private ProgressLoaderController progressLoader;
     private AuthViewModel authViewModel;
 
-    // ====================== LIFECYCLE ======================
+    // LIFECYCLE ===========
+    @Override
+    public void onCreate(@Nullable Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        authViewModel = new ViewModelProvider(requireActivity()).get(AuthViewModel.class);
+        progressLoader = new ProgressLoaderController(requireActivity());
+    }
+
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         binding = FragmentSignUpUserPasswordBinding.inflate(inflater, container, false);
 
-        progressBarController = new SettleXProgressBarController(binding.fragmentContainer);
-        authViewModel = new ViewModelProvider(requireActivity()).get(AuthViewModel.class);
-
-        setupStatusBar();
+        StatusBarUtil.setStatusBarColor(requireActivity(), R.color.white);
         setupUiActions();
 
         return binding.getRoot();
@@ -62,7 +66,7 @@ public class SignUpUserPasswordFragment extends Fragment {
         super.onViewCreated(view, savedInstanceState);
 
         observeNetworkStatus();
-        observeRegistrationResult();
+        observeRegistrationAndHandleResult();
     }
 
     @Override
@@ -72,7 +76,7 @@ public class SignUpUserPasswordFragment extends Fragment {
     }
 
 
-    // ====================== INITIALIZATION ======================
+    // UI ACTIONS ========
     private void setupUiActions() {
         setupPasswordValidation();
         reEnableEditTextFocus();
@@ -85,11 +89,11 @@ public class SignUpUserPasswordFragment extends Fragment {
         binding.btnCreateAccount.setOnClickListener(v -> validateAndCreateAccount());
     }
 
-    private void observeRegistrationResult() {
+    private void observeRegistrationAndHandleResult() {
         authViewModel.getRegisterResult().observe(getViewLifecycleOwner(), result -> {
             if (result != null) {
                 switch (result.getStatus()) {
-                    case LOADING -> progressBarController.show();
+                    case LOADING -> progressLoader.show();
                     case SUCCESS -> onRegistrationSuccess();
                     case ERROR -> onRegistrationFailure(result.getMessage());
                 }
@@ -106,37 +110,36 @@ public class SignUpUserPasswordFragment extends Fragment {
         startActivity(new Intent(requireContext(), DashboardActivity.class));
         requireActivity().finishAffinity();
 
-        progressBarController.hide();
+        progressLoader.hide();
     }
 
     private void onRegistrationFailure(String reason) {
         binding.txtErrorFeedback.setText(reason);
         binding.txtErrorFeedback.setVisibility(View.VISIBLE);
 
-        progressBarController.hide();
+        progressLoader.hide();
     }
 
-    private void onNoInternetConnection() {
+    private void showNoInternetConnection() {
         binding.txtErrorFeedback.setText(getString(R.string.error_no_internet));
         binding.txtErrorFeedback.setVisibility(View.VISIBLE);
     }
 
-    // ====================== BUSINESS LOGIC ======================
     private void validateAndCreateAccount() {
-       if (isConnected) {
-           String password = Objects.requireNonNull(binding.editTxtPassword.getText()).toString().trim();
-           String invitationCode = Objects.requireNonNull(binding.editTxtInvitationCode.getText()).toString().trim();
+        if (isConnected) {
+            String password = Objects.requireNonNull(binding.editTxtPassword.getText()).toString().trim();
+            String invitationCode = Objects.requireNonNull(binding.editTxtInvitationCode.getText()).toString().trim();
 
-           // Apply default values and trigger registration
-           authViewModel.applyDefaultUserValues(invitationCode);
-           UserModel user = authViewModel.getUser().getValue();
-           authViewModel.registerUser(authViewModel.getEmail(), password, user);
-       } else {
-           onNoInternetConnection();
-       }
+            // Apply default values and trigger registration
+            authViewModel.applyDefaultUserValues(invitationCode);
+            UserModel user = authViewModel.getUser().getValue();
+            authViewModel.registerUser(authViewModel.getEmail(), password, user);
+        } else {
+            showNoInternetConnection();
+        }
     }
 
-    // ====================== PASSWORD VALIDATION ======================
+    // PASSWORD VALIDATION ========
     private void validatePassword() {
         String password = Objects.requireNonNull(binding.editTxtPassword.getText()).toString().trim();
         String confirmPassword = Objects.requireNonNull(binding.editTxtConfirmPassword.getText()).toString().trim();
@@ -163,7 +166,6 @@ public class SignUpUserPasswordFragment extends Fragment {
         return hasLength && hasUpper && hasLower && hasSpecial && matches;
     }
 
-    // ====================== UI HANDLERS ======================
     private void showPasswordRequirements(boolean hasLength, boolean hasUpper, boolean hasLower, boolean hasSpecial, String password) {
         SpannableStringBuilder requirements = new SpannableStringBuilder();
         appendRequirement(requirements, hasLength, "At least 8 characters");
@@ -234,7 +236,6 @@ public class SignUpUserPasswordFragment extends Fragment {
     }
 
 
-    // ====================== NAVIGATION ======================
     private void navigateBack() {
         requireActivity().getSupportFragmentManager().popBackStack();
     }
@@ -244,7 +245,6 @@ public class SignUpUserPasswordFragment extends Fragment {
     }
 
 
-    // ====================== UTILITIES ======================
     @SuppressLint("ClickableViewAccessibility")
     private void clearFocusAndHideKeyboardOnOutsideTap(View root) {
         if (!(root instanceof EditText)) {
@@ -268,12 +268,5 @@ public class SignUpUserPasswordFragment extends Fragment {
             imm.hideSoftInputFromWindow(focusedView.getWindowToken(), 0);
             focusedView.clearFocus();
         }
-    }
-
-    private void setupStatusBar() {
-        Window window = requireActivity().getWindow();
-        window.setStatusBarColor(ContextCompat.getColor(requireContext(), R.color.white));
-        View decorView = window.getDecorView();
-        decorView.setSystemUiVisibility(decorView.getSystemUiVisibility() | View.SYSTEM_UI_FLAG_LIGHT_STATUS_BAR);
     }
 }

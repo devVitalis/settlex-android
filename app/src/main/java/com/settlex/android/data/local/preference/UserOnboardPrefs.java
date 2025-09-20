@@ -1,0 +1,54 @@
+package com.settlex.android.data.local.preference;
+
+import android.content.Context;
+import android.content.SharedPreferences;
+
+/**
+ * Manages user-specific onboarding preferences (biometrics, prompts, etc.).
+ * Scoped per-user using UID in SharedPreferences name.
+ */
+public class UserOnboardPrefs {
+
+    // Preference keys (all user-scoped)
+    private static final String PREF_NAME = "user_onboard_prefs";
+    private static final String KEY_NOTIFICATION_PROMPT_SHOWN = "onboard_notification_prompt_shown";
+    private static final String KEY_PIN_PROMPT_SHOWN = "onboard_pin_prompt_shown";
+    private static final String ONBOARD_FINGERPRINT_SHOWN = "onboard_fingerprint_shown";
+
+    private final SharedPreferences prefs;
+    private final SharedPreferences.Editor editor;
+
+    /**
+     * Creates user-scoped preference file.
+     * UID ensures isolation between accounts on the same device.
+     */
+    public UserOnboardPrefs(Context context, String uid) {
+        prefs = context.getSharedPreferences(PREF_NAME + "_" + uid, Context.MODE_PRIVATE);
+        editor = prefs.edit();
+    }
+
+    // Getters and Setters
+    public boolean isNotificationPromptShown() {
+        return prefs.getBoolean(KEY_NOTIFICATION_PROMPT_SHOWN, false);
+    }
+
+    public void setNotificationPromptShown(boolean shown) {
+        editor.putBoolean(KEY_NOTIFICATION_PROMPT_SHOWN, shown).apply();
+    }
+
+    public boolean isPinPromptShown() {
+        return prefs.getBoolean(KEY_PIN_PROMPT_SHOWN, false);
+    }
+
+    public void setPinPromptShown(boolean shown) {
+        editor.putBoolean(KEY_PIN_PROMPT_SHOWN, shown).apply();
+    }
+
+    public boolean isFingerprintShown() {
+        return prefs.getBoolean(ONBOARD_FINGERPRINT_SHOWN, false);
+    }
+
+    public void setFingerprintShown(boolean enabled) {
+        editor.putBoolean(ONBOARD_FINGERPRINT_SHOWN, enabled).apply();
+    }
+}

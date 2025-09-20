@@ -10,35 +10,43 @@ import android.view.LayoutInflater;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
-import android.view.Window;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.EditText;
 
 import androidx.annotation.NonNull;
-import androidx.core.content.ContextCompat;
+import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 import androidx.lifecycle.ViewModelProvider;
 
 import com.settlex.android.R;
 import com.settlex.android.databinding.FragmentSignupUserInfoBinding;
-import com.settlex.android.ui.activities.help.AuthHelpActivity;
 import com.settlex.android.ui.auth.viewmodel.AuthViewModel;
-import com.settlex.android.util.StringUtil;
+import com.settlex.android.ui.info.help.AuthHelpActivity;
+import com.settlex.android.util.string.StringUtil;
+import com.settlex.android.util.ui.StatusBarUtil;
 
 import java.util.Objects;
 
+import dagger.hilt.android.AndroidEntryPoint;
+
+@AndroidEntryPoint
 public class SignupUserInfoFragment extends Fragment {
 
     private FragmentSignupUserInfoBinding binding;
     private AuthViewModel authViewModel;
 
-    // ====================== LIFECYCLE ======================
+    // LIFECYCLE ===========
+    @Override
+    public void onCreate(@Nullable Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        authViewModel = new ViewModelProvider(requireActivity()).get(AuthViewModel.class);
+    }
+
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         binding = FragmentSignupUserInfoBinding.inflate(inflater, container, false);
-        authViewModel = new ViewModelProvider(requireActivity()).get(AuthViewModel.class);
 
-        setupStatusBar();
+        StatusBarUtil.setStatusBarColor(requireActivity(), R.color.white);
         setupUiActions();
 
         return binding.getRoot();
@@ -50,7 +58,7 @@ public class SignupUserInfoFragment extends Fragment {
         super.onDestroyView();
     }
 
-    // ====================== UI SETUP ======================
+    // UI SETUP ==========
     private void setupUiActions() {
         reEnableEditTextFocus();
         setupInputValidation();
@@ -76,8 +84,13 @@ public class SignupUserInfoFragment extends Fragment {
 
     private void setupInputValidation() {
         TextWatcher validationWatcher = new TextWatcher() {
-            @Override public void beforeTextChanged(CharSequence s, int start, int count, int after) {}
-            @Override public void afterTextChanged(Editable s) {}
+            @Override
+            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+            }
+
+            @Override
+            public void afterTextChanged(Editable s) {
+            }
 
             @Override
             public void onTextChanged(CharSequence s, int start, int before, int count) {
@@ -88,8 +101,6 @@ public class SignupUserInfoFragment extends Fragment {
         binding.editTxtFirstName.addTextChangedListener(validationWatcher);
         binding.editTxtLastName.addTextChangedListener(validationWatcher);
     }
-
-    // ====================== BUSINESS LOGIC ======================
 
     /**
      * Validates user info, updates ViewModel, and navigates to password setup.
@@ -121,7 +132,6 @@ public class SignupUserInfoFragment extends Fragment {
         binding.btnContinue.setEnabled(isValidFirstName && isValidLastName);
     }
 
-    // ====================== NAVIGATION ======================
     private void navigateToFragment(Fragment fragment) {
         requireActivity().getSupportFragmentManager()
                 .beginTransaction()
@@ -138,7 +148,6 @@ public class SignupUserInfoFragment extends Fragment {
         startActivity(new Intent(requireActivity(), AuthHelpActivity.class));
     }
 
-    // ====================== KEYBOARD HANDLING ======================
     @SuppressLint("ClickableViewAccessibility")
     private void clearFocusAndHideKeyboardOnOutsideTap(View root) {
         if (!(root instanceof EditText)) {
@@ -164,12 +173,5 @@ public class SignupUserInfoFragment extends Fragment {
             imm.hideSoftInputFromWindow(focusedView.getWindowToken(), 0);
             focusedView.clearFocus();
         }
-    }
-
-    private void setupStatusBar() {
-        Window window = requireActivity().getWindow();
-        window.setStatusBarColor(ContextCompat.getColor(requireContext(), R.color.white));
-        View decorView = window.getDecorView();
-        decorView.setSystemUiVisibility(decorView.getSystemUiVisibility() | View.SYSTEM_UI_FLAG_LIGHT_STATUS_BAR);
     }
 }

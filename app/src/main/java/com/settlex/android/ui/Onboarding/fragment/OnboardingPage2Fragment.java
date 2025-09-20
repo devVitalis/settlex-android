@@ -35,8 +35,8 @@ public class OnboardingPage2Fragment extends Fragment {
     }
 
     private void styleHeaderTxt() {
-        String htmlText = "Never <font color='#0044CC'>Miss</font> Your <font color='#0044CC'>Shows</font>";
-        binding.sectionHeader.setText(Html.fromHtml(htmlText, Html.FROM_HTML_MODE_LEGACY));
+        String htmlText = "NEVER <font color='#0044CC'>MISS</font> YOUR <font color='#0044CC'>SHOWS</font>";
+        binding.header.setText(Html.fromHtml(htmlText, Html.FROM_HTML_MODE_LEGACY));
     }
 
     private void loadOptimizedImage() {

@@ -6,38 +6,13 @@
     android:background="@color/white"
     tools:context=".ui.Onboarding.fragment.OnboardingPage3Fragment">
 
-    <!--Logo-->
-    <ImageView
-        android:id="@+id/logo"
-        android:layout_width="85dp"
-        android:layout_height="85dp"
-        android:layout_above="@id/sectionHeader"
-        android:layout_centerHorizontal="true"
-        android:contentDescription="@string/app_logo"
-        android:src="@mipmap/ic_launcher" />
-
-    <TextView
-        android:id="@+id/sectionHeader"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_above="@id/imageContainer"
-        android:layout_centerHorizontal="true"
-        android:layout_marginTop="20dp"
-        android:fontFamily="@font/poppins_medium"
-        android:includeFontPadding="false"
-        android:text="Secure By Design"
-        android:textColor="@color/black"
-        android:textSize="20sp"
-        android:textStyle="bold" />
-
-    <!--Image Background-->
     <LinearLayout
         android:id="@+id/imageContainer"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_centerInParent="true"
         android:layout_marginTop="25dp"
-        android:background="@drawable/bg_oval_light_blue">
+        android:background="@drawable/bg_oval_blue_light">
 
         <com.google.android.material.imageview.ShapeableImageView
             android:id="@+id/ImgIntroSlide3"
@@ -47,12 +22,25 @@
             android:src="@drawable/img_intro_slide_3" />
     </LinearLayout>
 
-    <!--Content Txt-->
     <TextView
-        android:id="@+id/txtContent"
+        android:id="@+id/header"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_below="@id/imageContainer"
+        android:layout_centerHorizontal="true"
+        android:layout_marginTop="20dp"
+        android:fontFamily="@font/poppins_medium"
+        android:includeFontPadding="false"
+        android:text="header"
+        android:textColor="@color/black"
+        android:textSize="20sp"
+        android:textStyle="bold" />
+
+    <TextView
+        android:id="@+id/subHeader"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/header"
         android:layout_centerHorizontal="true"
         android:layout_marginHorizontal="10dp"
         android:layout_marginTop="20dp"

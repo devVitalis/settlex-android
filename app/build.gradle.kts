@@ -1,6 +1,10 @@
 plugins {
     alias(libs.plugins.android.application)
-    id("com.google.gms.google-services")
+    id("org.jetbrains.kotlin.android") // Kotlin Android plugin
+    id("com.google.gms.google-services") // Firebase / Google services
+    id("com.google.devtools.ksp") // KSP
+    id("com.google.dagger.hilt.android") // Dagger / hilt
+    id("androidx.navigation.safeargs")
 }
 
 android {
@@ -43,6 +47,8 @@ dependencies {
     implementation(libs.material)
     implementation(libs.activity)
     implementation(libs.constraintlayout)
+    implementation(libs.navigation.fragment)
+    implementation(libs.navigation.ui)
     testImplementation(libs.junit)
     androidTestImplementation(libs.ext.junit)
     androidTestImplementation(libs.espresso.core)
@@ -54,6 +60,7 @@ dependencies {
     implementation(libs.firebase.functions)
     implementation(libs.firebase.storage)
     implementation(libs.firebase.messaging)
+    implementation(libs.firebase.config)
 
     // Dots Indicator
     implementation(libs.dotsindicator)
@@ -67,9 +74,9 @@ dependencies {
     // Gson
     implementation(libs.gson)
 
-    // Retrofit
+    /** Retrofit
     implementation(libs.retrofit)
-    implementation(libs.converter.gson)
+    implementation(libs.converter.gson) */
 
     // Lottie
     implementation(libs.lottie)
@@ -77,6 +84,33 @@ dependencies {
     // ViewModel (MVVM)
     implementation(libs.lifecycle.viewmodel)
     implementation(libs.lifecycle.livedata)
+
+    /** Blur TODO: remove
+    // implementation(libs.blurry) */
+
+    // Shimmer Loading
+    implementation(libs.shimmer)
+
+    // Navigation Component
+    implementation(libs.navigation.fragment.ktx)
+    implementation(libs.navigation.ui.ktx)
+
+    // DataStore (Preferences)
+    implementation(libs.datastore.preferences)
+
+    // Tink for encryption
+    implementation(libs.tink.android)
+
+    // Dependency Injection
+    implementation(libs.hilt.android)
+    ksp(libs.hilt.android.compiler)
+
+    // Object Mapper
+    implementation(libs.jackson.module.kotlin)
+    implementation(libs.jackson.databind)
+
+    // MPAndroid Chart
+    implementation(libs.mpandroidchart)
 }
 
 tasks.withType<JavaCompile>().configureEach {

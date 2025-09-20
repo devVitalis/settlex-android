@@ -3,18 +3,17 @@ package com.settlex.android.ui.Onboarding.activity;
 import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
-import android.view.Window;
 
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
-import androidx.core.content.ContextCompat;
 
 import com.settlex.android.R;
-import com.settlex.android.data.local.OnboardingPrefs;
+import com.settlex.android.data.local.preference.OnboardingPrefs;
 import com.settlex.android.databinding.ActivityOnboardingBinding;
 import com.settlex.android.ui.Onboarding.adapter.OnboardingAdapter;
 import com.settlex.android.ui.auth.activity.SignInActivity;
 import com.settlex.android.ui.auth.activity.SignUpActivity;
+import com.settlex.android.util.ui.StatusBarUtil;
 
 /**
  * Handles onboarding flow:
@@ -33,12 +32,11 @@ public class OnboardingActivity extends AppCompatActivity {
 
         prefs = new OnboardingPrefs(this);
 
-        setupStatusBar();
+        StatusBarUtil.setStatusBarColor(this, R.color.white);
         setupViewPager();
         setupUiActions();
     }
 
-    // ====================== CORE UI FLOW ======================
     private void setupViewPager() {
         OnboardingAdapter adapter = new OnboardingAdapter(this);
         binding.viewPager.setAdapter(adapter);
@@ -57,13 +55,5 @@ public class OnboardingActivity extends AppCompatActivity {
             startActivity(new Intent(this, targetActivity));
             finish();
         });
-    }
-
-    // ====================== UTILITIES ======================
-    private void setupStatusBar() {
-        Window window = getWindow();
-        window.setStatusBarColor(ContextCompat.getColor(this, R.color.white));
-        View decorView = window.getDecorView();
-        decorView.setSystemUiVisibility(decorView.getSystemUiVisibility() | View.SYSTEM_UI_FLAG_LIGHT_STATUS_BAR);
     }
 }

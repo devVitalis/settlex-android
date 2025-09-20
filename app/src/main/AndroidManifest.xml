@@ -3,7 +3,19 @@
     <!-- Required permissions -->
     <uses-permission android:name="android.permission.INTERNET" />
     <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
-    <uses-permission android:name="android.permission.ACCESS_WIFI_STATE" />
+    <uses-permission android:name="android.permission.ACCESS_WIFI_STATE" /> <!-- Browsers for opening promo links -->
+    <queries>
+        <intent>
+            <action android:name="android.intent.action.VIEW" />
+
+            <data android:scheme="http" />
+        </intent>
+        <intent>
+            <action android:name="android.intent.action.VIEW" />
+
+            <data android:scheme="https" />
+        </intent>
+    </queries>
 
     <application
         android:name=".SettleXApp"
@@ -15,27 +27,51 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/Theme.SettleX">
+        <activity
+            android:name=".ui.dashboard.activity.CommissionWithdrawalActivity"
+            android:exported="false" />
+        <activity
+            android:name=".ui.dashboard.activity.ReceiveMoneyActivity"
+            android:exported="false" />
+        <activity
+            android:name=".ui.dashboard.activity.TransactionDetailsActivity"
+            android:exported="false" />
+        <activity
+            android:name=".ui.dashboard.activity.DashboardActivity"
+            android:exported="true">
 
+            <!-- Handles app:// URLs -->
+            <intent-filter>
+                <action android:name="android.intent.action.VIEW" />
+
+                <category android:name="android.intent.category.DEFAULT" />
+                <category android:name="android.intent.category.BROWSABLE" />
+
+                <data
+                    android:host="settlex"
+                    android:scheme="app" />
+            </intent-filter>
+        </activity>
+        <activity
+            android:name=".ui.dashboard.activity.TransactionActivity"
+            android:exported="false" />
         <activity
             android:name=".ui.auth.activity.PasswordChangeActivity"
             android:exported="false" />
         <activity
-            android:name=".ui.auth.components.OtpVerificationActivity"
+            android:name=".ui.common.components.OtpVerificationActivity"
             android:exported="false" />
         <activity
             android:name=".ui.auth.activity.PasswordResetActivity"
             android:exported="false" />
         <activity
-            android:name=".ui.dashboard.activity.DashboardActivity"
+            android:name=".ui.info.legal.PrivacyPolicyActivity"
             android:exported="false" />
         <activity
-            android:name=".ui.activities.legal.PrivacyPolicyActivity"
+            android:name=".ui.info.legal.TermsAndConditionsActivity"
             android:exported="false" />
         <activity
-            android:name=".ui.activities.legal.TermsAndConditionsActivity"
-            android:exported="false" />
-        <activity
-            android:name=".ui.activities.help.AuthHelpActivity"
+            android:name=".ui.info.help.AuthHelpActivity"
             android:exported="false" />
         <activity
             android:name=".ui.auth.activity.PinLoginActivity"
@@ -50,7 +86,7 @@
             android:name=".ui.Onboarding.activity.OnboardingActivity"
             android:exported="false" />
         <activity
-            android:name=".ui.activities.splash.SplashActivity"
+            android:name=".ui.splash.SplashActivity"
             android:exported="true"
             android:theme="@style/Theme.SettleX.Splash">
             <intent-filter>
