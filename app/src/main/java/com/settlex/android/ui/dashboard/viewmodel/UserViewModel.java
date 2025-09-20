@@ -10,6 +10,7 @@ import com.settlex.android.data.enums.TransactionStatus;
 import com.settlex.android.data.remote.dto.TransactionDto;
 import com.settlex.android.data.remote.dto.UserDto;
 import com.settlex.android.data.repository.UserRepository;
+import com.settlex.android.ui.dashboard.model.MoneyFlowUiModel;
 import com.settlex.android.ui.dashboard.model.TransactionUiModel;
 import com.settlex.android.ui.dashboard.model.UserUiModel;
 import com.settlex.android.util.event.Result;
@@ -27,6 +28,7 @@ public class UserViewModel extends ViewModel {
     // LiveData for UI
     private final MediatorLiveData<String> authStateLiveData = new MediatorLiveData<>();
     private final MediatorLiveData<Result<UserUiModel>> userLiveData = new MediatorLiveData<>();
+    private final MediatorLiveData<Result<MoneyFlowUiModel>> moneyFlowLiveData = new MediatorLiveData<>();
     private final MutableLiveData<Result<List<TransactionUiModel>>> transactionLiveData = new MutableLiveData<>();
 
     // Dependencies
@@ -65,6 +67,7 @@ public class UserViewModel extends ViewModel {
                     return;
                 }
 
+                initMoneyFlow(uid, dtolist);
                 List<TransactionUiModel> uiModel = new ArrayList<>();
                 for (TransactionDto dto : dtolist) {
                     boolean isSender = uid.equals(dto.senderUid);
@@ -104,6 +107,37 @@ public class UserViewModel extends ViewModel {
             }
         });
         return transactionLiveData;
+    }
+
+    private void initMoneyFlow(String currentUserUid, List<TransactionDto> dtoList) {
+        moneyFlowLiveData.setValue(Result.loading());
+        double inFlow = 0;
+        double outFlow = 0;
+
+        if (dtoList == null) {
+            // Zero transaction
+            moneyFlowLiveData.setValue(null);
+            return;
+        }
+
+        for (TransactionDto dto : dtoList) {
+
+            if (dto.status != TransactionStatus.SUCCESS) {
+                // Skip Failed,
+                // Reversed and
+                // Pending Transaction
+                continue;
+            }
+
+            boolean isInFlow = !currentUserUid.equals(dto.senderUid);
+            inFlow += (isInFlow) ? dto.amount : 0;
+            outFlow += (isInFlow) ? 0 : dto.amount;
+        }
+        moneyFlowLiveData.setValue(Result.success(new MoneyFlowUiModel(inFlow, outFlow)));
+    }
+
+    public LiveData<Result<MoneyFlowUiModel>> getMoneyFlow() {
+        return moneyFlowLiveData;
     }
 
     /**

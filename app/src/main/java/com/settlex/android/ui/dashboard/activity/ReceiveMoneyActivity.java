@@ -1,6 +1,7 @@
 package com.settlex.android.ui.dashboard.activity;
 
 import android.os.Bundle;
+import android.widget.Toast;
 
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.lifecycle.ViewModelProvider;
@@ -35,6 +36,7 @@ public class ReceiveMoneyActivity extends AppCompatActivity {
 
         binding.btnCopy.setOnClickListener(v -> copyAccountNumber());
         binding.btnBackBefore.setOnClickListener(v -> finish());
+        binding.btnShareDetails.setOnClickListener(v -> Toast.makeText(this, "This feature is not yet implemented", Toast.LENGTH_SHORT).show());
     }
 
     private void copyAccountNumber() {

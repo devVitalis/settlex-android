@@ -108,6 +108,9 @@ dependencies {
     // Object Mapper
     implementation(libs.jackson.module.kotlin)
     implementation(libs.jackson.databind)
+
+    // MPAndroid Chart
+    implementation(libs.mpandroidchart)
 }
 
 tasks.withType<JavaCompile>().configureEach {

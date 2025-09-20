@@ -104,14 +104,15 @@
                 app:layout_constraintTop_toTopOf="@id/userProfilePic" />
 
             <FrameLayout
+                android:id="@+id/btnSupport"
                 android:layout_width="40dp"
                 android:layout_height="40dp"
                 android:layout_marginEnd="10dp"
                 android:background="@drawable/bg_oval_semi_transparent_black10"
                 android:padding="5dp"
-                app:layout_constraintBottom_toBottomOf="@+id/notificationLayout"
-                app:layout_constraintEnd_toStartOf="@+id/notificationLayout"
-                app:layout_constraintTop_toTopOf="@id/notificationLayout">
+                app:layout_constraintBottom_toBottomOf="@+id/btnNotification"
+                app:layout_constraintEnd_toStartOf="@+id/btnNotification"
+                app:layout_constraintTop_toTopOf="@id/btnNotification">
 
                 <ImageView
                     android:layout_width="25dp"
@@ -123,7 +124,7 @@
 
             <!--Notification Layout-->
             <androidx.constraintlayout.widget.ConstraintLayout
-                android:id="@+id/notificationLayout"
+                android:id="@+id/btnNotification"
                 android:layout_width="40dp"
                 android:layout_height="40dp"
                 android:background="@drawable/bg_oval_semi_transparent_black10"
@@ -333,10 +334,10 @@
                                     android:id="@+id/btnUserCommissionBalanceLayout"
                                     android:layout_width="wrap_content"
                                     android:layout_height="wrap_content"
+                                    android:layout_gravity="center"
+                                    android:background="?attr/selectableItemBackground"
                                     android:clickable="true"
                                     android:focusable="true"
-                                    android:background="?attr/selectableItemBackground"
-                                    android:layout_gravity="center"
                                     android:gravity="center_vertical"
                                     android:orientation="horizontal">
 
@@ -467,6 +468,92 @@
                         </LinearLayout>
                     </androidx.constraintlayout.widget.ConstraintLayout>
                 </LinearLayout>
+
+                <!--Money flow (Hidden) -->
+                <androidx.constraintlayout.widget.ConstraintLayout
+                    android:id="@+id/moneyFlowContainer"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="15dp"
+                    android:background="@drawable/bg_8dp_white"
+                    android:padding="8dp"
+                    android:visibility="gone">
+
+                    <TextView
+                        android:id="@+id/txtMoneyFlow"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:fontFamily="@font/poppins_regular"
+                        android:includeFontPadding="false"
+                        android:text="Money Flow"
+                        android:textColor="@color/gray"
+                        android:textSize="12sp"
+                        app:layout_constraintStart_toStartOf="parent"
+                        app:layout_constraintTop_toTopOf="parent" />
+
+
+                    <ImageView
+                        android:id="@+id/icInFlow"
+                        android:layout_width="20dp"
+                        android:layout_height="20dp"
+                        android:layout_marginTop="10dp"
+                        android:contentDescription="@null"
+                        android:src="@drawable/ic_inflow"
+                        app:layout_constraintStart_toStartOf="parent"
+                        app:layout_constraintTop_toBottomOf="@id/txtMoneyFlow" />
+
+                    <ImageView
+                        android:id="@+id/icOutFlow"
+                        android:layout_width="20dp"
+                        android:layout_height="20dp"
+                        android:layout_marginTop="5dp"
+                        android:contentDescription="@null"
+                        android:src="@drawable/ic_outflow"
+                        app:layout_constraintStart_toStartOf="parent"
+                        app:layout_constraintTop_toBottomOf="@id/icInFlow" />
+
+                    <LinearLayout
+                        android:id="@+id/flowContainer"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginStart="10dp"
+                        android:orientation="vertical"
+                        app:layout_constraintBottom_toBottomOf="@id/icOutFlow"
+                        app:layout_constraintStart_toEndOf="@id/icInFlow"
+                        app:layout_constraintTop_toTopOf="@id/icInFlow">
+
+                        <TextView
+                            android:id="@+id/inFlow"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:includeFontPadding="false"
+                            android:textColor="@color/black"
+                            android:textSize="16sp"
+                            android:textStyle="bold"
+                            tools:text="N200,000.00" />
+
+                        <TextView
+                            android:id="@+id/outFlow"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_marginTop="5dp"
+                            android:includeFontPadding="false"
+                            android:textColor="@color/black"
+                            android:textSize="16sp"
+                            android:textStyle="bold"
+                            tools:text="N200,000.00" />
+                    </LinearLayout>
+
+                    <com.github.mikephil.charting.charts.PieChart
+                        android:id="@+id/moneyFlowPieChart"
+                        android:layout_width="0dp"
+                        android:layout_height="0dp"
+                        android:layout_marginStart="10dp"
+                        app:layout_constraintBottom_toBottomOf="parent"
+                        app:layout_constraintEnd_toEndOf="parent"
+                        app:layout_constraintStart_toEndOf="@id/flowContainer"
+                        app:layout_constraintTop_toTopOf="parent" />
+                </androidx.constraintlayout.widget.ConstraintLayout>
 
                 <!--Services-->
                 <androidx.recyclerview.widget.RecyclerView

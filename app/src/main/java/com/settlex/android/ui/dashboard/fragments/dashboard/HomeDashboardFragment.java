@@ -103,6 +103,8 @@ public class HomeDashboardFragment extends Fragment {
         binding.btnAddMoney.setOnClickListener(v -> userViewModel.signOut());
         binding.btnReceiveMoney.setOnClickListener(v -> navigateTo(ReceiveMoneyActivity.class));
         binding.btnPayAFriend.setOnClickListener(v -> navigateTo(TransactionActivity.class));
+        binding.btnNotification.setOnClickListener(v -> Toast.makeText(requireContext(), "This feature is not yet implemented", Toast.LENGTH_SHORT).show());
+        binding.btnSupport.setOnClickListener(v -> Toast.makeText(requireContext(), "This feature is not yet implemented", Toast.LENGTH_SHORT).show());
     }
 
     //  OBSERVERS ===========
@@ -301,6 +303,7 @@ public class HomeDashboardFragment extends Fragment {
         binding.btnBalanceToggle.setVisibility(View.GONE);
         binding.greetingContainer.setVisibility(View.GONE);
         binding.actionButtons.setVisibility(View.GONE);
+        binding.moneyFlowContainer.setVisibility(View.GONE);
         binding.transactionContainer.setVisibility(View.GONE);
 
         // Explicitly reset the user data UI components

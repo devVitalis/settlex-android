@@ -40,23 +40,25 @@
             android:textStyle="bold" />
     </LinearLayout>
 
-    <!-- Card View -->
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="0dp"
         android:background="@color/gray_light"
         android:orientation="vertical"
-        android:paddingHorizontal="15dp"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.0"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/header">
+        app:layout_constraintTop_toBottomOf="@id/header"
+        app:layout_constraintVertical_bias="0.0">
 
+        <!-- Card View -->
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginTop="15dp"
+            android:layout_margin="15dp"
             android:background="@drawable/bg_8dp_white"
+            android:elevation="5dp"
             android:orientation="vertical"
             android:padding="20dp">
 
@@ -78,9 +80,9 @@
                 android:layout_marginTop="10dp"
                 android:fontFamily="@font/poppins_regular"
                 android:includeFontPadding="false"
+                android:text="Your Payment ID"
                 android:textColor="@color/gray"
-                android:textSize="14sp"
-                android:text="Payment TAG" />
+                android:textSize="14sp" />
 
             <LinearLayout
                 android:layout_width="wrap_content"
@@ -113,10 +115,10 @@
                 android:fontFamily="@font/poppins_regular"
                 android:gravity="center"
                 android:includeFontPadding="false"
-                android:text="Share your payment TAG to receive internal transfers"
+                android:text="Share this unique ID to receive money instantly from other app users."
                 android:textAlignment="center"
                 android:textColor="@color/black"
-                android:textSize="13sp" />
+                android:textSize="14sp" />
 
             <LinearLayout
                 android:layout_width="match_parent"
@@ -133,7 +135,7 @@
                     android:layout_marginEnd="20dp"
                     android:layout_weight="1"
                     android:fontFamily="@font/poppins_regular"
-                    android:text="Copy TAG" />
+                    android:text="Copy ID" />
 
                 <com.google.android.material.button.MaterialButton
                     android:id="@+id/btnShareDetails"

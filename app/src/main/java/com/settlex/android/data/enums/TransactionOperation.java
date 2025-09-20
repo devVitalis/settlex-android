@@ -7,7 +7,7 @@ import com.settlex.android.R;
  */
 public enum TransactionOperation {
     CREDIT("+", R.color.green),
-    DEBIT("-", R.color.black);
+    DEBIT("-", R.color.red);
 
     private final String symbol;
     private final int symbolColorRes;

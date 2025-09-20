@@ -1,6 +1,7 @@
 package com.settlex.android.ui.dashboard.activity;
 
 import android.os.Bundle;
+import android.widget.Toast;
 
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.lifecycle.ViewModelProvider;
@@ -26,6 +27,7 @@ public class CommissionWithdrawalActivity extends AppCompatActivity {
         setContentView(binding.getRoot());
 
         userViewModel = new ViewModelProvider(this).get(UserViewModel.class);
+
         observeUserData();
         setupUiActions();
     }
@@ -33,7 +35,7 @@ public class CommissionWithdrawalActivity extends AppCompatActivity {
     private void setupUiActions() {
         StatusBarUtil.setStatusBarColor(this, R.color.white);
 
-        binding.btnWithdraw.setOnClickListener(v -> {/* Do something */});
+        binding.btnWithdraw.setOnClickListener(v -> Toast.makeText(this, "This feature is not yet implemented", Toast.LENGTH_SHORT).show());
         binding.btnBackBefore.setOnClickListener(v -> finish());
     }
 
