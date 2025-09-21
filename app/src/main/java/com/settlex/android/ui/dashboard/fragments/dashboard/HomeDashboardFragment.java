@@ -105,12 +105,14 @@ public class HomeDashboardFragment extends Fragment {
         binding.btnPayAFriend.setOnClickListener(v -> navigateTo(TransactionActivity.class));
         binding.btnNotification.setOnClickListener(v -> Toast.makeText(requireContext(), "This feature is not yet implemented", Toast.LENGTH_SHORT).show());
         binding.btnSupport.setOnClickListener(v -> Toast.makeText(requireContext(), "This feature is not yet implemented", Toast.LENGTH_SHORT).show());
+        binding.btnViewAllTransaction.setOnClickListener(v -> Toast.makeText(requireContext(), "This feature is not yet implemented", Toast.LENGTH_SHORT).show());
     }
 
     //  OBSERVERS ===========
     private void observeNetworkState() {
         NetworkMonitor.getNetworkStatus().observe(getViewLifecycleOwner(), isConnected ->
-                this.isConnected = isConnected);
+                this.isConnected = isConnected
+        );
     }
 
     private void observeUserAuthState() {

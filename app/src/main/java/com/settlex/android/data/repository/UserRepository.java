@@ -136,7 +136,8 @@ public class UserRepository {
 
     // ---------------- TRANSACTIONS ----------------
     public void getUserTransactions(String uid, int limit, TransactionCallback callback) {
-        removeTransactionListener(); // avoid multiple listeners
+//        removeTransactionListener(); // avoid multiple listeners
+        if (transactionListener != null) Log.d("Repository", "Transaction listener is active ");
 
         Log.d("Repository", "Attaching Firestore transaction listener for user: " + uid);
         transactionListener = firestore.collection("users")

@@ -37,7 +37,7 @@ import com.settlex.android.util.ui.StatusBarUtil;
 import java.util.Objects;
 
 public class SignUpUserPasswordFragment extends Fragment {
-    private boolean isConnected = false; // Network connection status
+    private boolean isConnected = false; // Network connection state
 
     private FragmentSignUpUserPasswordBinding binding;
     private ProgressLoaderController progressLoader;
@@ -71,8 +71,8 @@ public class SignUpUserPasswordFragment extends Fragment {
 
     @Override
     public void onDestroyView() {
-        binding = null;
         super.onDestroyView();
+        binding = null;
     }
 
 

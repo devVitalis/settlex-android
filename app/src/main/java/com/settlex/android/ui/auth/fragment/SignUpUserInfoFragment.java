@@ -17,9 +17,11 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 import androidx.lifecycle.ViewModelProvider;
+import androidx.navigation.NavController;
+import androidx.navigation.fragment.NavHostFragment;
 
 import com.settlex.android.R;
-import com.settlex.android.databinding.FragmentSignupUserInfoBinding;
+import com.settlex.android.databinding.FragmentSignUpUserInfoBinding;
 import com.settlex.android.ui.auth.viewmodel.AuthViewModel;
 import com.settlex.android.ui.info.help.AuthHelpActivity;
 import com.settlex.android.util.string.StringUtil;
@@ -30,9 +32,9 @@ import java.util.Objects;
 import dagger.hilt.android.AndroidEntryPoint;
 
 @AndroidEntryPoint
-public class SignupUserInfoFragment extends Fragment {
+public class SignUpUserInfoFragment extends Fragment {
 
-    private FragmentSignupUserInfoBinding binding;
+    private FragmentSignUpUserInfoBinding binding;
     private AuthViewModel authViewModel;
 
     // LIFECYCLE ===========
@@ -44,7 +46,7 @@ public class SignupUserInfoFragment extends Fragment {
 
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-        binding = FragmentSignupUserInfoBinding.inflate(inflater, container, false);
+        binding = FragmentSignUpUserInfoBinding.inflate(inflater, container, false);
 
         StatusBarUtil.setStatusBarColor(requireActivity(), R.color.white);
         setupUiActions();
@@ -54,8 +56,8 @@ public class SignupUserInfoFragment extends Fragment {
 
     @Override
     public void onDestroyView() {
-        binding = null;
         super.onDestroyView();
+        binding = null;
     }
 
     // UI SETUP ==========
@@ -103,20 +105,17 @@ public class SignupUserInfoFragment extends Fragment {
     }
 
     /**
-     * Validates user info, updates ViewModel, and navigates to password setup.
+     * Update ViewModel, and navigates to password setup.
      */
     private void validateUserInfoAndProceed() {
-        String firstName = StringUtil.capitalizeEachWord(
-                Objects.requireNonNull(binding.editTxtFirstName.getText()).toString().trim()
-        );
-        String lastName = StringUtil.capitalizeEachWord(
-                Objects.requireNonNull(binding.editTxtLastName.getText()).toString().trim()
-        );
+        String firstName = StringUtil.capitalizeEachWord(Objects.requireNonNull(binding.editTxtFirstName.getText()).toString().trim());
+        String lastName = StringUtil.capitalizeEachWord(Objects.requireNonNull(binding.editTxtLastName.getText()).toString().trim());
 
         authViewModel.updateFirstName(firstName);
         authViewModel.updateLastName(lastName);
 
-        navigateToFragment(new SignUpUserPasswordFragment());
+        NavController navController = NavHostFragment.findNavController(this);
+        navController.navigate(R.id.signUpUserPasswordFragment);
     }
 
     /**
@@ -130,14 +129,6 @@ public class SignupUserInfoFragment extends Fragment {
         boolean isValidLastName = !lastName.isEmpty() && lastName.matches("^[a-zA-Z]{2,}(?:\\s[a-zA-Z]{2,})*$");
 
         binding.btnContinue.setEnabled(isValidFirstName && isValidLastName);
-    }
-
-    private void navigateToFragment(Fragment fragment) {
-        requireActivity().getSupportFragmentManager()
-                .beginTransaction()
-                .replace(R.id.fragment_container, fragment)
-                .addToBackStack(null)
-                .commit();
     }
 
     private void navigateBack() {

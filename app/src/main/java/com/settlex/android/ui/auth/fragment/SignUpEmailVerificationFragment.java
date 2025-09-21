@@ -18,6 +18,9 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 import androidx.lifecycle.ViewModelProvider;
+import androidx.navigation.NavController;
+import androidx.navigation.NavOptions;
+import androidx.navigation.fragment.NavHostFragment;
 
 import com.settlex.android.R;
 import com.settlex.android.databinding.FragmentSignUpEmailVerificationBinding;
@@ -41,7 +44,7 @@ public class SignUpEmailVerificationFragment extends Fragment {
     private EditText[] otpDigitViews;
 
     private String email; // The onboarding user email
-    private boolean isConnected = false; // Network connection status
+    private boolean isConnected = false; // Network connection state
 
     private AuthViewModel authViewModel;
     private ProgressLoaderController progressLoader;
@@ -79,11 +82,11 @@ public class SignUpEmailVerificationFragment extends Fragment {
 
     @Override
     public void onDestroyView() {
+        super.onDestroyView();
         // Cancel timer
         // Remove binding
         if (resendOtpCountdownTimer != null) resendOtpCountdownTimer.cancel();
         binding = null;
-        super.onDestroyView();
     }
 
     //  OBSERVERS =========
@@ -123,7 +126,11 @@ public class SignUpEmailVerificationFragment extends Fragment {
     }
 
     private void onOtpVerificationSuccess() {
-        navigateToFragment(new SignupUserInfoFragment());
+        NavOptions navOptions = new NavOptions.Builder()
+                .setPopUpTo(R.id.signUpEmailVerificationFragment, true) // Remove from back stack
+                .build();
+        NavController navController = NavHostFragment.findNavController(this);
+        navController.navigate(R.id.signUpUserInfoFragment, null, navOptions);
         progressLoader.hide();
     }
 
@@ -175,7 +182,9 @@ public class SignUpEmailVerificationFragment extends Fragment {
     }
 
     private void formatInfoText() {
-        String infoText = "Didn’t get the email? Make sure to also " + "<font color='#FFA500'><b>check your spam/junk folder</b></font> " + "if you can't find the email in your inbox.";
+        String infoText = "Didn’t get the email? Make sure to also " +
+                "<font color='#FFA500'><b>check your spam/junk folder</b></font> " +
+                "if you can't find the email in your inbox.";
         binding.txtInfo.setText(Html.fromHtml(infoText, Html.FROM_HTML_MODE_LEGACY));
     }
 
@@ -265,15 +274,8 @@ public class SignUpEmailVerificationFragment extends Fragment {
         }
     }
 
-    private void navigateToFragment(Fragment fragment) {
-        requireActivity().getSupportFragmentManager()
-                .beginTransaction()
-                .replace(R.id.fragment_container, fragment)
-                .commit();
-    }
-
     private void navigateBack() {
-        requireActivity().getSupportFragmentManager().popBackStack();
+        NavHostFragment.findNavController(this).popBackStack();
     }
 
     private void hideKeyboard() {

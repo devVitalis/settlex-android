@@ -4,16 +4,13 @@ import android.os.Bundle;
 
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
-import androidx.fragment.app.Fragment;
 
 import com.settlex.android.R;
-import com.settlex.android.ui.auth.fragment.SignUpUserContactInfoFragment;
 
 import dagger.hilt.android.AndroidEntryPoint;
 
 /**
  * Hosts the multi-step user registration flow using fragments.
- * Manages fragment transactions between registration steps.
  */
 @AndroidEntryPoint
 public class SignUpActivity extends AppCompatActivity {
@@ -22,15 +19,5 @@ public class SignUpActivity extends AppCompatActivity {
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_sign_up);
-
-        // Load default fragment on start
-        if (savedInstanceState == null) navigateToFragment(new SignUpUserContactInfoFragment());
-    }
-
-    private void navigateToFragment(Fragment fragment) {
-        getSupportFragmentManager()
-                .beginTransaction()
-                .replace(R.id.fragment_container, fragment)
-                .commit();
     }
 }

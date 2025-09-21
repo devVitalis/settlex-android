@@ -26,6 +26,8 @@ import androidx.annotation.Nullable;
 import androidx.core.content.ContextCompat;
 import androidx.fragment.app.Fragment;
 import androidx.lifecycle.ViewModelProvider;
+import androidx.navigation.NavController;
+import androidx.navigation.fragment.NavHostFragment;
 
 import com.settlex.android.R;
 import com.settlex.android.databinding.FragmentSignUpUserContactInfoBinding;
@@ -37,21 +39,22 @@ import com.settlex.android.ui.info.legal.PrivacyPolicyActivity;
 import com.settlex.android.ui.info.legal.TermsAndConditionsActivity;
 import com.settlex.android.util.event.Result;
 import com.settlex.android.util.network.NetworkMonitor;
-import com.settlex.android.util.string.StringUtil;
 import com.settlex.android.util.ui.StatusBarUtil;
 import com.settlex.android.util.ui.UiUtil;
-
-import java.util.Objects;
 
 import dagger.hilt.android.AndroidEntryPoint;
 
 @AndroidEntryPoint
 public class SignUpUserContactInfoFragment extends Fragment {
-    private boolean isConnected = false; // Network connection status
-
+    // Dependencies
+    private boolean isConnected = false;
     private AuthViewModel authViewModel;
     private ProgressLoaderController progressLoader;
     private FragmentSignUpUserContactInfoBinding binding;
+
+    // Instance variables for user data
+    private String email;
+    private String phone;
 
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
@@ -64,9 +67,7 @@ public class SignUpUserContactInfoFragment extends Fragment {
     public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         binding = FragmentSignUpUserContactInfoBinding.inflate(inflater, container, false);
 
-        StatusBarUtil.setStatusBarColor(requireActivity(), R.color.white);
         setupUiActions();
-
         return binding.getRoot();
     }
 
@@ -74,7 +75,7 @@ public class SignUpUserContactInfoFragment extends Fragment {
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
 
-        observeNetworkStatus();
+        observeNetworkState();
         observeAndHandleSendVerificationOtpResult();
     }
 
@@ -85,29 +86,36 @@ public class SignUpUserContactInfoFragment extends Fragment {
     }
 
     // OBSERVERS ==========
-    private void observeNetworkStatus() {
+    private void observeNetworkState() {
         NetworkMonitor.getNetworkStatus().observe(requireActivity(), isConnected -> this.isConnected = isConnected);
     }
 
     private void observeAndHandleSendVerificationOtpResult() {
         authViewModel.getSendEmailVerificationOtpResult().observe(getViewLifecycleOwner(), event -> {
             Result<String> result = event.getContentIfNotHandled();
-            if (result != null) {
-                switch (result.getStatus()) {
-                    case LOADING -> progressLoader.show();
-                    case SUCCESS -> onSendVerificationOtpSuccess();
-                    case ERROR -> onSendOtpFailure(result.getMessage());
-                }
+            if (result == null) {
+                return;
+            }
+
+            switch (result.getStatus()) {
+                case LOADING -> onSendVerificationOtpLoading();
+                case SUCCESS -> onSendVerificationOtpSuccess();
+                case ERROR -> onSendVerificationOtpError(result.getMessage());
             }
         });
     }
 
+    private void onSendVerificationOtpLoading() {
+        progressLoader.show();
+    }
+
     private void onSendVerificationOtpSuccess() {
-        navigateToFragment(new SignUpEmailVerificationFragment());
+        NavController navController = NavHostFragment.findNavController(this);
+        navController.navigate(R.id.signUpEmailVerificationFragment);
         progressLoader.hide();
     }
 
-    private void onSendOtpFailure(String reason) {
+    private void onSendVerificationOtpError(String reason) {
         binding.txtErrorFeedback.setText(reason);
         binding.txtErrorFeedback.setVisibility(View.VISIBLE);
         progressLoader.hide();
@@ -115,6 +123,7 @@ public class SignUpUserContactInfoFragment extends Fragment {
 
     // UI ACTIONS =========
     private void setupUiActions() {
+        StatusBarUtil.setStatusBarColor(requireActivity(), R.color.white);
         setupInputValidation();
         setupLegalLinks();
         reEnableEditTextFocus();
@@ -122,28 +131,36 @@ public class SignUpUserContactInfoFragment extends Fragment {
 
         binding.btnSignIn.setOnClickListener(view -> navigateToActivity(SignInActivity.class, true));
         binding.btnHelp.setOnClickListener(v -> navigateToActivity(AuthHelpActivity.class, false));
-        binding.imgBackBefore.setOnClickListener(v -> navigateBack());
-        binding.btnContinue.setOnClickListener(v -> validateUserInfoAndSendVerificationOtp());
+        binding.btnBackBefore.setOnClickListener(v -> onBackButtonPressed());
+        binding.btnContinue.setOnClickListener(v -> storeUserInfoInModel());
     }
 
-    private void validateUserInfoAndSendVerificationOtp() {
-        if (isConnected) {
-            String email = Objects.requireNonNull(binding.editTxtEmail.getText()).toString().trim();
-            String phone = StringUtil.formatPhoneNumber(binding.editTxtPhoneNumber.getText().toString().trim());
-
-            authViewModel.updateEmail(email);
-            authViewModel.updatePhone(phone);
-            authViewModel.sendEmailVerificationOtp(email);
+    private void storeUserInfoInModel() {
+        if (!isConnected) {
+            // Check for network state
+            showNoInternetDialog();
             return;
         }
-        showNoInternetDialog();
+
+        authViewModel.updateEmail(email);
+        authViewModel.updatePhone(phone);
+
+        // Send OTP
+        sendEmailVerificationOtp();
+    }
+
+    private void sendEmailVerificationOtp() {
+        authViewModel.sendEmailVerificationOtp(email);
     }
 
     private void showNoInternetDialog() {
+        String title = "Network Unavailable";
+        String message = "Please check your Wi-Fi or cellular data and try again";
+
         UiUtil.showAlertDialog(requireActivity(), (alertDialog, binding) -> {
             binding.icon.setImageResource(R.drawable.ic_signal_disconnected);
-            binding.title.setText("Network Unavailable");
-            binding.message.setText("Please check your Wi-Fi or cellular data and try again");
+            binding.title.setText(title);
+            binding.message.setText(message);
 
             binding.btnOkay.setOnClickListener(view -> alertDialog.dismiss());
             alertDialog.show();
@@ -151,6 +168,39 @@ public class SignUpUserContactInfoFragment extends Fragment {
     }
 
     private void setupInputValidation() {
+        // Email watcher
+        binding.editTxtEmail.addTextChangedListener(new TextWatcher() {
+            @Override
+            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+            }
+
+            @Override
+            public void afterTextChanged(Editable s) {
+            }
+
+            @Override
+            public void onTextChanged(CharSequence s, int start, int before, int count) {
+                email = s.toString().trim();
+                binding.emailSectionHeader.setVisibility(!TextUtils.isEmpty(email) ? View.VISIBLE : View.INVISIBLE);
+            }
+        });
+
+        // Phone watcher
+        binding.editTxtPhoneNumber.addTextChangedListener(new TextWatcher() {
+            @Override
+            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+            }
+
+            @Override
+            public void afterTextChanged(Editable s) {
+            }
+
+            @Override
+            public void onTextChanged(CharSequence s, int start, int before, int count) {
+                phone = s.toString().trim();
+            }
+        });
+
         TextWatcher validationWatcher = new TextWatcher() {
             @Override
             public void beforeTextChanged(CharSequence s, int start, int count, int after) {
@@ -167,28 +217,34 @@ public class SignUpUserContactInfoFragment extends Fragment {
             }
         };
 
+        // attach validation watcher
         binding.editTxtEmail.addTextChangedListener(validationWatcher);
         binding.editTxtPhoneNumber.addTextChangedListener(validationWatcher);
         binding.checkBoxTermsPrivacy.setOnCheckedChangeListener((buttonView, isChecked) -> updateContinueButtonState());
+    }
 
-        binding.editTxtEmail.addTextChangedListener(new TextWatcher() {
-            @Override
-            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
-            }
+    private void updateContinueButtonState() {
+        setContinueButtonEnabled(isEmailValid() && isPhoneNumberValid() && isCheckBoxTermsPrivacyChecked());
+    }
 
-            @Override
-            public void afterTextChanged(Editable s) {
-            }
+    private boolean isEmailValid() {
+        return email != null && !email.isEmpty() && Patterns.EMAIL_ADDRESS.matcher(email).matches();
+    }
 
-            @Override
-            public void onTextChanged(CharSequence s, int start, int before, int count) {
-                binding.emailSectionHeader.setVisibility(!TextUtils.isEmpty(s) ? View.VISIBLE : View.INVISIBLE);
-            }
-        });
+    private boolean isPhoneNumberValid() {
+        return phone != null && !phone.isEmpty() && phone.matches("^(0)?[7-9][0-1]\\d{8}$");
+    }
+
+    private boolean isCheckBoxTermsPrivacyChecked() {
+        return binding.checkBoxTermsPrivacy.isChecked();
+    }
+
+    private void setContinueButtonEnabled(boolean allValid) {
+        binding.btnContinue.setEnabled(allValid);
     }
 
     private void setupLegalLinks() {
-        String legalText = getString(R.string.terms_privacy_agreement);
+        String legalText = "I have read, understood and agreed to the Terms & Conditions and Privacy Policy.";
         SpannableStringBuilder span = new SpannableStringBuilder(legalText);
 
         ClickableSpan termsSpan = new ClickableSpan() {
@@ -240,40 +296,20 @@ public class SignUpUserContactInfoFragment extends Fragment {
         binding.editTxtEmail.setOnFocusChangeListener((v, hasFocus) -> binding.editTxtEmailBg.setBackgroundResource(hasFocus ? R.drawable.bg_edit_txt_custom_white_focused : R.drawable.bg_edit_txt_custom_white_not_focused));
     }
 
-    private void updateContinueButtonState() {
-        String email = Objects.requireNonNull(binding.editTxtEmail.getText()).toString().trim();
-        String phone = Objects.requireNonNull(binding.editTxtPhoneNumber.getText()).toString().trim();
-
-        boolean isValidEmail = Patterns.EMAIL_ADDRESS.matcher(email).matches();
-        boolean isValidPhone = phone.matches("^(0)?[7-9][0-1]\\d{8}$");
-        boolean isTermsAccepted = binding.checkBoxTermsPrivacy.isChecked();
-
-        binding.btnContinue.setEnabled(isValidEmail && isValidPhone && isTermsAccepted);
-    }
-
-    // ====================== NAVIGATION ======================
-    private void navigateToFragment(Fragment fragment) {
-        requireActivity().getSupportFragmentManager()
-                .beginTransaction()
-                .replace(R.id.fragment_container, fragment)
-                .addToBackStack(null).commit();
-    }
-
     private void navigateToActivity(Class<? extends Activity> activityClass, boolean clearBackStack) {
-        if (clearBackStack) {
+        if (!clearBackStack) {
             startActivity(new Intent(requireActivity(), activityClass));
-            requireActivity().finish();
-        } else {
-            startActivity(new Intent(requireActivity(), activityClass));
+            return;
         }
+        startActivity(new Intent(requireActivity(), activityClass));
+        requireActivity().finish();
     }
 
-    private void navigateBack() {
+    private void onBackButtonPressed() {
         requireActivity().getOnBackPressedDispatcher().onBackPressed();
         requireActivity().finish();
     }
 
-    // ====================== UTILITIES ======================
     @SuppressLint("ClickableViewAccessibility")
     private void clearFocusAndHideKeyboardOnOutsideTap(View root) {
         if (!(root instanceof EditText)) {

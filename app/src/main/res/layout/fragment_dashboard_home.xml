@@ -268,7 +268,10 @@
                             android:layout_width="18dp"
                             android:layout_height="18dp"
                             android:layout_marginStart="5dp"
+                            android:background="?attr/selectableItemBackgroundBorderless"
+                            android:clickable="true"
                             android:contentDescription="Hide Balance"
+                            android:focusable="true"
                             android:src="@drawable/ic_visibility_on"
                             app:layout_constraintStart_toEndOf="@id/balanceTitle"
                             app:layout_constraintTop_toTopOf="parent"
@@ -335,7 +338,7 @@
                                     android:layout_width="wrap_content"
                                     android:layout_height="wrap_content"
                                     android:layout_gravity="center"
-                                    android:background="?attr/selectableItemBackground"
+                                    android:background="?attr/selectableItemBackgroundBorderless"
                                     android:clickable="true"
                                     android:focusable="true"
                                     android:gravity="center_vertical"
@@ -595,6 +598,7 @@
                             android:textSize="12sp" />
 
                         <TextView
+                            android:id="@+id/btnViewAllTransaction"
                             android:layout_width="wrap_content"
                             android:layout_height="match_parent"
                             android:layout_marginEnd="4dp"
