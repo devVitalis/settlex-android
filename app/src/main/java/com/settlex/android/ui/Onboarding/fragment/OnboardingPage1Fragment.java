@@ -19,7 +19,6 @@ public class OnboardingPage1Fragment extends Fragment {
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         binding = FragmentOnboardingPage1Binding.inflate(inflater, container, false);
 
-
         return binding.getRoot();
     }
 
