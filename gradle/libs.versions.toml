@@ -29,7 +29,10 @@ shimmer = "0.5.0"
 tinkAndroid = "1.18.0"
 navigationFragment = "2.9.4"
 navigationUi = "2.9.4"
+<<<<<<< HEAD
 viewpagerindicator = "1.2.3"
+=======
+>>>>>>> dd99b345da7bbcae3d5c9d1d01bafe8b7f1a5a36
 
 [libraries]
 datastore-preferences = { module = "androidx.datastore:datastore-preferences", version.ref = "datastorePreferences" }
@@ -65,7 +68,10 @@ shimmer = { module = "com.facebook.shimmer:shimmer", version.ref = "shimmer" }
 tink-android = { module = "com.google.crypto.tink:tink-android", version.ref = "tinkAndroid" }
 navigation-fragment = { group = "androidx.navigation", name = "navigation-fragment", version.ref = "navigationFragment" }
 navigation-ui = { group = "androidx.navigation", name = "navigation-ui", version.ref = "navigationUi" }
+<<<<<<< HEAD
 viewpagerindicator = { module = "com.github.zhpanvip:viewpagerindicator", version.ref = "viewpagerindicator" }
+=======
+>>>>>>> dd99b345da7bbcae3d5c9d1d01bafe8b7f1a5a36
 
 [plugins]
 android-application = { id = "com.android.application", version.ref = "agp" }

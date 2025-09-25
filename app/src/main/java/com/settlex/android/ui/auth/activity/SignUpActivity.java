@@ -9,6 +9,8 @@ import com.settlex.android.R;
 
 import dagger.hilt.android.AndroidEntryPoint;
 
+import dagger.hilt.android.AndroidEntryPoint;
+
 /**
  * Hosts the multi-step user registration flow using fragments.
  */

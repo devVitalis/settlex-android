@@ -13,6 +13,7 @@ import com.bumptech.glide.Glide;
 import com.settlex.android.R;
 import com.settlex.android.databinding.FragmentOnboardingPage4Binding;
 
+
 public class OnboardingPage4Fragment extends Fragment {
     private FragmentOnboardingPage4Binding binding;
 

@@ -45,7 +45,6 @@ public class SignUpEmailVerificationFragment extends Fragment {
 
     private String email; // The onboarding user email
     private boolean isConnected = false; // Network connection state
-
     private AuthViewModel authViewModel;
     private ProgressLoaderController progressLoader;
     private FragmentSignUpEmailVerificationBinding binding;
@@ -131,6 +130,7 @@ public class SignUpEmailVerificationFragment extends Fragment {
                 .build();
         NavController navController = NavHostFragment.findNavController(this);
         navController.navigate(R.id.signUpUserInfoFragment, null, navOptions);
+
         progressLoader.hide();
     }
 
