@@ -6,6 +6,7 @@ import android.view.View;
 
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.viewpager2.widget.ViewPager2;
 
 import com.settlex.android.R;
 import com.settlex.android.data.local.preference.OnboardingPrefs;
@@ -39,8 +40,14 @@ public class OnboardingActivity extends AppCompatActivity {
 
     private void setupViewPager() {
         OnboardingAdapter adapter = new OnboardingAdapter(this);
-        binding.viewPager.setAdapter(adapter);
-        binding.dotsIndicator.attachTo(binding.viewPager);
+        binding.introViewPager.setAdapter(adapter);
+        setupIndicatorView(binding.introViewPager);
+    }
+
+    private void setupIndicatorView(ViewPager2 viewPager2) {
+        binding.roundRectIndicator.setSliderWidth(getResources().getDimension(R.dimen.dp_87));
+        binding.roundRectIndicator.setSliderHeight(getResources().getDimension(R.dimen.dp_5));
+        binding.roundRectIndicator.setupWithViewPager(viewPager2);
     }
 
     private void setupUiActions() {

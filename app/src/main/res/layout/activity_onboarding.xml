@@ -26,34 +26,41 @@
             android:fontFamily="sans-serif"
             android:gravity="center"
             android:includeFontPadding="false"
-            android:paddingHorizontal="10dp"
-            android:paddingVertical="5dp"
+            android:paddingHorizontal="15dp"
+            android:paddingVertical="10dp"
             android:text="Skip"
             android:textColor="@color/gray"
             android:textSize="15sp" />
 
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:layout_marginHorizontal="15dp"
+            android:layout_marginTop="15dp"
+            android:gravity="center"
+            android:orientation="horizontal">
+
+            <!--Page Indicator-->
+            <com.zhpan.indicator.IndicatorView
+                android:id="@+id/roundRectIndicator"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                app:vpi_orientation="horizontal"
+                app:vpi_slide_mode="smooth"
+                app:vpi_slider_checked_color="@color/blue"
+                app:vpi_slider_normal_color="@color/blue_light"
+                app:vpi_style="round_rect" />
+        </LinearLayout>
+
         <!--ViewPager2 (Fragment Container)-->
         <androidx.viewpager2.widget.ViewPager2
-            android:id="@+id/viewPager"
+            android:id="@+id/introViewPager"
             android:layout_width="match_parent"
             android:layout_height="0dp"
-            android:layout_weight="1"
             android:layout_marginTop="30dp"
+            android:layout_weight="1"
             android:scrollbars="none" />
-
-        <!--Dots Indicator-->
-        <com.tbuonomo.viewpagerdotsindicator.DotsIndicator
-            android:id="@+id/dotsIndicator"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_gravity="center_horizontal"
-            android:layout_marginTop="20dp"
-            app:dotsColor="@color/blue_light"
-            app:dotsSize="5dp"
-            app:dotsSpacing="2dp"
-            app:dotsWidthFactor="2.5"
-            app:progressMode="false"
-            app:selectedDotColor="@color/blue" />
 
         <!--Footer-->
         <LinearLayout
@@ -72,7 +79,8 @@
                 android:layout_width="match_parent"
                 android:layout_height="60dp"
                 android:text="Get Started"
-                android:textColor="@color/white" />
+                android:textColor="@color/white"
+                android:textStyle="bold" />
 
             <!--Btn Login-->
             <com.google.android.material.button.MaterialButton
@@ -81,7 +89,8 @@
                 android:layout_width="match_parent"
                 android:layout_height="60dp"
                 android:layout_marginTop="2dp"
-                android:text="Login" />
+                android:text="Login"
+                android:textStyle="bold" />
         </LinearLayout>
     </LinearLayout>
 </FrameLayout>

@@ -35,10 +35,9 @@ public class OnboardingPage3Fragment extends Fragment {
     }
 
     private void styleHeaderTxt() {
-        String htmlText = "<font color='#0044CC'>SECURE</font> BY DESIGN";
+        String htmlText = "Never Miss <br/>Your <font color='#0044CC'>Shows</font>";
         binding.header.setText(Html.fromHtml(htmlText, Html.FROM_HTML_MODE_LEGACY));
     }
-
 
     private void loadOptimizedImage() {
         Glide.with(this)

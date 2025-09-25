@@ -65,6 +65,9 @@ dependencies {
     // Dots Indicator
     implementation(libs.dotsindicator)
 
+    // ViewPager Indicator
+    implementation(libs.viewpagerindicator)
+
     // Splash Screen
     implementation(libs.core.splashscreen)
 

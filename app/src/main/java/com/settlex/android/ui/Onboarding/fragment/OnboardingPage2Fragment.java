@@ -35,7 +35,7 @@ public class OnboardingPage2Fragment extends Fragment {
     }
 
     private void styleHeaderTxt() {
-        String htmlText = "NEVER <font color='#0044CC'>MISS</font> YOUR <font color='#0044CC'>SHOWS</font>";
+        String htmlText = "Pay <font color='#0044CC'>Bills</font> <br/>Without Stress";
         binding.header.setText(Html.fromHtml(htmlText, Html.FROM_HTML_MODE_LEGACY));
     }
 
@@ -45,4 +45,5 @@ public class OnboardingPage2Fragment extends Fragment {
                 .centerCrop()
                 .into(binding.ImgIntroSlide2);
     }
+
 }
