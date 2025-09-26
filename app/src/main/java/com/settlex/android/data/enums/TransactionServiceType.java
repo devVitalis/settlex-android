@@ -13,7 +13,10 @@ public enum TransactionServiceType {
     CABLE_TV_SUBSCRIPTION("Cable TV Subscription", R.drawable.ic_cable_tv),
     ELECTRICITY_BILL("Electricity Bill Payment", R.drawable.ic_electricity),
     BETTING_TOPUP("Betting Topup", R.drawable.ic_betting),
-    VOUCHER("Redeem Voucher" ,R.drawable.ic_voucher);
+    INTERNET("Internet Subscription", R.drawable.ic_internet),
+    GIFT_CARD("Gift Card Purchase", R.drawable.ic_gift_card),
+    VOUCHER("Redeem Voucher" ,R.drawable.ic_voucher),
+    MORE("More" ,R.drawable.ic_more);
 
     private final String displayName;
     private final int iconRes;

@@ -18,10 +18,16 @@ import java.util.List;
  * RecyclerView adapter for displaying services in a grid/list format
  */
 public class ServicesAdapter extends RecyclerView.Adapter<ServicesAdapter.ServiceViewHolder> {
-    private final List<ServiceUiModel> serviceList;
+    private final List<ServiceUiModel> service;
+    private final onItemClickedListener listener;
 
-    public ServicesAdapter(List<ServiceUiModel> serviceList) {
-        this.serviceList = serviceList;
+    public interface onItemClickedListener {
+        void onServiceClick(ServiceUiModel service);
+    }
+
+    public ServicesAdapter(List<ServiceUiModel> service, onItemClickedListener listener) {
+        this.service = service;
+        this.listener = listener;
     }
 
     @NonNull
@@ -33,16 +39,17 @@ public class ServicesAdapter extends RecyclerView.Adapter<ServicesAdapter.Servic
 
     @Override
     public void onBindViewHolder(@NonNull ServiceViewHolder holder, int position) {
-        ServiceUiModel service = serviceList.get(position);
+        ServiceUiModel service = this.service.get(position);
 
         // Bind service data to views
         holder.name.setText(service.getName());
         holder.icon.setImageResource(service.getIconResId());
+        holder.itemView.setOnClickListener(view -> listener.onServiceClick(this.service.get(position)));
     }
 
     @Override
     public int getItemCount() {
-        return serviceList.size();
+        return service.size();
     }
 
     /**

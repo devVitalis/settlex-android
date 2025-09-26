@@ -24,17 +24,25 @@ public class DashboardActivity extends AppCompatActivity {
         setContentView(binding.getRoot());
 
         disableNavItemColorTint();
+        setupNavigationComponent();
+    }
 
-        /*
-         NavController navController = Navigation.findNavController(this, R.id.dashboard_nav_host);
-         NavigationUI.setupWithNavController(binding.bottomNavigationView, navController);
-         **/
-
+    private void setupNavigationComponent() {
         NavHostFragment navHostFragment = (NavHostFragment) getSupportFragmentManager().findFragmentById(R.id.dashboard_nav_host);
-        if (navHostFragment != null) {
-            NavController navController = navHostFragment.getNavController();
-            NavigationUI.setupWithNavController(binding.bottomNavigationView, navController);
-        }
+        if (navHostFragment == null) return;
+
+        NavController navController = navHostFragment.getNavController();
+        NavigationUI.setupWithNavController(binding.bottomNavigationView, navController);
+
+        // Override selection so Home always pops back
+        binding.bottomNavigationView.setOnItemSelectedListener(item -> {
+            if (item.getItemId() == R.id.homeFragment) {
+                // Pop everything above home, leave home on top
+                navController.popBackStack(R.id.homeFragment, false);
+                return true;
+            }
+            return NavigationUI.onNavDestinationSelected(item, navController);
+        });
     }
 
     private void disableNavItemColorTint() {

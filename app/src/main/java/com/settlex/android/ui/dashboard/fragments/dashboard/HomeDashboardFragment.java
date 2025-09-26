@@ -15,10 +15,13 @@ import androidx.activity.OnBackPressedCallback;
 import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
 import androidx.lifecycle.ViewModelProvider;
+import androidx.navigation.NavController;
+import androidx.navigation.fragment.NavHostFragment;
 import androidx.recyclerview.widget.GridLayoutManager;
 import androidx.recyclerview.widget.LinearLayoutManager;
 
 import com.settlex.android.R;
+import com.settlex.android.data.enums.TransactionServiceType;
 import com.settlex.android.data.remote.avater.AvatarService;
 import com.settlex.android.databinding.FragmentDashboardHomeBinding;
 import com.settlex.android.ui.auth.activity.SignInActivity;
@@ -30,6 +33,7 @@ import com.settlex.android.ui.dashboard.adapter.PromotionalBannerAdapter;
 import com.settlex.android.ui.dashboard.adapter.ServicesAdapter;
 import com.settlex.android.ui.dashboard.adapter.TransactionsAdapter;
 import com.settlex.android.ui.dashboard.components.GridSpacingItemDecoration;
+import com.settlex.android.ui.dashboard.model.ServiceDestination;
 import com.settlex.android.ui.dashboard.model.ServiceUiModel;
 import com.settlex.android.ui.dashboard.model.TransactionUiModel;
 import com.settlex.android.ui.dashboard.model.UserUiModel;
@@ -41,7 +45,9 @@ import com.settlex.android.util.string.StringUtil;
 import com.settlex.android.util.ui.StatusBarUtil;
 
 import java.util.Arrays;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import dagger.hilt.android.AndroidEntryPoint;
 
@@ -97,12 +103,12 @@ public class HomeDashboardFragment extends Fragment {
         initTransactionRecyclerView();
         setupDoubleBackToExit();
 
-        binding.btnLogin.setOnClickListener(v -> navigateTo(SignInActivity.class));
+        binding.btnLogin.setOnClickListener(v -> navigateToActivity(SignInActivity.class));
         binding.btnBalanceToggle.setOnClickListener(v -> userViewModel.toggleBalanceVisibility());
-        binding.btnUserCommissionBalanceLayout.setOnClickListener(v -> navigateTo(CommissionWithdrawalActivity.class));
+        binding.btnUserCommissionBalanceLayout.setOnClickListener(v -> navigateToActivity(CommissionWithdrawalActivity.class));
         binding.btnAddMoney.setOnClickListener(v -> userViewModel.signOut());
-        binding.btnReceiveMoney.setOnClickListener(v -> navigateTo(ReceiveMoneyActivity.class));
-        binding.btnPayAFriend.setOnClickListener(v -> navigateTo(TransactionActivity.class));
+        binding.btnReceiveMoney.setOnClickListener(v -> navigateToActivity(ReceiveMoneyActivity.class));
+        binding.btnPayAFriend.setOnClickListener(v -> navigateToActivity(TransactionActivity.class));
         binding.btnNotification.setOnClickListener(v -> Toast.makeText(requireContext(), "This feature is not yet implemented", Toast.LENGTH_SHORT).show());
         binding.btnSupport.setOnClickListener(v -> Toast.makeText(requireContext(), "This feature is not yet implemented", Toast.LENGTH_SHORT).show());
         binding.btnViewAllTransaction.setOnClickListener(v -> Toast.makeText(requireContext(), "This feature is not yet implemented", Toast.LENGTH_SHORT).show());
@@ -327,28 +333,59 @@ public class HomeDashboardFragment extends Fragment {
     }
 
     private void loadAppServices() {
-        GridLayoutManager layoutManager = new GridLayoutManager(requireActivity(), 4);
+        GridLayoutManager layoutManager = new GridLayoutManager(requireContext(), 4);
         binding.serviceRecyclerView.setLayoutManager(layoutManager);
         // Set equal spacing
         int spacingInPixels = (int) (10 * getResources().getDisplayMetrics().density);
         binding.serviceRecyclerView.addItemDecoration(new GridSpacingItemDecoration(4, spacingInPixels, true));
 
         List<ServiceUiModel> services = Arrays.asList(
-                new ServiceUiModel("Airtime", R.drawable.ic_airtime),
-                new ServiceUiModel("Data", R.drawable.ic_data),
-                new ServiceUiModel("Betting", R.drawable.ic_betting),
-                new ServiceUiModel("TV", R.drawable.ic_cable_tv),
-                new ServiceUiModel("Electricity", R.drawable.ic_electricity),
-                new ServiceUiModel("Internet", R.drawable.ic_internet),
-                new ServiceUiModel("Gift Card", R.drawable.ic_gift_card),
-                new ServiceUiModel("More", R.drawable.ic_more)
+                new ServiceUiModel("Airtime", R.drawable.ic_airtime, TransactionServiceType.AIRTIME_RECHARGE),
+                new ServiceUiModel("Data", R.drawable.ic_data, TransactionServiceType.DATA_RECHARGE),
+                new ServiceUiModel("Betting", R.drawable.ic_betting, TransactionServiceType.BETTING_TOPUP),
+                new ServiceUiModel("TV", R.drawable.ic_cable_tv, TransactionServiceType.CABLE_TV_SUBSCRIPTION),
+                new ServiceUiModel("Electricity", R.drawable.ic_electricity, TransactionServiceType.ELECTRICITY_BILL),
+                new ServiceUiModel("Internet", R.drawable.ic_internet, TransactionServiceType.INTERNET),
+                new ServiceUiModel("Gift Card", R.drawable.ic_gift_card, TransactionServiceType.GIFT_CARD),
+                new ServiceUiModel("More", R.drawable.ic_more, TransactionServiceType.MORE)
         );
-        ServicesAdapter adapter = new ServicesAdapter(services);
+
+        // Map services to Destinations
+        Map<TransactionServiceType, ServiceDestination> serviceMap = new HashMap<>();
+        serviceMap.put(TransactionServiceType.AIRTIME_RECHARGE, null);
+        serviceMap.put(TransactionServiceType.DATA_RECHARGE, null);
+        serviceMap.put(TransactionServiceType.BETTING_TOPUP, null);
+        serviceMap.put(TransactionServiceType.CABLE_TV_SUBSCRIPTION, null);
+        serviceMap.put(TransactionServiceType.ELECTRICITY_BILL, null);
+        serviceMap.put(TransactionServiceType.INTERNET, null);
+        serviceMap.put(TransactionServiceType.GIFT_CARD, null);
+        serviceMap.put(TransactionServiceType.MORE, new ServiceDestination(R.id.servicesFragment));
+
+        ServicesAdapter adapter = new ServicesAdapter(services, serviceUiModel -> {
+            ServiceDestination serviceDestination = serviceMap.get(serviceUiModel.getType());
+            if (serviceDestination == null) return;
+
+            if (serviceDestination.isActivity()) {
+                startActivity(new Intent(requireContext(), serviceDestination.getActivity()));
+                return;
+            }
+
+            if (serviceDestination.isFragment()) {
+                navigateToFragment(serviceDestination.getNavDestinationId());
+            }
+        });
+
+        // Set adapter
         binding.serviceRecyclerView.setAdapter(adapter);
     }
 
-    private void navigateTo(Class<? extends Activity> activityClass) {
-        startActivity(new Intent(requireActivity(), activityClass));
+    private void navigateToActivity(Class<? extends Activity> activityClass) {
+        startActivity(new Intent(requireContext(), activityClass));
+    }
+
+    private void navigateToFragment(int navigationId) {
+        NavController navController = NavHostFragment.findNavController(this);
+        navController.navigate(navigationId);
     }
 
     private void setupDoubleBackToExit() {

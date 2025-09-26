@@ -3,36 +3,33 @@ agp = "8.11.2"
 coreSplashscreen = "1.0.1"
 datastorePreferences = "1.1.7"
 dotsindicator = "5.1.0"
-firebaseBom = "34.2.0"
-firebaseConfig = "23.0.0"
+firebaseBom = "34.3.0"
+firebaseConfig = "23.0.1"
 glide = "4.16.0"
-gson = "2.13.1"
-hiltAndroid = "2.57.1"
-hiltAndroidCompiler = "2.57.1"
+gson = "2.13.2"
+hiltAndroid = "2.57.2"
+hiltAndroidCompiler = "2.57.2"
 jacksonDatabind = "2.20.0"
 jacksonModuleKotlin = "2.20.0"
 junit = "4.13.2"
 junitVersion = "1.3.0"
 espressoCore = "3.7.0"
 appcompat = "1.7.1"
-lifecycleLivedata = "2.9.3"
-lifecycleViewmodel = "2.9.3"
-lottie = "6.6.7"
+lifecycleLivedata = "2.9.4"
+lifecycleViewmodel = "2.9.4"
+lottie = "6.6.9"
 material = "1.13.0"
 activity = "1.11.0"
 constraintlayout = "2.2.1"
-firebaseFunctions = "22.0.0"
+firebaseFunctions = "22.0.1"
 mpandroidchart = "v3.1.0"
-navigationFragmentKtx = "2.9.4"
-navigationUiKtx = "2.9.4"
+navigationFragmentKtx = "2.9.5"
+navigationUiKtx = "2.9.5"
 shimmer = "0.5.0"
 tinkAndroid = "1.18.0"
-navigationFragment = "2.9.4"
-navigationUi = "2.9.4"
-<<<<<<< HEAD
+navigationFragment = "2.9.5"
+navigationUi = "2.9.5"
 viewpagerindicator = "1.2.3"
-=======
->>>>>>> dd99b345da7bbcae3d5c9d1d01bafe8b7f1a5a36
 
 [libraries]
 datastore-preferences = { module = "androidx.datastore:datastore-preferences", version.ref = "datastorePreferences" }
@@ -68,10 +65,7 @@ shimmer = { module = "com.facebook.shimmer:shimmer", version.ref = "shimmer" }
 tink-android = { module = "com.google.crypto.tink:tink-android", version.ref = "tinkAndroid" }
 navigation-fragment = { group = "androidx.navigation", name = "navigation-fragment", version.ref = "navigationFragment" }
 navigation-ui = { group = "androidx.navigation", name = "navigation-ui", version.ref = "navigationUi" }
-<<<<<<< HEAD
 viewpagerindicator = { module = "com.github.zhpanvip:viewpagerindicator", version.ref = "viewpagerindicator" }
-=======
->>>>>>> dd99b345da7bbcae3d5c9d1d01bafe8b7f1a5a36
 
 [plugins]
 android-application = { id = "com.android.application", version.ref = "agp" }
