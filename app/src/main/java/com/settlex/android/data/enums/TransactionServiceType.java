@@ -6,17 +6,20 @@ import com.settlex.android.R;
  * Enum representing different transaction services with their associated icons
  */
 public enum TransactionServiceType {
-    ADD_MONEY("Wallet Funding", R.drawable.ic_money_sent),  //TODO: update with icon
-    PAY_A_FRIEND("Transfer sent", R.drawable.ic_money_sent),
-    AIRTIME_RECHARGE("Airtime Recharge", R.drawable.ic_airtime),
-    DATA_RECHARGE("Data Recharge", R.drawable.ic_data),
-    CABLE_TV_SUBSCRIPTION("Cable TV Subscription", R.drawable.ic_cable_tv),
-    ELECTRICITY_BILL("Electricity Bill Payment", R.drawable.ic_electricity),
-    BETTING_TOPUP("Betting Topup", R.drawable.ic_betting),
-    INTERNET("Internet Subscription", R.drawable.ic_internet),
-    GIFT_CARD("Gift Card Purchase", R.drawable.ic_gift_card),
-    VOUCHER("Redeem Voucher" ,R.drawable.ic_voucher),
-    MORE("More" ,R.drawable.ic_more);
+    ADD_MONEY("Wallet Funding", R.drawable.ic_service_money_sent),  //TODO: update with icon
+    PAY_A_FRIEND("Transfer sent", R.drawable.ic_service_money_sent),
+    AIRTIME_RECHARGE("Airtime Recharge", R.drawable.ic_service_airtime),
+    DATA_RECHARGE("Data Recharge", R.drawable.ic_service_data),
+    CABLE_TV_SUBSCRIPTION("Cable TV Subscription", R.drawable.ic_service_cable_tv),
+    ELECTRICITY_BILL("Electricity Bill Payment", R.drawable.ic_service_electricity),
+    BETTING_TOPUP("Betting Top-up", R.drawable.ic_service_betting),
+    INTERNET("Internet Subscription", R.drawable.ic_service_internet),
+    GIFT_CARD("Gift Card Purchase", R.drawable.ic_service_gift_card),
+    VOUCHER("Redeem Voucher" ,R.drawable.ic_service_voucher),
+    MORE("More" ,R.drawable.ic_service_more),
+    ESIM("Esim" ,R.drawable.ic_service_esim),
+    FLIGHT("Flight Booking" ,R.drawable.ic_service_flight),
+    HOTEL("Hotel" ,R.drawable.ic_service_hotel);
 
     private final String displayName;
     private final int iconRes;

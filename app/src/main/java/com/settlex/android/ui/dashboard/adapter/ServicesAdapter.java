@@ -20,12 +20,14 @@ import java.util.List;
 public class ServicesAdapter extends RecyclerView.Adapter<ServicesAdapter.ServiceViewHolder> {
     private final List<ServiceUiModel> service;
     private final onItemClickedListener listener;
+    private final boolean useAllService; // true = item_service_all
 
     public interface onItemClickedListener {
         void onServiceClick(ServiceUiModel service);
     }
 
-    public ServicesAdapter(List<ServiceUiModel> service, onItemClickedListener listener) {
+    public ServicesAdapter(boolean useAllService, List<ServiceUiModel> service, onItemClickedListener listener) {
+        this.useAllService = useAllService;
         this.service = service;
         this.listener = listener;
     }
@@ -33,7 +35,8 @@ public class ServicesAdapter extends RecyclerView.Adapter<ServicesAdapter.Servic
     @NonNull
     @Override
     public ServiceViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
-        View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.item_services, parent, false);
+        int layoutId = (!useAllService) ? R.layout.item_service : R.layout.item_service_all;
+        View view = LayoutInflater.from(parent.getContext()).inflate(layoutId, parent, false);
         return new ServiceViewHolder(view);
     }
 

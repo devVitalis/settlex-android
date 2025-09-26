@@ -1,66 +1,147 @@
 package com.settlex.android.ui.dashboard.fragments.dashboard;
 
+import android.content.Intent;
 import android.os.Bundle;
-
-import androidx.fragment.app.Fragment;
-
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Toast;
+
+import androidx.annotation.NonNull;
+import androidx.fragment.app.Fragment;
+import androidx.navigation.NavController;
+import androidx.navigation.fragment.NavHostFragment;
+import androidx.recyclerview.widget.GridLayoutManager;
 
 import com.settlex.android.R;
+import com.settlex.android.data.enums.TransactionServiceType;
+import com.settlex.android.databinding.FragmentDashboardServicesBinding;
+import com.settlex.android.ui.dashboard.adapter.ServicesAdapter;
+import com.settlex.android.ui.dashboard.components.GridSpacingItemDecoration;
+import com.settlex.android.ui.dashboard.model.ServiceDestination;
+import com.settlex.android.ui.dashboard.model.ServiceUiModel;
+import com.settlex.android.ui.dashboard.services.AirtimePurchaseActivity;
+import com.settlex.android.ui.dashboard.services.BettingTopUpActivity;
+import com.settlex.android.ui.dashboard.services.CableTvSubscriptionActivity;
+import com.settlex.android.ui.dashboard.services.DataPurchaseActivity;
 
-/**
- * A simple {@link Fragment} subclass.
- * Use the {@link ServicesDashboardFragment#newInstance} factory method to
- * create an instance of this fragment.
- */
+import java.util.Arrays;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+
 public class ServicesDashboardFragment extends Fragment {
-
-    // TODO: Rename parameter arguments, choose names that match
-    // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
-    private static final String ARG_PARAM1 = "param1";
-    private static final String ARG_PARAM2 = "param2";
-
-    // TODO: Rename and change types of parameters
-    private String mParam1;
-    private String mParam2;
-
-    public ServicesDashboardFragment() {
-        // Required empty public constructor
-    }
-
-    /**
-     * Use this factory method to create a new instance of
-     * this fragment using the provided parameters.
-     *
-     * @param param1 Parameter 1.
-     * @param param2 Parameter 2.
-     * @return A new instance of fragment ServicesFragment.
-     */
-    // TODO: Rename and change types and number of parameters
-    public static ServicesDashboardFragment newInstance(String param1, String param2) {
-        ServicesDashboardFragment fragment = new ServicesDashboardFragment();
-        Bundle args = new Bundle();
-        args.putString(ARG_PARAM1, param1);
-        args.putString(ARG_PARAM2, param2);
-        fragment.setArguments(args);
-        return fragment;
-    }
+    private FragmentDashboardServicesBinding binding;
+    private ServiceMapper serviceMapper;
 
     @Override
-    public void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-        if (getArguments() != null) {
-            mParam1 = getArguments().getString(ARG_PARAM1);
-            mParam2 = getArguments().getString(ARG_PARAM2);
+    public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
+        binding = FragmentDashboardServicesBinding.inflate(inflater, container, false);
+        serviceMapper = new ServiceMapper();
+
+        setupUiActions();
+        setupTelecomRecyclerView();
+        setupEntertainmentRecyclerView();
+        setupUtilitiesRecyclerView();
+        setupTravelRecyclerView();
+
+        return binding.getRoot();
+    }
+
+    private void setupUiActions() {
+        binding.btnBackBefore.setOnClickListener(view -> NavHostFragment.findNavController(this).popBackStack());
+    }
+
+    private void setupRecyclerView(List<ServiceUiModel> services, androidx.recyclerview.widget.RecyclerView recyclerView) {
+        // Grid layout with 4 columns
+        GridLayoutManager layoutManager = new GridLayoutManager(requireContext(), 4);
+        recyclerView.setLayoutManager(layoutManager);
+
+        // Set equal spacing
+        int spacingInPixels = (int) (10 * getResources().getDisplayMetrics().density);
+        recyclerView.addItemDecoration(new GridSpacingItemDecoration(4, spacingInPixels, true));
+
+        // Adapter with click handling
+        ServicesAdapter adapter = new ServicesAdapter(true, services, serviceUiModel -> {
+            ServiceDestination destination = serviceMapper.getDestination(serviceUiModel.getType());
+            handleServiceClick(destination);
+        });
+        recyclerView.setAdapter(adapter);
+    }
+
+    private void setupTelecomRecyclerView() {
+        List<ServiceUiModel> services = Arrays.asList(
+                new ServiceUiModel("Airtime", R.drawable.ic_service_airtime, TransactionServiceType.AIRTIME_RECHARGE),
+                new ServiceUiModel("Data", R.drawable.ic_service_data, TransactionServiceType.DATA_RECHARGE),
+                new ServiceUiModel("Internet", R.drawable.ic_service_internet, TransactionServiceType.INTERNET),
+                new ServiceUiModel("Esim", R.drawable.ic_service_esim, TransactionServiceType.ESIM)
+        );
+        setupRecyclerView(services, binding.telecomAndDigitalRecyclerView);
+    }
+
+    private void setupEntertainmentRecyclerView() {
+        List<ServiceUiModel> services = Arrays.asList(
+                new ServiceUiModel("TV", R.drawable.ic_service_cable_tv, TransactionServiceType.CABLE_TV_SUBSCRIPTION),
+                new ServiceUiModel("Betting", R.drawable.ic_service_betting, TransactionServiceType.BETTING_TOPUP),
+                new ServiceUiModel("Voucher", R.drawable.ic_service_voucher, TransactionServiceType.VOUCHER),
+                new ServiceUiModel("Gift Card", R.drawable.ic_service_gift_card, TransactionServiceType.GIFT_CARD)
+        );
+        setupRecyclerView(services, binding.entertainmentRecyclerView);
+    }
+
+    private void setupUtilitiesRecyclerView() {
+        List<ServiceUiModel> services = List.of(
+                new ServiceUiModel("Electricity", R.drawable.ic_service_electricity, TransactionServiceType.ELECTRICITY_BILL)
+        );
+        setupRecyclerView(services, binding.utilitiesAndBillsRecyclerView);
+    }
+
+    private void setupTravelRecyclerView() {
+        List<ServiceUiModel> services = Arrays.asList(
+                new ServiceUiModel("Flight", R.drawable.ic_service_flight, TransactionServiceType.FLIGHT),
+                new ServiceUiModel("Hotel", R.drawable.ic_service_hotel, TransactionServiceType.HOTEL)
+        );
+        setupRecyclerView(services, binding.travelAndLifestyleRecyclerView);
+    }
+
+    private void handleServiceClick(ServiceDestination destination) {
+        if (destination == null) {
+            Toast.makeText(requireContext(), "Feature not yet implemented", Toast.LENGTH_SHORT).show();
+            return;
+        }
+
+        if (destination.isActivity()) {
+            startActivity(new Intent(requireContext(), destination.getActivity()));
+        } else if (destination.isFragment()) {
+            navigateToFragment(destination.getNavDestinationId());
         }
     }
 
-    @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container,
-                             Bundle savedInstanceState) {
-        // Inflate the layout for this fragment
-        return inflater.inflate(R.layout.fragment_dashboard_services, container, false);
+    private void navigateToFragment(int navigationResId) {
+        NavController navController = NavHostFragment.findNavController(this);
+        navController.navigate(navigationResId);
+    }
+
+    // Inner class for mapping responsibility
+    private static class ServiceMapper {
+        private final Map<TransactionServiceType, ServiceDestination> serviceMap = new HashMap<>();
+
+        ServiceMapper() {
+            serviceMap.put(TransactionServiceType.AIRTIME_RECHARGE, new ServiceDestination(AirtimePurchaseActivity.class));
+            serviceMap.put(TransactionServiceType.DATA_RECHARGE, new ServiceDestination(DataPurchaseActivity.class));
+            serviceMap.put(TransactionServiceType.BETTING_TOPUP, new ServiceDestination(BettingTopUpActivity.class));
+            serviceMap.put(TransactionServiceType.CABLE_TV_SUBSCRIPTION, new ServiceDestination(CableTvSubscriptionActivity.class));
+            serviceMap.put(TransactionServiceType.ELECTRICITY_BILL, null);
+            serviceMap.put(TransactionServiceType.INTERNET, null);
+            serviceMap.put(TransactionServiceType.ESIM, null);
+            serviceMap.put(TransactionServiceType.FLIGHT, null);
+            serviceMap.put(TransactionServiceType.HOTEL, null);
+            serviceMap.put(TransactionServiceType.VOUCHER, null);
+            serviceMap.put(TransactionServiceType.GIFT_CARD, null);
+        }
+
+        ServiceDestination getDestination(TransactionServiceType type) {
+            return serviceMap.get(type);
+        }
     }
 }

@@ -105,7 +105,7 @@
                         android:layout_height="80dp"
                         android:background="@drawable/bg_oval_blue_light"
                         android:contentDescription="Profile Picture"
-                        android:src="@drawable/ic_avatar" />
+                        tools:src="@mipmap/ic_launcher_round" />
 
                     <TextView
                         android:id="@+id/userDisplayName"

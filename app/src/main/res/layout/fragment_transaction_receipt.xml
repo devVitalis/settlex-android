@@ -155,7 +155,7 @@
                             android:background="@drawable/bg_oval_blue_light"
                             android:contentDescription="@null"
                             android:padding="7dp"
-                            tools:src="@drawable/ic_money_sent" />
+                            tools:src="@drawable/ic_service_money_sent" />
                     </FrameLayout>
                 </androidx.constraintlayout.widget.ConstraintLayout>
 

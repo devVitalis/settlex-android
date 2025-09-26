@@ -85,7 +85,6 @@ public class UserRepository {
         return sharedUserAuthState;
     }
 
-    // ---------------- USER ----------------
     private void initSharedUserListener(String uid) {
         sharedUserLiveData.postValue(Result.loading());
 
@@ -134,14 +133,10 @@ public class UserRepository {
         return isBalanceHiddenLiveData;
     }
 
-    // ---------------- TRANSACTIONS ----------------
     public void getUserTransactions(String uid, int limit, TransactionCallback callback) {
+        removeTransactionListener(); // avoid multiple listeners
 
-        // removeTransactionListener(); // avoid multiple listeners
-        if (transactionListener != null) Log.d("Repository", "Transaction listener is active ");
-
-
-        Log.d("Repository", "Attaching Firestore transaction listener for user: " + uid);
+        Log.d("Repository", "fetching new transactions for user: " + uid);
         transactionListener = firestore.collection("users")
                 .document(uid)
                 .collection("transactions")

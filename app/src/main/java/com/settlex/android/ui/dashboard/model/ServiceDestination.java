@@ -1,23 +1,29 @@
 package com.settlex.android.ui.dashboard.model;
 
+import android.app.Activity;
+
+import androidx.annotation.IdRes;
+
 /**
  * Holds reference to each service destination Activity/Fragment
  */
 public class ServiceDestination {
-    private Class<?> activity;
+    private Class<? extends Activity> activity;
     private Integer navDestinationId;
 
     // Constructors
-    public ServiceDestination(Class<?> activity) {
+
+
+    public ServiceDestination(Class<? extends Activity> activity) {
         this.activity = activity;
     }
 
-    public ServiceDestination(Integer navDestinationId) {
+    public ServiceDestination(@IdRes int navDestinationId) {
         this.navDestinationId = navDestinationId;
     }
 
     // Getters
-    public Class<?> getActivity() {
+    public Class<? extends Activity> getActivity() {
         return activity;
     }
 

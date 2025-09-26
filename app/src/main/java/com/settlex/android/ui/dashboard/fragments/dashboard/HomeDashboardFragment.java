@@ -5,7 +5,6 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Looper;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -37,6 +36,10 @@ import com.settlex.android.ui.dashboard.model.ServiceDestination;
 import com.settlex.android.ui.dashboard.model.ServiceUiModel;
 import com.settlex.android.ui.dashboard.model.TransactionUiModel;
 import com.settlex.android.ui.dashboard.model.UserUiModel;
+import com.settlex.android.ui.dashboard.services.AirtimePurchaseActivity;
+import com.settlex.android.ui.dashboard.services.BettingTopUpActivity;
+import com.settlex.android.ui.dashboard.services.CableTvSubscriptionActivity;
+import com.settlex.android.ui.dashboard.services.DataPurchaseActivity;
 import com.settlex.android.ui.dashboard.viewmodel.PromoBannerViewModel;
 import com.settlex.android.ui.dashboard.viewmodel.UserViewModel;
 import com.settlex.android.util.event.Result;
@@ -340,39 +343,39 @@ public class HomeDashboardFragment extends Fragment {
         binding.serviceRecyclerView.addItemDecoration(new GridSpacingItemDecoration(4, spacingInPixels, true));
 
         List<ServiceUiModel> services = Arrays.asList(
-                new ServiceUiModel("Airtime", R.drawable.ic_airtime, TransactionServiceType.AIRTIME_RECHARGE),
-                new ServiceUiModel("Data", R.drawable.ic_data, TransactionServiceType.DATA_RECHARGE),
-                new ServiceUiModel("Betting", R.drawable.ic_betting, TransactionServiceType.BETTING_TOPUP),
-                new ServiceUiModel("TV", R.drawable.ic_cable_tv, TransactionServiceType.CABLE_TV_SUBSCRIPTION),
-                new ServiceUiModel("Electricity", R.drawable.ic_electricity, TransactionServiceType.ELECTRICITY_BILL),
-                new ServiceUiModel("Internet", R.drawable.ic_internet, TransactionServiceType.INTERNET),
-                new ServiceUiModel("Gift Card", R.drawable.ic_gift_card, TransactionServiceType.GIFT_CARD),
-                new ServiceUiModel("More", R.drawable.ic_more, TransactionServiceType.MORE)
+                new ServiceUiModel("Airtime", R.drawable.ic_service_airtime, TransactionServiceType.AIRTIME_RECHARGE),
+                new ServiceUiModel("Data", R.drawable.ic_service_data, TransactionServiceType.DATA_RECHARGE),
+                new ServiceUiModel("Betting", R.drawable.ic_service_betting, TransactionServiceType.BETTING_TOPUP),
+                new ServiceUiModel("TV", R.drawable.ic_service_cable_tv, TransactionServiceType.CABLE_TV_SUBSCRIPTION),
+                new ServiceUiModel("Electricity", R.drawable.ic_service_electricity, TransactionServiceType.ELECTRICITY_BILL),
+                new ServiceUiModel("Internet", R.drawable.ic_service_internet, TransactionServiceType.INTERNET),
+                new ServiceUiModel("Gift Card", R.drawable.ic_service_gift_card, TransactionServiceType.GIFT_CARD),
+                new ServiceUiModel("More", R.drawable.ic_service_more, TransactionServiceType.MORE)
         );
 
-        // Map services to Destinations
+        // Map services to destinations
         Map<TransactionServiceType, ServiceDestination> serviceMap = new HashMap<>();
-        serviceMap.put(TransactionServiceType.AIRTIME_RECHARGE, null);
-        serviceMap.put(TransactionServiceType.DATA_RECHARGE, null);
-        serviceMap.put(TransactionServiceType.BETTING_TOPUP, null);
-        serviceMap.put(TransactionServiceType.CABLE_TV_SUBSCRIPTION, null);
+        serviceMap.put(TransactionServiceType.AIRTIME_RECHARGE, new ServiceDestination(AirtimePurchaseActivity.class));
+        serviceMap.put(TransactionServiceType.DATA_RECHARGE, new ServiceDestination(DataPurchaseActivity.class));
+        serviceMap.put(TransactionServiceType.BETTING_TOPUP, new ServiceDestination(BettingTopUpActivity.class));
+        serviceMap.put(TransactionServiceType.CABLE_TV_SUBSCRIPTION, new ServiceDestination(CableTvSubscriptionActivity.class));
         serviceMap.put(TransactionServiceType.ELECTRICITY_BILL, null);
         serviceMap.put(TransactionServiceType.INTERNET, null);
         serviceMap.put(TransactionServiceType.GIFT_CARD, null);
         serviceMap.put(TransactionServiceType.MORE, new ServiceDestination(R.id.servicesFragment));
 
-        ServicesAdapter adapter = new ServicesAdapter(services, serviceUiModel -> {
+        ServicesAdapter adapter = new ServicesAdapter(false, services, serviceUiModel -> {
             ServiceDestination serviceDestination = serviceMap.get(serviceUiModel.getType());
-            if (serviceDestination == null) return;
+            if (serviceDestination == null) {
+                Toast.makeText(requireContext(), "Feature not yet implemented", Toast.LENGTH_SHORT).show();
+                return;
+            }
 
             if (serviceDestination.isActivity()) {
                 startActivity(new Intent(requireContext(), serviceDestination.getActivity()));
                 return;
             }
-
-            if (serviceDestination.isFragment()) {
-                navigateToFragment(serviceDestination.getNavDestinationId());
-            }
+            navigateToFragment(serviceDestination.getNavDestinationId());
         });
 
         // Set adapter
@@ -393,7 +396,6 @@ public class HomeDashboardFragment extends Fragment {
             @Override
             public void handleOnBackPressed() {
                 if (backPressedTime + 2000 > System.currentTimeMillis()) {
-                    Log.d("ViewModel", "Back pressed time: " + backPressedTime + 2000 + "System time: " + System.currentTimeMillis() + "isGreater: " + (backPressedTime + 2000 > System.currentTimeMillis()));
                     requireActivity().finish();
                     return;
                 } else {
