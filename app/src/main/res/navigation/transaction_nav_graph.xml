@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="utf-8"?>
+<navigation xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/transaction_nav_graph"
+    app:startDestination="@id/payAFriendFragment">
+
+    <fragment
+        android:id="@+id/payAFriendFragment"
+        android:name="com.settlex.android.ui.dashboard.fragments.transaction.PayAFriendFragment"
+        android:label="PayAFriendFragment"
+        tools:layout="@layout/fragment_pay_a_friend">
+
+        <action
+            android:id="@+id/action_payAFriendFragment_to_transactionStatusFragment"
+            app:destination="@id/transactionStatusFragment" />
+    </fragment>
+
+    <fragment
+        android:id="@+id/transactionStatusFragment"
+        android:name="com.settlex.android.ui.dashboard.fragments.transaction.TransactionStatusFragment"
+        android:label="TransactionStatusFragment"
+        tools:layout="@layout/fragment_transaction_status">
+
+        <argument
+            android:name="amount"
+            app:argType="string"
+            app:nullable="false"/>
+    </fragment>
+</navigation>

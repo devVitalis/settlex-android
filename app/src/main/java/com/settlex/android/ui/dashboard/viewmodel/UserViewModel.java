@@ -5,6 +5,7 @@ import androidx.lifecycle.MediatorLiveData;
 import androidx.lifecycle.MutableLiveData;
 import androidx.lifecycle.ViewModel;
 
+import com.settlex.android.R;
 import com.settlex.android.data.enums.TransactionOperation;
 import com.settlex.android.data.enums.TransactionStatus;
 import com.settlex.android.data.remote.dto.TransactionDto;
@@ -89,7 +90,7 @@ public class UserViewModel extends ViewModel {
                             dto.recipientName.toUpperCase(),
                             isSender ? dto.recipientName.toUpperCase() : dto.senderName.toUpperCase(),
                             isSender ? dto.serviceType.getDisplayName() : "Transfer received",
-                            dto.serviceType.getIconRes(),
+                            isSender ? dto.serviceType.getIconRes() : R.drawable.ic_service_money_received,
                             operation.getSymbol(),
                             operation.getColorRes(),
                             StringUtil.formatToNaira(dto.amount),

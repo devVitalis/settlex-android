@@ -24,6 +24,8 @@ import dagger.hilt.android.AndroidEntryPoint;
  */
 @AndroidEntryPoint
 public class TransactionStatusFragment extends Fragment {
+
+    // Dependencies
     private FragmentTransactionStatusBinding binding;
     private TransactionViewModel transactionViewModel;
 
@@ -41,8 +43,8 @@ public class TransactionStatusFragment extends Fragment {
     public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         binding = FragmentTransactionStatusBinding.inflate(inflater, container, false);
 
-        StatusBarUtil.setStatusBarColor(requireActivity(), R.color.white);
         setupUiActions();
+        observeTransactionStatusAndHandleResult();
 
         return binding.getRoot();
     }
@@ -50,14 +52,14 @@ public class TransactionStatusFragment extends Fragment {
     @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
-
-        observeTransactionStatusAndHandleResult();
     }
 
     private void setupUiActions() {
-        Bundle args = getArguments();
-        if (args != null) {
-            binding.txnAmount.setText(args.getString("txn_amount"));
+        StatusBarUtil.setStatusBarColor(requireActivity(), R.color.white);
+
+        if (getArguments() != null) {
+            TransactionStatusFragmentArgs args = TransactionStatusFragmentArgs.fromBundle(getArguments());
+            binding.txnAmount.setText(args.getAmount());
         }
 
         binding.btnDone.setOnClickListener(v -> requireActivity().finish());
@@ -77,23 +79,26 @@ public class TransactionStatusFragment extends Fragment {
     }
 
     private void showPendingState() {
+        String PENDING_STATUS = "Transaction Pending";
         binding.txnPendingAnim.setVisibility(View.VISIBLE);
         binding.txnPendingAnim.setRenderMode(RenderMode.SOFTWARE);
         binding.txnPendingAnim.playAnimation();
-        binding.txnStatus.setText(getString(R.string.txn_pending));
+        binding.txnStatus.setText(PENDING_STATUS);
     }
 
     private void showSuccessState() {
+        String SUCCESS_STATUS = "Transaction Successful";
         binding.txnSuccessAnim.setVisibility(View.VISIBLE);
         binding.txnSuccessAnim.setRenderMode(RenderMode.SOFTWARE);
         binding.txnSuccessAnim.playAnimation();
-        binding.txnStatus.setText(getString(R.string.txn_success));
+        binding.txnStatus.setText(SUCCESS_STATUS);
     }
 
     private void showFailedState() {
+        String FAILED_STATUS = "Transaction Failed";
         binding.txnFailedAnim.setVisibility(View.VISIBLE);
         binding.txnFailedAnim.setRenderMode(RenderMode.SOFTWARE);
         binding.txnFailedAnim.playAnimation();
-        binding.txnStatus.setText(getString(R.string.txn_failed));
+        binding.txnStatus.setText(FAILED_STATUS);
     }
 }

@@ -11,8 +11,6 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.core.content.ContextCompat;
 import androidx.fragment.app.Fragment;
-import androidx.navigation.NavController;
-import androidx.navigation.Navigation;
 
 import com.settlex.android.R;
 import com.settlex.android.databinding.FragmentTransactionReceiptBinding;
@@ -37,7 +35,7 @@ public class TransactionReceiptFragment extends Fragment {
         binding = FragmentTransactionReceiptBinding.inflate(inflater, container, false);
 
         StatusBarUtil.setStatusBarColor(requireActivity(), R.color.white);
-        binding.imgBackBefore.setOnClickListener(view -> requireActivity().finish());
+        binding.btnBackBefore.setOnClickListener(view -> requireActivity().finish());
 
         return binding.getRoot();
     }
@@ -77,10 +75,10 @@ public class TransactionReceiptFragment extends Fragment {
         binding.recipient.setText(transaction.getRecipient());
         binding.recipientName.setText(transaction.getRecipientName());
 
-        binding.sender.setText(transaction.getSenderName());
+        binding.sender.setText(transaction.getSender());
 
         // show description if there any
-        if (transaction.getDescription() != null){
+        if (transaction.getDescription() != null) {
             binding.descriptionContainer.setVisibility(View.VISIBLE);
             binding.description.setText(transaction.getDescription());
         }
@@ -89,7 +87,7 @@ public class TransactionReceiptFragment extends Fragment {
         binding.copyTransactionId.setOnClickListener(v -> {
             StringUtil.copyToClipboard(
                     requireContext(),
-                    "TransactionId",
+                    "Transaction ID",
                     binding.transactionId.getText().toString());
 
             // show toast only on older devices < API 33

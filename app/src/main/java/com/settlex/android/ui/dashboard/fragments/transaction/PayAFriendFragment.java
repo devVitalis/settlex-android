@@ -6,7 +6,6 @@ import android.os.Bundle;
 import android.text.Editable;
 import android.text.InputType;
 import android.text.TextWatcher;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.MotionEvent;
 import android.view.View;
@@ -18,10 +17,11 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 import androidx.lifecycle.ViewModelProvider;
+import androidx.navigation.NavDirections;
+import androidx.navigation.fragment.NavHostFragment;
 import androidx.recyclerview.widget.LinearLayoutManager;
 
 import com.google.android.material.bottomsheet.BottomSheetDialog;
-import com.google.gson.Gson;
 import com.settlex.android.R;
 import com.settlex.android.data.enums.TransactionServiceType;
 import com.settlex.android.data.remote.avater.AvatarService;
@@ -49,12 +49,6 @@ import dagger.hilt.android.AndroidEntryPoint;
 
 @AndroidEntryPoint
 public class PayAFriendFragment extends Fragment {
-    // Input fields
-    private String username;
-    private double amount;
-    private Bundle bundle; // bundle to pass the txn amount to next screen
-    private UserUiModel currentUser; // latest logged in user
-    private BottomSheetDialog bottomSheetDialog;
 
     // dependencies
     private FragmentPayAFriendBinding binding;
@@ -62,12 +56,17 @@ public class PayAFriendFragment extends Fragment {
     private RecipientAdapter recipientAdapter;
     private UserViewModel userViewModel;
     private TransactionViewModel transactionViewModel;
+    private BottomSheetDialog bottomSheetDialog;
+    private UserUiModel currentUser;
+
+    // instance variables for txn data
+    private String paymentId;
+    private double amount;
 
     public PayAFriendFragment() {
         // Required empty public constructor
     }
 
-    // ---------- Lifecycle ----------
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -78,22 +77,14 @@ public class PayAFriendFragment extends Fragment {
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         binding = FragmentPayAFriendBinding.inflate(inflater, container, false);
-        progressLoader = new ProgressLoaderController(requireActivity());
 
+        progressLoader = new ProgressLoaderController(requireActivity());
         recipientAdapter = new RecipientAdapter();
-        bundle = new Bundle();
 
         observeUserState();
-
-        StatusBarUtil.setStatusBarColor(requireActivity(), R.color.white);
         setupUiActions();
 
         return binding.getRoot();
-    }
-
-    @Override
-    public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
-        super.onViewCreated(view, savedInstanceState);
     }
 
     @Override
@@ -113,7 +104,7 @@ public class PayAFriendFragment extends Fragment {
             // user is logged in fetch data
             observeUserData();
             observePayFriendAndHandleResult();
-            observeUsernameSearchAndHandleResult();
+            observeRecipientSearchAndHandleResult();
         });
     }
 
@@ -122,19 +113,18 @@ public class PayAFriendFragment extends Fragment {
             if (userData == null) return;
 
             switch (userData.getStatus()) {
-                case SUCCESS -> {
-                    UserUiModel user = userData.getData();
-                    if (user != null) {
-                        binding.availableBalance.setText(StringUtil.formatToNaira(user.getBalance() + user.getCommissionBalance()));
-                        this.currentUser = user;
-                    }
-                }
-
+                case SUCCESS -> onUserDataSuccess(userData.getData());
                 case ERROR -> {
                     // Handle error
                 }
             }
         });
+    }
+
+    private void onUserDataSuccess(UserUiModel user) {
+        if (user == null) return;
+        binding.availableBalance.setText(StringUtil.formatToNaira(user.getBalance() + user.getCommissionBalance()));
+        this.currentUser = user;
     }
 
     private void observePayFriendAndHandleResult() {
@@ -143,7 +133,7 @@ public class PayAFriendFragment extends Fragment {
             if (result == null) return;
 
             switch (result.getStatus()) {
-                case LOADING -> progressLoader.show();
+                case LOADING -> onTransactionLoading();
                 case PENDING -> onTransactionPending();
                 case SUCCESS -> onTransactionSuccess();
                 case ERROR -> onTransactionFailed();
@@ -151,57 +141,66 @@ public class PayAFriendFragment extends Fragment {
         });
     }
 
+    private  void onTransactionLoading(){
+        progressLoader.show();
+    }
+
     private void onTransactionPending() {
-        bundle.putString("txn_amount", StringUtil.formatToNaira(amount));
-        navigateToFragment(new TransactionStatusFragment(), bundle);
+        navigateToTransactionStatusFragment();
         progressLoader.hide();
         bottomSheetDialog.dismiss();
     }
 
     private void onTransactionSuccess() {
-        bundle.putString("txn_amount", StringUtil.formatToNaira(amount));
-        navigateToFragment(new TransactionStatusFragment(), bundle);
+        navigateToTransactionStatusFragment();
         progressLoader.hide();
         bottomSheetDialog.dismiss();
     }
 
     private void onTransactionFailed() {
-        bundle.putString("txn_amount", StringUtil.formatToNaira(amount));
-        navigateToFragment(new TransactionStatusFragment(), bundle);
+        navigateToTransactionStatusFragment();
         progressLoader.hide();
         bottomSheetDialog.dismiss();
     }
 
-    private void observeUsernameSearchAndHandleResult() {
+    private void navigateToTransactionStatusFragment() {
+        String amount = StringUtil.formatToNaira(this.amount);
+        NavDirections action = PayAFriendFragmentDirections.actionPayAFriendFragmentToTransactionStatusFragment(amount);
+        NavHostFragment.findNavController(this).navigate(action);
+    }
+
+    private void observeRecipientSearchAndHandleResult() {
         transactionViewModel.getRecipientSearchResult().observe(getViewLifecycleOwner(), result -> {
             if (result == null) return;
 
             switch (result.getStatus()) {
-                case LOADING -> onUsernameSearchLoading();
-                case SUCCESS -> onUsernameSearchSuccess(result.getData());
-                case ERROR -> onUsernameSearchFailed();
+                case LOADING -> onRecipientSearchLoading();
+                case SUCCESS -> onRecipientSearchSuccess(result.getData());
+                case ERROR -> onRecipientSearchFailed();
             }
         });
     }
 
-    private void onUsernameSearchLoading() {
+    private void onRecipientSearchLoading() {
+        // reset adapter
         recipientAdapter.submitList(Collections.emptyList());
         binding.recipientRecyclerView.setVisibility(View.GONE);
 
+        // hide selected recipient
         binding.selectedRecipient.setVisibility(View.GONE);
-        binding.txtUsernameFeedback.setVisibility(View.GONE);
-        validateInputsAndUpdateNextButton();
+        binding.txtUserFeedback.setVisibility(View.GONE);
+        updateNextButtonState();
 
         binding.shimmerEffect.startShimmer();
         binding.shimmerEffect.setVisibility(View.VISIBLE);
     }
 
-    private void onUsernameSearchSuccess(List<RecipientUiModel> recipient) {
+    private void onRecipientSearchSuccess(List<RecipientUiModel> recipient) {
         if (recipient == null || recipient.isEmpty()) {
             // Recipient not found
-            String username = StringUtil.addAtToUsername(this.username);
-            binding.txtUsernameFeedback.setText(getString(R.string.No_user_found_with_tag, username));
-            binding.txtUsernameFeedback.setVisibility(View.VISIBLE);
+            String username = StringUtil.addAtToUsername(this.paymentId);
+            binding.txtUserFeedback.setText(getString(R.string.No_user_found_with_tag, username));
+            binding.txtUserFeedback.setVisibility(View.VISIBLE);
         }
 
         // Recipient found
@@ -213,7 +212,7 @@ public class PayAFriendFragment extends Fragment {
         binding.recipientRecyclerView.setAdapter(recipientAdapter);
     }
 
-    private void onUsernameSearchFailed() {
+    private void onRecipientSearchFailed() {
         binding.shimmerEffect.stopShimmer();
         binding.shimmerEffect.setVisibility(View.GONE);
     }
@@ -251,8 +250,8 @@ public class PayAFriendFragment extends Fragment {
                 description);
     }
 
-    // ---------- UI Setup ----------
     private void setupUiActions() {
+        StatusBarUtil.setStatusBarColor(requireActivity(), R.color.white);
         setupTextInputWatcher();
         setupEditTextFocusHandlers();
         setupRecipientRecyclerView();
@@ -260,13 +259,13 @@ public class PayAFriendFragment extends Fragment {
         clearFocusAndHideKeyboardOnOutsideTap(binding.getRoot());
 
         // Display avail balance
-        binding.imgBackBefore.setOnClickListener(v -> requireActivity().getOnBackPressedDispatcher().onBackPressed());
-        binding.btnVerify.setOnClickListener(v -> searchRecipient(username.replaceAll("\\s+", "")));
+        binding.btnBackBefore.setOnClickListener(v -> requireActivity().getOnBackPressedDispatcher().onBackPressed());
+        binding.btnVerify.setOnClickListener(v -> searchRecipient(paymentId.replaceAll("\\s+", "")));
         binding.btnNext.setOnClickListener(v -> showPayConfirmation());
     }
 
-    private void searchRecipient(String username) {
-        transactionViewModel.searchRecipientWithUsername(username);
+    private void searchRecipient(String paymentId) {
+        transactionViewModel.searchRecipientWithUsername(paymentId);
     }
 
     private void setupRecipientRecyclerView() {
@@ -281,13 +280,14 @@ public class PayAFriendFragment extends Fragment {
         recipientAdapter.setOnItemClickListener(model -> {
             // Sender = receiver
             if (StringUtil.removeAtInUsername(model.getUsername()).equals(currentUser.getUsername())) {
-                binding.txtUsernameFeedback.setText("You can't send money to yourself");
-                binding.txtUsernameFeedback.setVisibility(View.VISIBLE);
+                String ERROR_CANNOT_SEND_TO_SELF = "You cannot send a payment to your own account. Please choose a different recipient";
+                binding.txtUserFeedback.setText(ERROR_CANNOT_SEND_TO_SELF);
+                binding.txtUserFeedback.setVisibility(View.VISIBLE);
                 return;
             }
 
-            binding.editTxtUsername.setText(StringUtil.removeAtInUsername(model.getUsername()));
-            binding.editTxtUsername.setSelection(binding.editTxtUsername.getText().length());
+            binding.editTxtPaymentId.setText(StringUtil.removeAtInUsername(model.getUsername()));
+            binding.editTxtPaymentId.setSelection(binding.editTxtPaymentId.getText().length());
             binding.btnVerify.setVisibility(View.GONE);
 
             // Clear recycler view
@@ -299,13 +299,12 @@ public class PayAFriendFragment extends Fragment {
             binding.selectedRecipientName.setText(model.getFullName());
             binding.selectedRecipientUsername.setText(model.getUsername());
             binding.selectedRecipient.setVisibility(View.VISIBLE);
-            validateInputsAndUpdateNextButton();
+            updateNextButtonState();
         });
     }
 
-    // ---------- Validation & Helpers ----------
     private void setupTextInputWatcher() {
-        binding.editTxtUsername.addTextChangedListener(new TextWatcher() {
+        binding.editTxtPaymentId.addTextChangedListener(new TextWatcher() {
             @Override
             public void beforeTextChanged(CharSequence s, int start, int count, int after) {
             }
@@ -319,11 +318,11 @@ public class PayAFriendFragment extends Fragment {
             @Override
             public void onTextChanged(CharSequence s, int start, int before, int count) {
                 if (!s.toString().isEmpty()) {
-                    username = StringUtil.removeAtInUsername(s.toString().trim().toLowerCase());
+                    paymentId = StringUtil.removeAtInUsername(s.toString().trim().toLowerCase());
                 }
-                binding.txtUsernameFeedback.setVisibility(View.GONE);
+                binding.txtUserFeedback.setVisibility(View.GONE);
                 binding.selectedRecipient.setVisibility(View.GONE);
-                validateInputsAndUpdateNextButton();
+                updateNextButtonState();
             }
         });
 
@@ -345,26 +344,27 @@ public class PayAFriendFragment extends Fragment {
                         //Ignored
                     }
                 }
-                binding.txtAmountFeedback.setVisibility((!validateAmount(amount) && !s.toString().isEmpty()) ? View.VISIBLE : View.GONE);
-                validateInputsAndUpdateNextButton();
+                binding.txtAmountFeedback.setVisibility((!isAmountValid(amount) && !s.toString().isEmpty()) ? View.VISIBLE : View.GONE);
+                updateNextButtonState();
             }
         });
     }
 
-    private void validateInputsAndUpdateNextButton() {
-        boolean recipientConfirmed = binding.selectedRecipient.getVisibility() == View.VISIBLE;
-        updateNextButtonState(validateUsername(username) && validateAmount(amount) && recipientConfirmed);
+    private void updateNextButtonState() {
+        boolean recipientSelected = binding.selectedRecipient.getVisibility() == View.VISIBLE;
+
+        enableNextButton(isPaymentIdValid(paymentId) && isAmountValid(amount) && recipientSelected);
     }
 
-    private boolean validateUsername(String username) {
-        return username.matches("^[a-z0-9]([a-z0-9]*[._]?[a-z0-9]*)+[a-z0-9]$");
+    private boolean isPaymentIdValid(String paymentId) {
+        return paymentId.matches("^[a-z0-9]([a-z0-9]*[._]?[a-z0-9]*)+[a-z0-9]$");
     }
 
-    private boolean validateAmount(double amount) {
+    private boolean isAmountValid(double amount) {
         return amount >= 100 && amount <= 500_000_000;
     }
 
-    private void updateNextButtonState(boolean allValid) {
+    private void enableNextButton(boolean allValid) {
         // Enable btn when all fields met requirements
         binding.btnNext.setEnabled(allValid);
     }
@@ -377,16 +377,13 @@ public class PayAFriendFragment extends Fragment {
                 v.requestFocus();
             }
         };
-        binding.editTxtUsername.setOnClickListener(focusListener);
+        binding.editTxtPaymentId.setOnClickListener(focusListener);
         binding.editTxtAmount.setOnClickListener(focusListener);
         binding.editTxtDescription.setOnClickListener(focusListener);
 
-        binding.editTxtUsername.setOnFocusChangeListener((v, hasFocus) ->
-                binding.editTxtUsernameBackground.setBackgroundResource(hasFocus ? R.drawable.bg_edit_txt_custom_white_focused : R.drawable.bg_edit_txt_custom_gray_not_focused));
-        binding.editTxtAmount.setOnFocusChangeListener((v, hasFocus)
-                -> binding.editTxtAmountBackground.setBackgroundResource(hasFocus ? R.drawable.bg_edit_txt_custom_white_focused : R.drawable.bg_edit_txt_custom_gray_not_focused));
-        binding.editTxtDescription.setOnFocusChangeListener((v, hasFocus)
-                -> binding.editTxtDescriptionBackground.setBackgroundResource(hasFocus ? R.drawable.bg_edit_txt_custom_white_focused : R.drawable.bg_edit_txt_custom_gray_not_focused));
+        binding.editTxtPaymentId.setOnFocusChangeListener((v, hasFocus) -> binding.editTxtPaymentIdBackground.setBackgroundResource(hasFocus ? R.drawable.bg_edit_txt_custom_white_focused : R.drawable.bg_edit_txt_custom_gray_not_focused));
+        binding.editTxtAmount.setOnFocusChangeListener((v, hasFocus) -> binding.editTxtAmountBackground.setBackgroundResource(hasFocus ? R.drawable.bg_edit_txt_custom_white_focused : R.drawable.bg_edit_txt_custom_gray_not_focused));
+        binding.editTxtDescription.setOnFocusChangeListener((v, hasFocus) -> binding.editTxtDescriptionBackground.setBackgroundResource(hasFocus ? R.drawable.bg_edit_txt_custom_white_focused : R.drawable.bg_edit_txt_custom_gray_not_focused));
     }
 
     public static void attachCurrencyFormatter(EditText editTextAmount) {
@@ -462,14 +459,6 @@ public class PayAFriendFragment extends Fragment {
             } catch (NumberFormatException ignored) {
             }
         });
-    }
-
-    private void navigateToFragment(Fragment fragment, Bundle args) {
-        fragment.setArguments(args);
-        requireActivity().getSupportFragmentManager()
-                .beginTransaction()
-                .replace(R.id.fragment_container, fragment)
-                .commit();
     }
 
     @SuppressLint("ClickableViewAccessibility")

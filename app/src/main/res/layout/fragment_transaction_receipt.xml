@@ -20,7 +20,7 @@
         app:layout_constraintTop_toTopOf="parent">
 
         <ImageView
-            android:id="@+id/imgBackBefore"
+            android:id="@+id/btnBackBefore"
             android:layout_width="20dp"
             android:layout_height="20dp"
             android:layout_marginStart="15dp"
@@ -389,11 +389,10 @@
                     <!-- Download-->
                     <LinearLayout
                         android:id="@+id/download"
-                        android:layout_width="0dp"
+                        android:layout_width="match_parent"
                         android:layout_height="match_parent"
-                        android:layout_weight="1"
                         android:background="@drawable/bg_8dp_gray_light"
-                        android:gravity="center_vertical"
+                        android:gravity="center"
                         android:orientation="horizontal"
                         android:padding="8dp">
 
@@ -413,38 +412,7 @@
                             android:includeFontPadding="false"
                             android:text="Download Receipt"
                             android:textColor="@color/black"
-                            android:textSize="12sp" />
-                    </LinearLayout>
-
-                    <!-- Pay again-->
-                    <LinearLayout
-                        android:id="@+id/payAgain"
-                        android:layout_width="0dp"
-                        android:layout_height="match_parent"
-                        android:layout_marginStart="20dp"
-                        android:layout_weight="1"
-                        android:background="@drawable/bg_8dp_gray_light"
-                        android:gravity="center_vertical"
-                        android:orientation="horizontal"
-                        android:padding="8dp">
-
-                        <ImageView
-                            android:layout_width="30dp"
-                            android:layout_height="30dp"
-                            android:background="@drawable/bg_8dp_blue_light"
-                            android:contentDescription="@null"
-                            android:padding="3dp"
-                            android:src="@drawable/ic_pay_again" />
-
-                        <TextView
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:layout_marginStart="5dp"
-                            android:fontFamily="@font/poppins_regular"
-                            android:includeFontPadding="false"
-                            android:text="Pay Again"
-                            android:textColor="@color/black"
-                            android:textSize="12sp" />
+                            android:textSize="15sp" />
                     </LinearLayout>
                 </LinearLayout>
             </LinearLayout>
