@@ -2,7 +2,7 @@
     <!-- Disabled -->
     <item android:color="@color/blue_light" android:state_enabled="false" />
     <!-- Pressed -->
-    <item android:color="@color/gray_light" android:state_pressed="true" />
+    <item android:color="@color/blue_deep" android:state_pressed="true" />
     <!-- Default -->
     <item android:color="@color/blue" />
 </selector>

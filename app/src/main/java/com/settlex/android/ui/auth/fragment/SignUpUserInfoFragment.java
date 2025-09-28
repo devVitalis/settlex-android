@@ -37,7 +37,7 @@ public class SignUpUserInfoFragment extends Fragment {
     private FragmentSignUpUserInfoBinding binding;
     private AuthViewModel authViewModel;
 
-    // LIFECYCLE ===========
+
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -48,9 +48,7 @@ public class SignUpUserInfoFragment extends Fragment {
     public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         binding = FragmentSignUpUserInfoBinding.inflate(inflater, container, false);
 
-        StatusBarUtil.setStatusBarColor(requireActivity(), R.color.white);
         setupUiActions();
-
         return binding.getRoot();
     }
 
@@ -62,13 +60,22 @@ public class SignUpUserInfoFragment extends Fragment {
 
     // UI SETUP ==========
     private void setupUiActions() {
+        StatusBarUtil.setStatusBarColor(requireActivity(), R.color.white);
         reEnableEditTextFocus();
         setupInputValidation();
         clearFocusAndHideKeyboardOnOutsideTap(binding.getRoot());
 
-        binding.imgBackBefore.setOnClickListener(v -> navigateBack());
+        binding.btnBackBefore.setOnClickListener(v -> navigateBack());
         binding.btnHelp.setOnClickListener(v -> navigateToHelpActivity());
-        binding.btnContinue.setOnClickListener(v -> validateUserInfoAndProceed());
+        binding.btnContinue.setOnClickListener(v -> submitUserInfoAndProceed());
+    }
+
+    private void navigateBack() {
+        NavHostFragment.findNavController(this).popBackStack();
+    }
+
+    private void navigateToHelpActivity() {
+        startActivity(new Intent(requireActivity(), AuthHelpActivity.class));
     }
 
     private void reEnableEditTextFocus() {
@@ -104,23 +111,21 @@ public class SignUpUserInfoFragment extends Fragment {
         binding.editTxtLastName.addTextChangedListener(validationWatcher);
     }
 
-    /**
-     * Update ViewModel, and navigates to password setup.
-     */
-    private void validateUserInfoAndProceed() {
+    private void submitUserInfoAndProceed() {
         String firstName = StringUtil.capitalizeEachWord(Objects.requireNonNull(binding.editTxtFirstName.getText()).toString().trim());
         String lastName = StringUtil.capitalizeEachWord(Objects.requireNonNull(binding.editTxtLastName.getText()).toString().trim());
 
         authViewModel.updateFirstName(firstName);
         authViewModel.updateLastName(lastName);
 
+        navigateToPasswordSetupFragment();
+    }
+
+    private void navigateToPasswordSetupFragment() {
         NavController navController = NavHostFragment.findNavController(this);
         navController.navigate(R.id.signUpUserPasswordFragment);
     }
 
-    /**
-     * Enables/disables Continue button based on name validation.
-     */
     private void updateContinueButtonState() {
         String firstName = Objects.requireNonNull(binding.editTxtFirstName.getText()).toString().trim();
         String lastName = Objects.requireNonNull(binding.editTxtLastName.getText()).toString().trim();
@@ -129,14 +134,6 @@ public class SignUpUserInfoFragment extends Fragment {
         boolean isValidLastName = !lastName.isEmpty() && lastName.matches("^[a-zA-Z]{2,}(?:\\s[a-zA-Z]{2,})*$");
 
         binding.btnContinue.setEnabled(isValidFirstName && isValidLastName);
-    }
-
-    private void navigateBack() {
-        requireActivity().getSupportFragmentManager().popBackStack();
-    }
-
-    private void navigateToHelpActivity() {
-        startActivity(new Intent(requireActivity(), AuthHelpActivity.class));
     }
 
     @SuppressLint("ClickableViewAccessibility")

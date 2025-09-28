@@ -23,6 +23,7 @@ import androidx.annotation.Nullable;
 import androidx.core.content.ContextCompat;
 import androidx.fragment.app.Fragment;
 import androidx.lifecycle.ViewModelProvider;
+import androidx.navigation.fragment.NavHostFragment;
 
 import com.settlex.android.R;
 import com.settlex.android.databinding.FragmentSignUpUserPasswordBinding;
@@ -37,13 +38,13 @@ import com.settlex.android.util.ui.StatusBarUtil;
 import java.util.Objects;
 
 public class SignUpUserPasswordFragment extends Fragment {
-    private boolean isConnected = false; // Network connection state
 
     private FragmentSignUpUserPasswordBinding binding;
     private ProgressLoaderController progressLoader;
     private AuthViewModel authViewModel;
+    private boolean isConnected = false;
 
-    // LIFECYCLE ===========
+
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -55,9 +56,8 @@ public class SignUpUserPasswordFragment extends Fragment {
     public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         binding = FragmentSignUpUserPasswordBinding.inflate(inflater, container, false);
 
-        StatusBarUtil.setStatusBarColor(requireActivity(), R.color.white);
         setupUiActions();
-
+        observeNetworkStatus();
         return binding.getRoot();
     }
 
@@ -65,7 +65,6 @@ public class SignUpUserPasswordFragment extends Fragment {
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
 
-        observeNetworkStatus();
         observeRegistrationAndHandleResult();
     }
 
@@ -75,36 +74,24 @@ public class SignUpUserPasswordFragment extends Fragment {
         binding = null;
     }
 
-
-    // UI ACTIONS ========
-    private void setupUiActions() {
-        setupPasswordValidation();
-        reEnableEditTextFocus();
-        clearFocusAndHideKeyboardOnOutsideTap(binding.getRoot());
-        togglePasswordVisibilityIcons(false);
-
-        binding.imgBackBefore.setOnClickListener(v -> navigateBack());
-        binding.btnHelp.setOnClickListener(v -> navigateToHelpActivity());
-        binding.icExpendLess.setOnClickListener(v -> toggleReferralCodeVisibility());
-        binding.btnCreateAccount.setOnClickListener(v -> validateAndCreateAccount());
-    }
-
-    private void observeRegistrationAndHandleResult() {
-        authViewModel.getRegisterResult().observe(getViewLifecycleOwner(), result -> {
-            if (result != null) {
-                switch (result.getStatus()) {
-                    case LOADING -> progressLoader.show();
-                    case SUCCESS -> onRegistrationSuccess();
-                    case ERROR -> onRegistrationFailure(result.getMessage());
-                }
-            }
-        });
-    }
-
     private void observeNetworkStatus() {
         NetworkMonitor.getNetworkStatus().observe(requireActivity(), isConnected ->
                 this.isConnected = isConnected);
     }
+
+
+    private void observeRegistrationAndHandleResult() {
+        authViewModel.getRegisterResult().observe(getViewLifecycleOwner(), result -> {
+            if (result == null) return;
+
+            switch (result.getStatus()) {
+                case LOADING -> progressLoader.show();
+                case SUCCESS -> onRegistrationSuccess();
+                case ERROR -> onRegistrationFailure(result.getMessage());
+            }
+        });
+    }
+
 
     private void onRegistrationSuccess() {
         startActivity(new Intent(requireContext(), DashboardActivity.class));
@@ -121,31 +108,65 @@ public class SignUpUserPasswordFragment extends Fragment {
     }
 
     private void showNoInternetConnection() {
-        binding.txtErrorFeedback.setText(getString(R.string.error_no_internet));
+        String ERROR_NO_INTERNET = "Connection lost. Please check your Wi-Fi or cellular data and try again";
+        binding.txtErrorFeedback.setText(ERROR_NO_INTERNET);
         binding.txtErrorFeedback.setVisibility(View.VISIBLE);
     }
 
-    private void validateAndCreateAccount() {
-        if (isConnected) {
-            String password = Objects.requireNonNull(binding.editTxtPassword.getText()).toString().trim();
-            String invitationCode = Objects.requireNonNull(binding.editTxtInvitationCode.getText()).toString().trim();
+    // UI ACTIONS ========
+    private void setupUiActions() {
+        StatusBarUtil.setStatusBarColor(requireActivity(), R.color.white);
+        setupPasswordValidation();
+        reEnableEditTextFocus();
+        clearFocusAndHideKeyboardOnOutsideTap(binding.getRoot());
+        togglePasswordVisibilityIcons(false);
 
-            // Apply default values and trigger registration
-            authViewModel.applyDefaultUserValues(invitationCode);
-            UserModel user = authViewModel.getUser().getValue();
-            authViewModel.registerUser(authViewModel.getEmail(), password, user);
-        } else {
+        binding.btnBackBefore.setOnClickListener(v -> navigateBack());
+        binding.btnHelp.setOnClickListener(v -> navigateToHelpActivity());
+        binding.icExpendLess.setOnClickListener(v -> toggleReferralCodeVisibility());
+        binding.btnCreateAccount.setOnClickListener(v -> validateAndCreateAccount());
+    }
+
+    private void toggleReferralCodeVisibility() {
+        boolean isVisible = binding.editTxtInvitationCode.getVisibility() == View.VISIBLE;
+        binding.editTxtInvitationCode.setVisibility(isVisible ? View.GONE : View.VISIBLE);
+        binding.icExpendLess.setImageResource(isVisible ? R.drawable.ic_expend_less : R.drawable.ic_expend_more);
+    }
+
+    private void validateAndCreateAccount() {
+        if (!isConnected) {
             showNoInternetConnection();
+            return;
         }
+
+        String password = Objects.requireNonNull(binding.editTxtPassword.getText()).toString().trim();
+        String invitationCode = Objects.requireNonNull(binding.editTxtInvitationCode.getText()).toString().trim();
+
+        // Apply default values
+        finalizeUserData(invitationCode);
+
+        UserModel user = authViewModel.getUser().getValue();
+        createUserAccount(password, user);
+    }
+
+    private void finalizeUserData(String invitationCode) {
+        authViewModel.applyDefaultUserValues(invitationCode);
+    }
+    private void createUserAccount(String password, UserModel user) {
+        authViewModel.registerUser(authViewModel.getEmail(), password, user);
     }
 
     // PASSWORD VALIDATION ========
-    private void validatePassword() {
+    private void isPasswordMatch() {
         String password = Objects.requireNonNull(binding.editTxtPassword.getText()).toString().trim();
         String confirmPassword = Objects.requireNonNull(binding.editTxtConfirmPassword.getText()).toString().trim();
 
         boolean valid = validatePasswordRequirements(password, confirmPassword);
-        binding.btnCreateAccount.setEnabled(valid);
+        enableCreateAccountButton(valid);
+    }
+
+    private void enableCreateAccountButton(boolean isPasswordValid){
+        binding.btnCreateAccount.setEnabled(isPasswordValid);
     }
 
     private boolean validatePasswordRequirements(String password, String confirm) {
@@ -156,7 +177,8 @@ public class SignUpUserPasswordFragment extends Fragment {
         boolean matches = password.equals(confirm);
 
         if (!confirm.isEmpty() && !matches) {
-            binding.txtErrorFeedback.setText(getString(R.string.error_password_mismatch));
+            String ERROR_PASSWORD_MISMATCH = "Passwords do not match!";
+            binding.txtErrorFeedback.setText(ERROR_PASSWORD_MISMATCH);
             binding.txtErrorFeedback.setVisibility(View.VISIBLE);
         } else {
             binding.txtErrorFeedback.setVisibility(View.GONE);
@@ -193,7 +215,7 @@ public class SignUpUserPasswordFragment extends Fragment {
         TextWatcher passwordWatcher = new TextWatcher() {
             @Override
             public void onTextChanged(CharSequence s, int start, int before, int count) {
-                validatePassword();
+                isPasswordMatch();
                 togglePasswordVisibilityIcons(!TextUtils.isEmpty(s));
             }
 
@@ -229,15 +251,8 @@ public class SignUpUserPasswordFragment extends Fragment {
         binding.editTxtInvitationCode.setOnClickListener(focusListener);
     }
 
-    private void toggleReferralCodeVisibility() {
-        boolean isVisible = binding.editTxtInvitationCode.getVisibility() == View.VISIBLE;
-        binding.editTxtInvitationCode.setVisibility(isVisible ? View.GONE : View.VISIBLE);
-        binding.icExpendLess.setImageResource(isVisible ? R.drawable.ic_expend_less : R.drawable.ic_expend_more);
-    }
-
-
     private void navigateBack() {
-        requireActivity().getSupportFragmentManager().popBackStack();
+        NavHostFragment.findNavController(this).popBackStack();
     }
 
     private void navigateToHelpActivity() {

@@ -165,6 +165,7 @@ public class PayAFriendFragment extends Fragment {
 
     private void navigateToTransactionStatusFragment() {
         String amount = StringUtil.formatToNaira(this.amount);
+        // Pass txn amount
         NavDirections action = PayAFriendFragmentDirections.actionPayAFriendFragmentToTransactionStatusFragment(amount);
         NavHostFragment.findNavController(this).navigate(action);
     }
