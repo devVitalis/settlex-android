@@ -110,27 +110,32 @@
                     <com.google.android.material.button.MaterialButton
                         android:id="@+id/btnVerify"
                         style="@style/Widget.SettleXApp.Button.Filled.Blue"
-                        android:layout_width="50dp"
-                        android:layout_height="30dp"
+                        android:layout_width="60dp"
+                        android:layout_height="35dp"
                         android:layout_marginEnd="10dp"
                         android:paddingHorizontal="0dp"
                         android:text="Verify"
-                        android:textSize="9sp"
+                        android:textSize="11sp"
                         android:visibility="gone" />
                 </LinearLayout>
 
                 <!-- Feedback -->
                 <TextView
-                    android:id="@+id/txtUserFeedback"
-                    android:layout_width="wrap_content"
+                    android:id="@+id/txtErrorFeedback"
+                    android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_marginTop="5dp"
+                    android:layout_marginTop="8dp"
+                    android:background="@drawable/bg_8dp_red_light"
+                    android:drawableStart="@drawable/ic_error"
+                    android:drawablePadding="5dp"
                     android:fontFamily="@font/poppins_regular"
                     android:gravity="center_vertical"
                     android:includeFontPadding="false"
+                    android:padding="5dp"
                     android:textColor="@color/red"
                     android:textSize="12sp"
-                    android:visibility="gone" />
+                    android:visibility="gone"
+                    tools:text="You cannot send a payment to your own account. Please choose a different recipient" />
 
                 <!-- Selected recipient (Hidden)-->
                 <LinearLayout

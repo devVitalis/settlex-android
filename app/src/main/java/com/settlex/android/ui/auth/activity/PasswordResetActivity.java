@@ -32,11 +32,14 @@ import dagger.hilt.android.AndroidEntryPoint;
  */
 @AndroidEntryPoint
 public class PasswordResetActivity extends AppCompatActivity {
-    private boolean isConnected = false; // Network connection status
 
+    private ProgressLoaderController progressLoader;
     private ActivityPasswordResetBinding binding;
     private AuthViewModel authViewModel;
-    private ProgressLoaderController progressLoader;
+    private boolean isConnected = false;
+
+    // instance var
+    private String email;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -48,14 +51,17 @@ public class PasswordResetActivity extends AppCompatActivity {
         progressLoader = new ProgressLoaderController(this);
         progressLoader.setOverlayColor(ContextCompat.getColor(this, R.color.semi_transparent_white));
 
-        StatusBarUtil.setStatusBarColor(this, R.color.white);
         setupUiActions();
         observeNetworkStatus();
-        observeOtpRequestResult();
+        observeOtpRequestAndHandleResult();
     }
 
     // OBSERVERS ===============
-    private void observeOtpRequestResult() {
+    private void observeNetworkStatus() {
+        NetworkMonitor.getNetworkStatus().observe(this, isConnected -> this.isConnected = isConnected);
+    }
+
+    private void observeOtpRequestAndHandleResult() {
         authViewModel.getSendPasswordResetOtpResult().observe(this, event -> {
             Result<String> result = event.getContentIfNotHandled();
             if (result == null) return;
@@ -68,12 +74,7 @@ public class PasswordResetActivity extends AppCompatActivity {
         });
     }
 
-    private void observeNetworkStatus() {
-        NetworkMonitor.getNetworkStatus().observe(this, isConnected -> this.isConnected = isConnected);
-    }
-
     private void handleOtpRequestSuccess() {
-        String email = binding.editTxtEmail.getText().toString().trim();
         startActivity(new Intent(this, OtpVerificationActivity.class).putExtra("email", email));
         progressLoader.hide();
     }
@@ -85,33 +86,34 @@ public class PasswordResetActivity extends AppCompatActivity {
     }
 
     private void showNoInternetConnection() {
-        binding.txtErrorFeedback.setText(getString(R.string.error_no_internet));
+        String ERROR_NO_INTERNET = "Connection lost. Please check your Wi-Fi or cellular data and try again";
+        binding.txtErrorFeedback.setText(ERROR_NO_INTERNET);
         binding.txtErrorFeedback.setVisibility(View.VISIBLE);
     }
 
     private void requestPasswordResetOtp() {
-        if (isConnected) {
-            authViewModel.sendPasswordResetOtp(binding.editTxtEmail.getText().toString().trim());
-        } else {
+        if (!isConnected) {
             showNoInternetConnection();
+            return;
         }
+        authViewModel.sendPasswordResetOtp(binding.editTxtEmail.getText().toString().trim());
     }
 
-    //  UI CONFIGURATION ===============
-
     private void setupUiActions() {
+        StatusBarUtil.setStatusBarColor(this, R.color.white);
         setupEmailInputValidation();
         setupFocusHandlers();
 
-        binding.imgBackBefore.setOnClickListener(v -> finish());
+        binding.btnBackBefore.setOnClickListener(v -> finish());
         binding.btnContinue.setOnClickListener(v -> requestPasswordResetOtp());
     }
-
 
     private void setupEmailInputValidation() {
         binding.editTxtEmail.addTextChangedListener(new TextWatcher() {
             @Override
             public void onTextChanged(CharSequence s, int start, int before, int count) {
+                email = s.toString().trim().toLowerCase();
+
                 binding.txtErrorFeedback.setVisibility(View.GONE);
                 updateContinueButtonState();
             }
@@ -127,13 +129,17 @@ public class PasswordResetActivity extends AppCompatActivity {
     }
 
     private void updateContinueButtonState() {
-        String email = binding.editTxtEmail.getText().toString().trim();
-        boolean emailValid = (Patterns.EMAIL_ADDRESS.matcher(email).matches());
+        enableButtonContinue(isEmailValid(email));
+    }
 
+    private boolean isEmailValid(String email) {
+        return (Patterns.EMAIL_ADDRESS.matcher(email).matches());
+    }
+
+    private void enableButtonContinue(boolean emailValid) {
         binding.btnContinue.setEnabled(emailValid);
     }
 
-    // FOCUS MANAGEMENT =================
     private void setupFocusHandlers() {
         View.OnClickListener focusListener = (v -> {
             if (v instanceof EditText) {

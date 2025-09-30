@@ -46,20 +46,18 @@ public class OtpVerificationActivity extends AppCompatActivity {
         authViewModel = new ViewModelProvider(this).get(AuthViewModel.class);
         progressLoader = new ProgressLoaderController(this);
 
-        StatusBarUtil.setStatusBarColor(this, R.color.white);
         setupUiActions();
-
-        observeVerifyOtpResult();
-        observeSendOtpResult();
+        observeVerifyOtpAndHandleResult();
+        observeSendOtpAndHandleResult();
     }
 
     // OBSERVERS =========
-    private void observeVerifyOtpResult() {
+    private void observeVerifyOtpAndHandleResult() {
         authViewModel.getVerifyEmailResetOtpResult().observe(this, event -> {
             Result<String> result = event.getContentIfNotHandled();
             if (result != null) {
                 switch (result.getStatus()) {
-                    case LOADING -> progressLoader.show();
+                    case LOADING -> onVerifyOrSendOtpLoading();
                     case SUCCESS -> onVerifyOtpSuccess();
                     case ERROR -> showOtpError(result.getMessage());
                 }
@@ -67,23 +65,27 @@ public class OtpVerificationActivity extends AppCompatActivity {
         });
     }
 
-    private void observeSendOtpResult() {
-        authViewModel.getSendPasswordResetOtpResult().observe(this, event -> {
-            Result<String> result = event.getContentIfNotHandled();
-            if (result != null) {
-                switch (result.getStatus()) {
-                    case LOADING -> progressLoader.show();
-                    case SUCCESS -> onSendOtpSuccess();
-                    case ERROR -> showOtpError(result.getMessage());
-                }
-            }
-        });
+    private void onVerifyOrSendOtpLoading() {
+        progressLoader.show();
     }
 
     private void onVerifyOtpSuccess() {
         startActivity(new Intent(this, PasswordChangeActivity.class).putExtra("email", userEmail));
         finish();
         progressLoader.hide();
+    }
+
+    private void observeSendOtpAndHandleResult() {
+        authViewModel.getSendPasswordResetOtpResult().observe(this, event -> {
+            Result<String> result = event.getContentIfNotHandled();
+            if (result != null) {
+                switch (result.getStatus()) {
+                    case LOADING -> onVerifyOrSendOtpLoading();
+                    case SUCCESS -> onSendOtpSuccess();
+                    case ERROR -> showOtpError(result.getMessage());
+                }
+            }
+        });
     }
 
     private void onSendOtpSuccess() {
@@ -99,11 +101,12 @@ public class OtpVerificationActivity extends AppCompatActivity {
 
     // UI ACTIONS ==========
     private void setupUiActions() {
+        StatusBarUtil.setStatusBarColor(this, R.color.white);
         setupOtpInputBehavior();
         startResendOtpCooldown();
         maskAndDisplayUserEmail();
 
-        binding.imgBackBefore.setOnClickListener(v -> finish());
+        binding.btnBackBefore.setOnClickListener(v -> finish());
         binding.btnResendOtp.setOnClickListener(v -> resendOtp());
         binding.btnConfirm.setOnClickListener(v -> verifyOtp());
     }
@@ -188,9 +191,12 @@ public class OtpVerificationActivity extends AppCompatActivity {
 
         new CountDownTimer(60000, 1000) {
             public void onTick(long millisUntilFinished) {
+
                 int seconds = (int) (millisUntilFinished / 1000);
+                String COUNT_DOWN = "Resend in " + seconds;
+
                 if (seconds > 0) {
-                    binding.btnResendOtp.setText(getString(R.string.resend_otp_countdown, seconds));
+                    binding.btnResendOtp.setText(COUNT_DOWN);
                 }
             }
 

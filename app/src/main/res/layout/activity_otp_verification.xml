@@ -17,11 +17,11 @@
         android:layout_height="35dp">
 
         <ImageView
-            android:id="@+id/imgBackBefore"
+            android:id="@+id/btnBackBefore"
             android:layout_width="20dp"
             android:layout_height="20dp"
             android:layout_marginStart="15dp"
-            android:contentDescription="Arrow Back"
+            android:contentDescription="Back"
             android:scaleType="centerCrop"
             android:src="@drawable/ic_arrow_back"
             app:layout_constraintBottom_toBottomOf="parent"

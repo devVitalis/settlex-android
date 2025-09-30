@@ -1,6 +1,6 @@
 package com.settlex.android.di;
 
-import com.settlex.android.data.local.preference.UserPrefs;
+import com.settlex.android.data.local.UserPrefs;
 
 import dagger.Module;
 import dagger.Provides;

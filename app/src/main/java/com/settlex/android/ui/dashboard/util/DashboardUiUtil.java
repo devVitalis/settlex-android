@@ -43,7 +43,7 @@ public class DashboardUiUtil {
             // Wallet balance alone is enough
             binding.paymentMethod.setText("Wallet");
             binding.debitFromSenderWalletBalance.setVisibility(View.VISIBLE);
-            binding.debitFromSenderWalletBalance.setText(binding.getRoot().getContext().getString(R.string.formattedAmountToSend, formattedAmountToSend));
+            binding.debitFromSenderWalletBalance.setText("-" + formattedAmountToSend);
 
             binding.btnPay.setEnabled(true);
 

@@ -56,18 +56,20 @@ import dagger.hilt.android.AndroidEntryPoint;
 
 @AndroidEntryPoint
 public class HomeDashboardFragment extends Fragment {
-    private long backPressedTime;
-    private final double MILLION_THRESHOLD = 999_999_999;
+
+    // Dependencies
+    private FragmentDashboardHomeBinding binding;
+    private PromoBannerViewModel promoBannerViewModel;
+    private UserViewModel userViewModel;
+    private TransactionsAdapter adapter;
+    private boolean isConnected = false;
+
     private final Handler autoScrollHandler = new Handler(Looper.getMainLooper());
     private Runnable autoScrollRunnable;
 
-    private boolean isConnected = false;  // Network state
-
-    // Dependencies
-    private TransactionsAdapter adapter;
-    private FragmentDashboardHomeBinding binding;
-    private UserViewModel userViewModel;
-    private PromoBannerViewModel promoBannerViewModel;
+    // Instance vars
+    private final double MILLION_THRESHOLD = 999_999_999;
+    private long backPressedTime;
 
     public HomeDashboardFragment() {
         // Required empty public constructor
@@ -96,6 +98,10 @@ public class HomeDashboardFragment extends Fragment {
     @Override
     public void onDestroyView() {
         super.onDestroyView();
+        clearResources();
+    }
+
+    private void clearResources() {
         stopAutoScroll();
         binding = null;
     }
@@ -119,9 +125,10 @@ public class HomeDashboardFragment extends Fragment {
 
     //  OBSERVERS ===========
     private void observeNetworkState() {
-        NetworkMonitor.getNetworkStatus().observe(getViewLifecycleOwner(), isConnected ->
-                this.isConnected = isConnected
-        );
+        NetworkMonitor.getNetworkStatus().observe(getViewLifecycleOwner(), isConnected -> {
+            binding.connectionLost.setVisibility((!isConnected) ? View.VISIBLE : View.GONE);
+            this.isConnected = isConnected;
+        });
     }
 
     private void observeUserAuthState() {
@@ -273,6 +280,7 @@ public class HomeDashboardFragment extends Fragment {
 
             PromotionalBannerAdapter adapter = new PromotionalBannerAdapter(banner);
             binding.promoViewPager.setAdapter(adapter);
+            binding.promoBannerContainer.setVisibility(View.VISIBLE);
 
             // Attach dots
             binding.dotsIndicator.attachTo(binding.promoViewPager);

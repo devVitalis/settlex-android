@@ -12,7 +12,7 @@ import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.ListenerRegistration;
 import com.google.firebase.firestore.Query;
 import com.google.firebase.functions.FirebaseFunctions;
-import com.settlex.android.data.local.preference.UserPrefs;
+import com.settlex.android.data.local.UserPrefs;
 import com.settlex.android.data.remote.dto.TransactionDto;
 import com.settlex.android.data.remote.dto.UserDto;
 import com.settlex.android.util.event.Result;
@@ -57,6 +57,7 @@ public class UserRepository {
 
         // setup once (single source of truth)
         initAuthStateListener();
+        Log.d("Debug", "UserRepo Instance created: " + this);
     }
 
     private void initAuthStateListener() {

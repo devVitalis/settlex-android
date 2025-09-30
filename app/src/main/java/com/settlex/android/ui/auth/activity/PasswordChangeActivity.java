@@ -34,18 +34,17 @@ import java.util.Objects;
 
 import dagger.hilt.android.AndroidEntryPoint;
 
-/**
- * Handles password reset flow
- */
 @AndroidEntryPoint
 public class PasswordChangeActivity extends AppCompatActivity {
-    private boolean isPasswordVisible = false;  // Network connection status
-    private boolean isConnected = false;
 
+    // Dependencies
     private ProgressLoaderController progressLoader;
     private ActivityPasswordChangeBinding binding;
     private AuthViewModel authViewModel;
+    private boolean isConnected = false;
 
+    // Instance var
+    private boolean isPasswordVisible = false;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -57,7 +56,6 @@ public class PasswordChangeActivity extends AppCompatActivity {
         progressLoader = new ProgressLoaderController(this);
         progressLoader.setOverlayColor(R.color.semi_transparent_white);
 
-        StatusBarUtil.setStatusBarColor(this, R.color.white);
         setupUiActions();
         observeNetworkStatus();
         observePasswordResetResult();
@@ -89,10 +87,14 @@ public class PasswordChangeActivity extends AppCompatActivity {
     }
 
     private void showSuccessDialog() {
+        String title = "Password Updated";
+        String message = "Your password has been changed successfully. You will now need to use your new password to sign in on all your devices";
+        String buttonTxt = "Continue";
+
         UiUtil.showBottomSheet(this, (dialog, binding) -> {
-            binding.title.setText("Password Updated");
-            binding.message.setText(getString(R.string.password_update_success));
-            binding.btnContinue.setText("Continue");
+            binding.title.setText(title);
+            binding.message.setText(message);
+            binding.btnContinue.setText(buttonTxt);
             binding.anim.playAnimation();
 
             binding.btnContinue.setOnClickListener(v -> {
@@ -115,18 +117,24 @@ public class PasswordChangeActivity extends AppCompatActivity {
     }
 
     private void attemptPasswordReset() {
+        if (!isConnected) {
+            showNoInternetConnection();
+            return;
+        }
+
         String email = getIntent().getStringExtra("email");
         String newPassword = binding.editTxtPassword.getText().toString().trim();
 
-        if (isConnected) {
-            authViewModel.changeUserPassword(email, newPassword);
-        } else {
-            showNoInternetConnection();
-        }
+        initiateUserPasswordChange(email, newPassword);
+    }
+
+    private void initiateUserPasswordChange(String email, String newPassword) {
+        authViewModel.changeUserPassword(email, newPassword);
     }
 
     private void showNoInternetConnection() {
-        binding.txtErrorFeedback.setText(getString(R.string.error_no_internet));
+        String ERROR_NO_INTERNET = "Connection lost. Please check your Wi-Fi or cellular data and try again";
+        binding.txtErrorFeedback.setText(ERROR_NO_INTERNET);
         binding.txtErrorFeedback.setVisibility(View.VISIBLE);
     }
 
@@ -150,7 +158,8 @@ public class PasswordChangeActivity extends AppCompatActivity {
         boolean matches = password.equals(confirm);
 
         if (!confirm.isEmpty() && !matches) {
-            binding.txtErrorFeedback.setText(getString(R.string.error_password_mismatch));
+            String ERROR_PASSWORD_MISMATCH = "Passwords do not match!";
+            binding.txtErrorFeedback.setText(ERROR_PASSWORD_MISMATCH);
             binding.txtErrorFeedback.setVisibility(View.VISIBLE);
         } else {
             binding.txtErrorFeedback.setVisibility(View.GONE);
@@ -185,11 +194,12 @@ public class PasswordChangeActivity extends AppCompatActivity {
 
     // UI ACTIONS ===========
     private void setupUiActions() {
+        StatusBarUtil.setStatusBarColor(this, R.color.white);
         setupEditTextFocusHandlers();
         setupPasswordValidation();
         setupPasswordVisibilityToggle();
 
-        binding.imgBackBefore.setOnClickListener(v -> finish());
+        binding.btnBackBefore.setOnClickListener(v -> finish());
         binding.btnResetPassword.setOnClickListener(v -> attemptPasswordReset());
     }
 

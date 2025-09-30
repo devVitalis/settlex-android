@@ -383,14 +383,25 @@
                     android:layout_marginTop="10dp"
                     android:background="@drawable/bg_8dp_white"
                     android:gravity="center_vertical"
-                    android:orientation="horizontal"
+                    android:orientation="vertical"
                     android:padding="10dp">
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:fontFamily="@font/poppins_regular"
+                        android:includeFontPadding="false"
+                        android:text="Service"
+                        android:textColor="@color/black"
+                        android:textSize="14sp"
+                        android:textStyle="bold" />
 
                     <!-- Download-->
                     <LinearLayout
                         android:id="@+id/download"
                         android:layout_width="match_parent"
                         android:layout_height="match_parent"
+                        android:layout_marginTop="2dp"
                         android:background="@drawable/bg_8dp_gray_light"
                         android:gravity="center"
                         android:orientation="horizontal"

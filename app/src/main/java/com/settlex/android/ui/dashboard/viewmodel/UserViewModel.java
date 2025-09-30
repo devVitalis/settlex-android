@@ -1,5 +1,7 @@
 package com.settlex.android.ui.dashboard.viewmodel;
 
+import android.util.Log;
+
 import androidx.lifecycle.LiveData;
 import androidx.lifecycle.MediatorLiveData;
 import androidx.lifecycle.MutableLiveData;
@@ -41,6 +43,7 @@ public class UserViewModel extends ViewModel {
 
         initAuthObserver();
         initUserLiveDataObserver();
+        Log.d("Debug", "ViewModel Instance created: " + this);
     }
 
     // Public APIs

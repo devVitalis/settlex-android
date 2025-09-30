@@ -50,7 +50,7 @@ import dagger.hilt.android.AndroidEntryPoint;
 @AndroidEntryPoint
 public class PayAFriendFragment extends Fragment {
 
-    // dependencies
+    // Dependencies
     private FragmentPayAFriendBinding binding;
     private ProgressLoaderController progressLoader;
     private RecipientAdapter recipientAdapter;
@@ -59,7 +59,7 @@ public class PayAFriendFragment extends Fragment {
     private BottomSheetDialog bottomSheetDialog;
     private UserUiModel currentUser;
 
-    // instance variables for txn data
+    // Instance variables for txn data
     private String paymentId;
     private double amount;
 
@@ -189,7 +189,7 @@ public class PayAFriendFragment extends Fragment {
 
         // hide selected recipient
         binding.selectedRecipient.setVisibility(View.GONE);
-        binding.txtUserFeedback.setVisibility(View.GONE);
+        binding.txtErrorFeedback.setVisibility(View.GONE);
         updateNextButtonState();
 
         binding.shimmerEffect.startShimmer();
@@ -200,8 +200,10 @@ public class PayAFriendFragment extends Fragment {
         if (recipient == null || recipient.isEmpty()) {
             // Recipient not found
             String username = StringUtil.addAtToUsername(this.paymentId);
-            binding.txtUserFeedback.setText(getString(R.string.No_user_found_with_tag, username));
-            binding.txtUserFeedback.setVisibility(View.VISIBLE);
+            String ERROR_NO_USER_FOUND = "No user found with Payment ID " + username;
+
+            binding.txtErrorFeedback.setText(ERROR_NO_USER_FOUND);
+            binding.txtErrorFeedback.setVisibility(View.VISIBLE);
         }
 
         // Recipient found
@@ -282,8 +284,8 @@ public class PayAFriendFragment extends Fragment {
             // Sender = receiver
             if (StringUtil.removeAtInUsername(model.getUsername()).equals(currentUser.getUsername())) {
                 String ERROR_CANNOT_SEND_TO_SELF = "You cannot send a payment to your own account. Please choose a different recipient";
-                binding.txtUserFeedback.setText(ERROR_CANNOT_SEND_TO_SELF);
-                binding.txtUserFeedback.setVisibility(View.VISIBLE);
+                binding.txtErrorFeedback.setText(ERROR_CANNOT_SEND_TO_SELF);
+                binding.txtErrorFeedback.setVisibility(View.VISIBLE);
                 return;
             }
 
@@ -321,7 +323,7 @@ public class PayAFriendFragment extends Fragment {
                 if (!s.toString().isEmpty()) {
                     paymentId = StringUtil.removeAtInUsername(s.toString().trim().toLowerCase());
                 }
-                binding.txtUserFeedback.setVisibility(View.GONE);
+                binding.txtErrorFeedback.setVisibility(View.GONE);
                 binding.selectedRecipient.setVisibility(View.GONE);
                 updateNextButtonState();
             }

@@ -20,13 +20,13 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.lifecycle.ViewModelProvider;
 
 import com.settlex.android.R;
+import com.settlex.android.data.remote.avater.AvatarService;
 import com.settlex.android.databinding.ActivitySignInBinding;
 import com.settlex.android.ui.auth.viewmodel.AuthViewModel;
 import com.settlex.android.ui.common.util.ProgressLoaderController;
 import com.settlex.android.ui.dashboard.activity.DashboardActivity;
 import com.settlex.android.ui.info.help.AuthHelpActivity;
 import com.settlex.android.util.network.NetworkMonitor;
-import com.settlex.android.util.string.StringUtil;
 import com.settlex.android.util.ui.StatusBarUtil;
 import com.settlex.android.util.ui.UiUtil;
 
@@ -56,30 +56,30 @@ public class SignInActivity extends AppCompatActivity {
         progressLoader = new ProgressLoaderController(this);
 
 
-        StatusBarUtil.setStatusBarColor(this, R.color.white);
         setupUiActions();
         observeUserState();
         observeNetworkStatus();
-        observeLoginResult();
+        observeLoginAndHandleResult();
     }
 
-    // NETWORK & DATA OBSERVERS ==============
-    private void observeUserState() {
-        authViewModel.getUserStateLiveData().observe(this, currentUser -> {
-            if (currentUser != null) {
-                showLoggedInLayout(currentUser.getDisplayName(), currentUser.getEmail());
-            } else {
-                showLoggedOutLayout();
-            }
-        });
-    }
-
+    // OBSERVERS ==============
     private void observeNetworkStatus() {
         NetworkMonitor.getNetworkStatus().observe(this, isConnected ->
                 this.isConnected = isConnected);
     }
 
-    private void observeLoginResult() {
+    private void observeUserState() {
+        authViewModel.getUserStateLiveData().observe(this, currentUser -> {
+            if (currentUser != null) {
+                // user is logged in
+                showLoggedInLayout(currentUser.getDisplayName(), currentUser.getEmail());
+                return;
+            }
+            showLoggedOutLayout();
+        });
+    }
+
+    private void observeLoginAndHandleResult() {
         authViewModel.getLoginResult().observe(this, result -> {
             if (result != null) {
                 switch (result.getStatus()) {
@@ -109,10 +109,13 @@ public class SignInActivity extends AppCompatActivity {
     }
 
     private void showNoInternetDialog() {
+        String title = "Network Unavailable";
+        String message = "Please check your Wi-Fi or cellular data and try again";
+
         UiUtil.showAlertDialog(this, (alertDialog, binding) -> {
             binding.icon.setImageResource(R.drawable.ic_signal_disconnected);
-            binding.title.setText("Network Unavailable");
-            binding.message.setText("Please check your Wi-Fi or cellular data and try again");
+            binding.title.setText(title);
+            binding.message.setText(message);
 
             binding.btnOkay.setOnClickListener(view -> alertDialog.dismiss());
             alertDialog.show();
@@ -120,19 +123,28 @@ public class SignInActivity extends AppCompatActivity {
     }
 
     private void attemptLogin() {
-        if (isConnected) {
-            String email = Objects.requireNonNull(binding.editTxtEmail.getText()).toString().trim();
-            String password = Objects.requireNonNull(binding.editTxtPassword.getText()).toString().trim();
-
-            authViewModel.loginWithEmail(email, password);
-        } else {
+        if (!isConnected) {
             showNoInternetDialog();
+            return;
         }
+
+        String email = Objects.requireNonNull(binding.editTxtEmail.getText()).toString().trim();
+        String password = Objects.requireNonNull(binding.editTxtPassword.getText()).toString().trim();
+
+        attemptUserLoginWithEmailAndPassword(email, password);
+    }
+
+    private void attemptUserLoginWithEmailAndPassword(String email, String password) {
+        authViewModel.loginWithEmail(email, password);
     }
 
     private void showLoggedInLayout(String firstName, String email) {
-        binding.userDisplayName.setText(getString(R.string.greeting_with_firstName, firstName));
-        binding.userEmail.setText(getString(R.string.mask_email_with_parathesis, StringUtil.maskEmail(email)));
+        String userDisplayName = "Hi, " + firstName;
+        String userEmail = "(" + email + ")";
+
+        AvatarService.loadAvatar(userDisplayName, binding.userProfile);
+        binding.userDisplayName.setText(userDisplayName);
+        binding.userEmail.setText(userEmail);
         binding.editTxtEmail.setText(email);
         // Show
         binding.showUserInfoLayout.setVisibility(View.VISIBLE);
@@ -157,13 +169,14 @@ public class SignInActivity extends AppCompatActivity {
 
     // UI ACTIONS ==========
     private void setupUiActions() {
+        StatusBarUtil.setStatusBarColor(this, R.color.white);
         setupFocusHandlers();
         setupAuthActionTexts();
         setupInputValidation();
         setupPasswordVisibilityToggle();
 
         // Click listeners
-        binding.imgBackBefore.setOnClickListener(v -> getOnBackPressedDispatcher().onBackPressed());
+        binding.btnBackBefore.setOnClickListener(v -> getOnBackPressedDispatcher().onBackPressed());
         binding.btnSignUp.setOnClickListener(v -> navigateTo(SignUpActivity.class));
         binding.btnHelp.setOnClickListener(v -> navigateTo(AuthHelpActivity.class));
         binding.btnSwitchAccount.setOnClickListener(view -> showLoggedOutLayout());
