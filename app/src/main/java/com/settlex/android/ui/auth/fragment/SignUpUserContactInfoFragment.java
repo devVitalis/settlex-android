@@ -31,7 +31,7 @@ import androidx.navigation.fragment.NavHostFragment;
 
 import com.settlex.android.R;
 import com.settlex.android.databinding.FragmentSignUpUserContactInfoBinding;
-import com.settlex.android.ui.auth.activity.SignInActivity;
+import com.settlex.android.ui.auth.activity.LoginActivity;
 import com.settlex.android.ui.auth.viewmodel.AuthViewModel;
 import com.settlex.android.ui.common.util.ProgressLoaderController;
 import com.settlex.android.ui.info.help.AuthHelpActivity;
@@ -129,7 +129,7 @@ public class SignUpUserContactInfoFragment extends Fragment {
         reEnableEditTextFocus();
         clearFocusAndHideKeyboardOnOutsideTap(binding.getRoot());
 
-        binding.btnSignIn.setOnClickListener(view -> navigateToActivity(SignInActivity.class, true));
+        binding.btnSignIn.setOnClickListener(view -> navigateToActivity(LoginActivity.class, true));
         binding.btnHelp.setOnClickListener(v -> navigateToActivity(AuthHelpActivity.class, false));
         binding.btnBackBefore.setOnClickListener(v -> onBackButtonPressed());
         binding.btnContinue.setOnClickListener(v -> storeUserInfoInModel());

@@ -26,11 +26,11 @@ public class AuthViewModel extends ViewModel {
     @Inject
     public AuthViewModel(AuthRepository authRepo) {
         this.authRepo = authRepo;
-        updateUserState();
+        initUserAuthState();
     }
 
     // LIVEDATA STATE HOLDERS =========
-    private final MutableLiveData<loginUiModel> userStateLiveData = new MutableLiveData<>();
+    private final MutableLiveData<loginUiModel> userAuthStateLiveData = new MutableLiveData<>();
     private final MutableLiveData<UserModel> userLiveData = new MutableLiveData<>();
     private final MutableLiveData<Result<String>> loginResult = new MutableLiveData<>();
     private final MutableLiveData<Result<String>> registerResult = new MutableLiveData<>();
@@ -78,9 +78,6 @@ public class AuthViewModel extends ViewModel {
         return verifyEmailVerificationOtpResult;
     }
 
-    public LiveData<loginUiModel> getUserStateLiveData() {
-        return userStateLiveData;
-    }
 
     /**
      * Handles user registration
@@ -250,12 +247,21 @@ public class AuthViewModel extends ViewModel {
         return (user != null) ? user.getEmail() : null;
     }
 
-    public void updateUserState() {
+    public void initUserAuthState() {
         FirebaseUser currentUser = authRepo.getCurrentUser();
-        userStateLiveData.setValue((currentUser != null) ? new loginUiModel(
+        userAuthStateLiveData.setValue((currentUser != null) ? new loginUiModel(
                 currentUser.getUid(),
                 currentUser.getEmail(),
-                currentUser.getDisplayName()) : null);
+                currentUser.getDisplayName())
+                : null);
+    }
+
+    public LiveData<loginUiModel> getUserAuthStateLiveData() {
+        return userAuthStateLiveData;
+    }
+
+    public boolean isUserLoggedIn() {
+        return authRepo.getCurrentUser() != null;
     }
 
     /**

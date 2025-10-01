@@ -28,6 +28,10 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.SettleX">
         <activity
+            android:name=".ui.auth.activity.LoginActivity"
+            android:exported="false"
+        />
+        <activity
             android:name=".ui.dashboard.services.CableTvSubscriptionActivity"
             android:exported="false" />
         <activity
@@ -87,9 +91,6 @@
             android:exported="false" />
         <activity
             android:name=".ui.auth.activity.PinLoginActivity"
-            android:exported="false" />
-        <activity
-            android:name=".ui.auth.activity.SignInActivity"
             android:exported="false" />
         <activity
             android:name=".ui.auth.activity.SignUpActivity"

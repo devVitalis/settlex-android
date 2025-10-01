@@ -19,7 +19,6 @@ public class OnboardingPrefs {
         editor = prefs.edit();
     }
 
-    // (Device-global) ---
     public void setIntroViewed(boolean viewed) {
         editor.putBoolean(KEY_NAME_INTRO_VIEWED, viewed).apply();
     }

@@ -23,7 +23,7 @@ import com.settlex.android.R;
 import com.settlex.android.data.enums.TransactionServiceType;
 import com.settlex.android.data.remote.avater.AvatarService;
 import com.settlex.android.databinding.FragmentDashboardHomeBinding;
-import com.settlex.android.ui.auth.activity.SignInActivity;
+import com.settlex.android.ui.auth.activity.LoginActivity;
 import com.settlex.android.ui.dashboard.activity.CommissionWithdrawalActivity;
 import com.settlex.android.ui.dashboard.activity.ReceiveMoneyActivity;
 import com.settlex.android.ui.dashboard.activity.TransactionActivity;
@@ -112,7 +112,7 @@ public class HomeDashboardFragment extends Fragment {
         initTransactionRecyclerView();
         setupDoubleBackToExit();
 
-        binding.btnLogin.setOnClickListener(v -> navigateToActivity(SignInActivity.class));
+        binding.btnLogin.setOnClickListener(v -> navigateToActivity(LoginActivity.class));
         binding.btnBalanceToggle.setOnClickListener(v -> userViewModel.toggleBalanceVisibility());
         binding.btnUserCommissionBalanceLayout.setOnClickListener(v -> navigateToActivity(CommissionWithdrawalActivity.class));
         binding.btnAddMoney.setOnClickListener(v -> userViewModel.signOut());

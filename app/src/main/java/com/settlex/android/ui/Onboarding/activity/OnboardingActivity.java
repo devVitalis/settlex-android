@@ -12,7 +12,7 @@ import com.settlex.android.R;
 import com.settlex.android.data.local.OnboardingPrefs;
 import com.settlex.android.databinding.ActivityOnboardingBinding;
 import com.settlex.android.ui.Onboarding.adapter.OnboardingAdapter;
-import com.settlex.android.ui.auth.activity.SignInActivity;
+import com.settlex.android.ui.auth.activity.LoginActivity;
 import com.settlex.android.ui.auth.activity.SignUpActivity;
 import com.settlex.android.util.ui.StatusBarUtil;
 
@@ -52,7 +52,7 @@ public class OnboardingActivity extends AppCompatActivity {
 
     private void setupUiActions() {
         attachNavigation(binding.btnCreateAccount, SignUpActivity.class);
-        attachNavigation(binding.btnLogin, SignInActivity.class);
+        attachNavigation(binding.btnLogin, LoginActivity.class);
         attachNavigation(binding.btnSkip, SignUpActivity.class);
     }
 

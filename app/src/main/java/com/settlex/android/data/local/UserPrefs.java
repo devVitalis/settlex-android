@@ -23,7 +23,6 @@ public class UserPrefs {
         return instance;
     }
 
-    // Balance state
     public boolean isBalanceHidden() {
         return prefs.getBoolean(KEY_HIDE_BALANCE, false);
     }

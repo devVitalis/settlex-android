@@ -1,7 +1,5 @@
 package com.settlex.android.data.repository;
 
-import androidx.annotation.Nullable;
-
 import com.google.firebase.FirebaseNetworkException;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseAuthInvalidCredentialsException;
@@ -236,7 +234,7 @@ public class AuthRepository {
                             markEmailAsUnverified(user.getUid());
                         }
                     });
-                    setUserDisplayName(user.getFirstName()); // Set display name in firebase auth
+                    setUserDisplayName(user.getFirstName() + " " + user.getLastName()); // Set display name in firebase auth
                 })
                 .addOnFailureListener(e -> {
                     if (e instanceof FirebaseNetworkException || e instanceof IOException) {
@@ -268,17 +266,16 @@ public class AuthRepository {
     /**
      * Updates user display name in Firebase Auth during registration with user firstName
      */
-    private void setUserDisplayName(String firstName) {
+    private void setUserDisplayName(String fullName) {
         FirebaseUser user = getCurrentUser();
         if (user == null) return;
 
         UserProfileChangeRequest displayName = new UserProfileChangeRequest.Builder()
-                .setDisplayName(firstName)
+                .setDisplayName(fullName)
                 .build();
         user.updateProfile(displayName);
     }
 
-    @Nullable
     public FirebaseUser getCurrentUser() {
         // Get current signed in user
         return FirebaseAuth.getInstance().getCurrentUser();

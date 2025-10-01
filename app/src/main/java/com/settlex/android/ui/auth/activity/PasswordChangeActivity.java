@@ -106,7 +106,7 @@ public class PasswordChangeActivity extends AppCompatActivity {
     }
 
     private void navigateToSignInActivity() {
-        startActivity(new Intent(this, SignInActivity.class));
+        startActivity(new Intent(this, LoginActivity.class));
         finishAffinity();
     }
 

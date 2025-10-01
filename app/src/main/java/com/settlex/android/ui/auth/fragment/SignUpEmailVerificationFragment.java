@@ -200,7 +200,7 @@ public class SignUpEmailVerificationFragment extends Fragment {
         resendOtpCountdownTimer = new CountDownTimer(OTP_RESEND_COOLDOWN_MS, COUNTDOWN_INTERVAL_MS) {
             public void onTick(long millisUntilFinished) {
                 if (binding == null) return;
-                String COUNT_DOWN = "Resend in" + millisUntilFinished / 1000;
+                String COUNT_DOWN = "Resend in " + millisUntilFinished / 1000;
                 binding.btnResendOtp.setText(COUNT_DOWN);
             }
 
