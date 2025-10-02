@@ -6,6 +6,7 @@ import androidx.lifecycle.ViewModel;
 
 import com.settlex.android.data.repository.PromoBannerRepository;
 import com.settlex.android.ui.dashboard.model.PromoBannerUiModel;
+import com.settlex.android.util.event.Result;
 
 import java.util.List;
 
@@ -15,7 +16,7 @@ import jakarta.inject.Inject;
 @HiltViewModel
 public class PromoBannerViewModel extends ViewModel {
     private final PromoBannerRepository promoBannerRepo;
-    private final MutableLiveData<List<PromoBannerUiModel>> promoBannersLiveData = new MutableLiveData<>();
+    private final MutableLiveData<Result<List<PromoBannerUiModel>>> promoBannersLiveData = new MutableLiveData<>();
 
     @Inject
     public PromoBannerViewModel(PromoBannerRepository promoBannerRepo) {
@@ -24,11 +25,12 @@ public class PromoBannerViewModel extends ViewModel {
     }
 
     // Getters
-    public LiveData<List<PromoBannerUiModel>> getPromoBanners() {
+    public LiveData<Result<List<PromoBannerUiModel>>> getPromoBanners() {
         return promoBannersLiveData;
     }
 
-    private void fetchPromoBanners(){
-        promoBannerRepo.fetchPromotionalBanners(promoBannersLiveData::postValue);
+    private void fetchPromoBanners() {
+        promoBannersLiveData.postValue(Result.loading());
+        promoBannerRepo.fetchPromotionalBanners(bannerUiModel -> promoBannersLiveData.postValue(Result.success(bannerUiModel)));
     }
 }

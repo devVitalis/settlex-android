@@ -7,7 +7,7 @@
     <com.google.android.material.imageview.ShapeableImageView
         android:id="@+id/promoBanner"
         android:layout_width="match_parent"
-        android:layout_height="100dp"
+        android:layout_height="120dp"
         android:scaleType="centerCrop"
         app:shapeAppearanceOverlay="@style/RoundedImage_16dp" />
 </FrameLayout>

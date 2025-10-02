@@ -133,10 +133,18 @@
         <item name="android:backgroundDimEnabled">false</item>
     </style>
 
-    <!-- M3 CardView -->
+    <!-- CardView -->
     <style name="Widget.SettleX.CardView.Elevated" parent="Widget.Material3.CardView.Elevated">
         <item name="cardElevation">5dp</item>
         <item name="cardCornerRadius">8dp</item>
         <item name="cardBackgroundColor">@color/white</item>
     </style>
+
+    <!-- Progress Indicator -->
+    <style name="Widget.SettleX.CircularProgressIndicator" parent="Widget.Material3.CircularProgressIndicator">
+        <item name="trackColor">@color/gray</item>
+        <item name="indicatorColor">@color/blue</item>
+        <item name="android:indeterminate">true</item>
+    </style>
+
 </resources>

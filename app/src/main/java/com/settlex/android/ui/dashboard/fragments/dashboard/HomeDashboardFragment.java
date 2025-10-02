@@ -32,6 +32,7 @@ import com.settlex.android.ui.dashboard.adapter.PromotionalBannerAdapter;
 import com.settlex.android.ui.dashboard.adapter.ServicesAdapter;
 import com.settlex.android.ui.dashboard.adapter.TransactionsAdapter;
 import com.settlex.android.ui.dashboard.components.GridSpacingItemDecoration;
+import com.settlex.android.ui.dashboard.model.PromoBannerUiModel;
 import com.settlex.android.ui.dashboard.model.ServiceDestination;
 import com.settlex.android.ui.dashboard.model.ServiceUiModel;
 import com.settlex.android.ui.dashboard.model.TransactionUiModel;
@@ -212,11 +213,13 @@ public class HomeDashboardFragment extends Fragment {
         userViewModel.getIsBalanceHiddenLiveData().observe(getViewLifecycleOwner(), hidden -> {
             if (hidden) {
                 // balance hidden set asterisk
+                binding.btnBalanceToggle.setImageResource(R.drawable.ic_visibility_off);
                 binding.userBalance.setText(StringUtil.setAsterisks());
                 binding.userCommissionBalance.setText(StringUtil.setAsterisks());
                 return;
             }
             // show balance
+            binding.btnBalanceToggle.setImageResource(R.drawable.ic_visibility_on);
             binding.userBalance.setText((balance > MILLION_THRESHOLD) ? StringUtil.formatToNairaShort(balance) : StringUtil.formatToNaira(balance));
             binding.userCommissionBalance.setText(StringUtil.formatToNairaShort(commissionBalance));
         });
@@ -273,19 +276,40 @@ public class HomeDashboardFragment extends Fragment {
 
     private void observeAndLoadPromoBanners() {
         promoBannerViewModel.getPromoBanners().observe(getViewLifecycleOwner(), banner -> {
-            if (banner == null || banner.isEmpty()) {
+
+            if (banner == null) {
                 binding.promoBannerContainer.setVisibility(View.GONE);
                 return;
             }
 
-            PromotionalBannerAdapter adapter = new PromotionalBannerAdapter(banner);
-            binding.promoViewPager.setAdapter(adapter);
-            binding.promoBannerContainer.setVisibility(View.VISIBLE);
-
-            // Attach dots
-            binding.dotsIndicator.attachTo(binding.promoViewPager);
-            setAutoScrollForPromoBanner(banner.size());
+            switch (banner.getStatus()) {
+                case LOADING -> onPromoBannerLoading();
+                case SUCCESS -> onPromoBannersSuccess(banner.getData());
+            }
         });
+    }
+
+    private void onPromoBannerLoading() {
+        binding.promoProgressBar.setVisibility(View.VISIBLE);
+        binding.promoProgressBar.show();
+    }
+
+    private void onPromoBannersSuccess(List<PromoBannerUiModel> banner) {
+        binding.promoProgressBar.hide();
+        binding.promoProgressBar.setVisibility(View.GONE);
+
+        if (banner.isEmpty()) {
+            binding.promoBannerContainer.setVisibility(View.GONE);
+            return;
+        }
+
+        PromotionalBannerAdapter adapter = new PromotionalBannerAdapter(banner);
+        binding.promoViewPager.setAdapter(adapter);
+        binding.promoBannerContainer.setVisibility(View.VISIBLE);
+
+        // Attach dots
+        binding.dotsIndicator.attachTo(binding.promoViewPager);
+        setAutoScrollForPromoBanner(banner.size());
     }
 
     private void setAutoScrollForPromoBanner(int size) {
@@ -380,10 +404,10 @@ public class HomeDashboardFragment extends Fragment {
             }
 
             if (serviceDestination.isActivity()) {
-                startActivity(new Intent(requireContext(), serviceDestination.getActivity()));
-                return;
+                navigateToActivity(serviceDestination.getActivity());
+            } else {
+                navigateToFragment(serviceDestination.getNavDestinationId());
             }
-            navigateToFragment(serviceDestination.getNavDestinationId());
         });
 
         // Set adapter

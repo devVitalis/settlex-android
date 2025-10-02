@@ -661,7 +661,7 @@
                             android:layout_height="wrap_content"
                             android:clipToPadding="false"
                             android:nestedScrollingEnabled="false"
-                            android:visibility="gone" />
+                            android:visibility="visible" />
 
                         <com.facebook.shimmer.ShimmerFrameLayout
                             android:id="@+id/txnShimmerEffect"
@@ -683,7 +683,7 @@
                 <FrameLayout
                     android:id="@+id/promoBannerContainer"
                     android:layout_width="match_parent"
-                    android:layout_height="100dp"
+                    android:layout_height="120dp"
                     android:layout_marginTop="15dp"
                     android:background="@drawable/bg_16dp_white"
                     android:visibility="gone">
@@ -691,7 +691,16 @@
                     <androidx.viewpager2.widget.ViewPager2
                         android:id="@+id/promoViewPager"
                         android:layout_width="match_parent"
-                        android:layout_height="100dp" />
+                        android:layout_height="match_parent" />
+
+                    <!-- Loading Progress bar -->
+                    <com.google.android.material.progressindicator.CircularProgressIndicator
+                        android:id="@+id/promoProgressBar"
+                        style="@style/Widget.SettleX.CircularProgressIndicator"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="center"
+                        android:visibility="gone" />
 
                     <!--Dots Indicator-->
                     <com.tbuonomo.viewpagerdotsindicator.DotsIndicator
