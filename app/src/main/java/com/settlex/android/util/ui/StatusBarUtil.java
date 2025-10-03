@@ -2,6 +2,7 @@ package com.settlex.android.util.ui;
 
 import android.app.Activity;
 import android.os.Build;
+import android.view.View;
 import android.view.Window;
 import android.view.WindowInsetsController;
 
@@ -25,6 +26,7 @@ public class StatusBarUtil {
      */
     public static void setStatusBarColor(Activity activity, @ColorRes int colorRes) {
         if (activity == null) return;
+        enableStatusBarColorControl(activity);
 
         Window window = activity.getWindow();
         int color = ContextCompat.getColor(activity, colorRes);
@@ -47,6 +49,29 @@ public class StatusBarUtil {
                     insetsController.setSystemBarsAppearance(0, WindowInsetsController.APPEARANCE_LIGHT_STATUS_BARS);
                 }
             }
+        }
+    }
+
+    /**
+     * Configures the window to allow status bar color changes.
+     * Call this BEFORE setStatusBarColor().
+     *
+     * @param activity The target activity.
+     */
+    public static void enableStatusBarColorControl(Activity activity) {
+        if (activity == null) return;
+
+        Window window = activity.getWindow();
+
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.R) {
+            // Android 11+ (API 30+)
+            window.setDecorFitsSystemWindows(false);
+        } else {
+            // Android 10 and below
+            window.getDecorView().setSystemUiVisibility(
+                    View.SYSTEM_UI_FLAG_LAYOUT_STABLE |
+                            View.SYSTEM_UI_FLAG_LAYOUT_FULLSCREEN
+            );
         }
     }
 

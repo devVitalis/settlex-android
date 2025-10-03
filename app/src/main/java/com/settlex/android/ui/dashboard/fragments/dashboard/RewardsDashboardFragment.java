@@ -1,66 +1,102 @@
 package com.settlex.android.ui.dashboard.fragments.dashboard;
 
+import android.content.Intent;
 import android.os.Bundle;
-
-import androidx.fragment.app.Fragment;
-
+import android.text.Html;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Toast;
+
+import androidx.annotation.NonNull;
+import androidx.fragment.app.Fragment;
+import androidx.lifecycle.ViewModelProvider;
 
 import com.settlex.android.R;
+import com.settlex.android.databinding.FragmentDashboardRewardsBinding;
+import com.settlex.android.ui.dashboard.activity.CommissionWithdrawalActivity;
+import com.settlex.android.ui.dashboard.model.UserUiModel;
+import com.settlex.android.ui.dashboard.viewmodel.UserViewModel;
+import com.settlex.android.util.string.StringUtil;
+import com.settlex.android.util.ui.StatusBarUtil;
 
-/**
- * A simple {@link Fragment} subclass.
- * Use the {@link RewardsDashboardFragment#newInstance} factory method to
- * create an instance of this fragment.
- */
+import dagger.hilt.android.AndroidEntryPoint;
+
+@AndroidEntryPoint
 public class RewardsDashboardFragment extends Fragment {
-
-    // TODO: Rename parameter arguments, choose names that match
-    // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
-    private static final String ARG_PARAM1 = "param1";
-    private static final String ARG_PARAM2 = "param2";
-
-    // TODO: Rename and change types of parameters
-    private String mParam1;
-    private String mParam2;
+    private FragmentDashboardRewardsBinding binding;
+    private UserViewModel userViewModel;
 
     public RewardsDashboardFragment() {
         // Required empty public constructor
     }
 
-    /**
-     * Use this factory method to create a new instance of
-     * this fragment using the provided parameters.
-     *
-     * @param param1 Parameter 1.
-     * @param param2 Parameter 2.
-     * @return A new instance of fragment RewardsFragment.
-     */
-    // TODO: Rename and change types and number of parameters
-    public static RewardsDashboardFragment newInstance(String param1, String param2) {
-        RewardsDashboardFragment fragment = new RewardsDashboardFragment();
-        Bundle args = new Bundle();
-        args.putString(ARG_PARAM1, param1);
-        args.putString(ARG_PARAM2, param2);
-        fragment.setArguments(args);
-        return fragment;
-    }
-
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        if (getArguments() != null) {
-            mParam1 = getArguments().getString(ARG_PARAM1);
-            mParam2 = getArguments().getString(ARG_PARAM2);
-        }
+        userViewModel = new ViewModelProvider(requireActivity()).get(UserViewModel.class);
     }
 
     @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container,
-                             Bundle savedInstanceState) {
-        // Inflate the layout for this fragment
-        return inflater.inflate(R.layout.fragment_dashboard_rewards, container, false);
+    public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
+        binding = FragmentDashboardRewardsBinding.inflate(inflater, container, false);
+
+        observeUserData();
+        setupUiActions();
+        return binding.getRoot();
+    }
+
+    @Override
+    public void onDestroyView() {
+        super.onDestroyView();
+        binding = null;
+    }
+
+    // observers
+    private void observeUserData() {
+        userViewModel.getUserLiveData().observe(requireActivity(), user -> {
+            if (user == null) return;
+
+            switch (user.getStatus()) {
+                case SUCCESS -> onUserDataSuccess(user.getData());
+                case ERROR -> {
+                    // TODO: handle error
+                }
+            }
+        });
+    }
+
+    private void onUserDataSuccess(UserUiModel user) {
+        binding.commissionBalance.setText(StringUtil.formatToNaira(user.getCommissionBalance()));
+        binding.referralCode.setText((user.getUsername() != null) ? StringUtil.addAtToUsername(user.getUsername()) : "Get Referral Code");
+        binding.totalReferralEarning.setText(StringUtil.formatToNaira(user.getReferralBalance()));
+    }
+
+    // ui actions
+    private void setupUiActions() {
+        StatusBarUtil.setStatusBarColor(requireActivity(), R.color.blue_400);
+        styleText();
+
+        binding.btnCopy.setOnClickListener(v -> copyReferralCodeToClipboard(binding.referralCode.getText().toString()));
+        binding.btnShareInvitationLink.setOnClickListener(v -> showToast("Feature not yet Implemented"));
+        binding.btnViewCommissionBalance.setOnClickListener(v -> navigateToActivity(CommissionWithdrawalActivity.class));
+    }
+
+    private void showToast(String text) {
+        Toast.makeText(requireContext(), text, Toast.LENGTH_SHORT).show();
+    }
+
+    private void navigateToActivity(Class<?> activityClass) {
+        startActivity(new Intent(requireContext(), activityClass));
+    }
+
+    private void copyReferralCodeToClipboard(String textToCopy) {
+        StringUtil.copyToClipboard(requireContext(), "Referral Code", textToCopy);
+    }
+
+    private void styleText() {
+        String htmlText = "Get <font color='#0044CC'><b>1% commission</b></font> on every transaction your referrals make, for " +
+                "<font color='#0044CC'><b>a lifetime</b></font>. Start sharing and watch your rewards grow!";
+        binding.txtReferralInfo.setText(Html.fromHtml(htmlText, Html.FROM_HTML_MODE_LEGACY));
     }
 }

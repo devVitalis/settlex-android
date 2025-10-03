@@ -9,6 +9,7 @@ import androidx.appcompat.app.AlertDialog;
 
 import com.google.android.material.bottomsheet.BottomSheetDialog;
 import com.google.android.material.dialog.MaterialAlertDialogBuilder;
+import com.settlex.android.R;
 import com.settlex.android.databinding.AlertDialogBinding;
 import com.settlex.android.databinding.BottomSheetDialogBinding;
 
@@ -27,7 +28,7 @@ public class UiUtil {
     public static void showBottomSheet(@NonNull Context context, @Nullable BiConsumer<BottomSheetDialog, BottomSheetDialogBinding> config) {
         BottomSheetDialogBinding binding = BottomSheetDialogBinding.inflate(LayoutInflater.from(context));
 
-        BottomSheetDialog dialog = new BottomSheetDialog(context);
+        BottomSheetDialog dialog = new BottomSheetDialog(context, R.style.Widget_SettleX_BottomSheetDialog);
         dialog.setContentView(binding.getRoot());
 
         // Default config

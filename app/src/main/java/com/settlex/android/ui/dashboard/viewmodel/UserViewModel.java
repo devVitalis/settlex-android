@@ -193,7 +193,8 @@ public class UserViewModel extends ViewModel {
                 dto.lastName,
                 dto.username,
                 dto.balance,
-                dto.commissionBalance
+                dto.commissionBalance,
+                dto.referralBalance
         );
     }
 }

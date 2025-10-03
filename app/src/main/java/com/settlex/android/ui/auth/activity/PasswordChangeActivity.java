@@ -54,7 +54,6 @@ public class PasswordChangeActivity extends AppCompatActivity {
 
         authViewModel = new ViewModelProvider(this).get(AuthViewModel.class);
         progressLoader = new ProgressLoaderController(this);
-        progressLoader.setOverlayColor(R.color.semi_transparent_white);
 
         setupUiActions();
         observeNetworkStatus();
