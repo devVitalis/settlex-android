@@ -68,7 +68,7 @@ public class RewardsDashboardFragment extends Fragment {
 
     private void onUserDataSuccess(UserUiModel user) {
         binding.commissionBalance.setText(StringUtil.formatToNaira(user.getCommissionBalance()));
-        binding.referralCode.setText((user.getUsername() != null) ? StringUtil.addAtToUsername(user.getUsername()) : "Get Referral Code");
+        binding.referralCode.setText((user.getUsername() != null) ? user.getUsername() : "Get Referral Code");
         binding.totalReferralEarning.setText(StringUtil.formatToNaira(user.getReferralBalance()));
     }
 

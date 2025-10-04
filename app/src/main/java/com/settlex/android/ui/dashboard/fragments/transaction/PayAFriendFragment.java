@@ -280,16 +280,17 @@ public class PayAFriendFragment extends Fragment {
     }
 
     private void handleOnRecipientItemClick() {
-        recipientAdapter.setOnItemClickListener(model -> {
+        recipientAdapter.setOnItemClickListener(recipient -> {
             // Sender = receiver
-            if (StringUtil.removeAtInUsername(model.getUsername()).equals(currentUser.getUsername())) {
+            if (StringUtil.removeAtInUsername(recipient.getUsername()).equals(currentUser.getUsername())) {
                 String ERROR_CANNOT_SEND_TO_SELF = "You cannot send a payment to your own account. Please choose a different recipient";
+
                 binding.txtErrorFeedback.setText(ERROR_CANNOT_SEND_TO_SELF);
                 binding.txtErrorFeedback.setVisibility(View.VISIBLE);
                 return;
             }
 
-            binding.editTxtPaymentId.setText(StringUtil.removeAtInUsername(model.getUsername()));
+            binding.editTxtPaymentId.setText(StringUtil.removeAtInUsername(recipient.getUsername()));
             binding.editTxtPaymentId.setSelection(binding.editTxtPaymentId.getText().length());
             binding.btnVerify.setVisibility(View.GONE);
 
@@ -297,10 +298,10 @@ public class PayAFriendFragment extends Fragment {
             recipientAdapter.submitList(Collections.emptyList());
             binding.recipientRecyclerView.setVisibility(View.GONE);
 
-            AvatarService.loadAvatar(model.getFullName(), binding.selectedRecipientProfilePic);
+            AvatarService.loadAvatar(recipient.getFullName(), binding.selectedRecipientProfilePic);
             // binding.selectedRecipientProfilePic.setImageResource(model.getProfileUrl()); //TODO: handle profile pic link
-            binding.selectedRecipientName.setText(model.getFullName());
-            binding.selectedRecipientUsername.setText(model.getUsername());
+            binding.selectedRecipientName.setText(recipient.getFullName());
+            binding.selectedRecipientUsername.setText(recipient.getUsername());
             binding.selectedRecipient.setVisibility(View.VISIBLE);
             updateNextButtonState();
         });
@@ -360,7 +361,7 @@ public class PayAFriendFragment extends Fragment {
     }
 
     private boolean isPaymentIdValid(String paymentId) {
-        return paymentId.matches("^[a-z0-9]([a-z0-9]*[._]?[a-z0-9]*)+[a-z0-9]$");
+        return paymentId != null && paymentId.matches("^[a-z0-9]([a-z0-9]*[._]?[a-z0-9]*)+[a-z0-9]$");
     }
 
     private boolean isAmountValid(double amount) {

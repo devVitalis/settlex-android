@@ -97,7 +97,7 @@ public class UserViewModel extends ViewModel {
                             operation.getSymbol(),
                             operation.getColorRes(),
                             StringUtil.formatToNaira(dto.amount),
-                            StringUtil.formatTimeStamp(dto.createdAt),
+                            StringUtil.formatTimeStampToSimpleDate(dto.createdAt),
                             dto.status.getDisplayName(),
                             dto.status.getColorRes(),
                             dto.status.getBgColorRes()

@@ -117,7 +117,7 @@
 
                 <com.google.android.material.imageview.ShapeableImageView
                     android:id="@+id/userProfile"
-                    style="@style/CircleImage"
+                    style="@style/Oval_Shape"
                     android:layout_width="70dp"
                     android:layout_height="70dp"
                     android:background="@drawable/bg_oval_outline_blue"

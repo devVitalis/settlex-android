@@ -47,8 +47,7 @@
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:orientation="vertical"
-            android:paddingBottom="50dp">
+            android:orientation="vertical">
 
             <FrameLayout
                 android:layout_width="match_parent"
@@ -61,7 +60,7 @@
                     android:background="@drawable/bg_10dp_bottom_rounded_blue_400" />
 
                 <LinearLayout
-                    android:layout_width="match_parent"
+                    android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_marginHorizontal="15dp"
                     android:gravity="center_vertical"
@@ -101,7 +100,7 @@
                             android:layout_marginStart="5dp"
                             android:includeFontPadding="false"
                             android:textColor="@color/white"
-                            android:textSize="20sp"
+                            android:textSize="25sp"
                             android:textStyle="bold"
                             tools:text="₦236.80" />
 
@@ -118,7 +117,7 @@
                     android:layout_height="wrap_content"
                     android:layout_gravity="bottom"
                     android:layout_marginHorizontal="15dp"
-                    android:layout_marginTop="60dp"
+                    android:layout_marginTop="70dp"
                     android:background="@drawable/bg_16dp_white"
                     android:gravity="center"
                     android:orientation="vertical"
@@ -133,7 +132,7 @@
                         android:includeFontPadding="false"
                         android:text="Invite friends and earn forever!"
                         android:textColor="@color/blue"
-                        android:textSize="14sp"
+                        android:textSize="16sp"
                         android:textStyle="bold" />
 
                     <ImageView
@@ -197,14 +196,20 @@
                             android:textColor="@color/gray"
                             android:textSize="11sp" />
 
-                        <com.google.android.material.imageview.ShapeableImageView
-                            style="@style/CircleImage"
-                            android:layout_width="50dp"
-                            android:layout_height="50dp"
-                            android:layout_marginTop="5dp"
-                            android:background="@drawable/bg_oval_gray_light"
-                            android:scaleType="fitCenter"
-                            android:src="@drawable/ic_invite_step1" />
+                        <com.google.android.material.card.MaterialCardView
+                            style="@style/Widget.SettleX.CardView.Oval.Elevated"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_marginTop="5dp">
+
+                            <com.google.android.material.imageview.ShapeableImageView
+                                style="@style/Oval_Shape"
+                                android:layout_width="50dp"
+                                android:layout_height="50dp"
+                                android:background="@drawable/bg_oval_gray_light"
+                                android:scaleType="fitCenter"
+                                android:src="@drawable/ic_invite_step1" />
+                        </com.google.android.material.card.MaterialCardView>
 
                         <TextView
                             android:layout_width="wrap_content"
@@ -257,14 +262,20 @@
                             android:textColor="@color/gray"
                             android:textSize="11sp" />
 
-                        <com.google.android.material.imageview.ShapeableImageView
-                            style="@style/CircleImage"
-                            android:layout_width="50dp"
-                            android:layout_height="50dp"
-                            android:layout_marginTop="5dp"
-                            android:background="@drawable/bg_oval_gray_light"
-                            android:scaleType="fitCenter"
-                            android:src="@drawable/ic_invite_step2" />
+                        <com.google.android.material.card.MaterialCardView
+                            style="@style/Widget.SettleX.CardView.Oval.Elevated"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_marginTop="5dp">
+
+                            <com.google.android.material.imageview.ShapeableImageView
+                                style="@style/Oval_Shape"
+                                android:layout_width="50dp"
+                                android:layout_height="50dp"
+                                android:background="@drawable/bg_oval_gray_light"
+                                android:scaleType="fitCenter"
+                                android:src="@drawable/ic_invite_step2" />
+                        </com.google.android.material.card.MaterialCardView>
 
                         <TextView
                             android:layout_width="wrap_content"
@@ -318,14 +329,20 @@
                             android:textColor="@color/gray"
                             android:textSize="11sp" />
 
-                        <com.google.android.material.imageview.ShapeableImageView
-                            style="@style/CircleImage"
-                            android:layout_width="50dp"
-                            android:layout_height="50dp"
-                            android:layout_marginTop="5dp"
-                            android:background="@drawable/bg_oval_gray_light"
-                            android:scaleType="fitCenter"
-                            android:src="@drawable/ic_invite_step3" />
+                        <com.google.android.material.card.MaterialCardView
+                            style="@style/Widget.SettleX.CardView.Oval.Elevated"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_marginTop="5dp">
+
+                            <com.google.android.material.imageview.ShapeableImageView
+                                style="@style/Oval_Shape"
+                                android:layout_width="50dp"
+                                android:layout_height="50dp"
+                                android:background="@drawable/bg_oval_gray_light"
+                                android:scaleType="fitCenter"
+                                android:src="@drawable/ic_invite_step3" />
+                        </com.google.android.material.card.MaterialCardView>
 
                         <TextView
                             android:layout_width="wrap_content"
@@ -347,13 +364,16 @@
 
                 <com.google.android.material.button.MaterialButton
                     android:id="@+id/btnShareInvitationLink"
-                    style="@style/Widget.SettleXApp.Button.Filled.Blue"
+                    style="@style/Widget.SettleXApp.Button.Filled.Gradient"
                     android:layout_width="match_parent"
-                    android:layout_height="55dp"
+                    android:layout_height="48dp"
                     android:layout_marginTop="20dp"
-                    android:text="Share Invitation Link >>>"
+                    android:text="Share Invitation Link"
                     android:textAllCaps="false"
-                    android:textColor="@color/white" />
+                    android:textColor="@color/white"
+                    app:icon="@drawable/ic_share"
+                    app:iconGravity="textEnd"
+                    app:iconTint="@color/white" />
 
                 <com.google.android.material.divider.MaterialDivider
                     android:layout_width="wrap_content"
@@ -387,21 +407,19 @@
                         android:id="@+id/referralCode"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:background="@drawable/bg_8dp_white"
                         android:fontFamily="@font/poppins_regular"
                         android:gravity="center"
                         android:includeFontPadding="false"
-                        android:padding="8dp"
+                        android:paddingHorizontal="5dp"
                         android:textColor="@color/black"
-                        android:textSize="18sp"
+                        android:textSize="20sp"
                         android:textStyle="bold"
-                        tools:text="\@vitalis" />
+                        tools:text="\vitalis" />
 
                     <ImageView
                         android:id="@+id/btnCopy"
                         android:layout_width="24dp"
                         android:layout_height="24dp"
-                        android:layout_marginStart="5dp"
                         android:contentDescription="Copy"
                         android:src="@drawable/ic_copy"
                         app:tint="@color/black" />
@@ -414,7 +432,9 @@
                 android:layout_height="wrap_content"
                 android:layout_marginHorizontal="15dp"
                 android:layout_marginTop="10dp"
+                android:layout_marginBottom="50dp"
                 android:background="@drawable/bg_16dp_white"
+                android:elevation="5dp"
                 android:orientation="vertical"
                 android:paddingHorizontal="10dp"
                 android:paddingVertical="15dp">
@@ -422,6 +442,7 @@
                 <LinearLayout
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
+                    android:gravity="center_vertical"
                     android:orientation="horizontal">
 
                     <ImageView
@@ -449,7 +470,7 @@
                         android:includeFontPadding="false"
                         android:text="₦0.00"
                         android:textColor="@color/black"
-                        android:textSize="15sp"
+                        android:textSize="20sp"
                         android:textStyle="bold" />
                 </LinearLayout>
 

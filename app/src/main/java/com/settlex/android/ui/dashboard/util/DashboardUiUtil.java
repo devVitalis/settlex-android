@@ -23,27 +23,38 @@ public class DashboardUiUtil {
         dialog.setCancelable(false);
         dialog.setCanceledOnTouchOutside(false);
 
-        //Format data for UI display
+        // Format data for UI display
         String formattedAmountToSend = StringUtil.formatToNaira(amountToSend);
         String formattedUsername = StringUtil.addAtToUsername(recipientUsername);
         String formattedRecipientName = recipientName.toUpperCase();
         double senderTotalBalance = senderWalletBalance + senderCommissionBalance;
 
+        // Feedback texts
+        String ERROR_INSUFFICIENT_BALANCE = "Insufficient";
+
+
         // Conditions
-        if (senderTotalBalance < amountToSend) {
+        boolean isSenderTotalBalanceSufficient = senderTotalBalance < amountToSend;
+        boolean isSenderWalletBalanceSufficient = senderWalletBalance >= amountToSend;
+
+        String PAYMENT_METHOD = (isSenderWalletBalanceSufficient) ? "Wallet" : "ALL";
+
+        if (isSenderTotalBalanceSufficient) {
             // Not enough money at all
             binding.txtFeedback.setVisibility(View.VISIBLE);
-            binding.paymentMethod.setText("Insufficient");
+            binding.paymentMethod.setText(ERROR_INSUFFICIENT_BALANCE);
 
             // Hide debit breakdowns
             binding.debitFromSenderWalletBalance.setVisibility(View.GONE);
             binding.debitFromSenderCommissionBalance.setVisibility(View.GONE);
 
-        } else if (senderWalletBalance >= amountToSend) {
+        } else if (isSenderWalletBalanceSufficient) {
             // Wallet balance alone is enough
-            binding.paymentMethod.setText("Wallet");
+            String DEBIT_FROM_SENDER_WALLET_BALANCE = "-" + formattedAmountToSend;
+
+            binding.paymentMethod.setText(PAYMENT_METHOD);
             binding.debitFromSenderWalletBalance.setVisibility(View.VISIBLE);
-            binding.debitFromSenderWalletBalance.setText("-" + formattedAmountToSend);
+            binding.debitFromSenderWalletBalance.setText(DEBIT_FROM_SENDER_WALLET_BALANCE);
 
             binding.btnPay.setEnabled(true);
 
@@ -56,15 +67,18 @@ public class DashboardUiUtil {
             fromWallet = senderWalletBalance;
             double fromCommission = amountToSend - senderWalletBalance;
 
-            binding.paymentMethod.setText("ALL");
+            String DEBIT_FROM_SENDER_WALLET_BALANCE = "-" + StringUtil.formatToNaira(fromWallet);
+            String DEBIT_FROM_SENDER_COMM_BALANCE = "-" + StringUtil.formatToNaira(fromCommission);
+
+            binding.paymentMethod.setText(PAYMENT_METHOD);
 
             if (senderWalletBalance != 0) {
                 binding.debitFromSenderWalletBalance.setVisibility(View.VISIBLE);
-                binding.debitFromSenderWalletBalance.setText("-" + StringUtil.formatToNaira(fromWallet));
+                binding.debitFromSenderWalletBalance.setText(DEBIT_FROM_SENDER_WALLET_BALANCE);
             }
 
             binding.debitFromSenderCommissionBalance.setVisibility(View.VISIBLE);
-            binding.debitFromSenderCommissionBalance.setText("-" + StringUtil.formatToNaira(fromCommission));
+            binding.debitFromSenderCommissionBalance.setText(DEBIT_FROM_SENDER_COMM_BALANCE);
 
             // Enable pay button
             binding.btnPay.setEnabled(true);
@@ -81,9 +95,12 @@ public class DashboardUiUtil {
         AvatarService.loadAvatar(recipientName, binding.recipientProfilePic); // TODO: replace with real profile pic
 
         // Sender details
+        String SENDER_WALLET_BALANCE = "(" + StringUtil.formatToNaira(senderWalletBalance) + ")";
+        String SENDER_COMM_BALANCE = "(" + StringUtil.formatToNaira(senderCommissionBalance) + ")";
+
         binding.senderTotalBalance.setText(StringUtil.formatToNaira(senderTotalBalance));
-        binding.senderWalletBalance.setText("(" + StringUtil.formatToNaira(senderWalletBalance) + ")");
-        binding.senderCommissionBalance.setText("(" + StringUtil.formatToNaira(senderCommissionBalance) + ")");
+        binding.senderWalletBalance.setText(SENDER_WALLET_BALANCE);
+        binding.senderCommissionBalance.setText(SENDER_COMM_BALANCE);
 
         // Handle buttons
         binding.btnClose.setOnClickListener(v -> dialog.dismiss());
