@@ -18,7 +18,7 @@ public class TransactionDto {
     public String recipientName;
     public String description;
 
-    public double amount;
+    public long amount;
     public com.google.firebase.Timestamp createdAt;
 
     public TransactionStatus status;
@@ -28,7 +28,7 @@ public class TransactionDto {
         // Firestore requires a no-arg constructor
     }
 
-    public TransactionDto(String transactionId, String transactionReference, String senderUid, String sender, String senderName, String recipient, String recipientName, String recipientUid, String description, double amount, Timestamp createdAt, TransactionStatus status, TransactionServiceType serviceType) {
+    public TransactionDto(String transactionId, String transactionReference, String senderUid, String sender, String senderName, String recipient, String recipientName, String recipientUid, String description, long amount, Timestamp createdAt, TransactionStatus status, TransactionServiceType serviceType) {
         this.transactionId = transactionId;
         this.transactionReference = transactionReference;
         this.senderUid = senderUid;

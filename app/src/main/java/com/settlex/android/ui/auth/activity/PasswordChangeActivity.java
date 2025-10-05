@@ -110,8 +110,8 @@ public class PasswordChangeActivity extends AppCompatActivity {
     }
 
     private void onResetFailure(String error) {
-        binding.txtErrorFeedback.setText(error);
-        binding.txtErrorFeedback.setVisibility(View.VISIBLE);
+        binding.passwordErrorFeedback.setText(error);
+        binding.passwordErrorFeedback.setVisibility(View.VISIBLE);
         progressLoader.hide();
     }
 
@@ -133,8 +133,8 @@ public class PasswordChangeActivity extends AppCompatActivity {
 
     private void showNoInternetConnection() {
         String ERROR_NO_INTERNET = "Connection lost. Please check your Wi-Fi or cellular data and try again";
-        binding.txtErrorFeedback.setText(ERROR_NO_INTERNET);
-        binding.txtErrorFeedback.setVisibility(View.VISIBLE);
+        binding.passwordErrorFeedback.setText(ERROR_NO_INTERNET);
+        binding.passwordErrorFeedback.setVisibility(View.VISIBLE);
     }
 
     private void validatePassword() {
@@ -158,10 +158,10 @@ public class PasswordChangeActivity extends AppCompatActivity {
 
         if (!confirm.isEmpty() && !matches) {
             String ERROR_PASSWORD_MISMATCH = "Passwords do not match!";
-            binding.txtErrorFeedback.setText(ERROR_PASSWORD_MISMATCH);
-            binding.txtErrorFeedback.setVisibility(View.VISIBLE);
+            binding.passwordErrorFeedback.setText(ERROR_PASSWORD_MISMATCH);
+            binding.passwordErrorFeedback.setVisibility(View.VISIBLE);
         } else {
-            binding.txtErrorFeedback.setVisibility(View.GONE);
+            binding.passwordErrorFeedback.setVisibility(View.GONE);
         }
 
         showPasswordRequirements(hasLength, hasUpper, hasLower, hasSpecial, password);
@@ -271,18 +271,23 @@ public class PasswordChangeActivity extends AppCompatActivity {
     @Override
     public boolean dispatchTouchEvent(MotionEvent event) {
         if (event.getAction() == MotionEvent.ACTION_DOWN) {
-            View focus = getCurrentFocus();
-            if (focus instanceof EditText) {
-                Rect rect = new Rect();
-                focus.getGlobalVisibleRect(rect);
-                if (!rect.contains((int) event.getRawX(), (int) event.getRawY())) {
-                    focus.clearFocus();
-                    InputMethodManager imm = (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
-                    if (imm != null) imm.hideSoftInputFromWindow(focus.getWindowToken(), 0);
-                    binding.main.requestFocus();
+            View v = getCurrentFocus();
+            if (v instanceof EditText) {
+                Rect outRect = new Rect();
+                v.getGlobalVisibleRect(outRect);
+                if (!outRect.contains((int) event.getRawX(), (int) event.getRawY())) {
+                    v.clearFocus();
+                    hideKeyboard(v);
                 }
             }
         }
         return super.dispatchTouchEvent(event);
+    }
+
+    private void hideKeyboard(View view) {
+        InputMethodManager imm = (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
+        if (imm != null) {
+            imm.hideSoftInputFromWindow(view.getWindowToken(), 0);
+        }
     }
 }

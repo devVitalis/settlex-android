@@ -1,15 +1,14 @@
 package com.settlex.android.ui.auth.fragment;
 
-import android.annotation.SuppressLint;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.text.Editable;
 import android.text.TextWatcher;
 import android.view.LayoutInflater;
-import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.inputmethod.EditorInfo;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.EditText;
 
@@ -63,7 +62,7 @@ public class SignUpUserInfoFragment extends Fragment {
         StatusBarUtil.setStatusBarColor(requireActivity(), R.color.white);
         reEnableEditTextFocus();
         setupInputValidation();
-        clearFocusAndHideKeyboardOnOutsideTap(binding.getRoot());
+        clearFocusOnLastEditTextField();
 
         binding.btnBackBefore.setOnClickListener(v -> navigateBack());
         binding.btnHelp.setOnClickListener(v -> navigateToHelpActivity());
@@ -136,30 +135,18 @@ public class SignUpUserInfoFragment extends Fragment {
         binding.btnContinue.setEnabled(isValidFirstName && isValidLastName);
     }
 
-    @SuppressLint("ClickableViewAccessibility")
-    private void clearFocusAndHideKeyboardOnOutsideTap(View root) {
-        if (!(root instanceof EditText)) {
-            root.setOnTouchListener((v, event) -> {
-                if (event.getAction() == MotionEvent.ACTION_DOWN) {
-                    hideKeyboard();
-                }
-                return false;
-            });
-        }
+    private void clearFocusOnLastEditTextField() {
+        binding.editTxtLastName.setOnEditorActionListener((v, actionId, event) -> {
+            if (actionId == EditorInfo.IME_ACTION_DONE) {
+                // Hide the keyboard
+                InputMethodManager imm = (InputMethodManager) v.getContext().getSystemService(Context.INPUT_METHOD_SERVICE);
+                imm.hideSoftInputFromWindow(v.getWindowToken(), 0);
 
-        if (root instanceof ViewGroup) {
-            for (int i = 0; i < ((ViewGroup) root).getChildCount(); i++) {
-                clearFocusAndHideKeyboardOnOutsideTap(((ViewGroup) root).getChildAt(i));
+                // Clear focus
+                v.clearFocus();
+                return true;
             }
-        }
-    }
-
-    private void hideKeyboard() {
-        View focusedView = requireActivity().getCurrentFocus();
-        if (focusedView != null) {
-            InputMethodManager imm = (InputMethodManager) requireContext().getSystemService(Context.INPUT_METHOD_SERVICE);
-            imm.hideSoftInputFromWindow(focusedView.getWindowToken(), 0);
-            focusedView.clearFocus();
-        }
+            return false;
+        });
     }
 }

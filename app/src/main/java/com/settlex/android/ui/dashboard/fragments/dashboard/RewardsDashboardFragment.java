@@ -41,7 +41,7 @@ public class RewardsDashboardFragment extends Fragment {
     public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         binding = FragmentDashboardRewardsBinding.inflate(inflater, container, false);
 
-        observeUserData();
+        observeAuthState();
         setupUiActions();
         return binding.getRoot();
     }
@@ -53,6 +53,18 @@ public class RewardsDashboardFragment extends Fragment {
     }
 
     // observers
+    private void observeAuthState() {
+        userViewModel.getAuthStateLiveData().observe(requireActivity(), auth -> {
+            if (auth == null) {
+                binding.commissionBalance.setText(StringUtil.setAsterisks());
+                binding.referralCode.setText(StringUtil.setAsterisks());
+                binding.totalReferralEarning.setText(StringUtil.setAsterisks());
+                return;
+            }
+            observeUserData();
+        });
+    }
+
     private void observeUserData() {
         userViewModel.getUserLiveData().observe(requireActivity(), user -> {
             if (user == null) return;

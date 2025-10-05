@@ -5,12 +5,12 @@ package com.settlex.android.data.remote.dto;
  */
 public class UserDto {
     public String uid, firstName, lastName, username, email, phone;
-    public double balance, commissionBalance, referralBalance;
+    public long balance, commissionBalance, referralBalance;
 
     public UserDto() {
     }
 
-    public UserDto(String uid, String firstName, String lastName, String username, String email, String phone, double balance, double commissionBalance, double referralBalance) {
+    public UserDto(String uid, String firstName, String lastName, String username, String email, String phone, long balance, long commissionBalance, long referralBalance) {
         this.uid = uid;
         this.firstName = firstName;
         this.lastName = lastName;

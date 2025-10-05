@@ -114,6 +114,9 @@ dependencies {
 
     // MPAndroid Chart
     implementation(libs.mpandroidchart)
+
+    // Currency Edittext
+    implementation(libs.currencyedittext)
 }
 
 tasks.withType<JavaCompile>().configureEach {

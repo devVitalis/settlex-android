@@ -1,15 +1,13 @@
 package com.settlex.android.ui.dashboard.fragments.transaction;
 
-import android.annotation.SuppressLint;
 import android.content.Context;
 import android.os.Bundle;
 import android.text.Editable;
-import android.text.InputType;
 import android.text.TextWatcher;
 import android.view.LayoutInflater;
-import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.inputmethod.EditorInfo;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.EditText;
 
@@ -38,12 +36,10 @@ import com.settlex.android.util.event.Result;
 import com.settlex.android.util.string.StringUtil;
 import com.settlex.android.util.ui.StatusBarUtil;
 
-import java.math.BigInteger;
-import java.text.DecimalFormat;
-import java.text.NumberFormat;
+import java.math.BigDecimal;
 import java.util.Collections;
 import java.util.List;
-import java.util.Locale;
+import java.util.Objects;
 
 import dagger.hilt.android.AndroidEntryPoint;
 
@@ -61,7 +57,7 @@ public class PayAFriendFragment extends Fragment {
 
     // Instance variables for txn data
     private String paymentId;
-    private double amount;
+    private long amount;
 
     public PayAFriendFragment() {
         // Required empty public constructor
@@ -83,7 +79,6 @@ public class PayAFriendFragment extends Fragment {
 
         observeUserState();
         setupUiActions();
-
         return binding.getRoot();
     }
 
@@ -141,7 +136,7 @@ public class PayAFriendFragment extends Fragment {
         });
     }
 
-    private  void onTransactionLoading(){
+    private void onTransactionLoading() {
         progressLoader.show();
     }
 
@@ -243,11 +238,11 @@ public class PayAFriendFragment extends Fragment {
                                 description));
     }
 
-    private void startPayFriendTransaction(String senderUid, String recipient, double amountToSend, String description) {
+    private void startPayFriendTransaction(String senderUid, String recipient, long amountToSend, String description) {
         transactionViewModel.payFriend(
                 senderUid,
                 recipient,
-                TransactionIdGenerator.generate(senderUid), // UID hash + timestamp + UUID
+                TransactionIdGenerator.generate(senderUid),
                 amountToSend,
                 String.valueOf(TransactionServiceType.PAY_A_FRIEND),
                 description);
@@ -255,11 +250,10 @@ public class PayAFriendFragment extends Fragment {
 
     private void setupUiActions() {
         StatusBarUtil.setStatusBarColor(requireActivity(), R.color.white);
+        clearFocusOnLastEditTextField();
         setupTextInputWatcher();
         setupEditTextFocusHandlers();
         setupRecipientRecyclerView();
-        attachCurrencyFormatter(binding.editTxtAmount);
-        clearFocusAndHideKeyboardOnOutsideTap(binding.getRoot());
 
         // Display avail balance
         binding.btnBackBefore.setOnClickListener(v -> requireActivity().getOnBackPressedDispatcher().onBackPressed());
@@ -341,14 +335,16 @@ public class PayAFriendFragment extends Fragment {
 
             @Override
             public void onTextChanged(CharSequence s, int start, int before, int count) {
-                if (!s.toString().isEmpty()) {
-                    try {
-                        amount = Double.parseDouble(binding.editTxtAmount.getText().toString().replaceAll(",", ""));
-                    } catch (NumberFormatException ignored) {
-                        //Ignored
-                    }
+                boolean isEmpty = s.toString().trim().isEmpty();
+                if (!isEmpty) {
+                    String cleanedAmount = s.toString().replaceAll(",", "");
+                    amount = StringUtil.convertNairaStringToLongCents(cleanedAmount);
                 }
-                binding.txtAmountFeedback.setVisibility((!isAmountValid(amount) && !s.toString().isEmpty()) ? View.VISIBLE : View.GONE);
+                String ERROR_INVALID_AMOUNT = "Amount must be in range of ₦100 - ₦500,000.00";
+                boolean shouldShowError = !isAmountValid(amount) && !isEmpty;
+                binding.txtAmountFeedback.setText((shouldShowError) ? ERROR_INVALID_AMOUNT : "");
+                binding.txtAmountFeedback.setVisibility((shouldShowError) ? View.VISIBLE : View.GONE);
+
                 updateNextButtonState();
             }
         });
@@ -356,7 +352,6 @@ public class PayAFriendFragment extends Fragment {
 
     private void updateNextButtonState() {
         boolean recipientSelected = binding.selectedRecipient.getVisibility() == View.VISIBLE;
-
         enableNextButton(isPaymentIdValid(paymentId) && isAmountValid(amount) && recipientSelected);
     }
 
@@ -364,9 +359,11 @@ public class PayAFriendFragment extends Fragment {
         return paymentId != null && paymentId.matches("^[a-z0-9]([a-z0-9]*[._]?[a-z0-9]*)+[a-z0-9]$");
     }
 
-    private boolean isAmountValid(double amount) {
-        return amount >= 100 && amount <= 500_000_000;
+    private boolean isAmountValid(long amount) {
+        // The amount is stored in kobo (smallest currency unit)
+        return amount >= 10_000L && amount <= 50_000_000_000L;
     }
+
 
     private void enableNextButton(boolean allValid) {
         // Enable btn when all fields met requirements
@@ -386,106 +383,44 @@ public class PayAFriendFragment extends Fragment {
         binding.editTxtDescription.setOnClickListener(focusListener);
 
         binding.editTxtPaymentId.setOnFocusChangeListener((v, hasFocus) -> binding.editTxtPaymentIdBackground.setBackgroundResource(hasFocus ? R.drawable.bg_edit_txt_custom_white_focused : R.drawable.bg_edit_txt_custom_gray_not_focused));
-        binding.editTxtAmount.setOnFocusChangeListener((v, hasFocus) -> binding.editTxtAmountBackground.setBackgroundResource(hasFocus ? R.drawable.bg_edit_txt_custom_white_focused : R.drawable.bg_edit_txt_custom_gray_not_focused));
         binding.editTxtDescription.setOnFocusChangeListener((v, hasFocus) -> binding.editTxtDescriptionBackground.setBackgroundResource(hasFocus ? R.drawable.bg_edit_txt_custom_white_focused : R.drawable.bg_edit_txt_custom_gray_not_focused));
-    }
 
-    public static void attachCurrencyFormatter(EditText editTextAmount) {
-        final Locale locale = Locale.US;
-        final NumberFormat integerFormatter = NumberFormat.getIntegerInstance(locale);
-        final DecimalFormat twoDecimalFormatter = new DecimalFormat("#,##0.00");
+        binding.editTxtAmount.setOnFocusChangeListener((v, hasFocus) -> {
+            binding.editTxtAmountBackground.setBackgroundResource(hasFocus ? R.drawable.bg_edit_txt_custom_white_focused : R.drawable.bg_edit_txt_custom_gray_not_focused);
 
-        editTextAmount.setRawInputType(InputType.TYPE_CLASS_NUMBER | InputType.TYPE_NUMBER_FLAG_DECIMAL);
-
-        editTextAmount.addTextChangedListener(new TextWatcher() {
-            private boolean isEditing = false;
-
-            @Override
-            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+            // format the input to currency format
+            String rawInput = Objects.requireNonNull(binding.editTxtAmount.getText()).toString().trim();
+            if (rawInput.isEmpty()) {
+                return;
             }
 
-            @Override
-            public void onTextChanged(CharSequence s, int start, int before, int count) {
+            BigDecimal numericValue = binding.editTxtAmount.getNumericValueBigDecimal();
+
+            if (hasFocus) {
+                String cleanNumber = numericValue.toPlainString();
+                binding.editTxtAmount.setText(cleanNumber);
+                binding.editTxtAmount.setSelection(cleanNumber.length());
+                return;
             }
 
-            @Override
-            public void afterTextChanged(Editable editable) {
-                if (isEditing) return;
-                String rawInput = editable.toString();
-                if (rawInput.isEmpty()) return;
-                String cleanInput = rawInput.replace(",", "");
-                if (cleanInput.equals(".") || cleanInput.equals("-") || cleanInput.equals("-."))
-                    return;
-                try {
-                    String[] parts = cleanInput.split("\\.", -1);
-                    String integerPart = parts[0].replaceFirst("^0+(?!$)", "");
-                    String decimalPart = (parts.length > 1) ? parts[1] : null;
-                    BigInteger bigInt = new BigInteger(integerPart.isEmpty() ? "0" : integerPart);
-                    String groupedInteger = integerFormatter.format(bigInt);
-                    String formattedValue = (decimalPart != null) ? (groupedInteger + "." + decimalPart) : groupedInteger;
-                    if (!formattedValue.equals(rawInput)) {
-                        isEditing = true;
-                        int cursorPos = editTextAmount.getSelectionStart();
-                        editTextAmount.setText(formattedValue);
-                        int diff = formattedValue.length() - rawInput.length();
-                        int newCursorPos = Math.max(0, Math.min(formattedValue.length(), cursorPos + diff));
-                        editTextAmount.setSelection(newCursorPos);
-                        isEditing = false;
-                    }
-                } catch (Exception ignored) {
-                }
-            }
-        });
-
-        editTextAmount.setOnFocusChangeListener((v, hasFocus) -> {
-            String text = editTextAmount.getText().toString().replace(",", "");
-            if (text.isEmpty() || text.equals(".") || text.equals("-") || text.equals("-.")) return;
-            try {
-                double value = Double.parseDouble(text);
-                if (hasFocus) {
-                    String current = editTextAmount.getText().toString();
-                    if (current.endsWith(".00") && !text.contains(".")) {
-                        String stripped = current.substring(0, current.length() - 3);
-                        editTextAmount.setText(stripped);
-                        editTextAmount.setSelection(stripped.length());
-                    }
-                } else {
-                    String raw = editTextAmount.getText().toString();
-                    String finalText;
-                    if (raw.contains(".")) {
-                        finalText = twoDecimalFormatter.format(value);
-                    } else {
-                        finalText = String.format(locale, "%,.2f", value);
-                    }
-                    editTextAmount.setText(finalText);
-                    editTextAmount.setSelection(finalText.length());
-                }
-            } catch (NumberFormatException ignored) {
-            }
+            String currencyFormat = StringUtil.formatToCurrency(numericValue);
+            binding.editTxtAmount.setText(currencyFormat);
+            binding.editTxtAmount.setSelection(currencyFormat.length());
         });
     }
 
-    @SuppressLint("ClickableViewAccessibility")
-    private void clearFocusAndHideKeyboardOnOutsideTap(View root) {
-        if (!(root instanceof EditText)) {
-            root.setOnTouchListener((v, event) -> {
-                if (event.getAction() == MotionEvent.ACTION_DOWN) hideKeyboard();
-                return false;
-            });
-        }
-        if (root instanceof ViewGroup) {
-            for (int i = 0; i < ((ViewGroup) root).getChildCount(); i++) {
-                clearFocusAndHideKeyboardOnOutsideTap(((ViewGroup) root).getChildAt(i));
-            }
-        }
-    }
+    private void clearFocusOnLastEditTextField() {
+        binding.editTxtDescription.setOnEditorActionListener((v, actionId, event) -> {
+            if (actionId == EditorInfo.IME_ACTION_DONE) {
+                // Hide the keyboard
+                InputMethodManager imm = (InputMethodManager) v.getContext().getSystemService(Context.INPUT_METHOD_SERVICE);
+                imm.hideSoftInputFromWindow(v.getWindowToken(), 0);
 
-    private void hideKeyboard() {
-        View focusedView = requireActivity().getCurrentFocus();
-        if (focusedView != null) {
-            InputMethodManager imm = (InputMethodManager) requireContext().getSystemService(Context.INPUT_METHOD_SERVICE);
-            imm.hideSoftInputFromWindow(focusedView.getWindowToken(), 0);
-            focusedView.clearFocus();
-        }
+                // Clear focus
+                v.clearFocus();
+                return true;
+            }
+            return false;
+        });
     }
 }

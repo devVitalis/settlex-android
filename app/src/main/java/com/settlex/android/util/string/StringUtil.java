@@ -12,6 +12,7 @@ import java.text.DecimalFormat;
 import java.text.NumberFormat;
 import java.text.SimpleDateFormat;
 import java.util.Locale;
+import java.util.Objects;
 
 /**
  * Utility class for string formatting and data transformations
@@ -93,49 +94,54 @@ public class StringUtil {
     }
 
     // CURRENCY FORMATTING =============
-    public static String formatToNaira(double amount) {
+    /**
+     * Formats kobo (long) into ₦X,XXX.XX
+     */
+    public static String formatToNaira(long amountInLongCent) {
+        BigDecimal kobo = BigDecimal.valueOf(amountInLongCent);
+        BigDecimal naira = kobo.divide(BigDecimal.valueOf(100), 2, RoundingMode.UNNECESSARY);
+
         NumberFormat formatter = NumberFormat.getCurrencyInstance(new Locale("en", "NG"));
-        return formatter.format(amount);
+        formatter.setMinimumFractionDigits(2);
+        formatter.setMaximumFractionDigits(2);
+
+        return formatter.format(naira);
     }
 
-    public static String formatToNairaShort(double amount) {
-        String symbol = "₦";
+    public static String formatToCurrency(BigDecimal numericValue){
+        Locale nigerianLocal = Locale.forLanguageTag("en-NG");
+        NumberFormat numberFormatter = NumberFormat.getCurrencyInstance(nigerianLocal);
 
-        if (amount < 1_000) {
-            return symbol + new DecimalFormat("#.##").format(amount);
-        } else if (amount < 1_000_000) {
-            return symbol + new DecimalFormat("#.##").format(amount / 1_000.0) + "K";
-        } else if (amount < 1_000_000_000) {
-            return symbol + new DecimalFormat("#.##").format(amount / 1_000_000.0) + "M";
-        } else {
-            return symbol + new DecimalFormat("#.##").format(amount / 1_000_000_000.0) + "B";
-        }
+        String formattedAmount = numberFormatter.format(numericValue);
+        String symbol = Objects.requireNonNull(numberFormatter.getCurrency()).getSymbol(nigerianLocal);
+
+        return formattedAmount.replace(symbol, "").trim();
     }
 
     /**
-     * Converts a long amount (in cents/kobo) to a safely formatted Naira currency string
-     * using BigDecimal for precision and NumberFormat for locale-specific display.
-     *
-     * @param amountInCents The monetary value stored as a long (e.g., 1299L for N12.99).
-     * @return A formatted currency string (e.g., "₦12.99").
+     * Formats kobo (long) into ₦X.XK / ₦X.XM / ₦X.XB
      */
-    public static String formatLongCentsToNaira(long amountInCents) {
-        // 1. Convert long cents to a precise BigDecimal
-        BigDecimal bdCents = new BigDecimal(amountInCents);
+    public static String formatToNairaShort(long amountInLongCents) {
+        String symbol = "₦";
+        DecimalFormat df = new DecimalFormat("#.##");
+        BigDecimal naira = BigDecimal.valueOf(amountInLongCents)
+                .divide(BigDecimal.valueOf(100), 2, RoundingMode.HALF_UP);
 
-        // 2. Divide by 100 to get the Naira value, maintaining 2 decimal places.
-        //    We use RoundingMode.UNNECESSARY because dividing an integer by 100
-        //    will not introduce new rounding issues.
-        BigDecimal finalAmount = bdCents.divide(
-                new BigDecimal("100"),
-                2,
-                RoundingMode.UNNECESSARY
-        );
+        if (naira.compareTo(BigDecimal.valueOf(1_000)) < 0) {
+            return symbol + naira.toPlainString(); // ₦999.99
 
-        // 3. Format the precise BigDecimal into the Naira currency format
-        NumberFormat formatter = NumberFormat.getCurrencyInstance(new Locale("en", "NG"));
+        } else if (naira.compareTo(BigDecimal.valueOf(1_000_000)) < 0) {
+            BigDecimal thousands = naira.divide(BigDecimal.valueOf(1_000), 1, RoundingMode.HALF_UP);
+            return symbol + df.format(thousands) + "K";
 
-        return formatter.format(finalAmount);
+        } else if (naira.compareTo(BigDecimal.valueOf(1_000_000_000)) < 0) {
+            BigDecimal millions = naira.divide(BigDecimal.valueOf(1_000_000), 1, RoundingMode.HALF_UP);
+            return symbol + df.format(millions) + "M";
+
+        } else {
+            BigDecimal billions = naira.divide(BigDecimal.valueOf(1_000_000_000), 1, RoundingMode.HALF_UP);
+            return symbol + df.format(billions) + "B";
+        }
     }
 
     /**

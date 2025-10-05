@@ -209,7 +209,7 @@ public class HomeDashboardFragment extends Fragment {
         // display error : system busy
     }
 
-    private void loadUserPrefs(double balance, double commissionBalance) {
+    private void loadUserPrefs(long balance, long commissionBalance) {
         userViewModel.getIsBalanceHiddenLiveData().observe(getViewLifecycleOwner(), hidden -> {
             if (hidden) {
                 // balance hidden set asterisk

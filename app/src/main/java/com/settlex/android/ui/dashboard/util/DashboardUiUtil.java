@@ -16,31 +16,26 @@ public class DashboardUiUtil {
         // prevent instantiation
     }
 
-    public static BottomSheetDialog showPayConfirmation(Context context, String recipientUsername, String recipientName, double amountToSend, double senderWalletBalance, double senderCommissionBalance, final Runnable onPay) {
+    public static BottomSheetDialog showPayConfirmation(Context context, String recipientUsername, String recipientName, long amountToSend, long senderWalletBalance, long senderCommissionBalance, final Runnable onPay) {
         BottomSheetConfirmPaymentBinding binding = BottomSheetConfirmPaymentBinding.inflate(LayoutInflater.from(context));
         BottomSheetDialog dialog = new BottomSheetDialog(context, R.style.Widget_SettleX_BottomSheetDialog);
         dialog.setContentView(binding.getRoot());
         dialog.setCancelable(false);
         dialog.setCanceledOnTouchOutside(false);
 
-        // Format data for UI display
-        String formattedAmountToSend = StringUtil.formatToNaira(amountToSend);
-        String formattedUsername = StringUtil.addAtToUsername(recipientUsername);
-        String formattedRecipientName = recipientName.toUpperCase();
-        double senderTotalBalance = senderWalletBalance + senderCommissionBalance;
 
-        // Feedback texts
-        String ERROR_INSUFFICIENT_BALANCE = "Insufficient";
+        // conditions
+        long SENDER_TOTAL_BALANCE = senderWalletBalance + senderCommissionBalance;
 
+        boolean IS_SENDER_TOTAL_BALANCE_SUFFICIENT = SENDER_TOTAL_BALANCE < amountToSend;
+        boolean IS_SENDER_WALLET_BALANCE_SUFFICIENT = senderWalletBalance >= amountToSend;
 
-        // Conditions
-        boolean isSenderTotalBalanceSufficient = senderTotalBalance < amountToSend;
-        boolean isSenderWalletBalanceSufficient = senderWalletBalance >= amountToSend;
+        String PAYMENT_METHOD = (IS_SENDER_WALLET_BALANCE_SUFFICIENT) ? "Wallet" : "ALL";
 
-        String PAYMENT_METHOD = (isSenderWalletBalanceSufficient) ? "Wallet" : "ALL";
-
-        if (isSenderTotalBalanceSufficient) {
+        if (IS_SENDER_TOTAL_BALANCE_SUFFICIENT) {
             // Not enough money at all
+            String ERROR_INSUFFICIENT_BALANCE = "Insufficient";
+
             binding.txtFeedback.setVisibility(View.VISIBLE);
             binding.paymentMethod.setText(ERROR_INSUFFICIENT_BALANCE);
 
@@ -48,9 +43,9 @@ public class DashboardUiUtil {
             binding.debitFromSenderWalletBalance.setVisibility(View.GONE);
             binding.debitFromSenderCommissionBalance.setVisibility(View.GONE);
 
-        } else if (isSenderWalletBalanceSufficient) {
+        } else if (IS_SENDER_WALLET_BALANCE_SUFFICIENT) {
             // Wallet balance alone is enough
-            String DEBIT_FROM_SENDER_WALLET_BALANCE = "-" + formattedAmountToSend;
+            String DEBIT_FROM_SENDER_WALLET_BALANCE = "-" + StringUtil.formatToNaira(amountToSend);
 
             binding.paymentMethod.setText(PAYMENT_METHOD);
             binding.debitFromSenderWalletBalance.setVisibility(View.VISIBLE);
@@ -63,9 +58,9 @@ public class DashboardUiUtil {
 
         } else {
             // Wallet not enough, but wallet + commission is sufficient
-            double fromWallet;
+            long fromWallet;
             fromWallet = senderWalletBalance;
-            double fromCommission = amountToSend - senderWalletBalance;
+            long fromCommission = amountToSend - senderWalletBalance;
 
             String DEBIT_FROM_SENDER_WALLET_BALANCE = "-" + StringUtil.formatToNaira(fromWallet);
             String DEBIT_FROM_SENDER_COMM_BALANCE = "-" + StringUtil.formatToNaira(fromCommission);
@@ -88,17 +83,17 @@ public class DashboardUiUtil {
         }
 
         // Recipient details
-        binding.amountToSendHeader.setText(formattedAmountToSend);
-        binding.amountToSend.setText(formattedAmountToSend);
-        binding.recipientUsername.setText(formattedUsername);
-        binding.recipientName.setText(formattedRecipientName);
+        binding.amountToSendHeader.setText(StringUtil.formatToNaira(amountToSend));
+        binding.amountToSend.setText(StringUtil.formatToNaira(amountToSend));
+        binding.recipientUsername.setText(StringUtil.addAtToUsername(recipientUsername));
+        binding.recipientName.setText(recipientName.toUpperCase());
         AvatarService.loadAvatar(recipientName, binding.recipientProfilePic); // TODO: replace with real profile pic
 
         // Sender details
         String SENDER_WALLET_BALANCE = "(" + StringUtil.formatToNaira(senderWalletBalance) + ")";
         String SENDER_COMM_BALANCE = "(" + StringUtil.formatToNaira(senderCommissionBalance) + ")";
 
-        binding.senderTotalBalance.setText(StringUtil.formatToNaira(senderTotalBalance));
+        binding.senderTotalBalance.setText(StringUtil.formatToNaira(SENDER_TOTAL_BALANCE));
         binding.senderWalletBalance.setText(SENDER_WALLET_BALANCE);
         binding.senderCommissionBalance.setText(SENDER_COMM_BALANCE);
 

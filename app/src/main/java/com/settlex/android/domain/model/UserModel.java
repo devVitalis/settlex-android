@@ -10,6 +10,7 @@ public class UserModel {
     private String uid;
     private String firstName;
     private String lastName;
+    private String username;
     private String email;
     private String phone;
     private String referralCode;
@@ -17,21 +18,13 @@ public class UserModel {
     private String pinSalt;
     public boolean hasPin;  // Public flag for quick PIN status checks
 
-    // ====================== CONSTRUCTORS ======================
-
-    /**
-     * Required for Firestore deserialization
-     */
     public UserModel() {
     }
 
-    /**
-     * Full constructor for manual user creation.
-     * Includes all required fields for account setup.
-     */
-    public UserModel(String firstName, String lastName, String email, String phone, String referralCode, String pin, String pinSalt, boolean hasPin) {
+    public UserModel(String firstName, String lastName, String username, String email, String phone, String referralCode, String pin, String pinSalt, boolean hasPin) {
         this.firstName = firstName;
         this.lastName = lastName;
+        this.username = username;
         this.email = email;
         this.phone = phone;
         this.referralCode = referralCode;
@@ -40,8 +33,6 @@ public class UserModel {
         this.hasPin = hasPin;
     }
 
-    // ====================== GETTERS/SETTERS ======================
-    // --- Identity ---
     public String getUid() {
         return uid;
     }
@@ -66,7 +57,13 @@ public class UserModel {
         this.lastName = lastName;
     }
 
-    // --- Contact ---
+    public String getUsername() {
+        return username;
+    }
+
+    public void setUsername(String username) {
+        this.username = username;
+    }
     public String getEmail() {
         return email;
     }
@@ -91,7 +88,6 @@ public class UserModel {
         this.referralCode = referralCode;
     }
 
-    // --- Security ---
     public String getPin() {
         return pin;
     }

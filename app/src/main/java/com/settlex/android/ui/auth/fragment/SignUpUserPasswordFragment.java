@@ -1,6 +1,5 @@
 package com.settlex.android.ui.auth.fragment;
 
-import android.annotation.SuppressLint;
 import android.content.Context;
 import android.content.Intent;
 import android.graphics.drawable.Drawable;
@@ -12,9 +11,9 @@ import android.text.TextUtils;
 import android.text.TextWatcher;
 import android.text.style.ImageSpan;
 import android.view.LayoutInflater;
-import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.inputmethod.EditorInfo;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.EditText;
 
@@ -33,9 +32,11 @@ import com.settlex.android.ui.common.util.ProgressLoaderController;
 import com.settlex.android.ui.dashboard.activity.DashboardActivity;
 import com.settlex.android.ui.info.help.AuthHelpActivity;
 import com.settlex.android.util.network.NetworkMonitor;
+import com.settlex.android.util.string.StringUtil;
 import com.settlex.android.util.ui.StatusBarUtil;
 
 import java.util.Objects;
+import java.util.regex.Pattern;
 
 public class SignUpUserPasswordFragment extends Fragment {
 
@@ -116,21 +117,15 @@ public class SignUpUserPasswordFragment extends Fragment {
     // UI ACTIONS ========
     private void setupUiActions() {
         StatusBarUtil.setStatusBarColor(requireActivity(), R.color.white);
-        setupPasswordValidation();
+        setupInputValidation();
         reEnableEditTextFocus();
-        clearFocusAndHideKeyboardOnOutsideTap(binding.getRoot());
+        clearFocusOnLastEditTextField();
         togglePasswordVisibilityIcons(false);
 
         binding.btnBackBefore.setOnClickListener(v -> navigateBack());
         binding.btnHelp.setOnClickListener(v -> navigateToHelpActivity());
         binding.icExpendLess.setOnClickListener(v -> toggleReferralCodeVisibility());
         binding.btnCreateAccount.setOnClickListener(v -> validateAndCreateAccount());
-    }
-
-    private void toggleReferralCodeVisibility() {
-        boolean isVisible = binding.editTxtInvitationCode.getVisibility() == View.VISIBLE;
-        binding.editTxtInvitationCode.setVisibility(isVisible ? View.GONE : View.VISIBLE);
-        binding.icExpendLess.setImageResource(isVisible ? R.drawable.ic_expend_less : R.drawable.ic_expend_more);
     }
 
     private void validateAndCreateAccount() {
@@ -141,31 +136,71 @@ public class SignUpUserPasswordFragment extends Fragment {
 
         String password = Objects.requireNonNull(binding.editTxtPassword.getText()).toString().trim();
         String invitationCode = Objects.requireNonNull(binding.editTxtInvitationCode.getText()).toString().trim();
+        String username = Objects.requireNonNull(binding.editTxtUsername.getText()).toString().trim();
 
         // Apply default values
-        finalizeUserData(invitationCode);
+        finalizeUserData(invitationCode, username);
 
         UserModel user = authViewModel.getUser().getValue();
         createUserAccount(password, user);
     }
 
-    private void finalizeUserData(String invitationCode) {
-        authViewModel.applyDefaultUserValues(invitationCode);
+    private void finalizeUserData(String invitationCode, String username) {
+        authViewModel.applyDefaultUserValues(invitationCode, username);
     }
+
     private void createUserAccount(String password, UserModel user) {
         authViewModel.registerUser(authViewModel.getEmail(), password, user);
     }
 
-    // PASSWORD VALIDATION ========
-    private void isPasswordMatch() {
+    private void validateRequirements() {
         String password = Objects.requireNonNull(binding.editTxtPassword.getText()).toString().trim();
         String confirmPassword = Objects.requireNonNull(binding.editTxtConfirmPassword.getText()).toString().trim();
+        String username = StringUtil.removeAtInUsername(Objects.requireNonNull(binding.editTxtUsername.getText()).toString().trim());
 
-        boolean valid = validatePasswordRequirements(password, confirmPassword);
-        enableCreateAccountButton(valid);
+        boolean allValid = validatePasswordRequirements(password, confirmPassword) && isUsernameValid(username);
+        enableCreateAccountButton(allValid);
     }
 
-    private void enableCreateAccountButton(boolean isPasswordValid){
+    private boolean isUsernameValid(String username) {
+        return username.matches("^[a-z0-9]([a-z0-9]*[._]?[a-z0-9]*)+[a-z0-9]$");
+    }
+
+    private String getUsernameError(String username) {
+        String USERNAME_REGEX = "^[a-z0-9]([a-z0-9]*[._]?[a-z0-9]*)+[a-z0-9]$";
+        Pattern USERNAME_PATTERN = Pattern.compile(USERNAME_REGEX);
+
+        // 1. Check Minimum Length (Must be >= 3 characters)
+        if (username.length() < 3) {
+            return "Username must be at least 3 characters long.";
+        }
+
+        // 2. Check the Format using the compiled Regular Expression
+        if (!USERNAME_PATTERN.matcher(username).matches()) {
+            // The regex failed. Provide granular feedback based on common errors for a better UX.
+
+            // Check if it starts/ends with an invalid character (the regex prevents this, but the explicit check provides a clear message)
+            if (username.startsWith(".") || username.startsWith("_")) {
+                return "Username cannot start with '.' or '_'.";
+            }
+            if (username.endsWith(".") || username.endsWith("_")) {
+                return "Username cannot end with '.' or '_'.";
+            }
+
+            // Check for consecutive special characters (e.g., "user..name", "user__name", "user._name", "user_.name")
+            if (username.contains("..") || username.contains("__") || username.contains("._") || username.contains("_.")) {
+                return "Username cannot contain consecutive '.' or '_' characters.";
+            }
+
+            // General format failure fallback (e.g., contains uppercase letters, hyphens, or other disallowed symbols)
+            return "Username can only contain lowercase letters, numbers, and single periods or underscores.";
+        }
+
+        // 3. All checks passed
+        return null;
+    }
+
+    private void enableCreateAccountButton(boolean isPasswordValid) {
         binding.btnCreateAccount.setEnabled(isPasswordValid);
     }
 
@@ -211,11 +246,11 @@ public class SignUpUserPasswordFragment extends Fragment {
         }
     }
 
-    private void setupPasswordValidation() {
+    private void setupInputValidation() {
         TextWatcher passwordWatcher = new TextWatcher() {
             @Override
             public void onTextChanged(CharSequence s, int start, int before, int count) {
-                isPasswordMatch();
+                validateRequirements();
                 togglePasswordVisibilityIcons(!TextUtils.isEmpty(s));
             }
 
@@ -227,14 +262,38 @@ public class SignUpUserPasswordFragment extends Fragment {
             public void afterTextChanged(Editable s) {
             }
         };
-
         binding.editTxtPassword.addTextChangedListener(passwordWatcher);
         binding.editTxtConfirmPassword.addTextChangedListener(passwordWatcher);
+
+        binding.editTxtUsername.addTextChangedListener(new TextWatcher() {
+            @Override
+            public void afterTextChanged(Editable editable) {
+
+            }
+
+            @Override
+            public void beforeTextChanged(CharSequence charSequence, int i, int i1, int i2) {
+
+            }
+
+            @Override
+            public void onTextChanged(CharSequence s, int i, int i1, int i2) {
+                boolean shouldShowUsernameFeedback = !s.toString().isEmpty();
+                binding.usernameErrorFeedback.setText(getUsernameError(s.toString()));
+                binding.usernameErrorFeedback.setVisibility(shouldShowUsernameFeedback ? View.VISIBLE : View.GONE);
+            }
+        });
     }
 
     private void togglePasswordVisibilityIcons(boolean show) {
         binding.txtInputLayoutPassword.setEndIconVisible(show);
         binding.txtInputLayoutConfirmPassword.setEndIconVisible(show);
+    }
+
+    private void toggleReferralCodeVisibility() {
+        boolean isVisible = binding.editTxtInvitationCode.getVisibility() == View.VISIBLE;
+        binding.editTxtInvitationCode.setVisibility(isVisible ? View.GONE : View.VISIBLE);
+        binding.icExpendLess.setImageResource(isVisible ? R.drawable.ic_expend_less : R.drawable.ic_expend_more);
     }
 
     private void reEnableEditTextFocus() {
@@ -259,29 +318,18 @@ public class SignUpUserPasswordFragment extends Fragment {
         startActivity(new Intent(requireActivity(), AuthHelpActivity.class));
     }
 
+    private void clearFocusOnLastEditTextField() {
+        binding.editTxtUsername.setOnEditorActionListener((v, actionId, event) -> {
+            if (actionId == EditorInfo.IME_ACTION_DONE) {
+                // Hide the keyboard
+                InputMethodManager imm = (InputMethodManager) v.getContext().getSystemService(Context.INPUT_METHOD_SERVICE);
+                imm.hideSoftInputFromWindow(v.getWindowToken(), 0);
 
-    @SuppressLint("ClickableViewAccessibility")
-    private void clearFocusAndHideKeyboardOnOutsideTap(View root) {
-        if (!(root instanceof EditText)) {
-            root.setOnTouchListener((v, event) -> {
-                if (event.getAction() == MotionEvent.ACTION_DOWN) hideKeyboard();
-                return false;
-            });
-        }
-
-        if (root instanceof ViewGroup) {
-            for (int i = 0; i < ((ViewGroup) root).getChildCount(); i++) {
-                clearFocusAndHideKeyboardOnOutsideTap(((ViewGroup) root).getChildAt(i));
+                // Clear focus
+                v.clearFocus();
+                return true;
             }
-        }
-    }
-
-    private void hideKeyboard() {
-        View focusedView = requireActivity().getCurrentFocus();
-        if (focusedView != null) {
-            InputMethodManager imm = (InputMethodManager) requireContext().getSystemService(Context.INPUT_METHOD_SERVICE);
-            imm.hideSoftInputFromWindow(focusedView.getWindowToken(), 0);
-            focusedView.clearFocus();
-        }
+            return false;
+        });
     }
 }

@@ -62,8 +62,8 @@ public class UserViewModel extends ViewModel {
 
     public LiveData<Result<List<TransactionUiModel>>> getRecentTransactionLiveData(String uid, int limit) {
         if (transactionLiveData.getValue() != null) return transactionLiveData;
-        transactionLiveData.setValue(Result.loading());
 
+        transactionLiveData.setValue(Result.loading());
         userRepo.getUserTransactions(uid, limit, new UserRepository.TransactionCallback() {
             @Override
             public void onResult(List<TransactionDto> dtolist) {

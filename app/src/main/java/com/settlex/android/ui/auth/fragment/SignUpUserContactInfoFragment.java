@@ -1,6 +1,5 @@
 package com.settlex.android.ui.auth.fragment;
 
-import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
@@ -15,9 +14,9 @@ import android.text.method.LinkMovementMethod;
 import android.text.style.ClickableSpan;
 import android.util.Patterns;
 import android.view.LayoutInflater;
-import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.inputmethod.EditorInfo;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.EditText;
 
@@ -39,6 +38,7 @@ import com.settlex.android.ui.info.legal.PrivacyPolicyActivity;
 import com.settlex.android.ui.info.legal.TermsAndConditionsActivity;
 import com.settlex.android.util.event.Result;
 import com.settlex.android.util.network.NetworkMonitor;
+import com.settlex.android.util.string.StringUtil;
 import com.settlex.android.util.ui.StatusBarUtil;
 import com.settlex.android.util.ui.UiUtil;
 
@@ -127,7 +127,7 @@ public class SignUpUserContactInfoFragment extends Fragment {
         setupInputValidation();
         setupLegalLinks();
         reEnableEditTextFocus();
-        clearFocusAndHideKeyboardOnOutsideTap(binding.getRoot());
+        clearFocusOnLastEditTextField();
 
         binding.btnSignIn.setOnClickListener(view -> navigateToActivity(LoginActivity.class, true));
         binding.btnHelp.setOnClickListener(v -> navigateToActivity(AuthHelpActivity.class, false));
@@ -143,9 +143,9 @@ public class SignUpUserContactInfoFragment extends Fragment {
         }
 
         authViewModel.updateEmail(email);
-        authViewModel.updatePhone(phone);
+        authViewModel.updatePhone(StringUtil.formatPhoneNumber(phone));
 
-        // Send OTP
+        // send OTP
         sendEmailVerificationOtp();
     }
 
@@ -310,28 +310,18 @@ public class SignUpUserContactInfoFragment extends Fragment {
         requireActivity().finish();
     }
 
-    @SuppressLint("ClickableViewAccessibility")
-    private void clearFocusAndHideKeyboardOnOutsideTap(View root) {
-        if (!(root instanceof EditText)) {
-            root.setOnTouchListener((v, event) -> {
-                if (event.getAction() == MotionEvent.ACTION_DOWN) hideKeyboard();
-                return false;
-            });
-        }
+    private void clearFocusOnLastEditTextField() {
+        binding.editTxtPhoneNumber.setOnEditorActionListener((v, actionId, event) -> {
+            if (actionId == EditorInfo.IME_ACTION_DONE) {
+                // Hide the keyboard
+                InputMethodManager imm = (InputMethodManager) v.getContext().getSystemService(Context.INPUT_METHOD_SERVICE);
+                imm.hideSoftInputFromWindow(v.getWindowToken(), 0);
 
-        if (root instanceof ViewGroup) {
-            for (int i = 0; i < ((ViewGroup) root).getChildCount(); i++) {
-                clearFocusAndHideKeyboardOnOutsideTap(((ViewGroup) root).getChildAt(i));
+                // Clear focus
+                v.clearFocus();
+                return true;
             }
-        }
-    }
-
-    private void hideKeyboard() {
-        View focusedView = requireActivity().getCurrentFocus();
-        if (focusedView != null) {
-            InputMethodManager imm = (InputMethodManager) requireContext().getSystemService(Context.INPUT_METHOD_SERVICE);
-            imm.hideSoftInputFromWindow(focusedView.getWindowToken(), 0);
-            focusedView.clearFocus();
-        }
+            return false;
+        });
     }
 }

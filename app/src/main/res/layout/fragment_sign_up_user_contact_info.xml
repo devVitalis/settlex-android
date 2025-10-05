@@ -7,8 +7,6 @@
     android:layout_height="match_parent"
     android:background="@color/white"
     android:fitsSystemWindows="true"
-    android:focusable="true"
-    android:focusableInTouchMode="true"
     tools:context=".ui.auth.fragment.SignUpUserContactInfoFragment">
 
     <!--Header-->
@@ -207,19 +205,16 @@
                 android:id="@+id/editTxtEmailBg"
                 android:layout_width="match_parent"
                 android:layout_height="55dp"
-                android:background="@drawable/bg_edit_txt_custom_white_not_focused"
-                android:focusable="true"
-                android:focusableInTouchMode="true">
+                android:background="@drawable/bg_edit_txt_custom_white_not_focused">
 
                 <EditText
                     android:id="@+id/editTxtEmail"
                     android:layout_width="0dp"
                     android:layout_height="0dp"
                     android:background="@android:color/transparent"
-                    android:focusable="false"
-                    android:focusableInTouchMode="false"
                     android:fontFamily="@font/poppins_regular"
                     android:hint="Enter your email address"
+                    android:imeOptions="actionNext"
                     android:includeFontPadding="false"
                     android:inputType="textEmailAddress"
                     android:paddingHorizontal="15dp"
@@ -255,9 +250,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="55dp"
                 android:layout_marginTop="10dp"
-                android:background="@drawable/bg_edit_txt_custom_white_not_focused"
-                android:focusable="true"
-                android:focusableInTouchMode="true">
+                android:background="@drawable/bg_edit_txt_custom_white_not_focused">
 
                 <!-- Nigerian flag -->
                 <ImageView
@@ -303,10 +296,9 @@
                     android:layout_height="0dp"
                     android:layout_marginStart="10dp"
                     android:background="@android:color/transparent"
-                    android:focusable="false"
-                    android:focusableInTouchMode="false"
                     android:fontFamily="@font/poppins_regular"
                     android:hint="Enter your phone number"
+                    android:imeOptions="actionDone"
                     android:includeFontPadding="false"
                     android:inputType="phone"
                     android:maxLength="11"

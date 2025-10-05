@@ -2,9 +2,9 @@ package com.settlex.android.ui.dashboard.model;
 
 public class UserUiModel {
     private final String uid, firstName, lastName, username;
-    private final double balance, commissionBalance, referralBalance;
+    private final long balance, commissionBalance, referralBalance;
 
-    public UserUiModel(String uid, String firstName, String lastName, String username, double balance, double commissionBalance, double referralBalance) {
+    public UserUiModel(String uid, String firstName, String lastName, String username, long balance, long commissionBalance, long referralBalance) {
         this.uid = uid;
         this.firstName = firstName;
         this.lastName = lastName;
@@ -31,15 +31,15 @@ public class UserUiModel {
         return username;
     }
 
-    public double getBalance() {
+    public long getBalance() {
         return balance;
     }
 
-    public double getCommissionBalance() {
+    public long getCommissionBalance() {
         return commissionBalance;
     }
 
-    public double getReferralBalance() {
+    public long getReferralBalance() {
         return referralBalance;
     }
 
