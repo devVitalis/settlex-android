@@ -124,7 +124,7 @@ public class SignUpUserPasswordFragment extends Fragment {
 
         binding.btnBackBefore.setOnClickListener(v -> navigateBack());
         binding.btnHelp.setOnClickListener(v -> navigateToHelpActivity());
-        binding.icExpendLess.setOnClickListener(v -> toggleReferralCodeVisibility());
+        binding.btnExpendLess.setOnClickListener(v -> toggleReferralCodeVisibility());
         binding.btnCreateAccount.setOnClickListener(v -> validateAndCreateAccount());
     }
 
@@ -170,33 +170,28 @@ public class SignUpUserPasswordFragment extends Fragment {
         String USERNAME_REGEX = "^[a-z0-9]([a-z0-9]*[._]?[a-z0-9]*)+[a-z0-9]$";
         Pattern USERNAME_PATTERN = Pattern.compile(USERNAME_REGEX);
 
-        // 1. Check Minimum Length (Must be >= 3 characters)
+        // Check Minimum Length (Must be >= 3 characters)
         if (username.length() < 3) {
             return "Username must be at least 3 characters long.";
         }
 
-        // 2. Check the Format using the compiled Regular Expression
         if (!USERNAME_PATTERN.matcher(username).matches()) {
-            // The regex failed. Provide granular feedback based on common errors for a better UX.
 
-            // Check if it starts/ends with an invalid character (the regex prevents this, but the explicit check provides a clear message)
-            if (username.startsWith(".") || username.startsWith("_")) {
-                return "Username cannot start with '.' or '_'.";
+            if (username.startsWith(".") || username.endsWith(".")) {
+                return "Username cannot start or end with '.'";
             }
-            if (username.endsWith(".") || username.endsWith("_")) {
-                return "Username cannot end with '.' or '_'.";
+            if (username.startsWith("_") || username.endsWith("_")) {
+                return "Username cannot start or end with '_'";
             }
 
-            // Check for consecutive special characters (e.g., "user..name", "user__name", "user._name", "user_.name")
             if (username.contains("..") || username.contains("__") || username.contains("._") || username.contains("_.")) {
-                return "Username cannot contain consecutive '.' or '_' characters.";
+                return "Username cannot contain consecutive '.' or '_' characters";
             }
 
-            // General format failure fallback (e.g., contains uppercase letters, hyphens, or other disallowed symbols)
-            return "Username can only contain lowercase letters, numbers, and single periods or underscores.";
+            return "Username can only contain lowercase letters, numbers, and single periods or underscores";
         }
 
-        // 3. All checks passed
+        // All checks passed
         return null;
     }
 
@@ -280,7 +275,7 @@ public class SignUpUserPasswordFragment extends Fragment {
             public void onTextChanged(CharSequence s, int i, int i1, int i2) {
                 boolean shouldShowUsernameFeedback = !s.toString().isEmpty();
                 binding.usernameErrorFeedback.setText(getUsernameError(s.toString()));
-                binding.usernameErrorFeedback.setVisibility(shouldShowUsernameFeedback ? View.VISIBLE : View.GONE);
+                binding.usernameErrorFeedback.setVisibility(shouldShowUsernameFeedback && !isUsernameValid(s.toString().trim()) ? View.VISIBLE : View.GONE);
             }
         });
     }
@@ -293,7 +288,7 @@ public class SignUpUserPasswordFragment extends Fragment {
     private void toggleReferralCodeVisibility() {
         boolean isVisible = binding.editTxtInvitationCode.getVisibility() == View.VISIBLE;
         binding.editTxtInvitationCode.setVisibility(isVisible ? View.GONE : View.VISIBLE);
-        binding.icExpendLess.setImageResource(isVisible ? R.drawable.ic_expend_less : R.drawable.ic_expend_more);
+        binding.btnExpendLess.setImageResource(isVisible ? R.drawable.ic_expend_less : R.drawable.ic_expend_more);
     }
 
     private void reEnableEditTextFocus() {

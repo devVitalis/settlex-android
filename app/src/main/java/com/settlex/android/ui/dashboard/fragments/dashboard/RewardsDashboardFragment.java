@@ -9,6 +9,7 @@ import android.view.ViewGroup;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
+import androidx.core.content.ContextCompat;
 import androidx.fragment.app.Fragment;
 import androidx.lifecycle.ViewModelProvider;
 
@@ -54,15 +55,23 @@ public class RewardsDashboardFragment extends Fragment {
 
     // observers
     private void observeAuthState() {
-        userViewModel.getAuthStateLiveData().observe(requireActivity(), auth -> {
+        userViewModel.getAuthStateLiveData().observe(getViewLifecycleOwner(), auth -> {
             if (auth == null) {
-                binding.commissionBalance.setText(StringUtil.setAsterisks());
-                binding.referralCode.setText(StringUtil.setAsterisks());
-                binding.totalReferralEarning.setText(StringUtil.setAsterisks());
+                showLoggedOutView();
                 return;
             }
             observeUserData();
+            binding.loggedOutState.setVisibility(View.GONE);
+            binding.loggedInState.setVisibility(View.VISIBLE);
         });
+    }
+
+    private void showLoggedOutView() {
+        binding.getRoot().setBackgroundColor(ContextCompat.getColor(requireContext(), R.color.white));
+        binding.headerTitle.setTextColor(ContextCompat.getColor(requireContext(), R.color.black));
+
+        binding.loggedInState.setVisibility(View.GONE);
+        binding.loggedOutState.setVisibility(View.VISIBLE);
     }
 
     private void observeUserData() {

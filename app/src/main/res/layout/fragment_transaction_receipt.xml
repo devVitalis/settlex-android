@@ -73,7 +73,7 @@
                         android:id="@+id/card"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:background="@drawable/bg_8dp_white"
+                        android:background="@drawable/bg_8dp_white_ripple_yes"
                         android:gravity="center"
                         android:orientation="vertical"
                         android:paddingHorizontal="10dp"
@@ -163,7 +163,7 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_marginTop="15dp"
-                    android:background="@drawable/bg_8dp_white"
+                    android:background="@drawable/bg_8dp_white_ripple_yes"
                     android:orientation="vertical"
                     android:paddingHorizontal="15dp"
                     android:paddingVertical="15sp">
@@ -381,7 +381,7 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_marginTop="10dp"
-                    android:background="@drawable/bg_8dp_white"
+                    android:background="@drawable/bg_8dp_white_ripple_yes"
                     android:gravity="center_vertical"
                     android:orientation="vertical"
                     android:padding="10dp">

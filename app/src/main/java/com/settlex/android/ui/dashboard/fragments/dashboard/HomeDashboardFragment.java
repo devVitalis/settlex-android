@@ -119,9 +119,13 @@ public class HomeDashboardFragment extends Fragment {
         binding.btnAddMoney.setOnClickListener(v -> userViewModel.signOut());
         binding.btnReceiveMoney.setOnClickListener(v -> navigateToActivity(ReceiveMoneyActivity.class));
         binding.btnPayAFriend.setOnClickListener(v -> navigateToActivity(TransactionActivity.class));
-        binding.btnNotification.setOnClickListener(v -> Toast.makeText(requireContext(), "This feature is not yet implemented", Toast.LENGTH_SHORT).show());
-        binding.btnSupport.setOnClickListener(v -> Toast.makeText(requireContext(), "This feature is not yet implemented", Toast.LENGTH_SHORT).show());
-        binding.btnViewAllTransaction.setOnClickListener(v -> Toast.makeText(requireContext(), "This feature is not yet implemented", Toast.LENGTH_SHORT).show());
+        binding.btnNotification.setOnClickListener(v -> toast());
+        binding.btnSupport.setOnClickListener(v -> toast());
+        binding.btnViewAllTransaction.setOnClickListener(v -> toast());
+    }
+
+    private void toast(){
+        Toast.makeText(requireContext(), "This feature is not yet implemented", Toast.LENGTH_SHORT).show();
     }
 
     //  OBSERVERS ===========

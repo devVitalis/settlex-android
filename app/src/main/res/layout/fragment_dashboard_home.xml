@@ -479,7 +479,7 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_marginTop="15dp"
-                    android:background="@drawable/bg_8dp_white"
+                    android:background="@drawable/bg_8dp_white_ripple_yes"
                     android:padding="8dp"
                     android:visibility="gone">
 
@@ -565,7 +565,7 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_marginTop="15dp"
-                    android:background="@drawable/bg_8dp_white"
+                    android:background="@drawable/bg_8dp_white_ripple_yes"
                     android:gravity="center_vertical"
                     android:orientation="horizontal"
                     android:padding="8dp"

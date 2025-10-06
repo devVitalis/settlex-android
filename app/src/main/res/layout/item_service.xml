@@ -4,10 +4,11 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="wrap_content"
     android:layout_height="wrap_content"
-    android:background="@drawable/bg_8dp_white"
+    android:background="@drawable/bg_8dp_white_ripple_yes"
     android:gravity="center"
     android:orientation="vertical"
-    android:padding="8dp">
+    android:paddingHorizontal="10dp"
+    android:paddingVertical="5dp">
 
     <FrameLayout
         android:layout_width="50dp"
