@@ -7,5 +7,4 @@
         android:endColor="@color/gray_light"
         android:startColor="@color/blue_light"
         android:type="linear" />
-
 </shape>

@@ -58,7 +58,7 @@ public class ServicesDashboardFragment extends Fragment {
         recyclerView.setLayoutManager(layoutManager);
 
         // Set equal spacing
-        int spacingInPixels = (int) (10 * getResources().getDisplayMetrics().density);
+        int spacingInPixels = (int) (5 * getResources().getDisplayMetrics().density);
         recyclerView.addItemDecoration(new GridSpacingItemDecoration(4, spacingInPixels, true));
 
         // Adapter with click handling
@@ -71,35 +71,35 @@ public class ServicesDashboardFragment extends Fragment {
 
     private void setupTelecomRecyclerView() {
         List<ServiceUiModel> services = Arrays.asList(
-                new ServiceUiModel("Airtime", R.drawable.ic_service_airtime, TransactionServiceType.AIRTIME_RECHARGE),
-                new ServiceUiModel("Data", R.drawable.ic_service_data, TransactionServiceType.DATA_RECHARGE),
-                new ServiceUiModel("Internet", R.drawable.ic_service_internet, TransactionServiceType.INTERNET),
-                new ServiceUiModel("Esim", R.drawable.ic_service_esim, TransactionServiceType.ESIM)
+                new ServiceUiModel("Airtime", R.drawable.ic_service_airtime, 0,TransactionServiceType.AIRTIME_RECHARGE),
+                new ServiceUiModel("Data", R.drawable.ic_service_data, 0, TransactionServiceType.DATA_RECHARGE),
+                new ServiceUiModel("Internet", R.drawable.ic_service_internet, 0, TransactionServiceType.INTERNET),
+                new ServiceUiModel("Esim", R.drawable.ic_service_esim, 0, TransactionServiceType.ESIM)
         );
         setupRecyclerView(services, binding.telecomAndDigitalRecyclerView);
     }
 
     private void setupEntertainmentRecyclerView() {
         List<ServiceUiModel> services = Arrays.asList(
-                new ServiceUiModel("TV", R.drawable.ic_service_cable_tv, TransactionServiceType.CABLE_TV_SUBSCRIPTION),
-                new ServiceUiModel("Betting", R.drawable.ic_service_betting, TransactionServiceType.BETTING_TOPUP),
-                new ServiceUiModel("Voucher", R.drawable.ic_service_voucher, TransactionServiceType.VOUCHER),
-                new ServiceUiModel("Gift Card", R.drawable.ic_service_gift_card, TransactionServiceType.GIFT_CARD)
+                new ServiceUiModel("TV", R.drawable.ic_service_cable_tv, 0, TransactionServiceType.CABLE_TV_SUBSCRIPTION),
+                new ServiceUiModel("Betting", R.drawable.ic_service_betting, 0, TransactionServiceType.BETTING_TOPUP),
+                new ServiceUiModel("Voucher", R.drawable.ic_service_voucher, 0, TransactionServiceType.VOUCHER),
+                new ServiceUiModel("Gift Card", R.drawable.ic_service_gift_card, 0, TransactionServiceType.GIFT_CARD)
         );
         setupRecyclerView(services, binding.entertainmentRecyclerView);
     }
 
     private void setupUtilitiesRecyclerView() {
         List<ServiceUiModel> services = List.of(
-                new ServiceUiModel("Electricity", R.drawable.ic_service_electricity, TransactionServiceType.ELECTRICITY_BILL)
+                new ServiceUiModel("Electricity", R.drawable.ic_service_electricity, 0, TransactionServiceType.ELECTRICITY_BILL)
         );
         setupRecyclerView(services, binding.utilitiesAndBillsRecyclerView);
     }
 
     private void setupTravelRecyclerView() {
         List<ServiceUiModel> services = Arrays.asList(
-                new ServiceUiModel("Flight", R.drawable.ic_service_flight, TransactionServiceType.FLIGHT),
-                new ServiceUiModel("Hotel", R.drawable.ic_service_hotel, TransactionServiceType.HOTEL)
+                new ServiceUiModel("Flight", R.drawable.ic_service_flight, 0, TransactionServiceType.FLIGHT),
+                new ServiceUiModel("Hotel", R.drawable.ic_service_hotel, 0, TransactionServiceType.HOTEL)
         );
         setupRecyclerView(services, binding.travelAndLifestyleRecyclerView);
     }

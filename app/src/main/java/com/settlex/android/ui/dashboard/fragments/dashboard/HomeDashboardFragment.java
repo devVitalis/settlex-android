@@ -375,18 +375,18 @@ public class HomeDashboardFragment extends Fragment {
         GridLayoutManager layoutManager = new GridLayoutManager(requireContext(), 4);
         binding.serviceRecyclerView.setLayoutManager(layoutManager);
         // Set equal spacing
-        int spacingInPixels = (int) (10 * getResources().getDisplayMetrics().density);
+        int spacingInPixels = (int) (5 * getResources().getDisplayMetrics().density);
         binding.serviceRecyclerView.addItemDecoration(new GridSpacingItemDecoration(4, spacingInPixels, true));
 
         List<ServiceUiModel> services = Arrays.asList(
-                new ServiceUiModel("Airtime", R.drawable.ic_service_airtime, TransactionServiceType.AIRTIME_RECHARGE),
-                new ServiceUiModel("Data", R.drawable.ic_service_data, TransactionServiceType.DATA_RECHARGE),
-                new ServiceUiModel("Betting", R.drawable.ic_service_betting, TransactionServiceType.BETTING_TOPUP),
-                new ServiceUiModel("TV", R.drawable.ic_service_cable_tv, TransactionServiceType.CABLE_TV_SUBSCRIPTION),
-                new ServiceUiModel("Electricity", R.drawable.ic_service_electricity, TransactionServiceType.ELECTRICITY_BILL),
-                new ServiceUiModel("Internet", R.drawable.ic_service_internet, TransactionServiceType.INTERNET),
-                new ServiceUiModel("Gift Card", R.drawable.ic_service_gift_card, TransactionServiceType.GIFT_CARD),
-                new ServiceUiModel("More", R.drawable.ic_service_more, TransactionServiceType.MORE)
+                new ServiceUiModel("Airtime", R.drawable.ic_service_airtime, 2, TransactionServiceType.AIRTIME_RECHARGE),
+                new ServiceUiModel("Data", R.drawable.ic_service_data, 6, TransactionServiceType.DATA_RECHARGE),
+                new ServiceUiModel("Betting", R.drawable.ic_service_betting, 10, TransactionServiceType.BETTING_TOPUP),
+                new ServiceUiModel("TV", R.drawable.ic_service_cable_tv, 0,TransactionServiceType.CABLE_TV_SUBSCRIPTION),
+                new ServiceUiModel("Electricity", R.drawable.ic_service_electricity, 0, TransactionServiceType.ELECTRICITY_BILL),
+                new ServiceUiModel("Internet", R.drawable.ic_service_internet, 0, TransactionServiceType.INTERNET),
+                new ServiceUiModel("Gift Card", R.drawable.ic_service_gift_card, 0, TransactionServiceType.GIFT_CARD),
+                new ServiceUiModel("More", R.drawable.ic_service_more, 0, TransactionServiceType.MORE)
         );
 
         // Map services to destinations

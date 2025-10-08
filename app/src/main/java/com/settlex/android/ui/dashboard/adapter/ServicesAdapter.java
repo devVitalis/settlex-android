@@ -47,6 +47,14 @@ public class ServicesAdapter extends RecyclerView.Adapter<ServicesAdapter.Servic
         // Bind service data to views
         holder.name.setText(service.getName());
         holder.icon.setImageResource(service.getIconResId());
+
+        if (!(service.getCashbackPercentage() < 1)) {
+            String CASHBACK = "up to " + service.getCashbackPercentage() + "%";
+            holder.cashback.setText(CASHBACK);
+            holder.cashback.setVisibility(View.VISIBLE);
+        } else {
+            holder.cashback.setVisibility(View.GONE);
+        }
         holder.itemView.setOnClickListener(view -> listener.onServiceClick(this.service.get(position)));
     }
 
@@ -60,12 +68,13 @@ public class ServicesAdapter extends RecyclerView.Adapter<ServicesAdapter.Servic
      */
     public static class ServiceViewHolder extends RecyclerView.ViewHolder {
         ImageView icon;
-        TextView name;
+        TextView name, cashback;
 
         ServiceViewHolder(@NonNull View itemView) {
             super(itemView);
             icon = itemView.findViewById(R.id.icon);
             name = itemView.findViewById(R.id.name);
+            cashback = itemView.findViewById(R.id.cashback);
         }
     }
 }
