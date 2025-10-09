@@ -20,6 +20,7 @@ import com.settlex.android.util.event.Result;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
+import java.util.Map;
 
 import jakarta.inject.Inject;
 import jakarta.inject.Singleton;
@@ -169,6 +170,20 @@ public class UserRepository {
         transactionListener = null;
     }
 
+    public void uploadNewProfilePic(String imageBase64, UploadProfilePicCallback callback) {
+        functions.getHttpsCallable("uploadProfilePic")
+                .call(Collections.singletonMap("imageBase64", imageBase64))
+                .addOnSuccessListener(result -> {
+
+                    Map<?, ?> data = (Map<?, ?>) result.getData();
+                    if (data != null) {
+                        String profilePicUrl = (String) data.get("displayUrl");
+                        callback.onSuccess(profilePicUrl);
+                    }
+                })
+                .addOnFailureListener(e -> callback.onFailure(e.getMessage()));
+    }
+
     // ------- SESSION ---------
     public void signOut() {
         auth.signOut();
@@ -186,5 +201,11 @@ public class UserRepository {
         void onResult(List<TransactionDto> dtolist);
 
         void onError(String reason);
+    }
+
+    public interface UploadProfilePicCallback {
+        void onSuccess(String profilePicUrl);
+
+        void onFailure(String error);
     }
 }

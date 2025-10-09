@@ -314,7 +314,7 @@ public class SignUpUserPasswordFragment extends Fragment {
     }
 
     private void clearFocusOnLastEditTextField() {
-        binding.editTxtUsername.setOnEditorActionListener((v, actionId, event) -> {
+        binding.editTxtInvitationCode.setOnEditorActionListener((v, actionId, event) -> {
             if (actionId == EditorInfo.IME_ACTION_DONE) {
                 // Hide the keyboard
                 InputMethodManager imm = (InputMethodManager) v.getContext().getSystemService(Context.INPUT_METHOD_SERVICE);

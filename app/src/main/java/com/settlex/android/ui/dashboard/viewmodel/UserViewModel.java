@@ -33,6 +33,7 @@ public class UserViewModel extends ViewModel {
     private final MediatorLiveData<Result<UserUiModel>> userLiveData = new MediatorLiveData<>();
     private final MediatorLiveData<Result<MoneyFlowUiModel>> moneyFlowLiveData = new MediatorLiveData<>();
     private final MutableLiveData<Result<List<TransactionUiModel>>> transactionLiveData = new MutableLiveData<>();
+    private final MutableLiveData<Result<String>> uploadProfilePicLiveData = new MutableLiveData<>();
 
     // Dependencies
     private final UserRepository userRepo;
@@ -114,6 +115,24 @@ public class UserViewModel extends ViewModel {
         return transactionLiveData;
     }
 
+    public void uploadProfilePic(String profilePicUrl){
+        uploadProfilePicLiveData.setValue(Result.loading());
+        userRepo.uploadNewProfilePic(profilePicUrl, new UserRepository.UploadProfilePicCallback() {
+            @Override
+            public void onSuccess(String profilePicUrl) {
+                uploadProfilePicLiveData.setValue(Result.success(profilePicUrl));
+            }
+
+            @Override
+            public void onFailure(String error) {
+                uploadProfilePicLiveData.setValue(Result.error(profilePicUrl));
+            }
+        });
+    }
+
+    public LiveData<Result<String>> getProfilePicUploadResult(){
+        return uploadProfilePicLiveData;
+    }
     private void initMoneyFlow(String currentUserUid, List<TransactionDto> dtoList) {
         moneyFlowLiveData.setValue(Result.loading());
         double inFlow = 0;
@@ -189,8 +208,10 @@ public class UserViewModel extends ViewModel {
         // User DTO → map to UI model
         return new UserUiModel(
                 dto.uid,
+                dto.email,
                 dto.firstName,
                 dto.lastName,
+                dto.phone,
                 dto.username,
                 dto.balance,
                 dto.commissionBalance,

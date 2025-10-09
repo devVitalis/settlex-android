@@ -1,0 +1,174 @@
+package com.settlex.android.ui.dashboard.fragments.profile;
+
+import android.Manifest;
+import android.content.pm.PackageManager;
+import android.os.Build;
+import android.os.Bundle;
+import android.util.Log;
+import android.view.LayoutInflater;
+import android.view.View;
+import android.view.ViewGroup;
+import android.widget.Toast;
+
+import androidx.activity.result.ActivityResultLauncher;
+import androidx.activity.result.PickVisualMediaRequest;
+import androidx.activity.result.contract.ActivityResultContracts;
+import androidx.annotation.NonNull;
+import androidx.core.content.ContextCompat;
+import androidx.fragment.app.Fragment;
+import androidx.lifecycle.ViewModelProvider;
+
+import com.bumptech.glide.Glide;
+import com.bumptech.glide.load.engine.DiskCacheStrategy;
+import com.bumptech.glide.load.resource.drawable.DrawableTransitionOptions;
+import com.bumptech.glide.request.RequestOptions;
+import com.settlex.android.R;
+import com.settlex.android.SettleXApp;
+import com.settlex.android.databinding.FragmentProfileBinding;
+import com.settlex.android.ui.dashboard.model.UserUiModel;
+import com.settlex.android.ui.dashboard.viewmodel.UserViewModel;
+import com.settlex.android.util.string.StringUtil;
+import com.settlex.android.util.ui.StatusBarUtil;
+
+import dagger.hilt.android.AndroidEntryPoint;
+
+@AndroidEntryPoint
+public class ProfileFragment extends Fragment {
+    private FragmentProfileBinding binding;
+    private UserViewModel userViewModel;
+    private ActivityResultLauncher<String> requestPermissionLauncher;
+    private ActivityResultLauncher<PickVisualMediaRequest> pickImageLauncher;
+
+    public ProfileFragment() {
+        // Required empty public constructor
+    }
+
+    @Override
+    public void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        userViewModel = new ViewModelProvider(requireActivity()).get(UserViewModel.class);
+    }
+
+    @Override
+    public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
+        binding = FragmentProfileBinding.inflate(inflater, container, false);
+
+        observeAndLoadUserData();
+        observeProfilePicUpload();
+        setupUiActions();
+        return binding.getRoot();
+    }
+
+    // observers
+    private void observeAndLoadUserData() {
+        userViewModel.getUserLiveData().observe(getViewLifecycleOwner(), user -> {
+            if (user == null) return;
+
+            switch (user.getStatus()) {
+                case SUCCESS -> onUserDataSuccess(user.getData());
+                case ERROR -> onUserDataError(user.getMessage());
+            }
+        });
+    }
+
+    private void onUserDataSuccess(UserUiModel user) {
+        // set data
+        binding.paymentID.setText(user.getUsername() != null ? user.getUsername() : "");
+        binding.fullName.setText(user.getUserFullName().toUpperCase());
+        binding.email.setText(StringUtil.maskEmail(user.getEmail()));
+        binding.phoneNumber.setText(StringUtil.formatPhoneNumberWithCountryCode(user.getPhone()));
+    }
+
+    private void onUserDataError(String error) {
+        Log.e("Fragment", "User data error: " + error);
+    }
+
+    private void observeProfilePicUpload(){
+        userViewModel.getProfilePicUploadResult().observe(getViewLifecycleOwner(), result -> {
+            if (result == null) return;
+
+            switch (result.getStatus()) {
+                case LOADING -> {
+
+                }
+                case SUCCESS -> {
+                    onProfilePicUploadSuccess(result.getData());
+                }
+                case ERROR -> {
+
+                }
+            }
+        });
+    }
+
+    private void onProfilePicUploadSuccess(String uri) {
+
+        Glide.with(SettleXApp.getAppContext())
+                .load(uri)
+                .apply(new RequestOptions())
+                .diskCacheStrategy(DiskCacheStrategy.ALL)
+                .transition(DrawableTransitionOptions.withCrossFade(300))
+                .into(binding.profilePic);
+    }
+
+    private void setupUiActions() {
+        initPermissionLauncher();
+        initPickImageLauncher();
+
+        StatusBarUtil.setStatusBarColor(requireActivity(), R.color.white);
+        binding.btnChangeProfilePic.setOnClickListener(view -> uploadNewProfilePic());
+        binding.btnBackBefore.setOnClickListener(v -> requireActivity().finish());
+        binding.btnCopyPaymentId.setOnClickListener(v -> StringUtil.copyToClipboard(requireContext(), "Payment ID", binding.paymentID.getText().toString()));
+    }
+
+    private void initPermissionLauncher() {
+        requestPermissionLauncher = registerForActivityResult(
+                new ActivityResultContracts.RequestPermission(), isGranted -> {
+                    if (isGranted) {
+                        openGalleryPicker();
+                        return;
+                    }
+                    Toast.makeText(requireContext(), "Permission denied", Toast.LENGTH_SHORT).show();
+                }
+        );
+    }
+
+    private void initPickImageLauncher() {
+        pickImageLauncher = registerForActivityResult(
+                new ActivityResultContracts.PickVisualMedia(),
+                uri -> {
+                    if (uri != null) {
+                        // set selected image
+                        userViewModel.uploadProfilePic(StringUtil.compressAndConvertToBase64(requireContext(), uri));
+                        return;
+                    }
+                    Toast.makeText(requireContext(), "No media selected", Toast.LENGTH_SHORT).show();
+                }
+        );
+    }
+
+    private void openGalleryPicker() {
+        pickImageLauncher.launch(
+                new PickVisualMediaRequest.Builder()
+                        .setMediaType(ActivityResultContracts.PickVisualMedia.ImageOnly.INSTANCE)
+                        .build()
+        );
+    }
+
+    private void uploadNewProfilePic() {
+        boolean IS_ANDROID_13_OR_HIGHER = Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU;
+        String permission = Manifest.permission.READ_EXTERNAL_STORAGE;
+
+        if (IS_ANDROID_13_OR_HIGHER) {
+            openGalleryPicker();
+            return;
+        }
+
+        boolean isPermissionGranted = ContextCompat.checkSelfPermission(requireContext(), permission) == PackageManager.PERMISSION_GRANTED;
+        if (isPermissionGranted) {
+            openGalleryPicker();
+            return;
+        }
+        requestPermissionLauncher.launch(permission);
+    }
+}

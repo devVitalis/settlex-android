@@ -3,9 +3,16 @@ package com.settlex.android.util.string;
 import android.content.ClipData;
 import android.content.ClipboardManager;
 import android.content.Context;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
+import android.net.Uri;
+import android.util.Base64;
+import android.util.Log;
 
 import com.google.firebase.Timestamp;
 
+import java.io.ByteArrayOutputStream;
+import java.io.InputStream;
 import java.math.BigDecimal;
 import java.math.RoundingMode;
 import java.text.DecimalFormat;
@@ -18,6 +25,7 @@ import java.util.Objects;
  * Utility class for string formatting and data transformations
  */
 public class StringUtil {
+    private static final String TAG = StringUtil.class.getSimpleName();
 
     private StringUtil() {
         // Prevent instantiation
@@ -85,7 +93,7 @@ public class StringUtil {
     }
 
     // PHONE NUMBER FORMATTING ===========
-    public static String formatPhoneNumber(String phone) {
+    public static String formatPhoneNumberWithCountryCode(String phone) {
         if (phone == null || phone.isEmpty()) return phone;
 
         if (phone.startsWith("0")) phone = phone.substring(1);
@@ -94,6 +102,7 @@ public class StringUtil {
     }
 
     // CURRENCY FORMATTING =============
+
     /**
      * Formats kobo (long) into ₦X,XXX.XX
      */
@@ -108,7 +117,7 @@ public class StringUtil {
         return formatter.format(naira);
     }
 
-    public static String formatToCurrency(BigDecimal numericValue){
+    public static String formatToCurrency(BigDecimal numericValue) {
         Locale nigerianLocal = Locale.forLanguageTag("en-NG");
         NumberFormat numberFormatter = NumberFormat.getCurrencyInstance(nigerianLocal);
 
@@ -186,4 +195,49 @@ public class StringUtil {
         return new SimpleDateFormat("dd MMM yyyy, hh:mm a", Locale.US)
                 .format(timestamp.toDate());
     }
+
+    public static String compressAndConvertToBase64(Context context, Uri uri) {
+        InputStream inputStream = null;
+        try {
+            // Open input stream from the Uri
+            inputStream = context.getContentResolver().openInputStream(uri);
+            Bitmap bitmap = BitmapFactory.decodeStream(inputStream);
+
+            if (bitmap == null) {
+                Log.e(TAG, "Failed to decode bitmap from URI");
+                return null;
+            }
+
+            // Scale while keeping aspect ratio (max 512px for width/height)
+            int maxSize = 512;
+            int width = bitmap.getWidth();
+            int height = bitmap.getHeight();
+            float scale = Math.min((float) maxSize / width, (float) maxSize / height);
+
+            int scaledWidth = Math.round(width * scale);
+            int scaledHeight = Math.round(height * scale);
+
+            Bitmap scaled = Bitmap.createScaledBitmap(bitmap, scaledWidth, scaledHeight, true);
+
+            // Compress Bitmap to JPEG with ~70% quality
+            ByteArrayOutputStream outputStream = new ByteArrayOutputStream();
+            scaled.compress(Bitmap.CompressFormat.JPEG, 70, outputStream);
+
+            // Convert compressed bytes to Base64 string
+            byte[] compressedBytes = outputStream.toByteArray();
+            return Base64.encodeToString(compressedBytes, Base64.NO_WRAP);
+
+        } catch (Exception e) {
+            Log.e(TAG, "Error compressing image: " + e.getMessage(), e);
+            return null;
+        } finally {
+            // Always close input stream
+            if (inputStream != null) {
+                try {
+                    inputStream.close();
+                } catch (Exception ignored) {}
+            }
+        }
+    }
+
 }

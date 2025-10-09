@@ -25,6 +25,7 @@ import com.settlex.android.data.remote.avater.AvatarService;
 import com.settlex.android.databinding.FragmentDashboardHomeBinding;
 import com.settlex.android.ui.auth.activity.LoginActivity;
 import com.settlex.android.ui.dashboard.activity.CommissionWithdrawalActivity;
+import com.settlex.android.ui.dashboard.activity.ProfileActivity;
 import com.settlex.android.ui.dashboard.activity.ReceiveMoneyActivity;
 import com.settlex.android.ui.dashboard.activity.TransactionActivity;
 import com.settlex.android.ui.dashboard.activity.TransactionDetailsActivity;
@@ -113,6 +114,7 @@ public class HomeDashboardFragment extends Fragment {
         initTransactionRecyclerView();
         setupDoubleBackToExit();
 
+        binding.profilePic.setOnClickListener(view -> navigateToActivity(ProfileActivity.class));
         binding.btnLogin.setOnClickListener(v -> navigateToActivity(LoginActivity.class));
         binding.btnBalanceToggle.setOnClickListener(v -> userViewModel.toggleBalanceVisibility());
         binding.btnUserCommissionBalanceLayout.setOnClickListener(v -> navigateToActivity(CommissionWithdrawalActivity.class));
@@ -124,7 +126,7 @@ public class HomeDashboardFragment extends Fragment {
         binding.btnViewAllTransaction.setOnClickListener(v -> toast());
     }
 
-    private void toast(){
+    private void toast() {
         Toast.makeText(requireContext(), "This feature is not yet implemented", Toast.LENGTH_SHORT).show();
     }
 
@@ -195,7 +197,7 @@ public class HomeDashboardFragment extends Fragment {
         binding.userBalance.setVisibility(View.VISIBLE);
         binding.btnUserCommissionBalanceLayout.setVisibility(View.VISIBLE);
 
-        AvatarService.loadAvatar(user.getUserFullName(), binding.userProfilePic);
+        AvatarService.loadAvatar(user.getUserFullName(), binding.profilePic);
         binding.userFullName.setText(user.getUserFullName());
         loadUserPrefs(user.getBalance(), user.getCommissionBalance());
     }
@@ -382,7 +384,7 @@ public class HomeDashboardFragment extends Fragment {
                 new ServiceUiModel("Airtime", R.drawable.ic_service_airtime, 2, TransactionServiceType.AIRTIME_RECHARGE),
                 new ServiceUiModel("Data", R.drawable.ic_service_data, 6, TransactionServiceType.DATA_RECHARGE),
                 new ServiceUiModel("Betting", R.drawable.ic_service_betting, 10, TransactionServiceType.BETTING_TOPUP),
-                new ServiceUiModel("TV", R.drawable.ic_service_cable_tv, 0,TransactionServiceType.CABLE_TV_SUBSCRIPTION),
+                new ServiceUiModel("TV", R.drawable.ic_service_cable_tv, 0, TransactionServiceType.CABLE_TV_SUBSCRIPTION),
                 new ServiceUiModel("Electricity", R.drawable.ic_service_electricity, 0, TransactionServiceType.ELECTRICITY_BILL),
                 new ServiceUiModel("Internet", R.drawable.ic_service_internet, 0, TransactionServiceType.INTERNET),
                 new ServiceUiModel("Gift Card", R.drawable.ic_service_gift_card, 0, TransactionServiceType.GIFT_CARD),

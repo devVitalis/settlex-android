@@ -143,7 +143,7 @@ public class SignUpUserContactInfoFragment extends Fragment {
         }
 
         authViewModel.updateEmail(email);
-        authViewModel.updatePhone(StringUtil.formatPhoneNumber(phone));
+        authViewModel.updatePhone(StringUtil.formatPhoneNumberWithCountryCode(phone));
 
         // send OTP
         sendEmailVerificationOtp();
