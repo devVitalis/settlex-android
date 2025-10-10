@@ -11,7 +11,6 @@ import android.text.Html;
 import android.text.InputType;
 import android.text.TextUtils;
 import android.text.TextWatcher;
-import android.util.Log;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.inputmethod.EditorInfo;
@@ -22,7 +21,7 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.lifecycle.ViewModelProvider;
 
 import com.settlex.android.R;
-import com.settlex.android.data.remote.avater.AvatarService;
+import com.settlex.android.data.remote.profile.ProfileService;
 import com.settlex.android.databinding.ActivityLoginBinding;
 import com.settlex.android.ui.auth.viewmodel.AuthViewModel;
 import com.settlex.android.ui.common.util.ProgressLoaderController;
@@ -133,7 +132,7 @@ public class LoginActivity extends AppCompatActivity {
         String userDisplayName = "Hi, " + displayName.toUpperCase();
         String userEmail = "(" + email + ")";
 
-        AvatarService.loadAvatar(displayName, binding.userProfile);
+//        ProfileService.loadProfilePic(displayName, binding.userProfile);
         binding.userDisplayName.setText(userDisplayName);
         binding.userEmail.setText(StringUtil.maskEmail(userEmail));
         binding.editTxtEmail.setText(email);

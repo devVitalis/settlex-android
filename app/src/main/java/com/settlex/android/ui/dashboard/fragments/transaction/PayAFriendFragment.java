@@ -22,7 +22,7 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import com.google.android.material.bottomsheet.BottomSheetDialog;
 import com.settlex.android.R;
 import com.settlex.android.data.enums.TransactionServiceType;
-import com.settlex.android.data.remote.avater.AvatarService;
+import com.settlex.android.data.remote.profile.ProfileService;
 import com.settlex.android.databinding.FragmentPayAFriendBinding;
 import com.settlex.android.ui.common.util.ProgressLoaderController;
 import com.settlex.android.ui.dashboard.adapter.RecipientAdapter;
@@ -56,6 +56,7 @@ public class PayAFriendFragment extends Fragment {
     private UserUiModel currentUser;
 
     // Instance variables for txn data
+    private String recipientProfileUrl;
     private String paymentId;
     private long amount;
 
@@ -226,6 +227,7 @@ public class PayAFriendFragment extends Fragment {
                 requireActivity(),
                 recipientUsername,
                 recipientName,
+                String.valueOf(recipientProfileUrl != null),
                 amount,
                 currentUser.getBalance(),
                 currentUser.getCommissionBalance(),
@@ -292,8 +294,10 @@ public class PayAFriendFragment extends Fragment {
             recipientAdapter.submitList(Collections.emptyList());
             binding.recipientRecyclerView.setVisibility(View.GONE);
 
-            AvatarService.loadAvatar(recipient.getFullName(), binding.selectedRecipientProfilePic);
-            // binding.selectedRecipientProfilePic.setImageResource(model.getProfileUrl()); //TODO: handle profile pic link
+            if (recipient.getProfileUrl() != null) {
+                ProfileService.loadProfilePic(recipient.getProfileUrl(), binding.selectedRecipientProfilePic);
+                recipientProfileUrl = recipient.getProfileUrl();
+            }
             binding.selectedRecipientName.setText(recipient.getFullName());
             binding.selectedRecipientUsername.setText(recipient.getUsername());
             binding.selectedRecipient.setVisibility(View.VISIBLE);

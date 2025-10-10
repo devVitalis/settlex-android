@@ -58,7 +58,7 @@ public class UserRepository {
 
         // setup once (single source of truth)
         initAuthStateListener();
-        Log.d("Debug", "UserRepo Instance created: " + this);
+        Log.d("Repository", "UserRepo Instance created: " + this);
     }
 
     private void initAuthStateListener() {

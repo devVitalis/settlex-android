@@ -115,9 +115,9 @@ public class UserViewModel extends ViewModel {
         return transactionLiveData;
     }
 
-    public void uploadProfilePic(String profilePicUrl){
+    public void uploadProfilePic(String imageBase64) {
         uploadProfilePicLiveData.setValue(Result.loading());
-        userRepo.uploadNewProfilePic(profilePicUrl, new UserRepository.UploadProfilePicCallback() {
+        userRepo.uploadNewProfilePic(imageBase64, new UserRepository.UploadProfilePicCallback() {
             @Override
             public void onSuccess(String profilePicUrl) {
                 uploadProfilePicLiveData.setValue(Result.success(profilePicUrl));
@@ -125,14 +125,15 @@ public class UserViewModel extends ViewModel {
 
             @Override
             public void onFailure(String error) {
-                uploadProfilePicLiveData.setValue(Result.error(profilePicUrl));
+                uploadProfilePicLiveData.setValue(Result.error(error));
             }
         });
     }
 
-    public LiveData<Result<String>> getProfilePicUploadResult(){
+    public LiveData<Result<String>> getProfilePicUploadResult() {
         return uploadProfilePicLiveData;
     }
+
     private void initMoneyFlow(String currentUserUid, List<TransactionDto> dtoList) {
         moneyFlowLiveData.setValue(Result.loading());
         double inFlow = 0;
@@ -213,6 +214,7 @@ public class UserViewModel extends ViewModel {
                 dto.lastName,
                 dto.phone,
                 dto.username,
+                dto.profileUrl,
                 dto.balance,
                 dto.commissionBalance,
                 dto.referralBalance

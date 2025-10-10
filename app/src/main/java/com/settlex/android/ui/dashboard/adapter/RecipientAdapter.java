@@ -8,8 +8,7 @@ import androidx.recyclerview.widget.DiffUtil;
 import androidx.recyclerview.widget.ListAdapter;
 import androidx.recyclerview.widget.RecyclerView;
 
-import com.settlex.android.R;
-import com.settlex.android.data.remote.avater.AvatarService;
+import com.settlex.android.data.remote.profile.ProfileService;
 import com.settlex.android.databinding.ItemRecipientBinding;
 import com.settlex.android.ui.dashboard.model.RecipientUiModel;
 
@@ -61,7 +60,9 @@ public class RecipientAdapter extends ListAdapter<RecipientUiModel, RecipientAda
         }
 
         public void bind(RecipientUiModel model, OnItemClickListener listener) {
-            AvatarService.loadAvatar(model.getFullName(), binding.userProfilePic);
+            if (model.getProfileUrl() != null) {
+                ProfileService.loadProfilePic(model.getProfileUrl(), binding.userProfilePic);
+            }
             binding.userFullName.setText(model.getFullName());
             binding.username.setText(model.getUsername());
 

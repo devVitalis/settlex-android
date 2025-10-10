@@ -21,7 +21,7 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 
 import com.settlex.android.R;
 import com.settlex.android.data.enums.TransactionServiceType;
-import com.settlex.android.data.remote.avater.AvatarService;
+import com.settlex.android.data.remote.profile.ProfileService;
 import com.settlex.android.databinding.FragmentDashboardHomeBinding;
 import com.settlex.android.ui.auth.activity.LoginActivity;
 import com.settlex.android.ui.dashboard.activity.CommissionWithdrawalActivity;
@@ -197,7 +197,9 @@ public class HomeDashboardFragment extends Fragment {
         binding.userBalance.setVisibility(View.VISIBLE);
         binding.btnUserCommissionBalanceLayout.setVisibility(View.VISIBLE);
 
-        AvatarService.loadAvatar(user.getUserFullName(), binding.profilePic);
+        if (user.getProfileUrl() != null) {
+            ProfileService.loadProfilePic(user.getProfileUrl(), binding.profilePic);
+        }
         binding.userFullName.setText(user.getUserFullName());
         loadUserPrefs(user.getBalance(), user.getCommissionBalance());
     }

@@ -6,7 +6,7 @@ import android.view.View;
 
 import com.google.android.material.bottomsheet.BottomSheetDialog;
 import com.settlex.android.R;
-import com.settlex.android.data.remote.avater.AvatarService;
+import com.settlex.android.data.remote.profile.ProfileService;
 import com.settlex.android.databinding.BottomSheetConfirmPaymentBinding;
 import com.settlex.android.util.string.StringUtil;
 
@@ -16,7 +16,7 @@ public class DashboardUiUtil {
         // prevent instantiation
     }
 
-    public static BottomSheetDialog showPayConfirmation(Context context, String recipientUsername, String recipientName, long amountToSend, long senderWalletBalance, long senderCommissionBalance, final Runnable onPay) {
+    public static BottomSheetDialog showPayConfirmation(Context context, String recipientUsername, String recipientName, String recipientProfileUrl, long amountToSend, long senderWalletBalance, long senderCommissionBalance, final Runnable onPay) {
         BottomSheetConfirmPaymentBinding binding = BottomSheetConfirmPaymentBinding.inflate(LayoutInflater.from(context));
         BottomSheetDialog dialog = new BottomSheetDialog(context, R.style.Widget_SettleX_BottomSheetDialog);
         dialog.setContentView(binding.getRoot());
@@ -87,7 +87,9 @@ public class DashboardUiUtil {
         binding.amountToSend.setText(StringUtil.formatToNaira(amountToSend));
         binding.recipientUsername.setText(StringUtil.addAtToUsername(recipientUsername));
         binding.recipientName.setText(recipientName.toUpperCase());
-        AvatarService.loadAvatar(recipientName, binding.recipientProfilePic); // TODO: replace with real profile pic
+        if (recipientProfileUrl != null) {
+            ProfileService.loadProfilePic(recipientProfileUrl, binding.recipientProfilePic);
+        }
 
         // Sender details
         String SENDER_WALLET_BALANCE = "(" + StringUtil.formatToNaira(senderWalletBalance) + ")";

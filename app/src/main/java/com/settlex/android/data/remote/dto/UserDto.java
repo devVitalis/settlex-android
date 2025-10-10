@@ -4,19 +4,20 @@ package com.settlex.android.data.remote.dto;
  * Represents a user in firestore database
  */
 public class UserDto {
-    public String uid, firstName, lastName, username, email, phone;
+    public String uid, email, phone, firstName, lastName, username, profileUrl;
     public long balance, commissionBalance, referralBalance;
 
     public UserDto() {
     }
 
-    public UserDto(String uid, String firstName, String lastName, String username, String email, String phone, long balance, long commissionBalance, long referralBalance) {
+    public UserDto(String uid, String firstName, String lastName, String username, String profileUrl, String email, String phone, long balance, long commissionBalance, long referralBalance) {
         this.uid = uid;
+        this.email = email;
+        this.phone = phone;
         this.firstName = firstName;
         this.lastName = lastName;
         this.username = username;
-        this.email = email;
-        this.phone = phone;
+        this.profileUrl = profileUrl;
         this.balance = balance;
         this.commissionBalance = commissionBalance;
         this.referralBalance = referralBalance;

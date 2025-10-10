@@ -196,11 +196,8 @@ public class StringUtil {
                 .format(timestamp.toDate());
     }
 
-    public static String compressAndConvertToBase64(Context context, Uri uri) {
-        InputStream inputStream = null;
-        try {
-            // Open input stream from the Uri
-            inputStream = context.getContentResolver().openInputStream(uri);
+    public static String compressAndConvertImageToBase64(Context context, Uri uri) {
+        try (InputStream inputStream = context.getContentResolver().openInputStream(uri)) {
             Bitmap bitmap = BitmapFactory.decodeStream(inputStream);
 
             if (bitmap == null) {
@@ -230,14 +227,6 @@ public class StringUtil {
         } catch (Exception e) {
             Log.e(TAG, "Error compressing image: " + e.getMessage(), e);
             return null;
-        } finally {
-            // Always close input stream
-            if (inputStream != null) {
-                try {
-                    inputStream.close();
-                } catch (Exception ignored) {}
-            }
         }
     }
-
 }

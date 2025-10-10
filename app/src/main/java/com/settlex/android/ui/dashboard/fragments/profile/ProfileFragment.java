@@ -2,6 +2,7 @@ package com.settlex.android.ui.dashboard.fragments.profile;
 
 import android.Manifest;
 import android.content.pm.PackageManager;
+import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
 import android.util.Log;
@@ -18,13 +19,10 @@ import androidx.core.content.ContextCompat;
 import androidx.fragment.app.Fragment;
 import androidx.lifecycle.ViewModelProvider;
 
-import com.bumptech.glide.Glide;
-import com.bumptech.glide.load.engine.DiskCacheStrategy;
-import com.bumptech.glide.load.resource.drawable.DrawableTransitionOptions;
-import com.bumptech.glide.request.RequestOptions;
 import com.settlex.android.R;
-import com.settlex.android.SettleXApp;
+import com.settlex.android.data.remote.profile.ProfileService;
 import com.settlex.android.databinding.FragmentProfileBinding;
+import com.settlex.android.ui.common.util.ProgressLoaderController;
 import com.settlex.android.ui.dashboard.model.UserUiModel;
 import com.settlex.android.ui.dashboard.viewmodel.UserViewModel;
 import com.settlex.android.util.string.StringUtil;
@@ -36,6 +34,7 @@ import dagger.hilt.android.AndroidEntryPoint;
 public class ProfileFragment extends Fragment {
     private FragmentProfileBinding binding;
     private UserViewModel userViewModel;
+    private ProgressLoaderController progressLoader;
     private ActivityResultLauncher<String> requestPermissionLauncher;
     private ActivityResultLauncher<PickVisualMediaRequest> pickImageLauncher;
 
@@ -47,6 +46,7 @@ public class ProfileFragment extends Fragment {
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         userViewModel = new ViewModelProvider(requireActivity()).get(UserViewModel.class);
+        progressLoader = new ProgressLoaderController(requireActivity());
     }
 
     @Override
@@ -73,6 +73,9 @@ public class ProfileFragment extends Fragment {
 
     private void onUserDataSuccess(UserUiModel user) {
         // set data
+        if (user.getProfileUrl() != null) {
+            ProfileService.loadProfilePic(user.getProfileUrl(), binding.profilePic);
+        }
         binding.paymentID.setText(user.getUsername() != null ? user.getUsername() : "");
         binding.fullName.setText(user.getUserFullName().toUpperCase());
         binding.email.setText(StringUtil.maskEmail(user.getEmail()));
@@ -83,45 +86,43 @@ public class ProfileFragment extends Fragment {
         Log.e("Fragment", "User data error: " + error);
     }
 
-    private void observeProfilePicUpload(){
-        userViewModel.getProfilePicUploadResult().observe(getViewLifecycleOwner(), result -> {
-            if (result == null) return;
+    private void observeProfilePicUpload() {
+        userViewModel.getProfilePicUploadResult().observe(getViewLifecycleOwner(), upload -> {
+            if (upload == null) return;
 
-            switch (result.getStatus()) {
-                case LOADING -> {
-
-                }
-                case SUCCESS -> {
-                    onProfilePicUploadSuccess(result.getData());
-                }
-                case ERROR -> {
-
-                }
+            switch (upload.getStatus()) {
+                case LOADING -> onProfilePicUploadLoading();
+                case SUCCESS -> onProfilePicUploadSuccess(upload.getData());
+                case ERROR -> onProfilePicUploadError(upload.getMessage());
             }
         });
     }
 
-    private void onProfilePicUploadSuccess(String uri) {
-
-        Glide.with(SettleXApp.getAppContext())
-                .load(uri)
-                .apply(new RequestOptions())
-                .diskCacheStrategy(DiskCacheStrategy.ALL)
-                .transition(DrawableTransitionOptions.withCrossFade(300))
-                .into(binding.profilePic);
+    private void onProfilePicUploadLoading() {
+        progressLoader.show();
     }
 
+    private void onProfilePicUploadSuccess(String uri) {
+        progressLoader.hide();
+    }
+
+    private void onProfilePicUploadError(String error) {
+        progressLoader.hide();
+        Log.e("ProfilePic", "Profile Pic Upload error: " + error);
+    }
+
+
     private void setupUiActions() {
-        initPermissionLauncher();
-        initPickImageLauncher();
+        initGalleryPermissionLauncher();
+        initProfilePicPicker();
 
         StatusBarUtil.setStatusBarColor(requireActivity(), R.color.white);
-        binding.btnChangeProfilePic.setOnClickListener(view -> uploadNewProfilePic());
+        binding.btnChangeProfilePic.setOnClickListener(view -> checkPermissionsAndOpenGallery());
         binding.btnBackBefore.setOnClickListener(v -> requireActivity().finish());
         binding.btnCopyPaymentId.setOnClickListener(v -> StringUtil.copyToClipboard(requireContext(), "Payment ID", binding.paymentID.getText().toString()));
     }
 
-    private void initPermissionLauncher() {
+    private void initGalleryPermissionLauncher() {
         requestPermissionLauncher = registerForActivityResult(
                 new ActivityResultContracts.RequestPermission(), isGranted -> {
                     if (isGranted) {
@@ -133,18 +134,22 @@ public class ProfileFragment extends Fragment {
         );
     }
 
-    private void initPickImageLauncher() {
+    private void initProfilePicPicker() {
         pickImageLauncher = registerForActivityResult(
                 new ActivityResultContracts.PickVisualMedia(),
                 uri -> {
                     if (uri != null) {
                         // set selected image
-                        userViewModel.uploadProfilePic(StringUtil.compressAndConvertToBase64(requireContext(), uri));
+                        uploadProfilePic(uri);
                         return;
                     }
                     Toast.makeText(requireContext(), "No media selected", Toast.LENGTH_SHORT).show();
                 }
         );
+    }
+
+    private void uploadProfilePic(Uri uri) {
+        userViewModel.uploadProfilePic(StringUtil.compressAndConvertImageToBase64(requireContext(), uri));
     }
 
     private void openGalleryPicker() {
@@ -155,7 +160,7 @@ public class ProfileFragment extends Fragment {
         );
     }
 
-    private void uploadNewProfilePic() {
+    private void checkPermissionsAndOpenGallery() {
         boolean IS_ANDROID_13_OR_HIGHER = Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU;
         String permission = Manifest.permission.READ_EXTERNAL_STORAGE;
 
