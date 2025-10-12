@@ -1,6 +1,7 @@
 package com.settlex.android.ui.dashboard.util;
 
 import android.content.Context;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 
@@ -87,9 +88,8 @@ public class DashboardUiUtil {
         binding.amountToSend.setText(StringUtil.formatToNaira(amountToSend));
         binding.recipientUsername.setText(StringUtil.addAtToUsername(recipientUsername));
         binding.recipientName.setText(recipientName.toUpperCase());
-        if (recipientProfileUrl != null) {
-            ProfileService.loadProfilePic(recipientProfileUrl, binding.recipientProfilePic);
-        }
+        ProfileService.loadProfilePic(recipientProfileUrl, binding.recipientProfilePic);
+        Log.d("UI", "Recipient profile url: " + recipientProfileUrl);
 
         // Sender details
         String SENDER_WALLET_BALANCE = "(" + StringUtil.formatToNaira(senderWalletBalance) + ")";

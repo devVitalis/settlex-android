@@ -75,7 +75,6 @@
                         app:shapeAppearanceOverlay="@style/Oval_Shape"
                         android:layout_width="65dp"
                         android:layout_height="65dp"
-                        android:scaleType="centerCrop"
                         app:srcCompat="@drawable/ic_avatar_default" />
 
                     <ImageView

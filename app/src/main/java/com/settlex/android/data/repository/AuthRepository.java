@@ -281,6 +281,11 @@ public class AuthRepository {
         return FirebaseAuth.getInstance().getCurrentUser();
     }
 
+    public void signOut() {
+        firebaseAuth.signOut();
+    }
+
+
     // Callback Interfaces =====
     public interface LoginCallback {
         void onSuccess();

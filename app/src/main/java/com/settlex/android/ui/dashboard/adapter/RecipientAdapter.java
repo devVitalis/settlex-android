@@ -59,15 +59,13 @@ public class RecipientAdapter extends ListAdapter<RecipientUiModel, RecipientAda
             this.binding = binding;
         }
 
-        public void bind(RecipientUiModel model, OnItemClickListener listener) {
-            if (model.getProfileUrl() != null) {
-                ProfileService.loadProfilePic(model.getProfileUrl(), binding.userProfilePic);
-            }
-            binding.userFullName.setText(model.getFullName());
-            binding.username.setText(model.getUsername());
+        public void bind(RecipientUiModel recipient, OnItemClickListener listener) {
+            ProfileService.loadProfilePic(recipient.getProfileUrl(), binding.profilePic);
+            binding.fullName.setText(recipient.getFullName());
+            binding.username.setText(recipient.getUsername());
 
             //Handle click
-            binding.getRoot().setOnClickListener(v -> listener.onItemClick(model));
+            binding.getRoot().setOnClickListener(v -> listener.onItemClick(recipient));
         }
     }
 }

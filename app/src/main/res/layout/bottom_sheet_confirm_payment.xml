@@ -90,11 +90,13 @@
             android:textColor="@color/gray"
             android:textSize="14sp" />
 
-        <ImageView
+        <com.google.android.material.imageview.ShapeableImageView
             android:id="@+id/recipientProfilePic"
-            android:layout_width="25dp"
-            android:layout_height="25dp"
-            android:layout_marginEnd="3dp" />
+            android:layout_width="20dp"
+            android:layout_height="20dp"
+            android:layout_marginEnd="3dp"
+            app:shapeAppearanceOverlay="@style/Oval_Shape"
+            app:srcCompat="@drawable/ic_avatar_default" />
 
         <TextView
             android:id="@+id/recipientName"

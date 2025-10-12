@@ -20,11 +20,14 @@ public class ProfileService {
      * @param target        The ImageView where the avatar will be loaded
      */
     public static void loadProfilePic(String profilePicUrl, ImageView target) {
+        if (profilePicUrl == null || profilePicUrl.isEmpty()) return;
+
         Glide.with(SettleXApp.getAppContext())
                 .load(profilePicUrl)
+                .centerCrop()
                 .apply(new RequestOptions())
                 .diskCacheStrategy(DiskCacheStrategy.ALL)
-                .transition(DrawableTransitionOptions.withCrossFade(300))
+                .transition(DrawableTransitionOptions.withCrossFade(100))
                 .into(target);
     }
 }

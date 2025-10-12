@@ -1,5 +1,7 @@
 package com.settlex.android.ui.auth.viewmodel;
 
+import android.util.Log;
+
 import androidx.lifecycle.LiveData;
 import androidx.lifecycle.MutableLiveData;
 import androidx.lifecycle.ViewModel;
@@ -7,7 +9,7 @@ import androidx.lifecycle.ViewModel;
 import com.google.firebase.auth.FirebaseUser;
 import com.settlex.android.data.repository.AuthRepository;
 import com.settlex.android.domain.model.UserModel;
-import com.settlex.android.ui.auth.model.loginUiModel;
+import com.settlex.android.ui.auth.model.LoginUiModel;
 import com.settlex.android.util.event.Event;
 import com.settlex.android.util.event.Result;
 
@@ -30,7 +32,7 @@ public class AuthViewModel extends ViewModel {
     }
 
     // LIVEDATA STATE HOLDERS =========
-    private final MutableLiveData<loginUiModel> userAuthStateLiveData = new MutableLiveData<>();
+    private final MutableLiveData<LoginUiModel> userAuthStateLiveData = new MutableLiveData<>();
     private final MutableLiveData<UserModel> userLiveData = new MutableLiveData<>();
     private final MutableLiveData<Result<String>> loginResult = new MutableLiveData<>();
     private final MutableLiveData<Result<String>> registerResult = new MutableLiveData<>();
@@ -249,14 +251,22 @@ public class AuthViewModel extends ViewModel {
 
     public void initUserAuthState() {
         FirebaseUser currentUser = authRepo.getCurrentUser();
-        userAuthStateLiveData.setValue((currentUser != null) ? new loginUiModel(
+        if (currentUser == null) userAuthStateLiveData.setValue(null);
+
+        userAuthStateLiveData.setValue((currentUser != null) ? new LoginUiModel(
                 currentUser.getUid(),
                 currentUser.getEmail(),
-                currentUser.getDisplayName())
+                currentUser.getDisplayName(),
+                currentUser.getPhotoUrl() != null ? currentUser.getPhotoUrl().toString() : null)
                 : null);
     }
 
-    public LiveData<loginUiModel> getUserAuthStateLiveData() {
+    public void signOut() {
+        // Log out current user / end session
+        authRepo.signOut();
+    }
+
+    public LiveData<LoginUiModel> getUserAuthStateLiveData() {
         return userAuthStateLiveData;
     }
 

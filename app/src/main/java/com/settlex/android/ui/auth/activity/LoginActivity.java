@@ -75,7 +75,7 @@ public class LoginActivity extends AppCompatActivity {
         authViewModel.getUserAuthStateLiveData().observe(this, currentUser -> {
             if (currentUser != null) {
                 // user is logged in
-                showLoggedInLayout(currentUser.getDisplayName(), currentUser.getEmail());
+                showLoggedInLayout(currentUser.getPhotoUrl(), currentUser.getDisplayName(), currentUser.getEmail());
                 return;
             }
             showLoggedOutLayout();
@@ -128,11 +128,11 @@ public class LoginActivity extends AppCompatActivity {
         authViewModel.loginWithEmail(email, password);
     }
 
-    private void showLoggedInLayout(String displayName, String email) {
+    private void showLoggedInLayout(String photoUrl, String displayName, String email) {
         String userDisplayName = "Hi, " + displayName.toUpperCase();
         String userEmail = "(" + email + ")";
 
-//        ProfileService.loadProfilePic(displayName, binding.userProfile);
+        ProfileService.loadProfilePic(photoUrl, binding.userProfile);
         binding.userDisplayName.setText(userDisplayName);
         binding.userEmail.setText(StringUtil.maskEmail(userEmail));
         binding.editTxtEmail.setText(email);
@@ -147,6 +147,7 @@ public class LoginActivity extends AppCompatActivity {
     }
 
     private void showLoggedOutLayout() {
+        authViewModel.signOut();
         // Hide
         binding.showCurrentUserLayout.setVisibility(View.GONE);
         binding.btnFingerprint.setVisibility(View.GONE);

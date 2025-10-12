@@ -224,10 +224,10 @@ public class PayAFriendFragment extends Fragment {
 
         // Current user is sender
         bottomSheetDialog = DashboardUiUtil.showPayConfirmation(
-                requireActivity(),
+                requireContext(),
                 recipientUsername,
                 recipientName,
-                String.valueOf(recipientProfileUrl != null),
+                recipientProfileUrl,
                 amount,
                 currentUser.getBalance(),
                 currentUser.getCommissionBalance(),
@@ -294,10 +294,8 @@ public class PayAFriendFragment extends Fragment {
             recipientAdapter.submitList(Collections.emptyList());
             binding.recipientRecyclerView.setVisibility(View.GONE);
 
-            if (recipient.getProfileUrl() != null) {
-                ProfileService.loadProfilePic(recipient.getProfileUrl(), binding.selectedRecipientProfilePic);
-                recipientProfileUrl = recipient.getProfileUrl();
-            }
+            recipientProfileUrl = recipient.getProfileUrl();
+            ProfileService.loadProfilePic(recipientProfileUrl, binding.selectedRecipientProfilePic);
             binding.selectedRecipientName.setText(recipient.getFullName());
             binding.selectedRecipientUsername.setText(recipient.getUsername());
             binding.selectedRecipient.setVisibility(View.VISIBLE);

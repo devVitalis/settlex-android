@@ -115,12 +115,11 @@
 
                 <com.google.android.material.imageview.ShapeableImageView
                     android:id="@+id/userProfile"
-                    style="@style/Oval_Shape"
+                    app:shapeAppearanceOverlay="@style/Oval_Shape"
                     android:layout_width="70dp"
                     android:layout_height="70dp"
-                    android:background="@drawable/bg_oval_outline_blue"
-                    android:contentDescription="Profile Picture"
-                    tools:src="@mipmap/ic_launcher_round" />
+                    android:contentDescription="@null"
+                    app:srcCompat="@drawable/ic_avatar_default" />
 
                 <TextView
                     android:id="@+id/userDisplayName"
@@ -185,9 +184,9 @@
                     android:background="@android:color/transparent"
                     android:fontFamily="@font/poppins_regular"
                     android:hint="Enter your password"
+                    android:imeOptions="actionDone"
                     android:includeFontPadding="false"
                     android:inputType="textPassword"
-                    android:imeOptions="actionDone"
                     android:paddingHorizontal="15dp"
                     android:textColor="@color/black"
                     android:textColorHint="@color/gray"

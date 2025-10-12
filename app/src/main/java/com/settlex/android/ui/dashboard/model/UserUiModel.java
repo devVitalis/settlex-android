@@ -58,7 +58,7 @@ public class UserUiModel {
         return referralBalance;
     }
 
-    public String getUserFullName() {
+    public String getFullName() {
         return getFirstName() + " " + getLastName();
     }
 }

@@ -73,11 +73,9 @@ public class ProfileFragment extends Fragment {
 
     private void onUserDataSuccess(UserUiModel user) {
         // set data
-        if (user.getProfileUrl() != null) {
-            ProfileService.loadProfilePic(user.getProfileUrl(), binding.profilePic);
-        }
+        ProfileService.loadProfilePic(user.getProfileUrl(), binding.profilePic);
         binding.paymentID.setText(user.getUsername() != null ? user.getUsername() : "");
-        binding.fullName.setText(user.getUserFullName().toUpperCase());
+        binding.fullName.setText(user.getFullName().toUpperCase());
         binding.email.setText(StringUtil.maskEmail(user.getEmail()));
         binding.phoneNumber.setText(StringUtil.formatPhoneNumberWithCountryCode(user.getPhone()));
     }

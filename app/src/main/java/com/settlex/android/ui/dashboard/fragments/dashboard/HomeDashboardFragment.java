@@ -26,7 +26,7 @@ import com.settlex.android.databinding.FragmentDashboardHomeBinding;
 import com.settlex.android.ui.auth.activity.LoginActivity;
 import com.settlex.android.ui.dashboard.activity.CommissionWithdrawalActivity;
 import com.settlex.android.ui.dashboard.activity.ProfileActivity;
-import com.settlex.android.ui.dashboard.activity.ReceiveMoneyActivity;
+import com.settlex.android.ui.dashboard.activity.PayMeActivity;
 import com.settlex.android.ui.dashboard.activity.TransactionActivity;
 import com.settlex.android.ui.dashboard.activity.TransactionDetailsActivity;
 import com.settlex.android.ui.dashboard.adapter.PromotionalBannerAdapter;
@@ -61,11 +61,10 @@ public class HomeDashboardFragment extends Fragment {
 
     // Dependencies
     private FragmentDashboardHomeBinding binding;
-    private PromoBannerViewModel promoBannerViewModel;
-    private UserViewModel userViewModel;
     private TransactionsAdapter adapter;
+    private UserViewModel userViewModel;
     private boolean isConnected = false;
-
+    private PromoBannerViewModel promoBannerViewModel;
     private final Handler autoScrollHandler = new Handler(Looper.getMainLooper());
     private Runnable autoScrollRunnable;
 
@@ -119,14 +118,14 @@ public class HomeDashboardFragment extends Fragment {
         binding.btnBalanceToggle.setOnClickListener(v -> userViewModel.toggleBalanceVisibility());
         binding.btnUserCommissionBalanceLayout.setOnClickListener(v -> navigateToActivity(CommissionWithdrawalActivity.class));
         binding.btnAddMoney.setOnClickListener(v -> userViewModel.signOut());
-        binding.btnReceiveMoney.setOnClickListener(v -> navigateToActivity(ReceiveMoneyActivity.class));
+        binding.btnReceiveMoney.setOnClickListener(v -> navigateToActivity(PayMeActivity.class));
         binding.btnPayAFriend.setOnClickListener(v -> navigateToActivity(TransactionActivity.class));
-        binding.btnNotification.setOnClickListener(v -> toast());
-        binding.btnSupport.setOnClickListener(v -> toast());
-        binding.btnViewAllTransaction.setOnClickListener(v -> toast());
+        binding.btnNotification.setOnClickListener(v -> toastNewFeature());
+        binding.btnSupport.setOnClickListener(v -> toastNewFeature());
+        binding.btnViewAllTransaction.setOnClickListener(v -> toastNewFeature());
     }
 
-    private void toast() {
+    private void toastNewFeature() {
         Toast.makeText(requireContext(), "This feature is not yet implemented", Toast.LENGTH_SHORT).show();
     }
 
@@ -153,9 +152,7 @@ public class HomeDashboardFragment extends Fragment {
 
     private void observeAndDisplayUserData() {
         userViewModel.getUserLiveData().observe(getViewLifecycleOwner(), user -> {
-            if (user == null) {
-                return;
-            }
+            if (user == null) return;
 
             switch (user.getStatus()) {
                 case LOADING -> onUserDataLoading();
@@ -167,7 +164,7 @@ public class HomeDashboardFragment extends Fragment {
 
     private void onUserDataLoading() {
         // hide details
-        binding.userFullName.setVisibility(View.GONE);
+        binding.fullName.setVisibility(View.GONE);
         binding.userBalance.setVisibility(View.GONE);
         binding.btnUserCommissionBalanceLayout.setVisibility(View.GONE);
 
@@ -193,14 +190,12 @@ public class HomeDashboardFragment extends Fragment {
 
 
         // show details
-        binding.userFullName.setVisibility(View.VISIBLE);
+        binding.fullName.setVisibility(View.VISIBLE);
         binding.userBalance.setVisibility(View.VISIBLE);
         binding.btnUserCommissionBalanceLayout.setVisibility(View.VISIBLE);
 
-        if (user.getProfileUrl() != null) {
-            ProfileService.loadProfilePic(user.getProfileUrl(), binding.profilePic);
-        }
-        binding.userFullName.setText(user.getUserFullName());
+        ProfileService.loadProfilePic(user.getProfileUrl(), binding.profilePic);
+        binding.fullName.setText(user.getFullName());
         loadUserPrefs(user.getBalance(), user.getCommissionBalance());
     }
 
@@ -349,6 +344,7 @@ public class HomeDashboardFragment extends Fragment {
 
     private void showLoggedOutLayout() {
         // Hide all logged-in UI elements
+        binding.profilePic.setVisibility(View.GONE);
         binding.marqueeTxt.setSelected(false);
         binding.marqueeContainer.setVisibility(View.GONE);
         binding.btnBalanceToggle.setVisibility(View.GONE);
@@ -358,7 +354,6 @@ public class HomeDashboardFragment extends Fragment {
         binding.transactionContainer.setVisibility(View.GONE);
 
         // Explicitly reset the user data UI components
-        binding.userFullName.setText("");
         binding.userBalance.setText(StringUtil.setAsterisks());
         binding.userCommissionBalance.setText(StringUtil.setAsterisks());
 
