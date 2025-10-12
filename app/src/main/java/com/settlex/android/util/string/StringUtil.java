@@ -6,8 +6,10 @@ import android.content.Context;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.net.Uri;
+import android.os.Build;
 import android.util.Base64;
 import android.util.Log;
+import android.widget.Toast;
 
 import com.google.firebase.Timestamp;
 
@@ -22,7 +24,8 @@ import java.util.Locale;
 import java.util.Objects;
 
 /**
- * Utility class for string formatting and data transformations
+ * Utility class for string formatting and data transformations.
+ * Central place for formatting money, usernames, timestamps, etc.
  */
 public class StringUtil {
     private static final String TAG = StringUtil.class.getSimpleName();
@@ -31,7 +34,7 @@ public class StringUtil {
         // Prevent instantiation
     }
 
-    // EMAIL MASKING ===========
+    /** Masks email for privacy, e.g. johndoe@gmail.com → j***e@gmail.com */
     public static String maskEmail(String email) {
         if (email == null) return "";
 
@@ -39,7 +42,6 @@ public class StringUtil {
         String emailPrefix = parts[0];
         String domain = parts[1];
 
-        // Handle short prefixes differently
         if (emailPrefix.length() <= 2) {
             return emailPrefix.charAt(0) + "***@" + domain;
         }
@@ -48,7 +50,7 @@ public class StringUtil {
         return masked + "@" + domain;
     }
 
-    // TEXT FORMATTING ===========
+    /** Capitalizes each word: "john doe" → "John Doe" */
     public static String capitalizeEachWord(String input) {
         if (input == null || input.isEmpty()) return input;
 
@@ -66,19 +68,17 @@ public class StringUtil {
         return result.toString().trim();
     }
 
+    /** Removes leading '@' from username, if present */
     public static String removeAtInUsername(String username) {
         if (username == null || username.isEmpty()) return username;
-
         if (username.startsWith("@")) return username.substring(1).toLowerCase();
-
         return username;
     }
 
+    /** Ensures username starts with '@' */
     public static String addAtToUsername(String username) {
         if (username == null || username.isEmpty()) return username;
-
         if (username.startsWith("@")) return username.toLowerCase();
-
         return "@" + username;
     }
 
@@ -86,28 +86,27 @@ public class StringUtil {
         return "****";
     }
 
-    public static void copyToClipboard(Context context, String label, String text) {
+    /** Copies text to clipboard, optionally showing a Toast (only for API < 33) */
+    public static void copyToClipboard(Context context, String label, String text, boolean showToast) {
         ClipboardManager clipboardManager = (ClipboardManager) context.getSystemService(Context.CLIPBOARD_SERVICE);
         ClipData clipData = ClipData.newPlainText(label, text);
         clipboardManager.setPrimaryClip(clipData);
+
+        if (showToast && Build.VERSION.SDK_INT < Build.VERSION_CODES.TIRAMISU) {
+            Toast.makeText(context, "Copied", Toast.LENGTH_SHORT).show();
+        }
     }
 
-    // PHONE NUMBER FORMATTING ===========
+    /** Converts Nigerian phone numbers (starting with 0) to +234 format */
     public static String formatPhoneNumberWithCountryCode(String phone) {
         if (phone == null || phone.isEmpty()) return phone;
-
         if (phone.startsWith("0")) phone = phone.substring(1);
-
         return "+234" + phone;
     }
 
-    // CURRENCY FORMATTING =============
-
-    /**
-     * Formats kobo (long) into ₦X,XXX.XX
-     */
-    public static String formatToNaira(long amountInLongCent) {
-        BigDecimal kobo = BigDecimal.valueOf(amountInLongCent);
+    /** Converts Kobo (long) to a formatted Naira currency string, e.g. 123450 → ₦1,234.50 */
+    public static String formatToNaira(long amountInKobo) {
+        BigDecimal kobo = BigDecimal.valueOf(amountInKobo);
         BigDecimal naira = kobo.divide(BigDecimal.valueOf(100), 2, RoundingMode.UNNECESSARY);
 
         NumberFormat formatter = NumberFormat.getCurrencyInstance(new Locale("en", "NG"));
@@ -117,85 +116,62 @@ public class StringUtil {
         return formatter.format(naira);
     }
 
-    public static String formatToCurrency(BigDecimal numericValue) {
-        Locale nigerianLocal = Locale.forLanguageTag("en-NG");
-        NumberFormat numberFormatter = NumberFormat.getCurrencyInstance(nigerianLocal);
+    /** Formats a BigDecimal into local currency string without ₦ symbol */
+    public static String formatToCurrency(BigDecimal number) {
+        Locale NIG_LOCAL = Locale.forLanguageTag("en-NG");
+        NumberFormat numberFormatter = NumberFormat.getCurrencyInstance(NIG_LOCAL);
 
-        String formattedAmount = numberFormatter.format(numericValue);
-        String symbol = Objects.requireNonNull(numberFormatter.getCurrency()).getSymbol(nigerianLocal);
+        String formattedAmount = numberFormatter.format(number);
+        String symbol = Objects.requireNonNull(numberFormatter.getCurrency()).getSymbol(NIG_LOCAL);
 
         return formattedAmount.replace(symbol, "").trim();
     }
 
-    /**
-     * Formats kobo (long) into ₦X.XK / ₦X.XM / ₦X.XB
-     */
-    public static String formatToNairaShort(long amountInLongCents) {
+    /** Converts large amounts to readable short forms, e.g. ₦2.5K / ₦3.2M / ₦1.1B */
+    public static String formatToNairaShort(long amountInKobo) {
         String symbol = "₦";
         DecimalFormat df = new DecimalFormat("#.##");
-        BigDecimal naira = BigDecimal.valueOf(amountInLongCents)
-                .divide(BigDecimal.valueOf(100), 2, RoundingMode.HALF_UP);
+        BigDecimal naira = BigDecimal.valueOf(amountInKobo).divide(BigDecimal.valueOf(100), 2, RoundingMode.HALF_UP);
 
         if (naira.compareTo(BigDecimal.valueOf(1_000)) < 0) {
             return symbol + naira.toPlainString(); // ₦999.99
-
         } else if (naira.compareTo(BigDecimal.valueOf(1_000_000)) < 0) {
             BigDecimal thousands = naira.divide(BigDecimal.valueOf(1_000), 1, RoundingMode.HALF_UP);
             return symbol + df.format(thousands) + "K";
-
         } else if (naira.compareTo(BigDecimal.valueOf(1_000_000_000)) < 0) {
             BigDecimal millions = naira.divide(BigDecimal.valueOf(1_000_000), 1, RoundingMode.HALF_UP);
             return symbol + df.format(millions) + "M";
-
         } else {
             BigDecimal billions = naira.divide(BigDecimal.valueOf(1_000_000_000), 1, RoundingMode.HALF_UP);
             return symbol + df.format(billions) + "B";
         }
     }
 
-    /**
-     * Converts a user-provided string (e.g., "100.60") into a long value (in cents/kobo)
-     * using BigDecimal for accurate parsing and rounding.
-     *
-     * @param amountString The user's input string (e.g., "100.60").
-     * @return The monetary value as a long in cents (e.g., 10060L).
-     * @throws NumberFormatException If the string cannot be parsed as a valid number.
-     */
-    public static long convertNairaStringToLongCents(String amountString) throws NumberFormatException {
+    /** Converts a Naira string like "120.50" to its equivalent Kobo value (12050L) */
+    public static long convertNairaStringToKobo(String amountString) {
         if (amountString == null || amountString.trim().isEmpty()) {
-            throw new NumberFormatException("Input string cannot be empty or null.");
+            return 0L;
         }
 
-        try {
-            // 1. Safely parse the user's string using the BigDecimal(String) constructor.
-            BigDecimal amountBD = new BigDecimal(amountString.trim());
+        BigDecimal amount = new BigDecimal(amountString.trim());
+        BigDecimal amountInCents = amount.multiply(new BigDecimal("100"));
 
-            // 2. Multiply by 100 to shift the decimal point (get cents)
-            BigDecimal amountInCentsBD = amountBD.multiply(new BigDecimal("100"));
+        // Round to nearest whole Kobo
+        BigDecimal roundedCents = amountInCents.setScale(0, RoundingMode.HALF_UP);
 
-            // 3. Round to 0 decimal places (the nearest whole cent/kobo) using HALF_UP
-            BigDecimal roundedCents = amountInCentsBD.setScale(0, RoundingMode.HALF_UP);
-
-            // 4. Safely extract the long value. longValueExact() throws an exception
-            //    if the value is too large for a long, adding an extra layer of safety.
-            return roundedCents.longValueExact();
-
-        } catch (ArithmeticException e) {
-            // Handle issues like too many decimal places after rounding or value overflow
-            throw new NumberFormatException("Invalid currency value: " + amountString);
-        } catch (NumberFormatException e) {
-            // Re-throw if the initial BigDecimal parsing failed
-            throw new NumberFormatException("Invalid number format for currency: " + amountString);
-        }
+        return roundedCents.longValueExact();
     }
 
-
-    // DATE FORMATTING ==========
+    /** Formats a Firebase Timestamp into human-readable date, e.g. "12 Oct 2025, 09:45 AM" */
     public static String formatTimeStampToSimpleDate(Timestamp timestamp) {
         return new SimpleDateFormat("dd MMM yyyy, hh:mm a", Locale.US)
                 .format(timestamp.toDate());
     }
 
+    /**
+     * Reads, scales, compresses, and encodes an image from a Uri into Base64 string.
+     * Keeps aspect ratio and limits image dimensions to 512px max.
+     */
     public static String compressAndConvertImageToBase64(Context context, Uri uri) {
         try (InputStream inputStream = context.getContentResolver().openInputStream(uri)) {
             Bitmap bitmap = BitmapFactory.decodeStream(inputStream);
@@ -205,7 +181,7 @@ public class StringUtil {
                 return null;
             }
 
-            // Scale while keeping aspect ratio (max 512px for width/height)
+            // Maintain aspect ratio, ensuring neither width nor height exceeds 512px
             int maxSize = 512;
             int width = bitmap.getWidth();
             int height = bitmap.getHeight();
@@ -216,11 +192,11 @@ public class StringUtil {
 
             Bitmap scaled = Bitmap.createScaledBitmap(bitmap, scaledWidth, scaledHeight, true);
 
-            // Compress Bitmap to JPEG with ~70% quality
+            // Compress scaled bitmap to JPEG (70% quality)
             ByteArrayOutputStream outputStream = new ByteArrayOutputStream();
             scaled.compress(Bitmap.CompressFormat.JPEG, 70, outputStream);
 
-            // Convert compressed bytes to Base64 string
+            // Convert bytes to Base64 string for upload or storage
             byte[] compressedBytes = outputStream.toByteArray();
             return Base64.encodeToString(compressedBytes, Base64.NO_WRAP);
 

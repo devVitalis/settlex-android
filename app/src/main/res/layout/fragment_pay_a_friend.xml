@@ -36,7 +36,7 @@
             android:fontFamily="@font/poppins_regular"
             android:gravity="center"
             android:includeFontPadding="false"
-            android:text="Pay A Friend"
+            android:text="Pay a Friend"
             android:textColor="@color/black"
             android:textSize="15sp"
             android:textStyle="bold" />
@@ -94,7 +94,7 @@
                         android:layout_weight="1"
                         android:background="@android:color/transparent"
                         android:fontFamily="@font/poppins_regular"
-                        android:hint="Enter recipient payment ID"
+                        android:hint="Enter recipient payment Id"
                         android:imeOptions="actionNext"
                         android:includeFontPadding="false"
                         android:inputType="text"

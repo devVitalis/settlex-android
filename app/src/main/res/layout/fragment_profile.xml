@@ -72,9 +72,9 @@
 
                     <com.google.android.material.imageview.ShapeableImageView
                         android:id="@+id/profilePic"
-                        app:shapeAppearanceOverlay="@style/Oval_Shape"
                         android:layout_width="65dp"
                         android:layout_height="65dp"
+                        app:shapeAppearanceOverlay="@style/Oval_Shape"
                         app:srcCompat="@drawable/ic_avatar_default" />
 
                     <ImageView
@@ -82,7 +82,7 @@
                         android:layout_width="25dp"
                         android:layout_height="25dp"
                         android:layout_gravity="bottom|end"
-                        android:background="@drawable/bg_oval_semi_transparent_black10"
+                        android:background="@drawable/bg_oval_semi_transparent_black50"
                         android:contentDescription="@null"
                         android:padding="3dp"
                         android:src="@drawable/ic_camera" />
@@ -107,7 +107,7 @@
                         android:textSize="14sp" />
 
                     <TextView
-                        android:id="@+id/paymentID"
+                        android:id="@+id/paymentId"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:fontFamily="@font/poppins_regular"

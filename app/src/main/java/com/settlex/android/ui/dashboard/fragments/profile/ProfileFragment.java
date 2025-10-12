@@ -32,11 +32,15 @@ import dagger.hilt.android.AndroidEntryPoint;
 
 @AndroidEntryPoint
 public class ProfileFragment extends Fragment {
+    // dependencies
     private FragmentProfileBinding binding;
     private UserViewModel userViewModel;
     private ProgressLoaderController progressLoader;
     private ActivityResultLauncher<String> requestPermissionLauncher;
     private ActivityResultLauncher<PickVisualMediaRequest> pickImageLauncher;
+
+    // instance var for old profile delete url
+    private String profileDeleteUrl;
 
     public ProfileFragment() {
         // Required empty public constructor
@@ -72,9 +76,10 @@ public class ProfileFragment extends Fragment {
     }
 
     private void onUserDataSuccess(UserUiModel user) {
-        // set data
+        // display data
+        this.profileDeleteUrl = user.getProfileDeleteUrl() != null ? user.getProfileDeleteUrl() : null;
         ProfileService.loadProfilePic(user.getProfileUrl(), binding.profilePic);
-        binding.paymentID.setText(user.getUsername() != null ? user.getUsername() : "");
+        binding.paymentId.setText(user.getUsername() != null ? user.getUsername() : "Setup Payment ID");
         binding.fullName.setText(user.getFullName().toUpperCase());
         binding.email.setText(StringUtil.maskEmail(user.getEmail()));
         binding.phoneNumber.setText(StringUtil.formatPhoneNumberWithCountryCode(user.getPhone()));
@@ -100,7 +105,7 @@ public class ProfileFragment extends Fragment {
         progressLoader.show();
     }
 
-    private void onProfilePicUploadSuccess(String uri) {
+    private void onProfilePicUploadSuccess(String message) {
         progressLoader.hide();
     }
 
@@ -117,7 +122,7 @@ public class ProfileFragment extends Fragment {
         StatusBarUtil.setStatusBarColor(requireActivity(), R.color.white);
         binding.btnChangeProfilePic.setOnClickListener(view -> checkPermissionsAndOpenGallery());
         binding.btnBackBefore.setOnClickListener(v -> requireActivity().finish());
-        binding.btnCopyPaymentId.setOnClickListener(v -> StringUtil.copyToClipboard(requireContext(), "Payment ID", binding.paymentID.getText().toString()));
+        binding.btnCopyPaymentId.setOnClickListener(v -> StringUtil.copyToClipboard(requireContext(), "Payment Id", binding.paymentId.getText().toString(), true));
     }
 
     private void initGalleryPermissionLauncher() {
@@ -147,7 +152,7 @@ public class ProfileFragment extends Fragment {
     }
 
     private void uploadProfilePic(Uri uri) {
-        userViewModel.uploadProfilePic(StringUtil.compressAndConvertImageToBase64(requireContext(), uri));
+        userViewModel.uploadProfilePic(StringUtil.compressAndConvertImageToBase64(requireContext(), uri), profileDeleteUrl);
     }
 
     private void openGalleryPicker() {

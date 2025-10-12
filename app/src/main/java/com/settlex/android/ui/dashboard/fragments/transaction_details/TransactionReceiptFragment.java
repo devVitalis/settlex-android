@@ -1,11 +1,9 @@
 package com.settlex.android.ui.dashboard.fragments.transaction_details;
 
-import android.os.Build;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -88,12 +86,8 @@ public class TransactionReceiptFragment extends Fragment {
             StringUtil.copyToClipboard(
                     requireContext(),
                     "Transaction ID",
-                    binding.transactionId.getText().toString());
-
-            // show toast only on older devices < API 33
-            if (Build.VERSION.SDK_INT < Build.VERSION_CODES.TIRAMISU) {
-                Toast.makeText(requireContext(), "Copied", Toast.LENGTH_SHORT).show();
-            }
+                    binding.transactionId.getText().toString(),
+                    true);
         });
     }
 }

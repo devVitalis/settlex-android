@@ -223,19 +223,23 @@ public class OtpVerificationActivity extends AppCompatActivity {
     @Override
     public boolean dispatchTouchEvent(MotionEvent event) {
         if (event.getAction() == MotionEvent.ACTION_DOWN) {
-            View currentFocus = getCurrentFocus();
-            if (currentFocus instanceof EditText) {
+            View v = getCurrentFocus();
+            if (v instanceof EditText) {
                 Rect outRect = new Rect();
-                currentFocus.getGlobalVisibleRect(outRect);
-
+                v.getGlobalVisibleRect(outRect);
                 if (!outRect.contains((int) event.getRawX(), (int) event.getRawY())) {
-                    currentFocus.clearFocus();
-                    InputMethodManager imm = (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
-                    if (imm != null) imm.hideSoftInputFromWindow(currentFocus.getWindowToken(), 0);
-                    binding.main.requestFocus();
+                    v.clearFocus();
+                    hideKeyboard(v);
                 }
             }
         }
         return super.dispatchTouchEvent(event);
+    }
+
+    private void hideKeyboard(View view) {
+        InputMethodManager imm = (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
+        if (imm != null) {
+            imm.hideSoftInputFromWindow(view.getWindowToken(), 0);
+        }
     }
 }

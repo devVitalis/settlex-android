@@ -220,20 +220,14 @@
                             android:textColor="@color/gray"
                             android:textSize="11sp" />
 
-                        <com.google.android.material.card.MaterialCardView
-                            style="@style/Widget.SettleX.CardView.Oval.Elevated"
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:layout_marginTop="5dp">
-
-                            <com.google.android.material.imageview.ShapeableImageView
-                                style="@style/Oval_Shape"
-                                android:layout_width="50dp"
-                                android:layout_height="50dp"
-                                android:background="@drawable/bg_oval_gray_light"
-                                android:scaleType="fitCenter"
-                                android:src="@drawable/ic_invite_step1" />
-                        </com.google.android.material.card.MaterialCardView>
+                        <com.google.android.material.imageview.ShapeableImageView
+                            style="@style/Oval_Shape"
+                            android:layout_width="50dp"
+                            android:layout_height="50dp"
+                            android:layout_marginTop="5dp"
+                            android:background="@drawable/bg_oval_gray_light"
+                            android:scaleType="fitCenter"
+                            android:src="@drawable/ic_invite_step1" />
 
                         <TextView
                             android:layout_width="wrap_content"
@@ -286,20 +280,14 @@
                             android:textColor="@color/gray"
                             android:textSize="11sp" />
 
-                        <com.google.android.material.card.MaterialCardView
-                            style="@style/Widget.SettleX.CardView.Oval.Elevated"
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:layout_marginTop="5dp">
-
-                            <com.google.android.material.imageview.ShapeableImageView
-                                style="@style/Oval_Shape"
-                                android:layout_width="50dp"
-                                android:layout_height="50dp"
-                                android:background="@drawable/bg_oval_gray_light"
-                                android:scaleType="fitCenter"
-                                android:src="@drawable/ic_invite_step2" />
-                        </com.google.android.material.card.MaterialCardView>
+                        <com.google.android.material.imageview.ShapeableImageView
+                            style="@style/Oval_Shape"
+                            android:layout_width="50dp"
+                            android:layout_height="50dp"
+                            android:layout_marginTop="5dp"
+                            android:background="@drawable/bg_oval_gray_light"
+                            android:scaleType="fitCenter"
+                            android:src="@drawable/ic_invite_step2" />
 
                         <TextView
                             android:layout_width="wrap_content"
@@ -353,20 +341,14 @@
                             android:textColor="@color/gray"
                             android:textSize="11sp" />
 
-                        <com.google.android.material.card.MaterialCardView
-                            style="@style/Widget.SettleX.CardView.Oval.Elevated"
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:layout_marginTop="5dp">
-
-                            <com.google.android.material.imageview.ShapeableImageView
-                                style="@style/Oval_Shape"
-                                android:layout_width="50dp"
-                                android:layout_height="50dp"
-                                android:background="@drawable/bg_oval_gray_light"
-                                android:scaleType="fitCenter"
-                                android:src="@drawable/ic_invite_step3" />
-                        </com.google.android.material.card.MaterialCardView>
+                        <com.google.android.material.imageview.ShapeableImageView
+                            style="@style/Oval_Shape"
+                            android:layout_width="50dp"
+                            android:layout_height="50dp"
+                            android:layout_marginTop="5dp"
+                            android:background="@drawable/bg_oval_gray_light"
+                            android:scaleType="fitCenter"
+                            android:src="@drawable/ic_invite_step3" />
 
                         <TextView
                             android:layout_width="wrap_content"

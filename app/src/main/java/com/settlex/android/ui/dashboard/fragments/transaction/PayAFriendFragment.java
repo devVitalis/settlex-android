@@ -340,7 +340,7 @@ public class PayAFriendFragment extends Fragment {
                 boolean isEmpty = s.toString().trim().isEmpty();
                 if (!isEmpty) {
                     String cleanedAmount = s.toString().replaceAll(",", "");
-                    amount = StringUtil.convertNairaStringToLongCents(cleanedAmount);
+                    amount = StringUtil.convertNairaStringToKobo(cleanedAmount);
                 }
                 String ERROR_INVALID_AMOUNT = "Amount must be in range of ₦100 - ₦500,000.00";
                 boolean shouldShowError = !isAmountValid(amount) && !isEmpty;

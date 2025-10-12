@@ -147,7 +147,9 @@ public class LoginActivity extends AppCompatActivity {
     }
 
     private void showLoggedOutLayout() {
+        // sign out
         authViewModel.signOut();
+
         // Hide
         binding.showCurrentUserLayout.setVisibility(View.GONE);
         binding.btnFingerprint.setVisibility(View.GONE);

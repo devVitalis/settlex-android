@@ -93,8 +93,8 @@ public class UserViewModel extends ViewModel {
                             dto.recipient,
                             dto.recipientName.toUpperCase(),
                             isSender ? dto.recipientName.toUpperCase() : dto.senderName.toUpperCase(),
-                            isSender ? dto.serviceType.getDisplayName() : "Transfer received",
-                            isSender ? dto.serviceType.getIconRes() : R.drawable.ic_service_money_received,
+                            isSender ? dto.serviceType.getDisplayName() : "Payment Received",
+                            isSender ? dto.serviceType.getIconRes() : R.drawable.ic_service_payment_received,
                             operation.getSymbol(),
                             operation.getColorRes(),
                             StringUtil.formatToNaira(dto.amount),
@@ -115,12 +115,12 @@ public class UserViewModel extends ViewModel {
         return transactionLiveData;
     }
 
-    public void uploadProfilePic(String imageBase64) {
+    public void uploadProfilePic(String imageBase64, String profileDeleteUrl) {
         uploadProfilePicLiveData.setValue(Result.loading());
-        userRepo.uploadNewProfilePic(imageBase64, new UserRepository.UploadProfilePicCallback() {
+        userRepo.uploadNewProfilePic(imageBase64, profileDeleteUrl, new UserRepository.UploadProfilePicCallback() {
             @Override
-            public void onSuccess(String profilePicUrl) {
-                uploadProfilePicLiveData.setValue(Result.success(profilePicUrl));
+            public void onSuccess() {
+                uploadProfilePicLiveData.setValue(Result.success("Profile changed successful"));
             }
 
             @Override
@@ -215,6 +215,7 @@ public class UserViewModel extends ViewModel {
                 dto.phone,
                 dto.username,
                 dto.profileUrl,
+                dto.profileDeleteUrl,
                 dto.balance,
                 dto.commissionBalance,
                 dto.referralBalance

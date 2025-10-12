@@ -112,7 +112,7 @@ public class RewardsDashboardFragment extends Fragment {
     }
 
     private void copyReferralCodeToClipboard(String textToCopy) {
-        StringUtil.copyToClipboard(requireContext(), "Referral Code", textToCopy);
+        StringUtil.copyToClipboard(requireContext(), "Referral Code", textToCopy, true);
     }
 
     private void styleText() {

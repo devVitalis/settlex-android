@@ -410,7 +410,7 @@
                                 android:layout_height="wrap_content"
                                 android:fontFamily="@font/poppins_regular"
                                 android:includeFontPadding="false"
-                                android:text="Add Money"
+                                android:text="Add Funds"
                                 android:textColor="@color/white"
                                 android:textSize="11sp" />
                         </LinearLayout>
@@ -438,7 +438,7 @@
                                 android:layout_height="wrap_content"
                                 android:fontFamily="@font/poppins_regular"
                                 android:includeFontPadding="false"
-                                android:text="Receive Money"
+                                android:text="Get Paid"
                                 android:textColor="@color/white"
                                 android:textSize="11sp" />
                         </LinearLayout>
@@ -465,7 +465,7 @@
                                 android:layout_height="wrap_content"
                                 android:fontFamily="@font/poppins_regular"
                                 android:includeFontPadding="false"
-                                android:text="Pay A Friend"
+                                android:text="Pay a Friend"
                                 android:textColor="@color/white"
                                 android:textSize="11sp" />
                         </LinearLayout>

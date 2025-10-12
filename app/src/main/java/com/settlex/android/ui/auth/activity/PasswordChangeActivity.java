@@ -14,6 +14,7 @@ import android.text.TextWatcher;
 import android.text.style.ImageSpan;
 import android.view.MotionEvent;
 import android.view.View;
+import android.view.inputmethod.EditorInfo;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.EditText;
 
@@ -197,6 +198,7 @@ public class PasswordChangeActivity extends AppCompatActivity {
         setupEditTextFocusHandlers();
         setupPasswordValidation();
         setupPasswordVisibilityToggle();
+        clearFocusOnEditTextField();
 
         binding.btnBackBefore.setOnClickListener(v -> finish());
         binding.btnResetPassword.setOnClickListener(v -> attemptPasswordReset());
@@ -289,5 +291,17 @@ public class PasswordChangeActivity extends AppCompatActivity {
         if (imm != null) {
             imm.hideSoftInputFromWindow(view.getWindowToken(), 0);
         }
+    }
+
+    private void clearFocusOnEditTextField() {
+        binding.editTxtConfirmPassword.setOnEditorActionListener((v, actionId, event) -> {
+            if (actionId == EditorInfo.IME_ACTION_DONE) {
+                // Hide the keyboard
+                hideKeyboard(v);
+                v.clearFocus();
+                return true;
+            }
+            return false;
+        });
     }
 }

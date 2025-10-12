@@ -7,7 +7,7 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.lifecycle.ViewModelProvider;
 
 import com.settlex.android.R;
-import com.settlex.android.databinding.ActivityPayMeBinding;
+import com.settlex.android.databinding.ActivityGetPaidBinding;
 import com.settlex.android.ui.dashboard.model.UserUiModel;
 import com.settlex.android.ui.dashboard.viewmodel.UserViewModel;
 import com.settlex.android.util.string.StringUtil;
@@ -16,14 +16,14 @@ import com.settlex.android.util.ui.StatusBarUtil;
 import dagger.hilt.android.AndroidEntryPoint;
 
 @AndroidEntryPoint
-public class PayMeActivity extends AppCompatActivity {
-    private ActivityPayMeBinding binding;
+public class GetPaidActivity extends AppCompatActivity {
+    private ActivityGetPaidBinding binding;
     private UserViewModel userViewModel;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        binding = ActivityPayMeBinding.inflate(getLayoutInflater());
+        binding = ActivityGetPaidBinding.inflate(getLayoutInflater());
         setContentView(binding.getRoot());
 
         userViewModel = new ViewModelProvider(this).get(UserViewModel.class);
@@ -34,13 +34,13 @@ public class PayMeActivity extends AppCompatActivity {
     private void setupUiActions() {
         StatusBarUtil.setStatusBarColor(this, R.color.white);
 
-        binding.btnCopy.setOnClickListener(v -> copyAccountNumber());
+        binding.btnCopy.setOnClickListener(v -> copyPaymentId());
         binding.btnBackBefore.setOnClickListener(v -> finish());
         binding.btnShareDetails.setOnClickListener(v -> Toast.makeText(this, "This feature is not yet implemented", Toast.LENGTH_SHORT).show());
     }
 
-    private void copyAccountNumber() {
-        StringUtil.copyToClipboard(this, "Account Number", binding.accountNumber.getText().toString());
+    private void copyPaymentId() {
+        StringUtil.copyToClipboard(this, "Payment Id", binding.paymentId.getText().toString(), true);
     }
 
     private void observeUserData() {
@@ -58,9 +58,10 @@ public class PayMeActivity extends AppCompatActivity {
 
     private void onUserDataSuccess(UserUiModel user) {
         boolean hasUsername = user.getUsername() != null && !user.getUsername().isEmpty();
+        binding.paymentName.setText(user.getFullName().toUpperCase());
 
         if (hasUsername) {
-            binding.accountNumber.setText(StringUtil.addAtToUsername(user.getUsername()));
+            binding.paymentId.setText(user.getUsername());
             return;
         }
         // do something TODO: prompt username creation

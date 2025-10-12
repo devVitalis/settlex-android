@@ -26,7 +26,7 @@ import com.settlex.android.databinding.FragmentDashboardHomeBinding;
 import com.settlex.android.ui.auth.activity.LoginActivity;
 import com.settlex.android.ui.dashboard.activity.CommissionWithdrawalActivity;
 import com.settlex.android.ui.dashboard.activity.ProfileActivity;
-import com.settlex.android.ui.dashboard.activity.PayMeActivity;
+import com.settlex.android.ui.dashboard.activity.GetPaidActivity;
 import com.settlex.android.ui.dashboard.activity.TransactionActivity;
 import com.settlex.android.ui.dashboard.activity.TransactionDetailsActivity;
 import com.settlex.android.ui.dashboard.adapter.PromotionalBannerAdapter;
@@ -118,7 +118,7 @@ public class HomeDashboardFragment extends Fragment {
         binding.btnBalanceToggle.setOnClickListener(v -> userViewModel.toggleBalanceVisibility());
         binding.btnUserCommissionBalanceLayout.setOnClickListener(v -> navigateToActivity(CommissionWithdrawalActivity.class));
         binding.btnAddMoney.setOnClickListener(v -> userViewModel.signOut());
-        binding.btnReceiveMoney.setOnClickListener(v -> navigateToActivity(PayMeActivity.class));
+        binding.btnReceiveMoney.setOnClickListener(v -> navigateToActivity(GetPaidActivity.class));
         binding.btnPayAFriend.setOnClickListener(v -> navigateToActivity(TransactionActivity.class));
         binding.btnNotification.setOnClickListener(v -> toastNewFeature());
         binding.btnSupport.setOnClickListener(v -> toastNewFeature());

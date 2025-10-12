@@ -9,6 +9,7 @@ import android.text.TextWatcher;
 import android.util.Patterns;
 import android.view.MotionEvent;
 import android.view.View;
+import android.view.inputmethod.EditorInfo;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.EditText;
 
@@ -103,6 +104,7 @@ public class PasswordResetActivity extends AppCompatActivity {
         StatusBarUtil.setStatusBarColor(this, R.color.white);
         setupEmailInputValidation();
         setupFocusHandlers();
+        clearFocusOnEditTextField();
 
         binding.btnBackBefore.setOnClickListener(v -> finish());
         binding.btnContinue.setOnClickListener(v -> requestPasswordResetOtp());
@@ -157,25 +159,39 @@ public class PasswordResetActivity extends AppCompatActivity {
         });
     }
 
-    // Dismiss keyboard on outside taps
+
     @Override
     public boolean dispatchTouchEvent(MotionEvent event) {
         if (event.getAction() == MotionEvent.ACTION_DOWN) {
-            handleOutsideTap(event);
+            View v = getCurrentFocus();
+            if (v instanceof EditText) {
+                Rect outRect = new Rect();
+                v.getGlobalVisibleRect(outRect);
+                if (!outRect.contains((int) event.getRawX(), (int) event.getRawY())) {
+                    v.clearFocus();
+                    hideKeyboard(v);
+                }
+            }
         }
         return super.dispatchTouchEvent(event);
     }
 
-    private void handleOutsideTap(MotionEvent event) {
-        View focus = getCurrentFocus();
-        if (focus instanceof EditText) {
-            Rect rect = new Rect();
-            focus.getGlobalVisibleRect(rect);
-            if (!rect.contains((int) event.getRawX(), (int) event.getRawY())) {
-                focus.clearFocus();
-                ((InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE)).hideSoftInputFromWindow(focus.getWindowToken(), 0);
-                binding.main.requestFocus();
-            }
+    private void hideKeyboard(View view) {
+        InputMethodManager imm = (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
+        if (imm != null) {
+            imm.hideSoftInputFromWindow(view.getWindowToken(), 0);
         }
+    }
+
+    private void clearFocusOnEditTextField() {
+        binding.editTxtEmail.setOnEditorActionListener((v, actionId, event) -> {
+            if (actionId == EditorInfo.IME_ACTION_DONE) {
+                // Hide the keyboard
+                hideKeyboard(v);
+                v.clearFocus();
+                return true;
+            }
+            return false;
+        });
     }
 }

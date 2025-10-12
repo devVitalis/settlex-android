@@ -52,7 +52,7 @@
             android:name=".ui.dashboard.activity.CommissionWithdrawalActivity"
             android:exported="false" />
         <activity
-            android:name=".ui.dashboard.activity.PayMeActivity"
+            android:name=".ui.dashboard.activity.GetPaidActivity"
             android:exported="false" />
         <activity
             android:name=".ui.dashboard.activity.TransactionDetailsActivity"

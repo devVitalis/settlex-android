@@ -19,6 +19,7 @@ import com.settlex.android.util.event.Result;
 
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -34,6 +35,7 @@ import jakarta.inject.Singleton;
  */
 @Singleton
 public class UserRepository {
+    private final String TAG = UserRepository.class.getSimpleName();
     private final MutableLiveData<Result<UserDto>> sharedUserLiveData = new MutableLiveData<>();
     private final MutableLiveData<FirebaseUser> sharedUserAuthState = new MutableLiveData<>();
     private final MutableLiveData<Boolean> isBalanceHiddenLiveData = new MutableLiveData<>();
@@ -170,18 +172,29 @@ public class UserRepository {
         transactionListener = null;
     }
 
-    public void uploadNewProfilePic(String imageBase64, UploadProfilePicCallback callback) {
-        functions.getHttpsCallable("uploadProfilePic")
-                .call(Collections.singletonMap("imageBase64", imageBase64))
-                .addOnSuccessListener(result -> {
+    public void uploadNewProfilePic(String imageBase64, String profileDeleteUrl, UploadProfilePicCallback callback) {
+        Map<String, Object> data = new HashMap<>();
+        data.put("imageBase64", imageBase64);
+        data.put("profileDeleteUrl", profileDeleteUrl);
 
-                    Map<?, ?> data = (Map<?, ?>) result.getData();
-                    if (data != null) {
-                        String profilePicUrl = (String) data.get("displayUrl");
-                        callback.onSuccess(profilePicUrl);
-                    }
+        functions.getHttpsCallable("uploadProfilePic")
+                .call(data)
+                .addOnSuccessListener(result -> {
+                    callback.onSuccess();
+                    reloadUser();
                 })
                 .addOnFailureListener(e -> callback.onFailure(e.getMessage()));
+    }
+
+    private void reloadUser() {
+        FirebaseUser user = auth.getCurrentUser();
+        if (user != null) {
+            user.reload()
+                    .addOnFailureListener(e -> {
+                        Log.e(TAG, "Failed to reload user: " + e.getMessage(), e);
+                        Log.d("Repository", " " + TAG);
+                    });
+        }
     }
 
     // ------- SESSION ---------
@@ -204,7 +217,7 @@ public class UserRepository {
     }
 
     public interface UploadProfilePicCallback {
-        void onSuccess(String profilePicUrl);
+        void onSuccess();
 
         void onFailure(String error);
     }

@@ -155,7 +155,7 @@
                             android:background="@drawable/bg_oval_blue_light"
                             android:contentDescription="@null"
                             android:padding="7dp"
-                            tools:src="@drawable/ic_service_money_sent" />
+                            tools:src="@drawable/ic_service_payment_sent" />
                     </FrameLayout>
                 </androidx.constraintlayout.widget.ConstraintLayout>
 
@@ -373,57 +373,6 @@
                             android:layout_height="20dp"
                             android:contentDescription="Copy"
                             android:src="@drawable/ic_copy" />
-                    </LinearLayout>
-                </LinearLayout>
-
-                <!-- Action Buttons-->
-                <LinearLayout
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_marginTop="10dp"
-                    android:background="@drawable/bg_8dp_white_ripple_yes"
-                    android:gravity="center_vertical"
-                    android:orientation="vertical"
-                    android:padding="10dp">
-
-                    <TextView
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:fontFamily="@font/poppins_regular"
-                        android:includeFontPadding="false"
-                        android:text="Service"
-                        android:textColor="@color/black"
-                        android:textSize="14sp"
-                        android:textStyle="bold" />
-
-                    <!-- Download-->
-                    <LinearLayout
-                        android:id="@+id/download"
-                        android:layout_width="match_parent"
-                        android:layout_height="match_parent"
-                        android:layout_marginTop="2dp"
-                        android:background="@drawable/bg_8dp_gray_light"
-                        android:gravity="center"
-                        android:orientation="horizontal"
-                        android:padding="8dp">
-
-                        <ImageView
-                            android:layout_width="30dp"
-                            android:layout_height="30dp"
-                            android:background="@drawable/bg_8dp_blue_light"
-                            android:contentDescription="@null"
-                            android:padding="3dp"
-                            android:src="@drawable/ic_download" />
-
-                        <TextView
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:layout_marginStart="5dp"
-                            android:fontFamily="@font/poppins_regular"
-                            android:includeFontPadding="false"
-                            android:text="Download Receipt"
-                            android:textColor="@color/black"
-                            android:textSize="15sp" />
                     </LinearLayout>
                 </LinearLayout>
             </LinearLayout>

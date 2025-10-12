@@ -5,7 +5,7 @@
     android:layout_height="match_parent"
     android:background="@color/white"
     android:fitsSystemWindows="true"
-    tools:context=".ui.dashboard.activity.PayMeActivity">
+    tools:context=".ui.dashboard.activity.GetPaidActivity">
 
     <!--Header-->
     <LinearLayout
@@ -34,7 +34,7 @@
             android:fontFamily="@font/poppins_regular"
             android:gravity="center"
             android:includeFontPadding="false"
-            android:text="Pay Me"
+            android:text="Get Paid"
             android:textColor="@color/black"
             android:textSize="15sp"
             android:textStyle="bold" />
@@ -65,19 +65,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:fontFamily="@font/poppins_regular"
-                android:includeFontPadding="false"
-                android:text="Receive Payment From Friend"
-                android:textColor="@color/black"
-                android:textSize="16sp"
-                android:textStyle="bold"
-                android:visibility="gone" />
-
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
                 android:layout_gravity="center"
-                android:layout_marginTop="10dp"
-                android:fontFamily="@font/poppins_regular"
                 android:includeFontPadding="false"
                 android:text="Your Payment ID"
                 android:textColor="@color/gray"
@@ -87,7 +75,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_gravity="center"
-                android:layout_marginTop="5dp"
+                android:layout_marginTop="2dp"
                 android:background="@drawable/bg_8dp_gray_light"
                 android:gravity="center"
                 android:orientation="vertical"
@@ -95,7 +83,7 @@
                 android:paddingVertical="10dp">
 
                 <TextView
-                    android:id="@+id/accountNumber"
+                    android:id="@+id/paymentId"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:fontFamily="@font/poppins_regular"
@@ -103,8 +91,20 @@
                     android:textColor="@color/black"
                     android:textSize="25sp"
                     android:textStyle="bold"
-                    tools:text="\@vitalis" />
+                    tools:text="vitalis" />
             </LinearLayout>
+
+            <TextView
+                android:id="@+id/paymentName"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                android:layout_marginTop="10dp"
+                android:fontFamily="@font/poppins_regular"
+                android:includeFontPadding="false"
+                android:textColor="@color/gray"
+                android:textSize="18sp"
+                tools:text="BENJAMIN NNAEMEKA" />
 
             <TextView
                 android:layout_width="wrap_content"
@@ -114,16 +114,21 @@
                 android:fontFamily="@font/poppins_regular"
                 android:gravity="center"
                 android:includeFontPadding="false"
-                android:text="Share this unique ID to receive money instantly from other app users."
+                android:text="Share this unique ID to get paid instantly from other SettleX users."
                 android:textAlignment="center"
                 android:textColor="@color/black"
                 android:textSize="14sp" />
+
+            <com.google.android.material.divider.MaterialDivider
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginVertical="20dp"
+                app:dividerColor="@color/gray_light" />
 
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_gravity="center"
-                android:layout_marginTop="20dp"
                 android:orientation="horizontal">
 
                 <com.google.android.material.button.MaterialButton

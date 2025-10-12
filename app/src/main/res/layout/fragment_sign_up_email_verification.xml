@@ -7,8 +7,6 @@
     android:layout_height="match_parent"
     android:background="@color/white"
     android:fitsSystemWindows="true"
-    android:focusable="true"
-    android:focusableInTouchMode="true"
     tools:context=".ui.auth.fragment.SignUpEmailVerificationFragment">
 
     <LinearLayout
@@ -113,8 +111,8 @@
                     android:layout_marginBottom="5dp"
                     android:fontFamily="@font/poppins_regular"
                     android:includeFontPadding="false"
-                    android:text="2 of 4"
-                    android:textColor="@color/black"
+                    android:text="Step 2 of 4"
+                    android:textColor="@color/gray"
                     android:textSize="13sp"
                     android:textStyle="bold" />
 

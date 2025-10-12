@@ -92,7 +92,6 @@
 
     <!--Scroll Layout-->
     <ScrollView
-        android:id="@+id/scrollContent"
         android:layout_width="0dp"
         android:layout_height="0dp"
         android:fillViewport="true"
@@ -139,8 +138,8 @@
                 android:layout_marginBottom="5dp"
                 android:fontFamily="@font/poppins_regular"
                 android:includeFontPadding="false"
-                android:text="1 of 4"
-                android:textColor="@color/black"
+                android:text="Step 1 of 4"
+                android:textColor="@color/gray"
                 android:textSize="13sp"
                 android:textStyle="bold" />
 

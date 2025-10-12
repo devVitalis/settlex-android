@@ -317,7 +317,6 @@ public class SignUpUserContactInfoFragment extends Fragment {
                 InputMethodManager imm = (InputMethodManager) v.getContext().getSystemService(Context.INPUT_METHOD_SERVICE);
                 imm.hideSoftInputFromWindow(v.getWindowToken(), 0);
 
-                // Clear focus
                 v.clearFocus();
                 return true;
             }

@@ -23,13 +23,13 @@ import jakarta.inject.Inject;
  * Centralizes all authentication operations
  */
 public class AuthRepository {
-    private final FirebaseAuth firebaseAuth;
+    private final FirebaseAuth auth;
     private final FirebaseFirestore firestore;
     private final FirebaseFunctions functions;
 
     @Inject
-    public AuthRepository(FirebaseAuth firebaseAuth, FirebaseFirestore firestore, FirebaseFunctions functions) {
-        this.firebaseAuth = firebaseAuth;
+    public AuthRepository(FirebaseAuth uth, FirebaseFirestore firestore, FirebaseFunctions functions) {
+        this.auth = uth;
         this.firestore = firestore;
         this.functions = functions;
     }
@@ -38,7 +38,7 @@ public class AuthRepository {
      * Handles email/password authentication with Firebase Auth
      */
     public void loginWithEmail(String email, String password, LoginCallback callback) {
-        firebaseAuth.signInWithEmailAndPassword(email, password)
+        auth.signInWithEmailAndPassword(email, password)
                 .addOnSuccessListener(authResult -> callback.onSuccess())
                 .addOnFailureListener(e -> {
                     if (e instanceof FirebaseAuthInvalidCredentialsException) {
@@ -62,7 +62,7 @@ public class AuthRepository {
      * Includes collision detection for existing accounts
      */
     public void registerUser(UserModel user, String email, String password, RegisterCallback callback) {
-        firebaseAuth.createUserWithEmailAndPassword(email, password)
+        auth.createUserWithEmailAndPassword(email, password)
                 .addOnSuccessListener(authResult -> {
                     FirebaseUser currentUser = authResult.getUser();
                     if (currentUser == null) {
@@ -282,7 +282,7 @@ public class AuthRepository {
     }
 
     public void signOut() {
-        firebaseAuth.signOut();
+        auth.signOut();
     }
 
 
