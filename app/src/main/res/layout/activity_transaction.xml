@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="utf-8"?>
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:id="@+id/transactionRoot"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context=".ui.dashboard.activity.TransactionActivity">
+
+    <!-- Fragment container-->
+    <androidx.fragment.app.FragmentContainerView
+        android:id="@+id/transaction_nav_host"
+        android:name="androidx.navigation.fragment.NavHostFragment"
+        app:defaultNavHost="true"
+        app:navGraph="@navigation/transaction_nav_graph"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent" />
+</FrameLayout>

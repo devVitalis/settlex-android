@@ -1,0 +1,42 @@
+# Ignore IntelliJ/Android Studio project files
+.idea/
+*.iml
+
+# Gradle
+.gradle/
+build/
+
+# Local configuration
+/local.properties
+
+# Captures and miscellaneous
+captures/
+.DS_Store
+Thumbs.db
+*.swp
+*.swo
+*.log
+*.stacktrace
+
+# Native/External build outputs
+.externalNativeBuild/
+.cxx/
+
+# Firebase & Google services (never commit secrets)
+google-services.json
+firebase-debug.log
+
+# Keystores and signing configs
+*.jks
+*.keystore
+
+# Jetpack Compose previews
+*.preview
+
+# Kotlin/Java compiler outputs
+*.class
+*.jar
+*.war
+*.ear
+*.apk
+*.ap_

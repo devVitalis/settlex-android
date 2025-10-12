@@ -1,0 +1,25 @@
+<resources>
+    <!-- Base application theme. -->
+    <style name="Base.Theme.SettleX" parent="Theme.Material3.DayNight.NoActionBar">
+        <!-- Customize your light theme here. -->
+        <!-- <item name="colorPrimary">@color/my_light_primary</item> -->
+
+        <!-- Transparent system bars for edge-to-edge. -->
+        <item name="android:navigationBarColor">@android:color/transparent</item>
+        <item name="android:statusBarColor">@android:color/transparent</item>
+        <item name="android:windowLightStatusBar">?attr/isLightTheme</item>
+    </style>
+
+    <!-- Default app theme -->
+    <style name="Theme.SettleX" parent="Base.Theme.SettleX">
+        <item name="bottomSheetDialogTheme">@style/Widget_SettleX_BottomSheetDialog</item>
+
+    </style>
+
+    <!-- Splash theme -->
+    <style name="Theme.SettleX.Splash" parent="Theme.SplashScreen">
+        <item name="windowSplashScreenBackground">@color/blue_navy</item>
+        <item name="windowSplashScreenAnimatedIcon">@drawable/logo_splash_inset</item>
+        <item name="postSplashScreenTheme">@style/Theme.SettleX</item>
+    </style>
+</resources>
