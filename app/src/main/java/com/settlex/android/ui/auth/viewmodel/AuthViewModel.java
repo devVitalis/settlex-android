@@ -1,14 +1,12 @@
 package com.settlex.android.ui.auth.viewmodel;
 
-import android.util.Log;
-
 import androidx.lifecycle.LiveData;
 import androidx.lifecycle.MutableLiveData;
 import androidx.lifecycle.ViewModel;
 
 import com.google.firebase.auth.FirebaseUser;
 import com.settlex.android.data.repository.AuthRepository;
-import com.settlex.android.domain.model.UserModel;
+import com.settlex.android.data.model.UserModel;
 import com.settlex.android.ui.auth.model.LoginUiModel;
 import com.settlex.android.util.event.Event;
 import com.settlex.android.util.event.Result;

@@ -39,9 +39,6 @@ public class ProfileFragment extends Fragment {
     private ActivityResultLauncher<String> requestPermissionLauncher;
     private ActivityResultLauncher<PickVisualMediaRequest> pickImageLauncher;
 
-    // instance var for old profile delete url
-    private String profileDeleteUrl;
-
     public ProfileFragment() {
         // Required empty public constructor
     }
@@ -77,7 +74,6 @@ public class ProfileFragment extends Fragment {
 
     private void onUserDataSuccess(UserUiModel user) {
         // display data
-        this.profileDeleteUrl = user.getProfileDeleteUrl() != null ? user.getProfileDeleteUrl() : null;
         ProfileService.loadProfilePic(user.getProfileUrl(), binding.profilePic);
         binding.paymentId.setText(user.getUsername() != null ? user.getUsername() : "Setup Payment ID");
         binding.fullName.setText(user.getFullName().toUpperCase());
@@ -95,7 +91,7 @@ public class ProfileFragment extends Fragment {
 
             switch (upload.getStatus()) {
                 case LOADING -> onProfilePicUploadLoading();
-                case SUCCESS -> onProfilePicUploadSuccess(upload.getData());
+                case SUCCESS -> onProfilePicUploadSuccess();
                 case ERROR -> onProfilePicUploadError(upload.getMessage());
             }
         });
@@ -105,12 +101,13 @@ public class ProfileFragment extends Fragment {
         progressLoader.show();
     }
 
-    private void onProfilePicUploadSuccess(String message) {
+    private void onProfilePicUploadSuccess() {
         progressLoader.hide();
     }
 
     private void onProfilePicUploadError(String error) {
         progressLoader.hide();
+        binding.error.setText(error);
         Log.e("ProfilePic", "Profile Pic Upload error: " + error);
     }
 
@@ -152,7 +149,7 @@ public class ProfileFragment extends Fragment {
     }
 
     private void uploadProfilePic(Uri uri) {
-        userViewModel.uploadProfilePic(StringUtil.compressAndConvertImageToBase64(requireContext(), uri), profileDeleteUrl);
+        userViewModel.uploadProfilePic(StringUtil.compressAndConvertImageToBase64(requireContext(), uri));
     }
 
     private void openGalleryPicker() {

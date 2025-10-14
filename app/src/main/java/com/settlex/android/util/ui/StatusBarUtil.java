@@ -58,7 +58,7 @@ public class StatusBarUtil {
      *
      * @param activity The target activity.
      */
-    public static void enableStatusBarColorControl(Activity activity) {
+    private static void enableStatusBarColorControl(Activity activity) {
         if (activity == null) return;
 
         Window window = activity.getWindow();

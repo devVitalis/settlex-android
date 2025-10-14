@@ -4,7 +4,7 @@ import android.content.Context;
 import android.content.SharedPreferences;
 
 import com.google.gson.Gson;
-import com.settlex.android.domain.model.UserModel;
+import com.settlex.android.data.model.UserModel;
 
 /**
  * Temporary storage for user data when database operations fail during registration.

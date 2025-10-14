@@ -5,6 +5,7 @@ import android.util.Log;
 import androidx.lifecycle.LiveData;
 import androidx.lifecycle.MutableLiveData;
 
+import com.google.firebase.FirebaseNetworkException;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.firestore.DocumentSnapshot;
@@ -17,11 +18,10 @@ import com.settlex.android.data.remote.dto.TransactionDto;
 import com.settlex.android.data.remote.dto.UserDto;
 import com.settlex.android.util.event.Result;
 
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Collections;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 
 import jakarta.inject.Inject;
 import jakarta.inject.Singleton;
@@ -50,6 +50,9 @@ public class UserRepository {
     private ListenerRegistration userListener;
     private ListenerRegistration transactionListener;
     private FirebaseAuth.AuthStateListener authStateListener;
+
+    // Error
+    private final String ERROR_NO_INTERNET = "Connection lost. Please check your Wi-Fi or cellular data and try again";
 
     @Inject
     public UserRepository(FirebaseAuth auth, FirebaseFirestore firestore, FirebaseFunctions functions, UserPrefs userPrefs) {
@@ -98,7 +101,7 @@ public class UserRepository {
                 .document(uid)
                 .addSnapshotListener((snapshot, error) -> {
                     if (error != null) {
-                        Log.e("Repository", "User listener error", error);
+                        Log.e(TAG, "User listener error" + error.getMessage(), error);
                         sharedUserLiveData.postValue(Result.error(error.getMessage()));
                         return;
                     }
@@ -172,29 +175,31 @@ public class UserRepository {
         transactionListener = null;
     }
 
-    public void uploadNewProfilePic(String imageBase64, String profileDeleteUrl, UploadProfilePicCallback callback) {
-        Map<String, Object> data = new HashMap<>();
-        data.put("imageBase64", imageBase64);
-        data.put("profileDeleteUrl", profileDeleteUrl);
-
+    public void uploadProfilePic(String imageBase64, UploadProfilePicCallback callback) {
         functions.getHttpsCallable("uploadProfilePic")
-                .call(data)
+                .call(Collections.singletonMap("imageBase64", imageBase64))
                 .addOnSuccessListener(result -> {
                     callback.onSuccess();
                     reloadUser();
                 })
-                .addOnFailureListener(e -> callback.onFailure(e.getMessage()));
+                .addOnFailureListener(e -> {
+                    if (e instanceof FirebaseNetworkException || e instanceof IOException) {
+                        callback.onFailure(ERROR_NO_INTERNET);
+                        return;
+                    }
+
+                    callback.onFailure(e.getMessage());
+                });
     }
 
     private void reloadUser() {
         FirebaseUser user = auth.getCurrentUser();
-        if (user != null) {
-            user.reload()
-                    .addOnFailureListener(e -> {
-                        Log.e(TAG, "Failed to reload user: " + e.getMessage(), e);
-                        Log.d("Repository", " " + TAG);
-                    });
-        }
+        if (user == null) return;
+
+        user.reload()
+                .addOnFailureListener(e ->
+                        Log.e(TAG, "Failed to reload user: " + e.getMessage(), e));
+
     }
 
     // ------- SESSION ---------

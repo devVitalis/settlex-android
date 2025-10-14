@@ -86,13 +86,13 @@
             android:name=".ui.auth.activity.PasswordResetActivity"
             android:exported="false" />
         <activity
-            android:name=".ui.info.legal.PrivacyPolicyActivity"
+            android:name=".ui.information.legal.PrivacyPolicyActivity"
             android:exported="false" />
         <activity
-            android:name=".ui.info.legal.TermsAndConditionsActivity"
+            android:name=".ui.information.legal.TermsAndConditionsActivity"
             android:exported="false" />
         <activity
-            android:name=".ui.info.help.AuthHelpActivity"
+            android:name=".ui.information.help.AuthHelpActivity"
             android:exported="false" />
         <activity
             android:name=".ui.auth.activity.PinLoginActivity"

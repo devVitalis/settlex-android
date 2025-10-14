@@ -1,12 +1,10 @@
-package com.settlex.android.domain.model;
+package com.settlex.android.data.model;
 
 /**
  * Represents a user entity with personal and security data.
  * Used for both Firestore operations and local storage.
  */
 public class UserModel {
-
-    // Fields ordered by logical grouping: identity -> contact -> security
     private String uid;
     private String firstName;
     private String lastName;
@@ -16,7 +14,7 @@ public class UserModel {
     private String referralCode;
     private String pin;
     private String pinSalt;
-    public boolean hasPin;  // Public flag for quick PIN status checks
+    public boolean hasPin;
 
     public UserModel() {
     }

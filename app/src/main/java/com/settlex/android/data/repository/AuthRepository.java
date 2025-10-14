@@ -11,7 +11,7 @@ import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.functions.FirebaseFunctions;
 import com.google.gson.Gson;
 import com.settlex.android.data.remote.api.MetadataService;
-import com.settlex.android.domain.model.UserModel;
+import com.settlex.android.data.model.UserModel;
 
 import java.io.IOException;
 import java.util.HashMap;

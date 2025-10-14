@@ -196,7 +196,7 @@ public class HomeDashboardFragment extends Fragment {
 
         ProfileService.loadProfilePic(user.getProfileUrl(), binding.profilePic);
         binding.fullName.setText(user.getFullName());
-        loadUserPrefs(user.getBalance(), user.getCommissionBalance());
+        observeAndLoadUserPrefs(user.getBalance(), user.getCommissionBalance());
     }
 
     private void onUserDataError() {
@@ -212,7 +212,7 @@ public class HomeDashboardFragment extends Fragment {
         // display error : system busy
     }
 
-    private void loadUserPrefs(long balance, long commissionBalance) {
+    private void observeAndLoadUserPrefs(long balance, long commissionBalance) {
         userViewModel.getIsBalanceHiddenLiveData().observe(getViewLifecycleOwner(), hidden -> {
             if (hidden) {
                 // balance hidden set asterisk

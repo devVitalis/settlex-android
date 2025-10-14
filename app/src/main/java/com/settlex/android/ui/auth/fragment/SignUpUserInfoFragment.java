@@ -22,7 +22,7 @@ import androidx.navigation.fragment.NavHostFragment;
 import com.settlex.android.R;
 import com.settlex.android.databinding.FragmentSignUpUserInfoBinding;
 import com.settlex.android.ui.auth.viewmodel.AuthViewModel;
-import com.settlex.android.ui.info.help.AuthHelpActivity;
+import com.settlex.android.ui.information.help.AuthHelpActivity;
 import com.settlex.android.util.string.StringUtil;
 import com.settlex.android.util.ui.StatusBarUtil;
 

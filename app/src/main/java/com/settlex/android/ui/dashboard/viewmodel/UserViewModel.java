@@ -115,9 +115,9 @@ public class UserViewModel extends ViewModel {
         return transactionLiveData;
     }
 
-    public void uploadProfilePic(String imageBase64, String profileDeleteUrl) {
+    public void uploadProfilePic(String imageBase64) {
         uploadProfilePicLiveData.setValue(Result.loading());
-        userRepo.uploadNewProfilePic(imageBase64, profileDeleteUrl, new UserRepository.UploadProfilePicCallback() {
+        userRepo.uploadProfilePic(imageBase64, new UserRepository.UploadProfilePicCallback() {
             @Override
             public void onSuccess() {
                 uploadProfilePicLiveData.setValue(Result.success("Profile changed successful"));

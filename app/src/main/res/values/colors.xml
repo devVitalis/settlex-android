@@ -14,7 +14,8 @@
     <!--Blue-->
     <color name="blue">#0044CC</color>
     <color name="blue_deep">#004A91</color>
-    <color name="blue_400">#42A5F5</color> // Gradient
+    <color name="blue_200">#90CAF9</color>
+    <color name="blue_400">#42A5F5</color>
     <color name="blue_light">#94A4DBFF</color>
     <color name="blue_very_light">#EDF2FE</color>
     <color name="blue_navy">#0A1E33</color> // Splash screen

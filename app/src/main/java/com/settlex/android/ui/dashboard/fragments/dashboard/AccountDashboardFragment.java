@@ -1,66 +1,108 @@
 package com.settlex.android.ui.dashboard.fragments.dashboard;
 
+import android.app.Activity;
+import android.content.Intent;
 import android.os.Bundle;
-
-import androidx.fragment.app.Fragment;
-
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
-import com.settlex.android.R;
+import androidx.annotation.IdRes;
+import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
+import androidx.fragment.app.Fragment;
+import androidx.lifecycle.ViewModelProvider;
+import androidx.navigation.NavController;
+import androidx.navigation.fragment.NavHostFragment;
 
-/**
- * A simple {@link Fragment} subclass.
- * Use the {@link AccountDashboardFragment#newInstance} factory method to
- * create an instance of this fragment.
- */
+import com.settlex.android.R;
+import com.settlex.android.data.remote.profile.ProfileService;
+import com.settlex.android.databinding.FragmentDashboardAccountBinding;
+import com.settlex.android.ui.dashboard.activity.ProfileActivity;
+import com.settlex.android.ui.dashboard.model.UserUiModel;
+import com.settlex.android.ui.dashboard.viewmodel.UserViewModel;
+import com.settlex.android.util.string.StringUtil;
+import com.settlex.android.util.ui.StatusBarUtil;
+
+import dagger.hilt.android.AndroidEntryPoint;
+
+@AndroidEntryPoint
 public class AccountDashboardFragment extends Fragment {
 
-    // TODO: Rename parameter arguments, choose names that match
-    // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
-    private static final String ARG_PARAM1 = "param1";
-    private static final String ARG_PARAM2 = "param2";
+    private FragmentDashboardAccountBinding binding;
+    private UserViewModel userViewModel;
 
-    // TODO: Rename and change types of parameters
-    private String mParam1;
-    private String mParam2;
+    // Instance var
+    private final String TAG = AccountDashboardFragment.class.getSimpleName();
+
 
     public AccountDashboardFragment() {
         // Required empty public constructor
     }
 
-    /**
-     * Use this factory method to create a new instance of
-     * this fragment using the provided parameters.
-     *
-     * @param param1 Parameter 1.
-     * @param param2 Parameter 2.
-     * @return A new instance of fragment AccountFragment.
-     */
-    // TODO: Rename and change types and number of parameters
-    public static AccountDashboardFragment newInstance(String param1, String param2) {
-        AccountDashboardFragment fragment = new AccountDashboardFragment();
-        Bundle args = new Bundle();
-        args.putString(ARG_PARAM1, param1);
-        args.putString(ARG_PARAM2, param2);
-        fragment.setArguments(args);
-        return fragment;
-    }
-
     @Override
-    public void onCreate(Bundle savedInstanceState) {
+    public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        if (getArguments() != null) {
-            mParam1 = getArguments().getString(ARG_PARAM1);
-            mParam2 = getArguments().getString(ARG_PARAM2);
-        }
+        userViewModel = new ViewModelProvider(requireActivity()).get(UserViewModel.class);
     }
 
     @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container,
-                             Bundle savedInstanceState) {
-        // Inflate the layout for this fragment
-        return inflater.inflate(R.layout.fragment_dashboard_account, container, false);
+    public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
+        binding = FragmentDashboardAccountBinding.inflate(inflater, container, false);
+
+        setupUIActions();
+        observeUserData();
+        return binding.getRoot();
+    }
+
+    private void observeUserData() {
+        userViewModel.getUserLiveData().observe(getViewLifecycleOwner(), user -> {
+            if (user == null) return;
+
+            switch (user.getStatus()) {
+                case SUCCESS -> onUserDataSuccess(user.getData());
+                case ERROR -> onUserDataError(user.getMessage());
+            }
+        });
+    }
+
+    private void onUserDataSuccess(UserUiModel user) {
+        ProfileService.loadProfilePic(user.getProfileUrl(), binding.btnProfilePic);
+        binding.fullName.setText(user.getFullName());
+        observeAndLoadUserPrefs(user.getBalance(), user.getCommissionBalance());
+    }
+
+    private void onUserDataError(String error) {
+        Log.e(TAG, "User data error: " + error);
+    }
+
+    private void observeAndLoadUserPrefs(long userBalance, long userCommBalance) {
+        userViewModel.getIsBalanceHiddenLiveData().observe(getViewLifecycleOwner(), isBalanceHidden -> {
+            long TOTAL_BALANCE = userBalance + userCommBalance;
+
+            binding.btnBalanceToggle.setImageResource((isBalanceHidden) ? R.drawable.ic_visibility_off_filled : R.drawable.ic_visibility_on_filled);
+            binding.totalBalance.setText((isBalanceHidden) ? StringUtil.setAsterisks() : StringUtil.formatToNaira(TOTAL_BALANCE));
+        });
+    }
+
+    private void setupUIActions() {
+        StatusBarUtil.setStatusBarColor(requireActivity(), R.color.gray_light);
+
+        binding.btnProfilePic.setOnClickListener(view -> navigateToActivity(ProfileActivity.class));
+        binding.btnBalanceToggle.setOnClickListener(view -> userViewModel.toggleBalanceVisibility());
+
+        binding.btnEarnRewards.setOnClickListener(view -> navigateToFragment(R.id.rewardsFragment));
+        binding.btnSignOut.setOnClickListener(view -> userViewModel.signOut());
+    }
+
+
+    private void navigateToActivity(Class<? extends Activity> activityClass) {
+        startActivity(new Intent(requireContext(), activityClass));
+    }
+
+    private void navigateToFragment(@IdRes int navId) {
+        NavController navController = NavHostFragment.findNavController(this);
+        navController.navigate(navId);
     }
 }
