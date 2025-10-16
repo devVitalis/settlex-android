@@ -78,7 +78,7 @@ public class ProfileFragment extends Fragment {
         binding.paymentId.setText(user.getUsername() != null ? user.getUsername() : "Setup Payment ID");
         binding.fullName.setText(user.getFullName().toUpperCase());
         binding.email.setText(StringUtil.maskEmail(user.getEmail()));
-        binding.phoneNumber.setText(StringUtil.formatPhoneNumberWithCountryCode(user.getPhone()));
+        binding.phoneNumber.setText(user.getPhone());
     }
 
     private void onUserDataError(String error) {

@@ -247,7 +247,8 @@
                             android:layout_width="15dp"
                             android:layout_height="15dp"
                             android:contentDescription="@null"
-                            android:src="@drawable/ic_protection"
+                            android:src="@drawable/ic_shield_protection"
+                            app:tint="@color/white"
                             app:layout_constraintStart_toStartOf="parent"
                             app:layout_constraintTop_toTopOf="parent" />
 
@@ -293,7 +294,7 @@
                                 android:textColor="@color/white"
                                 android:textSize="20sp"
                                 android:textStyle="bold"
-                                tools:text="₦2,540.00" />
+                                tools:text="₦2,500.00" />
 
                             <com.facebook.shimmer.ShimmerFrameLayout
                                 android:id="@+id/userBalanceShimmer"

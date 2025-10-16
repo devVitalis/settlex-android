@@ -101,8 +101,8 @@ dependencies {
     // DataStore (Preferences)
     implementation(libs.datastore.preferences)
 
-    // Tink for encryption
-    implementation(libs.tink.android)
+    /** Tink for encryption
+    implementation(libs.tink.android) */
 
     // Dependency Injection
     implementation(libs.hilt.android)

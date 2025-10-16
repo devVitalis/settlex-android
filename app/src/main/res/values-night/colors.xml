@@ -1,48 +1,48 @@
-<?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <!-- 1. Semantic Colors (Mapped to Light values) -->
-    <color name="color_background_page">@color/white</color>     <!-- White for Light Mode -->
-    <color name="color_text_primary">@color/black</color>       <!-- Black for Light Mode -->
-    <color name="color_surface_secondary">@color/gray_light</color> <!-- Light Gray for containers -->
-    <color name="color_accent_brand">@color/blue_deep</color>    <!-- Deep Blue for accents -->
-    <color name="color_icon_tint">@color/gray_dark</color>       <!-- Dark Gray for icons -->
+    <!-- 1. Semantic Colors (Mapped to Dark values) -->
+    <color name="color_background_page">@color/black</color>      <!-- Black for Dark Mode -->
+    <color name="color_text_primary">@color/white</color>        <!-- White for Dark Mode -->
+    <color name="color_surface_secondary">@color/gray_dark</color>  <!-- Dark Gray for containers -->
+    <color name="color_accent_brand">@color/blue_200</color>     <!-- Lighter Blue for visibility -->
+    <color name="color_icon_tint">@color/gray_light</color>        <!-- Light Gray for icons -->
 
-    <!--Black && White-->
+    <!-- 2. Literal Colors (These should be consistent across both files) -->
+    <!-- Black && White -->
     <color name="black">#FF000000</color>
     <color name="white">#FFFFFFFF</color>
 
-    <!--Gray-->
+    <!-- Gray -->
     <color name="gray">#9E9E9E</color>
     <color name="gray_dark">#4A4A4A</color>
     <color name="gray_light">#F5F5F5</color>
     <color name="gray_whitish">#E0E0E0</color>
     <color name="gray_blue_tone">#F8FAFF</color>
 
-    <!--Blue-->
+    <!-- Blue -->
     <color name="blue">#0044CC</color>
     <color name="blue_deep">#004A91</color>
     <color name="blue_200">#90CAF9</color>
     <color name="blue_400">#42A5F5</color>
     <color name="blue_light">#94A4DBFF</color>
     <color name="blue_very_light">#EDF2FE</color>
-    <color name="blue_navy">#0A1E33</color> // Splash screen
+    <color name="blue_navy">#0A1E33</color>
 
-    <!--Red-->
+    <!-- Red -->
     <color name="red">#FF0A0A</color>
     <color name="red_light">#FDE2E1</color>
 
-    <!--Orange-->
+    <!-- Orange -->
     <color name="orange">#FFA500</color>
     <color name="orange_light">#FFF4E0</color>
 
-    <!--Green-->
+    <!-- Green -->
     <color name="green">#00C48C</color>
     <color name="green_light">#E0FAF3</color>
 
-    <!--Overlay Colors-->
+    <!-- Overlay Colors -->
     <color name="semi_transparent_white">#80FFFFFF</color>
     <color name="semi_transparent_black50">#80000000</color>
     <color name="semi_transparent_black10">#1A000000</color>
 
-    <color name="cyan">#00E5FF</color> <!--// TODO: delete-->
+    <color name="cyan">#00E5FF</color>
 </resources>
