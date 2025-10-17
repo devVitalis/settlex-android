@@ -25,18 +25,16 @@ import androidx.lifecycle.ViewModelProvider;
 import androidx.navigation.fragment.NavHostFragment;
 
 import com.settlex.android.R;
-import com.settlex.android.databinding.FragmentSignUpUserPasswordBinding;
 import com.settlex.android.data.model.UserModel;
+import com.settlex.android.databinding.FragmentSignUpUserPasswordBinding;
 import com.settlex.android.ui.auth.viewmodel.AuthViewModel;
 import com.settlex.android.ui.common.util.ProgressLoaderController;
-import com.settlex.android.ui.dashboard.activity.DashboardActivity;
+import com.settlex.android.ui.dashboard.DashboardActivity;
 import com.settlex.android.ui.information.help.AuthHelpActivity;
 import com.settlex.android.util.network.NetworkMonitor;
-import com.settlex.android.util.string.StringUtil;
 import com.settlex.android.util.ui.StatusBarUtil;
 
 import java.util.Objects;
-import java.util.regex.Pattern;
 
 public class SignUpUserPasswordFragment extends Fragment {
 
@@ -136,17 +134,16 @@ public class SignUpUserPasswordFragment extends Fragment {
 
         String password = Objects.requireNonNull(binding.editTxtPassword.getText()).toString().trim();
         String invitationCode = Objects.requireNonNull(binding.editTxtInvitationCode.getText()).toString().trim();
-        String username = Objects.requireNonNull(binding.editTxtUsername.getText()).toString().trim();
 
         // Apply default values
-        finalizeUserData(invitationCode, username);
+        finalizeUserData(invitationCode);
 
         UserModel user = authViewModel.getUser().getValue();
         createUserAccount(password, user);
     }
 
-    private void finalizeUserData(String invitationCode, String username) {
-        authViewModel.applyDefaultUserValues(invitationCode, username);
+    private void finalizeUserData(String invitationCode) {
+        authViewModel.applyDefaultUserValues(invitationCode);
     }
 
     private void createUserAccount(String password, UserModel user) {
@@ -156,43 +153,9 @@ public class SignUpUserPasswordFragment extends Fragment {
     private void validateRequirements() {
         String password = Objects.requireNonNull(binding.editTxtPassword.getText()).toString().trim();
         String confirmPassword = Objects.requireNonNull(binding.editTxtConfirmPassword.getText()).toString().trim();
-        String username = StringUtil.removeAtInUsername(Objects.requireNonNull(binding.editTxtUsername.getText()).toString().trim());
 
-        boolean allValid = validatePasswordRequirements(password, confirmPassword) && isUsernameValid(username);
+        boolean allValid = validatePasswordRequirements(password, confirmPassword);
         enableCreateAccountButton(allValid);
-    }
-
-    private boolean isUsernameValid(String username) {
-        return username.matches("^[a-z0-9]([a-z0-9]*[._]?[a-z0-9]*)+[a-z0-9]$");
-    }
-
-    private String getUsernameError(String username) {
-        String USERNAME_REGEX = "^[a-z0-9]([a-z0-9]*[._]?[a-z0-9]*)+[a-z0-9]$";
-        Pattern USERNAME_PATTERN = Pattern.compile(USERNAME_REGEX);
-
-        // Check Minimum Length (Must be >= 3 characters)
-        if (username.length() < 3) {
-            return "Username must be at least 3 characters long.";
-        }
-
-        if (!USERNAME_PATTERN.matcher(username).matches()) {
-
-            if (username.startsWith(".") || username.endsWith(".")) {
-                return "Username cannot start or end with '.'";
-            }
-            if (username.startsWith("_") || username.endsWith("_")) {
-                return "Username cannot start or end with '_'";
-            }
-
-            if (username.contains("..") || username.contains("__") || username.contains("._") || username.contains("_.")) {
-                return "Username cannot contain consecutive '.' or '_' characters";
-            }
-
-            return "Username can only contain lowercase letters, numbers, and single periods or underscores";
-        }
-
-        // All checks passed
-        return null;
     }
 
     private void enableCreateAccountButton(boolean isPasswordValid) {
@@ -259,25 +222,6 @@ public class SignUpUserPasswordFragment extends Fragment {
         };
         binding.editTxtPassword.addTextChangedListener(passwordWatcher);
         binding.editTxtConfirmPassword.addTextChangedListener(passwordWatcher);
-
-        binding.editTxtUsername.addTextChangedListener(new TextWatcher() {
-            @Override
-            public void afterTextChanged(Editable editable) {
-
-            }
-
-            @Override
-            public void beforeTextChanged(CharSequence charSequence, int i, int i1, int i2) {
-
-            }
-
-            @Override
-            public void onTextChanged(CharSequence s, int i, int i1, int i2) {
-                boolean shouldShowUsernameFeedback = !s.toString().isEmpty();
-                binding.usernameErrorFeedback.setText(getUsernameError(s.toString()));
-                binding.usernameErrorFeedback.setVisibility(shouldShowUsernameFeedback && !isUsernameValid(s.toString().trim()) ? View.VISIBLE : View.GONE);
-            }
-        });
     }
 
     private void togglePasswordVisibilityIcons(boolean show) {

@@ -7,7 +7,7 @@
     android:layout_height="match_parent"
     android:background="@color/blue_400"
     android:fitsSystemWindows="true"
-    tools:context=".ui.dashboard.fragments.dashboard.RewardsDashboardFragment">
+    tools:context=".ui.dashboard.fragment.rewards.RewardsDashboardFragment">
 
     <!-- Logged out view -->
     <LinearLayout

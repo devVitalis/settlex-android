@@ -1,15 +1,14 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <!-- 1. Semantic Colors (Mapped to Light values) -->
-    <color name="color_background_page">@color/white</color>     <!-- White for Light Mode -->
-    <color name="color_text_primary">@color/black</color>       <!-- Black for Light Mode -->
-    <color name="color_surface_secondary">@color/gray_light</color> <!-- Light Gray for containers -->
-    <color name="color_accent_brand">@color/blue_deep</color>    <!-- Deep Blue for accents -->
-    <color name="color_icon_tint">@color/gray_dark</color>       <!-- Dark Gray for icons -->
+    <color name="color_background_page">@color/white</color>
+    <color name="color_text_primary">@color/black</color>
+    <color name="color_text_secondary">@color/gray</color>
 
     <!--Black && White-->
     <color name="black">#FF000000</color>
     <color name="white">#FFFFFFFF</color>
+    <color name="material_dark">#121212</color>
 
     <!--Gray-->
     <color name="gray">#9E9E9E</color>

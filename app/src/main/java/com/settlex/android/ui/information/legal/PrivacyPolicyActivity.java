@@ -29,9 +29,6 @@ public class PrivacyPolicyActivity extends AppCompatActivity {
         return """
                 <html>
                 <body>
-                    <h1>SettleX - Privacy Policy</h1>
-                    <p><strong>Last Updated: October 2025</strong></p>
-                
                     <h2>1. Introduction</h2>
                     <p>This Privacy Policy describes how SettleX ("we," "us," or "our") collects, uses, processes, and shares your information when you use the SettleX mobile application and our services. We are committed to protecting your personal data in compliance with the Nigerian Data Protection Regulation (NDPR) and other applicable Nigerian laws.</p>
                 

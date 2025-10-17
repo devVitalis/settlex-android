@@ -276,10 +276,9 @@ public class AuthViewModel extends ViewModel {
      * Prepares user model for registration by:
      * - Setting referral code if available and pin default values fields
      */
-    public void applyDefaultUserValues(String invitationCode, String username) {
+    public void applyDefaultUserValues(String invitationCode) {
         UserModel user = getOrCreateUser();
         user.setReferralCode(!invitationCode.isEmpty() ? invitationCode : null);
-        user.setUsername(username);
         user.setPin(null);
         user.setPinSalt(null);
         user.setHasPin(false);

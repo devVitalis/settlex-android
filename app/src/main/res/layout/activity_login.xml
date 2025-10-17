@@ -36,6 +36,7 @@
 
         <!-- Help button -->
         <LinearLayout
+            android:visibility="invisible"
             android:id="@+id/btnHelp"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
@@ -225,7 +226,7 @@
                 android:layout_height="wrap_content"
                 android:layout_gravity="end"
                 android:layout_marginTop="10dp"
-                android:fontFamily="@font/poppins_regular"
+                android:fontFamily="@font/inter_18pt_regular"
                 android:includeFontPadding="false"
                 android:text="Forgot Password?"
                 android:textColor="@color/blue"

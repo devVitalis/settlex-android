@@ -4,8 +4,9 @@
     <uses-permission android:name="android.permission.INTERNET" />
     <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
     <uses-permission android:name="android.permission.ACCESS_WIFI_STATE" /> <!-- Browsers for opening promo links -->
-    <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE"
-        android:maxSdkVersion="32"/>
+    <uses-permission
+        android:name="android.permission.READ_EXTERNAL_STORAGE"
+        android:maxSdkVersion="32" />
 
     <queries>
         <intent>
@@ -31,50 +32,43 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.SettleX">
         <activity
-            android:name=".ui.dashboard.activity.ProfileActivity"
+            android:name=".ui.dashboard.fragment.home.activity.CreatePaymentIdActivity"
+            android:exported="false" />
+        <activity
+            android:name=".ui.dashboard.fragment.account.activity.SettingsActivity"
+            android:exported="false" />
+        <activity
+            android:name=".ui.dashboard.fragment.home.activity.TransactionStatusActivity"
+            android:exported="false" />
+        <activity
+            android:name=".ui.dashboard.fragment.home.activity.PayAFriendActivity"
+            android:exported="false" />
+        <activity
+            android:name=".ui.dashboard.fragment.home.activity.ProfileActivity"
             android:exported="false" />
         <activity
             android:name=".ui.auth.activity.LoginActivity"
             android:exported="false" />
         <activity
-            android:name=".ui.dashboard.services.CableTvSubscriptionActivity"
+            android:name=".ui.dashboard.fragment.home.activity.services.CableTvSubscriptionActivity"
             android:exported="false" />
         <activity
-            android:name=".ui.dashboard.services.BettingTopUpActivity"
+            android:name=".ui.dashboard.fragment.home.activity.services.BettingTopUpActivity"
             android:exported="false" />
         <activity
-            android:name=".ui.dashboard.services.DataPurchaseActivity"
+            android:name=".ui.dashboard.fragment.home.activity.services.DataPurchaseActivity"
             android:exported="false" />
         <activity
-            android:name=".ui.dashboard.services.AirtimePurchaseActivity"
+            android:name=".ui.dashboard.fragment.home.activity.services.AirtimePurchaseActivity"
             android:exported="false" />
         <activity
-            android:name=".ui.dashboard.activity.CommissionWithdrawalActivity"
+            android:name=".ui.dashboard.fragment.home.activity.CommissionWithdrawalActivity"
             android:exported="false" />
         <activity
-            android:name=".ui.dashboard.activity.GetPaidActivity"
+            android:name=".ui.dashboard.fragment.home.activity.GetPaidActivity"
             android:exported="false" />
         <activity
-            android:name=".ui.dashboard.activity.TransactionDetailsActivity"
-            android:exported="false" />
-        <activity
-            android:name=".ui.dashboard.activity.DashboardActivity"
-            android:exported="true">
-
-            <!-- Handles app:// URLs -->
-            <intent-filter>
-                <action android:name="android.intent.action.VIEW" />
-
-                <category android:name="android.intent.category.DEFAULT" />
-                <category android:name="android.intent.category.BROWSABLE" />
-
-                <data
-                    android:host="settlex"
-                    android:scheme="app" />
-            </intent-filter>
-        </activity>
-        <activity
-            android:name=".ui.dashboard.activity.TransactionActivity"
+            android:name=".ui.dashboard.fragment.home.activity.TransactionActivity"
             android:exported="false" />
         <activity
             android:name=".ui.auth.activity.PasswordChangeActivity"
@@ -101,7 +95,7 @@
             android:name=".ui.auth.activity.SignUpActivity"
             android:exported="false" />
         <activity
-            android:name=".ui.Onboarding.activity.OnboardingActivity"
+            android:name=".onboarding.activity.OnboardingActivity"
             android:exported="false" />
         <activity
             android:name=".ui.splash.SplashActivity"
@@ -111,6 +105,22 @@
                 <action android:name="android.intent.action.MAIN" />
 
                 <category android:name="android.intent.category.LAUNCHER" />
+            </intent-filter>
+        </activity>
+        <activity
+            android:name=".ui.dashboard.DashboardActivity"
+            android:exported="true">
+
+            <!-- Handles app:// URLs -->
+            <intent-filter>
+                <action android:name="android.intent.action.VIEW" />
+
+                <category android:name="android.intent.category.DEFAULT" />
+                <category android:name="android.intent.category.BROWSABLE" />
+
+                <data
+                    android:host="settlex"
+                    android:scheme="app" />
             </intent-filter>
         </activity>
     </application>

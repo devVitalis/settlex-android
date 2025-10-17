@@ -3,6 +3,8 @@ package com.settlex.android;
 import android.app.Application;
 import android.content.Context;
 
+import androidx.appcompat.app.AppCompatDelegate;
+
 import com.google.firebase.FirebaseApp;
 import com.settlex.android.util.network.NetworkMonitor;
 
@@ -33,6 +35,7 @@ public class SettleXApp extends Application {
     }
 
     private void initializeGlobals() {
+        AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_NO);
         instance = this;
         appContext = getApplicationContext();
     }

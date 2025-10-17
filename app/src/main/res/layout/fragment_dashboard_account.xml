@@ -7,7 +7,7 @@
     android:layout_height="match_parent"
     android:background="@drawable/bg_0dp_gradient_blue_200"
     android:fitsSystemWindows="true"
-    tools:context=".ui.dashboard.fragments.dashboard.AccountDashboardFragment">
+    tools:context=".ui.dashboard.fragment.account.AccountDashboardFragment">
 
     <!--Header-->
     <androidx.constraintlayout.widget.ConstraintLayout
@@ -16,7 +16,7 @@
         android:layout_height="wrap_content"
         android:background="@drawable/bg_0dp_gradient_blue_200"
         android:paddingHorizontal="15dp"
-        android:paddingVertical="15dp"
+        android:paddingVertical="5dp"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent">
@@ -70,40 +70,62 @@
                 tools:text="Nnaemeka Benjamin" />
         </LinearLayout>
 
-        <TextView
-            android:id="@id/username"
+        <ImageView
+            android:id="@+id/btnSettingsHeader"
+            android:layout_width="25dp"
+            android:layout_height="25dp"
+            android:contentDescription="Settings"
+            android:src="@drawable/ic_settings"
+            app:layout_constraintBottom_toBottomOf="@id/greetingContainer"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toTopOf="@id/greetingContainer"
+            app:tint="@color/black" />
+
+        <LinearLayout
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginTop="10dp"
-            android:background="@drawable/bg_8dp_blue"
-            android:fontFamily="@font/inter_18pt_regular"
-            android:gravity="center"
-            android:includeFontPadding="false"
-            android:paddingHorizontal="10dp"
-            android:paddingVertical="5dp"
-            android:textColor="@color/white"
-            android:textSize="15sp"
-            android:textStyle="bold"
+            android:gravity="center_vertical"
+            android:orientation="horizontal"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@id/btnProfilePic"
-            tools:text="\@vitalis" />
+            app:layout_constraintTop_toBottomOf="@id/btnProfilePic">
 
-        <TextView
-            android:id="@+id/btnCopy"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginStart="5dp"
-            android:background="@drawable/bg_8dp_blue"
-            android:fontFamily="@font/inter_18pt_regular"
-            android:includeFontPadding="false"
-            android:paddingHorizontal="10dp"
-            android:paddingVertical="5dp"
-            android:text="Copy"
-            android:textColor="@color/white"
-            android:textSize="15sp"
-            app:layout_constraintBottom_toBottomOf="@id/username"
-            app:layout_constraintStart_toEndOf="@id/username"
-            app:layout_constraintTop_toTopOf="@id/username" />
+            <!-- Hidden -->
+            <View
+                android:layout_width="2dp"
+                android:layout_height="15dp"
+                android:background="@color/blue"
+                android:visibility="gone" />
+
+            <TextView
+                android:id="@id/username"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="2dp"
+                android:fontFamily="@font/inter_18pt_regular"
+                android:gravity="center"
+                android:includeFontPadding="false"
+                android:textColor="@color/gray"
+                android:textSize="15sp"
+                android:textStyle="bold"
+                android:visibility="gone"
+                tools:text="\@vitalis" />
+
+            <TextView
+                android:id="@+id/btnCopy"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="5dp"
+                android:background="@drawable/bg_8dp_blue"
+                android:fontFamily="@font/inter_18pt_regular"
+                android:includeFontPadding="false"
+                android:paddingHorizontal="10dp"
+                android:paddingVertical="5dp"
+                android:text="Copy"
+                android:textColor="@color/white"
+                android:textSize="15sp"
+                android:visibility="gone" />
+        </LinearLayout>
     </androidx.constraintlayout.widget.ConstraintLayout>
 
     <!-- Scroll Content -->
@@ -142,23 +164,25 @@
                 android:layout_marginTop="5dp"
                 android:background="@drawable/bg_8dp_white"
                 android:orientation="vertical"
-                android:padding="5dp">
+                android:paddingHorizontal="5dp"
+                android:paddingVertical="10dp">
 
                 <!-- Transaction History -->
                 <LinearLayout
                     android:id="@+id/btnTransactions"
                     android:layout_width="match_parent"
-                    android:layout_height="50dp"
+                    android:layout_height="45dp"
                     android:background="@drawable/bg_8dp_white_ripple_yes"
                     android:gravity="center_vertical"
                     android:orientation="horizontal"
                     android:padding="5dp">
 
                     <ImageView
-                        android:layout_width="30dp"
-                        android:layout_height="30dp"
+                        android:layout_width="25dp"
+                        android:layout_height="25dp"
                         android:contentDescription="@null"
-                        android:src="@drawable/ic_receipt" />
+                        android:src="@drawable/ic_receipt"
+                        app:tint="@color/blue" />
 
                     <TextView
                         android:layout_width="0dp"
@@ -181,9 +205,9 @@
 
                 <!-- Security Settings -->
                 <LinearLayout
-                    android:id="@+id/btnLoginAndSecurity"
+                    android:id="@+id/btnSettings"
                     android:layout_width="match_parent"
-                    android:layout_height="50dp"
+                    android:layout_height="45dp"
                     android:layout_marginTop="10dp"
                     android:background="@drawable/bg_8dp_white_ripple_yes"
                     android:gravity="center_vertical"
@@ -191,10 +215,11 @@
                     android:padding="5dp">
 
                     <ImageView
-                        android:layout_width="30dp"
-                        android:layout_height="30dp"
+                        android:layout_width="25dp"
+                        android:layout_height="25dp"
                         android:contentDescription="@null"
-                        android:src="@drawable/ic_lock" />
+                        android:src="@drawable/ic_settings"
+                        app:tint="@color/blue" />
 
                     <TextView
                         android:layout_width="0dp"
@@ -203,43 +228,7 @@
                         android:layout_weight="1"
                         android:fontFamily="@font/inter_18pt_regular"
                         android:includeFontPadding="false"
-                        android:text="Login &amp; Security"
-                        android:textColor="@color/black"
-                        android:textSize="14sp" />
-
-                    <ImageView
-                        android:layout_width="15dp"
-                        android:layout_height="15dp"
-                        android:contentDescription="@null"
-                        android:src="@drawable/ic_arrow_forward"
-                        app:tint="@color/gray" />
-                </LinearLayout>
-
-                <!-- Theme -->
-                <LinearLayout
-                    android:id="@+id/btnTheme"
-                    android:layout_width="match_parent"
-                    android:layout_height="50dp"
-                    android:layout_marginTop="10dp"
-                    android:background="@drawable/bg_8dp_white_ripple_yes"
-                    android:gravity="center_vertical"
-                    android:orientation="horizontal"
-                    android:padding="5dp">
-
-                    <ImageView
-                        android:layout_width="30dp"
-                        android:layout_height="30dp"
-                        android:contentDescription="@null"
-                        android:src="@drawable/ic_theme" />
-
-                    <TextView
-                        android:layout_width="0dp"
-                        android:layout_height="wrap_content"
-                        android:layout_marginStart="15dp"
-                        android:layout_weight="1"
-                        android:fontFamily="@font/inter_18pt_regular"
-                        android:includeFontPadding="false"
-                        android:text="Theme"
+                        android:text="Settings"
                         android:textColor="@color/black"
                         android:textSize="14sp" />
 
@@ -268,23 +257,25 @@
                 android:layout_marginTop="5dp"
                 android:background="@drawable/bg_8dp_white"
                 android:orientation="vertical"
-                android:padding="5dp">
+                android:paddingHorizontal="5dp"
+                android:paddingVertical="10dp">
 
                 <!-- Rewards -->
                 <LinearLayout
                     android:id="@+id/btnEarnRewards"
                     android:layout_width="match_parent"
-                    android:layout_height="50dp"
+                    android:layout_height="wrap_content"
                     android:background="@drawable/bg_8dp_white_ripple_yes"
                     android:gravity="center_vertical"
                     android:orientation="horizontal"
                     android:padding="5dp">
 
                     <ImageView
-                        android:layout_width="30dp"
-                        android:layout_height="30dp"
+                        android:layout_width="25dp"
+                        android:layout_height="25dp"
                         android:contentDescription="@null"
-                        android:src="@drawable/ic_megaphone" />
+                        android:src="@drawable/ic_megaphone"
+                        app:tint="@color/blue" />
 
                     <LinearLayout
                         android:layout_width="0dp"
@@ -310,7 +301,7 @@
                             android:includeFontPadding="false"
                             android:text="Invite friends and earn forever"
                             android:textColor="@color/gray"
-                            android:textSize="13sp" />
+                            android:textSize="12sp" />
                     </LinearLayout>
 
                     <ImageView
@@ -325,7 +316,7 @@
                 <LinearLayout
                     android:id="@+id/btnRateUs"
                     android:layout_width="match_parent"
-                    android:layout_height="50dp"
+                    android:layout_height="wrap_content"
                     android:layout_marginTop="10dp"
                     android:background="@drawable/bg_8dp_white_ripple_yes"
                     android:gravity="center_vertical"
@@ -333,10 +324,11 @@
                     android:padding="5dp">
 
                     <ImageView
-                        android:layout_width="30dp"
-                        android:layout_height="30dp"
+                        android:layout_width="25dp"
+                        android:layout_height="25dp"
                         android:contentDescription="@null"
-                        android:src="@drawable/ic_rate" />
+                        android:src="@drawable/ic_review"
+                        app:tint="@color/blue" />
 
                     <LinearLayout
                         android:layout_width="0dp"
@@ -351,7 +343,7 @@
                             android:layout_height="wrap_content"
                             android:fontFamily="@font/inter_18pt_regular"
                             android:includeFontPadding="false"
-                            android:text="Rate us"
+                            android:text="Review Us"
                             android:textColor="@color/black"
                             android:textSize="14sp" />
 
@@ -360,9 +352,9 @@
                             android:layout_height="wrap_content"
                             android:fontFamily="@font/inter_18pt_regular"
                             android:includeFontPadding="false"
-                            android:text="Your rating helps others find us"
+                            android:text="Your review helps others find us"
                             android:textColor="@color/gray"
-                            android:textSize="13sp" />
+                            android:textSize="12sp" />
                     </LinearLayout>
 
                     <ImageView
@@ -377,7 +369,7 @@
                 <LinearLayout
                     android:id="@+id/btnFeedback"
                     android:layout_width="match_parent"
-                    android:layout_height="50dp"
+                    android:layout_height="wrap_content"
                     android:layout_marginTop="10dp"
                     android:background="@drawable/bg_8dp_white_ripple_yes"
                     android:gravity="center_vertical"
@@ -385,10 +377,11 @@
                     android:padding="5dp">
 
                     <ImageView
-                        android:layout_width="30dp"
-                        android:layout_height="30dp"
+                        android:layout_width="25dp"
+                        android:layout_height="25dp"
                         android:contentDescription="@null"
-                        android:src="@drawable/ic_feedback_note" />
+                        android:src="@drawable/ic_message"
+                        app:tint="@color/blue" />
 
                     <LinearLayout
                         android:layout_width="0dp"
@@ -414,7 +407,7 @@
                             android:includeFontPadding="false"
                             android:text="Help us improve by sharing your thoughts"
                             android:textColor="@color/gray"
-                            android:textSize="13sp" />
+                            android:textSize="12sp" />
                     </LinearLayout>
 
                     <ImageView
@@ -443,23 +436,25 @@
                 android:layout_marginTop="5dp"
                 android:background="@drawable/bg_8dp_white"
                 android:orientation="vertical"
-                android:padding="5dp">
+                android:paddingHorizontal="5dp"
+                android:paddingVertical="10dp">
 
                 <!-- Terms -->
                 <LinearLayout
                     android:id="@+id/btnTermsAndCondition"
                     android:layout_width="match_parent"
-                    android:layout_height="50dp"
+                    android:layout_height="45dp"
                     android:background="@drawable/bg_8dp_white_ripple_yes"
                     android:gravity="center_vertical"
                     android:orientation="horizontal"
                     android:padding="5dp">
 
                     <ImageView
-                        android:layout_width="30dp"
-                        android:layout_height="30dp"
+                        android:layout_width="25dp"
+                        android:layout_height="25dp"
                         android:contentDescription="@null"
-                        android:src="@drawable/ic_docs_closed" />
+                        android:src="@drawable/ic_file_text"
+                        app:tint="@color/blue" />
 
                     <TextView
                         android:layout_width="0dp"
@@ -484,7 +479,7 @@
                 <LinearLayout
                     android:id="@+id/btnPrivacyPolicy"
                     android:layout_width="match_parent"
-                    android:layout_height="50dp"
+                    android:layout_height="45dp"
                     android:layout_marginTop="5dp"
                     android:background="@drawable/bg_8dp_white_ripple_yes"
                     android:gravity="center_vertical"
@@ -492,10 +487,11 @@
                     android:padding="5dp">
 
                     <ImageView
-                        android:layout_width="30dp"
-                        android:layout_height="30dp"
+                        android:layout_width="25dp"
+                        android:layout_height="25dp"
                         android:contentDescription="@null"
-                        android:src="@drawable/ic_docs_open" />
+                        android:src="@drawable/ic_file_text"
+                        app:tint="@color/blue" />
 
                     <TextView
                         android:layout_width="0dp"
@@ -564,9 +560,17 @@
                 android:orientation="horizontal"
                 android:padding="10dp">
 
+                <ImageView
+                    android:layout_width="25dp"
+                    android:layout_height="25dp"
+                    android:contentDescription="@null"
+                    android:src="@drawable/ic_log_out"
+                    app:tint="@color/gray" />
+
                 <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
+                    android:layout_marginStart="15dp"
                     android:fontFamily="@font/inter_18pt_regular"
                     android:includeFontPadding="false"
                     android:text="Sign Out"
@@ -579,7 +583,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_gravity="center"
-                android:layout_marginTop="25dp"
+                android:layout_marginTop="30dp"
                 android:layout_marginBottom="20dp"
                 android:fontFamily="@font/inter_18pt_regular"
                 android:includeFontPadding="false"

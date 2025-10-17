@@ -30,9 +30,6 @@ public class TermsAndConditionsActivity extends AppCompatActivity {
         return """
                 <html>
                 <body>
-                    <h1>SettleX - Terms and Conditions of Service</h1>
-                    <p><strong>Last Updated: October 2025</strong></p>
-                
                     <h2>1. Acceptance of Terms</h2>
                     <p>By accessing or using the SettleX mobile application and related services (collectively, the <strong>"Service"</strong>), you agree to be bound by these Terms and Conditions (<strong>"Terms"</strong>) and our Privacy Policy. If you do not agree to these Terms, you may not use the Service. SettleX is operated by <strong>[Insert Company Name, e.g., SettleX Technologies Ltd.]</strong>, a company registered under the laws of the Federal Republic of Nigeria.</p>
                 

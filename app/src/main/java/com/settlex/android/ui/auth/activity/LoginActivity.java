@@ -25,7 +25,7 @@ import com.settlex.android.data.remote.profile.ProfileService;
 import com.settlex.android.databinding.ActivityLoginBinding;
 import com.settlex.android.ui.auth.viewmodel.AuthViewModel;
 import com.settlex.android.ui.common.util.ProgressLoaderController;
-import com.settlex.android.ui.dashboard.activity.DashboardActivity;
+import com.settlex.android.ui.dashboard.DashboardActivity;
 import com.settlex.android.ui.information.help.AuthHelpActivity;
 import com.settlex.android.util.network.NetworkMonitor;
 import com.settlex.android.util.string.StringUtil;

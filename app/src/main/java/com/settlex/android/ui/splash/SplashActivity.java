@@ -12,10 +12,10 @@ import androidx.core.splashscreen.SplashScreen;
 import androidx.lifecycle.ViewModelProvider;
 
 import com.settlex.android.data.local.OnboardingPrefs;
-import com.settlex.android.ui.Onboarding.activity.OnboardingActivity;
 import com.settlex.android.ui.auth.activity.LoginActivity;
 import com.settlex.android.ui.auth.viewmodel.AuthViewModel;
-import com.settlex.android.ui.dashboard.activity.DashboardActivity;
+import com.settlex.android.ui.dashboard.DashboardActivity;
+import com.settlex.android.onboarding.activity.OnboardingActivity;
 
 import dagger.hilt.android.AndroidEntryPoint;
 

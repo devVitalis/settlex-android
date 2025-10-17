@@ -1,15 +1,13 @@
 <resources>
-    <!-- 1. Semantic Colors (Mapped to Dark values) -->
-    <color name="color_background_page">@color/black</color>      <!-- Black for Dark Mode -->
-    <color name="color_text_primary">@color/white</color>        <!-- White for Dark Mode -->
-    <color name="color_surface_secondary">@color/gray_dark</color>  <!-- Dark Gray for containers -->
-    <color name="color_accent_brand">@color/blue_200</color>     <!-- Lighter Blue for visibility -->
-    <color name="color_icon_tint">@color/gray_light</color>        <!-- Light Gray for icons -->
+    <!-- Semantic Colors (Mapped to Dark values) -->
+    <color name="color_background_page">@color/material_dark</color>
+    <color name="color_text_primary">@color/white</color>
+    <color name="color_text_secondary">@color/gray</color>
 
-    <!-- 2. Literal Colors (These should be consistent across both files) -->
-    <!-- Black && White -->
+    <!-- Literal Colors -->
     <color name="black">#FF000000</color>
     <color name="white">#FFFFFFFF</color>
+    <color name="material_dark">#181A1F</color>
 
     <!-- Gray -->
     <color name="gray">#9E9E9E</color>
