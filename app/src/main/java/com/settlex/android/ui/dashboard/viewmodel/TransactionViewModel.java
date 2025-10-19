@@ -39,7 +39,7 @@ public class TransactionViewModel extends ViewModel {
 
     public void searchRecipientWithUsername(String query) {
         recipientSearchResult.postValue(Result.loading());
-        transactionRepo.searchRecipientWithUsername(query, new TransactionRepository.SearchRecipientCallback() {
+        transactionRepo.searchRecipient(query, new TransactionRepository.SearchRecipientCallback() {
             @Override
             public void onResult(List<RecipientDto> recipientDto) {
                 // Map DTO -> UI Model

@@ -11,6 +11,7 @@ public class UserModel {
     private String username;
     private String email;
     private String phone;
+    private String fcmToken;
     private String referralCode;
     private String pin;
     private String pinSalt;
@@ -19,12 +20,13 @@ public class UserModel {
     public UserModel() {
     }
 
-    public UserModel(String firstName, String lastName, String username, String email, String phone, String referralCode, String pin, String pinSalt, boolean hasPin) {
+    public UserModel(String firstName, String lastName, String username, String email, String phone, String fcmToken, String referralCode, String pin, String pinSalt, boolean hasPin) {
         this.firstName = firstName;
         this.lastName = lastName;
         this.username = username;
         this.email = email;
         this.phone = phone;
+        this.fcmToken = fcmToken;
         this.referralCode = referralCode;
         this.pin = pin;
         this.pinSalt = pinSalt;
@@ -62,6 +64,7 @@ public class UserModel {
     public void setUsername(String username) {
         this.username = username;
     }
+
     public String getEmail() {
         return email;
     }
@@ -76,6 +79,14 @@ public class UserModel {
 
     public void setPhone(String phone) {
         this.phone = phone;
+    }
+
+    public String getFcmToken() {
+        return fcmToken;
+    }
+
+    public void setFcmToken(String fcmToken) {
+        this.fcmToken = fcmToken;
     }
 
     public String getReferralCode() {

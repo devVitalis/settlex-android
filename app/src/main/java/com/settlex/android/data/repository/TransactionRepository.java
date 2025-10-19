@@ -26,9 +26,9 @@ public class TransactionRepository {
         this.firestore = firestore;
     }
 
-    public void searchRecipientWithUsername(String input, SearchRecipientCallback callback) {
-        functions.getHttpsCallable("searchUsername")
-                .call(Collections.singletonMap("input", input))
+    public void searchRecipient(String paymentId, SearchRecipientCallback callback) {
+        functions.getHttpsCallable("searchPaymentId")
+                .call(Collections.singletonMap("paymentId", paymentId))
                 .addOnSuccessListener(result -> {
                     Map<?, ?> data = (Map<?, ?>) result.getData();
                     List<RecipientDto> recipientDto = new ArrayList<>();

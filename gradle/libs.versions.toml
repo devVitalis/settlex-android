@@ -6,6 +6,7 @@ datastorePreferences = "1.1.7"
 dotsindicator = "5.1.0"
 firebaseBom = "34.3.0"
 firebaseConfig = "23.0.1"
+firebaseMessaging = "25.0.1"
 glide = "4.16.0"
 gson = "2.13.2"
 hiltAndroid = "2.57.2"
@@ -44,6 +45,7 @@ firebase-bom = { module = "com.google.firebase:firebase-bom", version.ref = "fir
 firebase-firestore = { module = "com.google.firebase:firebase-firestore" }
 firebase-messaging = { module = "com.google.firebase:firebase-messaging" }
 firebase-storage = { module = "com.google.firebase:firebase-storage" }
+google-firebase-messaging = { module = "com.google.firebase:firebase-messaging", version.ref = "firebaseMessaging" }
 gson = { module = "com.google.code.gson:gson", version.ref = "gson" }
 hilt-android = { module = "com.google.dagger:hilt-android", version.ref = "hiltAndroid" }
 hilt-android-compiler = { module = "com.google.dagger:hilt-android-compiler", version.ref = "hiltAndroidCompiler" }

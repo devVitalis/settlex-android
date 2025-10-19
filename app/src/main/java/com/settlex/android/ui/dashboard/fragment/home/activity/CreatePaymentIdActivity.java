@@ -58,26 +58,38 @@ public class CreatePaymentIdActivity extends AppCompatActivity {
     }
 
     private void validateRuleSet(String paymentId) {
+        binding.error.setText(validatePaymentIdRequirements(paymentId));
+        binding.error.setVisibility(!isPaymentIdValid(paymentId) ? View.VISIBLE : View.GONE);
+
+        // Cache drawables and colors
         Drawable validBg = ContextCompat.getDrawable(this, R.drawable.bg_24dp_green_light);
         Drawable invalidBg = ContextCompat.getDrawable(this, R.drawable.bg_24dp_semi_transparent_black10);
 
         ColorStateList validIcon = ColorStateList.valueOf(ContextCompat.getColor(this, R.color.green));
-        ColorStateList inValidIcon = ColorStateList.valueOf(ContextCompat.getColor(this, R.color.gray));
+        ColorStateList invalidIcon = ColorStateList.valueOf(ContextCompat.getColor(this, R.color.gray));
 
         int validText = ContextCompat.getColor(this, R.color.green);
-        int inValidText = ContextCompat.getColor(this, R.color.gray);
+        int invalidText = ContextCompat.getColor(this, R.color.gray);
 
-        binding.layoutRuleStartWith.setBackground(startsWithLetter(paymentId) ? validBg : invalidBg);
-        binding.iconCheckRuleStartWith.setImageTintList(startsWithLetter(paymentId) ? validIcon : inValidIcon);
-        binding.txtRuleStartWith.setTextColor(startsWithLetter(paymentId) ? validText : inValidText);
+        // Evaluate rules once
+        boolean startsWith = startsWithLetter(paymentId);
+        boolean hasLength = hasMinimumLength(paymentId);
+        boolean isValidFormat = isValidAlphaNumericFormat(paymentId);
 
-        binding.layoutRuleLength.setBackground(hasMinimumLength(paymentId) ? validBg : invalidBg);
-        binding.icCheckRuleLength.setImageTintList(hasMinimumLength(paymentId) ? validIcon : inValidIcon);
-        binding.txtRuleLength.setTextColor(hasMinimumLength(paymentId) ? validText : inValidText);
+        // Starts with letter
+        binding.layoutRuleStartWith.setBackground(startsWith ? validBg : invalidBg);
+        binding.iconCheckRuleStartWith.setImageTintList(startsWith ? validIcon : invalidIcon);
+        binding.txtRuleStartWith.setTextColor(startsWith ? validText : invalidText);
 
-        binding.layoutRuleContains.setBackground(isValidAlphaNumericFormat(paymentId) ? validBg : invalidBg);
-        binding.icCheckRuleContains.setImageTintList(isValidAlphaNumericFormat(paymentId) ? validIcon : inValidIcon);
-        binding.txtRuleContains.setTextColor(isValidAlphaNumericFormat(paymentId) ? validText : inValidText);
+        // Minimum length
+        binding.layoutRuleLength.setBackground(hasLength ? validBg : invalidBg);
+        binding.icCheckRuleLength.setImageTintList(hasLength ? validIcon : invalidIcon);
+        binding.txtRuleLength.setTextColor(hasLength ? validText : invalidText);
+
+        // Alphanumeric format
+        binding.layoutRuleContains.setBackground(isValidFormat ? validBg : invalidBg);
+        binding.icCheckRuleContains.setImageTintList(isValidFormat ? validIcon : invalidIcon);
+        binding.txtRuleContains.setTextColor(isValidFormat ? validText : invalidText);
     }
 
     private boolean isPaymentIdValid(String paymentId) {
@@ -93,6 +105,9 @@ public class CreatePaymentIdActivity extends AppCompatActivity {
     }
 
     private boolean isValidAlphaNumericFormat(String paymentId) {
+        if (!hasMinimumLength(paymentId)) {
+            return false;
+        }
         return paymentId.matches("^[A-Za-z0-9_]+$");
     }
 

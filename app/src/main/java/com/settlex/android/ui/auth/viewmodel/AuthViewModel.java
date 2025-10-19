@@ -5,8 +5,8 @@ import androidx.lifecycle.MutableLiveData;
 import androidx.lifecycle.ViewModel;
 
 import com.google.firebase.auth.FirebaseUser;
-import com.settlex.android.data.repository.AuthRepository;
 import com.settlex.android.data.model.UserModel;
+import com.settlex.android.data.repository.AuthRepository;
 import com.settlex.android.ui.auth.model.LoginUiModel;
 import com.settlex.android.util.event.Event;
 import com.settlex.android.util.event.Result;
@@ -29,11 +29,11 @@ public class AuthViewModel extends ViewModel {
         initUserAuthState();
     }
 
-    // LIVEDATA STATE HOLDERS =========
+    private final MutableLiveData<UserModel> sharedUserLiveData = new MutableLiveData<>();
     private final MutableLiveData<LoginUiModel> userAuthStateLiveData = new MutableLiveData<>();
-    private final MutableLiveData<UserModel> userLiveData = new MutableLiveData<>();
     private final MutableLiveData<Result<String>> loginResult = new MutableLiveData<>();
     private final MutableLiveData<Result<String>> registerResult = new MutableLiveData<>();
+    private final MutableLiveData<Result<String>> fcmTokenLiveData = new MutableLiveData<>();
     private final MutableLiveData<Result<Boolean>> emailExistenceResult = new MutableLiveData<>();
     private final MutableLiveData<Event<Result<String>>> changeUserPasswordResult = new MutableLiveData<>();
     private final MutableLiveData<Event<Result<String>>> sendPasswordResetOtpResult = new MutableLiveData<>();
@@ -43,7 +43,7 @@ public class AuthViewModel extends ViewModel {
 
     // LIVEDATA GETTERS ==========
     public LiveData<UserModel> getUser() {
-        return userLiveData;
+        return sharedUserLiveData;
     }
 
     public LiveData<Result<String>> getRegisterResult() {
@@ -78,10 +78,21 @@ public class AuthViewModel extends ViewModel {
         return verifyEmailVerificationOtpResult;
     }
 
+    public LiveData<Result<String>> generateUserFcmToken() {
+        authRepo.generateUserFcmToken(new AuthRepository.FcmTokenCallback() {
+            @Override
+            public void onTokenReceived(String token) {
+                fcmTokenLiveData.setValue(Result.success(token));
+            }
 
-    /**
-     * Handles user registration
-     */
+            @Override
+            public void onTokenError() {
+                fcmTokenLiveData.setValue(Result.error("Failed to generate FCM Token"));
+            }
+        });
+        return fcmTokenLiveData;
+    }
+
     public void registerUser(String email, String password, UserModel user) {
         registerResult.postValue(Result.loading());
         authRepo.registerUser(user, email, password, new AuthRepository.RegisterCallback() {
@@ -221,30 +232,36 @@ public class AuthViewModel extends ViewModel {
     public void updateFirstName(String firstName) {
         UserModel user = getOrCreateUser();
         user.setFirstName(firstName);
-        userLiveData.setValue(user);
+        sharedUserLiveData.setValue(user);
     }
 
     public void updateLastName(String lastName) {
         UserModel user = getOrCreateUser();
         user.setLastName(lastName);
-        userLiveData.setValue(user);
+        sharedUserLiveData.setValue(user);
     }
 
     public void updateEmail(String email) {
         UserModel user = getOrCreateUser();
         user.setEmail(email);
-        userLiveData.setValue(user);
+        sharedUserLiveData.setValue(user);
     }
 
     public void updatePhone(String phone) {
         UserModel user = getOrCreateUser();
         user.setPhone(phone);
-        userLiveData.setValue(user);
+        sharedUserLiveData.setValue(user);
     }
 
     public String getEmail() {
-        UserModel user = userLiveData.getValue();
+        UserModel user = sharedUserLiveData.getValue();
         return (user != null) ? user.getEmail() : null;
+    }
+
+    public void updateFcmToken(String token){
+        UserModel user = getOrCreateUser();
+        user.setFcmToken(token);
+        sharedUserLiveData.setValue(user);
     }
 
     public void initUserAuthState() {
@@ -282,11 +299,11 @@ public class AuthViewModel extends ViewModel {
         user.setPin(null);
         user.setPinSalt(null);
         user.setHasPin(false);
-        userLiveData.setValue(user);
+        sharedUserLiveData.setValue(user);
     }
 
     private UserModel getOrCreateUser() {
-        UserModel user = userLiveData.getValue();
+        UserModel user = sharedUserLiveData.getValue();
         return (user != null) ? user : new UserModel();
     }
 }

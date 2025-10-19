@@ -1,5 +1,7 @@
 package com.settlex.android.data.repository;
 
+import android.util.Log;
+
 import com.google.firebase.FirebaseNetworkException;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseAuthInvalidCredentialsException;
@@ -9,9 +11,10 @@ import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.auth.UserProfileChangeRequest;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.functions.FirebaseFunctions;
+import com.google.firebase.messaging.FirebaseMessaging;
 import com.google.gson.Gson;
-import com.settlex.android.data.remote.api.MetadataService;
 import com.settlex.android.data.model.UserModel;
+import com.settlex.android.data.remote.api.MetadataService;
 
 import java.io.IOException;
 import java.util.HashMap;
@@ -23,15 +26,20 @@ import jakarta.inject.Inject;
  * Centralizes all authentication operations
  */
 public class AuthRepository {
+    private final String TAG = AuthRepository.class.getSimpleName();
+    private final String ERROR_NO_INTERNET = "Connection lost. Please check your Wi-Fi or cellular data and try again";
+
     private final FirebaseAuth auth;
     private final FirebaseFirestore firestore;
     private final FirebaseFunctions functions;
+    private final FirebaseMessaging firebaseMessaging;
 
     @Inject
-    public AuthRepository(FirebaseAuth uth, FirebaseFirestore firestore, FirebaseFunctions functions) {
+    public AuthRepository(FirebaseAuth uth, FirebaseFirestore firestore, FirebaseFunctions functions, FirebaseMessaging firebaseMessaging) {
         this.auth = uth;
         this.firestore = firestore;
         this.functions = functions;
+        this.firebaseMessaging = firebaseMessaging;
     }
 
     /**
@@ -46,7 +54,7 @@ public class AuthRepository {
                         return;
                     }
                     if (e instanceof FirebaseNetworkException || e instanceof IOException) {
-                        callback.onFailure("Connection lost. Please check your Wi-Fi or cellular data and try again");
+                        callback.onFailure(ERROR_NO_INTERNET);
                         return;
                     }
                     if (((FirebaseAuthInvalidUserException) e).getErrorCode().equals("ERROR_USER_DISABLED")) {
@@ -70,7 +78,7 @@ public class AuthRepository {
                         return;
                     }
                     user.setUid(currentUser.getUid());
-                    storeUserProfileAndVerify(user, callback);
+                    storeUserProfile(user, callback);
                 })
                 .addOnFailureListener(e -> {
                     if (e instanceof FirebaseAuthUserCollisionException) {
@@ -216,7 +224,7 @@ public class AuthRepository {
      * Stores user profile and mark email as verify
      * Maintains data consistency with rollback on failure
      */
-    private void storeUserProfileAndVerify(UserModel user, RegisterCallback callback) {
+    private void storeUserProfile(UserModel user, RegisterCallback callback) {
         Map<String, Object> data = new HashMap<>();
         data.put("user", new Gson().toJson(user));
 
@@ -234,7 +242,7 @@ public class AuthRepository {
                             markEmailAsUnverified(user.getUid());
                         }
                     });
-                    setUserDisplayName(user.getFirstName() + " " + user.getLastName()); // Set display name in firebase auth
+                    setUserDisplayName(user.getFirstName() + " " + user.getLastName());
                 })
                 .addOnFailureListener(e -> {
                     if (e instanceof FirebaseNetworkException || e instanceof IOException) {
@@ -243,6 +251,35 @@ public class AuthRepository {
                     }
                     callback.onFailure(e.getMessage());
                 });
+    }
+
+    public void generateUserFcmToken(FcmTokenCallback callback) {
+        firebaseMessaging.getToken()
+                .addOnSuccessListener(callback::onTokenReceived)
+                .addOnFailureListener(e -> {
+                    callback.onTokenError();
+                    Log.e(TAG, "Failed to fetch token", e);
+                });
+    }
+
+    /**
+     * Sends the updated FCM token to your backend or Firestore.
+     */
+    public void sendTokenToServer(String token) {
+        FirebaseUser user = getCurrentUser();
+        if (user == null) return; // user not logged in, skip
+
+        FirebaseFirestore db = FirebaseFirestore.getInstance();
+        db.collection("users")
+                .document(user.getUid())
+                .update("fcmToken", token)
+                .addOnSuccessListener(aVoid -> Log.d("FCM", "Token updated successfully"))
+                .addOnFailureListener(e -> Log.e("FCM", "Failed to update token", e));
+    }
+
+    public interface FcmTokenCallback {
+        void onTokenReceived(String token);
+        void onTokenError();
     }
 
     private void markEmailVerified(String uid, RegisterCallback callback) {

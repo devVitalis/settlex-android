@@ -61,6 +61,7 @@ dependencies {
     implementation(libs.firebase.storage)
     implementation(libs.firebase.messaging)
     implementation(libs.firebase.config)
+    implementation(libs.google.firebase.messaging)
 
     // Dots Indicator
     implementation(libs.dotsindicator)

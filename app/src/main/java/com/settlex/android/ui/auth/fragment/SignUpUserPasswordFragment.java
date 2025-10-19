@@ -10,6 +10,7 @@ import android.text.Spanned;
 import android.text.TextUtils;
 import android.text.TextWatcher;
 import android.text.style.ImageSpan;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -57,6 +58,7 @@ public class SignUpUserPasswordFragment extends Fragment {
 
         setupUiActions();
         observeNetworkStatus();
+        generateAndObserveFcmToken();
         return binding.getRoot();
     }
 
@@ -78,6 +80,20 @@ public class SignUpUserPasswordFragment extends Fragment {
                 this.isConnected = isConnected);
     }
 
+    private void generateAndObserveFcmToken() {
+        authViewModel.generateUserFcmToken().observe(getViewLifecycleOwner(), result -> {
+            if (result == null) return;
+
+            switch (result.getStatus()) {
+                case SUCCESS -> setUserFcmToken(result.getData());
+                case ERROR -> setUserFcmToken(null);
+            }
+        });
+    }
+
+    private void setUserFcmToken(String token) {
+        authViewModel.updateFcmToken(token);
+    }
 
     private void observeRegistrationAndHandleResult() {
         authViewModel.getRegisterResult().observe(getViewLifecycleOwner(), result -> {

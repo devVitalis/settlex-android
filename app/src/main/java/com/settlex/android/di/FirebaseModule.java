@@ -3,6 +3,7 @@ package com.settlex.android.di;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.functions.FirebaseFunctions;
+import com.google.firebase.messaging.FirebaseMessaging;
 import com.google.firebase.remoteconfig.FirebaseRemoteConfig;
 
 import dagger.Module;
@@ -32,5 +33,10 @@ public class FirebaseModule {
     @Provides
     public static FirebaseRemoteConfig provideFirebaseRemoteConfig() {
         return FirebaseRemoteConfig.getInstance();
+    }
+
+    @Provides
+    public static FirebaseMessaging provideFirebaseMessaging() {
+        return FirebaseMessaging.getInstance();
     }
 }
