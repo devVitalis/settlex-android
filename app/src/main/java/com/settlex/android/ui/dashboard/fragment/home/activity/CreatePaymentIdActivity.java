@@ -5,6 +5,8 @@ import android.content.res.ColorStateList;
 import android.graphics.Rect;
 import android.graphics.drawable.Drawable;
 import android.os.Bundle;
+import android.os.Handler;
+import android.os.Looper;
 import android.text.Editable;
 import android.text.TextWatcher;
 import android.view.MotionEvent;
@@ -14,15 +16,36 @@ import android.widget.EditText;
 
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.content.ContextCompat;
+import androidx.lifecycle.ViewModelProvider;
 
 import com.settlex.android.R;
 import com.settlex.android.databinding.ActivityCreatePaymentIdBinding;
+import com.settlex.android.ui.common.util.ProgressLoaderController;
+import com.settlex.android.ui.dashboard.model.UserUiModel;
+import com.settlex.android.ui.dashboard.viewmodel.UserViewModel;
+import com.settlex.android.util.event.Result;
 import com.settlex.android.util.ui.StatusBarUtil;
+import com.settlex.android.util.ui.UiUtil;
 
-import java.util.regex.Pattern;
+import dagger.hilt.android.AndroidEntryPoint;
 
+@AndroidEntryPoint
 public class CreatePaymentIdActivity extends AppCompatActivity {
+
+    // instance vars for user data
+    private String userUid;
+    private String userPaymentId;
+
+    // validation
+    private boolean isFormatValid = false;
+    private boolean exists = false;
+
+    // dependencies
+    private UserViewModel userViewModel;
     private ActivityCreatePaymentIdBinding binding;
+    private ProgressLoaderController progressLoader;
+    private final Handler handler = new Handler(Looper.getMainLooper());
+    private Runnable pendingCheckRunnable = null;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -30,21 +53,141 @@ public class CreatePaymentIdActivity extends AppCompatActivity {
         binding = ActivityCreatePaymentIdBinding.inflate(getLayoutInflater());
         setContentView(binding.getRoot());
 
+        userViewModel = new ViewModelProvider(this).get(UserViewModel.class);
+        progressLoader = new ProgressLoaderController(this);
+
         setupUiActions();
+        observeUserDataStatus();
+        observePaymentIdAvailabilityStatus();
+        observePaymentIdStoreStatus();
+    }
+
+    private void observeUserDataStatus() {
+        userViewModel.getUserLiveData().observe(this, user -> {
+            if (user == null) return;
+
+            switch (user.getStatus()) {
+                case SUCCESS -> onUserDataStatusSuccess(user.getData());
+                case ERROR -> {
+                    // TODO: Handle error
+                }
+            }
+        });
+    }
+
+    private void onUserDataStatusSuccess(UserUiModel user) {
+        userUid = user.getUid();
+    }
+
+    private void observePaymentIdStoreStatus() {
+        userViewModel.getStoreUserPaymentIdStatus().observe(this, resultEvent -> {
+            Result<String> result = resultEvent.getContentIfNotHandled();
+            if (result == null) return;
+
+            switch (result.getStatus()) {
+                case LOADING -> progressLoader.show();
+                case SUCCESS -> onPaymentIdStoreStatusSuccess();
+                case ERROR -> onPaymentIdStoreStatusError(result.getMessage());
+            }
+        });
+    }
+
+    private void onPaymentIdStoreStatusSuccess() {
+        progressLoader.hide();
+        UiUtil.showBottomSheet(
+                this,
+                (dialog, dialogBinding) -> {
+                    String title = "Success";
+                    String message = "Your payment ID was successfully created.";
+
+                    dialogBinding.anim.playAnimation();
+                    dialogBinding.title.setText(title);
+                    dialogBinding.message.setText(message);
+                    dialogBinding.btnContinue.setOnClickListener(view -> {
+                        finish();
+                        dialog.dismiss();
+                    });
+
+                    dialog.show();
+                });
+    }
+
+    private void onPaymentIdStoreStatusError(String error) {
+        binding.paymentIdAvailabilityFeedback.setText(error);
+        progressLoader.hide();
+    }
+
+    private void observePaymentIdAvailabilityStatus() {
+        userViewModel.getPaymentIdExistsStatus().observe(this, resultEvent -> {
+            Result<Boolean> result = resultEvent.getContentIfNotHandled();
+            if (result == null) return;
+
+            switch (result.getStatus()) {
+                case LOADING -> onPaymentIdAvailabilityCheckLoading();
+                case SUCCESS -> onPaymentIdAvailabilityCheckSuccess(result.getData());
+                case ERROR -> onPaymentIdAvailabilityCheckError(result.getMessage());
+            }
+        });
+    }
+
+    private void onPaymentIdAvailabilityCheckLoading() {
+        binding.paymentIdAvailableCheck.setVisibility(View.GONE);
+        binding.paymentIdProgressBar.show();
+        binding.paymentIdProgressBar.setVisibility(View.VISIBLE);
+    }
+
+    private void onPaymentIdAvailabilityCheckSuccess(boolean exists) {
+        this.exists = exists;
+
+        // Hide progress bar
+        binding.paymentIdProgressBar.hide();
+        binding.paymentIdProgressBar.setVisibility(View.GONE);
+
+        binding.paymentIdAvailableCheck.setVisibility(!exists ? View.VISIBLE : View.GONE);
+
+        String feedback = (!exists) ? "Available" : "Not Available";
+        int feedbackColor = (!exists) ? ContextCompat.getColor(this, R.color.green) : ContextCompat.getColor(this, R.color.red);
+
+        binding.paymentIdAvailabilityFeedback.setTextColor(feedbackColor);
+        binding.paymentIdAvailabilityFeedback.setVisibility(View.VISIBLE);
+        binding.paymentIdAvailabilityFeedback.setText(feedback);
+
+        // Validate button state
+        updateContinueButtonState();
+    }
+
+    private void onPaymentIdAvailabilityCheckError(String error) {
+        binding.txtError.setText(error);
+        binding.txtError.setVisibility(View.VISIBLE);
+
+        binding.paymentIdProgressBar.hide();
+        binding.paymentIdProgressBar.setVisibility(View.GONE);
+        binding.paymentIdAvailableCheck.setVisibility(View.GONE);
+        binding.paymentIdAvailabilityFeedback.setVisibility(View.GONE);
     }
 
     private void setupUiActions() {
         StatusBarUtil.setStatusBarColor(this, R.color.white);
         setupPaymentIdInputWatcher();
+        setupEditTextFocusHandler();
+
+        binding.btnContinue.setOnClickListener(view -> storeUserPaymentId(userPaymentId, userUid));
+    }
+
+    private void storeUserPaymentId(String paymentId, String uid) {
+        userViewModel.storeUserPaymentIdToServer(paymentId, uid);
+    }
+
+    private void setupEditTextFocusHandler() {
+        // cache drawables
+        Drawable focus = ContextCompat.getDrawable(this, R.drawable.bg_edit_txt_custom_white_focused);
+        Drawable notFocus = ContextCompat.getDrawable(this, R.drawable.bg_edit_txt_custom_white_not_focused);
+
+        binding.editTxtPaymentId.setOnFocusChangeListener((view, hasFocus) -> binding.editTxtPaymentIdBackground.setBackground(hasFocus ? focus : notFocus));
     }
 
     private void setupPaymentIdInputWatcher() {
         binding.editTxtPaymentId.addTextChangedListener(new TextWatcher() {
-            @Override
-            public void afterTextChanged(Editable editable) {
-
-            }
-
             @Override
             public void beforeTextChanged(CharSequence charSequence, int i, int i1, int i2) {
 
@@ -52,18 +195,47 @@ public class CreatePaymentIdActivity extends AppCompatActivity {
 
             @Override
             public void onTextChanged(CharSequence s, int i, int i1, int i2) {
-                validateRuleSet(s.toString().trim());
+
+                setContinueButtonEnabled(false); // disable continue btn
+
+                // don't trim
+                validatePaymentIdRuleSet(s.toString());
+                userPaymentId = s.toString();
+
+                // Hide feedbacks
+                binding.paymentIdAvailableCheck.setVisibility(View.GONE);
+                binding.paymentIdAvailabilityFeedback.setVisibility(View.GONE);
+                binding.txtError.setVisibility(View.GONE);
+            }
+
+            @Override
+            public void afterTextChanged(Editable e) {
+
+                // don't trim
+                String eString = e.toString();
+                boolean shouldSearch = isFormatValid;
+
+                // cancel any previous pending check
+                if (pendingCheckRunnable != null) {
+                    handler.removeCallbacks(pendingCheckRunnable);
+                }
+
+                if (shouldSearch) {
+                    pendingCheckRunnable = () -> checkPaymentIdAvailability(eString);
+                    handler.postDelayed(pendingCheckRunnable, 1500);
+                }
             }
         });
     }
 
-    private void validateRuleSet(String paymentId) {
-        binding.error.setText(validatePaymentIdRequirements(paymentId));
-        binding.error.setVisibility(!isPaymentIdValid(paymentId) ? View.VISIBLE : View.GONE);
+    private void checkPaymentIdAvailability(String paymentId) {
+        userViewModel.checkPaymentIdExists(paymentId);
+    }
 
+    private void validatePaymentIdRuleSet(String paymentId) {
         // Cache drawables and colors
-        Drawable validBg = ContextCompat.getDrawable(this, R.drawable.bg_24dp_green_light);
-        Drawable invalidBg = ContextCompat.getDrawable(this, R.drawable.bg_24dp_semi_transparent_black10);
+        Drawable validBg = ContextCompat.getDrawable(this, R.drawable.bg_8dp_green_light);
+        Drawable invalidBg = ContextCompat.getDrawable(this, R.drawable.bg_8dp_gray_light);
 
         ColorStateList validIcon = ColorStateList.valueOf(ContextCompat.getColor(this, R.color.green));
         ColorStateList invalidIcon = ColorStateList.valueOf(ContextCompat.getColor(this, R.color.gray));
@@ -73,7 +245,7 @@ public class CreatePaymentIdActivity extends AppCompatActivity {
 
         // Evaluate rules once
         boolean startsWith = startsWithLetter(paymentId);
-        boolean hasLength = hasMinimumLength(paymentId);
+        boolean hasMinimumLength = hasMinimumLength(paymentId);
         boolean isValidFormat = isValidAlphaNumericFormat(paymentId);
 
         // Starts with letter
@@ -82,18 +254,17 @@ public class CreatePaymentIdActivity extends AppCompatActivity {
         binding.txtRuleStartWith.setTextColor(startsWith ? validText : invalidText);
 
         // Minimum length
-        binding.layoutRuleLength.setBackground(hasLength ? validBg : invalidBg);
-        binding.icCheckRuleLength.setImageTintList(hasLength ? validIcon : invalidIcon);
-        binding.txtRuleLength.setTextColor(hasLength ? validText : invalidText);
+        binding.layoutRuleLength.setBackground(hasMinimumLength ? validBg : invalidBg);
+        binding.icCheckRuleLength.setImageTintList(hasMinimumLength ? validIcon : invalidIcon);
+        binding.txtRuleLength.setTextColor(hasMinimumLength ? validText : invalidText);
 
         // Alphanumeric format
         binding.layoutRuleContains.setBackground(isValidFormat ? validBg : invalidBg);
         binding.icCheckRuleContains.setImageTintList(isValidFormat ? validIcon : invalidIcon);
         binding.txtRuleContains.setTextColor(isValidFormat ? validText : invalidText);
-    }
 
-    private boolean isPaymentIdValid(String paymentId) {
-        return paymentId.matches("^[a-z0-9]([a-z0-9]*[._]?[a-z0-9]*)+[a-z0-9]$");
+        // Only update the flag here
+        isFormatValid = startsWith && hasMinimumLength && isValidFormat;
     }
 
     private boolean startsWithLetter(String paymentId) {
@@ -101,45 +272,21 @@ public class CreatePaymentIdActivity extends AppCompatActivity {
     }
 
     private boolean hasMinimumLength(String paymentId) {
-        return paymentId.length() >= 3;
+        return paymentId.length() >= 5 && paymentId.length() <= 20;
     }
 
     private boolean isValidAlphaNumericFormat(String paymentId) {
-        if (!hasMinimumLength(paymentId)) {
-            return false;
-        }
-        return paymentId.matches("^[A-Za-z0-9_]+$");
+        return paymentId.matches("^[a-z0-9]+$");
     }
 
-    private String validatePaymentIdRequirements(String paymentId) {
-        String PAYMENT_ID_REGEX = "^[a-z0-9]([a-z0-9]*[._]?[a-z0-9]*)+[a-z0-9]$";
-        Pattern PAYMENT_ID_PATTERN = Pattern.compile(PAYMENT_ID_REGEX);
-
-        // Check Minimum Length (Must be >= 3 characters)
-        if (paymentId.length() < 3) {
-            return "Payment ID must be at least 3 characters long.";
-        }
-
-        if (!PAYMENT_ID_PATTERN.matcher(paymentId).matches()) {
-
-            if (paymentId.startsWith(".") || paymentId.endsWith(".")) {
-                return "Payment ID cannot start or end with '.'";
-            }
-            if (paymentId.startsWith("_") || paymentId.endsWith("_")) {
-                return "Payment ID cannot start or end with '_'";
-            }
-
-            if (paymentId.contains("..") || paymentId.contains("__") || paymentId.contains("._") || paymentId.contains("_.")) {
-                return "Payment ID cannot contain consecutive '.' or '_' characters";
-            }
-
-            return "Payment ID can only contain lowercase letters, numbers, and single periods or underscores";
-        }
-
-        // All checks passed
-        return null;
+    private void updateContinueButtonState() {
+        // Button only enabled when format is valid AND ID does not exist
+        setContinueButtonEnabled(isFormatValid && !exists);
     }
 
+    private void setContinueButtonEnabled(boolean enable) {
+        binding.btnContinue.setEnabled(enable);
+    }
 
     @Override
     public boolean dispatchTouchEvent(MotionEvent event) {

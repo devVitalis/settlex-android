@@ -265,7 +265,7 @@ public class AuthRepository {
     /**
      * Sends the updated FCM token to your backend or Firestore.
      */
-    public void sendTokenToServer(String token) {
+    public void storeNewTokenToServer(String token) {
         FirebaseUser user = getCurrentUser();
         if (user == null) return; // user not logged in, skip
 

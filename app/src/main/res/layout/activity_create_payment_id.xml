@@ -9,45 +9,29 @@
     android:fitsSystemWindows="true"
     tools:context=".ui.dashboard.fragment.home.activity.CreatePaymentIdActivity">
 
-    <LinearLayout
-        android:id="@+id/header"
-        android:layout_width="match_parent"
-        android:layout_height="50dp"
-        android:gravity="center_vertical"
-        android:orientation="horizontal"
-        android:paddingHorizontal="15dp"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent">
-
-        <ImageView
-            android:layout_width="20dp"
-            android:layout_height="20dp"
-            android:contentDescription="Back"
-            android:src="@drawable/ic_arrow_back" />
-    </LinearLayout>
-
     <!-- Content -->
     <ScrollView
+        android:id="@+id/mainContent"
         android:layout_width="match_parent"
         android:layout_height="0dp"
         android:fillViewport="true"
         android:scrollbars="none"
         app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/header">
+        app:layout_constraintTop_toTopOf="parent">
 
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:orientation="vertical"
-            android:padding="15dp">
+            android:paddingHorizontal="15dp"
+            android:paddingTop="50dp">
 
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:fontFamily="@font/poppins_regular"
+                android:fontFamily="@font/inter_18pt_regular"
                 android:includeFontPadding="false"
-                android:text="Create your Payment ID"
+                android:text="Create Your Payment ID"
                 android:textColor="@color/black"
                 android:textSize="25sp"
                 android:textStyle="bold" />
@@ -55,63 +39,92 @@
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:fontFamily="@font/poppins_regular"
+                android:layout_marginTop="10dp"
+                android:fontFamily="@font/inter_18pt_regular"
                 android:includeFontPadding="false"
                 android:text="This ID lets others send you money securely on SettleX. Once created, it can’t be changed"
                 android:textColor="@color/gray"
                 android:textSize="14sp" />
 
-            <com.google.android.material.textfield.TextInputLayout
-                style="@style/Widget.SettleXApp.TextInputLayout.Outlined"
+            <!-- Password -->
+            <FrameLayout
+                android:id="@+id/editTxtPaymentIdBackground"
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_gravity="center"
-                android:layout_marginTop="20dp"
-                android:gravity="center"
-                android:hint="Choose your Payment ID (e.g. @vitalis_001)"
-                app:endIconMode="clear_text">
+                android:layout_height="55dp"
+                android:layout_marginTop="10dp"
+                android:background="@drawable/bg_edit_txt_custom_white_not_focused">
 
-                <com.google.android.material.textfield.TextInputEditText
+                <EditText
                     android:id="@+id/editTxtPaymentId"
                     android:layout_width="match_parent"
-                    android:layout_height="55dp"
-                    android:layout_marginBottom="10dp"
-                    android:fontFamily="@font/poppins_regular"
-                    android:gravity="start|center_vertical"
+                    android:layout_height="match_parent"
+                    android:background="@android:color/transparent"
+                    android:fontFamily="@font/inter_18pt_regular"
+                    android:hint="Choose your Payment ID"
                     android:imeOptions="actionDone"
                     android:includeFontPadding="false"
                     android:inputType="textPersonName"
-                    android:paddingHorizontal="20dp"
+                    android:paddingHorizontal="15dp"
                     android:textColor="@color/black"
                     android:textColorHint="@color/gray"
                     android:textSize="14sp" />
-            </com.google.android.material.textfield.TextInputLayout>
 
-            <TextView
-                android:id="@+id/error"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="5dp"
-                android:gravity="center_vertical"
-                android:includeFontPadding="false"
-                android:text="This Payment ID is already taken. Try another"
-                android:textColor="@color/red"
-                android:textSize="13sp"
-                android:visibility="gone" />
+                <LinearLayout
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="end|center_vertical"
+                    android:layout_marginEnd="15dp"
+                    android:gravity="end"
+                    android:orientation="horizontal">
+
+                    <TextView
+                        android:id="@+id/paymentIdAvailabilityFeedback"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:fontFamily="@font/inter_18pt_regular"
+                        android:includeFontPadding="false"
+                        android:textColor="@color/green"
+                        android:textSize="13sp"
+                        android:visibility="gone"
+                        tools:text="Available" />
+
+                    <ImageView
+                        android:id="@+id/paymentIdAvailableCheck"
+                        android:layout_width="15dp"
+                        android:layout_height="15dp"
+                        android:layout_marginStart="3dp"
+                        android:contentDescription="@null"
+                        android:src="@drawable/ic_check_circle"
+                        android:visibility="gone"
+                        app:tint="@color/green" />
+
+                    <!-- Progress bar -->
+                    <com.google.android.material.progressindicator.CircularProgressIndicator
+                        android:id="@+id/paymentIdProgressBar"
+                        style="@style/Widget.SettleX.CircularProgressIndicator"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginEnd="15dp"
+                        android:visibility="gone"
+                        app:indicatorSize="20dp"
+                        app:trackThickness="2dp" />
+                </LinearLayout>
+            </FrameLayout>
 
             <androidx.constraintlayout.widget.ConstraintLayout
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content">
+                android:layout_height="wrap_content"
+                android:layout_marginTop="10dp">
 
                 <LinearLayout
                     android:id="@+id/layoutRuleStartWith"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:background="@drawable/bg_24dp_semi_transparent_black10"
+                    android:background="@drawable/bg_8dp_gray_light"
                     android:gravity="center_vertical"
                     android:orientation="horizontal"
                     android:paddingHorizontal="8dp"
-                    android:paddingVertical="2dp"
+                    android:paddingVertical="5dp"
                     app:layout_constraintStart_toStartOf="parent"
                     app:layout_constraintTop_toTopOf="parent">
 
@@ -128,6 +141,7 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_marginStart="2dp"
+                        android:fontFamily="@font/inter_18pt_regular"
                         android:gravity="center_vertical"
                         android:includeFontPadding="false"
                         android:text="Starts with a letter"
@@ -140,11 +154,11 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_marginStart="10dp"
-                    android:background="@drawable/bg_24dp_semi_transparent_black10"
+                    android:background="@drawable/bg_8dp_gray_light"
                     android:gravity="center_vertical"
                     android:orientation="horizontal"
                     android:paddingHorizontal="8dp"
-                    android:paddingVertical="2dp"
+                    android:paddingVertical="5dp"
                     app:layout_constraintBottom_toBottomOf="@id/layoutRuleStartWith"
                     app:layout_constraintStart_toEndOf="@id/layoutRuleStartWith"
                     app:layout_constraintTop_toTopOf="@+id/layoutRuleStartWith">
@@ -162,9 +176,10 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_marginStart="2dp"
+                        android:fontFamily="@font/inter_18pt_regular"
                         android:gravity="center_vertical"
                         android:includeFontPadding="false"
-                        android:text="Minimum 3 Characters"
+                        android:text="Min &amp; Max 5-20 Characters"
                         android:textColor="@color/gray"
                         android:textSize="13sp" />
                 </LinearLayout>
@@ -174,11 +189,11 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_marginTop="10dp"
-                    android:background="@drawable/bg_24dp_semi_transparent_black10"
+                    android:background="@drawable/bg_8dp_gray_light"
                     android:gravity="center_vertical"
                     android:orientation="horizontal"
                     android:paddingHorizontal="8dp"
-                    android:paddingVertical="2dp"
+                    android:paddingVertical="5dp"
                     app:layout_constraintStart_toStartOf="parent"
                     app:layout_constraintTop_toBottomOf="@id/layoutRuleStartWith">
 
@@ -195,9 +210,10 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_marginStart="2dp"
+                        android:fontFamily="@font/inter_18pt_regular"
                         android:gravity="center_vertical"
                         android:includeFontPadding="false"
-                        android:text="Only letters, numbers, and underscores"
+                        android:text="Only lowercase letters numbers and no space"
                         android:textColor="@color/gray"
                         android:textSize="13sp" />
                 </LinearLayout>
@@ -209,7 +225,22 @@
                 android:layout_width="match_parent"
                 android:layout_height="55dp"
                 android:layout_marginTop="20dp"
+                android:enabled="false"
                 android:text="Continue" />
+
+            <TextView
+                android:id="@+id/txtError"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="10dp"
+                android:fontFamily="@font/inter_18pt_regular"
+                android:gravity="center"
+                android:includeFontPadding="false"
+                android:textAlignment="center"
+                android:textColor="@color/red"
+                android:textSize="14sp"
+                android:visibility="gone"
+                tools:text="@string/error_no_internet" />
         </LinearLayout>
     </ScrollView>
 </androidx.constraintlayout.widget.ConstraintLayout>

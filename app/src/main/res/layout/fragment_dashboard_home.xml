@@ -242,48 +242,51 @@
                         android:layout_height="wrap_content"
                         android:layout_marginTop="15dp">
 
-                        <ImageView
-                            android:id="@+id/protection"
-                            android:layout_width="15dp"
-                            android:layout_height="15dp"
-                            android:contentDescription="@null"
-                            android:src="@drawable/ic_shield_protection"
-                            app:tint="@color/white"
-                            app:layout_constraintStart_toStartOf="parent"
-                            app:layout_constraintTop_toTopOf="parent" />
-
-                        <TextView
-                            android:id="@+id/balanceTitle"
+                        <LinearLayout
+                            android:id="@+id/protectionContainer"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
-                            android:layout_marginStart="2dp"
-                            android:includeFontPadding="false"
-                            android:text="Balance"
-                            android:textColor="@color/white"
-                            android:textSize="14sp"
-                            app:layout_constraintStart_toEndOf="@id/protection"
-                            app:layout_constraintTop_toTopOf="parent" />
+                            android:gravity="center_vertical"
+                            android:orientation="horizontal"
+                            app:layout_constraintStart_toStartOf="parent"
+                            app:layout_constraintTop_toTopOf="parent">
 
-                        <ImageView
-                            android:id="@+id/btnBalanceToggle"
-                            android:layout_width="18dp"
-                            android:layout_height="18dp"
-                            android:layout_marginStart="5dp"
-                            android:background="?attr/selectableItemBackgroundBorderless"
-                            android:clickable="true"
-                            android:contentDescription="Hide Balance"
-                            android:focusable="true"
-                            android:src="@drawable/ic_visibility_on"
-                            app:layout_constraintStart_toEndOf="@id/balanceTitle"
-                            app:layout_constraintTop_toTopOf="parent"
-                            app:tint="@color/white" />
+                            <ImageView
+                                android:id="@+id/protection"
+                                android:layout_width="15dp"
+                                android:layout_height="15dp"
+                                android:contentDescription="@null"
+                                android:src="@drawable/ic_shield_protection"
+                                app:tint="@color/white" />
+
+                            <TextView
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:layout_marginStart="2dp"
+                                android:includeFontPadding="false"
+                                android:text="Balance"
+                                android:textColor="@color/white"
+                                android:textSize="14sp" />
+
+                            <ImageView
+                                android:id="@+id/btnBalanceToggle"
+                                android:layout_width="18dp"
+                                android:layout_height="18dp"
+                                android:layout_marginStart="5dp"
+                                android:background="?attr/selectableItemBackgroundBorderless"
+                                android:clickable="true"
+                                android:contentDescription="Hide Balance"
+                                android:focusable="true"
+                                android:src="@drawable/ic_visibility_on"
+                                app:tint="@color/white" />
+                        </LinearLayout>
 
                         <FrameLayout
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:layout_marginTop="10dp"
-                            app:layout_constraintStart_toStartOf="@id/protection"
-                            app:layout_constraintTop_toBottomOf="@id/balanceTitle">
+                            app:layout_constraintStart_toStartOf="parent"
+                            app:layout_constraintTop_toBottomOf="@id/protectionContainer">
 
                             <TextView
                                 android:id="@+id/userBalance"

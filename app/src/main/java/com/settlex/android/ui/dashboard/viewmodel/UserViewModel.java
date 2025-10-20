@@ -16,6 +16,7 @@ import com.settlex.android.data.repository.UserRepository;
 import com.settlex.android.ui.dashboard.model.MoneyFlowUiModel;
 import com.settlex.android.ui.dashboard.model.TransactionUiModel;
 import com.settlex.android.ui.dashboard.model.UserUiModel;
+import com.settlex.android.util.event.Event;
 import com.settlex.android.util.event.Result;
 import com.settlex.android.util.string.StringUtil;
 
@@ -34,6 +35,8 @@ public class UserViewModel extends ViewModel {
     private final MediatorLiveData<Result<MoneyFlowUiModel>> moneyFlowLiveData = new MediatorLiveData<>();
     private final MutableLiveData<Result<List<TransactionUiModel>>> transactionLiveData = new MutableLiveData<>();
     private final MutableLiveData<Result<String>> uploadProfilePicLiveData = new MutableLiveData<>();
+    private final MutableLiveData<Event<Result<Boolean>>> checkPaymentIdExistsLiveData = new MutableLiveData<>();
+    private final MutableLiveData<Event<Result<String>>> storeUserPaymentIdLiveData = new MutableLiveData<>();
 
     // Dependencies
     private final UserRepository userRepo;
@@ -59,6 +62,63 @@ public class UserViewModel extends ViewModel {
     public void signOut() {
         // Log out current user / end session
         userRepo.signOut();
+    }
+
+    public void uploadProfilePic(String imageBase64) {
+        uploadProfilePicLiveData.setValue(Result.loading());
+        userRepo.uploadUserProfilePicToServer(imageBase64, new UserRepository.UploadProfilePicCallback() {
+            @Override
+            public void onSuccess() {
+                uploadProfilePicLiveData.setValue(Result.success("Profile changed successful"));
+            }
+
+            @Override
+            public void onFailure(String error) {
+                uploadProfilePicLiveData.setValue(Result.error(error));
+            }
+        });
+    }
+
+    public LiveData<Result<String>> getProfilePicUploadResult() {
+        return uploadProfilePicLiveData;
+    }
+
+    public void checkPaymentIdExists(String paymentId) {
+        checkPaymentIdExistsLiveData.setValue(new Event<>(Result.loading()));
+        userRepo.checkPaymentIdAvailability(paymentId, new UserRepository.PaymentIdAvailableCallback() {
+            @Override
+            public void onSuccess(boolean exists) {
+                checkPaymentIdExistsLiveData.setValue(new Event<>(Result.success(exists)));
+            }
+
+            @Override
+            public void onFailure(String error) {
+                checkPaymentIdExistsLiveData.setValue(new Event<>(Result.error(error)));
+            }
+        });
+    }
+
+    public LiveData<Event<Result<Boolean>>> getPaymentIdExistsStatus() {
+        return checkPaymentIdExistsLiveData;
+    }
+
+    public void storeUserPaymentIdToServer(String paymentId, String uid){
+        storeUserPaymentIdLiveData.setValue(new Event<>(Result.loading()));
+        userRepo.storeUserPaymentIdToDatabase(paymentId, uid, new UserRepository.StorePaymentIdCallback() {
+            @Override
+            public void onSuccess() {
+                storeUserPaymentIdLiveData.setValue(new Event<>(Result.success("success")));
+            }
+
+            @Override
+            public void onFailure(String error) {
+                storeUserPaymentIdLiveData.setValue(new Event<>(Result.error(error)));
+            }
+        });
+    }
+
+    public LiveData<Event<Result<String>>> getStoreUserPaymentIdStatus() {
+        return storeUserPaymentIdLiveData;
     }
 
     public LiveData<Result<List<TransactionUiModel>>> getRecentTransactionLiveData(String uid, int limit) {
@@ -113,25 +173,6 @@ public class UserViewModel extends ViewModel {
             }
         });
         return transactionLiveData;
-    }
-
-    public void uploadProfilePic(String imageBase64) {
-        uploadProfilePicLiveData.setValue(Result.loading());
-        userRepo.uploadProfilePic(imageBase64, new UserRepository.UploadProfilePicCallback() {
-            @Override
-            public void onSuccess() {
-                uploadProfilePicLiveData.setValue(Result.success("Profile changed successful"));
-            }
-
-            @Override
-            public void onFailure(String error) {
-                uploadProfilePicLiveData.setValue(Result.error(error));
-            }
-        });
-    }
-
-    public LiveData<Result<String>> getProfilePicUploadResult() {
-        return uploadProfilePicLiveData;
     }
 
     private void initMoneyFlow(String currentUserUid, List<TransactionDto> dtoList) {

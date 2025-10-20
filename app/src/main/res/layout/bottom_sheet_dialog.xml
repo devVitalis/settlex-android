@@ -44,7 +44,7 @@
 
     <com.google.android.material.button.MaterialButton
         android:id="@+id/btnContinue"
-        style="@style/Widget.SettleXApp.Button.Filled.Rounded8.Blue"
+        style="@style/Widget.SettleXApp.Button.Filled.Blue"
         android:layout_width="match_parent"
         android:layout_marginHorizontal="30dp"
         android:layout_height="55dp"

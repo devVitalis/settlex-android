@@ -8,10 +8,13 @@ import androidx.lifecycle.MutableLiveData;
 import com.google.firebase.FirebaseNetworkException;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
+import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
+import com.google.firebase.firestore.FirebaseFirestoreException;
 import com.google.firebase.firestore.ListenerRegistration;
 import com.google.firebase.firestore.Query;
+import com.google.firebase.firestore.SetOptions;
 import com.google.firebase.functions.FirebaseFunctions;
 import com.settlex.android.data.local.UserPrefs;
 import com.settlex.android.data.remote.dto.TransactionDto;
@@ -36,6 +39,8 @@ import jakarta.inject.Singleton;
 @Singleton
 public class UserRepository {
     private final String TAG = UserRepository.class.getSimpleName();
+    private final String ERROR_NO_INTERNET = "Connection lost. Please check your Wi-Fi or cellular data and try again";
+
     private final MutableLiveData<Result<UserDto>> sharedUserLiveData = new MutableLiveData<>();
     private final MutableLiveData<FirebaseUser> sharedUserAuthState = new MutableLiveData<>();
     private final MutableLiveData<Boolean> isBalanceHiddenLiveData = new MutableLiveData<>();
@@ -50,9 +55,6 @@ public class UserRepository {
     private ListenerRegistration userListener;
     private ListenerRegistration transactionListener;
     private FirebaseAuth.AuthStateListener authStateListener;
-
-    // Error
-    private final String ERROR_NO_INTERNET = "Connection lost. Please check your Wi-Fi or cellular data and try again";
 
     @Inject
     public UserRepository(FirebaseAuth auth, FirebaseFirestore firestore, FirebaseFunctions functions, UserPrefs userPrefs) {
@@ -124,6 +126,7 @@ public class UserRepository {
         userListener = null;
     }
 
+    // User preference
     private void initIsBalanceHiddenLiveData() {
         isBalanceHiddenLiveData.setValue(userPrefs.isBalanceHidden());
     }
@@ -169,13 +172,19 @@ public class UserRepository {
                 });
     }
 
+    public interface TransactionCallback {
+        void onResult(List<TransactionDto> dtolist);
+
+        void onError(String reason);
+    }
+
     private void removeTransactionListener() {
         if (transactionListener == null) return;
         transactionListener.remove();
         transactionListener = null;
     }
 
-    public void uploadProfilePic(String imageBase64, UploadProfilePicCallback callback) {
+    public void uploadUserProfilePicToServer(String imageBase64, UploadProfilePicCallback callback) {
         functions.getHttpsCallable("uploadProfilePic")
                 .call(Collections.singletonMap("imageBase64", imageBase64))
                 .addOnSuccessListener(result -> {
@@ -187,9 +196,14 @@ public class UserRepository {
                         callback.onFailure(ERROR_NO_INTERNET);
                         return;
                     }
-
                     callback.onFailure(e.getMessage());
                 });
+    }
+
+    public interface UploadProfilePicCallback {
+        void onSuccess();
+
+        void onFailure(String error);
     }
 
     private void reloadUser() {
@@ -202,7 +216,62 @@ public class UserRepository {
 
     }
 
-    // ------- SESSION ---------
+    public void checkPaymentIdAvailability(String paymentId, PaymentIdAvailableCallback callback) {
+        firestore.collection("payment_ids")
+                .document(paymentId)
+                .get()
+                .addOnSuccessListener(snapshot -> callback.onSuccess(snapshot.exists()))
+                .addOnFailureListener(e -> {
+                    if (e instanceof FirebaseNetworkException || e instanceof IOException) {
+                        callback.onFailure(ERROR_NO_INTERNET);
+                        return;
+                    }
+                    callback.onFailure(e.getMessage());
+                    Log.e(TAG, "Failed to check Payment ID availability", e);
+                });
+    }
+
+    public interface PaymentIdAvailableCallback {
+        void onSuccess(boolean exists);
+
+        void onFailure(String error);
+    }
+
+    public void storeUserPaymentIdToDatabase(String paymentId, String uid, StorePaymentIdCallback callback) {
+        DocumentReference globalDocRef = firestore.collection("payment_ids").document(paymentId);
+        DocumentReference userDocRef = firestore.collection("users").document(uid);
+
+        firestore.runTransaction(transaction -> {
+                    DocumentSnapshot docSnapshot = transaction.get(globalDocRef);
+
+                    if (docSnapshot.exists()) {
+                        throw new FirebaseFirestoreException("Payment ID is already taken",
+                                FirebaseFirestoreException.Code.ABORTED);
+                    }
+
+                    // save payment ID
+                    transaction.set(globalDocRef, Collections.singletonMap("UserUid", uid));
+                    // merge so existing content remains
+                    transaction.set(userDocRef, Collections.singletonMap("paymentId", paymentId), SetOptions.merge());
+                    return null;
+                })
+                .addOnSuccessListener(success -> callback.onSuccess())
+                .addOnFailureListener(e -> {
+                    if (e instanceof FirebaseNetworkException || e instanceof IOException) {
+                        callback.onFailure(ERROR_NO_INTERNET);
+                        return;
+                    }
+                    callback.onFailure(e.getMessage());
+                    Log.e(TAG, "failed to store user payment ID: " + e.getMessage(), e);
+                });
+    }
+
+    public interface StorePaymentIdCallback {
+        void onSuccess();
+
+        void onFailure(String error);
+    }
+
     public void signOut() {
         auth.signOut();
     }
@@ -212,18 +281,5 @@ public class UserRepository {
         removeTransactionListener();
         // don’t remove authStateListener,
         // we want it alive to pick up next login
-    }
-
-    // -------- CALLBACKS ---------
-    public interface TransactionCallback {
-        void onResult(List<TransactionDto> dtolist);
-
-        void onError(String reason);
-    }
-
-    public interface UploadProfilePicCallback {
-        void onSuccess();
-
-        void onFailure(String error);
     }
 }

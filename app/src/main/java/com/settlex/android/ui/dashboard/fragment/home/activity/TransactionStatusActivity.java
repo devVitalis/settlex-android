@@ -1,5 +1,6 @@
 package com.settlex.android.ui.dashboard.fragment.home.activity;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
@@ -10,6 +11,7 @@ import com.airbnb.lottie.RenderMode;
 import com.settlex.android.R;
 import com.settlex.android.data.enums.TransactionStatus;
 import com.settlex.android.databinding.ActivityTransactionStatusBinding;
+import com.settlex.android.ui.dashboard.DashboardActivity;
 import com.settlex.android.util.ui.StatusBarUtil;
 
 import java.util.Objects;
@@ -38,7 +40,10 @@ public class TransactionStatusActivity extends AppCompatActivity {
 
         showTransactionData();
 
-        binding.btnDone.setOnClickListener(v -> finish());
+        binding.btnDone.setOnClickListener(v -> {
+            startActivity(new Intent(this, DashboardActivity.class));
+            finishAffinity();
+        });
     }
 
     private void showTransactionData() {
