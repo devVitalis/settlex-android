@@ -36,7 +36,6 @@
 
         <!-- Help button -->
         <LinearLayout
-            android:visibility="invisible"
             android:id="@+id/btnHelp"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
@@ -44,7 +43,8 @@
             android:gravity="center"
             android:orientation="horizontal"
             android:paddingHorizontal="5dp"
-            android:paddingVertical="2dp">
+            android:paddingVertical="2dp"
+            android:visibility="invisible">
 
             <ImageView
                 android:layout_width="15dp"
@@ -55,7 +55,6 @@
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:fontFamily="@font/poppins_regular"
                 android:includeFontPadding="false"
                 android:text="Help"
                 android:textColor="@color/white"
@@ -86,15 +85,14 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:background="@drawable/bg_8dp_blue_light"
-                android:fontFamily="@font/poppins_semibold"
                 android:includeFontPadding="false"
                 android:paddingHorizontal="10dp"
                 android:paddingVertical="5dp"
                 android:text="Login"
                 android:textColor="@color/blue"
                 android:textSize="20sp"
-                android:visibility="invisible"
-                android:textStyle="bold" />
+                android:textStyle="bold"
+                android:visibility="invisible" />
 
             <!-- Logo -->
             <ImageView
@@ -117,10 +115,10 @@
 
                 <com.google.android.material.imageview.ShapeableImageView
                     android:id="@+id/userProfile"
-                    app:shapeAppearanceOverlay="@style/Oval_Shape"
                     android:layout_width="70dp"
                     android:layout_height="70dp"
                     android:contentDescription="@null"
+                    app:shapeAppearanceOverlay="@style/Oval_Shape"
                     app:srcCompat="@drawable/ic_avatar_default" />
 
                 <TextView
@@ -128,7 +126,6 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_marginTop="10dp"
-                    android:fontFamily="@font/poppins_regular"
                     android:includeFontPadding="false"
                     android:textColor="@color/black"
                     android:textSize="15sp"
@@ -138,7 +135,6 @@
                     android:id="@+id/userEmail"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:fontFamily="@font/poppins_regular"
                     android:includeFontPadding="false"
                     android:textColor="@color/black"
                     android:textSize="15sp"
@@ -160,7 +156,6 @@
                     android:id="@+id/editTxtEmail"
                     android:layout_width="match_parent"
                     android:layout_height="55dp"
-                    android:fontFamily="@font/poppins_regular"
                     android:gravity="start|center_vertical"
                     android:imeOptions="actionNext"
                     android:includeFontPadding="false"
@@ -184,7 +179,6 @@
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
                     android:background="@android:color/transparent"
-                    android:fontFamily="@font/poppins_regular"
                     android:hint="Enter your password"
                     android:imeOptions="actionDone"
                     android:includeFontPadding="false"
@@ -211,7 +205,6 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="5dp"
-                android:fontFamily="@font/poppins_regular"
                 android:gravity="center_vertical"
                 android:includeFontPadding="false"
                 android:text="message"
@@ -226,7 +219,6 @@
                 android:layout_height="wrap_content"
                 android:layout_gravity="end"
                 android:layout_marginTop="10dp"
-                android:fontFamily="@font/inter_18pt_regular"
                 android:includeFontPadding="false"
                 android:text="Forgot Password?"
                 android:textColor="@color/blue"
@@ -281,7 +273,6 @@
                     android:id="@+id/btnSignUp"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:fontFamily="@font/poppins_regular"
                     android:gravity="center"
                     android:includeFontPadding="false"
                     android:text="Don't have an account yet?\nClick here to register"
@@ -292,7 +283,6 @@
                     android:id="@+id/btnSwitchAccount"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:fontFamily="@font/poppins_regular"
                     android:gravity="center"
                     android:includeFontPadding="false"
                     android:text="Not you? Switch Account"

@@ -31,7 +31,6 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginStart="10dp"
-            android:fontFamily="@font/poppins_regular"
             android:gravity="center"
             android:includeFontPadding="false"
             android:text="Commission"
@@ -92,7 +91,6 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:backgroundTint="@color/orange"
-                    android:fontFamily="@font/poppins_regular"
                     android:text="Withdraw" />
             </LinearLayout>
         </LinearLayout>
@@ -108,7 +106,6 @@
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:fontFamily="@font/poppins_regular"
                 android:includeFontPadding="false"
                 android:text="Earn commission on every transaction, start today!"
                 android:textColor="@color/black"

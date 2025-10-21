@@ -48,7 +48,6 @@
                     android:id="@+id/greeting"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:fontFamily="@font/poppins_regular"
                     android:includeFontPadding="false"
                     android:text="Hello 👋"
                     android:textColor="@color/black"
@@ -63,7 +62,6 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_gravity="center"
-                        android:fontFamily="@font/poppins_regular"
                         android:includeFontPadding="false"
                         android:textColor="@color/black"
                         android:textSize="14sp"
@@ -98,9 +96,9 @@
                 android:paddingHorizontal="0dp"
                 android:text="Login"
                 android:visibility="gone"
-                app:layout_constraintBottom_toBottomOf="@id/profilePic"
-                app:layout_constraintStart_toEndOf="@id/profilePic"
-                app:layout_constraintTop_toTopOf="@id/profilePic" />
+                app:layout_constraintBottom_toBottomOf="@id/btnProfilePic"
+                app:layout_constraintStart_toEndOf="@id/btnProfilePic"
+                app:layout_constraintTop_toTopOf="@id/btnProfilePic" />
 
             <FrameLayout
                 android:id="@+id/btnSupport"
@@ -204,7 +202,6 @@
                         android:ellipsize="marquee"
                         android:focusable="true"
                         android:focusableInTouchMode="true"
-                        android:fontFamily="@font/poppins_regular"
                         android:includeFontPadding="false"
                         android:marqueeRepeatLimit="marquee_forever"
                         android:scrollHorizontally="true"
@@ -412,7 +409,6 @@
                             <TextView
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
-                                android:fontFamily="@font/poppins_regular"
                                 android:includeFontPadding="false"
                                 android:text="Add Funds"
                                 android:textColor="@color/white"
@@ -440,7 +436,6 @@
                             <TextView
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
-                                android:fontFamily="@font/poppins_regular"
                                 android:includeFontPadding="false"
                                 android:text="Get Paid"
                                 android:textColor="@color/white"
@@ -467,7 +462,6 @@
                             <TextView
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
-                                android:fontFamily="@font/poppins_regular"
                                 android:includeFontPadding="false"
                                 android:text="Pay a Friend"
                                 android:textColor="@color/white"
@@ -490,7 +484,6 @@
                         android:id="@+id/txtMoneyFlow"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:fontFamily="@font/poppins_regular"
                         android:includeFontPadding="false"
                         android:text="Money Flow"
                         android:textColor="@color/gray"
@@ -578,7 +571,6 @@
                         android:layout_width="0dp"
                         android:layout_height="wrap_content"
                         android:layout_weight="1"
-                        android:fontFamily="@font/poppins_regular"
                         android:includeFontPadding="false"
                         android:text="@string/error_no_internet"
                         android:textColor="@color/gray_dark"
@@ -629,7 +621,6 @@
                             android:layout_height="wrap_content"
                             android:layout_gravity="start"
                             android:layout_weight="1"
-                            android:fontFamily="@font/poppins_regular"
                             android:includeFontPadding="false"
                             android:text="Recent Transactions"
                             android:textColor="@color/gray"
@@ -640,7 +631,6 @@
                             android:layout_width="wrap_content"
                             android:layout_height="match_parent"
                             android:layout_marginEnd="4dp"
-                            android:fontFamily="@font/poppins_regular"
                             android:includeFontPadding="false"
                             android:text="View ALL"
                             android:textColor="@color/gray"
