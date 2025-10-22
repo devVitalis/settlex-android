@@ -13,6 +13,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.EditText;
+import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -30,11 +31,14 @@ import com.settlex.android.util.event.Result;
 import com.settlex.android.util.network.NetworkMonitor;
 import com.settlex.android.util.string.StringUtil;
 import com.settlex.android.util.ui.StatusBarUtil;
+import com.settlex.android.util.ui.UiUtil;
 
 import dagger.hilt.android.AndroidEntryPoint;
 
 @AndroidEntryPoint
 public class SignUpEmailVerificationFragment extends Fragment {
+
+    private String email;
 
     // Dependencies
     private static final int OTP_RESEND_COOLDOWN_MS = 60000;
@@ -47,11 +51,6 @@ public class SignUpEmailVerificationFragment extends Fragment {
     private FragmentSignUpEmailVerificationBinding binding;
     private boolean isConnected = false;
 
-    // Instance var for user data
-    private String email;
-
-
-    // LIFECYCLE ===========
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -75,8 +74,8 @@ public class SignUpEmailVerificationFragment extends Fragment {
         super.onViewCreated(view, savedInstanceState);
 
         startResendOtpCooldown();
-        observeSendEmailOtpAndHandleResult();
-        observeOtpVerificationAndHandleResult();
+        observeSendEmailOtpStatus();
+        observeOtpVerificationStatus();
     }
 
     @Override
@@ -86,71 +85,79 @@ public class SignUpEmailVerificationFragment extends Fragment {
     }
 
     private void clearResources() {
-        // Cancel timer // Remove binding
+        // Cancel timer
+        // Remove binding
         if (resendOtpCountdownTimer != null) resendOtpCountdownTimer.cancel();
         binding = null;
     }
 
     //  OBSERVERS =========
     private void observeNetworkStatus() {
-        NetworkMonitor.getNetworkStatus().observe(requireActivity(), isConnected -> this.isConnected = isConnected);
+        NetworkMonitor.getNetworkStatus().observe(getViewLifecycleOwner(), isConnected -> {
+            if (!isConnected) {
+                showNoInternet();
+            }
+            this.isConnected = isConnected;
+        });
     }
 
-    private void observeOtpVerificationAndHandleResult() {
+    private void observeOtpVerificationStatus() {
         authViewModel.getVerifyEmailVerificationOtpResult().observe(getViewLifecycleOwner(), event -> {
             Result<String> result = event.getContentIfNotHandled();
             if (result == null) return;
 
             switch (result.getStatus()) {
-                case LOADING -> onOtpSendOrVerificationLoading();
+                case LOADING -> progressLoader.show();
                 case SUCCESS -> onOtpVerificationSuccess();
-                case ERROR -> onSendOrVerifyOtpFailure(result.getMessage());
+                case ERROR -> onSendOrVerifyOtpStatusError(result.getMessage());
             }
         });
     }
 
     private void onOtpVerificationSuccess() {
         NavOptions navOptions = new NavOptions.Builder()
-                .setPopUpTo(R.id.signUpEmailVerificationFragment, true) // Remove from back stack
+                .setPopUpTo(R.id.signUpEmailVerificationFragment, true)
                 .build();
+
         NavController navController = NavHostFragment.findNavController(this);
         navController.navigate(R.id.signUpUserInfoFragment, null, navOptions);
 
         progressLoader.hide();
     }
 
-    private void observeSendEmailOtpAndHandleResult() {
+    private void observeSendEmailOtpStatus() {
         authViewModel.getSendEmailVerificationOtpResult().observe(getViewLifecycleOwner(), event -> {
             Result<String> result = event.getContentIfNotHandled();
             if (result == null) return;
 
             switch (result.getStatus()) {
-                case LOADING -> onOtpSendOrVerificationLoading();
-                case SUCCESS -> onSendNewOtpVerificationSuccess();
-                case ERROR -> onSendOrVerifyOtpFailure(result.getMessage());
+                case LOADING -> progressLoader.show();
+                case SUCCESS -> onSendNewOtpVerificationStatusSuccess();
+                case ERROR -> onSendOrVerifyOtpStatusError(result.getMessage());
             }
         });
     }
 
-    private void onOtpSendOrVerificationLoading() {
-        progressLoader.show();
-    }
-
-    private void onSendNewOtpVerificationSuccess() {
+    private void onSendNewOtpVerificationStatusSuccess() {
         startResendOtpCooldown();
         progressLoader.hide();
     }
 
-    private void onSendOrVerifyOtpFailure(String reason) {
-        binding.txtOtpFeedback.setText(reason);
-        binding.txtOtpFeedback.setVisibility(View.VISIBLE);
+    private void onSendOrVerifyOtpStatusError(String reason) {
+        binding.txtError.setText(reason);
+        binding.txtError.setVisibility(View.VISIBLE);
         progressLoader.hide();
     }
 
-    private void showNoInternetConnection() {
-        String ERROR_NO_INTERNET = "Connection lost. Please check your Wi-Fi or cellular data and try again";
-        binding.txtOtpFeedback.setText(ERROR_NO_INTERNET);
-        binding.txtOtpFeedback.setVisibility(View.VISIBLE);
+    private void showNoInternet() {
+        String title = "Network Unavailable";
+        String message = "Please check your Wi-Fi or cellular data and try again";
+
+        UiUtil.showSimpleAlertDialog(
+                requireContext(),
+                title,
+                message
+        );
     }
 
     // UI SETUP ============
@@ -163,6 +170,12 @@ public class SignUpEmailVerificationFragment extends Fragment {
         binding.btnBackBefore.setOnClickListener(v -> navigateBack());
         binding.btnResendOtp.setOnClickListener(v -> resendOtp());
         binding.btnVerify.setOnClickListener(v -> verifyOtp());
+
+        binding.btnHelp.setOnClickListener(v -> Toast.makeText(
+                        requireContext(),
+                        "Feature not yet implementation",
+                        Toast.LENGTH_SHORT).show());
+
     }
 
     private void verifyOtp() {
@@ -170,7 +183,7 @@ public class SignUpEmailVerificationFragment extends Fragment {
             authViewModel.verifyEmailOtp(email, getEnteredOtpDigits());
             return;
         }
-        showNoInternetConnection();
+        showNoInternet();
     }
 
     private void resendOtp() {
@@ -178,7 +191,7 @@ public class SignUpEmailVerificationFragment extends Fragment {
             authViewModel.sendEmailVerificationOtp(email);
             return;
         }
-        showNoInternetConnection();
+        showNoInternet();
     }
 
     private void maskAndDisplayEmail() {
@@ -192,7 +205,6 @@ public class SignUpEmailVerificationFragment extends Fragment {
         binding.txtInfo.setText(Html.fromHtml(infoText, Html.FROM_HTML_MODE_LEGACY));
     }
 
-    // OTP HANDLING =========
     private void startResendOtpCooldown() {
         binding.btnResendOtp.setEnabled(false); // Disable resend btn
         final CharSequence originalText = binding.btnResendOtp.getText();
@@ -252,7 +264,7 @@ public class SignUpEmailVerificationFragment extends Fragment {
                 @Override
                 public void onTextChanged(CharSequence s, int start, int before, int count) {
                     if (isOtpDigitsFilled()) hideKeyboard();
-                    if (TextUtils.isEmpty(s)) binding.txtOtpFeedback.setVisibility(View.GONE);
+                    if (TextUtils.isEmpty(s)) binding.txtError.setVisibility(View.GONE);
 
                     if (s.length() == 1 && next != null) {
                         next.setEnabled(true);

@@ -1,5 +1,6 @@
 [versions]
 agp = "8.11.2"
+blurview = "version-2.0.3"
 coreSplashscreen = "1.0.1"
 currencyedittext = "1.0.0"
 datastorePreferences = "1.1.7"
@@ -34,6 +35,7 @@ navigationUi = "2.9.5"
 viewpagerindicator = "1.2.3"
 
 [libraries]
+blurview = { module = "com.github.Dimezis:BlurView", version.ref = "blurview" }
 currencyedittext = { module = "com.cottacush:CurrencyEditText", version.ref = "currencyedittext" }
 datastore-preferences = { module = "androidx.datastore:datastore-preferences", version.ref = "datastorePreferences" }
 firebase-config = { module = "com.google.firebase:firebase-config", version.ref = "firebaseConfig" }

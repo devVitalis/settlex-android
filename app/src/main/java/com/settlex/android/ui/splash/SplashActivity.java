@@ -15,7 +15,7 @@ import com.settlex.android.data.local.OnboardingPrefs;
 import com.settlex.android.ui.auth.activity.LoginActivity;
 import com.settlex.android.ui.auth.viewmodel.AuthViewModel;
 import com.settlex.android.ui.dashboard.DashboardActivity;
-import com.settlex.android.onboarding.activity.OnboardingActivity;
+import com.settlex.android.ui.onboarding.activity.OnboardingActivity;
 
 import dagger.hilt.android.AndroidEntryPoint;
 

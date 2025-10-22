@@ -7,7 +7,7 @@
     android:gravity="center"
     android:orientation="vertical"
     android:paddingHorizontal="20dp"
-    tools:context=".onboarding.fragment.OnboardingPage2Fragment">
+    tools:context=".ui.onboarding.fragment.OnboardingPage2Fragment">
 
     <LinearLayout
         android:id="@+id/imageContainer"
@@ -30,6 +30,7 @@
         android:layout_height="wrap_content"
         android:layout_gravity="start"
         android:layout_marginTop="25dp"
+        android:fontFamily="@font/inter_bold"
         android:includeFontPadding="false"
         android:text="Pay Bills\nWithout Stress."
         android:textColor="@color/black"
@@ -40,6 +41,7 @@
         android:id="@+id/subHeader"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:fontFamily="@font/inter_regular"
         android:layout_marginTop="10dp"
         android:text="Get the cheapest data bundles and easily manage your electricity, airtime, and betting payments. One app for all your needs."
         android:textAlignment="textStart"

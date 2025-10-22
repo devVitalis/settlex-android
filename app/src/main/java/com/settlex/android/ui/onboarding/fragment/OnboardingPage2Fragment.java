@@ -1,4 +1,4 @@
-package com.settlex.android.onboarding.fragment;
+package com.settlex.android.ui.onboarding.fragment;
 
 import android.os.Bundle;
 import android.text.Html;
@@ -12,15 +12,15 @@ import androidx.fragment.app.Fragment;
 
 import com.bumptech.glide.Glide;
 import com.settlex.android.R;
-import com.settlex.android.databinding.FragmentOnboardingPage3Binding;
+import com.settlex.android.databinding.FragmentOnboardingPage2Binding;
 
-public class OnboardingPage3Fragment extends Fragment {
-    private FragmentOnboardingPage3Binding binding;
+public class OnboardingPage2Fragment extends Fragment {
+    private FragmentOnboardingPage2Binding binding;
 
     @Nullable
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
-        binding = FragmentOnboardingPage3Binding.inflate(inflater, container, false);
+        binding = FragmentOnboardingPage2Binding.inflate(inflater, container, false);
 
         styleHeaderTxt();
         loadOptimizedImage();
@@ -35,14 +35,15 @@ public class OnboardingPage3Fragment extends Fragment {
     }
 
     private void styleHeaderTxt() {
-        String htmlText = "Never Miss <br/>Your <font color='#0044CC'>Shows</font>";
+        String htmlText = "Pay <font color='#0044CC'>Bills</font> <br/>Without Stress";
         binding.header.setText(Html.fromHtml(htmlText, Html.FROM_HTML_MODE_LEGACY));
     }
 
     private void loadOptimizedImage() {
         Glide.with(this)
-                .load(R.drawable.img_intro_slide_3)
+                .load(R.drawable.img_intro_slide_2)
                 .centerCrop()
-                .into(binding.ImgIntroSlide3);
+                .into(binding.ImgIntroSlide2);
     }
+
 }

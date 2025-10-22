@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/main"
@@ -9,336 +9,344 @@
     android:fitsSystemWindows="true"
     tools:context=".ui.auth.fragment.SignUpEmailVerificationFragment">
 
-    <LinearLayout
-        android:id="@+id/mainLayout"
+    <!--Header-->
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:id="@+id/header"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:orientation="vertical">
+        android:layout_height="35dp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent">
 
-        <!--Header-->
-        <androidx.constraintlayout.widget.ConstraintLayout
-            android:id="@+id/header"
-            android:layout_width="match_parent"
-            android:layout_height="35dp">
+        <ImageView
+            android:id="@+id/btnBackBefore"
+            android:layout_width="20dp"
+            android:layout_height="20dp"
+            android:layout_marginStart="15dp"
+            android:background="?attr/selectableItemBackgroundBorderless"
+            android:contentDescription="Arrow Back"
+            android:scaleType="centerCrop"
+            android:src="@drawable/ic_arrow_back"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
+
+        <LinearLayout
+            android:id="@+id/btnHelp"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginEnd="15dp"
+            android:background="@drawable/bg_24dp_blue"
+            android:gravity="center"
+            android:orientation="horizontal"
+            android:paddingHorizontal="5dp"
+            android:paddingVertical="2dp"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toTopOf="parent">
 
             <ImageView
-                android:id="@+id/btnBackBefore"
-                android:layout_width="20dp"
-                android:layout_height="20dp"
-                android:layout_marginStart="15dp"
-                android:contentDescription="Arrow Back"
-                android:scaleType="centerCrop"
-                android:src="@drawable/ic_arrow_back"
-                app:layout_constraintBottom_toBottomOf="parent"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toTopOf="parent" />
+                android:layout_width="15dp"
+                android:layout_height="15dp"
+                android:contentDescription="Help"
+                android:src="@drawable/ic_help" />
 
-            <LinearLayout
-                android:id="@+id/txtHelp"
+            <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginEnd="15dp"
-                android:background="@drawable/bg_24dp_blue"
-                android:gravity="center"
-                android:orientation="horizontal"
-                android:paddingHorizontal="5dp"
-                android:paddingVertical="2dp"
-                app:layout_constraintBottom_toBottomOf="parent"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintTop_toTopOf="parent">
+                android:fontFamily="@font/inter_regular"
+                android:includeFontPadding="false"
+                android:text="Help"
+                android:textColor="@color/white"
+                android:textSize="12sp" />
+        </LinearLayout>
+    </androidx.constraintlayout.widget.ConstraintLayout>
 
-                <ImageView
-                    android:layout_width="15dp"
-                    android:layout_height="15dp"
-                    android:contentDescription="Help"
-                    android:src="@drawable/ic_help" />
 
-                <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:includeFontPadding="false"
-                    android:text="Help"
-                    android:textColor="@color/white"
-                    android:textSize="12sp" />
-            </LinearLayout>
-        </androidx.constraintlayout.widget.ConstraintLayout>
+    <!-- Content -->
+    <ScrollView
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="1"
+        android:fillViewport="true"
+        android:scrollbars="none"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/header">
 
-        <!--Scroll Layout-->
-        <ScrollView
+        <LinearLayout
             android:layout_width="match_parent"
-            android:layout_height="0dp"
-            android:layout_weight="1"
-            android:fillViewport="true"
-            android:scrollbars="none">
+            android:layout_height="wrap_content"
+            android:gravity="center_horizontal"
+            android:orientation="vertical"
+            android:paddingHorizontal="15dp">
 
+            <!-- Title -->
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="start"
+                android:layout_marginTop="25dp"
+                android:fontFamily="@font/inter_bold"
+                android:includeFontPadding="false"
+                android:text="We've Sent You an Email"
+                android:textColor="@color/black"
+                android:textSize="25sp"
+                android:textStyle="bold" />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="start"
+                android:fontFamily="@font/inter_regular"
+                android:includeFontPadding="false"
+                android:text="Confirm your email address"
+                android:textColor="@color/black"
+                android:textSize="15sp" />
+
+            <!-- Pages Count -->
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="start"
+                android:layout_marginTop="20dp"
+                android:layout_marginBottom="5dp"
+                android:fontFamily="@font/inter_regular"
+                android:includeFontPadding="false"
+                android:text="Step 2 of 4"
+                android:textColor="@color/gray"
+                android:textSize="14sp"
+                android:textStyle="bold" />
+
+            <!-- Progress Bar -->
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:gravity="center_horizontal"
-                android:orientation="vertical"
-                android:paddingStart="15dp"
-                android:paddingEnd="15dp">
+                android:orientation="horizontal">
 
-                <!-- Title -->
-                <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_gravity="start"
-                    android:includeFontPadding="false"
-                    android:text="We've Sent You an Email"
-                    android:textColor="@color/black"
-                    android:textSize="20sp"
-                    android:textStyle="bold" />
+                <View
+                    android:layout_width="0dp"
+                    android:layout_height="2dp"
+                    android:layout_marginEnd="10dp"
+                    android:layout_weight="1"
+                    android:background="@drawable/bg_24dp_blue" />
 
-                <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_gravity="start"
-                    android:includeFontPadding="false"
-                    android:text="Confirm your email address"
-                    android:textColor="@color/black"
-                    android:textSize="13sp" />
+                <View
+                    android:layout_width="0dp"
+                    android:layout_height="2dp"
+                    android:layout_marginEnd="10dp"
+                    android:layout_weight="1"
+                    android:background="@drawable/bg_24dp_blue" />
 
-                <!-- Pages Count -->
-                <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_gravity="start"
-                    android:layout_marginTop="20dp"
-                    android:layout_marginBottom="5dp"
-                    android:includeFontPadding="false"
-                    android:text="Step 2 of 4"
-                    android:textColor="@color/gray"
-                    android:textSize="13sp"
-                    android:textStyle="bold" />
+                <View
+                    android:layout_width="0dp"
+                    android:layout_height="2dp"
+                    android:layout_marginEnd="10dp"
+                    android:layout_weight="1"
+                    android:background="@drawable/bg_24dp_light_blue" />
 
-                <!-- Progress Bar -->
-                <LinearLayout
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:orientation="horizontal">
+                <View
+                    android:layout_width="0dp"
+                    android:layout_height="2dp"
+                    android:layout_weight="1"
+                    android:background="@drawable/bg_24dp_light_blue" />
+            </LinearLayout>
 
-                    <View
-                        android:layout_width="0dp"
-                        android:layout_height="2dp"
-                        android:layout_marginEnd="10dp"
-                        android:layout_weight="1"
-                        android:background="@drawable/bg_24dp_blue" />
+            <!-- Email Sent Image -->
+            <ImageView
+                android:layout_width="match_parent"
+                android:layout_height="90dp"
+                android:layout_marginTop="5dp"
+                android:scaleType="fitCenter"
+                android:src="@drawable/img_email_sent" />
 
-                    <View
-                        android:layout_width="0dp"
-                        android:layout_height="2dp"
-                        android:layout_marginEnd="10dp"
-                        android:layout_weight="1"
-                        android:background="@drawable/bg_24dp_blue" />
+            <!-- OTP Section -->
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:fontFamily="@font/inter_regular"
+                android:includeFontPadding="false"
+                android:text="Enter your verification code"
+                android:textColor="@color/black"
+                android:textSize="20sp"
+                android:textStyle="bold" />
 
-                    <View
-                        android:layout_width="0dp"
-                        android:layout_height="2dp"
-                        android:layout_marginEnd="10dp"
-                        android:layout_weight="1"
-                        android:background="@drawable/bg_24dp_light_blue" />
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="5dp"
+                android:fontFamily="@font/inter_regular"
+                android:gravity="center"
+                android:includeFontPadding="false"
+                android:text="Enter the OTP sent to your email"
+                android:textAlignment="center"
+                android:textColor="@color/gray"
+                android:textSize="14sp" />
 
-                    <View
-                        android:layout_width="0dp"
-                        android:layout_height="2dp"
-                        android:layout_weight="1"
-                        android:background="@drawable/bg_24dp_light_blue" />
-                </LinearLayout>
+            <TextView
+                android:id="@+id/txtUserEmail"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:fontFamily="@font/inter_regular"
+                android:gravity="center"
+                android:includeFontPadding="false"
+                android:text="(*****@gmail.com)"
+                android:textAlignment="center"
+                android:textColor="@color/blue"
+                android:textSize="14sp"
+                android:textStyle="bold" />
 
-                <!-- Email Sent Image -->
-                <ImageView
-                    android:layout_width="match_parent"
-                    android:layout_height="90dp"
-                    android:layout_marginTop="5dp"
-                    android:scaleType="fitCenter"
-                    android:src="@drawable/img_email_sent" />
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="15dp"
+                android:layout_gravity="start"
+                android:layout_marginTop="20dp"
+                android:fontFamily="@font/inter_regular"
+                android:includeFontPadding="false"
+                android:text="OTP Code"
+                android:textColor="@color/black"
+                android:textSize="13sp" />
 
-                <!-- OTP Section -->
-                <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:includeFontPadding="false"
-                    android:text="Enter your verification code"
-                    android:textColor="@color/black"
-                    android:textSize="20sp"
-                    android:textStyle="bold" />
+            <!-- OTP Field -->
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="5dp"
+                android:orientation="horizontal">
 
-                <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_marginTop="5dp"
-                    android:gravity="center"
-                    android:includeFontPadding="false"
-                    android:text="Enter the OTP sent to your email"
-                    android:textAlignment="center"
-                    android:textColor="@color/gray"
-                    android:textSize="14sp" />
-
-                <TextView
-                    android:id="@+id/txtUserEmail"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:gravity="center"
-                    android:includeFontPadding="false"
-                    android:text="(*****@gmail.com)"
-                    android:textAlignment="center"
-                    android:textColor="@color/blue"
-                    android:textSize="14sp"
-                    android:textStyle="bold" />
-
-                <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_gravity="start"
-                    android:layout_marginTop="20dp"
-                    android:includeFontPadding="false"
-                    android:text="OTP Code"
-                    android:textColor="@color/black"
-                    android:textSize="13sp" />
-
-                <!-- OTP Field -->
-                <LinearLayout
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_marginTop="5dp"
-                    android:orientation="horizontal">
-
-                    <com.settlex.android.ui.common.custom.PinBoxEditText
-                        android:id="@+id/otpDigit1"
-                        style="@style/Widget.SettleXApp.EditText.PinBox"
-                        android:layout_height="match_parent"
-                        android:inputType="number"
-                        android:maxLength="1" />
-
-                    <Space
-                        android:layout_width="0dp"
-                        android:layout_height="0dp"
-                        android:layout_weight="1" />
-
-                    <com.settlex.android.ui.common.custom.PinBoxEditText
-                        android:id="@+id/otpDigit2"
-                        style="@style/Widget.SettleXApp.EditText.PinBox"
-                        android:inputType="number"
-                        android:maxLength="1" />
-
-                    <Space
-                        android:layout_width="0dp"
-                        android:layout_height="0dp"
-                        android:layout_weight="1" />
-
-                    <com.settlex.android.ui.common.custom.PinBoxEditText
-                        android:id="@+id/otpDigit3"
-                        style="@style/Widget.SettleXApp.EditText.PinBox"
-                        android:inputType="number"
-                        android:maxLength="1" />
-
-                    <Space
-                        android:layout_width="0dp"
-                        android:layout_height="0dp"
-                        android:layout_weight="1" />
-
-                    <com.settlex.android.ui.common.custom.PinBoxEditText
-                        android:id="@+id/otpDigit4"
-                        style="@style/Widget.SettleXApp.EditText.PinBox"
-                        android:inputType="number"
-                        android:maxLength="1" />
-
-                    <Space
-                        android:layout_width="0dp"
-                        android:layout_height="0dp"
-                        android:layout_weight="1" />
-
-                    <com.settlex.android.ui.common.custom.PinBoxEditText
-                        android:id="@+id/otpDigit5"
-                        style="@style/Widget.SettleXApp.EditText.PinBox"
-                        android:inputType="number"
-                        android:maxLength="1" />
-
-                    <Space
-                        android:layout_width="0dp"
-                        android:layout_height="0dp"
-                        android:layout_weight="1" />
-
-                    <com.settlex.android.ui.common.custom.PinBoxEditText
-                        android:id="@+id/otpDigit6"
-                        style="@style/Widget.SettleXApp.EditText.PinBox"
-                        android:inputType="number"
-                        android:maxLength="1" />
-                </LinearLayout>
-
-                <!-- Feedback Message -->
-                <TextView
-                    android:id="@+id/txtOtpFeedback"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_marginTop="5dp"
-                    android:gravity="center_vertical"
-                    android:includeFontPadding="false"
-                    android:textColor="@color/red"
-                    android:textSize="13sp"
-                    android:visibility="gone"
-                    tools:text="message" />
-
-                <!-- Resend OTP -->
-                <LinearLayout
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_marginTop="5dp"
-                    android:gravity="center_vertical"
-                    android:orientation="horizontal">
-
-                    <TextView
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:includeFontPadding="false"
-                        android:text="Didn't receive the OTP?"
-                        android:textColor="@color/black"
-                        android:textSize="13sp" />
-
-                    <com.google.android.material.button.MaterialButton
-                        android:id="@+id/btnResendOtp"
-                        style="@style/Widget.SettleXApp.Button.Outlined"
-                        android:layout_width="wrap_content"
-                        android:layout_height="40dp"
-                        android:layout_gravity="center"
-                        android:layout_marginStart="5dp"
-                        android:paddingHorizontal="0dp"
-                        android:paddingVertical="0dp"
-                        android:text="Resend"
-                        android:textSize="13sp" />
-                </LinearLayout>
-
-                <!-- Info -->
-                <TextView
-                    android:id="@+id/txtInfo"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_marginTop="10dp"
-                    android:background="@drawable/bg_8dp_orange_light"
-                    android:includeFontPadding="false"
-                    android:padding="10dp"
-                    android:textColor="@color/gray_dark"
-                    android:textSize="11sp"
-                    tools:text="Didn’t get the email? Make sure to also check your spam/junk folder if you can't find the email in your inbox." />
+                <com.settlex.android.ui.common.custom.PinBoxEditText
+                    android:id="@+id/otpDigit1"
+                    style="@style/Widget.SettleXApp.EditText.PinBox"
+                    android:layout_height="match_parent"
+                    android:inputType="number"
+                    android:maxLength="1" />
 
                 <Space
                     android:layout_width="0dp"
                     android:layout_height="0dp"
                     android:layout_weight="1" />
 
-                <!-- Verify Button -->
-                <com.google.android.material.button.MaterialButton
-                    android:id="@+id/btnVerify"
-                    style="@style/Widget.SettleXApp.Button.Filled.Rounded8.Blue"
-                    android:layout_width="match_parent"
-                    android:layout_height="55dp"
-                    android:layout_marginBottom="25dp"
-                    android:enabled="false"
-                    android:paddingHorizontal="15dp"
-                    android:text="Verify"
-                    android:textSize="14sp" />
+                <com.settlex.android.ui.common.custom.PinBoxEditText
+                    android:id="@+id/otpDigit2"
+                    style="@style/Widget.SettleXApp.EditText.PinBox"
+                    android:inputType="number"
+                    android:maxLength="1" />
+
+                <Space
+                    android:layout_width="0dp"
+                    android:layout_height="0dp"
+                    android:layout_weight="1" />
+
+                <com.settlex.android.ui.common.custom.PinBoxEditText
+                    android:id="@+id/otpDigit3"
+                    style="@style/Widget.SettleXApp.EditText.PinBox"
+                    android:inputType="number"
+                    android:maxLength="1" />
+
+                <Space
+                    android:layout_width="0dp"
+                    android:layout_height="0dp"
+                    android:layout_weight="1" />
+
+                <com.settlex.android.ui.common.custom.PinBoxEditText
+                    android:id="@+id/otpDigit4"
+                    style="@style/Widget.SettleXApp.EditText.PinBox"
+                    android:inputType="number"
+                    android:maxLength="1" />
+
+                <Space
+                    android:layout_width="0dp"
+                    android:layout_height="0dp"
+                    android:layout_weight="1" />
+
+                <com.settlex.android.ui.common.custom.PinBoxEditText
+                    android:id="@+id/otpDigit5"
+                    style="@style/Widget.SettleXApp.EditText.PinBox"
+                    android:inputType="number"
+                    android:maxLength="1" />
+
+                <Space
+                    android:layout_width="0dp"
+                    android:layout_height="0dp"
+                    android:layout_weight="1" />
+
+                <com.settlex.android.ui.common.custom.PinBoxEditText
+                    android:id="@+id/otpDigit6"
+                    style="@style/Widget.SettleXApp.EditText.PinBox"
+                    android:inputType="number"
+                    android:maxLength="1" />
             </LinearLayout>
-        </ScrollView>
-    </LinearLayout>
-</FrameLayout>
+
+            <!-- Feedback Message -->
+            <TextView
+                android:id="@+id/txtError"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="5dp"
+                android:gravity="center_vertical"
+                android:includeFontPadding="false"
+                android:textColor="@color/red"
+                android:textSize="13sp"
+                android:visibility="gone"
+                tools:text="message" />
+
+            <!-- Resend OTP -->
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="5dp"
+                android:gravity="center_vertical"
+                android:orientation="horizontal">
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:fontFamily="@font/inter_regular"
+                    android:includeFontPadding="false"
+                    android:text="Didn't receive the OTP?"
+                    android:textColor="@color/black"
+                    android:textSize="14sp" />
+
+                <com.google.android.material.button.MaterialButton
+                    android:id="@+id/btnResendOtp"
+                    style="@style/Widget.SettleXApp.Button.Outlined"
+                    android:layout_width="wrap_content"
+                    android:layout_height="40dp"
+                    android:layout_gravity="center"
+                    android:layout_marginStart="5dp"
+                    android:paddingHorizontal="0dp"
+                    android:paddingVertical="0dp"
+                    android:text="Resend"
+                    android:textSize="13sp" />
+            </LinearLayout>
+
+            <!-- Info -->
+            <TextView
+                android:id="@+id/txtInfo"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="10dp"
+                android:background="@drawable/bg_8dp_orange_light"
+                android:fontFamily="@font/inter_regular"
+                android:includeFontPadding="false"
+                android:padding="10dp"
+                android:textColor="@color/gray_dark"
+                android:textSize="12sp"
+                tools:text="Didn’t get the email? Make sure to also check your spam/junk folder if you can't find the email in your inbox." />
+        </LinearLayout>
+    </ScrollView>
+
+    <!-- Verify Button -->
+    <com.google.android.material.button.MaterialButton
+        android:id="@+id/btnVerify"
+        style="@style/Widget.SettleXApp.Button.Filled.Rounded8.Blue"
+        android:layout_width="match_parent"
+        android:layout_height="55dp"
+        android:layout_marginHorizontal="15dp"
+        android:layout_marginBottom="25dp"
+        android:enabled="false"
+        android:text="Verify"
+        android:textSize="14sp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent" />
+</androidx.constraintlayout.widget.ConstraintLayout>

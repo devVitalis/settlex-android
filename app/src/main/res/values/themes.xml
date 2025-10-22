@@ -12,7 +12,7 @@
 
     <!-- Default app theme -->
     <style name="Theme.SettleX" parent="Base.Theme.SettleX">
-        <item name="bottomSheetDialogTheme">@style/Widget_SettleX_BottomSheetDialog</item>
+        <item name="bottomSheetDialogTheme">@style/MyBottomSheetDialogTheme</item>
 
     </style>
 

@@ -18,14 +18,41 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent">
 
+        <!--Sign In-->
+        <TextView
+            android:id="@+id/btnSignIn"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginEnd="20dp"
+            android:fontFamily="@font/inter_medium"
+            android:includeFontPadding="false"
+            android:text="Sign in"
+            android:textColor="@color/blue"
+            android:textSize="15sp"
+            android:textStyle="bold"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toStartOf="@id/divider"
+            app:layout_constraintTop_toTopOf="parent" />
+
+        <!--Divider-->
+        <View
+            android:id="@+id/divider"
+            android:layout_width="1.5dp"
+            android:layout_height="15dp"
+            android:layout_marginEnd="20dp"
+            android:background="@color/gray"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toStartOf="@id/btnHelp"
+            app:layout_constraintTop_toTopOf="parent" />
+
         <!--Back Button-->
         <ImageView
             android:id="@+id/btnBackBefore"
             android:layout_width="20dp"
             android:layout_height="20dp"
             android:layout_marginStart="15dp"
+            android:background="?attr/selectableItemBackgroundBorderless"
             android:contentDescription="Back"
-            android:scaleType="centerCrop"
             android:src="@drawable/ic_arrow_back"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintStart_toStartOf="parent"
@@ -55,40 +82,15 @@
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
+                android:fontFamily="@font/inter_regular"
                 android:includeFontPadding="false"
                 android:text="Help"
                 android:textColor="@color/white"
                 android:textSize="12sp" />
         </LinearLayout>
-
-        <!--Divider-->
-        <View
-            android:id="@+id/divider"
-            android:layout_width="1.5dp"
-            android:layout_height="15dp"
-            android:layout_marginEnd="10dp"
-            android:background="@color/gray"
-            app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintEnd_toStartOf="@id/btnHelp"
-            app:layout_constraintTop_toTopOf="parent" />
-
-        <!--Sign In-->
-        <TextView
-            android:id="@+id/btnSignIn"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginEnd="20dp"
-            android:includeFontPadding="false"
-            android:text="Sign in"
-            android:textColor="@color/blue"
-            android:textSize="15sp"
-            android:textStyle="bold"
-            app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintEnd_toStartOf="@id/divider"
-            app:layout_constraintTop_toTopOf="parent" />
     </androidx.constraintlayout.widget.ConstraintLayout>
 
-    <!--Scroll Layout-->
+    <!-- Content -->
     <ScrollView
         android:layout_width="0dp"
         android:layout_height="0dp"
@@ -106,25 +108,27 @@
             android:paddingStart="15dp"
             android:paddingEnd="15dp">
 
-            <!--Page Header-->
+            <!-- Header -->
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="25dp"
+                android:fontFamily="@font/inter_bold"
                 android:includeFontPadding="false"
                 android:text="Create Your Account"
                 android:textColor="@color/black"
-                android:textSize="20sp"
+                android:textSize="25sp"
                 android:textStyle="bold" />
 
             <!--Sub Header-->
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
+                android:fontFamily="@font/inter_regular"
                 android:includeFontPadding="false"
                 android:text="Lets get you started"
                 android:textColor="@color/black"
-                android:textSize="13sp" />
+                android:textSize="15sp" />
 
             <!--Pages View-->
             <TextView
@@ -132,10 +136,11 @@
                 android:layout_height="wrap_content"
                 android:layout_marginTop="20dp"
                 android:layout_marginBottom="5dp"
+                android:fontFamily="@font/inter_regular"
                 android:includeFontPadding="false"
                 android:text="Step 1 of 4"
                 android:textColor="@color/gray"
-                android:textSize="13sp"
+                android:textSize="14sp"
                 android:textStyle="bold" />
 
             <LinearLayout
@@ -175,35 +180,26 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="20dp"
+                android:fontFamily="@font/inter_regular"
                 android:includeFontPadding="false"
                 android:text="Please enter a valid email address and phone number. An OTP will be sent to your email address."
                 android:textColor="@color/black"
-                android:textSize="13sp" />
+                android:textSize="14sp" />
 
-            <!--Email Section Header-->
-            <TextView
-                android:id="@+id/emailSectionHeader"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="10dp"
-                android:includeFontPadding="false"
-                android:text="Email address"
-                android:textColor="@color/gray_dark"
-                android:textSize="14sp"
-                android:visibility="invisible" />
-
-            <!-- Email Field -->
-            <androidx.constraintlayout.widget.ConstraintLayout
+            <!-- Email -->
+            <FrameLayout
                 android:id="@+id/editTxtEmailBg"
                 android:layout_width="match_parent"
                 android:layout_height="55dp"
+                android:layout_marginTop="10dp"
                 android:background="@drawable/bg_edit_txt_custom_white_not_focused">
 
                 <EditText
                     android:id="@+id/editTxtEmail"
-                    android:layout_width="0dp"
-                    android:layout_height="0dp"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
                     android:background="@android:color/transparent"
+                    android:fontFamily="@font/inter_regular"
                     android:hint="Enter your email address"
                     android:imeOptions="actionNext"
                     android:includeFontPadding="false"
@@ -211,28 +207,23 @@
                     android:paddingHorizontal="15dp"
                     android:textColor="@color/black"
                     android:textColorHint="@color/gray"
-                    android:textSize="14sp"
-                    app:layout_constraintBottom_toBottomOf="parent"
-                    app:layout_constraintEnd_toEndOf="parent"
-                    app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintTop_toTopOf="parent" />
-            </androidx.constraintlayout.widget.ConstraintLayout>
-
+                    android:textSize="14sp" />
+            </FrameLayout>
 
             <!--Display Error (Hidden)-->
             <TextView
-                android:id="@+id/txtErrorFeedback"
+                android:id="@+id/txt_error"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="5dp"
                 android:gravity="center_vertical"
                 android:includeFontPadding="false"
-                tools:text="message"
                 android:textColor="@color/red"
                 android:textSize="13sp"
-                android:visibility="gone" />
+                android:visibility="gone"
+                tools:text="message" />
 
-            <!--Phone number field-->
+            <!--Phone number -->
             <androidx.constraintlayout.widget.ConstraintLayout
                 android:id="@+id/editTxtPhoneNumberBackground"
                 android:layout_width="match_parent"
@@ -258,6 +249,7 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_marginStart="8dp"
+                    android:fontFamily="@font/inter_regular"
                     android:includeFontPadding="false"
                     android:text="+234"
                     android:textColor="@color/black"
@@ -277,13 +269,13 @@
                     app:layout_constraintStart_toEndOf="@id/countryCode"
                     app:layout_constraintTop_toTopOf="parent" />
 
-                <!-- Phone input -->
                 <EditText
                     android:id="@+id/editTxtPhoneNumber"
                     android:layout_width="0dp"
                     android:layout_height="0dp"
                     android:layout_marginStart="10dp"
                     android:background="@android:color/transparent"
+                    android:fontFamily="@font/inter_regular"
                     android:hint="Enter your phone number"
                     android:imeOptions="actionDone"
                     android:includeFontPadding="false"
@@ -330,6 +322,7 @@
                 android:id="@+id/txtTermsPrivacy"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
+                android:fontFamily="@font/inter_regular"
                 android:includeFontPadding="false"
                 android:textColor="@color/black"
                 android:textSize="12sp"

@@ -94,11 +94,11 @@ public class CreatePaymentIdActivity extends AppCompatActivity {
 
     private void onPaymentIdStoreStatusSuccess() {
         progressLoader.hide();
-        UiUtil.showBottomSheet(
+        UiUtil.showBottomSheetDialog(
                 this,
                 (dialog, dialogBinding) -> {
                     String title = "Success";
-                    String message = "Your payment ID was successfully created.";
+                    String message = "Your Payment ID was successfully created.";
 
                     dialogBinding.anim.playAnimation();
                     dialogBinding.title.setText(title);
@@ -123,20 +123,20 @@ public class CreatePaymentIdActivity extends AppCompatActivity {
             if (result == null) return;
 
             switch (result.getStatus()) {
-                case LOADING -> onPaymentIdAvailabilityCheckLoading();
-                case SUCCESS -> onPaymentIdAvailabilityCheckSuccess(result.getData());
-                case ERROR -> onPaymentIdAvailabilityCheckError(result.getMessage());
+                case LOADING -> onPaymentIdAvailabilityCheckStatusLoading();
+                case SUCCESS -> onPaymentIdAvailabilityCheckStatusSuccess(result.getData());
+                case ERROR -> onPaymentIdAvailabilityCheckStatusError(result.getMessage());
             }
         });
     }
 
-    private void onPaymentIdAvailabilityCheckLoading() {
+    private void onPaymentIdAvailabilityCheckStatusLoading() {
         binding.paymentIdAvailableCheck.setVisibility(View.GONE);
         binding.paymentIdProgressBar.show();
         binding.paymentIdProgressBar.setVisibility(View.VISIBLE);
     }
 
-    private void onPaymentIdAvailabilityCheckSuccess(boolean exists) {
+    private void onPaymentIdAvailabilityCheckStatusSuccess(boolean exists) {
         this.exists = exists;
 
         // Hide progress bar
@@ -156,7 +156,7 @@ public class CreatePaymentIdActivity extends AppCompatActivity {
         updateContinueButtonState();
     }
 
-    private void onPaymentIdAvailabilityCheckError(String error) {
+    private void onPaymentIdAvailabilityCheckStatusError(String error) {
         binding.txtError.setText(error);
         binding.txtError.setVisibility(View.VISIBLE);
 
@@ -246,7 +246,7 @@ public class CreatePaymentIdActivity extends AppCompatActivity {
         // Evaluate rules once
         boolean startsWith = startsWithLetter(paymentId);
         boolean hasMinimumLength = hasMinimumLength(paymentId);
-        boolean isValidFormat = isValidAlphaNumericFormat(paymentId);
+        boolean isValidFormat = isAlphaNumericFormat(paymentId);
 
         // Starts with letter
         binding.layoutRuleStartWith.setBackground(startsWith ? validBg : invalidBg);
@@ -275,7 +275,7 @@ public class CreatePaymentIdActivity extends AppCompatActivity {
         return paymentId.length() >= 5 && paymentId.length() <= 20;
     }
 
-    private boolean isValidAlphaNumericFormat(String paymentId) {
+    private boolean isAlphaNumericFormat(String paymentId) {
         return paymentId.matches("^[a-z0-9]+$");
     }
 

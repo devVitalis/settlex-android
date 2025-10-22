@@ -135,7 +135,7 @@
 
                 <com.google.android.material.button.MaterialButton
                     android:id="@+id/btnShareDetails"
-                    style="@style/Widget.SettleXApp.Button.Filled.Blue"
+                    style="@style/MyDefaultButton.Filled.Blue"
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
                     android:layout_weight="1"

@@ -85,12 +85,12 @@ dependencies {
     // Lottie
     implementation(libs.lottie)
 
-    // ViewModel (MVVM)
+    // ViewModel
     implementation(libs.lifecycle.viewmodel)
     implementation(libs.lifecycle.livedata)
 
-    /** Blur TODO: remove
-    // implementation(libs.blurry) */
+    // Blur
+    implementation(libs.blurview)
 
     // Shimmer Loading
     implementation(libs.shimmer)

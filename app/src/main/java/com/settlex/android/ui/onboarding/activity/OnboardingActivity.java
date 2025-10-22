@@ -1,4 +1,4 @@
-package com.settlex.android.onboarding.activity;
+package com.settlex.android.ui.onboarding.activity;
 
 import android.content.Intent;
 import android.os.Bundle;
@@ -13,7 +13,7 @@ import com.settlex.android.data.local.OnboardingPrefs;
 import com.settlex.android.databinding.ActivityOnboardingBinding;
 import com.settlex.android.ui.auth.activity.LoginActivity;
 import com.settlex.android.ui.auth.activity.SignUpActivity;
-import com.settlex.android.onboarding.adapter.OnboardingAdapter;
+import com.settlex.android.ui.onboarding.adapter.OnboardingAdapter;
 import com.settlex.android.util.ui.StatusBarUtil;
 
 /**

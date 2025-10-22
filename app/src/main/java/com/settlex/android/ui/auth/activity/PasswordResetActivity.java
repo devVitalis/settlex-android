@@ -25,6 +25,7 @@ import com.settlex.android.ui.common.util.ProgressLoaderController;
 import com.settlex.android.util.event.Result;
 import com.settlex.android.util.network.NetworkMonitor;
 import com.settlex.android.util.ui.StatusBarUtil;
+import com.settlex.android.util.ui.UiUtil;
 
 import dagger.hilt.android.AndroidEntryPoint;
 
@@ -57,9 +58,34 @@ public class PasswordResetActivity extends AppCompatActivity {
         observeOtpRequestAndHandleResult();
     }
 
-    // OBSERVERS ===============
+    private void setupUiActions() {
+        StatusBarUtil.setStatusBarColor(this, R.color.white);
+        setupEmailInputValidation();
+        setupEditTextFocusHandlers();
+        clearFocusOnEditTextField();
+
+        binding.btnBackBefore.setOnClickListener(v -> finish());
+        binding.btnContinue.setOnClickListener(v -> requestPasswordResetOtp());
+    }
+
+
     private void observeNetworkStatus() {
-        NetworkMonitor.getNetworkStatus().observe(this, isConnected -> this.isConnected = isConnected);
+        NetworkMonitor.getNetworkStatus().observe(this, isConnected -> {
+            if (!isConnected) {
+                showNoInternetDialog();
+            }
+            this.isConnected = isConnected;
+        });
+    }
+
+    private void showNoInternetDialog() {
+        String title = "Network Unavailable";
+        String message = "Please check your Wi-Fi or cellular data and try again";
+
+        UiUtil.showSimpleAlertDialog(
+                this,
+                title,
+                message);
     }
 
     private void observeOtpRequestAndHandleResult() {
@@ -81,33 +107,17 @@ public class PasswordResetActivity extends AppCompatActivity {
     }
 
     private void handleOtpRequestError(String error) {
-        binding.txtErrorFeedback.setText(error);
-        binding.txtErrorFeedback.setVisibility(View.VISIBLE);
+        binding.txtError.setText(error);
+        binding.txtError.setVisibility(View.VISIBLE);
         progressLoader.hide();
-    }
-
-    private void showNoInternetConnection() {
-        String ERROR_NO_INTERNET = "Connection lost. Please check your Wi-Fi or cellular data and try again";
-        binding.txtErrorFeedback.setText(ERROR_NO_INTERNET);
-        binding.txtErrorFeedback.setVisibility(View.VISIBLE);
     }
 
     private void requestPasswordResetOtp() {
         if (!isConnected) {
-            showNoInternetConnection();
+            showNoInternetDialog();
             return;
         }
         authViewModel.sendPasswordResetOtp(binding.editTxtEmail.getText().toString().trim());
-    }
-
-    private void setupUiActions() {
-        StatusBarUtil.setStatusBarColor(this, R.color.white);
-        setupEmailInputValidation();
-        setupFocusHandlers();
-        clearFocusOnEditTextField();
-
-        binding.btnBackBefore.setOnClickListener(v -> finish());
-        binding.btnContinue.setOnClickListener(v -> requestPasswordResetOtp());
     }
 
     private void setupEmailInputValidation() {
@@ -116,7 +126,7 @@ public class PasswordResetActivity extends AppCompatActivity {
             public void onTextChanged(CharSequence s, int start, int before, int count) {
                 email = s.toString().trim().toLowerCase();
 
-                binding.txtErrorFeedback.setVisibility(View.GONE);
+                binding.txtError.setVisibility(View.GONE);
                 updateContinueButtonState();
             }
 
@@ -142,21 +152,13 @@ public class PasswordResetActivity extends AppCompatActivity {
         binding.btnContinue.setEnabled(emailValid);
     }
 
-    private void setupFocusHandlers() {
-        View.OnClickListener focusListener = (v -> {
-            if (v instanceof EditText) {
-                v.setFocusable(true);
-                v.setFocusableInTouchMode(true);
-                v.requestFocus();
-            }
-        });
-        binding.editTxtEmail.setOnClickListener(focusListener);
+    private void setupEditTextFocusHandlers() {
+        int focusBgRes = R.drawable.bg_edit_txt_custom_gray_focused;
+        int defaultBgRes = R.drawable.bg_edit_txt_custom_gray_not_focused;
 
-        // Background changes
-        binding.editTxtEmail.setOnFocusChangeListener((v, hasFocus) -> {
-            int emailBackgroundRes = (hasFocus) ? R.drawable.bg_edit_txt_custom_gray_focused : R.drawable.bg_edit_txt_custom_gray_not_focused;
-            binding.editTxtEmailBackground.setBackgroundResource(emailBackgroundRes);
-        });
+        // background changes
+        binding.editTxtEmail.setOnFocusChangeListener((v, hasFocus) ->
+                binding.editTxtEmailBackground.setBackgroundResource(hasFocus ? focusBgRes : defaultBgRes));
     }
 
 

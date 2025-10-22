@@ -1,7 +1,12 @@
 package com.settlex.android.util.ui;
 
+import android.app.Activity;
 import android.content.Context;
+import android.graphics.RenderEffect;
+import android.graphics.Shader;
+import android.os.Build;
 import android.view.LayoutInflater;
+import android.view.View;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -25,20 +30,26 @@ public class UiUtil {
         // Utility class - prevent instantiation
     }
 
-    public static void showBottomSheet(@NonNull Context context, @Nullable BiConsumer<BottomSheetDialog, BottomSheetDialogBinding> config) {
+    public static void showBottomSheetDialog(@NonNull Context context, @Nullable BiConsumer<BottomSheetDialog, BottomSheetDialogBinding> config) {
         BottomSheetDialogBinding binding = BottomSheetDialogBinding.inflate(LayoutInflater.from(context));
 
-        BottomSheetDialog dialog = new BottomSheetDialog(context, R.style.Widget_SettleX_BottomSheetDialog);
+        BottomSheetDialog dialog = new BottomSheetDialog(context, R.style.MyBottomSheetDialogTheme);
         dialog.setContentView(binding.getRoot());
 
         // Default config
         dialog.setCancelable(false);
         dialog.setCanceledOnTouchOutside(false);
 
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.S) {
+            // blur background on Android 12+
+            View rootView = ((Activity) context).getWindow().getDecorView();
+            rootView.setRenderEffect(RenderEffect.createBlurEffect(5, 5, Shader.TileMode.CLAMP));
+        }
+
         if (config != null) config.accept(dialog, binding);
     }
 
-    public static void showAlertDialog(Context context, BiConsumer<AlertDialog, AlertDialogBinding> config) {
+    public static void showCustomAlertDialog(Context context, BiConsumer<AlertDialog, AlertDialogBinding> config) {
         AlertDialogBinding binding = AlertDialogBinding.inflate(LayoutInflater.from(context));
 
         MaterialAlertDialogBuilder builder = new MaterialAlertDialogBuilder(context)
@@ -48,5 +59,14 @@ public class UiUtil {
         AlertDialog alertDialog = builder.create();
 
         if (config != null) config.accept(alertDialog, binding);
+    }
+
+    public static void showSimpleAlertDialog(Context context, String title, String message) {
+        new MaterialAlertDialogBuilder(context, R.style.MyAlertDialogTheme)
+                .setCancelable(true)
+                .setTitle(title)
+                .setMessage(message)
+                .setPositiveButton("OK", (dialog, i) -> dialog.dismiss())
+                .show();
     }
 }

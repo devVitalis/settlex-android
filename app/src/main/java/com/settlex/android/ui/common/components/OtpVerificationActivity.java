@@ -13,6 +13,7 @@ import android.view.MotionEvent;
 import android.view.View;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.EditText;
+import android.widget.Toast;
 
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.lifecycle.ViewModelProvider;
@@ -23,13 +24,19 @@ import com.settlex.android.ui.auth.activity.PasswordChangeActivity;
 import com.settlex.android.ui.auth.viewmodel.AuthViewModel;
 import com.settlex.android.ui.common.util.ProgressLoaderController;
 import com.settlex.android.util.event.Result;
+import com.settlex.android.util.network.NetworkMonitor;
 import com.settlex.android.util.string.StringUtil;
 import com.settlex.android.util.ui.StatusBarUtil;
+import com.settlex.android.util.ui.UiUtil;
 
 import dagger.hilt.android.AndroidEntryPoint;
 
 @AndroidEntryPoint
 public class OtpVerificationActivity extends AppCompatActivity {
+
+    private boolean isConnected;
+
+    // dependencies
     private String userEmail;
     private EditText[] otpInputs;
     private AuthViewModel authViewModel;
@@ -47,53 +54,69 @@ public class OtpVerificationActivity extends AppCompatActivity {
         progressLoader = new ProgressLoaderController(this);
 
         setupUiActions();
-        observeVerifyOtpAndHandleResult();
-        observeSendOtpAndHandleResult();
+        observeNetworkStatus();
+        observeSendOtpStatus();
+        observeVerifyOtpStatus();
     }
 
-    // OBSERVERS =========
-    private void observeVerifyOtpAndHandleResult() {
+    private void observeNetworkStatus(){
+        NetworkMonitor.getNetworkStatus().observe(this, isConnected -> {
+            if (!isConnected) showNoInternetDialog();
+            this.isConnected = isConnected;
+        });
+    }
+
+    private void showNoInternetDialog() {
+        String title = "Network Unavailable";
+        String message = "Please check your Wi-Fi or cellular data and try again";
+
+        UiUtil.showSimpleAlertDialog(
+                this,
+                title,
+                message);
+    }
+
+    private void observeVerifyOtpStatus() {
         authViewModel.getVerifyEmailResetOtpResult().observe(this, event -> {
             Result<String> result = event.getContentIfNotHandled();
             if (result != null) {
                 switch (result.getStatus()) {
-                    case LOADING -> onVerifyOrSendOtpLoading();
-                    case SUCCESS -> onVerifyOtpSuccess();
-                    case ERROR -> showOtpError(result.getMessage());
+                    case LOADING -> progressLoader.show();
+                    case SUCCESS -> onVerifyOtpStatusSuccess();
+                    case ERROR -> onOtpStatusError(result.getMessage());
                 }
             }
         });
     }
 
-    private void onVerifyOrSendOtpLoading() {
-        progressLoader.show();
-    }
-
-    private void onVerifyOtpSuccess() {
-        startActivity(new Intent(this, PasswordChangeActivity.class).putExtra("email", userEmail));
+    private void onVerifyOtpStatusSuccess() {
+        startActivity(new Intent(
+                this,
+                PasswordChangeActivity.class)
+                .putExtra("email", userEmail));
         finish();
         progressLoader.hide();
     }
 
-    private void observeSendOtpAndHandleResult() {
+    private void observeSendOtpStatus() {
         authViewModel.getSendPasswordResetOtpResult().observe(this, event -> {
             Result<String> result = event.getContentIfNotHandled();
             if (result != null) {
                 switch (result.getStatus()) {
-                    case LOADING -> onVerifyOrSendOtpLoading();
-                    case SUCCESS -> onSendOtpSuccess();
-                    case ERROR -> showOtpError(result.getMessage());
+                    case LOADING -> progressLoader.show();
+                    case SUCCESS -> onSendOtpStatusSuccess();
+                    case ERROR -> onOtpStatusError(result.getMessage());
                 }
             }
         });
     }
 
-    private void onSendOtpSuccess() {
+    private void onSendOtpStatusSuccess() {
         startResendOtpCooldown();
         progressLoader.hide();
     }
 
-    private void showOtpError(String message) {
+    private void onOtpStatusError(String message) {
         binding.txtOtpFeedback.setText(message);
         binding.txtOtpFeedback.setVisibility(View.VISIBLE);
         progressLoader.hide();
@@ -107,15 +130,28 @@ public class OtpVerificationActivity extends AppCompatActivity {
         maskAndDisplayUserEmail();
 
         binding.btnBackBefore.setOnClickListener(v -> finish());
-        binding.btnResendOtp.setOnClickListener(v -> resendOtp());
-        binding.btnConfirm.setOnClickListener(v -> verifyOtp());
+        binding.btnResendOtp.setOnClickListener(v -> resendOtpCode());
+        binding.btnConfirm.setOnClickListener(v -> attemptOtpVerification());
+        binding.btnHelp.setOnClickListener(v -> Toast.makeText(
+                this,
+                "Feature not yet implemented",
+                Toast.LENGTH_SHORT
+        ).show());
     }
 
-    private void verifyOtp() {
+    private void attemptOtpVerification() {
+        if (!isConnected) {
+            showNoInternetDialog();
+            return;
+        }
         authViewModel.verifyPasswordResetOtp(userEmail, getEnteredOtpCode());
     }
 
-    private void resendOtp() {
+    private void resendOtpCode() {
+        if (!isConnected) {
+            showNoInternetDialog();
+            return;
+        }
         authViewModel.sendPasswordResetOtp(userEmail);
     }
 

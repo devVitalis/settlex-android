@@ -10,13 +10,12 @@ import android.text.Spanned;
 import android.text.TextUtils;
 import android.text.TextWatcher;
 import android.text.style.ImageSpan;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.inputmethod.EditorInfo;
 import android.view.inputmethod.InputMethodManager;
-import android.widget.EditText;
+import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -31,9 +30,9 @@ import com.settlex.android.databinding.FragmentSignUpUserPasswordBinding;
 import com.settlex.android.ui.auth.viewmodel.AuthViewModel;
 import com.settlex.android.ui.common.util.ProgressLoaderController;
 import com.settlex.android.ui.dashboard.DashboardActivity;
-import com.settlex.android.ui.information.help.AuthHelpActivity;
 import com.settlex.android.util.network.NetworkMonitor;
 import com.settlex.android.util.ui.StatusBarUtil;
+import com.settlex.android.util.ui.UiUtil;
 
 import java.util.Objects;
 
@@ -65,8 +64,7 @@ public class SignUpUserPasswordFragment extends Fragment {
     @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
-
-        observeRegistrationAndHandleResult();
+        observeRegistrationStatus();
     }
 
     @Override
@@ -76,8 +74,12 @@ public class SignUpUserPasswordFragment extends Fragment {
     }
 
     private void observeNetworkStatus() {
-        NetworkMonitor.getNetworkStatus().observe(requireActivity(), isConnected ->
-                this.isConnected = isConnected);
+        NetworkMonitor.getNetworkStatus().observe(getViewLifecycleOwner(), isConnected -> {
+            if (!isConnected) {
+                showNoInternetConnection();
+            }
+            this.isConnected = isConnected;
+        });
     }
 
     private void generateAndObserveFcmToken() {
@@ -95,51 +97,58 @@ public class SignUpUserPasswordFragment extends Fragment {
         authViewModel.updateFcmToken(token);
     }
 
-    private void observeRegistrationAndHandleResult() {
+    private void observeRegistrationStatus() {
         authViewModel.getRegisterResult().observe(getViewLifecycleOwner(), result -> {
             if (result == null) return;
 
             switch (result.getStatus()) {
                 case LOADING -> progressLoader.show();
-                case SUCCESS -> onRegistrationSuccess();
-                case ERROR -> onRegistrationFailure(result.getMessage());
+                case SUCCESS -> onRegistrationStatusSuccess();
+                case ERROR -> onRegistrationStatusFailure(result.getMessage());
             }
         });
     }
 
-
-    private void onRegistrationSuccess() {
+    private void onRegistrationStatusSuccess() {
         startActivity(new Intent(requireContext(), DashboardActivity.class));
         requireActivity().finishAffinity();
 
         progressLoader.hide();
     }
 
-    private void onRegistrationFailure(String reason) {
-        binding.txtErrorFeedback.setText(reason);
-        binding.txtErrorFeedback.setVisibility(View.VISIBLE);
+    private void onRegistrationStatusFailure(String error) {
+        binding.txtError.setText(error);
+        binding.txtError.setVisibility(View.VISIBLE);
 
         progressLoader.hide();
     }
 
     private void showNoInternetConnection() {
-        String ERROR_NO_INTERNET = "Connection lost. Please check your Wi-Fi or cellular data and try again";
-        binding.txtErrorFeedback.setText(ERROR_NO_INTERNET);
-        binding.txtErrorFeedback.setVisibility(View.VISIBLE);
+        String title = "Network Unavailable";
+        String message = "Please check your Wi-Fi or cellular data and try again";
+
+        UiUtil.showSimpleAlertDialog(
+                requireContext(),
+                title,
+                message
+        );
     }
 
     // UI ACTIONS ========
     private void setupUiActions() {
         StatusBarUtil.setStatusBarColor(requireActivity(), R.color.white);
         setupInputValidation();
-        reEnableEditTextFocus();
         clearFocusOnLastEditTextField();
         togglePasswordVisibilityIcons(false);
 
         binding.btnBackBefore.setOnClickListener(v -> navigateBack());
-        binding.btnHelp.setOnClickListener(v -> navigateToHelpActivity());
         binding.btnExpendLess.setOnClickListener(v -> toggleReferralCodeVisibility());
         binding.btnCreateAccount.setOnClickListener(v -> validateAndCreateAccount());
+
+        binding.btnHelp.setOnClickListener(v -> Toast.makeText(
+                requireContext(),
+                "Feature not yet implementation",
+                Toast.LENGTH_SHORT).show());
     }
 
     private void validateAndCreateAccount() {
@@ -187,10 +196,10 @@ public class SignUpUserPasswordFragment extends Fragment {
 
         if (!confirm.isEmpty() && !matches) {
             String ERROR_PASSWORD_MISMATCH = "Passwords do not match!";
-            binding.txtErrorFeedback.setText(ERROR_PASSWORD_MISMATCH);
-            binding.txtErrorFeedback.setVisibility(View.VISIBLE);
+            binding.txtError.setText(ERROR_PASSWORD_MISMATCH);
+            binding.txtError.setVisibility(View.VISIBLE);
         } else {
-            binding.txtErrorFeedback.setVisibility(View.GONE);
+            binding.txtError.setVisibility(View.GONE);
         }
 
         showPasswordRequirements(hasLength, hasUpper, hasLower, hasSpecial, password);
@@ -251,26 +260,8 @@ public class SignUpUserPasswordFragment extends Fragment {
         binding.btnExpendLess.setImageResource(isVisible ? R.drawable.ic_expend_less : R.drawable.ic_expend_more);
     }
 
-    private void reEnableEditTextFocus() {
-        View.OnClickListener focusListener = v -> {
-            if (v instanceof EditText) {
-                v.setFocusable(true);
-                v.setFocusableInTouchMode(true);
-                v.requestFocus();
-            }
-        };
-
-        binding.editTxtPassword.setOnClickListener(focusListener);
-        binding.editTxtConfirmPassword.setOnClickListener(focusListener);
-        binding.editTxtInvitationCode.setOnClickListener(focusListener);
-    }
-
     private void navigateBack() {
         NavHostFragment.findNavController(this).popBackStack();
-    }
-
-    private void navigateToHelpActivity() {
-        startActivity(new Intent(requireActivity(), AuthHelpActivity.class));
     }
 
     private void clearFocusOnLastEditTextField() {
@@ -280,7 +271,6 @@ public class SignUpUserPasswordFragment extends Fragment {
                 InputMethodManager imm = (InputMethodManager) v.getContext().getSystemService(Context.INPUT_METHOD_SERVICE);
                 imm.hideSoftInputFromWindow(v.getWindowToken(), 0);
 
-                // Clear focus
                 v.clearFocus();
                 return true;
             }

@@ -7,7 +7,7 @@
     android:gravity="center"
     android:orientation="vertical"
     android:paddingHorizontal="20dp"
-    tools:context=".onboarding.fragment.OnboardingPage4Fragment">
+    tools:context=".ui.onboarding.fragment.OnboardingPage4Fragment">
 
     <LinearLayout
         android:id="@+id/imageContainer"
@@ -30,6 +30,7 @@
         android:layout_height="wrap_content"
         android:layout_gravity="start"
         android:layout_marginTop="25dp"
+        android:fontFamily="@font/inter_bold"
         android:includeFontPadding="false"
         android:text="Secure By\nDesign"
         android:textColor="@color/black"
@@ -41,6 +42,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginTop="10dp"
+        android:fontFamily="@font/inter_regular"
         android:text="We protect your information with the same high-level encryption trusted by major banks, keeping your personal details secure and private."
         android:textAlignment="textStart"
         android:textColor="@color/gray"

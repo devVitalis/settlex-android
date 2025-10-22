@@ -1,14 +1,14 @@
-package com.settlex.android.onboarding.adapter;
+package com.settlex.android.ui.onboarding.adapter;
 
 import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentActivity;
 import androidx.viewpager2.adapter.FragmentStateAdapter;
 
-import com.settlex.android.onboarding.fragment.OnboardingPage1Fragment;
-import com.settlex.android.onboarding.fragment.OnboardingPage2Fragment;
-import com.settlex.android.onboarding.fragment.OnboardingPage3Fragment;
-import com.settlex.android.onboarding.fragment.OnboardingPage4Fragment;
+import com.settlex.android.ui.onboarding.fragment.OnboardingPage1Fragment;
+import com.settlex.android.ui.onboarding.fragment.OnboardingPage2Fragment;
+import com.settlex.android.ui.onboarding.fragment.OnboardingPage3Fragment;
+import com.settlex.android.ui.onboarding.fragment.OnboardingPage4Fragment;
 
 public class OnboardingAdapter extends FragmentStateAdapter {
 

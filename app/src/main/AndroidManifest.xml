@@ -119,7 +119,7 @@
             android:name=".ui.auth.activity.SignUpActivity"
             android:exported="false" />
         <activity
-            android:name=".onboarding.activity.OnboardingActivity"
+            android:name=".ui.onboarding.activity.OnboardingActivity"
             android:exported="false" />
         <activity
             android:name=".ui.splash.SplashActivity"

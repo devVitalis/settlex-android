@@ -7,7 +7,7 @@
     android:gravity="center"
     android:orientation="vertical"
     android:paddingHorizontal="20dp"
-    tools:context=".onboarding.fragment.OnboardingPage3Fragment">
+    tools:context=".ui.onboarding.fragment.OnboardingPage3Fragment">
 
     <LinearLayout
         android:id="@+id/imageContainer"
@@ -30,6 +30,7 @@
         android:layout_height="wrap_content"
         android:layout_gravity="start"
         android:layout_marginTop="25dp"
+        android:fontFamily="@font/inter_bold"
         android:includeFontPadding="false"
         android:text="Never Miss\nYour Shows."
         android:textColor="@color/black"
@@ -41,6 +42,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginTop="10dp"
+        android:fontFamily="@font/inter_regular"
         android:text="Stay connected to your favorite TV and streaming services. Renew your subscriptions on time and keep the entertainment going."
         android:textAlignment="textStart"
         android:textColor="@color/gray"

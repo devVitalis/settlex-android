@@ -172,7 +172,7 @@ public class PayAFriendActivity extends AppCompatActivity {
 
         // hide selected recipient
         binding.selectedRecipient.setVisibility(View.GONE);
-        binding.txtErrorFeedback.setVisibility(View.GONE);
+        binding.txtError.setVisibility(View.GONE);
         updateNextButtonState();
 
         binding.shimmerEffect.startShimmer();
@@ -187,8 +187,8 @@ public class PayAFriendActivity extends AppCompatActivity {
             String username = StringUtil.addAtToUsername(this.recipientPaymentId);
             String ERROR_NO_USER_FOUND = "No user found with Payment ID " + username;
 
-            binding.txtErrorFeedback.setText(ERROR_NO_USER_FOUND);
-            binding.txtErrorFeedback.setVisibility(View.VISIBLE);
+            binding.txtError.setText(ERROR_NO_USER_FOUND);
+            binding.txtError.setVisibility(View.VISIBLE);
         }
 
         // Recipient found
@@ -270,8 +270,8 @@ public class PayAFriendActivity extends AppCompatActivity {
             if (StringUtil.removeAtInUsername(recipient.getUsername()).equals(currentUser.getUsername())) {
                 String ERROR_CANNOT_SEND_TO_SELF = "You cannot send a payment to your own account. Please choose a different recipient";
 
-                binding.txtErrorFeedback.setText(ERROR_CANNOT_SEND_TO_SELF);
-                binding.txtErrorFeedback.setVisibility(View.VISIBLE);
+                binding.txtError.setText(ERROR_CANNOT_SEND_TO_SELF);
+                binding.txtError.setVisibility(View.VISIBLE);
                 return;
             }
 
@@ -309,7 +309,7 @@ public class PayAFriendActivity extends AppCompatActivity {
                 if (!s.toString().isEmpty()) {
                     recipientPaymentId = StringUtil.removeAtInUsername(s.toString().trim().toLowerCase());
                 }
-                binding.txtErrorFeedback.setVisibility(View.GONE);
+                binding.txtError.setVisibility(View.GONE);
                 binding.selectedRecipient.setVisibility(View.GONE);
                 updateNextButtonState();
             }

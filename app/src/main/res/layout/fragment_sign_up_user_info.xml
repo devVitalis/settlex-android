@@ -28,6 +28,7 @@
                 android:layout_width="20dp"
                 android:layout_height="20dp"
                 android:layout_marginStart="15dp"
+                android:background="?attr/selectableItemBackgroundBorderless"
                 android:contentDescription="Back"
                 android:scaleType="centerCrop"
                 android:src="@drawable/ic_arrow_back"
@@ -58,6 +59,7 @@
                 <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
+                    android:fontFamily="@font/inter_regular"
                     android:includeFontPadding="false"
                     android:text="Help"
                     android:textColor="@color/white"
@@ -88,20 +90,22 @@
                     android:layout_height="wrap_content"
                     android:layout_gravity="start"
                     android:layout_marginTop="25dp"
+                    android:fontFamily="@font/inter_bold"
                     android:includeFontPadding="false"
                     android:text="Let's Get to Know You"
                     android:textColor="@color/black"
-                    android:textSize="20sp"
+                    android:textSize="25sp"
                     android:textStyle="bold" />
 
                 <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_gravity="start"
+                    android:fontFamily="@font/inter_regular"
                     android:includeFontPadding="false"
                     android:text="Tell us your name"
                     android:textColor="@color/black"
-                    android:textSize="13sp" />
+                    android:textSize="15sp" />
 
                 <TextView
                     android:layout_width="wrap_content"
@@ -109,10 +113,11 @@
                     android:layout_gravity="start"
                     android:layout_marginTop="20dp"
                     android:layout_marginBottom="5dp"
+                    android:fontFamily="@font/inter_regular"
                     android:includeFontPadding="false"
                     android:text="Step 3 of 4"
                     android:textColor="@color/gray"
-                    android:textSize="13sp"
+                    android:textSize="14sp"
                     android:textStyle="bold" />
 
                 <LinearLayout
@@ -153,15 +158,16 @@
                     android:layout_height="wrap_content"
                     android:layout_gravity="start"
                     android:layout_marginTop="20dp"
+                    android:fontFamily="@font/inter_regular"
                     android:includeFontPadding="false"
                     android:text="Please enter your first name and last name as it appears on your NIN"
                     android:textColor="@color/black"
-                    android:textSize="13sp" />
+                    android:textSize="14sp" />
 
                 <!-- Firstname Field -->
                 <com.google.android.material.textfield.TextInputLayout
                     android:id="@+id/txtInputLayoutFirstname"
-                    style="@style/Widget.SettleXApp.TextInputLayout.Outlined"
+                    style="@style/MyTextInputLayoutThemeOutlined"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_gravity="center"
@@ -174,6 +180,7 @@
                         android:id="@+id/editTxtFirstName"
                         android:layout_width="match_parent"
                         android:layout_height="55dp"
+                        android:fontFamily="@font/inter_regular"
                         android:gravity="start|center_vertical"
                         android:imeOptions="actionNext"
                         android:includeFontPadding="false"
@@ -187,7 +194,7 @@
                 <!-- Lastname Field -->
                 <com.google.android.material.textfield.TextInputLayout
                     android:id="@+id/txtInputLayoutPassword"
-                    style="@style/Widget.SettleXApp.TextInputLayout.Outlined"
+                    style="@style/MyTextInputLayoutThemeOutlined"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_gravity="center"
@@ -200,6 +207,7 @@
                         android:id="@+id/editTxtLastName"
                         android:layout_width="match_parent"
                         android:layout_height="55dp"
+                        android:fontFamily="@font/inter_regular"
                         android:gravity="start|center_vertical"
                         android:imeOptions="actionDone"
                         android:includeFontPadding="false"

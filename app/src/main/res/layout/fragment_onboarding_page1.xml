@@ -7,7 +7,7 @@
     android:gravity="center"
     android:orientation="vertical"
     android:paddingHorizontal="20dp"
-    tools:context=".onboarding.fragment.OnboardingPage1Fragment">
+    tools:context=".ui.onboarding.fragment.OnboardingPage1Fragment">
 
     <LinearLayout
         android:id="@+id/imageContainer"
@@ -33,6 +33,7 @@
         android:includeFontPadding="false"
         android:text="Welcome to SettleX"
         android:textColor="@color/black"
+        android:fontFamily="@font/inter_bold"
         android:textSize="25sp"
         android:textStyle="bold" />
 
@@ -40,6 +41,7 @@
         android:id="@+id/subHeader"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:fontFamily="@font/inter_regular"
         android:layout_marginTop="10dp"
         android:text="Experience seamless payments and cheaper bundles built for you. SettleX makes every transactions simple."
         android:textAlignment="textStart"

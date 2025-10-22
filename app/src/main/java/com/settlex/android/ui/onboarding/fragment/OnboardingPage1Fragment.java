@@ -1,4 +1,4 @@
-package com.settlex.android.onboarding.fragment;
+package com.settlex.android.ui.onboarding.fragment;
 
 import android.os.Bundle;
 import android.view.LayoutInflater;

@@ -309,7 +309,7 @@
 
     <com.google.android.material.button.MaterialButton
         android:id="@+id/btnPay"
-        style="@style/Widget.SettleXApp.Button.Filled.Blue"
+        style="@style/MyDefaultButton.Filled.Blue"
         android:layout_width="match_parent"
         android:layout_height="55dp"
         android:enabled="false"

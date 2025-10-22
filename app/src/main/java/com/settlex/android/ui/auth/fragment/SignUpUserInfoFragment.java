@@ -10,7 +10,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.view.inputmethod.EditorInfo;
 import android.view.inputmethod.InputMethodManager;
-import android.widget.EditText;
+import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -23,8 +23,10 @@ import com.settlex.android.R;
 import com.settlex.android.databinding.FragmentSignUpUserInfoBinding;
 import com.settlex.android.ui.auth.viewmodel.AuthViewModel;
 import com.settlex.android.ui.information.help.AuthHelpActivity;
+import com.settlex.android.util.network.NetworkMonitor;
 import com.settlex.android.util.string.StringUtil;
 import com.settlex.android.util.ui.StatusBarUtil;
+import com.settlex.android.util.ui.UiUtil;
 
 import java.util.Objects;
 
@@ -33,6 +35,7 @@ import dagger.hilt.android.AndroidEntryPoint;
 @AndroidEntryPoint
 public class SignUpUserInfoFragment extends Fragment {
 
+    private boolean isConnected;
     private FragmentSignUpUserInfoBinding binding;
     private AuthViewModel authViewModel;
 
@@ -48,6 +51,7 @@ public class SignUpUserInfoFragment extends Fragment {
         binding = FragmentSignUpUserInfoBinding.inflate(inflater, container, false);
 
         setupUiActions();
+        observeNetworkStatus();
         return binding.getRoot();
     }
 
@@ -57,37 +61,38 @@ public class SignUpUserInfoFragment extends Fragment {
         binding = null;
     }
 
-    // UI SETUP ==========
+    private void observeNetworkStatus() {
+        NetworkMonitor.getNetworkStatus().observe(getViewLifecycleOwner(), isConnected -> {
+            if (!isConnected) {
+                showNoInternet();
+            }
+            this.isConnected = isConnected;
+        });
+    }
+
+    private void showNoInternet() {
+        String title = "Network Unavailable";
+        String message = "Please check your Wi-Fi or cellular data and try again";
+
+        UiUtil.showSimpleAlertDialog(
+                requireContext(),
+                title,
+                message
+        );
+    }
+
     private void setupUiActions() {
         StatusBarUtil.setStatusBarColor(requireActivity(), R.color.white);
-        reEnableEditTextFocus();
         setupInputValidation();
         clearFocusOnLastEditTextField();
 
-        binding.btnBackBefore.setOnClickListener(v -> navigateBack());
-        binding.btnHelp.setOnClickListener(v -> navigateToHelpActivity());
+        binding.btnBackBefore.setOnClickListener(v -> NavHostFragment.findNavController(this).popBackStack());
         binding.btnContinue.setOnClickListener(v -> submitUserInfoAndProceed());
-    }
 
-    private void navigateBack() {
-        NavHostFragment.findNavController(this).popBackStack();
-    }
-
-    private void navigateToHelpActivity() {
-        startActivity(new Intent(requireActivity(), AuthHelpActivity.class));
-    }
-
-    private void reEnableEditTextFocus() {
-        View.OnClickListener focusListener = v -> {
-            if (v instanceof EditText) {
-                v.setFocusable(true);
-                v.setFocusableInTouchMode(true);
-                v.requestFocus();
-            }
-        };
-
-        binding.editTxtFirstName.setOnClickListener(focusListener);
-        binding.editTxtLastName.setOnClickListener(focusListener);
+        binding.btnHelp.setOnClickListener(v -> Toast.makeText(
+                requireContext(),
+                "Feature not yet implementation",
+                Toast.LENGTH_SHORT).show());
     }
 
     private void setupInputValidation() {
@@ -105,12 +110,16 @@ public class SignUpUserInfoFragment extends Fragment {
                 updateContinueButtonState();
             }
         };
-
         binding.editTxtFirstName.addTextChangedListener(validationWatcher);
         binding.editTxtLastName.addTextChangedListener(validationWatcher);
     }
 
     private void submitUserInfoAndProceed() {
+        if (!isConnected) {
+            showNoInternet();
+            return;
+        }
+
         String firstName = StringUtil.capitalizeEachWord(Objects.requireNonNull(binding.editTxtFirstName.getText()).toString().trim());
         String lastName = StringUtil.capitalizeEachWord(Objects.requireNonNull(binding.editTxtLastName.getText()).toString().trim());
 
@@ -142,7 +151,6 @@ public class SignUpUserInfoFragment extends Fragment {
                 InputMethodManager imm = (InputMethodManager) v.getContext().getSystemService(Context.INPUT_METHOD_SERVICE);
                 imm.hideSoftInputFromWindow(v.getWindowToken(), 0);
 
-                // Clear focus
                 v.clearFocus();
                 return true;
             }

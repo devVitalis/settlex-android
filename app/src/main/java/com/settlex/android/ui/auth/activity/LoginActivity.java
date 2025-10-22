@@ -11,7 +11,6 @@ import android.text.Html;
 import android.text.InputType;
 import android.text.TextUtils;
 import android.text.TextWatcher;
-import android.util.Log;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.inputmethod.EditorInfo;
@@ -37,9 +36,6 @@ import java.util.Objects;
 
 import dagger.hilt.android.AndroidEntryPoint;
 
-/**
- * Handles user sign-in flow including:
- */
 @AndroidEntryPoint
 public class LoginActivity extends AppCompatActivity {
 
@@ -68,8 +64,10 @@ public class LoginActivity extends AppCompatActivity {
 
     // OBSERVERS ==============
     private void observeNetworkStatus() {
-        NetworkMonitor.getNetworkStatus().observe(this, isConnected ->
-                this.isConnected = isConnected);
+        NetworkMonitor.getNetworkStatus().observe(this, isConnected -> {
+            if (!isConnected) showNoInternetDialog();
+            this.isConnected = isConnected;
+        });
     }
 
     private void observeUserState() {
@@ -106,8 +104,8 @@ public class LoginActivity extends AppCompatActivity {
     }
 
     private void onLoginFailure(String error) {
-        binding.txtErrorFeedback.setText(error);
-        binding.txtErrorFeedback.setVisibility(View.VISIBLE);
+        binding.txtError.setText(error);
+        binding.txtError.setVisibility(View.VISIBLE);
 
         progressLoader.hide();
     }
@@ -165,20 +163,16 @@ public class LoginActivity extends AppCompatActivity {
         String title = "Network Unavailable";
         String message = "Please check your Wi-Fi or cellular data and try again";
 
-        UiUtil.showAlertDialog(this, (alertDialog, binding) -> {
-            binding.icon.setImageResource(R.drawable.ic_signal_disconnected);
-            binding.title.setText(title);
-            binding.message.setText(message);
-
-            binding.btnOkay.setOnClickListener(view -> alertDialog.dismiss());
-            alertDialog.show();
-        });
+        UiUtil.showSimpleAlertDialog(
+                this,
+                title,
+                message);
     }
 
     // UI ACTIONS ==========
     private void setupUiActions() {
         StatusBarUtil.setStatusBarColor(this, R.color.white);
-        setupFocusHandlers();
+        setupEditTextFocusHandler();
         setupAuthActionTexts();
         setupInputValidation();
         setupPasswordVisibilityToggle();
@@ -205,21 +199,11 @@ public class LoginActivity extends AppCompatActivity {
         startActivity(new Intent(this, activityClass));
     }
 
-    private void setupFocusHandlers() {
-        View.OnClickListener focusListener = v -> {
-            if (v instanceof EditText editText) {
-                editText.setFocusable(true);
-                editText.setFocusableInTouchMode(true);
-                editText.requestFocus();
-            }
-        };
-        binding.editTxtEmail.setOnClickListener(focusListener);
-        binding.editTxtPassword.setOnClickListener(focusListener);
+    private void setupEditTextFocusHandler() {
+        int focusBgRes =  R.drawable.bg_edit_txt_custom_white_focused;
+        int defaultBgRes = R.drawable.bg_edit_txt_custom_gray_not_focused;
 
-        binding.editTxtPassword.setOnFocusChangeListener((v, hasFocus) -> {
-            int backgroundRes = (hasFocus) ? R.drawable.bg_edit_txt_custom_white_focused : R.drawable.bg_edit_txt_custom_gray_not_focused;
-            binding.editTxtPasswordBackground.setBackgroundResource(backgroundRes);
-        });
+        binding.editTxtPassword.setOnFocusChangeListener((v, hasFocus) -> binding.editTxtPasswordBg.setBackgroundResource(hasFocus ? focusBgRes : defaultBgRes));
     }
 
     private void updateSignInButtonState() {
@@ -241,7 +225,7 @@ public class LoginActivity extends AppCompatActivity {
 
             @Override
             public void onTextChanged(CharSequence s, int start, int before, int count) {
-                binding.txtErrorFeedback.setVisibility(View.GONE);
+                binding.txtError.setVisibility(View.GONE);
                 updateSignInButtonState();
             }
         };
