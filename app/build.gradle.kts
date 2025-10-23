@@ -89,9 +89,6 @@ dependencies {
     implementation(libs.lifecycle.viewmodel)
     implementation(libs.lifecycle.livedata)
 
-    // Blur
-    implementation(libs.blurview)
-
     // Shimmer Loading
     implementation(libs.shimmer)
 

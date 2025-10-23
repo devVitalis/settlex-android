@@ -8,8 +8,8 @@ import com.google.firebase.auth.FirebaseUser;
 import com.settlex.android.data.model.UserModel;
 import com.settlex.android.data.repository.AuthRepository;
 import com.settlex.android.ui.auth.model.LoginUiModel;
-import com.settlex.android.util.event.Event;
-import com.settlex.android.util.event.Result;
+import com.settlex.android.utils.event.Event;
+import com.settlex.android.utils.event.Result;
 
 import dagger.hilt.android.lifecycle.HiltViewModel;
 import jakarta.inject.Inject;

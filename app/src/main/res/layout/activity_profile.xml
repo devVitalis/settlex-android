@@ -5,7 +5,7 @@
     android:layout_height="match_parent"
     android:background="@color/white"
     android:fitsSystemWindows="true"
-    tools:context=".ui.dashboard.fragment.home.activity.ProfileActivity">
+    tools:context=".ui.dashboard.home.ProfileActivity">
 
     <!-- Header -->
     <LinearLayout
@@ -31,6 +31,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginStart="10dp"
+            android:fontFamily="@font/inter_bold"
             android:includeFontPadding="false"
             android:text="My Profile"
             android:textColor="@color/black"
@@ -70,10 +71,10 @@
 
                     <com.google.android.material.imageview.ShapeableImageView
                         android:id="@+id/profilePic"
-                        android:layout_width="65dp"
-                        android:layout_height="65dp"
+                        android:layout_width="60dp"
+                        android:layout_height="60dp"
                         app:shapeAppearanceOverlay="@style/Oval_Shape"
-                        app:srcCompat="@drawable/ic_avatar_default" />
+                        app:srcCompat="@drawable/ic_no_profile_pic" />
 
                     <ImageView
                         android:id="@+id/btnChangeProfilePic"
@@ -109,6 +110,7 @@
                         android:layout_width="0dp"
                         android:layout_height="wrap_content"
                         android:layout_weight="1"
+                        android:fontFamily="@font/inter_regular"
                         android:includeFontPadding="false"
                         android:text="Payment ID"
                         android:textColor="@color/black"
@@ -118,10 +120,11 @@
                         android:id="@+id/paymentId"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
+                        android:fontFamily="@font/inter_regular"
                         android:includeFontPadding="false"
                         android:textColor="@color/gray"
                         android:textSize="14sp"
-                        tools:text="vitalis" />
+                        tools:text="\@vitalis" />
 
                     <ImageView
                         android:id="@+id/btnCopyPaymentId"
@@ -154,6 +157,7 @@
                     <TextView
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
+                        android:fontFamily="@font/inter_regular"
                         android:includeFontPadding="false"
                         android:text="Full Name"
                         android:textColor="@color/black"
@@ -166,6 +170,7 @@
                         android:layout_marginStart="5dp"
                         android:layout_weight="1"
                         android:ellipsize="end"
+                        android:fontFamily="@font/inter_regular"
                         android:includeFontPadding="false"
                         android:maxLines="1"
                         android:textAlignment="textEnd"
@@ -184,6 +189,7 @@
                     <TextView
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
+                        android:fontFamily="@font/inter_regular"
                         android:includeFontPadding="false"
                         android:text="Phone Number"
                         android:textColor="@color/black"
@@ -196,6 +202,7 @@
                         android:layout_marginStart="5dp"
                         android:layout_weight="1"
                         android:ellipsize="end"
+                        android:fontFamily="@font/inter_regular"
                         android:includeFontPadding="false"
                         android:maxLines="1"
                         android:textAlignment="textEnd"
@@ -214,6 +221,7 @@
                     <TextView
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
+                        android:fontFamily="@font/inter_regular"
                         android:includeFontPadding="false"
                         android:text="Email Address"
                         android:textColor="@color/black"
@@ -226,6 +234,7 @@
                         android:layout_marginStart="5dp"
                         android:layout_weight="1"
                         android:ellipsize="end"
+                        android:fontFamily="@font/inter_regular"
                         android:includeFontPadding="false"
                         android:maxLines="1"
                         android:textAlignment="textEnd"
@@ -233,7 +242,6 @@
                         android:textSize="14sp"
                         tools:text="c**s@gmail.com" />
                 </LinearLayout>
-
 
                 <LinearLayout
                     android:layout_width="match_parent"
@@ -245,24 +253,36 @@
                     <TextView
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
+                        android:fontFamily="@font/inter_regular"
                         android:includeFontPadding="false"
-                        android:text="Username"
+                        android:text="Joined Date"
                         android:textColor="@color/black"
                         android:textSize="14sp" />
 
                     <TextView
-                        android:id="@+id/username"
+                        android:id="@+id/joinedDate"
                         android:layout_width="0dp"
                         android:layout_height="wrap_content"
                         android:layout_marginStart="5dp"
                         android:layout_weight="1"
                         android:ellipsize="end"
+                        android:fontFamily="@font/inter_regular"
                         android:includeFontPadding="false"
                         android:maxLines="1"
                         android:textAlignment="textEnd"
                         android:textColor="@color/gray"
                         android:textSize="14sp"
-                        tools:text="\@vitalis" />
+                        tools:text="2 years ago" />
+
+                    <ImageView
+                        android:id="@+id/btnShowFullDate"
+                        android:layout_width="17dp"
+                        android:layout_height="17dp"
+                        android:layout_marginStart="5dp"
+                        android:background="?attr/selectableItemBackgroundBorderless"
+                        android:contentDescription="@null"
+                        android:src="@drawable/ic_info_outline"
+                        app:tint="@color/gray" />
                 </LinearLayout>
             </LinearLayout>
         </LinearLayout>

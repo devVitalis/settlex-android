@@ -1,7 +1,6 @@
 package com.settlex.android.ui.auth.fragment;
 
 import android.content.Context;
-import android.content.Intent;
 import android.os.Bundle;
 import android.text.Editable;
 import android.text.TextWatcher;
@@ -22,11 +21,10 @@ import androidx.navigation.fragment.NavHostFragment;
 import com.settlex.android.R;
 import com.settlex.android.databinding.FragmentSignUpUserInfoBinding;
 import com.settlex.android.ui.auth.viewmodel.AuthViewModel;
-import com.settlex.android.ui.information.help.AuthHelpActivity;
-import com.settlex.android.util.network.NetworkMonitor;
-import com.settlex.android.util.string.StringUtil;
-import com.settlex.android.util.ui.StatusBarUtil;
-import com.settlex.android.util.ui.UiUtil;
+import com.settlex.android.utils.network.NetworkMonitor;
+import com.settlex.android.utils.string.StringUtil;
+import com.settlex.android.utils.ui.StatusBarUtil;
+import com.settlex.android.utils.ui.UiUtil;
 
 import java.util.Objects;
 

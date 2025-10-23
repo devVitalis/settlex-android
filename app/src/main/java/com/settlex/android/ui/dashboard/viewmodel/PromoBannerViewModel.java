@@ -6,7 +6,7 @@ import androidx.lifecycle.ViewModel;
 
 import com.settlex.android.data.repository.PromoBannerRepository;
 import com.settlex.android.ui.dashboard.model.PromoBannerUiModel;
-import com.settlex.android.util.event.Result;
+import com.settlex.android.utils.event.Result;
 
 import java.util.List;
 

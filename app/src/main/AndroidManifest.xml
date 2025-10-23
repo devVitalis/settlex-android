@@ -4,22 +4,23 @@
     <uses-permission android:name="android.permission.INTERNET" />
     <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
     <uses-permission android:name="android.permission.ACCESS_WIFI_STATE" /> <!-- Browsers for opening promo links -->
+    <uses-permission android:name="android.permission.POST_NOTIFICATIONS" />
     <uses-permission
         android:name="android.permission.READ_EXTERNAL_STORAGE"
         android:maxSdkVersion="32" />
 
-    <queries>
-        <intent>
-            <action android:name="android.intent.action.VIEW" />
+    <!--    <queries>-->
+    <!--        <intent>-->
+    <!--            <action android:name="android.intent.action.VIEW" />-->
 
-            <data android:scheme="http" />
-        </intent>
-        <intent>
-            <action android:name="android.intent.action.VIEW" />
+    <!--            <data android:scheme="http" />-->
+    <!--        </intent>-->
+    <!--        <intent>-->
+    <!--            <action android:name="android.intent.action.VIEW" />-->
 
-            <data android:scheme="https" />
-        </intent>
-    </queries>
+    <!--            <data android:scheme="https" />-->
+    <!--        </intent>-->
+    <!--    </queries>-->
 
     <application
         android:name=".SettleXApp"
@@ -33,12 +34,15 @@
         android:theme="@style/Theme.SettleX">
 
         <!-- Firebase Messaging Service -->
-        <service android:name=".data.remote.messaging.AppFirebaseMessagingService"
+        <service
+            android:name=".data.remote.messaging.AppFirebaseMessagingService"
             android:exported="false">
             <intent-filter>
-                <action android:name="com.google.firebase.MESSAGING_EVENT"/>
+                <action android:name="com.google.firebase.MESSAGING_EVENT" />
             </intent-filter>
         </service>
+
+        <!--  Dashboard -->
         <activity
             android:name=".ui.dashboard.DashboardActivity"
             android:exported="true"
@@ -56,43 +60,43 @@
             </intent-filter>
         </activity>
         <activity
-            android:name=".ui.dashboard.fragment.home.activity.CreatePaymentIdActivity"
+            android:name=".ui.dashboard.home.CreatePaymentIdActivity"
             android:exported="false" />
         <activity
-            android:name=".ui.dashboard.fragment.account.activity.SettingsActivity"
+            android:name=".ui.dashboard.account.activity.SettingsActivity"
             android:exported="false" />
         <activity
-            android:name=".ui.dashboard.fragment.home.activity.TransactionStatusActivity"
+            android:name=".ui.dashboard.home.TransactionStatusActivity"
             android:exported="false" />
         <activity
-            android:name=".ui.dashboard.fragment.home.activity.PayAFriendActivity"
+            android:name=".ui.dashboard.home.PayAFriendActivity"
             android:exported="false" />
         <activity
-            android:name=".ui.dashboard.fragment.home.activity.ProfileActivity"
+            android:name=".ui.dashboard.home.ProfileActivity"
             android:exported="false" />
         <activity
             android:name=".ui.auth.activity.LoginActivity"
             android:exported="false" />
         <activity
-            android:name=".ui.dashboard.fragment.home.activity.services.CableTvSubscriptionActivity"
+            android:name=".ui.dashboard.services.CableTvSubscriptionActivity"
             android:exported="false" />
         <activity
-            android:name=".ui.dashboard.fragment.home.activity.services.BettingTopUpActivity"
+            android:name=".ui.dashboard.services.BettingTopUpActivity"
             android:exported="false" />
         <activity
-            android:name=".ui.dashboard.fragment.home.activity.services.DataPurchaseActivity"
+            android:name=".ui.dashboard.services.DataPurchaseActivity"
             android:exported="false" />
         <activity
-            android:name=".ui.dashboard.fragment.home.activity.services.AirtimePurchaseActivity"
+            android:name=".ui.dashboard.services.AirtimePurchaseActivity"
             android:exported="false" />
         <activity
-            android:name=".ui.dashboard.fragment.home.activity.CommissionWithdrawalActivity"
+            android:name=".ui.dashboard.home.CommissionWithdrawalActivity"
             android:exported="false" />
         <activity
-            android:name=".ui.dashboard.fragment.home.activity.GetPaidActivity"
+            android:name=".ui.dashboard.home.GetPaidActivity"
             android:exported="false" />
         <activity
-            android:name=".ui.dashboard.fragment.home.activity.TransactionActivity"
+            android:name=".ui.dashboard.home.TransactionActivity"
             android:exported="false" />
         <activity
             android:name=".ui.auth.activity.PasswordChangeActivity"

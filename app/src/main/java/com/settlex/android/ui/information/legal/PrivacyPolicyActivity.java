@@ -7,7 +7,7 @@ import androidx.appcompat.app.AppCompatActivity;
 
 import com.settlex.android.R;
 import com.settlex.android.databinding.ActivityPrivacyPolicyBinding;
-import com.settlex.android.util.ui.StatusBarUtil;
+import com.settlex.android.utils.ui.StatusBarUtil;
 
 /**
  * Displays HTML-formatted privacy policy with light-themed status bar.

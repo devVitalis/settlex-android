@@ -308,7 +308,7 @@
 
                 <com.google.android.material.button.MaterialButton
                     android:id="@+id/btnResendOtp"
-                    style="@style/Widget.SettleXApp.Button.Outlined"
+                    style="@style/MyButton.Outlined.Blue"
                     android:layout_width="wrap_content"
                     android:layout_height="40dp"
                     android:layout_gravity="center"

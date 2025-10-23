@@ -16,9 +16,9 @@ import com.settlex.android.data.repository.UserRepository;
 import com.settlex.android.ui.dashboard.model.MoneyFlowUiModel;
 import com.settlex.android.ui.dashboard.model.TransactionUiModel;
 import com.settlex.android.ui.dashboard.model.UserUiModel;
-import com.settlex.android.util.event.Event;
-import com.settlex.android.util.event.Result;
-import com.settlex.android.util.string.StringUtil;
+import com.settlex.android.utils.event.Event;
+import com.settlex.android.utils.event.Result;
+import com.settlex.android.utils.string.StringUtil;
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -29,7 +29,6 @@ import jakarta.inject.Inject;
 
 @HiltViewModel
 public class UserViewModel extends ViewModel {
-    // LiveData for UI
     private final MediatorLiveData<String> authStateLiveData = new MediatorLiveData<>();
     private final MediatorLiveData<Result<UserUiModel>> userLiveData = new MediatorLiveData<>();
     private final MediatorLiveData<Result<MoneyFlowUiModel>> moneyFlowLiveData = new MediatorLiveData<>();
@@ -38,7 +37,7 @@ public class UserViewModel extends ViewModel {
     private final MutableLiveData<Event<Result<Boolean>>> checkPaymentIdExistsLiveData = new MutableLiveData<>();
     private final MutableLiveData<Event<Result<String>>> storeUserPaymentIdLiveData = new MutableLiveData<>();
 
-    // Dependencies
+    // dependencies
     private final UserRepository userRepo;
 
     @Inject
@@ -102,7 +101,7 @@ public class UserViewModel extends ViewModel {
         return checkPaymentIdExistsLiveData;
     }
 
-    public void storeUserPaymentIdToServer(String paymentId, String uid){
+    public void storeUserPaymentIdToServer(String paymentId, String uid) {
         storeUserPaymentIdLiveData.setValue(new Event<>(Result.loading()));
         userRepo.storeUserPaymentIdToDatabase(paymentId, uid, new UserRepository.StorePaymentIdCallback() {
             @Override
@@ -158,7 +157,7 @@ public class UserViewModel extends ViewModel {
                             operation.getSymbol(),
                             operation.getColorRes(),
                             StringUtil.formatToNaira(dto.amount),
-                            StringUtil.formatTimeStampToSimpleDate(dto.createdAt),
+                            StringUtil.formatTimeStampToSimpleDateAndTime(dto.createdAt),
                             dto.status.getDisplayName(),
                             dto.status.getColorRes(),
                             dto.status.getBgColorRes()
@@ -242,10 +241,6 @@ public class UserViewModel extends ViewModel {
         });
     }
 
-    public LiveData<Result<UserUiModel>> getUserLiveData() {
-        return userLiveData;
-    }
-
     private UserUiModel mapToUiModel(UserDto dto) {
         // User DTO → map to UI model
         return new UserUiModel(
@@ -253,13 +248,18 @@ public class UserViewModel extends ViewModel {
                 dto.email,
                 dto.firstName,
                 dto.lastName,
+                dto.createdAt,
                 dto.phone,
-                dto.username,
+                dto.paymentId,
                 dto.profileUrl,
                 dto.profileDeleteUrl,
                 dto.balance,
                 dto.commissionBalance,
                 dto.referralBalance
         );
+    }
+
+    public LiveData<Result<UserUiModel>> getUserLiveData() {
+        return userLiveData;
     }
 }

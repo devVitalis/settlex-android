@@ -1,7 +1,10 @@
 package com.settlex.android.ui.dashboard.util;
 
+import android.app.Activity;
 import android.content.Context;
-import android.util.Log;
+import android.graphics.RenderEffect;
+import android.graphics.Shader;
+import android.os.Build;
 import android.view.LayoutInflater;
 import android.view.View;
 
@@ -9,7 +12,7 @@ import com.google.android.material.bottomsheet.BottomSheetDialog;
 import com.settlex.android.R;
 import com.settlex.android.data.remote.profile.ProfileService;
 import com.settlex.android.databinding.BottomSheetConfirmPaymentBinding;
-import com.settlex.android.util.string.StringUtil;
+import com.settlex.android.utils.string.StringUtil;
 
 public class DashboardUiUtil {
 
@@ -24,6 +27,14 @@ public class DashboardUiUtil {
         dialog.setCancelable(false);
         dialog.setCanceledOnTouchOutside(false);
 
+        // Set blur background
+        View rootView;
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.S) {
+            rootView = ((Activity) context).getWindow().getDecorView();
+            rootView.setRenderEffect(RenderEffect.createBlurEffect(2, 2, Shader.TileMode.CLAMP));
+        } else {
+            rootView = null;
+        }
 
         // conditions
         long SENDER_TOTAL_BALANCE = senderWalletBalance + senderCommissionBalance;
@@ -86,10 +97,9 @@ public class DashboardUiUtil {
         // Recipient details
         binding.amountToSendHeader.setText(StringUtil.formatToNaira(amountToSend));
         binding.amountToSend.setText(StringUtil.formatToNaira(amountToSend));
-        binding.recipientUsername.setText(StringUtil.addAtToUsername(recipientUsername));
+        binding.recipientUsername.setText(StringUtil.addAtToPaymentId(recipientUsername));
         binding.recipientName.setText(recipientName.toUpperCase());
         ProfileService.loadProfilePic(recipientProfileUrl, binding.recipientProfilePic);
-        Log.d("UI", "Recipient profile url: " + recipientProfileUrl);
 
         // Sender details
         String SENDER_WALLET_BALANCE = "(" + StringUtil.formatToNaira(senderWalletBalance) + ")";
@@ -100,7 +110,10 @@ public class DashboardUiUtil {
         binding.senderCommissionBalance.setText(SENDER_COMM_BALANCE);
 
         // Handle buttons
-        binding.btnClose.setOnClickListener(v -> dialog.dismiss());
+        binding.btnClose.setOnClickListener(v -> {
+            dialog.dismiss();
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.S) rootView.setRenderEffect(null);
+        });
         binding.btnPay.setOnClickListener(v -> {
             binding.btnPay.setEnabled(false);
             if (onPay != null) {

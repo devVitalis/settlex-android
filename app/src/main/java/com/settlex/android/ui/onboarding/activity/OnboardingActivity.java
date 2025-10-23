@@ -14,7 +14,7 @@ import com.settlex.android.databinding.ActivityOnboardingBinding;
 import com.settlex.android.ui.auth.activity.LoginActivity;
 import com.settlex.android.ui.auth.activity.SignUpActivity;
 import com.settlex.android.ui.onboarding.adapter.OnboardingAdapter;
-import com.settlex.android.util.ui.StatusBarUtil;
+import com.settlex.android.utils.ui.StatusBarUtil;
 
 /**
  * Handles onboarding flow:

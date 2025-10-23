@@ -7,7 +7,7 @@
     android:layout_height="match_parent"
     android:background="@drawable/bg_0dp_gradient_blue_200"
     android:fitsSystemWindows="true"
-    tools:context=".ui.dashboard.fragment.account.AccountDashboardFragment">
+    tools:context=".ui.dashboard.account.AccountDashboardFragment">
 
     <!--Header-->
     <androidx.constraintlayout.widget.ConstraintLayout
@@ -16,7 +16,8 @@
         android:layout_height="wrap_content"
         android:background="@drawable/bg_0dp_gradient_blue_200"
         android:paddingHorizontal="15dp"
-        android:paddingVertical="5dp"
+        android:paddingTop="5dp"
+        android:paddingBottom="25dp"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent">
@@ -50,6 +51,7 @@
                     android:id="@+id/greeting"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
+                    android:fontFamily="@font/poppins_regular"
                     android:includeFontPadding="false"
                     android:text="Hello 👋"
                     android:textColor="@color/black"
@@ -60,6 +62,7 @@
                 android:id="@id/fullName"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
+                android:fontFamily="@font/poppins_regular"
                 android:gravity="center"
                 android:includeFontPadding="false"
                 android:textColor="@color/black"
@@ -78,50 +81,6 @@
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintTop_toTopOf="@id/greetingContainer"
             app:tint="@color/black" />
-
-        <LinearLayout
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="10dp"
-            android:gravity="center_vertical"
-            android:orientation="horizontal"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@id/btnProfilePic">
-
-            <!-- Hidden -->
-            <View
-                android:layout_width="2dp"
-                android:layout_height="15dp"
-                android:background="@color/blue"
-                android:visibility="gone" />
-
-            <TextView
-                android:id="@id/username"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginStart="2dp"
-                android:gravity="center"
-                android:includeFontPadding="false"
-                android:textColor="@color/gray"
-                android:textSize="15sp"
-                android:textStyle="bold"
-                android:visibility="gone"
-                tools:text="\@vitalis" />
-
-            <TextView
-                android:id="@+id/btnCopy"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginStart="5dp"
-                android:background="@drawable/bg_8dp_blue"
-                android:includeFontPadding="false"
-                android:paddingHorizontal="10dp"
-                android:paddingVertical="5dp"
-                android:text="Copy"
-                android:textColor="@color/white"
-                android:textSize="15sp"
-                android:visibility="gone" />
-        </LinearLayout>
     </androidx.constraintlayout.widget.ConstraintLayout>
 
     <!-- Scroll Content -->
@@ -148,6 +107,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="5dp"
+                android:fontFamily="@font/inter_regular"
                 android:includeFontPadding="false"
                 android:text="Account Settings"
                 android:textColor="@color/gray"
@@ -184,6 +144,7 @@
                         android:layout_height="wrap_content"
                         android:layout_marginStart="15dp"
                         android:layout_weight="1"
+                        android:fontFamily="@font/inter_regular"
                         android:includeFontPadding="false"
                         android:text="Transaction History"
                         android:textColor="@color/black"
@@ -220,6 +181,7 @@
                         android:layout_height="wrap_content"
                         android:layout_marginStart="15dp"
                         android:layout_weight="1"
+                        android:fontFamily="@font/inter_regular"
                         android:includeFontPadding="false"
                         android:text="Settings"
                         android:textColor="@color/black"
@@ -238,6 +200,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="15dp"
+                android:fontFamily="@font/inter_regular"
                 android:includeFontPadding="false"
                 android:text="Engagement and Rewards"
                 android:textColor="@color/gray"
@@ -280,6 +243,7 @@
                         <TextView
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
+                            android:fontFamily="@font/inter_regular"
                             android:includeFontPadding="false"
                             android:text="Earn Rewards"
                             android:textColor="@color/black"
@@ -288,6 +252,7 @@
                         <TextView
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
+                            android:fontFamily="@font/inter_regular"
                             android:includeFontPadding="false"
                             android:text="Invite friends and earn forever"
                             android:textColor="@color/gray"
@@ -331,6 +296,7 @@
                         <TextView
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
+                            android:fontFamily="@font/inter_regular"
                             android:includeFontPadding="false"
                             android:text="Review Us"
                             android:textColor="@color/black"
@@ -339,6 +305,7 @@
                         <TextView
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
+                            android:fontFamily="@font/inter_regular"
                             android:includeFontPadding="false"
                             android:text="Your review helps others find us"
                             android:textColor="@color/gray"
@@ -382,6 +349,7 @@
                         <TextView
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
+                            android:fontFamily="@font/inter_regular"
                             android:includeFontPadding="false"
                             android:text="Feedback &amp; Suggestions"
                             android:textColor="@color/black"
@@ -390,6 +358,7 @@
                         <TextView
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
+                            android:fontFamily="@font/inter_regular"
                             android:includeFontPadding="false"
                             android:text="Help us improve by sharing your thoughts"
                             android:textColor="@color/gray"
@@ -410,6 +379,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="15dp"
+                android:fontFamily="@font/inter_regular"
                 android:includeFontPadding="false"
                 android:text="Legal"
                 android:textColor="@color/gray"
@@ -446,6 +416,7 @@
                         android:layout_height="wrap_content"
                         android:layout_marginStart="15dp"
                         android:layout_weight="1"
+                        android:fontFamily="@font/inter_regular"
                         android:includeFontPadding="false"
                         android:text="Terms &amp; Conditions"
                         android:textColor="@color/black"
@@ -482,6 +453,7 @@
                         android:layout_height="wrap_content"
                         android:layout_marginStart="15dp"
                         android:layout_weight="1"
+                        android:fontFamily="@font/inter_regular"
                         android:includeFontPadding="false"
                         android:text="Privacy Policy"
                         android:textColor="@color/black"
@@ -518,6 +490,7 @@
                     android:layout_height="wrap_content"
                     android:layout_marginStart="15dp"
                     android:layout_weight="1"
+                    android:fontFamily="@font/inter_regular"
                     android:includeFontPadding="false"
                     android:text="Close Account"
                     android:textColor="@color/red"
@@ -553,6 +526,7 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_marginStart="15dp"
+                    android:fontFamily="@font/inter_regular"
                     android:includeFontPadding="false"
                     android:text="Sign Out"
                     android:textColor="@color/black"
@@ -566,6 +540,7 @@
                 android:layout_gravity="center"
                 android:layout_marginTop="30dp"
                 android:layout_marginBottom="20dp"
+                android:fontFamily="@font/inter_regular"
                 android:includeFontPadding="false"
                 android:textColor="@color/black"
                 android:textSize="14sp"

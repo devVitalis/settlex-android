@@ -11,9 +11,7 @@ public class ServiceDestination {
     private Class<? extends Activity> activity;
     private Integer navDestinationId;
 
-    // Constructors
-
-
+    // constructors
     public ServiceDestination(Class<? extends Activity> activity) {
         this.activity = activity;
     }

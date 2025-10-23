@@ -7,7 +7,7 @@
     android:layout_height="match_parent"
     android:background="@color/white"
     android:fitsSystemWindows="true"
-    tools:context=".ui.dashboard.fragment.home.activity.TransactionStatusActivity">
+    tools:context=".ui.dashboard.home.TransactionStatusActivity">
 
     <!-- Header -->
     <LinearLayout
@@ -98,20 +98,21 @@
                     app:lottie_loop="false" />
             </FrameLayout>
 
-            <!-- Status Text -->
+            <!-- status -->
             <TextView
                 android:id="@+id/txnStatus"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_gravity="center"
                 android:layout_marginTop="10dp"
+                android:fontFamily="@font/inter_regular"
                 android:includeFontPadding="false"
                 android:textColor="@color/black"
                 android:textSize="16sp"
                 android:textStyle="bold"
                 tools:text="Transaction Successful" />
 
-            <!-- Amount Text -->
+            <!-- amount -->
             <TextView
                 android:id="@+id/txnAmount"
                 android:layout_width="wrap_content"
@@ -123,6 +124,19 @@
                 android:textSize="25sp"
                 android:textStyle="bold"
                 tools:text="₦1,000" />
+
+            <TextView
+                android:id="@+id/txtError"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                android:layout_marginTop="20dp"
+                android:fontFamily="@font/inter_regular"
+                android:includeFontPadding="false"
+                android:textColor="@color/red"
+                android:textSize="14sp"
+                android:visibility="gone"
+                tools:text="Failure reason" />
         </LinearLayout>
     </androidx.constraintlayout.widget.ConstraintLayout>
 </androidx.constraintlayout.widget.ConstraintLayout>

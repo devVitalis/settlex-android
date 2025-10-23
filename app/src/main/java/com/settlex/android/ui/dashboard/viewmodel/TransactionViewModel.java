@@ -8,9 +8,9 @@ import com.settlex.android.data.remote.dto.RecipientDto;
 import com.settlex.android.data.repository.TransactionRepository;
 import com.settlex.android.ui.dashboard.model.RecipientUiModel;
 import com.settlex.android.ui.dashboard.model.TransactionUiModel;
-import com.settlex.android.util.event.Event;
-import com.settlex.android.util.event.Result;
-import com.settlex.android.util.string.StringUtil;
+import com.settlex.android.utils.event.Event;
+import com.settlex.android.utils.event.Result;
+import com.settlex.android.utils.string.StringUtil;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -47,7 +47,7 @@ public class TransactionViewModel extends ViewModel {
 
                 for (RecipientDto dto : recipientDto) {
                     recipientUiModelList.add(new RecipientUiModel(
-                            StringUtil.addAtToUsername(dto.username),
+                            StringUtil.addAtToPaymentId(dto.paymentId),
                             dto.firstName + " " + dto.lastName,
                             dto.profileUrl)); // Null on default
                 }

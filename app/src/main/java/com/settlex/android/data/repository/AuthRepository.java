@@ -87,7 +87,7 @@ public class AuthRepository {
                     }
 
                     if (e instanceof FirebaseNetworkException || e instanceof IOException) {
-                        callback.onFailure("Connection lost. Please check your Wi-Fi or cellular data and try again");
+                        callback.onFailure(ERROR_NO_INTERNET);
                         return;
                     }
                     callback.onFailure(e.getMessage());
@@ -113,7 +113,7 @@ public class AuthRepository {
                 })
                 .addOnFailureListener(e -> {
                     if (e instanceof FirebaseNetworkException || e instanceof IOException) {
-                        callback.onFailure("Connection lost. Please check your Wi-Fi or cellular data and try again");
+                        callback.onFailure(ERROR_NO_INTERNET);
                         return;
                     }
                     callback.onFailure(e.getMessage());
@@ -133,7 +133,7 @@ public class AuthRepository {
                 .addOnSuccessListener(result -> callback.onSuccess())
                 .addOnFailureListener(e -> {
                     if (e instanceof FirebaseNetworkException || e instanceof IOException) {
-                        callback.onFailure("Connection lost. Please check your Wi-Fi or cellular data and try again");
+                        callback.onFailure(ERROR_NO_INTERNET);
                         return;
                     }
                     callback.onFailure(e.getMessage());
@@ -151,7 +151,7 @@ public class AuthRepository {
                 .addOnSuccessListener(result -> callback.onSuccess())
                 .addOnFailureListener(e -> {
                     if (e instanceof FirebaseNetworkException || e instanceof IOException) {
-                        callback.onFailure("Connection lost. Please check your Wi-Fi or cellular data and try again");
+                        callback.onFailure(ERROR_NO_INTERNET);
                         return;
                     }
                     callback.onFailure(e.getMessage());
@@ -171,7 +171,7 @@ public class AuthRepository {
                 .addOnSuccessListener(result -> callback.onSuccess())
                 .addOnFailureListener(e -> {
                     if (e instanceof FirebaseNetworkException || e instanceof IOException) {
-                        callback.onFailure("Connection lost. Please check your Wi-Fi or cellular data and try again");
+                        callback.onFailure(ERROR_NO_INTERNET);
                         return;
                     }
                     callback.onFailure(e.getMessage());
@@ -189,7 +189,7 @@ public class AuthRepository {
                 .addOnSuccessListener(result -> callback.onSuccess())
                 .addOnFailureListener(e -> {
                     if (e instanceof FirebaseNetworkException || e instanceof IOException) {
-                        callback.onFailure("Connection lost. Please check your Wi-Fi or cellular data and try again");
+                        callback.onFailure(ERROR_NO_INTERNET);
                         return;
                     }
                     callback.onFailure(e.getMessage());
@@ -212,7 +212,7 @@ public class AuthRepository {
                     .addOnSuccessListener(result -> callback.onSuccess())
                     .addOnFailureListener(e -> {
                         if (e instanceof FirebaseNetworkException || e instanceof IOException) {
-                            callback.onFailure("Connection lost. Please check your Wi-Fi or cellular data and try again");
+                            callback.onFailure(ERROR_NO_INTERNET);
                             return;
                         }
                         callback.onFailure(e.getMessage());
@@ -246,7 +246,7 @@ public class AuthRepository {
                 })
                 .addOnFailureListener(e -> {
                     if (e instanceof FirebaseNetworkException || e instanceof IOException) {
-                        callback.onFailure("Connection lost. Please check your Wi-Fi or cellular data and try again");
+                        callback.onFailure(ERROR_NO_INTERNET);
                         return;
                     }
                     callback.onFailure(e.getMessage());
@@ -273,12 +273,13 @@ public class AuthRepository {
         db.collection("users")
                 .document(user.getUid())
                 .update("fcmToken", token)
-                .addOnSuccessListener(aVoid -> Log.d("FCM", "Token updated successfully"))
-                .addOnFailureListener(e -> Log.e("FCM", "Failed to update token", e));
+                .addOnSuccessListener(aVoid -> Log.d(TAG, "Token updated successfully"))
+                .addOnFailureListener(e -> Log.e(TAG, "Failed to update token", e));
     }
 
     public interface FcmTokenCallback {
         void onTokenReceived(String token);
+
         void onTokenError();
     }
 

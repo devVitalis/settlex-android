@@ -6,7 +6,7 @@ import android.content.Context;
 import androidx.appcompat.app.AppCompatDelegate;
 
 import com.google.firebase.FirebaseApp;
-import com.settlex.android.util.network.NetworkMonitor;
+import com.settlex.android.utils.network.NetworkMonitor;
 
 import dagger.hilt.android.HiltAndroidApp;
 

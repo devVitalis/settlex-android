@@ -7,9 +7,8 @@
     android:background="@color/gray_light"
     android:fitsSystemWindows="true"
     android:orientation="vertical"
-    tools:context=".ui.dashboard.fragment.home.fragment.HomeDashboardFragment">
+    tools:context=".ui.dashboard.home.HomeDashboardFragment">
 
-    <!--Parent Container-->
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
@@ -48,6 +47,7 @@
                     android:id="@+id/greeting"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
+                    android:fontFamily="@font/poppins_regular"
                     android:includeFontPadding="false"
                     android:text="Hello 👋"
                     android:textColor="@color/black"
@@ -62,6 +62,7 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_gravity="center"
+                        android:fontFamily="@font/poppins_regular"
                         android:includeFontPadding="false"
                         android:textColor="@color/black"
                         android:textSize="14sp"
@@ -89,7 +90,7 @@
 
             <com.google.android.material.button.MaterialButton
                 android:id="@+id/btnLogin"
-                style="@style/Widget.SettleXApp.Button.Outlined"
+                style="@style/MyButton.Outlined.Blue"
                 android:layout_width="80dp"
                 android:layout_height="40dp"
                 android:layout_marginStart="5dp"
@@ -409,6 +410,7 @@
                             <TextView
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
+                                android:fontFamily="@font/inter_regular"
                                 android:includeFontPadding="false"
                                 android:text="Add Funds"
                                 android:textColor="@color/white"
@@ -436,6 +438,7 @@
                             <TextView
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
+                                android:fontFamily="@font/inter_regular"
                                 android:includeFontPadding="false"
                                 android:text="Get Paid"
                                 android:textColor="@color/white"
@@ -462,6 +465,7 @@
                             <TextView
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
+                                android:fontFamily="@font/inter_regular"
                                 android:includeFontPadding="false"
                                 android:text="Pay a Friend"
                                 android:textColor="@color/white"
@@ -484,13 +488,13 @@
                         android:id="@+id/txtMoneyFlow"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
+                        android:fontFamily="@font/inter_regular"
                         android:includeFontPadding="false"
                         android:text="Money Flow"
                         android:textColor="@color/gray"
                         android:textSize="12sp"
                         app:layout_constraintStart_toStartOf="parent"
                         app:layout_constraintTop_toTopOf="parent" />
-
 
                     <ImageView
                         android:id="@+id/icInFlow"
@@ -526,6 +530,7 @@
                             android:id="@+id/inFlow"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
+                            android:fontFamily="@font/inter_regular"
                             android:includeFontPadding="false"
                             android:textColor="@color/black"
                             android:textSize="16sp"
@@ -537,6 +542,7 @@
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:layout_marginTop="5dp"
+                            android:fontFamily="@font/inter_regular"
                             android:includeFontPadding="false"
                             android:textColor="@color/black"
                             android:textSize="16sp"
@@ -571,21 +577,21 @@
                         android:layout_width="0dp"
                         android:layout_height="wrap_content"
                         android:layout_weight="1"
+                        android:fontFamily="@font/inter_regular"
                         android:includeFontPadding="false"
                         android:text="@string/error_no_internet"
                         android:textColor="@color/gray_dark"
                         android:textSize="12sp" />
 
                     <com.google.android.material.button.MaterialButton
-                        android:id="@+id/btnRetry"
-                        style="@style/Widget.SettleXApp.Button.Outlined"
+                        android:id="@+id/btnOkay"
+                        style="@style/MyButton.Outlined.Blue"
                         android:layout_width="70dp"
                         android:layout_height="40dp"
                         android:layout_marginStart="5dp"
                         android:paddingHorizontal="0dp"
-                        android:text="Retry"
+                        android:text="Okay"
                         android:textSize="12sp" />
-
                 </LinearLayout>
 
                 <!--Services-->
@@ -621,6 +627,7 @@
                             android:layout_height="wrap_content"
                             android:layout_gravity="start"
                             android:layout_weight="1"
+                            android:fontFamily="@font/inter_regular"
                             android:includeFontPadding="false"
                             android:text="Recent Transactions"
                             android:textColor="@color/gray"
@@ -631,6 +638,7 @@
                             android:layout_width="wrap_content"
                             android:layout_height="match_parent"
                             android:layout_marginEnd="4dp"
+                            android:fontFamily="@font/inter_regular"
                             android:includeFontPadding="false"
                             android:text="View ALL"
                             android:textColor="@color/gray"
@@ -680,7 +688,7 @@
                     android:layout_height="120dp"
                     android:layout_marginTop="15dp"
                     android:background="@drawable/bg_16dp_white"
-                    android:visibility="gone">
+                    android:visibility="visible">
 
                     <androidx.viewpager2.widget.ViewPager2
                         android:id="@+id/promoViewPager"

@@ -27,10 +27,10 @@ import com.settlex.android.ui.auth.viewmodel.AuthViewModel;
 import com.settlex.android.ui.common.util.ProgressLoaderController;
 import com.settlex.android.ui.dashboard.DashboardActivity;
 import com.settlex.android.ui.information.help.AuthHelpActivity;
-import com.settlex.android.util.network.NetworkMonitor;
-import com.settlex.android.util.string.StringUtil;
-import com.settlex.android.util.ui.StatusBarUtil;
-import com.settlex.android.util.ui.UiUtil;
+import com.settlex.android.utils.network.NetworkMonitor;
+import com.settlex.android.utils.string.StringUtil;
+import com.settlex.android.utils.ui.StatusBarUtil;
+import com.settlex.android.utils.ui.UiUtil;
 
 import java.util.Objects;
 
@@ -38,14 +38,13 @@ import dagger.hilt.android.AndroidEntryPoint;
 
 @AndroidEntryPoint
 public class LoginActivity extends AppCompatActivity {
+    private boolean isPasswordVisible = false;
 
+    // dependencies
     private ProgressLoaderController progressLoader;
     private ActivityLoginBinding binding;
     private AuthViewModel authViewModel;
     private boolean isConnected = false;
-
-    // instance var
-    private boolean isPasswordVisible = false;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -62,7 +61,7 @@ public class LoginActivity extends AppCompatActivity {
         observeLoginAndHandleResult();
     }
 
-    // OBSERVERS ==============
+    // OBSERVERS =========
     private void observeNetworkStatus() {
         NetworkMonitor.getNetworkStatus().observe(this, isConnected -> {
             if (!isConnected) showNoInternetDialog();
@@ -260,7 +259,7 @@ public class LoginActivity extends AppCompatActivity {
             int inputType = isPasswordVisible ? InputType.TYPE_TEXT_VARIATION_VISIBLE_PASSWORD : InputType.TYPE_TEXT_VARIATION_PASSWORD;
 
             binding.editTxtPassword.setInputType(InputType.TYPE_CLASS_TEXT | inputType);
-            binding.passwordToggle.setImageResource(isPasswordVisible ? R.drawable.ic_visibility_on : R.drawable.ic_visibility_off);
+            binding.passwordToggle.setImageResource(isPasswordVisible ? R.drawable.ic_visibility_on_filled : R.drawable.ic_visibility_off_filled);
 
             binding.editTxtPassword.setTypeface(currentTypeface);
             binding.editTxtPassword.setSelection(binding.editTxtPassword.getText().length());

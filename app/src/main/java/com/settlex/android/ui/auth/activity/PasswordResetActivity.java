@@ -22,10 +22,10 @@ import com.settlex.android.databinding.ActivityPasswordResetBinding;
 import com.settlex.android.ui.auth.viewmodel.AuthViewModel;
 import com.settlex.android.ui.common.components.OtpVerificationActivity;
 import com.settlex.android.ui.common.util.ProgressLoaderController;
-import com.settlex.android.util.event.Result;
-import com.settlex.android.util.network.NetworkMonitor;
-import com.settlex.android.util.ui.StatusBarUtil;
-import com.settlex.android.util.ui.UiUtil;
+import com.settlex.android.utils.event.Result;
+import com.settlex.android.utils.network.NetworkMonitor;
+import com.settlex.android.utils.ui.StatusBarUtil;
+import com.settlex.android.utils.ui.UiUtil;
 
 import dagger.hilt.android.AndroidEntryPoint;
 

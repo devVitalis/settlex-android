@@ -27,16 +27,10 @@ public class AppFirebaseMessagingService extends FirebaseMessagingService {
     @Override
     public void onMessageReceived(@NonNull RemoteMessage message) {
         super.onMessageReceived(message);
-        // Check if message contains data payload
+
+        // handle data payload
         if (!message.getData().isEmpty()) {
-            handleDataMessage(message.getData());
-        }
-
-
-        // If there's also a notification payload (optional)
-        if (message.getNotification() != null) {
-            showNotification(message.getNotification().getTitle(),
-                    message.getNotification().getBody());
+            handleDataMessageAndTiggerNotification(message.getData());
         }
     }
 
@@ -46,7 +40,7 @@ public class AppFirebaseMessagingService extends FirebaseMessagingService {
         authRepository.storeNewTokenToServer(token);
     }
 
-    private void handleDataMessage(Map<String, String> data) {
+    private void handleDataMessageAndTiggerNotification(Map<String, String> data) {
         String title = data.get("title");
         String body = data.get("body");
         showNotification(title, body);

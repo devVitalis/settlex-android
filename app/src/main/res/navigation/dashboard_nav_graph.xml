@@ -7,7 +7,7 @@
 
     <fragment
         android:id="@+id/homeFragment"
-        android:name="com.settlex.android.ui.dashboard.fragment.home.fragment.HomeDashboardFragment"
+        android:name="com.settlex.android.ui.dashboard.home.HomeDashboardFragment"
         android:label="HomeDashboardFragment"
         tools:layout="@layout/fragment_dashboard_home">
         <action
@@ -17,19 +17,19 @@
 
     <fragment
         android:id="@+id/servicesFragment"
-        android:name="com.settlex.android.ui.dashboard.fragment.services.ServicesDashboardFragment"
+        android:name="com.settlex.android.ui.dashboard.services.ServicesDashboardFragment"
         android:label="ServicesDashboardFragment"
         tools:layout="@layout/fragment_dashboard_services" />
 
     <fragment
         android:id="@+id/rewardsFragment"
-        android:name="com.settlex.android.ui.dashboard.fragment.rewards.RewardsDashboardFragment"
+        android:name="com.settlex.android.ui.dashboard.rewards.RewardsDashboardFragment"
         android:label="RewardsDashboardFragment"
         tools:layout="@layout/fragment_dashboard_rewards" />
 
     <fragment
         android:id="@+id/accountFragment"
-        android:name="com.settlex.android.ui.dashboard.fragment.account.AccountDashboardFragment"
+        android:name="com.settlex.android.ui.dashboard.account.AccountDashboardFragment"
         android:label="AccountDashboardFragment"
         tools:layout="@layout/fragment_dashboard_account">
         <action

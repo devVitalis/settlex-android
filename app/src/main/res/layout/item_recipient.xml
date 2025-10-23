@@ -14,10 +14,10 @@
         android:id="@+id/profilePic"
         android:layout_width="50dp"
         android:layout_height="50dp"
-        app:srcCompat="@drawable/ic_avatar_default"
         android:layout_marginEnd="10dp"
         android:contentDescription="@null"
-        app:shapeAppearance="@style/Oval_Shape" />
+        app:shapeAppearance="@style/Oval_Shape"
+        app:srcCompat="@drawable/ic_no_profile_pic" />
 
     <LinearLayout
         android:layout_width="match_parent"
@@ -29,15 +29,17 @@
             android:id="@+id/fullName"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:fontFamily="@font/inter_regular"
             android:includeFontPadding="false"
             android:textColor="@color/black"
             android:textSize="14sp"
             tools:text="BENJAMIN NNAEMEKA" />
 
         <TextView
-            android:id="@+id/username"
+            android:id="@+id/paymentId"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:fontFamily="@font/inter_regular"
             android:includeFontPadding="false"
             android:textColor="@color/gray"
             android:textSize="14sp"

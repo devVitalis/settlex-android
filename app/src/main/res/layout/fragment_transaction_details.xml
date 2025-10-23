@@ -6,7 +6,7 @@
     android:layout_height="match_parent"
     android:background="@color/white"
     android:fitsSystemWindows="true"
-    tools:context=".ui.dashboard.fragment.home.fragment.TransactionDetailsFragment">
+    tools:context=".ui.dashboard.home.TransactionDetailsFragment">
 
     <!--Header-->
     <LinearLayout
@@ -32,6 +32,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginStart="10dp"
+            android:fontFamily="@font/inter_bold"
             android:gravity="center"
             android:includeFontPadding="false"
             android:text="Transaction Details"
@@ -86,10 +87,11 @@
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:layout_marginTop="20dp"
+                            android:fontFamily="@font/inter_regular"
                             android:includeFontPadding="false"
                             android:textColor="@color/black"
                             android:textSize="16sp"
-                            tools:text="Transfer Received" />
+                            tools:text="Payment Received" />
 
                         <LinearLayout
                             android:layout_width="wrap_content"
@@ -123,6 +125,7 @@
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:layout_marginTop="10dp"
+                            android:fontFamily="@font/inter_regular"
                             android:includeFontPadding="false"
                             android:paddingHorizontal="8dp"
                             android:paddingVertical="2dp"
@@ -174,6 +177,7 @@
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:layout_marginEnd="10dp"
+                            android:fontFamily="@font/inter_regular"
                             android:includeFontPadding="false"
                             android:text="Date/Time"
                             android:textColor="@color/gray"
@@ -185,6 +189,7 @@
                             android:layout_height="wrap_content"
                             android:layout_weight="1"
                             android:ellipsize="end"
+                            android:fontFamily="@font/inter_regular"
                             android:gravity="end"
                             android:includeFontPadding="false"
                             android:maxLines="1"
@@ -204,6 +209,7 @@
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:layout_marginEnd="10dp"
+                            android:fontFamily="@font/inter_regular"
                             android:includeFontPadding="false"
                             android:text="Sender"
                             android:textColor="@color/gray"
@@ -215,6 +221,7 @@
                             android:layout_height="wrap_content"
                             android:layout_weight="1"
                             android:ellipsize="end"
+                            android:fontFamily="@font/inter_regular"
                             android:gravity="end"
                             android:includeFontPadding="false"
                             android:maxLines="1"
@@ -234,6 +241,7 @@
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:layout_marginEnd="10dp"
+                            android:fontFamily="@font/inter_regular"
                             android:includeFontPadding="false"
                             android:text="Recipient"
                             android:textColor="@color/gray"
@@ -245,6 +253,7 @@
                             android:layout_height="wrap_content"
                             android:layout_weight="1"
                             android:ellipsize="end"
+                            android:fontFamily="@font/inter_regular"
                             android:gravity="end"
                             android:includeFontPadding="false"
                             android:maxLines="1"
@@ -264,6 +273,7 @@
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:layout_marginEnd="10dp"
+                            android:fontFamily="@font/inter_regular"
                             android:includeFontPadding="false"
                             android:text="Recipient Name"
                             android:textColor="@color/gray"
@@ -275,6 +285,7 @@
                             android:layout_height="wrap_content"
                             android:layout_weight="1"
                             android:ellipsize="end"
+                            android:fontFamily="@font/inter_regular"
                             android:gravity="end"
                             android:includeFontPadding="false"
                             android:maxLines="1"
@@ -333,6 +344,7 @@
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:layout_marginEnd="10dp"
+                            android:fontFamily="@font/inter_regular"
                             android:includeFontPadding="false"
                             android:text="Transaction ID"
                             android:textColor="@color/gray"
@@ -344,6 +356,7 @@
                             android:layout_height="wrap_content"
                             android:layout_weight="1"
                             android:ellipsize="end"
+                            android:fontFamily="@font/inter_regular"
                             android:gravity="end"
                             android:includeFontPadding="false"
                             android:maxLines="1"

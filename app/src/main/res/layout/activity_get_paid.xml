@@ -5,7 +5,7 @@
     android:layout_height="match_parent"
     android:background="@color/white"
     android:fitsSystemWindows="true"
-    tools:context=".ui.dashboard.fragment.home.activity.GetPaidActivity">
+    tools:context=".ui.dashboard.home.GetPaidActivity">
 
     <!--Header-->
     <LinearLayout
@@ -29,6 +29,7 @@
 
         <TextView
             android:layout_width="wrap_content"
+            android:fontFamily="@font/inter_bold"
             android:layout_height="wrap_content"
             android:layout_marginStart="10dp"
             android:gravity="center"
@@ -63,6 +64,7 @@
                 android:layout_height="wrap_content"
                 android:layout_gravity="center"
                 android:includeFontPadding="false"
+                android:fontFamily="@font/inter_regular"
                 android:text="Your Payment ID"
                 android:textColor="@color/gray"
                 android:textSize="14sp" />
@@ -82,6 +84,7 @@
                     android:id="@+id/paymentId"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
+                    android:fontFamily="@font/inter_regular"
                     android:includeFontPadding="false"
                     android:textColor="@color/black"
                     android:textSize="25sp"
@@ -94,6 +97,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_gravity="center"
+                android:fontFamily="@font/inter_regular"
                 android:layout_marginTop="10dp"
                 android:includeFontPadding="false"
                 android:textColor="@color/gray"
@@ -106,6 +110,7 @@
                 android:layout_gravity="center"
                 android:layout_marginTop="15dp"
                 android:gravity="center"
+                android:fontFamily="@font/inter_regular"
                 android:includeFontPadding="false"
                 android:text="Share this unique ID to get paid instantly from other SettleX users."
                 android:textAlignment="center"
@@ -126,7 +131,7 @@
 
                 <com.google.android.material.button.MaterialButton
                     android:id="@+id/btnCopy"
-                    style="@style/Widget.SettleXApp.Button.Filled.Tonal.BlueLight"
+                    style="@style/MyButton.Filled.Tonal.BlueLight"
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
                     android:layout_marginEnd="20dp"

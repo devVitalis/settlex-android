@@ -6,6 +6,7 @@ import com.bumptech.glide.Glide;
 import com.bumptech.glide.load.engine.DiskCacheStrategy;
 import com.bumptech.glide.load.resource.drawable.DrawableTransitionOptions;
 import com.bumptech.glide.request.RequestOptions;
+import com.settlex.android.R;
 import com.settlex.android.SettleXApp;
 
 public class ProfileService {
@@ -25,6 +26,7 @@ public class ProfileService {
         Glide.with(SettleXApp.getAppContext())
                 .load(profilePicUrl)
                 .centerCrop()
+                .error(R.drawable.ic_no_profile_pic)
                 .apply(new RequestOptions())
                 .diskCacheStrategy(DiskCacheStrategy.ALL)
                 .transition(DrawableTransitionOptions.withCrossFade(100))

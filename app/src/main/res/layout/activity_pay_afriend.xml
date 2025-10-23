@@ -7,7 +7,7 @@
     android:layout_height="match_parent"
     android:background="@color/white"
     android:fitsSystemWindows="true"
-    tools:context=".ui.dashboard.fragment.home.activity.PayAFriendActivity">
+    tools:context=".ui.dashboard.home.PayAFriendActivity">
 
     <!--Header-->
     <LinearLayout
@@ -25,6 +25,7 @@
             android:layout_width="20dp"
             android:layout_height="20dp"
             android:layout_marginStart="15dp"
+            android:background="?attr/selectableItemBackgroundBorderless"
             android:contentDescription="Back"
             android:scaleType="centerCrop"
             android:src="@drawable/ic_arrow_back" />
@@ -33,6 +34,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginStart="10dp"
+            android:fontFamily="@font/inter_bold"
             android:gravity="center"
             android:includeFontPadding="false"
             android:text="Pay a Friend"
@@ -70,6 +72,7 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_gravity="start"
+                    android:fontFamily="@font/inter_regular"
                     android:includeFontPadding="false"
                     android:text="Recipient"
                     android:textColor="@color/gray_dark"
@@ -84,13 +87,13 @@
                     android:background="@drawable/bg_edit_txt_custom_gray_not_focused"
                     android:orientation="horizontal">
 
-                    <!-- Username Input -->
                     <EditText
                         android:id="@+id/editTxtPaymentId"
                         android:layout_width="0dp"
                         android:layout_height="match_parent"
                         android:layout_weight="1"
                         android:background="@android:color/transparent"
+                        android:fontFamily="@font/inter_regular"
                         android:hint="Enter recipient payment Id"
                         android:imeOptions="actionNext"
                         android:includeFontPadding="false"
@@ -119,14 +122,15 @@
                     android:layout_height="wrap_content"
                     android:layout_marginTop="8dp"
                     android:background="@drawable/bg_8dp_red_light"
-                    android:drawableStart="@drawable/ic_info_outline"
                     android:drawablePadding="5dp"
+                    android:fontFamily="@font/inter_regular"
                     android:gravity="center_vertical"
                     android:includeFontPadding="false"
                     android:padding="5dp"
                     android:textColor="@color/red"
                     android:textSize="12sp"
                     android:visibility="gone"
+                    app:drawableStartCompat="@drawable/ic_info_outline"
                     tools:text="You cannot send a payment to your own account. Please choose a different recipient" />
 
                 <!-- Selected recipient (Hidden)-->
@@ -148,7 +152,7 @@
                         android:layout_marginEnd="10dp"
                         android:contentDescription="@null"
                         app:shapeAppearanceOverlay="@style/Oval_Shape"
-                        app:srcCompat="@drawable/ic_avatar_default" />
+                        app:srcCompat="@drawable/ic_no_profile_pic" />
 
                     <LinearLayout
                         android:layout_width="0dp"
@@ -161,14 +165,16 @@
                             android:id="@+id/selectedRecipientName"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
+                            android:fontFamily="@font/inter_regular"
                             android:includeFontPadding="false"
                             android:textColor="@color/black"
                             android:textSize="14sp"
                             tools:text="Benjamin Nnaemeka" />
 
                         <TextView
-                            android:id="@+id/selectedRecipientUsername"
+                            android:id="@+id/selectedRecipientPaymentId"
                             android:layout_width="wrap_content"
+                            android:fontFamily="@font/inter_regular"
                             android:layout_height="wrap_content"
                             android:includeFontPadding="false"
                             android:textColor="@color/gray"
@@ -226,6 +232,7 @@
                         android:layout_height="wrap_content"
                         android:layout_gravity="start"
                         android:layout_weight="1"
+                        android:fontFamily="@font/inter_regular"
                         android:includeFontPadding="false"
                         android:text="Amount"
                         android:textColor="@color/gray_dark"
@@ -234,6 +241,7 @@
                     <TextView
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
+                        android:fontFamily="@font/inter_regular"
                         android:includeFontPadding="false"
                         android:text="Available Balance:"
                         android:textColor="@color/gray_dark"
@@ -242,8 +250,9 @@
                     <TextView
                         android:id="@+id/availableBalance"
                         android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
+                        android:layout_height="match_parent"
                         android:layout_marginStart="5dp"
+                        android:fontFamily="@font/inter_regular"
                         android:includeFontPadding="false"
                         android:textColor="@color/gray_dark"
                         android:textSize="12sp"
@@ -264,6 +273,7 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_marginStart="15dp"
+                        android:fontFamily="@font/inter_regular"
                         android:includeFontPadding="false"
                         android:text="₦"
                         android:textColor="@color/black"
@@ -283,7 +293,6 @@
                         app:layout_constraintStart_toEndOf="@id/naira"
                         app:layout_constraintTop_toTopOf="@id/naira" />
 
-                    <!-- Amount Input -->
                     <com.cottacush.android.currencyedittext.CurrencyEditText
                         android:id="@+id/editTxtAmount"
                         android:layout_width="0dp"
@@ -291,6 +300,7 @@
                         android:layout_marginStart="10dp"
                         android:layout_marginEnd="15dp"
                         android:background="@android:color/transparent"
+                        android:fontFamily="@font/inter_regular"
                         android:hint="100.00 - 500,000,000.00"
                         android:imeOptions="actionNext"
                         android:includeFontPadding="false"
@@ -313,6 +323,7 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_marginTop="5dp"
+                    android:fontFamily="@font/inter_regular"
                     android:gravity="center_vertical"
                     android:includeFontPadding="false"
                     android:textColor="@color/red"
@@ -326,8 +337,9 @@
                     android:layout_height="wrap_content"
                     android:layout_gravity="start"
                     android:layout_marginTop="10dp"
+                    android:fontFamily="@font/inter_regular"
                     android:includeFontPadding="false"
-                    android:text="Note/Description (Optional)"
+                    android:text="Remark (Optional)"
                     android:textColor="@color/gray_dark"
                     android:textSize="12sp" />
 
@@ -339,12 +351,12 @@
                     android:layout_marginTop="5dp"
                     android:background="@drawable/bg_edit_txt_custom_gray_not_focused">
 
-                    <!-- Username Input -->
                     <EditText
                         android:id="@+id/editTxtDescription"
                         android:layout_width="match_parent"
                         android:layout_height="match_parent"
                         android:background="@android:color/transparent"
+                        android:fontFamily="@font/inter_regular"
                         android:hint="What's this payment for?"
                         android:imeOptions="actionDone"
                         android:includeFontPadding="false"

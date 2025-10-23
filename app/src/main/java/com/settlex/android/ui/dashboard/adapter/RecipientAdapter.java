@@ -30,7 +30,7 @@ public class RecipientAdapter extends ListAdapter<RecipientUiModel, RecipientAda
     private static final DiffUtil.ItemCallback<RecipientUiModel> DIFF_CALLBACK = new DiffUtil.ItemCallback<>() {
         @Override
         public boolean areItemsTheSame(@NonNull RecipientUiModel oldItem, @NonNull RecipientUiModel newItem) {
-            return oldItem.getUsername().equals(newItem.getUsername());
+            return oldItem.getPaymentId().equals(newItem.getPaymentId());
         }
 
         @Override
@@ -62,9 +62,9 @@ public class RecipientAdapter extends ListAdapter<RecipientUiModel, RecipientAda
         public void bind(RecipientUiModel recipient, OnItemClickListener listener) {
             ProfileService.loadProfilePic(recipient.getProfileUrl(), binding.profilePic);
             binding.fullName.setText(recipient.getFullName());
-            binding.username.setText(recipient.getUsername());
+            binding.paymentId.setText(recipient.getPaymentId());
 
-            //Handle click
+            // handle click
             binding.getRoot().setOnClickListener(v -> listener.onItemClick(recipient));
         }
     }

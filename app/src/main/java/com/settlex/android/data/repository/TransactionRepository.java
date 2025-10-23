@@ -17,6 +17,9 @@ import java.util.stream.Collectors;
 import jakarta.inject.Inject;
 
 public class TransactionRepository {
+    private final String ERROR_NO_INTERNET = "Connection lost. Please check your Wi-Fi or cellular data and try again";
+
+    // dependencies
     private final FirebaseFunctions functions;
     private final FirebaseFirestore firestore;
 
@@ -48,11 +51,16 @@ public class TransactionRepository {
                 })
                 .addOnFailureListener(e -> {
                     if (e instanceof FirebaseNetworkException || e instanceof IOException) {
-                        callback.onFailure("Network request failed. Please check your network and try again");
+                        callback.onFailure(ERROR_NO_INTERNET);
                         return;
                     }
                     callback.onFailure(e.getMessage());
                 });
+    }
+
+    public interface SearchRecipientCallback {
+        void onResult(List<RecipientDto> dto);
+        void onFailure(String reason);
     }
 
     public void payFriend(String senderUid, String recipient, String transactionId, double amount, String serviceType, String description, PayFriendCallback callback) {
@@ -68,23 +76,15 @@ public class TransactionRepository {
                 .call(data).addOnSuccessListener(result -> callback.onPayFriendSuccess())
                 .addOnFailureListener(e -> {
                     if (e instanceof FirebaseNetworkException || e instanceof IOException) {
-                        callback.onPayFriendFailed("Network request failed. Please check your connection.");
+                        callback.onPayFriendFailed(ERROR_NO_INTERNET);
                         return;
                     }
                     callback.onPayFriendFailed(e.getMessage());
                 });
     }
 
-    // Callbacks interfaces
-    public interface SearchRecipientCallback {
-        void onResult(List<RecipientDto> dto);
-
-        void onFailure(String reason);
-    }
-
     public interface PayFriendCallback {
         void onPayFriendSuccess();
-
         void onPayFriendFailed(String reason);
     }
 }
