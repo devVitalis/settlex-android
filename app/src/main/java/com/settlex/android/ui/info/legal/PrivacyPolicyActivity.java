@@ -1,4 +1,4 @@
-package com.settlex.android.ui.information.legal;
+package com.settlex.android.ui.info.legal;
 
 import android.os.Bundle;
 import android.text.Html;

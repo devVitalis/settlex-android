@@ -27,8 +27,8 @@ import com.settlex.android.ui.dashboard.account.activity.SettingsActivity;
 import com.settlex.android.ui.dashboard.home.ProfileActivity;
 import com.settlex.android.ui.dashboard.model.UserUiModel;
 import com.settlex.android.ui.dashboard.viewmodel.UserViewModel;
-import com.settlex.android.ui.information.legal.PrivacyPolicyActivity;
-import com.settlex.android.ui.information.legal.TermsAndConditionsActivity;
+import com.settlex.android.ui.info.legal.PrivacyPolicyActivity;
+import com.settlex.android.ui.info.legal.TermsAndConditionsActivity;
 import com.settlex.android.utils.ui.StatusBarUtil;
 
 import dagger.hilt.android.AndroidEntryPoint;

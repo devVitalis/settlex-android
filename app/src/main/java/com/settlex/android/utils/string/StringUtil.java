@@ -192,8 +192,8 @@ public class StringUtil {
                 .format(timestamp.toDate());
     }
 
-    public static String formatTimeStampToFullDate(Timestamp timestamp) {
-        return new SimpleDateFormat("EEEE MMMM yyyy", Locale.US)
+    public static String formatTimeStampToFullDateAndTime(Timestamp timestamp) {
+        return new SimpleDateFormat("EEEE MMMM yyyy, hh:mm a", Locale.US)
                 .format(timestamp.toDate());
     }
 

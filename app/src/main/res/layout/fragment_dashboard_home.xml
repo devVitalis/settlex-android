@@ -392,7 +392,7 @@
 
                         <!-- Add Money -->
                         <LinearLayout
-                            android:id="@+id/btnAddMoney"
+                            android:id="@+id/btnDeposit"
                             android:layout_width="100dp"
                             android:layout_height="wrap_content"
                             android:background="@drawable/bg_8dp_transparent_white"
@@ -412,14 +412,14 @@
                                 android:layout_height="wrap_content"
                                 android:fontFamily="@font/inter_regular"
                                 android:includeFontPadding="false"
-                                android:text="Add Funds"
+                                android:text="Deposit"
                                 android:textColor="@color/white"
                                 android:textSize="11sp" />
                         </LinearLayout>
 
                         <!-- Receive Money -->
                         <LinearLayout
-                            android:id="@+id/btnReceiveMoney"
+                            android:id="@+id/btnReceive"
                             android:layout_width="100dp"
                             android:layout_height="wrap_content"
                             android:background="@drawable/bg_8dp_transparent_white"
@@ -440,14 +440,14 @@
                                 android:layout_height="wrap_content"
                                 android:fontFamily="@font/inter_regular"
                                 android:includeFontPadding="false"
-                                android:text="Get Paid"
+                                android:text="Recieve"
                                 android:textColor="@color/white"
                                 android:textSize="11sp" />
                         </LinearLayout>
 
                         <!-- Send Money -->
                         <LinearLayout
-                            android:id="@+id/btnPayAFriend"
+                            android:id="@+id/btnTransfer"
                             android:layout_width="100dp"
                             android:layout_height="wrap_content"
                             android:background="@drawable/bg_8dp_transparent_white"
@@ -467,7 +467,7 @@
                                 android:layout_height="wrap_content"
                                 android:fontFamily="@font/inter_regular"
                                 android:includeFontPadding="false"
-                                android:text="Pay a Friend"
+                                android:text="Transfer"
                                 android:textColor="@color/white"
                                 android:textSize="11sp" />
                         </LinearLayout>
@@ -607,7 +607,7 @@
 
                 <!--Recent Transaction-->
                 <LinearLayout
-                    android:id="@+id/transactionContainer"
+                    android:id="@+id/txnContainer"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_marginTop="15dp"
@@ -633,23 +633,31 @@
                             android:textColor="@color/gray"
                             android:textSize="12sp" />
 
-                        <TextView
+                        <LinearLayout
                             android:id="@+id/btnViewAllTransaction"
                             android:layout_width="wrap_content"
-                            android:layout_height="match_parent"
-                            android:layout_marginEnd="4dp"
-                            android:fontFamily="@font/inter_regular"
-                            android:includeFontPadding="false"
-                            android:text="View ALL"
-                            android:textColor="@color/gray"
-                            android:textSize="12sp" />
+                            android:layout_height="wrap_content"
+                            android:background="?attr/selectableItemBackground"
+                            android:gravity="center_vertical"
+                            android:orientation="horizontal">
 
-                        <ImageView
-                            android:layout_width="12dp"
-                            android:layout_height="12dp"
-                            android:contentDescription="@null"
-                            android:src="@drawable/ic_arrow_forward"
-                            app:tint="@color/gray" />
+                            <TextView
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:layout_marginEnd="4dp"
+                                android:fontFamily="@font/inter_regular"
+                                android:includeFontPadding="false"
+                                android:text="View ALL"
+                                android:textColor="@color/gray"
+                                android:textSize="12sp" />
+
+                            <ImageView
+                                android:layout_width="12dp"
+                                android:layout_height="12dp"
+                                android:contentDescription="@null"
+                                android:src="@drawable/ic_arrow_forward"
+                                app:tint="@color/gray" />
+                        </LinearLayout>
                     </LinearLayout>
 
                     <FrameLayout
@@ -658,12 +666,12 @@
                         android:layout_marginTop="5dp">
 
                         <androidx.recyclerview.widget.RecyclerView
-                            android:id="@+id/transactionRecyclerView"
+                            android:id="@+id/txnRecyclerView"
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
                             android:clipToPadding="false"
                             android:nestedScrollingEnabled="false"
-                            android:visibility="visible" />
+                            android:visibility="gone" />
 
                         <com.facebook.shimmer.ShimmerFrameLayout
                             android:id="@+id/txnShimmerEffect"
@@ -678,6 +686,43 @@
                                 android:layout_width="match_parent"
                                 android:layout_height="wrap_content" />
                         </com.facebook.shimmer.ShimmerFrameLayout>
+
+                        <!-- No transaction data -->
+                        <LinearLayout
+                            android:id="@+id/noTxnData"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:gravity="center"
+                            android:orientation="vertical"
+                            android:paddingVertical="15dp">
+
+                            <TextView
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:fontFamily="@font/inter_medium"
+                                android:includeFontPadding="false"
+                                android:text="No transactions yet"
+                                android:textColor="@color/black"
+                                android:textSize="16sp"
+                                android:textStyle="bold" />
+
+                            <TextView
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:layout_marginTop="5dp"
+                                android:fontFamily="@font/inter_regular"
+                                android:includeFontPadding="false"
+                                android:text="You activity will show up here"
+                                android:textColor="@color/gray"
+                                android:textSize="11sp" />
+
+                            <ImageView
+                                android:layout_width="50dp"
+                                android:layout_height="50dp"
+                                android:layout_marginTop="5dp"
+                                android:contentDescription="@null"
+                                android:src="@drawable/ic_no_transactions" />
+                        </LinearLayout>
                     </FrameLayout>
                 </LinearLayout>
 

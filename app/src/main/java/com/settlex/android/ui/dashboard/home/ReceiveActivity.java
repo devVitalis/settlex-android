@@ -7,7 +7,7 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.lifecycle.ViewModelProvider;
 
 import com.settlex.android.R;
-import com.settlex.android.databinding.ActivityGetPaidBinding;
+import com.settlex.android.databinding.ActivityReceiveBinding;
 import com.settlex.android.ui.dashboard.model.UserUiModel;
 import com.settlex.android.ui.dashboard.viewmodel.UserViewModel;
 import com.settlex.android.utils.string.StringUtil;
@@ -16,14 +16,14 @@ import com.settlex.android.utils.ui.StatusBarUtil;
 import dagger.hilt.android.AndroidEntryPoint;
 
 @AndroidEntryPoint
-public class GetPaidActivity extends AppCompatActivity {
-    private ActivityGetPaidBinding binding;
+public class ReceiveActivity extends AppCompatActivity {
+    private ActivityReceiveBinding binding;
     private UserViewModel userViewModel;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        binding = ActivityGetPaidBinding.inflate(getLayoutInflater());
+        binding = ActivityReceiveBinding.inflate(getLayoutInflater());
         setContentView(binding.getRoot());
 
         userViewModel = new ViewModelProvider(this).get(UserViewModel.class);
@@ -58,13 +58,6 @@ public class GetPaidActivity extends AppCompatActivity {
     }
 
     private void onUserDataStatusSuccess(UserUiModel user) {
-        boolean hasPaymentId = user.getPaymentId() != null && !user.getPaymentId().isEmpty();
-        binding.paymentName.setText(user.getFullName().toUpperCase());
-
-        if (hasPaymentId) {
-            binding.paymentId.setText(StringUtil.addAtToPaymentId(user.getPaymentId()));
-            return;
-        }
-        // do something TODO: prompt paymentID creation
+        binding.paymentId.setText(StringUtil.addAtToPaymentId(user.getPaymentId()));
     }
 }

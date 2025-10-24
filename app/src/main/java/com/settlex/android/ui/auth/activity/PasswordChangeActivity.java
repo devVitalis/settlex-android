@@ -64,7 +64,7 @@ public class PasswordChangeActivity extends AppCompatActivity {
         setupPasswordVisibilityToggle();
 
         binding.btnBackBefore.setOnClickListener(v -> finish());
-        binding.btnResetPassword.setOnClickListener(v -> attemptPasswordReset());
+        binding.btnChangePassword.setOnClickListener(v -> attemptPasswordReset());
     }
 
     // OBSERVERS =========
@@ -158,7 +158,7 @@ public class PasswordChangeActivity extends AppCompatActivity {
     }
 
     private void updateResetButtonState(boolean isEnabled) {
-        binding.btnResetPassword.setEnabled(isEnabled);
+        binding.btnChangePassword.setEnabled(isEnabled);
     }
 
     private boolean validatePasswordRequirements(String password, String confirm) {

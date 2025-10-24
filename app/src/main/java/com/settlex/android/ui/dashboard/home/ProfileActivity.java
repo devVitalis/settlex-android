@@ -70,7 +70,7 @@ public class ProfileActivity extends AppCompatActivity {
 
     private void showJoinedDateInSimpleDialog() {
         String title = "Joined Date";
-        String message = StringUtil.formatTimeStampToFullDate(joinedDate);
+        String message = StringUtil.formatTimeStampToFullDateAndTime(joinedDate);
 
         UiUtil.showSimpleAlertDialog(
                 this,

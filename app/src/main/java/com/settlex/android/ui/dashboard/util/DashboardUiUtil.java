@@ -31,7 +31,7 @@ public class DashboardUiUtil {
         View rootView;
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.S) {
             rootView = ((Activity) context).getWindow().getDecorView();
-            rootView.setRenderEffect(RenderEffect.createBlurEffect(2, 2, Shader.TileMode.CLAMP));
+            rootView.setRenderEffect(RenderEffect.createBlurEffect(5, 5, Shader.TileMode.CLAMP));
         } else {
             rootView = null;
         }

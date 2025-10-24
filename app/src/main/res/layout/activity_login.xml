@@ -118,8 +118,8 @@
 
                 <com.google.android.material.imageview.ShapeableImageView
                     android:id="@+id/userProfile"
-                    android:layout_width="70dp"
-                    android:layout_height="70dp"
+                    android:layout_width="65dp"
+                    android:layout_height="65dp"
                     android:contentDescription="@null"
                     app:shapeAppearanceOverlay="@style/Oval_Shape"
                     app:srcCompat="@drawable/ic_avatar_default" />

@@ -93,7 +93,7 @@
             android:name=".ui.dashboard.home.CommissionWithdrawalActivity"
             android:exported="false" />
         <activity
-            android:name=".ui.dashboard.home.GetPaidActivity"
+            android:name=".ui.dashboard.home.ReceiveActivity"
             android:exported="false" />
         <activity
             android:name=".ui.dashboard.home.TransactionActivity"
@@ -108,13 +108,13 @@
             android:name=".ui.auth.activity.PasswordResetActivity"
             android:exported="false" />
         <activity
-            android:name=".ui.information.legal.PrivacyPolicyActivity"
+            android:name=".ui.info.legal.PrivacyPolicyActivity"
             android:exported="false" />
         <activity
-            android:name=".ui.information.legal.TermsAndConditionsActivity"
+            android:name=".ui.info.legal.TermsAndConditionsActivity"
             android:exported="false" />
         <activity
-            android:name=".ui.information.help.AuthHelpActivity"
+            android:name=".ui.info.help.AuthHelpActivity"
             android:exported="false" />
         <activity
             android:name=".ui.auth.activity.PinLoginActivity"

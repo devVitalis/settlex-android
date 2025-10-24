@@ -5,7 +5,7 @@
     android:layout_height="match_parent"
     android:background="@color/white"
     android:fitsSystemWindows="true"
-    tools:context=".ui.dashboard.home.GetPaidActivity">
+    tools:context=".ui.dashboard.home.ReceiveActivity">
 
     <!--Header-->
     <LinearLayout
@@ -29,12 +29,12 @@
 
         <TextView
             android:layout_width="wrap_content"
-            android:fontFamily="@font/inter_bold"
             android:layout_height="wrap_content"
             android:layout_marginStart="10dp"
+            android:fontFamily="@font/inter_bold"
             android:gravity="center"
             android:includeFontPadding="false"
-            android:text="Get Paid"
+            android:text="Receive"
             android:textColor="@color/black"
             android:textSize="15sp"
             android:textStyle="bold" />
@@ -55,7 +55,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_margin="15dp"
-            android:background="@drawable/bg_8dp_white_ripple_yes"
+            android:background="@drawable/bg_16dp_white"
             android:orientation="vertical"
             android:padding="20dp">
 
@@ -63,70 +63,42 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_gravity="center"
-                android:includeFontPadding="false"
                 android:fontFamily="@font/inter_regular"
-                android:text="Your Payment ID"
+                android:includeFontPadding="false"
+                android:text="SettleX Payment ID"
                 android:textColor="@color/gray"
-                android:textSize="14sp" />
-
-            <LinearLayout
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_gravity="center"
-                android:layout_marginTop="2dp"
-                android:background="@drawable/bg_8dp_gray_light"
-                android:gravity="center"
-                android:orientation="vertical"
-                android:paddingHorizontal="35dp"
-                android:paddingVertical="10dp">
-
-                <TextView
-                    android:id="@+id/paymentId"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:fontFamily="@font/inter_regular"
-                    android:includeFontPadding="false"
-                    android:textColor="@color/black"
-                    android:textSize="25sp"
-                    android:textStyle="bold"
-                    tools:text="vitalis" />
-            </LinearLayout>
+                android:textSize="12sp" />
 
             <TextView
-                android:id="@+id/paymentName"
+                android:id="@+id/paymentId"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_gravity="center"
-                android:fontFamily="@font/inter_regular"
-                android:layout_marginTop="10dp"
+                android:layout_marginVertical="15dp"
+                android:fontFamily="@font/inter_bold"
                 android:includeFontPadding="false"
-                android:textColor="@color/gray"
-                android:textSize="18sp"
-                tools:text="BENJAMIN NNAEMEKA" />
+                android:textColor="@color/black"
+                android:textSize="30sp"
+                android:textStyle="bold"
+                tools:text="\@vitalis" />
 
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_gravity="center"
-                android:layout_marginTop="15dp"
-                android:gravity="center"
                 android:fontFamily="@font/inter_regular"
+                android:gravity="center"
                 android:includeFontPadding="false"
-                android:text="Share this unique ID to get paid instantly from other SettleX users."
+                android:text="Share your ID to get paid instantly from other SettleX users."
                 android:textAlignment="center"
                 android:textColor="@color/black"
                 android:textSize="14sp" />
 
-            <com.google.android.material.divider.MaterialDivider
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginVertical="20dp"
-                app:dividerColor="@color/gray_light" />
-
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_gravity="center"
+                android:layout_marginTop="15dp"
                 android:orientation="horizontal">
 
                 <com.google.android.material.button.MaterialButton

@@ -26,7 +26,7 @@ import com.settlex.android.databinding.ActivityLoginBinding;
 import com.settlex.android.ui.auth.viewmodel.AuthViewModel;
 import com.settlex.android.ui.common.util.ProgressLoaderController;
 import com.settlex.android.ui.dashboard.DashboardActivity;
-import com.settlex.android.ui.information.help.AuthHelpActivity;
+import com.settlex.android.ui.info.help.AuthHelpActivity;
 import com.settlex.android.utils.network.NetworkMonitor;
 import com.settlex.android.utils.string.StringUtil;
 import com.settlex.android.utils.ui.StatusBarUtil;

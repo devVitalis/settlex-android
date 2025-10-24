@@ -28,15 +28,15 @@ import com.settlex.android.ui.dashboard.adapter.PromotionalBannerAdapter;
 import com.settlex.android.ui.dashboard.adapter.ServicesAdapter;
 import com.settlex.android.ui.dashboard.adapter.TransactionsAdapter;
 import com.settlex.android.ui.dashboard.components.GridSpacingItemDecoration;
-import com.settlex.android.ui.dashboard.services.AirtimePurchaseActivity;
-import com.settlex.android.ui.dashboard.services.BettingTopUpActivity;
-import com.settlex.android.ui.dashboard.services.CableTvSubscriptionActivity;
-import com.settlex.android.ui.dashboard.services.DataPurchaseActivity;
 import com.settlex.android.ui.dashboard.model.PromoBannerUiModel;
 import com.settlex.android.ui.dashboard.model.ServiceDestination;
 import com.settlex.android.ui.dashboard.model.ServiceUiModel;
 import com.settlex.android.ui.dashboard.model.TransactionUiModel;
 import com.settlex.android.ui.dashboard.model.UserUiModel;
+import com.settlex.android.ui.dashboard.services.AirtimePurchaseActivity;
+import com.settlex.android.ui.dashboard.services.BettingTopUpActivity;
+import com.settlex.android.ui.dashboard.services.CableTvSubscriptionActivity;
+import com.settlex.android.ui.dashboard.services.DataPurchaseActivity;
 import com.settlex.android.ui.dashboard.viewmodel.PromoBannerViewModel;
 import com.settlex.android.ui.dashboard.viewmodel.UserViewModel;
 import com.settlex.android.utils.event.Result;
@@ -109,10 +109,10 @@ public class HomeDashboardFragment extends Fragment {
         binding.btnProfilePic.setOnClickListener(view -> navigateToActivity(ProfileActivity.class));
         binding.btnLogin.setOnClickListener(v -> navigateToActivity(LoginActivity.class));
         binding.btnBalanceToggle.setOnClickListener(v -> userViewModel.toggleBalanceVisibility());
-        binding.btnUserCommissionBalanceLayout.setOnClickListener(v -> navigateToActivity(CommissionWithdrawalActivity.class));
-        binding.btnAddMoney.setOnClickListener(v -> navigateToActivity(CreatePaymentIdActivity.class));
-        binding.btnReceiveMoney.setOnClickListener(v -> navigateToActivity(GetPaidActivity.class));
-        binding.btnPayAFriend.setOnClickListener(v -> navigateToActivity(PayAFriendActivity.class));
+        binding.btnUserCommissionBalanceLayout.setOnClickListener(v -> toastNewFeature());
+        binding.btnDeposit.setOnClickListener(v -> navigateToActivity(CreatePaymentIdActivity.class));
+        binding.btnReceive.setOnClickListener(v -> navigateToActivity(ReceiveActivity.class));
+        binding.btnTransfer.setOnClickListener(v -> navigateToActivity(PayAFriendActivity.class));
         binding.btnNotification.setOnClickListener(v -> toastNewFeature());
         binding.btnSupport.setOnClickListener(v -> toastNewFeature());
         binding.btnViewAllTransaction.setOnClickListener(v -> toastNewFeature());
@@ -242,7 +242,8 @@ public class HomeDashboardFragment extends Fragment {
     }
 
     private void onTransactionStatusLoading() {
-        binding.transactionRecyclerView.setVisibility(View.GONE);
+        binding.noTxnData.setVisibility(View.GONE);
+        binding.txnRecyclerView.setVisibility(View.GONE);
         binding.txnShimmerEffect.setVisibility(View.VISIBLE);
         binding.txnShimmerEffect.startShimmer();
     }
@@ -252,22 +253,23 @@ public class HomeDashboardFragment extends Fragment {
             // zero transaction history
             binding.txnShimmerEffect.stopShimmer();
             binding.txnShimmerEffect.setVisibility(View.GONE);
-            binding.transactionContainer.setVisibility(View.GONE);
+            binding.noTxnData.setVisibility(View.VISIBLE);
             return;
         }
 
         // transaction exists
         adapter.submitList(transactions.getData());
-        binding.transactionRecyclerView.setAdapter(adapter);
+        binding.txnRecyclerView.setAdapter(adapter);
 
         binding.txnShimmerEffect.stopShimmer();
         binding.txnShimmerEffect.setVisibility(View.GONE);
-        binding.transactionRecyclerView.setVisibility(View.VISIBLE);
+        binding.noTxnData.setVisibility(View.GONE);
+        binding.txnRecyclerView.setVisibility(View.VISIBLE);
     }
 
     private void onTransactionStatusError() {
         // show error state
-        binding.transactionContainer.setVisibility(View.GONE);
+        binding.noTxnData.setVisibility(View.VISIBLE);
     }
 
     private void onItemTransactionClick() {
@@ -352,7 +354,7 @@ public class HomeDashboardFragment extends Fragment {
         binding.greetingContainer.setVisibility(View.GONE);
         binding.actionButtons.setVisibility(View.GONE);
         binding.moneyFlowContainer.setVisibility(View.GONE);
-        binding.transactionContainer.setVisibility(View.GONE);
+        binding.txnContainer.setVisibility(View.GONE);
 
         // Explicitly reset the user data UI components
         binding.userBalance.setText(StringUtil.setAsterisks());
@@ -365,7 +367,7 @@ public class HomeDashboardFragment extends Fragment {
     private void initTransactionRecyclerView() {
         LinearLayoutManager layoutManager = new LinearLayoutManager(getContext());
         layoutManager.setOrientation(LinearLayoutManager.VERTICAL);
-        binding.transactionRecyclerView.setLayoutManager(layoutManager);
+        binding.txnRecyclerView.setLayoutManager(layoutManager);
 
         adapter = new TransactionsAdapter();
         onItemTransactionClick();
