@@ -242,10 +242,12 @@
 
                         <LinearLayout
                             android:id="@+id/protectionContainer"
-                            android:layout_width="wrap_content"
+                            android:layout_width="0dp"
                             android:layout_height="wrap_content"
-                            android:gravity="center_vertical"
+                            android:gravity="start|center"
                             android:orientation="horizontal"
+                            app:layout_constraintEnd_toStartOf="@id/commissionContainer"
+                            app:layout_constraintHorizontal_weight="1"
                             app:layout_constraintStart_toStartOf="parent"
                             app:layout_constraintTop_toTopOf="parent">
 
@@ -258,6 +260,7 @@
                                 app:tint="@color/white" />
 
                             <TextView
+                                android:id="@+id/balanceTitle"
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
                                 android:layout_marginStart="2dp"
@@ -280,6 +283,7 @@
                         </LinearLayout>
 
                         <FrameLayout
+                            android:id="@+id/balanceValueContainer"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:layout_marginTop="10dp"
@@ -315,14 +319,18 @@
 
                         <!-- Commission stack -->
                         <LinearLayout
-                            android:layout_width="wrap_content"
+                            android:id="@+id/commissionContainer"
+                            android:layout_width="0dp"
                             android:layout_height="wrap_content"
-                            android:layout_marginEnd="80dp"
                             android:orientation="vertical"
+                            app:layout_constraintBottom_toBottomOf="@id/balanceValueContainer"
                             app:layout_constraintEnd_toEndOf="parent"
-                            app:layout_constraintTop_toTopOf="parent">
+                            app:layout_constraintHorizontal_weight="1"
+                            app:layout_constraintStart_toEndOf="@id/protectionContainer"
+                            app:layout_constraintTop_toTopOf="@id/protectionContainer">
 
                             <TextView
+                                android:id="@+id/commissionBalance"
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
                                 android:includeFontPadding="false"
@@ -341,8 +349,6 @@
                                     android:layout_height="wrap_content"
                                     android:layout_gravity="center"
                                     android:background="?attr/selectableItemBackgroundBorderless"
-                                    android:clickable="true"
-                                    android:focusable="true"
                                     android:gravity="center_vertical"
                                     android:orientation="horizontal">
 
@@ -393,12 +399,14 @@
                         <!-- Add Money -->
                         <LinearLayout
                             android:id="@+id/btnDeposit"
-                            android:layout_width="100dp"
+                            android:layout_width="0dp"
                             android:layout_height="wrap_content"
                             android:background="@drawable/bg_8dp_transparent_white"
                             android:gravity="center"
                             android:orientation="vertical"
-                            android:paddingVertical="3dp"
+                            android:paddingVertical="5dp"
+                            app:layout_constraintEnd_toStartOf="@id/btnReceive"
+                            app:layout_constraintHorizontal_weight="1"
                             app:layout_constraintStart_toStartOf="parent"
                             app:layout_constraintTop_toTopOf="parent">
 
@@ -420,14 +428,17 @@
                         <!-- Receive Money -->
                         <LinearLayout
                             android:id="@+id/btnReceive"
-                            android:layout_width="100dp"
+                            android:layout_width="0dp"
                             android:layout_height="wrap_content"
+                            android:layout_marginStart="20dp"
+                            android:layout_marginEnd="20dp"
                             android:background="@drawable/bg_8dp_transparent_white"
                             android:gravity="center"
                             android:orientation="vertical"
-                            android:paddingVertical="3dp"
-                            app:layout_constraintEnd_toEndOf="parent"
-                            app:layout_constraintStart_toStartOf="parent"
+                            android:paddingVertical="5dp"
+                            app:layout_constraintEnd_toStartOf="@+id/btnTransfer"
+                            app:layout_constraintHorizontal_weight="1"
+                            app:layout_constraintStart_toEndOf="@+id/btnDeposit"
                             app:layout_constraintTop_toTopOf="parent">
 
                             <ImageView
@@ -448,13 +459,15 @@
                         <!-- Send Money -->
                         <LinearLayout
                             android:id="@+id/btnTransfer"
-                            android:layout_width="100dp"
+                            android:layout_width="0dp"
                             android:layout_height="wrap_content"
                             android:background="@drawable/bg_8dp_transparent_white"
                             android:gravity="center"
                             android:orientation="vertical"
-                            android:paddingVertical="3dp"
+                            android:paddingVertical="5dp"
                             app:layout_constraintEnd_toEndOf="parent"
+                            app:layout_constraintHorizontal_weight="1"
+                            app:layout_constraintStart_toEndOf="@id/btnReceive"
                             app:layout_constraintTop_toTopOf="parent">
 
                             <ImageView

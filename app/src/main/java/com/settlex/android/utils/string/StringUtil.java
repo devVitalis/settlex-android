@@ -245,4 +245,8 @@ public class StringUtil {
             return null;
         }
     }
+
+    public static void showNotImplementedToast(Context context){
+        Toast.makeText(context, "Feature not yet implemented", Toast.LENGTH_SHORT).show();
+    }
 }

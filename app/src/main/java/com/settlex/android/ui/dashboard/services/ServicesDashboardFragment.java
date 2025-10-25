@@ -5,7 +5,6 @@ import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
@@ -17,9 +16,9 @@ import com.settlex.android.R;
 import com.settlex.android.data.enums.TransactionServiceType;
 import com.settlex.android.databinding.FragmentDashboardServicesBinding;
 import com.settlex.android.ui.dashboard.adapter.ServicesAdapter;
-import com.settlex.android.ui.dashboard.components.GridSpacingItemDecoration;
 import com.settlex.android.ui.dashboard.model.ServiceDestination;
 import com.settlex.android.ui.dashboard.model.ServiceUiModel;
+import com.settlex.android.utils.string.StringUtil;
 import com.settlex.android.utils.ui.StatusBarUtil;
 
 import java.util.Arrays;
@@ -56,13 +55,8 @@ public class ServicesDashboardFragment extends Fragment {
     }
 
     private void setupRecyclerView(List<ServiceUiModel> services, androidx.recyclerview.widget.RecyclerView recyclerView) {
-        // Grid layout with 4 columns
         GridLayoutManager layoutManager = new GridLayoutManager(requireContext(), 4);
         recyclerView.setLayoutManager(layoutManager);
-
-        // Set equal spacing
-        int spacingInPixels = (int) (5 * getResources().getDisplayMetrics().density);
-        recyclerView.addItemDecoration(new GridSpacingItemDecoration(4, spacingInPixels, true));
 
         // Adapter with click handling
         ServicesAdapter adapter = new ServicesAdapter(true, services, serviceUiModel -> {
@@ -74,42 +68,42 @@ public class ServicesDashboardFragment extends Fragment {
 
     private void setupTelecomRecyclerView() {
         List<ServiceUiModel> services = Arrays.asList(
-                new ServiceUiModel("Airtime", R.drawable.ic_service_airtime, 0, TransactionServiceType.AIRTIME_RECHARGE),
-                new ServiceUiModel("Data", R.drawable.ic_service_data, 0, TransactionServiceType.DATA_RECHARGE),
-                new ServiceUiModel("Internet", R.drawable.ic_service_internet, 0, TransactionServiceType.INTERNET),
-                new ServiceUiModel("Esim", R.drawable.ic_service_esim, 0, TransactionServiceType.ESIM)
+                new ServiceUiModel("Airtime", R.drawable.ic_service_airtime, TransactionServiceType.AIRTIME_RECHARGE),
+                new ServiceUiModel("Data", R.drawable.ic_service_data, TransactionServiceType.DATA_RECHARGE),
+                new ServiceUiModel("Internet", R.drawable.ic_service_internet, TransactionServiceType.INTERNET),
+                new ServiceUiModel("Esim", R.drawable.ic_service_esim, TransactionServiceType.ESIM)
         );
         setupRecyclerView(services, binding.telecomAndDigitalRecyclerView);
     }
 
     private void setupEntertainmentRecyclerView() {
         List<ServiceUiModel> services = Arrays.asList(
-                new ServiceUiModel("TV", R.drawable.ic_service_cable_tv, 0, TransactionServiceType.CABLE_TV_SUBSCRIPTION),
-                new ServiceUiModel("Betting", R.drawable.ic_service_betting, 0, TransactionServiceType.BETTING_TOPUP),
-                new ServiceUiModel("Voucher", R.drawable.ic_service_voucher, 0, TransactionServiceType.VOUCHER),
-                new ServiceUiModel("Gift Card", R.drawable.ic_service_gift_card, 0, TransactionServiceType.GIFT_CARD)
+                new ServiceUiModel("TV", R.drawable.ic_service_cable_tv, TransactionServiceType.CABLE_TV_SUBSCRIPTION),
+                new ServiceUiModel("Betting", R.drawable.ic_service_betting, "Hot", TransactionServiceType.BETTING_TOPUP),
+                new ServiceUiModel("Voucher", R.drawable.ic_service_voucher, TransactionServiceType.VOUCHER),
+                new ServiceUiModel("Gift Card", R.drawable.ic_service_gift_card, TransactionServiceType.GIFT_CARD)
         );
         setupRecyclerView(services, binding.entertainmentRecyclerView);
     }
 
     private void setupUtilitiesRecyclerView() {
         List<ServiceUiModel> services = List.of(
-                new ServiceUiModel("Electricity", R.drawable.ic_service_electricity, 0, TransactionServiceType.ELECTRICITY_BILL)
+                new ServiceUiModel("Electricity", R.drawable.ic_service_electricity, TransactionServiceType.ELECTRICITY_BILL)
         );
         setupRecyclerView(services, binding.utilitiesAndBillsRecyclerView);
     }
 
     private void setupTravelRecyclerView() {
         List<ServiceUiModel> services = Arrays.asList(
-                new ServiceUiModel("Flight", R.drawable.ic_service_flight, 0, TransactionServiceType.FLIGHT),
-                new ServiceUiModel("Hotel", R.drawable.ic_service_hotel, 0, TransactionServiceType.HOTEL)
+                new ServiceUiModel("Flight", R.drawable.ic_service_flight, TransactionServiceType.FLIGHT),
+                new ServiceUiModel("Hotel", R.drawable.ic_service_hotel, TransactionServiceType.HOTEL)
         );
         setupRecyclerView(services, binding.travelAndLifestyleRecyclerView);
     }
 
     private void handleOnItemServiceClick(ServiceDestination destination) {
         if (destination == null) {
-            Toast.makeText(requireContext(), "Feature not yet implemented", Toast.LENGTH_SHORT).show();
+            StringUtil.showNotImplementedToast(requireContext());
             return;
         }
 

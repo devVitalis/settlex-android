@@ -50,10 +50,13 @@ public class ServicesAdapter extends RecyclerView.Adapter<ServicesAdapter.Servic
 
         if (!(service.getCashbackPercentage() < 1)) {
             String CASHBACK = "up to " + service.getCashbackPercentage() + "%";
-            holder.cashback.setText(CASHBACK);
-            holder.cashback.setVisibility(View.VISIBLE);
+            holder.badge.setText(CASHBACK);
+            holder.badge.setVisibility(View.VISIBLE);
+
+        } else if (service.getLabel() != null && !service.getLabel().isEmpty()) {
+            holder.badge.setText(service.getLabel());
         } else {
-            holder.cashback.setVisibility(View.GONE);
+            holder.badge.setVisibility(View.GONE);
         }
         holder.itemView.setOnClickListener(view -> listener.onServiceClick(this.service.get(position)));
     }
@@ -63,18 +66,15 @@ public class ServicesAdapter extends RecyclerView.Adapter<ServicesAdapter.Servic
         return service.size();
     }
 
-    /**
-     * ViewHolder for service items containing icon and name
-     */
     public static class ServiceViewHolder extends RecyclerView.ViewHolder {
         ImageView icon;
-        TextView name, cashback;
+        TextView name, badge;
 
         ServiceViewHolder(@NonNull View itemView) {
             super(itemView);
             icon = itemView.findViewById(R.id.icon);
             name = itemView.findViewById(R.id.name);
-            cashback = itemView.findViewById(R.id.cashback);
+            badge = itemView.findViewById(R.id.badge);
         }
     }
 }

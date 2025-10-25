@@ -2,19 +2,26 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
-    android:layout_width="wrap_content"
+    android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:background="@drawable/bg_8dp_white_ripple_yes"
     android:clipChildren="false"
     android:clipToPadding="false"
     android:gravity="center"
     android:orientation="vertical"
-    android:paddingHorizontal="15dp"
     android:paddingVertical="5dp">
 
     <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="wrap_content"
-        android:layout_height="wrap_content">
+        android:layout_height="wrap_content"
+        android:clipChildren="false">
+
+        <androidx.constraintlayout.widget.Guideline
+            android:id="@+id/centerGuideLine"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            app:layout_constraintGuide_percent="0.5" />
 
         <FrameLayout
             android:id="@+id/iconFrame"
@@ -37,19 +44,20 @@
         </FrameLayout>
 
         <TextView
-            android:id="@+id/cashback"
+            android:id="@+id/badge"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:background="@drawable/bg_cashback_badge"
+            android:layout_marginTop="-2dp"
+            android:background="@drawable/bg_service_badge"
+            android:gravity="center"
             android:includeFontPadding="false"
             android:maxLines="1"
+            android:minWidth="30dp"
             android:paddingHorizontal="5dp"
             android:paddingVertical="2dp"
             android:textColor="@color/white"
             android:textSize="8sp"
-            android:translationX="15dp"
-            android:translationY="-2dp"
-            app:layout_constraintEnd_toEndOf="@id/iconFrame"
+            app:layout_constraintStart_toStartOf="@+id/centerGuideLine"
             app:layout_constraintTop_toTopOf="@+id/iconFrame"
             tools:ignore="SmallSp"
             tools:text="up to 10%" />

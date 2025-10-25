@@ -27,7 +27,6 @@ import com.settlex.android.ui.auth.activity.LoginActivity;
 import com.settlex.android.ui.dashboard.adapter.PromotionalBannerAdapter;
 import com.settlex.android.ui.dashboard.adapter.ServicesAdapter;
 import com.settlex.android.ui.dashboard.adapter.TransactionsAdapter;
-import com.settlex.android.ui.dashboard.components.GridSpacingItemDecoration;
 import com.settlex.android.ui.dashboard.model.PromoBannerUiModel;
 import com.settlex.android.ui.dashboard.model.ServiceDestination;
 import com.settlex.android.ui.dashboard.model.ServiceUiModel;
@@ -100,7 +99,7 @@ public class HomeDashboardFragment extends Fragment {
         binding = null;
     }
 
-    // UI ACTIONS =============
+    // UI ACTIONS =======
     private void setupUiActions() {
         StatusBarUtil.setStatusBarColor(requireActivity(), R.color.gray_light);
         initTransactionRecyclerView();
@@ -109,8 +108,8 @@ public class HomeDashboardFragment extends Fragment {
         binding.btnProfilePic.setOnClickListener(view -> navigateToActivity(ProfileActivity.class));
         binding.btnLogin.setOnClickListener(v -> navigateToActivity(LoginActivity.class));
         binding.btnBalanceToggle.setOnClickListener(v -> userViewModel.toggleBalanceVisibility());
-        binding.btnUserCommissionBalanceLayout.setOnClickListener(v -> toastNewFeature());
-        binding.btnDeposit.setOnClickListener(v -> navigateToActivity(CreatePaymentIdActivity.class));
+        binding.btnUserCommissionBalanceLayout.setOnClickListener(v -> navigateToActivity(CommissionWithdrawalActivity.class));
+        binding.btnDeposit.setOnClickListener(v -> toastNewFeature());
         binding.btnReceive.setOnClickListener(v -> navigateToActivity(ReceiveActivity.class));
         binding.btnTransfer.setOnClickListener(v -> navigateToActivity(PayAFriendActivity.class));
         binding.btnNotification.setOnClickListener(v -> toastNewFeature());
@@ -253,6 +252,7 @@ public class HomeDashboardFragment extends Fragment {
             // zero transaction history
             binding.txnShimmerEffect.stopShimmer();
             binding.txnShimmerEffect.setVisibility(View.GONE);
+            binding.btnViewAllTransaction.setVisibility(View.GONE);
             binding.noTxnData.setVisibility(View.VISIBLE);
             return;
         }
@@ -376,19 +376,16 @@ public class HomeDashboardFragment extends Fragment {
     private void loadAppServices() {
         GridLayoutManager layoutManager = new GridLayoutManager(requireContext(), 4);
         binding.serviceRecyclerView.setLayoutManager(layoutManager);
-        // Set equal spacing
-        int spacingInPixels = (int) (5 * getResources().getDisplayMetrics().density);
-        binding.serviceRecyclerView.addItemDecoration(new GridSpacingItemDecoration(4, spacingInPixels, true));
 
         List<ServiceUiModel> services = Arrays.asList(
                 new ServiceUiModel("Airtime", R.drawable.ic_service_airtime, 2, TransactionServiceType.AIRTIME_RECHARGE),
                 new ServiceUiModel("Data", R.drawable.ic_service_data, 6, TransactionServiceType.DATA_RECHARGE),
-                new ServiceUiModel("Betting", R.drawable.ic_service_betting, 10, TransactionServiceType.BETTING_TOPUP),
-                new ServiceUiModel("TV", R.drawable.ic_service_cable_tv, 0, TransactionServiceType.CABLE_TV_SUBSCRIPTION),
-                new ServiceUiModel("Electricity", R.drawable.ic_service_electricity, 0, TransactionServiceType.ELECTRICITY_BILL),
-                new ServiceUiModel("Internet", R.drawable.ic_service_internet, 0, TransactionServiceType.INTERNET),
-                new ServiceUiModel("Gift Card", R.drawable.ic_service_gift_card, 0, TransactionServiceType.GIFT_CARD),
-                new ServiceUiModel("More", R.drawable.ic_service_more, 0, TransactionServiceType.MORE)
+                new ServiceUiModel("Betting", R.drawable.ic_service_betting, "Hot", TransactionServiceType.BETTING_TOPUP),
+                new ServiceUiModel("TV", R.drawable.ic_service_cable_tv, TransactionServiceType.CABLE_TV_SUBSCRIPTION),
+                new ServiceUiModel("Electricity", R.drawable.ic_service_electricity, TransactionServiceType.ELECTRICITY_BILL),
+                new ServiceUiModel("Internet", R.drawable.ic_service_internet, TransactionServiceType.INTERNET),
+                new ServiceUiModel("Gift Card", R.drawable.ic_service_gift_card, TransactionServiceType.GIFT_CARD),
+                new ServiceUiModel("More", R.drawable.ic_service_more, TransactionServiceType.MORE)
         );
 
         // Map services to destinations
@@ -405,7 +402,7 @@ public class HomeDashboardFragment extends Fragment {
         ServicesAdapter adapter = new ServicesAdapter(false, services, serviceUiModel -> {
             ServiceDestination serviceDestination = serviceMap.get(serviceUiModel.getType());
             if (serviceDestination == null) {
-                Toast.makeText(requireContext(), "Feature not yet implemented", Toast.LENGTH_SHORT).show();
+                StringUtil.showNotImplementedToast(requireContext());
                 return;
             }
 
