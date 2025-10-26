@@ -28,6 +28,7 @@ firebaseFunctions = "22.0.1"
 mpandroidchart = "v3.1.0"
 navigationFragmentKtx = "2.9.5"
 navigationUiKtx = "2.9.5"
+pinview = "1.4.4"
 prettytime = "5.0.1.Final"
 shimmer = "0.5.0"
 tinkAndroid = "1.18.0"
@@ -68,6 +69,7 @@ firebase-functions = { group = "com.google.firebase", name = "firebase-functions
 mpandroidchart = { module = "com.github.PhilJay:MPAndroidChart", version.ref = "mpandroidchart" }
 navigation-fragment-ktx = { module = "androidx.navigation:navigation-fragment-ktx", version.ref = "navigationFragmentKtx" }
 navigation-ui-ktx = { module = "androidx.navigation:navigation-ui-ktx", version.ref = "navigationUiKtx" }
+pinview = { module = "io.github.chaosleung:pinview", version.ref = "pinview" }
 prettytime = { module = "org.ocpsoft.prettytime:prettytime", version.ref = "prettytime" }
 shimmer = { module = "com.facebook.shimmer:shimmer", version.ref = "shimmer" }
 tink-android = { module = "com.google.crypto.tink:tink-android", version.ref = "tinkAndroid" }

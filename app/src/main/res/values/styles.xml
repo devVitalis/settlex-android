@@ -68,6 +68,18 @@
         <item name="android:textAllCaps">false</item>
     </style>
 
+    <style name="MyButton.Numeric.KeyPad" parent="Widget.Material3.Button">
+        <item name="android:layout_width">0dp</item>
+        <item name="android:layout_height">48dp</item>
+        <item name="android:layout_margin">3dp</item>
+        <item name="android:layout_columnWeight">1</item>
+        <item name="android:textSize">18sp</item>
+        <item name="android:textColor">@color/black</item>
+        <item name="backgroundTint">@null</item>
+        <item name="android:includeFontPadding">false</item>
+        <item name="android:background">@drawable/bg_numeric_keypad</item>
+    </style>
+
     <!-- CheckBox -->
     <style name="Widget.SettleXApp.CheckBox" parent="Widget.Material3.CompoundButton.CheckBox">
         <item name="buttonTint">@color/checkbox_color_selector_blue</item>
@@ -75,7 +87,7 @@
         <item name="android:textSize">12sp</item>
     </style>
 
-    <!-- TextInputLayout - Outlined -->
+    <!-- TextInputLayout, Outlined -->
     <style name="MyTextInputLayoutThemeOutlined" parent="Widget.Material3.TextInputLayout.OutlinedBox">
         <item name="boxBackgroundColor">@color/white</item>
         <item name="boxStrokeColor">@color/text_input_layout_stroke_color_selector</item>
@@ -111,6 +123,20 @@
         <item name="android:textAlignment">center</item>
         <item name="android:gravity">center</item>
         <item name="android:includeFontPadding">false</item>
+    </style>
+
+    <style name="MyPinBox.Gray" parent="PinWidget.PinView">
+        <item name="itemCount">4</item>
+        <item name="itemSpacing">10dp</item>
+        <item name="lineWidth">1dp</item>
+        <item name="lineColor">@drawable/pin_box_line_color_selector</item>
+        <item name="viewType">rectangle</item>
+        <item name="hideLineWhenFilled">true</item>
+        <item name="android:inputType">numberPassword</item>
+        <item name="android:itemBackground">@color/gray_light</item>
+        <item name="itemRadius">8dp</item>
+        <item name="itemWidth">48dp</item>
+        <item name="itemHeight">48dp</item>
     </style>
 
     <!-- Bottom Navigation Active Indicator -->

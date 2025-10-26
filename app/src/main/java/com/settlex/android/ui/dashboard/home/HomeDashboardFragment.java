@@ -44,6 +44,7 @@ import com.settlex.android.utils.string.StringUtil;
 import com.settlex.android.utils.ui.StatusBarUtil;
 
 import java.util.Arrays;
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -109,19 +110,21 @@ public class HomeDashboardFragment extends Fragment {
         binding.btnLogin.setOnClickListener(v -> navigateToActivity(LoginActivity.class));
         binding.btnBalanceToggle.setOnClickListener(v -> userViewModel.toggleBalanceVisibility());
         binding.btnUserCommissionBalanceLayout.setOnClickListener(v -> navigateToActivity(CommissionWithdrawalActivity.class));
-        binding.btnDeposit.setOnClickListener(v -> toastNewFeature());
+        binding.btnDeposit.setOnClickListener(v -> toggleBrandAwareness());
         binding.btnReceive.setOnClickListener(v -> navigateToActivity(ReceiveActivity.class));
         binding.btnTransfer.setOnClickListener(v -> navigateToActivity(PayAFriendActivity.class));
-        binding.btnNotification.setOnClickListener(v -> toastNewFeature());
-        binding.btnSupport.setOnClickListener(v -> toastNewFeature());
-        binding.btnViewAllTransaction.setOnClickListener(v -> toastNewFeature());
+        binding.btnNotification.setOnClickListener(v -> StringUtil.showNotImplementedToast(requireContext()));
+        binding.btnSupport.setOnClickListener(v -> StringUtil.showNotImplementedToast(requireContext()));
+        binding.btnViewAllTransaction.setOnClickListener(v -> StringUtil.showNotImplementedToast(requireContext()));
     }
 
-    private void toastNewFeature() {
-        Toast.makeText(requireContext(), "This feature is not yet implemented", Toast.LENGTH_SHORT).show();
+    private void toggleBrandAwareness() {
+        boolean isVisible = binding.brandAwarenessContainer.getVisibility() == View.VISIBLE;
+        binding.brandAwarenessContainer.setVisibility(isVisible ? View.GONE : View.VISIBLE);
+        binding.txtBrandAwareness.setSelected(!isVisible);
     }
 
-    //  OBSERVERS =========
+    //  OBSERVERS ======
     private void observeNetworkState() {
         NetworkMonitor.getNetworkStatus().observe(getViewLifecycleOwner(), isConnected -> {
             binding.connectionLost.setVisibility((!isConnected) ? View.VISIBLE : View.GONE);
@@ -241,7 +244,7 @@ public class HomeDashboardFragment extends Fragment {
     }
 
     private void onTransactionStatusLoading() {
-        binding.noTxnData.setVisibility(View.GONE);
+        binding.emptyTransactionsState.setVisibility(View.GONE);
         binding.txnRecyclerView.setVisibility(View.GONE);
         binding.txnShimmerEffect.setVisibility(View.VISIBLE);
         binding.txnShimmerEffect.startShimmer();
@@ -252,8 +255,13 @@ public class HomeDashboardFragment extends Fragment {
             // zero transaction history
             binding.txnShimmerEffect.stopShimmer();
             binding.txnShimmerEffect.setVisibility(View.GONE);
+
+            // clear recyclerview
+            adapter.submitList(Collections.emptyList());
+            binding.txnRecyclerView.setAdapter(adapter);
+
             binding.btnViewAllTransaction.setVisibility(View.GONE);
-            binding.noTxnData.setVisibility(View.VISIBLE);
+            binding.emptyTransactionsState.setVisibility(View.VISIBLE);
             return;
         }
 
@@ -263,13 +271,13 @@ public class HomeDashboardFragment extends Fragment {
 
         binding.txnShimmerEffect.stopShimmer();
         binding.txnShimmerEffect.setVisibility(View.GONE);
-        binding.noTxnData.setVisibility(View.GONE);
+        binding.emptyTransactionsState.setVisibility(View.GONE);
         binding.txnRecyclerView.setVisibility(View.VISIBLE);
     }
 
     private void onTransactionStatusError() {
         // show error state
-        binding.noTxnData.setVisibility(View.VISIBLE);
+        binding.emptyTransactionsState.setVisibility(View.VISIBLE);
     }
 
     private void onItemTransactionClick() {
@@ -348,8 +356,7 @@ public class HomeDashboardFragment extends Fragment {
     private void showLoggedOutLayout() {
         // Hide all logged-in UI elements
         binding.btnProfilePic.setVisibility(View.GONE);
-        binding.marqueeTxt.setSelected(false);
-        binding.marqueeContainer.setVisibility(View.GONE);
+        binding.brandAwarenessContainer.setVisibility(View.GONE);
         binding.btnBalanceToggle.setVisibility(View.GONE);
         binding.greetingContainer.setVisibility(View.GONE);
         binding.actionButtons.setVisibility(View.GONE);

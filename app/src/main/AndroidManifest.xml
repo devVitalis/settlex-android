@@ -3,24 +3,11 @@
     <!-- Required permissions -->
     <uses-permission android:name="android.permission.INTERNET" />
     <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
-    <uses-permission android:name="android.permission.ACCESS_WIFI_STATE" /> <!-- Browsers for opening promo links -->
+    <uses-permission android:name="android.permission.ACCESS_WIFI_STATE" />
     <uses-permission android:name="android.permission.POST_NOTIFICATIONS" />
     <uses-permission
         android:name="android.permission.READ_EXTERNAL_STORAGE"
         android:maxSdkVersion="32" />
-
-    <!--    <queries>-->
-    <!--        <intent>-->
-    <!--            <action android:name="android.intent.action.VIEW" />-->
-
-    <!--            <data android:scheme="http" />-->
-    <!--        </intent>-->
-    <!--        <intent>-->
-    <!--            <action android:name="android.intent.action.VIEW" />-->
-
-    <!--            <data android:scheme="https" />-->
-    <!--        </intent>-->
-    <!--    </queries>-->
 
     <application
         android:name=".SettleXApp"

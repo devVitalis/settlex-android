@@ -99,9 +99,6 @@ dependencies {
     // DataStore (Preferences)
     implementation(libs.datastore.preferences)
 
-    /** Tink for encryption
-    implementation(libs.tink.android) */
-
     // Dependency Injection
     implementation(libs.hilt.android)
     ksp(libs.hilt.android.compiler)
@@ -113,8 +110,11 @@ dependencies {
     // MPAndroid Chart
     implementation(libs.mpandroidchart)
 
-    // Currency Edittext
+    // Currency EditText
     implementation(libs.currencyedittext)
+
+    // Pin/OTP EditText
+    implementation(libs.pinview)
 }
 
 tasks.withType<JavaCompile>().configureEach {

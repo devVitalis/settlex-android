@@ -1,0 +1,127 @@
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:id="@+id/numericKeyboard"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:layout_gravity="bottom"
+    android:background="@color/gray_light"
+    android:gravity="center"
+    android:orientation="vertical"
+    android:paddingVertical="10dp">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="10dp"
+        android:gravity="center"
+        android:orientation="horizontal">
+
+        <ImageView
+            android:layout_width="17dp"
+            android:layout_height="17dp"
+            android:layout_marginEnd="2dp"
+            android:contentDescription="@null"
+            android:src="@drawable/ic_shield_protection" />
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:fontFamily="@font/inter_regular"
+            android:includeFontPadding="false"
+            android:text="SettleX Secure Numeric Keypad"
+            android:textColor="@color/gray"
+            android:textSize="11sp" />
+    </LinearLayout>
+
+    <GridLayout
+        android:id="@+id/keyboardGrid"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:columnCount="3"
+        android:paddingHorizontal="10dp"
+        android:rowCount="4">
+
+        <com.google.android.material.button.MaterialButton
+            style="@style/MyButton.Numeric.KeyPad"
+            android:layout_row="0"
+            android:layout_column="0"
+            android:text="1" />
+
+        <com.google.android.material.button.MaterialButton
+            style="@style/MyButton.Numeric.KeyPad"
+            android:layout_row="0"
+            android:layout_column="1"
+            android:text="2" />
+
+        <com.google.android.material.button.MaterialButton
+            style="@style/MyButton.Numeric.KeyPad"
+            android:layout_row="0"
+            android:layout_column="2"
+            android:text="3" />
+
+        <com.google.android.material.button.MaterialButton
+            style="@style/MyButton.Numeric.KeyPad"
+            android:layout_row="1"
+            android:layout_column="0"
+            android:text="4" />
+
+        <com.google.android.material.button.MaterialButton
+            style="@style/MyButton.Numeric.KeyPad"
+            android:layout_row="1"
+            android:layout_column="1"
+            android:text="5" />
+
+        <com.google.android.material.button.MaterialButton
+            style="@style/MyButton.Numeric.KeyPad"
+            android:layout_row="1"
+            android:layout_column="2"
+            android:text="6" />
+
+        <com.google.android.material.button.MaterialButton
+            style="@style/MyButton.Numeric.KeyPad"
+            android:layout_row="2"
+            android:layout_column="0"
+            android:text="7" />
+
+        <com.google.android.material.button.MaterialButton
+            style="@style/MyButton.Numeric.KeyPad"
+            android:layout_row="2"
+            android:layout_column="1"
+            android:text="8" />
+
+        <com.google.android.material.button.MaterialButton
+            style="@style/MyButton.Numeric.KeyPad"
+            android:layout_row="2"
+            android:layout_column="2"
+            android:text="9" />
+
+        <com.google.android.material.button.MaterialButton
+            android:id="@+id/keyDelete"
+            style="@style/MyButton.Numeric.KeyPad"
+            android:layout_row="3"
+            android:layout_column="0"
+            android:text=""
+            app:icon="@drawable/ic_backspace"
+            app:iconGravity="textStart"
+            app:iconSize="30dp"
+            app:iconTint="@color/black" />
+
+        <com.google.android.material.button.MaterialButton
+            style="@style/MyButton.Numeric.KeyPad"
+            android:layout_row="3"
+            android:layout_column="1"
+            android:text="0" />
+
+        <com.google.android.material.button.MaterialButton
+            android:id="@+id/keyDone"
+            style="@style/MyButton.Numeric.KeyPad"
+            android:layout_row="3"
+            android:layout_column="2"
+            android:text=""
+            android:textColor="@color/blue"
+            app:icon="@drawable/ic_check_circle"
+            app:iconGravity="textStart"
+            app:iconSize="30dp"
+            app:iconTint="@color/black" />
+    </GridLayout>
+</LinearLayout>

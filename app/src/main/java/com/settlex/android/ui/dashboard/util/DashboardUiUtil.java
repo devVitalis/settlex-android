@@ -12,7 +12,10 @@ import com.google.android.material.bottomsheet.BottomSheetDialog;
 import com.settlex.android.R;
 import com.settlex.android.data.remote.profile.ProfileService;
 import com.settlex.android.databinding.BottomSheetConfirmPaymentBinding;
+import com.settlex.android.databinding.BottomSheetPaymentPinConfirmBinding;
 import com.settlex.android.utils.string.StringUtil;
+
+import java.util.function.BiConsumer;
 
 public class DashboardUiUtil {
 
@@ -24,6 +27,7 @@ public class DashboardUiUtil {
         BottomSheetConfirmPaymentBinding binding = BottomSheetConfirmPaymentBinding.inflate(LayoutInflater.from(context));
         BottomSheetDialog dialog = new BottomSheetDialog(context, R.style.MyBottomSheetDialogTheme);
         dialog.setContentView(binding.getRoot());
+
         dialog.setCancelable(false);
         dialog.setCanceledOnTouchOutside(false);
 
@@ -38,7 +42,6 @@ public class DashboardUiUtil {
 
         // conditions
         long SENDER_TOTAL_BALANCE = senderWalletBalance + senderCommissionBalance;
-
         boolean IS_SENDER_TOTAL_BALANCE_SUFFICIENT = SENDER_TOTAL_BALANCE < amountToSend;
         boolean IS_SENDER_WALLET_BALANCE_SUFFICIENT = senderWalletBalance >= amountToSend;
 
@@ -122,5 +125,16 @@ public class DashboardUiUtil {
         });
         dialog.show();
         return dialog;
+    }
+
+    public static void showBottomSheetPaymentPinConfirmation(Context context, BiConsumer<BottomSheetDialog, BottomSheetPaymentPinConfirmBinding> consumer) {
+        BottomSheetPaymentPinConfirmBinding binding = BottomSheetPaymentPinConfirmBinding.inflate(LayoutInflater.from(context));
+        BottomSheetDialog dialog = new BottomSheetDialog(context, R.style.MyBottomSheetDialogTheme);
+        dialog.setContentView(binding.getRoot());
+
+        dialog.setCancelable(false);
+        dialog.setCanceledOnTouchOutside(false);
+
+        if (consumer != null) consumer.accept(dialog, binding);
     }
 }

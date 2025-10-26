@@ -67,7 +67,7 @@
                         android:textColor="@color/black"
                         android:textSize="14sp"
                         android:textStyle="bold"
-                        tools:text="Nnaemeka Benjamin" />
+                        tools:text="Firstname Lastname" />
 
                     <!-- Shimmer user fullName -->
                     <com.facebook.shimmer.ShimmerFrameLayout
@@ -179,7 +179,7 @@
 
                 <!--Marquee Container-->
                 <LinearLayout
-                    android:id="@+id/marqueeContainer"
+                    android:id="@+id/brandAwarenessContainer"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:background="@drawable/bg_8dp_orange_light"
@@ -197,12 +197,11 @@
                         app:tint="@color/orange" />
 
                     <TextView
-                        android:id="@+id/marqueeTxt"
+                        android:id="@+id/txtBrandAwareness"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:ellipsize="marquee"
-                        android:focusable="true"
-                        android:focusableInTouchMode="true"
+                        android:fontFamily="@font/inter_regular"
                         android:includeFontPadding="false"
                         android:marqueeRepeatLimit="marquee_forever"
                         android:scrollHorizontally="true"
@@ -702,7 +701,7 @@
 
                         <!-- No transaction data -->
                         <LinearLayout
-                            android:id="@+id/noTxnData"
+                            android:id="@+id/emptyTransactionsState"
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
                             android:gravity="center"

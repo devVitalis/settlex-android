@@ -227,12 +227,19 @@ public class PayAFriendActivity extends AppCompatActivity {
                 currentUser.getBalance(),
                 currentUser.getCommissionBalance(),
                 () ->
+                        DashboardUiUtil.showBottomSheetPaymentPinConfirmation(
+                                this,
+                                (dialog, binding) -> {
+                                    binding.btnClose.setOnClickListener(v -> dialog.dismiss());
+                                    dialog.show();
+                                })
                         // onPay btn clicked
-                        startPayFriendTransaction(
-                                currentUser.getUid(),
-                                recipientPaymentId,
-                                amountToSend,
-                                description));
+//                        startPayFriendTransaction(
+//                                currentUser.getUid(),
+//                                recipientPaymentId,
+//                                amountToSend,
+//                                description)
+                                );
     }
 
     private void startPayFriendTransaction(String fromSenderUid, String toRecipient, long amountToSend, String description) {

@@ -23,6 +23,7 @@ import com.settlex.android.R;
 import com.settlex.android.SettleXApp;
 import com.settlex.android.data.remote.profile.ProfileService;
 import com.settlex.android.databinding.FragmentDashboardAccountBinding;
+import com.settlex.android.ui.auth.activity.LoginActivity;
 import com.settlex.android.ui.dashboard.account.activity.SettingsActivity;
 import com.settlex.android.ui.dashboard.home.ProfileActivity;
 import com.settlex.android.ui.dashboard.model.UserUiModel;
@@ -95,7 +96,10 @@ public class AccountDashboardFragment extends Fragment {
         binding.btnEarnRewards.setOnClickListener(view -> navigateToFragment(R.id.rewardsFragment));
         binding.btnTermsAndCondition.setOnClickListener(view -> navigateToActivity(TermsAndConditionsActivity.class));
         binding.btnPrivacyPolicy.setOnClickListener(view -> navigateToActivity(PrivacyPolicyActivity.class));
-        binding.btnSignOut.setOnClickListener(view -> userViewModel.signOut());
+        binding.btnSignOut.setOnClickListener(view -> {
+            userViewModel.signOut();
+            navigateToActivity(LoginActivity.class);
+        });
         binding.appVersion.setText(getAppVersion());
     }
 
