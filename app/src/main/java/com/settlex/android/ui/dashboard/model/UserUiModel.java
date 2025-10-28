@@ -3,11 +3,12 @@ package com.settlex.android.ui.dashboard.model;
 import com.google.firebase.Timestamp;
 
 public class UserUiModel {
-    private final String uid, email, firstName, lastName, phone, paymentId, profileUrl, profileDeleteUrl;
+    private final String uid, email, firstName, lastName, phone, paymentId, profileUrl;
+    boolean hasPin;
     private final long balance, commissionBalance, referralBalance;
     private final Timestamp createdAt;
 
-    public UserUiModel(String uid, String email, String firstName, String lastName, Timestamp createdAt, String phone, String paymentId, String profileUrl, String profileDeleteUrl, long balance, long commissionBalance, long referralBalance) {
+    public UserUiModel(String uid, String email, String firstName, String lastName, Timestamp createdAt, String phone, String paymentId, String profileUrl, boolean hasPin, long balance, long commissionBalance, long referralBalance) {
         this.uid = uid;
         this.email = email;
         this.firstName = firstName;
@@ -15,7 +16,7 @@ public class UserUiModel {
         this.createdAt = createdAt;
         this.paymentId = paymentId;
         this.profileUrl = profileUrl;
-        this.profileDeleteUrl = profileDeleteUrl;
+        this.hasPin = hasPin;
         this.phone = phone;
         this.balance = balance;
         this.commissionBalance = commissionBalance;
@@ -51,8 +52,8 @@ public class UserUiModel {
         return profileUrl;
     }
 
-    public String getProfileDeleteUrl() {
-        return profileDeleteUrl;
+    public boolean hasPin() {
+        return hasPin;
     }
 
     public String getPhone() {

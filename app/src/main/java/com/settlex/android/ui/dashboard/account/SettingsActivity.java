@@ -1,4 +1,4 @@
-package com.settlex.android.ui.dashboard.account.activity;
+package com.settlex.android.ui.dashboard.account;
 
 import android.os.Bundle;
 

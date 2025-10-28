@@ -87,7 +87,7 @@
 
                 <com.google.android.material.button.MaterialButton
                     android:id="@+id/btnWithdraw"
-                    style="@style/MyDefaultButton.Filled.Blue"
+                    style="@style/DefaultButton.Filled.Blue"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:backgroundTint="@color/orange"

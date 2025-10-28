@@ -13,29 +13,18 @@ import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.FirebaseFirestoreException;
 import com.google.firebase.firestore.ListenerRegistration;
-import com.google.firebase.firestore.Query;
 import com.google.firebase.firestore.SetOptions;
 import com.google.firebase.functions.FirebaseFunctions;
 import com.settlex.android.data.local.UserPrefs;
-import com.settlex.android.data.remote.dto.TransactionDto;
 import com.settlex.android.data.remote.dto.UserDto;
 import com.settlex.android.utils.event.Result;
 
 import java.io.IOException;
-import java.util.ArrayList;
 import java.util.Collections;
-import java.util.List;
 
 import jakarta.inject.Inject;
 import jakarta.inject.Singleton;
 
-/**
- * Repository managing user account session and data.
- * - Owns FirebaseAuth listener
- * - Owns Firestore snapshot listeners
- * - Exposes LiveData for auth state and user profile
- * - Ensures no duplicate listeners or stale data
- */
 @Singleton
 public class UserRepository {
     private final String TAG = UserRepository.class.getSimpleName();
@@ -50,22 +39,22 @@ public class UserRepository {
     private final FirebaseFirestore firestore;
     private final FirebaseAuth auth;
     private final UserPrefs userPrefs;
+    private final TransactionRepository transactionRepo;
 
     // Internal listeners
     private ListenerRegistration userListener;
-    private ListenerRegistration transactionListener;
     private FirebaseAuth.AuthStateListener authStateListener;
 
     @Inject
-    public UserRepository(FirebaseAuth auth, FirebaseFirestore firestore, FirebaseFunctions functions, UserPrefs userPrefs) {
+    public UserRepository(FirebaseAuth auth, FirebaseFirestore firestore, FirebaseFunctions functions, UserPrefs userPrefs, TransactionRepository transactionRepo) {
         this.auth = auth;
         this.firestore = firestore;
         this.functions = functions;
         this.userPrefs = userPrefs;
+        this.transactionRepo = transactionRepo;
 
         // setup once (single source of truth)
         initAuthStateListener();
-        Log.d("Repository", "UserRepo Instance created: " + this);
     }
 
     private void initAuthStateListener() {
@@ -90,7 +79,7 @@ public class UserRepository {
     }
 
     public LiveData<FirebaseUser> getSharedUserAuthState() {
-        // Expose current user
+        // Expose user auth state
         return sharedUserAuthState;
     }
 
@@ -143,46 +132,6 @@ public class UserRepository {
         return isBalanceHiddenLiveData;
     }
 
-    public void getUserTransactions(String uid, int limit, TransactionCallback callback) {
-        removeTransactionListener(); // avoid multiple listeners
-
-        Log.d("Repository", "fetching new transactions for user: " + uid);
-        transactionListener = firestore.collection("users")
-                .document(uid)
-                .collection("transactions")
-                .orderBy("createdAt", Query.Direction.DESCENDING)
-                .limit(limit)
-                .addSnapshotListener((snapshots, error) -> {
-                    if (error != null) {
-                        callback.onError(error.getMessage());
-                        return;
-                    }
-
-                    if (snapshots == null || snapshots.isEmpty()) {
-                        callback.onResult(Collections.emptyList());
-                        return;
-                    }
-
-                    List<TransactionDto> transactions = new ArrayList<>();
-                    for (DocumentSnapshot doc : snapshots.getDocuments()) {
-                        TransactionDto txn = doc.toObject(TransactionDto.class);
-                        if (txn != null) transactions.add(txn);
-                    }
-                    callback.onResult(transactions);
-                });
-    }
-
-    public interface TransactionCallback {
-        void onResult(List<TransactionDto> dtolist);
-
-        void onError(String reason);
-    }
-
-    private void removeTransactionListener() {
-        if (transactionListener == null) return;
-        transactionListener.remove();
-        transactionListener = null;
-    }
 
     public void uploadUserProfilePicToServer(String imageBase64, UploadProfilePicCallback callback) {
         functions.getHttpsCallable("uploadProfilePic")
@@ -210,9 +159,8 @@ public class UserRepository {
         FirebaseUser user = auth.getCurrentUser();
         if (user == null) return;
 
-        user.reload()
-                .addOnFailureListener(e ->
-                        Log.e(TAG, "Failed to reload user: " + e.getMessage(), e));
+        user.reload().addOnFailureListener(e ->
+                Log.e(TAG, "Failed to reload user: " + e.getMessage(), e));
 
     }
 
@@ -245,12 +193,11 @@ public class UserRepository {
                     DocumentSnapshot docSnapshot = transaction.get(globalDocRef);
 
                     if (docSnapshot.exists()) {
-                        throw new FirebaseFirestoreException("Payment ID is already taken",
-                                FirebaseFirestoreException.Code.ABORTED);
+                        throw new FirebaseFirestoreException("Payment ID is already taken", FirebaseFirestoreException.Code.ABORTED);
                     }
 
-                    // save payment ID
-                    transaction.set(globalDocRef, Collections.singletonMap("UserUid", uid));
+                    // save Payment ID
+                    transaction.set(globalDocRef, Collections.singletonMap("UserId", uid));
                     // merge so existing content remains
                     transaction.set(userDocRef, Collections.singletonMap("paymentId", paymentId), SetOptions.merge());
                     return null;
@@ -273,12 +220,13 @@ public class UserRepository {
     }
 
     public void signOut() {
+        // End session
         auth.signOut();
     }
 
     private void clearUserSession() {
         removeUserListener();
-        removeTransactionListener();
+        transactionRepo.removeTransactionListener();
         // don’t remove authStateListener,
         // we want it alive to pick up next login
     }

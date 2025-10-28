@@ -1,10 +1,16 @@
 package com.settlex.android.data.repository;
 
+import android.util.Log;
+
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.google.firebase.FirebaseNetworkException;
+import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
+import com.google.firebase.firestore.ListenerRegistration;
+import com.google.firebase.firestore.Query;
 import com.google.firebase.functions.FirebaseFunctions;
 import com.settlex.android.data.remote.dto.RecipientDto;
+import com.settlex.android.data.remote.dto.TransactionDto;
 
 import java.io.IOException;
 import java.util.ArrayList;
@@ -22,6 +28,7 @@ public class TransactionRepository {
     // dependencies
     private final FirebaseFunctions functions;
     private final FirebaseFirestore firestore;
+    private ListenerRegistration transactionListener;
 
     @Inject
     public TransactionRepository(FirebaseFunctions functions, FirebaseFirestore firestore) {
@@ -86,5 +93,46 @@ public class TransactionRepository {
     public interface PayFriendCallback {
         void onPayFriendSuccess();
         void onPayFriendFailed(String reason);
+    }
+
+
+    public void getTransactions(String uid, int limit, TransactionCallback callback) {
+        removeTransactionListener(); // avoid multiple listeners
+
+        Log.d("Repository", "fetching new transactions for user: " + uid);
+        transactionListener = firestore.collection("users")
+                .document(uid)
+                .collection("transactions")
+                .orderBy("createdAt", Query.Direction.DESCENDING)
+                .limit(limit)
+                .addSnapshotListener((snapshots, error) -> {
+                    if (error != null) {
+                        callback.onError(error.getMessage());
+                        return;
+                    }
+
+                    if (snapshots == null || snapshots.isEmpty()) {
+                        callback.onResult(Collections.emptyList());
+                        return;
+                    }
+
+                    List<TransactionDto> transactions = new ArrayList<>();
+                    for (DocumentSnapshot doc : snapshots.getDocuments()) {
+                        TransactionDto txn = doc.toObject(TransactionDto.class);
+                        if (txn != null) transactions.add(txn);
+                    }
+                    callback.onResult(transactions);
+                });
+    }
+
+    public interface TransactionCallback {
+        void onResult(List<TransactionDto> dtolist);
+        void onError(String reason);
+    }
+
+    public void removeTransactionListener() {
+        if (transactionListener == null) return;
+        transactionListener.remove();
+        transactionListener = null;
     }
 }

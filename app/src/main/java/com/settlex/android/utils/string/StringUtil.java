@@ -133,19 +133,6 @@ public class StringUtil {
     }
 
     /**
-     * Formats a BigDecimal into local currency string without ₦ symbol
-     */
-    public static String formatToCurrency(BigDecimal number) {
-        Locale NIG_LOCAL = Locale.forLanguageTag("en-NG");
-        NumberFormat numberFormatter = NumberFormat.getCurrencyInstance(NIG_LOCAL);
-
-        String formattedAmount = numberFormatter.format(number);
-        String symbol = Objects.requireNonNull(numberFormatter.getCurrency()).getSymbol(NIG_LOCAL);
-
-        return formattedAmount.replace(symbol, "").trim();
-    }
-
-    /**
      * Converts large amounts to readable short forms, e.g. ₦2.5K / ₦3.2M / ₦1.1B
      */
     public static String formatToNairaShort(long amountInKobo) {
@@ -168,20 +155,36 @@ public class StringUtil {
     }
 
     /**
+     * Formats a BigDecimal into local currency string without ₦ symbol
+     */
+    public static String formatToCurrency(BigDecimal number) {
+        Locale NIG_LOCAL = Locale.forLanguageTag("en-NG");
+        NumberFormat numberFormatter = NumberFormat.getCurrencyInstance(NIG_LOCAL);
+
+        String formattedAmount = numberFormatter.format(number);
+        String symbol = Objects.requireNonNull(numberFormatter.getCurrency()).getSymbol(NIG_LOCAL);
+
+        return formattedAmount.replace(symbol, "").trim();
+    }
+
+    /**
      * Converts a Naira string like "120.50" to its equivalent Kobo value (12050L)
      */
     public static long convertNairaStringToKobo(String amountString) {
         if (amountString == null || amountString.trim().isEmpty()) {
             return 0L;
         }
+        try {
+            BigDecimal amount = new BigDecimal(amountString.trim());
+            BigDecimal amountInKobo = amount.multiply(new BigDecimal("100"));
 
-        BigDecimal amount = new BigDecimal(amountString.trim());
-        BigDecimal amountInCents = amount.multiply(new BigDecimal("100"));
+            // Round to nearest whole Kobo
+            BigDecimal roundedKobo = amountInKobo.setScale(0, RoundingMode.HALF_UP);
 
-        // Round to nearest whole Kobo
-        BigDecimal roundedCents = amountInCents.setScale(0, RoundingMode.HALF_UP);
-
-        return roundedCents.longValueExact();
+            return roundedKobo.longValueExact();
+        } catch (ArithmeticException | NumberFormatException e) {
+            return 0L;
+        }
     }
 
     /**
@@ -246,7 +249,7 @@ public class StringUtil {
         }
     }
 
-    public static void showNotImplementedToast(Context context){
+    public static void showNotImplementedToast(Context context) {
         Toast.makeText(context, "Feature not yet implemented", Toast.LENGTH_SHORT).show();
     }
 }

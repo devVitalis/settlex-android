@@ -24,7 +24,6 @@ import com.settlex.android.SettleXApp;
 import com.settlex.android.data.remote.profile.ProfileService;
 import com.settlex.android.databinding.FragmentDashboardAccountBinding;
 import com.settlex.android.ui.auth.activity.LoginActivity;
-import com.settlex.android.ui.dashboard.account.activity.SettingsActivity;
 import com.settlex.android.ui.dashboard.home.ProfileActivity;
 import com.settlex.android.ui.dashboard.model.UserUiModel;
 import com.settlex.android.ui.dashboard.viewmodel.UserViewModel;

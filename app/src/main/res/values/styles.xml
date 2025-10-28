@@ -17,7 +17,7 @@
     </style>
 
     <!-- Buttons -->
-    <style name="MyDefaultButton.Filled.Blue" parent="Widget.Material3.Button">
+    <style name="DefaultButton.Filled.Blue" parent="Widget.Material3.Button">
         <item name="backgroundTint">@color/btn_filled_color_selector_blue</item>
         <item name="android:textColor">@color/white</item>
         <item name="android:fontFamily">sans-serif</item>
@@ -25,7 +25,7 @@
         <item name="android:textAllCaps">false</item>
     </style>
 
-    <style name="MyButton.Filled.Gradient" parent="Widget.Material3.Button">
+    <style name="Button.Filled.Gradient" parent="Widget.Material3.Button">
         <item name="android:background">@drawable/btn_gradient_blue</item>
         <item name="backgroundTint">@null</item>
         <item name="android:fontFamily">sans-serif</item>
@@ -34,7 +34,7 @@
         <item name="android:textAllCaps">false</item>
     </style>
 
-    <style name="Widget.SettleXApp.Button.Filled.Rounded8.Blue" parent="Widget.Material3.Button">
+    <style name="Button.Filled.Rounded8.Blue" parent="Widget.Material3.Button">
         <item name="backgroundTint">@color/btn_filled_color_selector_blue</item>
         <item name="android:textColor">@color/white</item>
         <item name="android:fontFamily">sans-serif</item>
@@ -43,7 +43,7 @@
         <item name="shapeAppearance">@style/Rounded_Shape_8dp</item>
     </style>
 
-    <style name="MyButton.Filled.Tonal.BlueLight" parent="Widget.Material3.Button">
+    <style name="Button.Filled.Tonal.BlueLight" parent="Widget.Material3.Button">
         <item name="backgroundTint">@color/btn_filled_color_selector_light_blue</item>
         <item name="android:textColor">@color/blue</item>
         <item name="android:fontFamily">sans-serif</item>
@@ -51,7 +51,7 @@
         <item name="android:textAllCaps">false</item>
     </style>
 
-    <style name="Widget.SettleXApp.Button.Filled.Tonal.Rounded8.BlueLight" parent="Widget.Material3.Button">
+    <style name="Button.Filled.Tonal.Rounded8.BlueLight" parent="Widget.Material3.Button">
         <item name="backgroundTint">@color/btn_filled_color_selector_light_blue</item>
         <item name="android:textColor">@color/blue</item>
         <item name="android:includeFontPadding">false</item>
@@ -60,7 +60,7 @@
         <item name="shapeAppearance">@style/Rounded_Shape_8dp</item>
     </style>
 
-    <style name="MyButton.Outlined.Blue" parent="Widget.Material3.Button.OutlinedButton">
+    <style name="Button.Outlined.Blue" parent="Widget.Material3.Button.OutlinedButton">
         <item name="android:textColor">@color/btn_outlined_text_color_selector</item>
         <item name="strokeColor">@color/btn_outlined_color_selector</item>
         <item name="android:fontFamily">sans-serif</item>
@@ -68,7 +68,7 @@
         <item name="android:textAllCaps">false</item>
     </style>
 
-    <style name="MyButton.Numeric.KeyPad" parent="Widget.Material3.Button">
+    <style name="Button.Numeric.KeyPad" parent="Widget.Material3.Button">
         <item name="android:layout_width">0dp</item>
         <item name="android:layout_height">48dp</item>
         <item name="android:layout_margin">3dp</item>
@@ -125,16 +125,15 @@
         <item name="android:includeFontPadding">false</item>
     </style>
 
-    <style name="MyPinBox.Gray" parent="PinWidget.PinView">
+    <style name="MyPinBox.Gray.Light" parent="PinWidget.PinView">
         <item name="itemCount">4</item>
         <item name="itemSpacing">10dp</item>
-        <item name="lineWidth">1dp</item>
-        <item name="lineColor">@drawable/pin_box_line_color_selector</item>
         <item name="viewType">rectangle</item>
-        <item name="hideLineWhenFilled">true</item>
-        <item name="android:inputType">numberPassword</item>
-        <item name="android:itemBackground">@color/gray_light</item>
         <item name="itemRadius">8dp</item>
+        <item name="android:cursorVisible">false</item>
+        <item name="lineColor">@color/pin_box_line_color_selector</item>
+        <item name="lineWidth">1.5dp</item>
+        <item name="android:itemBackground">@drawable/pin_box_bg_color_selector</item>
         <item name="itemWidth">48dp</item>
         <item name="itemHeight">48dp</item>
     </style>
@@ -179,4 +178,7 @@
         <item name="android:backgroundTint">@color/white</item>
     </style>
 
+    <style name="CustomMaterialDialog" parent="MaterialAlertDialog.Material3">
+        <item name="shapeAppearanceOverlay">@style/Rounded_Shape_16dp</item>
+    </style>
 </resources>

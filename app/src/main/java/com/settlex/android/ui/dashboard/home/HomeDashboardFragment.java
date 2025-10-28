@@ -37,6 +37,7 @@ import com.settlex.android.ui.dashboard.services.BettingTopUpActivity;
 import com.settlex.android.ui.dashboard.services.CableTvSubscriptionActivity;
 import com.settlex.android.ui.dashboard.services.DataPurchaseActivity;
 import com.settlex.android.ui.dashboard.viewmodel.PromoBannerViewModel;
+import com.settlex.android.ui.dashboard.viewmodel.TransactionViewModel;
 import com.settlex.android.ui.dashboard.viewmodel.UserViewModel;
 import com.settlex.android.utils.event.Result;
 import com.settlex.android.utils.network.NetworkMonitor;
@@ -61,6 +62,7 @@ public class HomeDashboardFragment extends Fragment {
     private FragmentDashboardHomeBinding binding;
     private TransactionsAdapter adapter;
     private UserViewModel userViewModel;
+    private TransactionViewModel transactionViewModel;
     private boolean isConnected = false;
     private PromoBannerViewModel promoBannerViewModel;
     private final Handler autoScrollHandler = new Handler(Looper.getMainLooper());
@@ -74,6 +76,7 @@ public class HomeDashboardFragment extends Fragment {
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         userViewModel = new ViewModelProvider(requireActivity()).get(UserViewModel.class);
+        transactionViewModel = new ViewModelProvider(requireActivity()).get(TransactionViewModel.class);
         promoBannerViewModel = new ViewModelProvider(requireActivity()).get(PromoBannerViewModel.class);
     }
 
@@ -232,7 +235,7 @@ public class HomeDashboardFragment extends Fragment {
     }
 
     private void observeAndLoadRecentTransactions(String uid) {
-        userViewModel.getRecentTransactionLiveData(uid, 2).observe(getViewLifecycleOwner(), transactions -> {
+        transactionViewModel.getTransactionLiveData(uid, 2).observe(getViewLifecycleOwner(), transactions -> {
             if (transactions == null) return;
 
             switch (transactions.getStatus()) {

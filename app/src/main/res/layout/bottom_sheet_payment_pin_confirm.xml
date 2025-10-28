@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:gravity="center"
@@ -26,27 +27,15 @@
         android:textColor="@color/black"
         android:textSize="14sp" />
 
-    <LinearLayout
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="15dp"
-        android:gravity="center"
-        android:orientation="horizontal">
-
-        <include layout="@layout/item_pin_box" />
-
-        <include layout="@layout/item_pin_box" />
-
-        <include layout="@layout/item_pin_box" />
-
-        <include layout="@layout/item_pin_box" />
-    </LinearLayout>
-
     <com.chaos.view.PinView
-        style="@style/MyPinBox.Gray"
+        android:id="@+id/pinBox"
+        style="@style/MyPinBox.Gray.Light"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginTop="15dp" />
+        android:layout_marginTop="15dp"
+        android:inputType="numberPassword"
+        android:textSize="5sp"
+        tools:ignore="SmallSp" />
 
     <TextView
         android:id="@+id/btnForgotPaymentPin"
@@ -59,5 +48,9 @@
         android:textColor="@color/blue"
         android:textSize="12sp" />
 
-    <include layout="@layout/item_numeric_keypad" />
+    <com.settlex.android.ui.common.custom.CustomNumericKeypad
+        android:id="@+id/numericKeypad"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_gravity="bottom" />
 </LinearLayout>

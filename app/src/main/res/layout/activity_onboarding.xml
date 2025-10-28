@@ -75,7 +75,7 @@
             <!--Btn Create Account-->
             <com.google.android.material.button.MaterialButton
                 android:id="@+id/btnCreateAccount"
-                style="@style/MyDefaultButton.Filled.Blue"
+                style="@style/DefaultButton.Filled.Blue"
                 android:layout_width="match_parent"
                 android:layout_height="60dp"
                 android:text="Get Started"
@@ -85,7 +85,7 @@
             <!--Btn Login-->
             <com.google.android.material.button.MaterialButton
                 android:id="@+id/btnLogin"
-                style="@style/MyButton.Filled.Tonal.BlueLight"
+                style="@style/Button.Filled.Tonal.BlueLight"
                 android:layout_width="match_parent"
                 android:layout_height="60dp"
                 android:layout_marginTop="2dp"

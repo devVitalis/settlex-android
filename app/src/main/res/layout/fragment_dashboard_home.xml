@@ -90,7 +90,7 @@
 
             <com.google.android.material.button.MaterialButton
                 android:id="@+id/btnLogin"
-                style="@style/MyButton.Outlined.Blue"
+                style="@style/Button.Outlined.Blue"
                 android:layout_width="80dp"
                 android:layout_height="40dp"
                 android:layout_marginStart="5dp"
@@ -597,7 +597,7 @@
 
                     <com.google.android.material.button.MaterialButton
                         android:id="@+id/btnOkay"
-                        style="@style/MyButton.Outlined.Blue"
+                        style="@style/Button.Outlined.Blue"
                         android:layout_width="70dp"
                         android:layout_height="40dp"
                         android:layout_marginStart="5dp"
@@ -773,7 +773,7 @@
                         app:dotsSpacing="2dp"
                         app:dotsWidthFactor="2.5"
                         app:progressMode="false"
-                        app:selectedDotColor="@color/blue" />
+                        app:selectedDotColor="@color/white" />
                 </FrameLayout>
             </LinearLayout>
         </ScrollView>

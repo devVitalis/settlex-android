@@ -10,12 +10,10 @@ import android.view.View;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
-import androidx.appcompat.app.AlertDialog;
 
 import com.google.android.material.bottomsheet.BottomSheetDialog;
 import com.google.android.material.dialog.MaterialAlertDialogBuilder;
 import com.settlex.android.R;
-import com.settlex.android.databinding.AlertDialogBinding;
 import com.settlex.android.databinding.BottomSheetDialogBinding;
 
 import java.util.function.BiConsumer;
@@ -47,18 +45,6 @@ public class UiUtil {
         }
 
         if (config != null) config.accept(dialog, binding);
-    }
-
-    public static void showCustomAlertDialog(Context context, BiConsumer<AlertDialog, AlertDialogBinding> config) {
-        AlertDialogBinding binding = AlertDialogBinding.inflate(LayoutInflater.from(context));
-
-        MaterialAlertDialogBuilder builder = new MaterialAlertDialogBuilder(context)
-                .setView(binding.getRoot())
-                .setCancelable(false);
-
-        AlertDialog alertDialog = builder.create();
-
-        if (config != null) config.accept(alertDialog, binding);
     }
 
     public static void showSimpleAlertDialog(Context context, String title, String message) {

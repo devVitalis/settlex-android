@@ -23,6 +23,7 @@ import com.settlex.android.data.enums.TransactionStatus;
 import com.settlex.android.data.remote.profile.ProfileService;
 import com.settlex.android.databinding.ActivityPayAfriendBinding;
 import com.settlex.android.ui.common.util.ProgressLoaderController;
+import com.settlex.android.ui.dashboard.account.CreatePaymentPinActivity;
 import com.settlex.android.ui.dashboard.adapter.RecipientAdapter;
 import com.settlex.android.ui.dashboard.model.RecipientUiModel;
 import com.settlex.android.ui.dashboard.model.UserUiModel;
@@ -226,20 +227,25 @@ public class PayAFriendActivity extends AppCompatActivity {
                 amountToSend,
                 currentUser.getBalance(),
                 currentUser.getCommissionBalance(),
-                () ->
-                        DashboardUiUtil.showBottomSheetPaymentPinConfirmation(
-                                this,
-                                (dialog, binding) -> {
-                                    binding.btnClose.setOnClickListener(v -> dialog.dismiss());
-                                    dialog.show();
-                                })
-                        // onPay btn clicked
-//                        startPayFriendTransaction(
-//                                currentUser.getUid(),
-//                                recipientPaymentId,
-//                                amountToSend,
-//                                description)
+                () -> {
+                    if (!currentUser.hasPin()) {
+                        promptTransactionPinCreation();
+                        return;
+                    }
+                    // onPay btn click
+                    DashboardUiUtil.showBottomSheetPaymentPinConfirmation(
+                            this,
+                            () -> {
+                                // onPinConfirmation success btn clicked
+                                startPayFriendTransaction(
+                                        currentUser.getUid(),
+                                        recipientPaymentId,
+                                        amountToSend,
+                                        description
                                 );
+                            });
+                }
+        );
     }
 
     private void startPayFriendTransaction(String fromSenderUid, String toRecipient, long amountToSend, String description) {
@@ -252,8 +258,36 @@ public class PayAFriendActivity extends AppCompatActivity {
                 description);
     }
 
+    private void promptTransactionPinCreation() {
+        String title = "Transaction PIN Required";
+        String message = "Please set up your Transaction PIN to complete this transaction securely";
+        String btnPriText = "Create PIN";
+        String btnSecText = "Cancel";
+
+        DashboardUiUtil.showCustomAlertDialog(
+                this,
+                (dialog, dialogBinding) -> {
+                    dialogBinding.title.setText(title);
+                    dialogBinding.message.setText(message);
+                    dialogBinding.btnPrimary.setText(btnPriText);
+                    dialogBinding.btnSecondary.setText(btnSecText);
+                    dialogBinding.icon.setImageResource(R.drawable.ic_lock_filled);
+
+                    dialogBinding.btnSecondary.setOnClickListener(v -> dialog.dismiss());
+                    dialogBinding.btnPrimary.setOnClickListener(v -> startActivity(new Intent(this, CreatePaymentPinActivity.class)));
+                }
+        );
+    }
+
     private void searchRecipient(String paymentId) {
-        transactionViewModel.searchRecipientWithUsername(paymentId);
+        if (StringUtil.removeAtInPaymentId(paymentId).equals(currentUser.getPaymentId())) {
+            String ERROR_CANNOT_SEND_TO_SELF = "You cannot send a payment to your own account. Please choose a different recipient";
+
+            binding.txtError.setText(ERROR_CANNOT_SEND_TO_SELF);
+            binding.txtError.setVisibility(View.VISIBLE);
+            return;
+        }
+        transactionViewModel.searchRecipient(paymentId);
     }
 
     private void setupRecipientRecyclerView() {
@@ -267,13 +301,13 @@ public class PayAFriendActivity extends AppCompatActivity {
     private void handleOnRecipientItemClick() {
         recipientAdapter.setOnItemClickListener(recipient -> {
             // Sender = receiver
-            if (StringUtil.removeAtInPaymentId(recipient.getPaymentId()).equals(currentUser.getPaymentId())) {
-                String ERROR_CANNOT_SEND_TO_SELF = "You cannot send a payment to your own account. Please choose a different recipient";
-
-                binding.txtError.setText(ERROR_CANNOT_SEND_TO_SELF);
-                binding.txtError.setVisibility(View.VISIBLE);
-                return;
-            }
+//            if (StringUtil.removeAtInPaymentId(recipient.getPaymentId()).equals(currentUser.getPaymentId())) {
+//                String ERROR_CANNOT_SEND_TO_SELF = "You cannot send a payment to your own account. Please choose a different recipient";
+//
+//                binding.txtError.setText(ERROR_CANNOT_SEND_TO_SELF);
+//                binding.txtError.setVisibility(View.VISIBLE);
+//                return;
+//            }
 
             binding.editTxtPaymentId.setText(recipient.getPaymentId());
             binding.editTxtPaymentId.setSelection(binding.editTxtPaymentId.getText().length());
@@ -300,7 +334,7 @@ public class PayAFriendActivity extends AppCompatActivity {
 
             @Override
             public void afterTextChanged(Editable editable) {
-                boolean showVerifyBtn = editable.toString().trim().length() >= 3;
+                boolean showVerifyBtn = editable.toString().trim().length() >= 5;
                 binding.btnVerify.setVisibility(showVerifyBtn ? View.VISIBLE : View.GONE);
             }
 
@@ -325,14 +359,16 @@ public class PayAFriendActivity extends AppCompatActivity {
             }
 
             @Override
-            public void onTextChanged(CharSequence s, int start, int before, int count) {
-                boolean isEmpty = s.toString().trim().isEmpty();
-                if (!isEmpty) {
-                    String cleanedAmount = s.toString().replaceAll(",", "");
+            public void onTextChanged(CharSequence rawAmount, int start, int before, int count) {
+                boolean isAmountEmpty = rawAmount.toString().trim().isEmpty();
+                String ERROR_INVALID_AMOUNT = "Amount must be in range of ₦100 - ₦1,000,000.00";
+
+                if (!isAmountEmpty) {
+                    String cleanedAmount = rawAmount.toString().replaceAll(",", "");
                     amountToSend = StringUtil.convertNairaStringToKobo(cleanedAmount);
                 }
-                String ERROR_INVALID_AMOUNT = "Amount must be in range of ₦100 - ₦500,000.00";
-                boolean shouldShowError = !isAmountValid(amountToSend) && !isEmpty;
+
+                boolean shouldShowError = !isAmountInRange(amountToSend) && !isAmountEmpty;
                 binding.txtAmountFeedback.setText((shouldShowError) ? ERROR_INVALID_AMOUNT : "");
                 binding.txtAmountFeedback.setVisibility((shouldShowError) ? View.VISIBLE : View.GONE);
 
@@ -343,16 +379,16 @@ public class PayAFriendActivity extends AppCompatActivity {
 
     private void updateNextButtonState() {
         boolean recipientSelected = binding.selectedRecipient.getVisibility() == View.VISIBLE;
-        enableNextButton(isPaymentIdValid(recipientPaymentId) && isAmountValid(amountToSend) && recipientSelected);
+        enableNextButton(isPaymentIdValid(recipientPaymentId) && isAmountInRange(amountToSend) && recipientSelected);
     }
 
     private boolean isPaymentIdValid(String paymentId) {
-        return paymentId != null && paymentId.matches("^[a-z0-9]([a-z0-9]*[._]?[a-z0-9]*)+[a-z0-9]$");
+        return paymentId != null && paymentId.matches("^@?[A-Za-z][A-Za-z0-9]{4,19}$");
     }
 
-    private boolean isAmountValid(long amount) {
+    private boolean isAmountInRange(long amount) {
         // The amount is stored in kobo (smallest currency unit)
-        return amount >= 10_000L && amount <= 50_000_000_000L;
+        return amount >= 10_000L && amount <= 100_000_000L;
     }
 
 
@@ -362,17 +398,6 @@ public class PayAFriendActivity extends AppCompatActivity {
     }
 
     private void setupEditTextFocusHandlers() {
-        View.OnClickListener focusListener = v -> {
-            if (v instanceof EditText) {
-                v.setFocusableInTouchMode(true);
-                v.setFocusable(true);
-                v.requestFocus();
-            }
-        };
-        binding.editTxtPaymentId.setOnClickListener(focusListener);
-        binding.editTxtAmount.setOnClickListener(focusListener);
-        binding.editTxtDescription.setOnClickListener(focusListener);
-
         binding.editTxtPaymentId.setOnFocusChangeListener((v, hasFocus) -> binding.editTxtPaymentIdBackground.setBackgroundResource(hasFocus ? R.drawable.bg_edit_txt_custom_white_focused : R.drawable.bg_edit_txt_custom_gray_not_focused));
         binding.editTxtDescription.setOnFocusChangeListener((v, hasFocus) -> binding.editTxtDescriptionBackground.setBackgroundResource(hasFocus ? R.drawable.bg_edit_txt_custom_white_focused : R.drawable.bg_edit_txt_custom_gray_not_focused));
 

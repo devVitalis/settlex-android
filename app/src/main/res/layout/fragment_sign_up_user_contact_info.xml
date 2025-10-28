@@ -331,7 +331,7 @@
 
         <com.google.android.material.button.MaterialButton
             android:id="@+id/btnContinue"
-            style="@style/Widget.SettleXApp.Button.Filled.Rounded8.Blue"
+            style="@style/Button.Filled.Rounded8.Blue"
             android:layout_width="match_parent"
             android:layout_height="55dp"
             android:layout_gravity="center"

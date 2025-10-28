@@ -7,14 +7,21 @@ import android.graphics.Shader;
 import android.os.Build;
 import android.view.LayoutInflater;
 import android.view.View;
+import android.view.inputmethod.InputMethodManager;
+
+import androidx.appcompat.app.AlertDialog;
 
 import com.google.android.material.bottomsheet.BottomSheetDialog;
+import com.google.android.material.dialog.MaterialAlertDialogBuilder;
 import com.settlex.android.R;
 import com.settlex.android.data.remote.profile.ProfileService;
+import com.settlex.android.databinding.AlertDialogCustomBinding;
 import com.settlex.android.databinding.BottomSheetConfirmPaymentBinding;
 import com.settlex.android.databinding.BottomSheetPaymentPinConfirmBinding;
+import com.settlex.android.ui.common.custom.CustomNumericKeypad;
 import com.settlex.android.utils.string.StringUtil;
 
+import java.util.Objects;
 import java.util.function.BiConsumer;
 
 public class DashboardUiUtil {
@@ -40,7 +47,7 @@ public class DashboardUiUtil {
             rootView = null;
         }
 
-        // conditions
+        // Conditions
         long SENDER_TOTAL_BALANCE = senderWalletBalance + senderCommissionBalance;
         boolean IS_SENDER_TOTAL_BALANCE_SUFFICIENT = SENDER_TOTAL_BALANCE < amountToSend;
         boolean IS_SENDER_WALLET_BALANCE_SUFFICIENT = senderWalletBalance >= amountToSend;
@@ -118,7 +125,6 @@ public class DashboardUiUtil {
             if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.S) rootView.setRenderEffect(null);
         });
         binding.btnPay.setOnClickListener(v -> {
-            binding.btnPay.setEnabled(false);
             if (onPay != null) {
                 onPay.run();
             }
@@ -127,7 +133,7 @@ public class DashboardUiUtil {
         return dialog;
     }
 
-    public static void showBottomSheetPaymentPinConfirmation(Context context, BiConsumer<BottomSheetDialog, BottomSheetPaymentPinConfirmBinding> consumer) {
+    public static void showBottomSheetPaymentPinConfirmation(Context context, Runnable onPinConfirmSuccess) {
         BottomSheetPaymentPinConfirmBinding binding = BottomSheetPaymentPinConfirmBinding.inflate(LayoutInflater.from(context));
         BottomSheetDialog dialog = new BottomSheetDialog(context, R.style.MyBottomSheetDialogTheme);
         dialog.setContentView(binding.getRoot());
@@ -135,6 +141,65 @@ public class DashboardUiUtil {
         dialog.setCancelable(false);
         dialog.setCanceledOnTouchOutside(false);
 
-        if (consumer != null) consumer.accept(dialog, binding);
+        // setup click listener
+        binding.btnClose.setOnClickListener(view -> dialog.dismiss());
+        binding.btnForgotPaymentPin.setOnClickListener(view -> {
+        });
+
+        // disable the system keyboard
+        InputMethodManager imm = (InputMethodManager) context.getSystemService(Context.INPUT_METHOD_SERVICE);
+        if (imm != null && dialog.getCurrentFocus() != null) {
+            imm.hideSoftInputFromWindow(dialog.getCurrentFocus().getWindowToken(), 0);
+        }
+        binding.pinBox.setShowSoftInputOnFocus(false);
+
+        // handle keypad input
+        binding.numericKeypad.setOnKeypadInputListener(new CustomNumericKeypad.OnKeypadInputListener() {
+            @Override
+            public void onNumberPressed(String number) {
+                if (binding.pinBox.length() < binding.pinBox.getItemCount()) {
+                    binding.pinBox.append(number);
+                }
+            }
+
+            @Override
+            public void onDeletePressed() {
+                String current = Objects.requireNonNull(binding.pinBox.getText()).toString();
+
+                if (!current.isEmpty()) {
+                    binding.pinBox.setText(current.subSequence(0, current.length() - 1));
+                }
+            }
+
+            @Override
+            public void onDonePressed() {
+                String pin = Objects.requireNonNull(binding.pinBox.getText()).toString();
+
+                if (!(pin.length() == binding.pinBox.getItemCount())) {
+                    binding.pinBox.setError("Invalid Pin");
+                    return;
+                }
+
+                if (onPinConfirmSuccess != null) {
+                    onPinConfirmSuccess.run();
+                    dialog.dismiss();
+                }
+            }
+        });
+
+        dialog.show();
+    }
+
+    public static void showCustomAlertDialog(Context context, BiConsumer<AlertDialog, AlertDialogCustomBinding> config) {
+        AlertDialogCustomBinding binding = AlertDialogCustomBinding.inflate(LayoutInflater.from(context));
+
+        MaterialAlertDialogBuilder builder = new MaterialAlertDialogBuilder(context, R.style.CustomMaterialDialog)
+                .setView(binding.getRoot())
+                .setCancelable(false);
+
+        AlertDialog alertDialog = builder.create();
+
+        if (config != null) config.accept(alertDialog, binding);
+        alertDialog.show();
     }
 }
