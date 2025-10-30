@@ -94,7 +94,7 @@ public class CreatePaymentIdActivity extends AppCompatActivity {
 
     private void onPaymentIdStoreStatusSuccess() {
         progressLoader.hide();
-        UiUtil.showBottomSheetDialog(
+        UiUtil.showSuccessBottomSheetDialog(
                 this,
                 (dialog, dialogBinding) -> {
                     String title = "Success";
@@ -107,8 +107,6 @@ public class CreatePaymentIdActivity extends AppCompatActivity {
                         finish();
                         dialog.dismiss();
                     });
-
-                    dialog.show();
                 });
     }
 

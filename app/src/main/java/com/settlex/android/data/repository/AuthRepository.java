@@ -101,7 +101,7 @@ public class AuthRepository {
     public void checkEmailExistence(String email, EmailExistenceCallback callback) {
         Map<String, Object> data = new HashMap<>();
         data.put("email", email);
-        functions.getHttpsCallable("checkEmailExistence")
+        functions.getHttpsCallable("default-checkEmailExistence")
                 .call(data)
                 .addOnSuccessListener(result -> {
                     if (result.getData() != null) {
@@ -128,7 +128,7 @@ public class AuthRepository {
         Map<String, Object> data = new HashMap<>();
         data.put("email", email);
 
-        functions.getHttpsCallable("sendVerifyEmail")
+        functions.getHttpsCallable("default-sendVerifyEmail")
                 .call(data)
                 .addOnSuccessListener(result -> callback.onSuccess())
                 .addOnFailureListener(e -> {
@@ -146,7 +146,7 @@ public class AuthRepository {
         data.put("email", email);
         data.put("otp", otp);
 
-        functions.getHttpsCallable("verifyEmailOtp")
+        functions.getHttpsCallable("default-verifyEmailOtp")
                 .call(data)
                 .addOnSuccessListener(result -> callback.onSuccess())
                 .addOnFailureListener(e -> {
@@ -166,7 +166,7 @@ public class AuthRepository {
         Map<String, Object> data = new HashMap<>();
         data.put("email", email);
 
-        functions.getHttpsCallable("sendPasswordResetEmail")
+        functions.getHttpsCallable("default-sendPasswordResetEmail")
                 .call(data)
                 .addOnSuccessListener(result -> callback.onSuccess())
                 .addOnFailureListener(e -> {
@@ -184,7 +184,7 @@ public class AuthRepository {
         data.put("email", email);
         data.put("otp", otp);
 
-        functions.getHttpsCallable("verifyPasswordResetOtp")
+        functions.getHttpsCallable("default-verifyPasswordResetOtp")
                 .call(data)
                 .addOnSuccessListener(result -> callback.onSuccess())
                 .addOnFailureListener(e -> {
@@ -207,7 +207,7 @@ public class AuthRepository {
             data.put("newPassword", newPassword);
             data.put("metadata", new Gson().toJson(metadata));
 
-            functions.getHttpsCallable("changePassword")
+            functions.getHttpsCallable("default-changePassword")
                     .call(data)
                     .addOnSuccessListener(result -> callback.onSuccess())
                     .addOnFailureListener(e -> {
@@ -228,7 +228,7 @@ public class AuthRepository {
         Map<String, Object> data = new HashMap<>();
         data.put("user", new Gson().toJson(user));
 
-        functions.getHttpsCallable("storeUserProfile")
+        functions.getHttpsCallable("default-storeUserProfile")
                 .call(data)
                 .addOnSuccessListener(result -> {
                     callback.onSuccess(); // return
@@ -286,7 +286,7 @@ public class AuthRepository {
     private void markEmailVerified(String uid, RegisterCallback callback) {
         Map<String, Object> data = new HashMap<>();
         data.put("uid", uid);
-        functions.getHttpsCallable("markEmailVerified")
+        functions.getHttpsCallable("default-markEmailVerified")
                 .call(data)
                 .addOnSuccessListener(result -> callback.onSuccess())
                 .addOnFailureListener(e -> callback.onFailure(e.getMessage()));

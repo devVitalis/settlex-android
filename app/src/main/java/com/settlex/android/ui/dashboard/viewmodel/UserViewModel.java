@@ -22,6 +22,8 @@ public class UserViewModel extends ViewModel {
     private final MutableLiveData<Result<String>> uploadProfilePicLiveData = new MutableLiveData<>();
     private final MutableLiveData<Event<Result<Boolean>>> checkPaymentIdExistsLiveData = new MutableLiveData<>();
     private final MutableLiveData<Event<Result<String>>> storeUserPaymentIdLiveData = new MutableLiveData<>();
+    private final MutableLiveData<Event<Result<String>>> createPaymentLiveData = new MutableLiveData<>();
+    private final MutableLiveData<Event<Result<Boolean>>> verifyPaymentLiveData = new MutableLiveData<>();
 
     // dependencies
     private final UserRepository userRepo;
@@ -104,6 +106,45 @@ public class UserViewModel extends ViewModel {
 
     public LiveData<Event<Result<String>>> getStoreUserPaymentIdStatus() {
         return storeUserPaymentIdLiveData;
+    }
+
+    public void createPaymentPin(String pin) {
+        createPaymentLiveData.setValue(new Event<>(Result.loading()));
+        userRepo.createPaymentPin(pin, new UserRepository.CreatePaymentPinCallback() {
+            @Override
+            public void onSuccess() {
+                createPaymentLiveData.setValue(new Event<>(Result.success("Success")));
+            }
+
+            @Override
+            public void onError(String error) {
+                createPaymentLiveData.setValue(new Event<>(Result.error(error)));
+            }
+        });
+    }
+
+    public LiveData<Event<Result<String>>> getCreatePaymentPinLiveData() {
+        return createPaymentLiveData;
+    }
+
+    public void verifyPaymentPin(String pin) {
+        verifyPaymentLiveData.setValue(new Event<>(Result.loading()));
+
+        userRepo.VerifyPaymentPin(pin, new UserRepository.VerifyPaymentPinCallback() {
+            @Override
+            public void onSuccess(boolean isVerified) {
+                verifyPaymentLiveData.setValue(new Event<>(Result.success(isVerified)));
+            }
+
+            @Override
+            public void onError(String error) {
+                verifyPaymentLiveData.setValue(new Event<>(Result.error(error)));
+            }
+        });
+    }
+
+    public LiveData<Event<Result<Boolean>>> getVerifyPaymentPinLiveData() {
+        return verifyPaymentLiveData;
     }
 
     /**

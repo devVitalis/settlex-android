@@ -44,10 +44,6 @@ public class CustomNumericKeypad extends LinearLayout {
         binding.btnKeyDelete.setOnClickListener(view -> {
             if (listener != null) listener.onDeletePressed();
         });
-
-        binding.btnKeyDone.setOnClickListener(view -> {
-            if (listener != null) listener.onDonePressed();
-        });
     }
 
     public void setOnKeypadInputListener(OnKeypadInputListener listener) {
@@ -58,7 +54,5 @@ public class CustomNumericKeypad extends LinearLayout {
         void onNumberPressed(String number);
 
         void onDeletePressed();
-
-        void onDonePressed();
     }
 }

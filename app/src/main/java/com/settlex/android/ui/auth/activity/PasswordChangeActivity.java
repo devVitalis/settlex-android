@@ -114,7 +114,7 @@ public class PasswordChangeActivity extends AppCompatActivity {
         String message = "Your password has been changed successfully. You will now need to use your new password to sign in on all your devices";
         String buttonTxt = "Continue";
 
-        UiUtil.showBottomSheetDialog(this, (dialog, binding) -> {
+        UiUtil.showSuccessBottomSheetDialog(this, (dialog, binding) -> {
             binding.title.setText(title);
             binding.message.setText(message);
             binding.btnContinue.setText(buttonTxt);
@@ -124,7 +124,6 @@ public class PasswordChangeActivity extends AppCompatActivity {
                 navigateToSignInActivity();
                 dialog.dismiss();
             });
-            dialog.show();
         });
     }
 

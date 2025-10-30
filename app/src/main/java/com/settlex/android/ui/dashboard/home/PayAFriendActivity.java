@@ -34,6 +34,7 @@ import com.settlex.android.ui.dashboard.viewmodel.UserViewModel;
 import com.settlex.android.utils.event.Result;
 import com.settlex.android.utils.string.StringUtil;
 import com.settlex.android.utils.ui.StatusBarUtil;
+import com.settlex.android.utils.ui.UiUtil;
 
 import java.math.BigDecimal;
 import java.util.Collections;
@@ -48,6 +49,7 @@ public class PayAFriendActivity extends AppCompatActivity {
     private String recipientProfileUrl;
     private String recipientPaymentId;
     private long amountToSend;
+    private boolean isPinVerified = false;
 
     // dependencies
     private ActivityPayAfriendBinding binding;
@@ -83,7 +85,7 @@ public class PayAFriendActivity extends AppCompatActivity {
 
         binding.btnBackBefore.setOnClickListener(v -> this.getOnBackPressedDispatcher().onBackPressed());
         binding.btnVerify.setOnClickListener(v -> searchRecipient(recipientPaymentId.replaceAll("\\s+", "")));
-        binding.btnNext.setOnClickListener(v -> showPayConfirmation());
+        binding.btnNext.setOnClickListener(v -> startPaymentProcess());
     }
 
     private void observeUserAuthState() {
@@ -96,6 +98,7 @@ public class PayAFriendActivity extends AppCompatActivity {
             observeUserDataStatus();
             observePayFriendStatus();
             observeRecipientSearchStatus();
+            observeVerifyPaymentPinStatus();
         });
     }
 
@@ -212,11 +215,77 @@ public class PayAFriendActivity extends AppCompatActivity {
         binding.shimmerEffect.setVisibility(View.GONE);
     }
 
-    private void showPayConfirmation() {
+    private void observeVerifyPaymentPinStatus() {
+        userViewModel.getVerifyPaymentPinLiveData().observe(this, event -> {
+            Result<Boolean> result = event.getContentIfNotHandled();
+            if (result == null) return;
+
+            switch (result.getStatus()) {
+                case LOADING -> progressLoader.show();
+                case SUCCESS -> onVerifyPaymentPinStatusSuccess(result.getData());
+                case ERROR -> onVerifyPaymentPinStatusError(result.getMessage());
+            }
+        });
+    }
+
+    private void onVerifyPaymentPinStatusSuccess(boolean isVerified) {
+        progressLoader.hide();
+
+        if (!isVerified) {
+            showMessageDialog();
+            return;
+        }
+
+        // start transaction
+        startPayFriendTransaction(
+                currentUser.getUid(),
+                recipientPaymentId,
+                amountToSend,
+                binding.editTxtDescription.getText().toString().trim()
+        );
+    }
+
+    private void onVerifyPaymentPinStatusError(String message) {
+        progressLoader.hide();
+        showSimpleAlertDialog("Error", message);
+    }
+
+    private void showMessageDialog() {
+        String message = "Incorrect PIN. Please try again, or click on the Forgot PIN to reset your PIN";
+        String priButton = "Forgot Pin";
+        String secButton = "Retry";
+
+        DashboardUiUtil.showAlertDialogMessage(
+                this,
+                (dialog, binding) -> {
+                    binding.message.setText(message);
+                    binding.btnPrimary.setText(priButton);
+                    binding.btnSecondary.setText(secButton);
+
+                    binding.btnSecondary.setOnClickListener(v -> dialog.dismiss());
+                    binding.btnPrimary.setOnClickListener(v -> {
+                        // TODO direct to pin reset
+                    });
+                }
+        );
+    }
+
+    private void showSimpleAlertDialog(String title, String message) {
+        UiUtil.showSimpleAlertDialog(
+                this,
+                title,
+                message
+        );
+    }
+
+    private void verifyPaymentPin(String pin) {
+        userViewModel.verifyPaymentPin(pin);
+    }
+
+    private void startPaymentProcess() {
         // Get recipient details
         String recipientPaymentId = StringUtil.removeAtInPaymentId(binding.selectedRecipientPaymentId.getText().toString());
         String recipientName = binding.selectedRecipientName.getText().toString();
-        String description = binding.editTxtDescription.getText().toString().trim();
 
         // Current user is sender
         bottomSheetDialog = DashboardUiUtil.showPayConfirmation(
@@ -232,17 +301,11 @@ public class PayAFriendActivity extends AppCompatActivity {
                         promptTransactionPinCreation();
                         return;
                     }
-                    // onPay btn click
+                    // ask for authorization
                     DashboardUiUtil.showBottomSheetPaymentPinConfirmation(
                             this,
-                            () -> {
-                                // onPinConfirmation success btn clicked
-                                startPayFriendTransaction(
-                                        currentUser.getUid(),
-                                        recipientPaymentId,
-                                        amountToSend,
-                                        description
-                                );
+                            (binding, runnable) -> runnable[0] = () -> {
+                                verifyPaymentPin(Objects.requireNonNull(binding.pinBox.getText()).toString());
                             });
                 }
         );
@@ -259,12 +322,12 @@ public class PayAFriendActivity extends AppCompatActivity {
     }
 
     private void promptTransactionPinCreation() {
-        String title = "Transaction PIN Required";
-        String message = "Please set up your Transaction PIN to complete this transaction securely";
+        String title = "Payment PIN Required";
+        String message = "Please set up your Payment PIN to complete this transaction securely";
         String btnPriText = "Create PIN";
         String btnSecText = "Cancel";
 
-        DashboardUiUtil.showCustomAlertDialog(
+        DashboardUiUtil.showDialogWithIcon(
                 this,
                 (dialog, dialogBinding) -> {
                     dialogBinding.title.setText(title);
@@ -274,12 +337,16 @@ public class PayAFriendActivity extends AppCompatActivity {
                     dialogBinding.icon.setImageResource(R.drawable.ic_lock_filled);
 
                     dialogBinding.btnSecondary.setOnClickListener(v -> dialog.dismiss());
-                    dialogBinding.btnPrimary.setOnClickListener(v -> startActivity(new Intent(this, CreatePaymentPinActivity.class)));
+                    dialogBinding.btnPrimary.setOnClickListener(v -> {
+                        startActivity(new Intent(this, CreatePaymentPinActivity.class));
+                        dialog.dismiss();
+                    });
                 }
         );
     }
 
     private void searchRecipient(String paymentId) {
+        // Prevent self search
         if (StringUtil.removeAtInPaymentId(paymentId).equals(currentUser.getPaymentId())) {
             String ERROR_CANNOT_SEND_TO_SELF = "You cannot send a payment to your own account. Please choose a different recipient";
 
@@ -300,15 +367,6 @@ public class PayAFriendActivity extends AppCompatActivity {
 
     private void handleOnRecipientItemClick() {
         recipientAdapter.setOnItemClickListener(recipient -> {
-            // Sender = receiver
-//            if (StringUtil.removeAtInPaymentId(recipient.getPaymentId()).equals(currentUser.getPaymentId())) {
-//                String ERROR_CANNOT_SEND_TO_SELF = "You cannot send a payment to your own account. Please choose a different recipient";
-//
-//                binding.txtError.setText(ERROR_CANNOT_SEND_TO_SELF);
-//                binding.txtError.setVisibility(View.VISIBLE);
-//                return;
-//            }
-
             binding.editTxtPaymentId.setText(recipient.getPaymentId());
             binding.editTxtPaymentId.setSelection(binding.editTxtPaymentId.getText().length());
             binding.btnVerify.setVisibility(View.GONE);

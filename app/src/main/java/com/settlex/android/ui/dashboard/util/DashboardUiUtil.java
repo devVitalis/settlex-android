@@ -15,7 +15,8 @@ import com.google.android.material.bottomsheet.BottomSheetDialog;
 import com.google.android.material.dialog.MaterialAlertDialogBuilder;
 import com.settlex.android.R;
 import com.settlex.android.data.remote.profile.ProfileService;
-import com.settlex.android.databinding.AlertDialogCustomBinding;
+import com.settlex.android.databinding.AlertDialogMessageBinding;
+import com.settlex.android.databinding.AlertDialogWithIconBinding;
 import com.settlex.android.databinding.BottomSheetConfirmPaymentBinding;
 import com.settlex.android.databinding.BottomSheetPaymentPinConfirmBinding;
 import com.settlex.android.ui.common.custom.CustomNumericKeypad;
@@ -133,7 +134,7 @@ public class DashboardUiUtil {
         return dialog;
     }
 
-    public static void showBottomSheetPaymentPinConfirmation(Context context, Runnable onPinConfirmSuccess) {
+    public static void showBottomSheetPaymentPinConfirmation(Context context, BiConsumer<BottomSheetPaymentPinConfirmBinding, Runnable[]> config) {
         BottomSheetPaymentPinConfirmBinding binding = BottomSheetPaymentPinConfirmBinding.inflate(LayoutInflater.from(context));
         BottomSheetDialog dialog = new BottomSheetDialog(context, R.style.MyBottomSheetDialogTheme);
         dialog.setContentView(binding.getRoot());
@@ -148,10 +149,10 @@ public class DashboardUiUtil {
 
         // disable the system keyboard
         InputMethodManager imm = (InputMethodManager) context.getSystemService(Context.INPUT_METHOD_SERVICE);
-        if (imm != null && dialog.getCurrentFocus() != null) {
-            imm.hideSoftInputFromWindow(dialog.getCurrentFocus().getWindowToken(), 0);
-        }
+        if (dialog.getCurrentFocus() != null) imm.hideSoftInputFromWindow(dialog.getCurrentFocus().getWindowToken(), 0);
         binding.pinBox.setShowSoftInputOnFocus(false);
+
+        final Runnable[] onPinVerified = new Runnable[1];
 
         // handle keypad input
         binding.numericKeypad.setOnKeypadInputListener(new CustomNumericKeypad.OnKeypadInputListener() {
@@ -159,6 +160,15 @@ public class DashboardUiUtil {
             public void onNumberPressed(String number) {
                 if (binding.pinBox.length() < binding.pinBox.getItemCount()) {
                     binding.pinBox.append(number);
+                }
+
+                String pin = Objects.requireNonNull(binding.pinBox.getText()).toString();
+
+                if (pin.length() == binding.pinBox.getItemCount()) {
+                    if (onPinVerified[0] != null) {
+                        onPinVerified[0].run();
+                        dialog.dismiss();
+                    }
                 }
             }
 
@@ -170,28 +180,26 @@ public class DashboardUiUtil {
                     binding.pinBox.setText(current.subSequence(0, current.length() - 1));
                 }
             }
-
-            @Override
-            public void onDonePressed() {
-                String pin = Objects.requireNonNull(binding.pinBox.getText()).toString();
-
-                if (!(pin.length() == binding.pinBox.getItemCount())) {
-                    binding.pinBox.setError("Invalid Pin");
-                    return;
-                }
-
-                if (onPinConfirmSuccess != null) {
-                    onPinConfirmSuccess.run();
-                    dialog.dismiss();
-                }
-            }
         });
-
+        if (config != null) config.accept(binding, onPinVerified);
         dialog.show();
     }
 
-    public static void showCustomAlertDialog(Context context, BiConsumer<AlertDialog, AlertDialogCustomBinding> config) {
-        AlertDialogCustomBinding binding = AlertDialogCustomBinding.inflate(LayoutInflater.from(context));
+    public static void showDialogWithIcon(Context context, BiConsumer<AlertDialog, AlertDialogWithIconBinding> config) {
+        AlertDialogWithIconBinding binding = AlertDialogWithIconBinding.inflate(LayoutInflater.from(context));
+
+        MaterialAlertDialogBuilder builder = new MaterialAlertDialogBuilder(context, R.style.CustomMaterialDialog)
+                .setView(binding.getRoot())
+                .setCancelable(false);
+
+        AlertDialog alertDialog = builder.create();
+
+        if (config != null) config.accept(alertDialog, binding);
+        alertDialog.show();
+    }
+
+    public static void showAlertDialogMessage(Context context, BiConsumer<AlertDialog, AlertDialogMessageBinding> config) {
+        AlertDialogMessageBinding binding = AlertDialogMessageBinding.inflate(LayoutInflater.from(context));
 
         MaterialAlertDialogBuilder builder = new MaterialAlertDialogBuilder(context, R.style.CustomMaterialDialog)
                 .setView(binding.getRoot())

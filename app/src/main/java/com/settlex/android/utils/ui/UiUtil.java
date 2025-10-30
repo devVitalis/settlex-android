@@ -14,7 +14,7 @@ import androidx.annotation.Nullable;
 import com.google.android.material.bottomsheet.BottomSheetDialog;
 import com.google.android.material.dialog.MaterialAlertDialogBuilder;
 import com.settlex.android.R;
-import com.settlex.android.databinding.BottomSheetDialogBinding;
+import com.settlex.android.databinding.BottomSheetSuccessDialogBinding;
 
 import java.util.function.BiConsumer;
 
@@ -28,13 +28,11 @@ public class UiUtil {
         // Utility class - prevent instantiation
     }
 
-    public static void showBottomSheetDialog(@NonNull Context context, @Nullable BiConsumer<BottomSheetDialog, BottomSheetDialogBinding> config) {
-        BottomSheetDialogBinding binding = BottomSheetDialogBinding.inflate(LayoutInflater.from(context));
-
+    public static void showSuccessBottomSheetDialog(@NonNull Context context, @Nullable BiConsumer<BottomSheetDialog, BottomSheetSuccessDialogBinding> config) {
+        BottomSheetSuccessDialogBinding binding = BottomSheetSuccessDialogBinding.inflate(LayoutInflater.from(context));
         BottomSheetDialog dialog = new BottomSheetDialog(context, R.style.MyBottomSheetDialogTheme);
         dialog.setContentView(binding.getRoot());
 
-        // Default config
         dialog.setCancelable(false);
         dialog.setCanceledOnTouchOutside(false);
 
@@ -45,6 +43,7 @@ public class UiUtil {
         }
 
         if (config != null) config.accept(dialog, binding);
+        dialog.show();
     }
 
     public static void showSimpleAlertDialog(Context context, String title, String message) {

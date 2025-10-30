@@ -21,6 +21,7 @@ import com.settlex.android.utils.event.Result;
 
 import java.io.IOException;
 import java.util.Collections;
+import java.util.Map;
 
 import jakarta.inject.Inject;
 import jakarta.inject.Singleton;
@@ -134,7 +135,7 @@ public class UserRepository {
 
 
     public void uploadUserProfilePicToServer(String imageBase64, UploadProfilePicCallback callback) {
-        functions.getHttpsCallable("uploadProfilePic")
+        functions.getHttpsCallable("default-uploadProfilePic")
                 .call(Collections.singletonMap("imageBase64", imageBase64))
                 .addOnSuccessListener(result -> {
                     callback.onSuccess();
@@ -196,9 +197,9 @@ public class UserRepository {
                         throw new FirebaseFirestoreException("Payment ID is already taken", FirebaseFirestoreException.Code.ABORTED);
                     }
 
-                    // save Payment ID
+                    // Save Payment ID
+                    // Merge so existing content remains
                     transaction.set(globalDocRef, Collections.singletonMap("UserId", uid));
-                    // merge so existing content remains
                     transaction.set(userDocRef, Collections.singletonMap("paymentId", paymentId), SetOptions.merge());
                     return null;
                 })
@@ -217,6 +218,52 @@ public class UserRepository {
         void onSuccess();
 
         void onFailure(String error);
+    }
+
+    public void createPaymentPin(String pin, CreatePaymentPinCallback callback) {
+        functions.getHttpsCallable("default-createPaymentPin")
+                .call(Collections.singletonMap("pin", pin))
+                .addOnSuccessListener(result -> callback.onSuccess())
+                .addOnFailureListener(e -> {
+                    if (e instanceof FirebaseNetworkException || e instanceof IOException) {
+                        callback.onError(ERROR_NO_INTERNET);
+                        return;
+                    }
+                    callback.onError(e.getMessage());
+                    Log.e(TAG, "Failed to create Payment PIN: ", e);
+                });
+    }
+
+    public interface CreatePaymentPinCallback {
+        void onSuccess();
+
+        void onError(String error);
+    }
+
+    public void VerifyPaymentPin(String pin, VerifyPaymentPinCallback callback) {
+        functions.getHttpsCallable("default-verifyPaymentPin")
+                .call(Collections.singletonMap("pin", pin))
+                .addOnSuccessListener(result -> {
+                    Map<?, ?> data = (Map<?, ?>) result.getData();
+                    if (data != null) {
+                        boolean isVerified = (boolean) data.get("verified");
+                        callback.onSuccess(isVerified);
+                    }
+                })
+                .addOnFailureListener(e -> {
+                    if (e instanceof FirebaseNetworkException || e instanceof IOException) {
+                        callback.onError(ERROR_NO_INTERNET);
+                        return;
+                    }
+                    callback.onError(e.getMessage());
+                    Log.e(TAG, "Failed to verify user Payment PIN: ", e);
+                });
+    }
+
+    public interface VerifyPaymentPinCallback {
+        void onSuccess(boolean isVerified);
+
+        void onError(String error);
     }
 
     public void signOut() {
