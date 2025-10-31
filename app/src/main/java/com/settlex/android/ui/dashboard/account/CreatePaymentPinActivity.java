@@ -85,7 +85,7 @@ public class CreatePaymentPinActivity extends AppCompatActivity {
                 (dialog, binding) -> {
                     binding.title.setText(title);
                     binding.message.setText(message);
-                    binding.message.setText(buttonTxt);
+                    binding.btnContinue.setText(buttonTxt);
                     binding.btnContinue.setOnClickListener(view -> finish());
                     binding.anim.playAnimation();
                 }

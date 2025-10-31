@@ -6,14 +6,11 @@ import android.graphics.Rect;
 import android.os.Bundle;
 import android.os.CountDownTimer;
 import android.text.Editable;
-import android.text.TextUtils;
 import android.text.TextWatcher;
-import android.view.KeyEvent;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.EditText;
-import android.widget.Toast;
 
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.lifecycle.ViewModelProvider;
@@ -29,6 +26,8 @@ import com.settlex.android.utils.string.StringUtil;
 import com.settlex.android.utils.ui.StatusBarUtil;
 import com.settlex.android.utils.ui.UiUtil;
 
+import java.util.Objects;
+
 import dagger.hilt.android.AndroidEntryPoint;
 
 @AndroidEntryPoint
@@ -38,7 +37,6 @@ public class OtpVerificationActivity extends AppCompatActivity {
 
     // dependencies
     private String userEmail;
-    private EditText[] otpInputs;
     private AuthViewModel authViewModel;
     private ActivityOtpVerificationBinding binding;
     private ProgressLoaderController progressLoader;
@@ -59,7 +57,20 @@ public class OtpVerificationActivity extends AppCompatActivity {
         observeVerifyOtpStatus();
     }
 
-    private void observeNetworkStatus(){
+    private void setupUiActions() {
+        StatusBarUtil.setStatusBarColor(this, R.color.white);
+        setupOtpInputWatcher();
+        startResendOtpCooldown();
+        maskAndDisplayUserEmail();
+
+        binding.btnBackBefore.setOnClickListener(v -> finish());
+        binding.btnResendOtp.setOnClickListener(v -> resendOtpCode());
+        binding.btnConfirm.setOnClickListener(v -> attemptOtpVerification());
+        binding.btnHelp.setOnClickListener(v -> StringUtil.showNotImplementedToast(this));
+    }
+
+
+    private void observeNetworkStatus() {
         NetworkMonitor.getNetworkStatus().observe(this, isConnected -> {
             if (!isConnected) showNoInternetDialog();
             this.isConnected = isConnected;
@@ -90,11 +101,11 @@ public class OtpVerificationActivity extends AppCompatActivity {
     }
 
     private void onVerifyOtpStatusSuccess() {
-        startActivity(new Intent(
-                this,
-                PasswordChangeActivity.class)
-                .putExtra("email", userEmail));
+        Intent intent = new Intent(this, PasswordChangeActivity.class);
+        intent.putExtra("email", userEmail);
+        startActivity(intent);
         finish();
+
         progressLoader.hide();
     }
 
@@ -122,23 +133,6 @@ public class OtpVerificationActivity extends AppCompatActivity {
         progressLoader.hide();
     }
 
-    // UI ACTIONS ==========
-    private void setupUiActions() {
-        StatusBarUtil.setStatusBarColor(this, R.color.white);
-        setupOtpInputBehavior();
-        startResendOtpCooldown();
-        maskAndDisplayUserEmail();
-
-        binding.btnBackBefore.setOnClickListener(v -> finish());
-        binding.btnResendOtp.setOnClickListener(v -> resendOtpCode());
-        binding.btnConfirm.setOnClickListener(v -> attemptOtpVerification());
-        binding.btnHelp.setOnClickListener(v -> Toast.makeText(
-                this,
-                "Feature not yet implemented",
-                Toast.LENGTH_SHORT
-        ).show());
-    }
-
     private void attemptOtpVerification() {
         if (!isConnected) {
             showNoInternetDialog();
@@ -155,70 +149,31 @@ public class OtpVerificationActivity extends AppCompatActivity {
         authViewModel.sendPasswordResetOtp(userEmail);
     }
 
-    private void setupOtpInputBehavior() {
-        otpInputs = new EditText[]{binding.otpDigit1, binding.otpDigit2, binding.otpDigit3, binding.otpDigit4, binding.otpDigit5, binding.otpDigit6};
+    private void setupOtpInputWatcher() {
+        binding.otpBox.addTextChangedListener(new TextWatcher() {
+            @Override
+            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+            }
 
-        for (int i = 0; i < otpInputs.length; i++) {
-            EditText current = otpInputs[i];
-            EditText next = (i < otpInputs.length - 1) ? otpInputs[i + 1] : null;
-            EditText prev = (i > 0) ? otpInputs[i - 1] : null;
+            @Override
+            public void afterTextChanged(Editable s) {
+            }
 
-            current.setLongClickable(false);
-            current.setTextIsSelectable(false);
-            current.setEnabled(i == 0);
-
-            current.addTextChangedListener(new TextWatcher() {
-                @Override
-                public void beforeTextChanged(CharSequence s, int start, int count, int after) {
-                }
-
-                @Override
-                public void afterTextChanged(Editable s) {
-                }
-
-                @Override
-                public void onTextChanged(CharSequence s, int start, int before, int count) {
-                    if (isOtpComplete()) hideSoftKeyboard();
-                    if (TextUtils.isEmpty(s)) binding.txtOtpFeedback.setVisibility(View.GONE);
-
-                    if (s.length() == 1 && next != null) {
-                        next.setEnabled(true);
-                        next.requestFocus();
-                        next.setText("");
-                    }
-                    binding.btnConfirm.setEnabled(isOtpComplete());
-                }
-            });
-
-            current.setOnKeyListener((v, keyCode, event) -> {
-                if (event.getAction() == KeyEvent.ACTION_DOWN && keyCode == KeyEvent.KEYCODE_DEL) {
-                    if (!TextUtils.isEmpty(current.getText())) {
-                        current.setText("");
-                    } else if (prev != null) {
-                        prev.setText("");
-                        prev.requestFocus();
-                        current.setEnabled(false);
-                    }
-                    return true;
-                }
-                return false;
-            });
-        }
+            @Override
+            public void onTextChanged(CharSequence otp, int start, int before, int count) {
+                if (otp.toString().isEmpty()) binding.txtOtpFeedback.setVisibility(View.GONE);
+                binding.btnConfirm.setEnabled(isOtpComplete());
+            }
+        });
     }
 
+
     private boolean isOtpComplete() {
-        for (EditText input : otpInputs) {
-            if (TextUtils.isEmpty(input.getText())) return false;
-        }
-        return true;
+        return binding.otpBox.length() == binding.otpBox.getItemCount();
     }
 
     private String getEnteredOtpCode() {
-        StringBuilder pin = new StringBuilder();
-        for (EditText input : otpInputs) {
-            pin.append(input.getText().toString().trim());
-        }
-        return pin.toString();
+        return Objects.requireNonNull(binding.otpBox.getText()).toString();
     }
 
     private void startResendOtpCooldown() {
@@ -246,14 +201,6 @@ public class OtpVerificationActivity extends AppCompatActivity {
     private void maskAndDisplayUserEmail() {
         String maskedEmail = StringUtil.maskEmail(userEmail);
         binding.txtUserEmail.setText(maskedEmail);
-    }
-
-    private void hideSoftKeyboard() {
-        InputMethodManager imm = (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
-        View view = getCurrentFocus();
-        if (view != null) {
-            imm.hideSoftInputFromWindow(view.getWindowToken(), 0);
-        }
     }
 
     @Override

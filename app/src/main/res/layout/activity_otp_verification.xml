@@ -150,74 +150,18 @@
                         app:tint="@color/blue" />
                 </androidx.constraintlayout.widget.ConstraintLayout>
 
-                <!-- OTP Form -->
-                <LinearLayout
-                    android:layout_width="match_parent"
+                <com.chaos.view.PinView
+                    android:id="@+id/otpBox"
+                    style="@style/MyPinBox.Gray.Light"
+                    android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
+                    android:layout_gravity="center"
                     android:layout_marginTop="15dp"
-                    android:orientation="horizontal">
-
-                    <com.settlex.android.ui.common.custom.PinBoxEditText
-                        android:id="@+id/otpDigit1"
-                        style="@style/Widget.SettleXApp.EditText.PinBox.GrayLight"
-                        android:inputType="number"
-                        android:maxLength="1" />
-
-                    <Space
-                        android:layout_width="0dp"
-                        android:layout_height="0dp"
-                        android:layout_weight="1" />
-
-                    <com.settlex.android.ui.common.custom.PinBoxEditText
-                        android:id="@+id/otpDigit2"
-                        style="@style/Widget.SettleXApp.EditText.PinBox.GrayLight"
-                        android:inputType="number"
-                        android:maxLength="1" />
-
-                    <Space
-                        android:layout_width="0dp"
-                        android:layout_height="0dp"
-                        android:layout_weight="1" />
-
-                    <com.settlex.android.ui.common.custom.PinBoxEditText
-                        android:id="@+id/otpDigit3"
-                        style="@style/Widget.SettleXApp.EditText.PinBox.GrayLight"
-                        android:inputType="number"
-                        android:maxLength="1" />
-
-                    <Space
-                        android:layout_width="0dp"
-                        android:layout_height="0dp"
-                        android:layout_weight="1" />
-
-                    <com.settlex.android.ui.common.custom.PinBoxEditText
-                        android:id="@+id/otpDigit4"
-                        style="@style/Widget.SettleXApp.EditText.PinBox.GrayLight"
-                        android:inputType="number"
-                        android:maxLength="1" />
-
-                    <Space
-                        android:layout_width="0dp"
-                        android:layout_height="0dp"
-                        android:layout_weight="1" />
-
-                    <com.settlex.android.ui.common.custom.PinBoxEditText
-                        android:id="@+id/otpDigit5"
-                        style="@style/Widget.SettleXApp.EditText.PinBox.GrayLight"
-                        android:inputType="number"
-                        android:maxLength="1" />
-
-                    <Space
-                        android:layout_width="0dp"
-                        android:layout_height="0dp"
-                        android:layout_weight="1" />
-
-                    <com.settlex.android.ui.common.custom.PinBoxEditText
-                        android:id="@+id/otpDigit6"
-                        style="@style/Widget.SettleXApp.EditText.PinBox.GrayLight"
-                        android:inputType="number"
-                        android:maxLength="1" />
-                </LinearLayout>
+                    android:inputType="number"
+                    app:itemCount="6"
+                    app:itemHeight="50dp"
+                    app:itemSpacing="15dp"
+                    app:itemWidth="50dp" />
 
                 <!-- Display Error (Hidden) -->
                 <TextView

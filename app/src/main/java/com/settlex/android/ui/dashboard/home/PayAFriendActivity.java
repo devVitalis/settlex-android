@@ -247,7 +247,7 @@ public class PayAFriendActivity extends AppCompatActivity {
 
     private void onVerifyPaymentPinStatusError(String message) {
         progressLoader.hide();
-        showSimpleAlertDialog("Error", message);
+        showSimpleAlertDialog(message);
     }
 
     private void showMessageDialog() {
@@ -270,10 +270,10 @@ public class PayAFriendActivity extends AppCompatActivity {
         );
     }
 
-    private void showSimpleAlertDialog(String title, String message) {
+    private void showSimpleAlertDialog(String message) {
         UiUtil.showSimpleAlertDialog(
                 this,
-                title,
+                "Error",
                 message
         );
     }

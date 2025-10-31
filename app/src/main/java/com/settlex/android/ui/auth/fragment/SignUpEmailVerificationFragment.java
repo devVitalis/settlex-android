@@ -1,19 +1,16 @@
 package com.settlex.android.ui.auth.fragment;
 
-import android.content.Context;
+import android.graphics.Color;
 import android.os.Bundle;
 import android.os.CountDownTimer;
 import android.text.Editable;
-import android.text.Html;
-import android.text.TextUtils;
+import android.text.SpannableStringBuilder;
+import android.text.Spanned;
 import android.text.TextWatcher;
-import android.view.KeyEvent;
+import android.text.style.ForegroundColorSpan;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.view.inputmethod.InputMethodManager;
-import android.widget.EditText;
-import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -33,6 +30,8 @@ import com.settlex.android.utils.string.StringUtil;
 import com.settlex.android.utils.ui.StatusBarUtil;
 import com.settlex.android.utils.ui.UiUtil;
 
+import java.util.Objects;
+
 import dagger.hilt.android.AndroidEntryPoint;
 
 @AndroidEntryPoint
@@ -44,7 +43,6 @@ public class SignUpEmailVerificationFragment extends Fragment {
     private static final int OTP_RESEND_COOLDOWN_MS = 60000;
     private static final int COUNTDOWN_INTERVAL_MS = 1000;
     private CountDownTimer resendOtpCountdownTimer;
-    private EditText[] otpDigitViews;
 
     private AuthViewModel authViewModel;
     private ProgressLoaderController progressLoader;
@@ -91,7 +89,18 @@ public class SignUpEmailVerificationFragment extends Fragment {
         binding = null;
     }
 
-    //  OBSERVERS =========
+    private void setupUiActions() {
+        StatusBarUtil.setStatusBarColor(requireActivity(), R.color.white);
+        styleSpamHintText();
+        setupOtpInputWatcher();
+        maskAndDisplayEmail();
+
+        binding.btnBackBefore.setOnClickListener(v -> NavHostFragment.findNavController(this).popBackStack());
+        binding.btnResendOtp.setOnClickListener(v -> resendOtp());
+        binding.btnVerify.setOnClickListener(v -> verifyOtp());
+        binding.btnHelp.setOnClickListener(v -> StringUtil.showNotImplementedToast(requireContext()));
+    }
+
     private void observeNetworkStatus() {
         NetworkMonitor.getNetworkStatus().observe(getViewLifecycleOwner(), isConnected -> {
             if (!isConnected) {
@@ -144,8 +153,8 @@ public class SignUpEmailVerificationFragment extends Fragment {
     }
 
     private void onSendOrVerifyOtpStatusError(String reason) {
-        binding.txtError.setText(reason);
-        binding.txtError.setVisibility(View.VISIBLE);
+        binding.otpError.setText(reason);
+        binding.otpError.setVisibility(View.VISIBLE);
         progressLoader.hide();
     }
 
@@ -158,24 +167,6 @@ public class SignUpEmailVerificationFragment extends Fragment {
                 title,
                 message
         );
-    }
-
-    // UI SETUP ============
-    private void setupUiActions() {
-        StatusBarUtil.setStatusBarColor(requireActivity(), R.color.white);
-        formatInfoText();
-        setupOtpInputBehavior();
-        maskAndDisplayEmail();
-
-        binding.btnBackBefore.setOnClickListener(v -> navigateBack());
-        binding.btnResendOtp.setOnClickListener(v -> resendOtp());
-        binding.btnVerify.setOnClickListener(v -> verifyOtp());
-
-        binding.btnHelp.setOnClickListener(v -> Toast.makeText(
-                        requireContext(),
-                        "Feature not yet implementation",
-                        Toast.LENGTH_SHORT).show());
-
     }
 
     private void verifyOtp() {
@@ -198,12 +189,26 @@ public class SignUpEmailVerificationFragment extends Fragment {
         binding.txtUserEmail.setText(StringUtil.maskEmail(email));
     }
 
-    private void formatInfoText() {
-        String infoText = "Didn’t get the email? Make sure to also " +
-                "<font color='#FFA500'><b>check your spam/junk folder</b></font> " +
-                "if you can't find the email in your inbox.";
-        binding.txtInfo.setText(Html.fromHtml(infoText, Html.FROM_HTML_MODE_LEGACY));
+    private void styleSpamHintText() {
+        String message = "Didn’t get the email? Make sure to also check your spam/junk folder if you can't find the email in your inbox";
+        String highlightedPhrase = "check your spam/junk folder";
+
+        // Find the phrase location inside the full text
+        int startIndex = message.indexOf(highlightedPhrase);
+        int endIndex = startIndex + highlightedPhrase.length();
+
+        SpannableStringBuilder styledMessage = new SpannableStringBuilder(message);
+        styledMessage.setSpan(
+                new ForegroundColorSpan(Color.parseColor("#FFA500")),
+                startIndex,
+                endIndex,
+                Spanned.SPAN_EXCLUSIVE_EXCLUSIVE
+        );
+
+        // Update the TextView
+        binding.txtInfo.setText(styledMessage);
     }
+
 
     private void startResendOtpCooldown() {
         binding.btnResendOtp.setEnabled(false); // Disable resend btn
@@ -226,80 +231,28 @@ public class SignUpEmailVerificationFragment extends Fragment {
     }
 
     private boolean isOtpDigitsFilled() {
-        for (EditText digit : otpDigitViews) {
-            if (TextUtils.isEmpty(digit.getText())) return false;
-        }
-        return true;
+        return binding.otpBox.length() == binding.otpBox.getItemCount();
     }
 
     private String getEnteredOtpDigits() {
-        StringBuilder otp = new StringBuilder();
-        for (EditText digit : otpDigitViews) {
-            otp.append(digit.getText().toString().trim());
-        }
-        return otp.toString();
+        return Objects.requireNonNull(binding.otpBox.getText()).toString();
     }
 
-    private void setupOtpInputBehavior() {
-        otpDigitViews = new EditText[]{binding.otpDigit1, binding.otpDigit2, binding.otpDigit3, binding.otpDigit4, binding.otpDigit5, binding.otpDigit6};
+    private void setupOtpInputWatcher() {
+        binding.otpBox.addTextChangedListener(new TextWatcher() {
+            @Override
+            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+            }
 
-        for (int i = 0; i < otpDigitViews.length; i++) {
-            EditText current = otpDigitViews[i];
-            EditText next = (i < otpDigitViews.length - 1) ? otpDigitViews[i + 1] : null;
-            EditText previous = (i > 0) ? otpDigitViews[i - 1] : null;
+            @Override
+            public void afterTextChanged(Editable s) {
+            }
 
-            current.setLongClickable(false);
-            current.setTextIsSelectable(false);
-            current.setEnabled(i == 0);
-
-            current.addTextChangedListener(new TextWatcher() {
-                @Override
-                public void beforeTextChanged(CharSequence s, int start, int count, int after) {
-                }
-
-                @Override
-                public void afterTextChanged(Editable s) {
-                }
-
-                @Override
-                public void onTextChanged(CharSequence s, int start, int before, int count) {
-                    if (isOtpDigitsFilled()) hideKeyboard();
-                    if (TextUtils.isEmpty(s)) binding.txtError.setVisibility(View.GONE);
-
-                    if (s.length() == 1 && next != null) {
-                        next.setEnabled(true);
-                        next.requestFocus();
-                    }
-
-                    binding.btnVerify.setEnabled(isOtpDigitsFilled());
-                }
-            });
-
-            current.setOnKeyListener((v, keyCode, event) -> {
-                if (event.getAction() == KeyEvent.ACTION_DOWN && keyCode == KeyEvent.KEYCODE_DEL) {
-                    if (!TextUtils.isEmpty(current.getText())) {
-                        current.setText("");
-                    } else if (previous != null) {
-                        previous.setText("");
-                        previous.requestFocus();
-                        current.setEnabled(false);
-                    }
-                    return true;
-                }
-                return false;
-            });
-        }
-    }
-
-    private void navigateBack() {
-        NavHostFragment.findNavController(this).popBackStack();
-    }
-
-    private void hideKeyboard() {
-        InputMethodManager imm = (InputMethodManager) requireContext().getSystemService(Context.INPUT_METHOD_SERVICE);
-        View focusedView = requireActivity().getCurrentFocus();
-        if (focusedView != null) {
-            imm.hideSoftInputFromWindow(focusedView.getWindowToken(), 0);
-        }
+            @Override
+            public void onTextChanged(CharSequence otp, int start, int before, int count) {
+                if (otp.toString().isEmpty()) binding.otpError.setVisibility(View.GONE);
+                binding.btnVerify.setEnabled(isOtpDigitsFilled());
+            }
+        });
     }
 }
