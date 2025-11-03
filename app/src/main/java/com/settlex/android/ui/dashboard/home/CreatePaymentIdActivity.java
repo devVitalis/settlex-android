@@ -1,6 +1,7 @@
 package com.settlex.android.ui.dashboard.home;
 
 import android.content.Context;
+import android.content.Intent;
 import android.content.res.ColorStateList;
 import android.graphics.Rect;
 import android.graphics.drawable.Drawable;
@@ -14,6 +15,7 @@ import android.view.View;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.EditText;
 
+import androidx.activity.OnBackPressedCallback;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.content.ContextCompat;
 import androidx.lifecycle.ViewModelProvider;
@@ -21,6 +23,7 @@ import androidx.lifecycle.ViewModelProvider;
 import com.settlex.android.R;
 import com.settlex.android.databinding.ActivityCreatePaymentIdBinding;
 import com.settlex.android.ui.common.util.ProgressLoaderController;
+import com.settlex.android.ui.dashboard.DashboardActivity;
 import com.settlex.android.ui.dashboard.model.UserUiModel;
 import com.settlex.android.ui.dashboard.viewmodel.UserViewModel;
 import com.settlex.android.utils.event.Result;
@@ -62,13 +65,22 @@ public class CreatePaymentIdActivity extends AppCompatActivity {
         observePaymentIdStoreStatus();
     }
 
+    private void setupUiActions() {
+        StatusBarUtil.setStatusBarColor(this, R.color.white);
+        setupPaymentIdInputWatcher();
+        setupEditTextFocusHandler();
+        handleOnBackPressed();
+
+        binding.btnContinue.setOnClickListener(view -> storeUserPaymentId(userPaymentId, userUid));
+    }
+
     private void observeUserDataStatus() {
         userViewModel.getUserLiveData().observe(this, user -> {
             if (user == null) return;
 
             switch (user.getStatus()) {
                 case SUCCESS -> onUserDataStatusSuccess(user.getData());
-                case ERROR -> {
+                case FAILURE -> {
                     // TODO: Handle error
                 }
             }
@@ -87,7 +99,7 @@ public class CreatePaymentIdActivity extends AppCompatActivity {
             switch (result.getStatus()) {
                 case LOADING -> progressLoader.show();
                 case SUCCESS -> onPaymentIdStoreStatusSuccess();
-                case ERROR -> onPaymentIdStoreStatusError(result.getMessage());
+                case FAILURE -> onPaymentIdStoreStatusError(result.getError());
             }
         });
     }
@@ -104,6 +116,7 @@ public class CreatePaymentIdActivity extends AppCompatActivity {
                     dialogBinding.title.setText(title);
                     dialogBinding.message.setText(message);
                     dialogBinding.btnContinue.setOnClickListener(view -> {
+                        startActivity(new Intent(this, DashboardActivity.class));
                         finish();
                         dialog.dismiss();
                     });
@@ -123,7 +136,7 @@ public class CreatePaymentIdActivity extends AppCompatActivity {
             switch (result.getStatus()) {
                 case LOADING -> onPaymentIdAvailabilityCheckStatusLoading();
                 case SUCCESS -> onPaymentIdAvailabilityCheckStatusSuccess(result.getData());
-                case ERROR -> onPaymentIdAvailabilityCheckStatusError(result.getMessage());
+                case FAILURE -> onPaymentIdAvailabilityCheckStatusError(result.getError());
             }
         });
     }
@@ -162,14 +175,6 @@ public class CreatePaymentIdActivity extends AppCompatActivity {
         binding.paymentIdProgressBar.setVisibility(View.GONE);
         binding.paymentIdAvailableCheck.setVisibility(View.GONE);
         binding.paymentIdAvailabilityFeedback.setVisibility(View.GONE);
-    }
-
-    private void setupUiActions() {
-        StatusBarUtil.setStatusBarColor(this, R.color.white);
-        setupPaymentIdInputWatcher();
-        setupEditTextFocusHandler();
-
-        binding.btnContinue.setOnClickListener(view -> storeUserPaymentId(userPaymentId, userUid));
     }
 
     private void storeUserPaymentId(String paymentId, String uid) {
@@ -307,5 +312,17 @@ public class CreatePaymentIdActivity extends AppCompatActivity {
         if (imm != null) {
             imm.hideSoftInputFromWindow(view.getWindowToken(), 0);
         }
+    }
+
+    public void handleOnBackPressed() {
+        getOnBackPressedDispatcher().addCallback(
+                this,
+                new OnBackPressedCallback(true) {
+                    @Override
+                    public void handleOnBackPressed() {
+                        // Prevent user from going back
+                    }
+                }
+        );
     }
 }

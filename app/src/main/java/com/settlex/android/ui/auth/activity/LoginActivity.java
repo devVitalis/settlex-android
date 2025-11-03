@@ -3,14 +3,16 @@ package com.settlex.android.ui.auth.activity;
 import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
+import android.graphics.Color;
 import android.graphics.Rect;
 import android.graphics.Typeface;
 import android.os.Bundle;
 import android.text.Editable;
-import android.text.Html;
 import android.text.InputType;
-import android.text.TextUtils;
+import android.text.SpannableString;
+import android.text.Spanned;
 import android.text.TextWatcher;
+import android.text.style.ForegroundColorSpan;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.inputmethod.EditorInfo;
@@ -58,10 +60,27 @@ public class LoginActivity extends AppCompatActivity {
         setupUiActions();
         observeUserState();
         observeNetworkStatus();
-        observeLoginAndHandleResult();
+        observeLoginStatus();
     }
 
-    // OBSERVERS =========
+    private void setupUiActions() {
+        StatusBarUtil.setStatusBarColor(this, R.color.white);
+        setupEditTextFocusHandler();
+        setupAuthActionTexts();
+        setupInputValidation();
+        setupPasswordVisibilityToggle();
+        clearFocusOnLastEditTextField();
+
+        // Click listeners
+        binding.btnBackBefore.setOnClickListener(v -> getOnBackPressedDispatcher().onBackPressed());
+        binding.btnSignUp.setOnClickListener(v -> navigateTo(SignUpActivity.class));
+        binding.btnHelp.setOnClickListener(v -> navigateTo(AuthHelpActivity.class));
+        binding.btnSwitchAccount.setOnClickListener(view -> showLoggedOutLayout());
+        binding.btnForgotPassword.setOnClickListener(v -> navigateTo(ForgotPasswordActivity.class));
+        binding.btnSignIn.setOnClickListener(v -> attemptLogin());
+    }
+
+    // OBSERVERS ======
     private void observeNetworkStatus() {
         NetworkMonitor.getNetworkStatus().observe(this, isConnected -> {
             if (!isConnected) showNoInternetDialog();
@@ -70,39 +89,38 @@ public class LoginActivity extends AppCompatActivity {
     }
 
     private void observeUserState() {
-        authViewModel.getUserAuthStateLiveData().observe(this, currentUser -> {
+        authViewModel.getCurrentUserLiveData().observe(this, currentUser -> {
             if (currentUser != null) {
                 // user is logged in
-                showLoggedInLayout(currentUser.getPhotoUrl(), currentUser.getDisplayName(), currentUser.getEmail());
+                showLoggedInLayout(
+                        currentUser.getPhotoUrl(),
+                        currentUser.getDisplayName(),
+                        currentUser.getEmail());
                 return;
             }
             showLoggedOutLayout();
         });
     }
 
-    private void observeLoginAndHandleResult() {
-        authViewModel.getLoginResult().observe(this, result -> {
+    private void observeLoginStatus() {
+        authViewModel.getLoginLiveData().observe(this, result -> {
             if (result != null) {
                 switch (result.getStatus()) {
-                    case LOADING -> onLoginLoading();
-                    case SUCCESS -> onLoginSuccess();
-                    case ERROR -> onLoginFailure(result.getMessage());
+                    case LOADING -> progressLoader.show();
+                    case SUCCESS -> onLoginStatusSuccess();
+                    case FAILURE -> onLoginStatusError(result.getError());
                 }
             }
         });
     }
 
-    private void onLoginLoading() {
-        progressLoader.show();
-    }
-
-    private void onLoginSuccess() {
+    private void onLoginStatusSuccess() {
         startActivity(new Intent(this, DashboardActivity.class));
         finishAffinity();
         progressLoader.hide();
     }
 
-    private void onLoginFailure(String error) {
+    private void onLoginStatusError(String error) {
         binding.txtError.setText(error);
         binding.txtError.setVisibility(View.VISIBLE);
 
@@ -134,10 +152,12 @@ public class LoginActivity extends AppCompatActivity {
         binding.userDisplayName.setText(userDisplayName);
         binding.userEmail.setText(StringUtil.maskEmail(userEmail));
         binding.editTxtEmail.setText(email);
+
         // Show
         binding.showCurrentUserLayout.setVisibility(View.VISIBLE);
         binding.btnFingerprint.setVisibility(View.VISIBLE);
         binding.btnSwitchAccount.setVisibility(View.VISIBLE);
+
         // Hide
         binding.logo.setVisibility(View.GONE);
         binding.txtInputLayoutEmail.setVisibility(View.GONE);
@@ -152,6 +172,7 @@ public class LoginActivity extends AppCompatActivity {
         binding.showCurrentUserLayout.setVisibility(View.GONE);
         binding.btnFingerprint.setVisibility(View.GONE);
         binding.btnSwitchAccount.setVisibility(View.GONE);
+
         // Show
         binding.txtInputLayoutEmail.setVisibility(View.VISIBLE);
         binding.btnSignUp.setVisibility(View.VISIBLE);
@@ -168,30 +189,41 @@ public class LoginActivity extends AppCompatActivity {
                 message);
     }
 
-    // UI ACTIONS ==========
-    private void setupUiActions() {
-        StatusBarUtil.setStatusBarColor(this, R.color.white);
-        setupEditTextFocusHandler();
-        setupAuthActionTexts();
-        setupInputValidation();
-        setupPasswordVisibilityToggle();
-        clearFocusOnLastEditTextField();
+    private void setupAuthActionTexts() {
+        String fullText = "Don't have an account yet?\nClick here to register";
+        String textToHighlight = "Click here to register";
 
-        // Click listeners
-        binding.btnBackBefore.setOnClickListener(v -> getOnBackPressedDispatcher().onBackPressed());
-        binding.btnSignUp.setOnClickListener(v -> navigateTo(SignUpActivity.class));
-        binding.btnHelp.setOnClickListener(v -> navigateTo(AuthHelpActivity.class));
-        binding.btnSwitchAccount.setOnClickListener(view -> showLoggedOutLayout());
-        binding.btnForgotPassword.setOnClickListener(v -> navigateTo(PasswordResetActivity.class));
-        binding.btnSignIn.setOnClickListener(v -> attemptLogin());
+        int startIndex = fullText.indexOf(textToHighlight);
+        int endIndex = fullText.length();
+
+        SpannableString signUpText = new SpannableString(fullText);
+        signUpText.setSpan(
+                new ForegroundColorSpan(Color.parseColor("#0044CC")),
+                startIndex,
+                endIndex,
+                Spanned.SPAN_EXCLUSIVE_EXCLUSIVE
+        );
+        binding.btnSignUp.setText(signUpText);
+
+        setupSwitchAccount();
     }
 
-    private void setupAuthActionTexts() {
-        String signUpActionText = "Don't have an account yet? <font color='#0044CC'><br>Click here to register</font>";
-        binding.btnSignUp.setText(Html.fromHtml(signUpActionText, Html.FROM_HTML_MODE_LEGACY));
+    private void setupSwitchAccount() {
+        String fullText = "Not you?\nSwitch Account";
+        String textToHighlight = "Switch Account";
 
-        String switchAccountActionText = "Not you? <br><font color='#0044CC'>Switch Account</font>";
-        binding.btnSwitchAccount.setText(Html.fromHtml(switchAccountActionText, Html.FROM_HTML_MODE_LEGACY));
+        int startIndex = fullText.indexOf(textToHighlight);
+        int endIndex = startIndex + textToHighlight.length();
+
+        SpannableString switchText = new SpannableString(fullText);
+        switchText.setSpan(
+                new ForegroundColorSpan(Color.parseColor("#0044CC")),
+                startIndex,
+                endIndex,
+                Spanned.SPAN_EXCLUSIVE_EXCLUSIVE
+        );
+
+        binding.btnSwitchAccount.setText(switchText);
     }
 
     private void navigateTo(Class<? extends Activity> activityClass) {
@@ -199,7 +231,7 @@ public class LoginActivity extends AppCompatActivity {
     }
 
     private void setupEditTextFocusHandler() {
-        int focusBgRes =  R.drawable.bg_edit_txt_custom_white_focused;
+        int focusBgRes = R.drawable.bg_edit_txt_custom_white_focused;
         int defaultBgRes = R.drawable.bg_edit_txt_custom_gray_not_focused;
 
         binding.editTxtPassword.setOnFocusChangeListener((v, hasFocus) -> binding.editTxtPasswordBg.setBackgroundResource(hasFocus ? focusBgRes : defaultBgRes));
@@ -224,6 +256,8 @@ public class LoginActivity extends AppCompatActivity {
 
             @Override
             public void onTextChanged(CharSequence s, int start, int before, int count) {
+                String password = binding.editTxtPassword.getText().toString().trim();
+                binding.passwordToggle.setVisibility((!password.isEmpty()) ? View.VISIBLE : View.GONE);
                 binding.txtError.setVisibility(View.GONE);
                 updateSignInButtonState();
             }
@@ -231,24 +265,6 @@ public class LoginActivity extends AppCompatActivity {
 
         binding.editTxtEmail.addTextChangedListener(validationWatcher);
         binding.editTxtPassword.addTextChangedListener(validationWatcher);
-        setupPasswordToggleVisibility();
-    }
-
-    private void setupPasswordToggleVisibility() {
-        binding.editTxtPassword.addTextChangedListener(new TextWatcher() {
-            @Override
-            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
-            }
-
-            @Override
-            public void afterTextChanged(Editable s) {
-            }
-
-            @Override
-            public void onTextChanged(CharSequence s, int start, int before, int count) {
-                binding.passwordToggle.setVisibility(!TextUtils.isEmpty(s) ? View.VISIBLE : View.GONE);
-            }
-        });
     }
 
     private void setupPasswordVisibilityToggle() {

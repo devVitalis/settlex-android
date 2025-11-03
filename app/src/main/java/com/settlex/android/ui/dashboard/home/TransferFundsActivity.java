@@ -21,7 +21,7 @@ import com.settlex.android.R;
 import com.settlex.android.data.enums.TransactionServiceType;
 import com.settlex.android.data.enums.TransactionStatus;
 import com.settlex.android.data.remote.profile.ProfileService;
-import com.settlex.android.databinding.ActivityPayAfriendBinding;
+import com.settlex.android.databinding.ActivityTransferFundsBinding;
 import com.settlex.android.ui.common.util.ProgressLoaderController;
 import com.settlex.android.ui.dashboard.account.CreatePaymentPinActivity;
 import com.settlex.android.ui.dashboard.adapter.RecipientAdapter;
@@ -44,7 +44,7 @@ import java.util.Objects;
 import dagger.hilt.android.AndroidEntryPoint;
 
 @AndroidEntryPoint
-public class PayAFriendActivity extends AppCompatActivity {
+public class TransferFundsActivity extends AppCompatActivity {
 
     private String recipientProfileUrl;
     private String recipientPaymentId;
@@ -52,7 +52,7 @@ public class PayAFriendActivity extends AppCompatActivity {
     private boolean isPinVerified = false;
 
     // dependencies
-    private ActivityPayAfriendBinding binding;
+    private ActivityTransferFundsBinding binding;
     private ProgressLoaderController progressLoader;
     private RecipientAdapter recipientAdapter;
     private UserViewModel userViewModel;
@@ -63,7 +63,7 @@ public class PayAFriendActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        binding = ActivityPayAfriendBinding.inflate(getLayoutInflater());
+        binding = ActivityTransferFundsBinding.inflate(getLayoutInflater());
         setContentView(binding.getRoot());
 
         userViewModel = new ViewModelProvider(this).get(UserViewModel.class);
@@ -108,7 +108,7 @@ public class PayAFriendActivity extends AppCompatActivity {
 
             switch (userData.getStatus()) {
                 case SUCCESS -> onUserDataStatusSuccess(userData.getData());
-                case ERROR -> {
+                case FAILURE -> {
                     // Handle error
                 }
             }
@@ -130,7 +130,7 @@ public class PayAFriendActivity extends AppCompatActivity {
                 case LOADING -> progressLoader.show();
                 case PENDING -> onTransactionStatusPending();
                 case SUCCESS -> onTransactionStatusSuccess();
-                case ERROR -> onTransactionStatusFailed(result.getMessage());
+                case FAILURE -> onTransactionStatusFailed(result.getError());
             }
         });
     }
@@ -170,7 +170,7 @@ public class PayAFriendActivity extends AppCompatActivity {
             switch (result.getStatus()) {
                 case LOADING -> onRecipientSearchStatusLoading();
                 case SUCCESS -> onRecipientSearchStatusSuccess(result.getData());
-                case ERROR -> onRecipientSearchStatusFailed();
+                case FAILURE -> onRecipientSearchStatusFailed();
             }
         });
     }
@@ -223,7 +223,7 @@ public class PayAFriendActivity extends AppCompatActivity {
             switch (result.getStatus()) {
                 case LOADING -> progressLoader.show();
                 case SUCCESS -> onVerifyPaymentPinStatusSuccess(result.getData());
-                case ERROR -> onVerifyPaymentPinStatusError(result.getMessage());
+                case FAILURE -> onVerifyPaymentPinStatusError(result.getError());
             }
         });
     }

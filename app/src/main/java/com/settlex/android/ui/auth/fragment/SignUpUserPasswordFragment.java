@@ -57,7 +57,7 @@ public class SignUpUserPasswordFragment extends Fragment {
 
         setupUiActions();
         observeNetworkStatus();
-        generateAndObserveFcmToken();
+        getFcmToken();
         return binding.getRoot();
     }
 
@@ -82,13 +82,13 @@ public class SignUpUserPasswordFragment extends Fragment {
         });
     }
 
-    private void generateAndObserveFcmToken() {
-        authViewModel.generateUserFcmToken().observe(getViewLifecycleOwner(), result -> {
+    private void getFcmToken() {
+        authViewModel.getFcmToken().observe(getViewLifecycleOwner(), result -> {
             if (result == null) return;
 
             switch (result.getStatus()) {
                 case SUCCESS -> setUserFcmToken(result.getData());
-                case ERROR -> setUserFcmToken(null);
+                case FAILURE -> setUserFcmToken(null);
             }
         });
     }
@@ -98,13 +98,13 @@ public class SignUpUserPasswordFragment extends Fragment {
     }
 
     private void observeRegistrationStatus() {
-        authViewModel.getRegisterResult().observe(getViewLifecycleOwner(), result -> {
+        authViewModel.getCreateAccountLiveData().observe(getViewLifecycleOwner(), result -> {
             if (result == null) return;
 
             switch (result.getStatus()) {
                 case LOADING -> progressLoader.show();
                 case SUCCESS -> onRegistrationStatusSuccess();
-                case ERROR -> onRegistrationStatusFailure(result.getMessage());
+                case FAILURE -> onRegistrationStatusFailure(result.getError());
             }
         });
     }
@@ -172,7 +172,7 @@ public class SignUpUserPasswordFragment extends Fragment {
     }
 
     private void createUserAccount(String password, UserModel user) {
-        authViewModel.registerUser(authViewModel.getEmail(), password, user);
+        authViewModel.createAccount(authViewModel.getEmail(), password, user);
     }
 
     private void validateRequirements() {

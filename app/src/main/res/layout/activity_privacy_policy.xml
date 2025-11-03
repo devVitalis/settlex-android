@@ -17,7 +17,7 @@
         android:layout_height="35dp">
 
         <ImageView
-            android:id="@+id/btnBackBefore"
+            android:id="@+id/btn_back_before"
             android:layout_width="20dp"
             android:layout_height="20dp"
             android:layout_marginStart="15dp"
@@ -28,9 +28,10 @@
             app:srcCompat="@drawable/ic_arrow_back" />
 
         <TextView
-            android:id="@+id/txtHeaderTitle"
+            android:id="@+id/txt_header_title"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:fontFamily="@font/inter_bold"
             android:includeFontPadding="false"
             android:text="Privacy Policy"
             android:textColor="@color/black"
@@ -61,6 +62,7 @@
                 android:layout_height="wrap_content"
                 android:layout_gravity="center"
                 android:layout_marginTop="10dp"
+                android:fontFamily="@font/inter_bold"
                 android:includeFontPadding="false"
                 android:text="SettleX - Privacy Policy"
                 android:textColor="@color/black"
@@ -68,20 +70,22 @@
                 android:textStyle="bold" />
 
             <TextView
-                android:id="@+id/txtLastUpdated"
+                android:id="@+id/txt_last_updated"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_gravity="center"
+                android:fontFamily="@font/inter_regular"
                 android:includeFontPadding="false"
                 android:text="Last Updated: October 2025"
                 android:textColor="@color/gray"
                 android:textSize="14sp" />
 
             <TextView
-                android:id="@+id/txtPrivacyPolicy"
+                android:id="@+id/txt_privacy_policy"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="10dp"
+                android:fontFamily="@font/inter_regular"
                 android:includeFontPadding="false"
                 android:textColor="@color/black"
                 android:textSize="15sp"

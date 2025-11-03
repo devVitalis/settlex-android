@@ -15,71 +15,86 @@ import dagger.hilt.android.lifecycle.HiltViewModel;
 import jakarta.inject.Inject;
 
 /**
- * Manages authentication state and coordinates between UI and data layer.
- * Handles user registration, login, OTP flows, and password reset operations.
+ * ViewModel responsible for managing all authentication flows
+ * and temporary user state during onboarding.
  */
-
 @HiltViewModel
 public class AuthViewModel extends ViewModel {
+
     private final AuthRepository authRepo;
 
     @Inject
     public AuthViewModel(AuthRepository authRepo) {
         this.authRepo = authRepo;
-        initUserAuthState();
+        loadCurrentUserState(); // Sync Firebase user on startup
     }
 
     private final MutableLiveData<UserModel> sharedUserLiveData = new MutableLiveData<>();
-    private final MutableLiveData<LoginUiModel> userAuthStateLiveData = new MutableLiveData<>();
-    private final MutableLiveData<Result<String>> loginResult = new MutableLiveData<>();
-    private final MutableLiveData<Result<String>> registerResult = new MutableLiveData<>();
+    private final MutableLiveData<LoginUiModel> currentUserLiveData = new MutableLiveData<>();
+
+    private final MutableLiveData<Result<String>> loginLiveData = new MutableLiveData<>();
+    private final MutableLiveData<Result<String>> createAccountLiveData = new MutableLiveData<>();
     private final MutableLiveData<Result<String>> fcmTokenLiveData = new MutableLiveData<>();
-    private final MutableLiveData<Result<Boolean>> emailExistenceResult = new MutableLiveData<>();
-    private final MutableLiveData<Event<Result<String>>> changeUserPasswordResult = new MutableLiveData<>();
-    private final MutableLiveData<Event<Result<String>>> sendPasswordResetOtpResult = new MutableLiveData<>();
-    private final MutableLiveData<Event<Result<String>>> verifyEmailResetOtpResult = new MutableLiveData<>();
-    private final MutableLiveData<Event<Result<String>>> sendEmailVerificationOtpResult = new MutableLiveData<>();
-    private final MutableLiveData<Event<Result<String>>> verifyEmailVerificationOtpResult = new MutableLiveData<>();
+    private final MutableLiveData<Result<Boolean>> checkEmailExistsLiveData = new MutableLiveData<>();
 
-    // LIVEDATA GETTERS ==========
-    public LiveData<UserModel> getUser() {
-        return sharedUserLiveData;
+    // One shot events
+    private final MutableLiveData<Event<Result<String>>> setNewPasswordLiveData = new MutableLiveData<>();
+    private final MutableLiveData<Event<Result<String>>> sendPasswordResetCodeLiveData = new MutableLiveData<>();
+    private final MutableLiveData<Event<Result<String>>> verifyPasswordResetLiveData = new MutableLiveData<>();
+    private final MutableLiveData<Event<Result<String>>> sendVerificationCodeLiveData = new MutableLiveData<>();
+    private final MutableLiveData<Event<Result<String>>> verifyEmailLiveData = new MutableLiveData<>();
+
+
+    /**
+     * Creates a new account
+     */
+    public void createAccount(String email, String password, UserModel user) {
+        createAccountLiveData.postValue(Result.loading());
+        authRepo.createAccount(user, email, password, new AuthRepository.CreateAccountCallback() {
+            @Override
+            public void onSuccess() {
+                createAccountLiveData.postValue(Result.success("Registration successful"));
+            }
+
+            @Override
+            public void onFailure(String reason) {
+                createAccountLiveData.postValue(Result.failure(reason));
+            }
+        });
     }
 
-    public LiveData<Result<String>> getRegisterResult() {
-        return registerResult;
+    public LiveData<Result<String>> getCreateAccountLiveData() {
+        return createAccountLiveData;
     }
 
-    public LiveData<Result<String>> getLoginResult() {
-        return loginResult;
+    /**
+     * Login via email & password
+     */
+    public void loginWithEmail(String email, String password) {
+        loginLiveData.postValue(Result.loading());
+        authRepo.loginWithEmail(email, password, new AuthRepository.LoginCallback() {
+            @Override
+            public void onSuccess() {
+                loginLiveData.postValue(Result.success("Login success"));
+            }
+
+            @Override
+            public void onFailure(String reason) {
+                loginLiveData.postValue(Result.failure(reason));
+            }
+        });
     }
 
-    public LiveData<Event<Result<String>>> getChangeUserPasswordResult() {
-        return changeUserPasswordResult;
+    public LiveData<Result<String>> getLoginLiveData() {
+        return loginLiveData;
     }
 
-    public LiveData<Event<Result<String>>> getSendPasswordResetOtpResult() {
-        return sendPasswordResetOtpResult;
-    }
-
-    public LiveData<Result<Boolean>> getEmailExistenceResult() {
-        return emailExistenceResult;
-    }
-
-    public LiveData<Event<Result<String>>> getVerifyEmailResetOtpResult() {
-        return verifyEmailResetOtpResult;
-    }
-
-    public LiveData<Event<Result<String>>> getSendEmailVerificationOtpResult() {
-        return sendEmailVerificationOtpResult;
-    }
-
-    public LiveData<Event<Result<String>>> getVerifyEmailVerificationOtpResult() {
-        return verifyEmailVerificationOtpResult;
-    }
-
-    public LiveData<Result<String>> generateUserFcmToken() {
-        authRepo.generateUserFcmToken(new AuthRepository.FcmTokenCallback() {
+    /**
+     * Fetch FCM token for device
+     */
+    public LiveData<Result<String>> getFcmToken() {
+        fcmTokenLiveData.setValue(Result.loading());
+        authRepo.getFcmToken(new AuthRepository.FcmTokenCallback() {
             @Override
             public void onTokenReceived(String token) {
                 fcmTokenLiveData.setValue(Result.success(token));
@@ -87,148 +102,133 @@ public class AuthViewModel extends ViewModel {
 
             @Override
             public void onTokenError() {
-                fcmTokenLiveData.setValue(Result.error("Failed to generate FCM Token"));
+                fcmTokenLiveData.setValue(Result.failure("Failed to get FCM token"));
             }
         });
         return fcmTokenLiveData;
     }
 
-    public void registerUser(String email, String password, UserModel user) {
-        registerResult.postValue(Result.loading());
-        authRepo.registerUser(user, email, password, new AuthRepository.RegisterCallback() {
+    // Password Reset
+    public void sendPasswordResetCode(String email) {
+        sendPasswordResetCodeLiveData.postValue(new Event<>(Result.loading()));
+        authRepo.sendPasswordResetCode(email, new AuthRepository.SendVerificationCodeCallback() {
             @Override
             public void onSuccess() {
-                registerResult.postValue(Result.success("Registration successful"));
+                sendPasswordResetCodeLiveData.postValue(new Event<>(Result.success("OTP Sent")));
             }
 
             @Override
             public void onFailure(String reason) {
-                registerResult.postValue(Result.error(reason));
+                sendPasswordResetCodeLiveData.postValue(new Event<>(Result.failure(reason)));
             }
         });
+    }
+
+    public LiveData<Event<Result<String>>> getSendPasswordResetCodeLiveData() {
+        return sendPasswordResetCodeLiveData;
+    }
+
+    public void verifyPasswordReset(String email, String otp) {
+        verifyPasswordResetLiveData.postValue(new Event<>(Result.loading()));
+        authRepo.verifyPasswordReset(email, otp, new AuthRepository.VerifyPasswordCallback() {
+            @Override
+            public void onSuccess() {
+                verifyPasswordResetLiveData.postValue(new Event<>(Result.success("OTP Verified Successfully")));
+            }
+
+            @Override
+            public void onFailure(String reason) {
+                verifyPasswordResetLiveData.postValue(new Event<>(Result.failure(reason)));
+            }
+        });
+    }
+
+    public LiveData<Event<Result<String>>> getVerifyPasswordResetLiveData() {
+        return verifyPasswordResetLiveData;
+    }
+
+    public void setNewPassword(String email, String newPassword) {
+        setNewPasswordLiveData.postValue(new Event<>(Result.loading()));
+        authRepo.setNewPassword(email, newPassword, new AuthRepository.SetNewPasswordCallback() {
+            @Override
+            public void onSuccess() {
+                setNewPasswordLiveData.postValue(new Event<>(Result.success("Password changed successfully")));
+            }
+
+            @Override
+            public void onFailure(String reason) {
+                setNewPasswordLiveData.postValue(new Event<>(Result.failure(reason)));
+            }
+        });
+    }
+
+    public LiveData<Event<Result<String>>> getSetNewPasswordLiveData() {
+        return setNewPasswordLiveData;
+    }
+
+    // Email Verification
+    public void sendVerificationCode(String email) {
+        sendVerificationCodeLiveData.postValue(new Event<>(Result.loading()));
+        authRepo.sendVerificationCode(email, new AuthRepository.SendVerificationCodeCallback() {
+            @Override
+            public void onSuccess() {
+                sendVerificationCodeLiveData.postValue(new Event<>(Result.success("OTP Sent")));
+            }
+
+            @Override
+            public void onFailure(String reason) {
+                sendVerificationCodeLiveData.postValue(new Event<>(Result.failure(reason)));
+            }
+        });
+    }
+
+    public LiveData<Event<Result<String>>> getSendVerificationCodeLiveData() {
+        return sendVerificationCodeLiveData;
+    }
+
+    public void verifyEmail(String email, String otp) {
+        verifyEmailLiveData.postValue(new Event<>(Result.loading()));
+        authRepo.verifyEmail(email, otp, new AuthRepository.VerifyEmailCallback() {
+            @Override
+            public void onSuccess() {
+                verifyEmailLiveData.postValue(new Event<>(Result.success("OTP Verified Successfully")));
+            }
+
+            @Override
+            public void onFailure(String reason) {
+                verifyEmailLiveData.postValue(new Event<>(Result.failure(reason)));
+            }
+        });
+    }
+
+    public LiveData<Event<Result<String>>> getVerifyEmailLiveData() {
+        return verifyEmailLiveData;
     }
 
     /**
-     * Manages email/password login authentication
+     * Check if email exists during signup flow
      */
-    public void loginWithEmail(String email, String password) {
-        loginResult.postValue(Result.loading());
-        authRepo.loginWithEmail(email, password, new AuthRepository.LoginCallback() {
-            @Override
-            public void onSuccess() {
-                loginResult.postValue(Result.success("Login success"));
-            }
-
-            @Override
-            public void onFailure(String reason) {
-                loginResult.postValue(Result.error(reason));
-            }
-        });
-    }
-
-    /**
-     * Starts password reset flow
-     */
-    public void sendPasswordResetOtp(String email) {
-        sendPasswordResetOtpResult.postValue(new Event<>(Result.loading()));
-        authRepo.sendEmailPasswordResetOtp(email, new AuthRepository.SendOtpCallback() {
-            @Override
-            public void onSuccess() {
-                sendPasswordResetOtpResult.postValue(new Event<>(Result.success("OTP Sent")));
-            }
-
-            @Override
-            public void onFailure(String reason) {
-                sendPasswordResetOtpResult.postValue(new Event<>(Result.error(reason)));
-            }
-        });
-    }
-
-    // Send OTP
-    public void verifyPasswordResetOtp(String email, String otp) {
-        verifyEmailResetOtpResult.postValue(new Event<>(Result.loading()));
-        authRepo.verifyEmailPasswordResetOtp(email, otp, new AuthRepository.VerifyOtpCallback() {
-            @Override
-            public void onSuccess() {
-                verifyEmailResetOtpResult.postValue(new Event<>(Result.success("OTP Verified Successfully")));
-            }
-
-            @Override
-            public void onFailure(String reason) {
-                verifyEmailResetOtpResult.postValue(new Event<>(Result.error(reason)));
-            }
-        });
-    }
-
-    // Verify OTP
-    public void changeUserPassword(String email, String newPassword) {
-        changeUserPasswordResult.postValue(new Event<>(Result.loading()));
-        authRepo.changeUserPassword(email, newPassword, new AuthRepository.ChangePasswordCallback() {
-            @Override
-            public void onSuccess() {
-                changeUserPasswordResult.postValue(new Event<>(Result.success("Password change success")));
-            }
-
-            @Override
-            public void onFailure(String reason) {
-                changeUserPasswordResult.postValue(new Event<>(Result.error(reason)));
-            }
-        });
-    }
-
-    /**
-     * Starts email verification flow for new registrations
-     */
-    public void sendEmailVerificationOtp(String email) {
-        sendEmailVerificationOtpResult.postValue(new Event<>(Result.loading()));
-        authRepo.sendEmailVerificationOtp(email, new AuthRepository.SendOtpCallback() {
-            @Override
-            public void onSuccess() {
-                sendEmailVerificationOtpResult.postValue(new Event<>(Result.success("OTP Sent")));
-            }
-
-            @Override
-            public void onFailure(String reason) {
-                sendEmailVerificationOtpResult.postValue(new Event<>(Result.error(reason)));
-            }
-        });
-    }
-
-    // Verify OTP
-    public void verifyEmailOtp(String email, String otp) {
-        verifyEmailVerificationOtpResult.postValue(new Event<>(Result.loading()));
-        authRepo.verifyEmailVerificationOtp(email, otp, new AuthRepository.VerifyOtpCallback() {
-            @Override
-            public void onSuccess() {
-                verifyEmailVerificationOtpResult.postValue(new Event<>(Result.success("OTP Verified Successfully")));
-            }
-
-            @Override
-            public void onFailure(String reason) {
-                verifyEmailVerificationOtpResult.postValue(new Event<>(Result.error(reason)));
-            }
-        });
-    }
-
-    /**
-     * Checks email uniqueness during registration
-     */
-    public void checkEmailExistence(String email) { // Not implemented
-        emailExistenceResult.postValue(Result.loading());
-        authRepo.checkEmailExistence(email, new AuthRepository.EmailExistenceCallback() {
+    public void checkEmailExists(String email) {
+        checkEmailExistsLiveData.postValue(Result.loading());
+        authRepo.checkEmailExists(email, new AuthRepository.CheckEmailExistsCallback() {
             @Override
             public void onSuccess(boolean exists) {
-                emailExistenceResult.postValue(Result.success(exists));
+                checkEmailExistsLiveData.postValue(Result.success(exists));
             }
 
             @Override
             public void onFailure(String reason) {
-                emailExistenceResult.postValue(Result.error(reason));
+                checkEmailExistsLiveData.postValue(Result.failure(reason));
             }
         });
     }
 
-    // USER STATE MUTATORS =========
+    public LiveData<Result<Boolean>> getCheckEmailExistsLiveData() {
+        return checkEmailExistsLiveData;
+    }
+
+
+    // Local User State (registration progress)
     public void updateFirstName(String firstName) {
         UserModel user = getOrCreateUser();
         user.setFirstName(firstName);
@@ -253,57 +253,62 @@ public class AuthViewModel extends ViewModel {
         sharedUserLiveData.setValue(user);
     }
 
-    public String getEmail() {
-        UserModel user = sharedUserLiveData.getValue();
-        return (user != null) ? user.getEmail() : null;
-    }
-
-    public void updateFcmToken(String token){
+    public void updateFcmToken(String token) {
         UserModel user = getOrCreateUser();
         user.setFcmToken(token);
         sharedUserLiveData.setValue(user);
     }
 
-    public void initUserAuthState() {
-        FirebaseUser currentUser = authRepo.getCurrentUser();
-        if (currentUser == null) userAuthStateLiveData.setValue(null);
-
-        userAuthStateLiveData.setValue((currentUser != null) ? new LoginUiModel(
-                currentUser.getUid(),
-                currentUser.getEmail(),
-                currentUser.getDisplayName(),
-                currentUser.getPhotoUrl() != null ? currentUser.getPhotoUrl().toString() : null)
-                : null);
+    public String getEmail() {
+        UserModel user = sharedUserLiveData.getValue();
+        return (user != null) ? user.getEmail() : null;
     }
 
-    public void signOut() {
-        // Log out current user / end session
-        authRepo.signOut();
-    }
-
-    public LiveData<LoginUiModel> getUserAuthStateLiveData() {
-        return userAuthStateLiveData;
-    }
-
-    public boolean isUserLoggedIn() {
-        return authRepo.getCurrentUser() != null;
+    public LiveData<UserModel> getUser() {
+        return sharedUserLiveData;
     }
 
     /**
-     * Prepares user model for registration by:
-     * - Setting referral code if available and pin default values fields
+     * Apply initial default values during registration
      */
     public void applyDefaultUserValues(String invitationCode) {
         UserModel user = getOrCreateUser();
         user.setReferralCode(!invitationCode.isEmpty() ? invitationCode : null);
-        user.setPin(null);
-        user.setPinSalt(null);
         user.setHasPin(false);
         sharedUserLiveData.setValue(user);
     }
 
     private UserModel getOrCreateUser() {
-        UserModel user = sharedUserLiveData.getValue();
-        return (user != null) ? user : new UserModel();
+        UserModel existing = sharedUserLiveData.getValue();
+        return (existing != null) ? existing : new UserModel();
+    }
+
+    /**
+     * Sync ViewModel with currently logged-in Firebase user
+     */
+    private void loadCurrentUserState() {
+        FirebaseUser user = authRepo.getCurrentUser();
+
+        if (user != null) {
+            currentUserLiveData.setValue(new LoginUiModel(
+                    user.getUid(),
+                    user.getEmail(),
+                    user.getDisplayName(),
+                    user.getPhotoUrl() != null ? user.getPhotoUrl().toString() : null
+            ));
+        }
+    }
+
+    public LiveData<LoginUiModel> getCurrentUserLiveData() {
+        return currentUserLiveData;
+    }
+
+    // Session Controls
+    public void signOut() {
+        authRepo.signOut();
+    }
+
+    public boolean isUserLoggedIn() {
+        return authRepo.getCurrentUser() != null;
     }
 }

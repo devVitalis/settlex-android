@@ -9,7 +9,6 @@
     android:fitsSystemWindows="true"
     tools:context=".ui.auth.fragment.SignUpUserContactInfoFragment">
 
-    <!--Header-->
     <androidx.constraintlayout.widget.ConstraintLayout
         android:id="@+id/header"
         android:layout_width="0dp"
@@ -18,12 +17,12 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent">
 
-        <!--Sign In-->
         <TextView
-            android:id="@+id/btnSignIn"
+            android:id="@+id/btn_sign_in"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginEnd="20dp"
+            android:background="?attr/selectableItemBackground"
             android:fontFamily="@font/inter_medium"
             android:includeFontPadding="false"
             android:text="Sign in"
@@ -34,7 +33,6 @@
             app:layout_constraintEnd_toStartOf="@id/divider"
             app:layout_constraintTop_toTopOf="parent" />
 
-        <!--Divider-->
         <View
             android:id="@+id/divider"
             android:layout_width="1.5dp"
@@ -42,12 +40,11 @@
             android:layout_marginEnd="20dp"
             android:background="@color/gray"
             app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintEnd_toStartOf="@id/btnHelp"
+            app:layout_constraintEnd_toStartOf="@id/btn_help"
             app:layout_constraintTop_toTopOf="parent" />
 
-        <!--Back Button-->
         <ImageView
-            android:id="@+id/btnBackBefore"
+            android:id="@+id/btn_back_before"
             android:layout_width="20dp"
             android:layout_height="20dp"
             android:layout_marginStart="15dp"
@@ -58,9 +55,8 @@
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent" />
 
-        <!--Help Button-->
         <LinearLayout
-            android:id="@+id/btnHelp"
+            android:id="@+id/btn_help"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginEnd="15dp"
@@ -90,13 +86,12 @@
         </LinearLayout>
     </androidx.constraintlayout.widget.ConstraintLayout>
 
-    <!-- Content -->
     <ScrollView
         android:layout_width="0dp"
         android:layout_height="0dp"
         android:fillViewport="true"
         android:scrollbars="none"
-        app:layout_constraintBottom_toTopOf="@id/btnContainer"
+        app:layout_constraintBottom_toTopOf="@id/btn_container"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@id/header">
@@ -108,7 +103,6 @@
             android:paddingStart="15dp"
             android:paddingEnd="15dp">
 
-            <!-- Header -->
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
@@ -120,7 +114,6 @@
                 android:textSize="25sp"
                 android:textStyle="bold" />
 
-            <!--Sub Header-->
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
@@ -130,7 +123,6 @@
                 android:textColor="@color/black"
                 android:textSize="15sp" />
 
-            <!--Pages View-->
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
@@ -147,7 +139,6 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:orientation="horizontal">
-
                 <View
                     android:layout_width="0dp"
                     android:layout_height="2dp"
@@ -186,16 +177,15 @@
                 android:textColor="@color/black"
                 android:textSize="14sp" />
 
-            <!-- Email -->
             <FrameLayout
-                android:id="@+id/editTxtEmailBg"
+                android:id="@+id/edit_txt_email_bg"
                 android:layout_width="match_parent"
                 android:layout_height="55dp"
                 android:layout_marginTop="10dp"
                 android:background="@drawable/bg_edit_txt_custom_white_not_focused">
 
                 <EditText
-                    android:id="@+id/editTxtEmail"
+                    android:id="@+id/edit_txt_email"
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
                     android:background="@android:color/transparent"
@@ -210,7 +200,6 @@
                     android:textSize="14sp" />
             </FrameLayout>
 
-            <!--Display Error (Hidden)-->
             <TextView
                 android:id="@+id/txt_error"
                 android:layout_width="wrap_content"
@@ -223,17 +212,15 @@
                 android:visibility="gone"
                 tools:text="message" />
 
-            <!--Phone number -->
             <androidx.constraintlayout.widget.ConstraintLayout
-                android:id="@+id/editTxtPhoneNumberBackground"
+                android:id="@+id/edit_txt_phone_bg"
                 android:layout_width="match_parent"
                 android:layout_height="55dp"
                 android:layout_marginTop="10dp"
                 android:background="@drawable/bg_edit_txt_custom_white_not_focused">
 
-                <!-- Nigerian flag -->
                 <ImageView
-                    android:id="@+id/flagIcon"
+                    android:id="@+id/flag_icon"
                     android:layout_width="24dp"
                     android:layout_height="16dp"
                     android:layout_marginStart="15dp"
@@ -243,9 +230,8 @@
                     app:layout_constraintStart_toStartOf="parent"
                     app:layout_constraintTop_toTopOf="parent" />
 
-                <!-- Country code -->
                 <TextView
-                    android:id="@+id/countryCode"
+                    android:id="@+id/country_code"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_marginStart="8dp"
@@ -255,22 +241,21 @@
                     android:textColor="@color/black"
                     android:textSize="14sp"
                     app:layout_constraintBottom_toBottomOf="parent"
-                    app:layout_constraintStart_toEndOf="@id/flagIcon"
+                    app:layout_constraintStart_toEndOf="@id/flag_icon"
                     app:layout_constraintTop_toTopOf="parent" />
 
-                <!-- Divider -->
                 <com.google.android.material.divider.MaterialDivider
-                    android:id="@+id/dividerPhone"
+                    android:id="@+id/divider_phone"
                     android:layout_width="1dp"
                     android:layout_height="20dp"
                     android:layout_marginStart="8dp"
                     app:dividerColor="@color/gray"
                     app:layout_constraintBottom_toBottomOf="parent"
-                    app:layout_constraintStart_toEndOf="@id/countryCode"
+                    app:layout_constraintStart_toEndOf="@id/country_code"
                     app:layout_constraintTop_toTopOf="parent" />
 
                 <EditText
-                    android:id="@+id/editTxtPhoneNumber"
+                    android:id="@+id/edit_txt_phone"
                     android:layout_width="0dp"
                     android:layout_height="0dp"
                     android:layout_marginStart="10dp"
@@ -286,15 +271,14 @@
                     android:textSize="14sp"
                     app:layout_constraintBottom_toBottomOf="parent"
                     app:layout_constraintEnd_toEndOf="parent"
-                    app:layout_constraintStart_toEndOf="@id/dividerPhone"
+                    app:layout_constraintStart_toEndOf="@id/divider_phone"
                     app:layout_constraintTop_toTopOf="parent" />
             </androidx.constraintlayout.widget.ConstraintLayout>
         </LinearLayout>
     </ScrollView>
 
-    <!--Footer-->
     <LinearLayout
-        android:id="@+id/btnContainer"
+        android:id="@+id/btn_container"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:orientation="vertical"
@@ -311,7 +295,7 @@
             android:orientation="horizontal">
 
             <com.google.android.material.checkbox.MaterialCheckBox
-                android:id="@+id/checkBoxTermsPrivacy"
+                android:id="@+id/check_box_terms_privacy"
                 style="@style/Widget.SettleXApp.CheckBox"
                 android:layout_width="30dp"
                 android:layout_height="30dp"
@@ -319,7 +303,7 @@
                 android:gravity="center" />
 
             <TextView
-                android:id="@+id/txtTermsPrivacy"
+                android:id="@+id/txt_terms_privacy"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:fontFamily="@font/inter_regular"
@@ -330,7 +314,7 @@
         </LinearLayout>
 
         <com.google.android.material.button.MaterialButton
-            android:id="@+id/btnContinue"
+            android:id="@+id/btn_continue"
             style="@style/Button.Filled.Rounded8.Blue"
             android:layout_width="match_parent"
             android:layout_height="55dp"

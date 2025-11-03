@@ -15,10 +15,11 @@ import android.view.inputmethod.InputMethodManager;
 import android.widget.EditText;
 
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.core.content.ContextCompat;
 import androidx.lifecycle.ViewModelProvider;
 
 import com.settlex.android.R;
-import com.settlex.android.databinding.ActivityPasswordChangeBinding;
+import com.settlex.android.databinding.ActivitySetNewPasswordBinding;
 import com.settlex.android.ui.auth.viewmodel.AuthViewModel;
 import com.settlex.android.ui.common.util.ProgressLoaderController;
 import com.settlex.android.utils.event.Result;
@@ -31,29 +32,30 @@ import java.util.Objects;
 import dagger.hilt.android.AndroidEntryPoint;
 
 @AndroidEntryPoint
-public class PasswordChangeActivity extends AppCompatActivity {
+public class SetNewPasswordActivity extends AppCompatActivity {
 
     private boolean isPasswordVisible = false;
     private boolean isConfirmPasswordVisible = false;
 
     // dependencies
     private ProgressLoaderController progressLoader;
-    private ActivityPasswordChangeBinding binding;
+    private ActivitySetNewPasswordBinding binding;
     private AuthViewModel authViewModel;
     private boolean isConnected = false;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        binding = ActivityPasswordChangeBinding.inflate(getLayoutInflater());
+        binding = ActivitySetNewPasswordBinding.inflate(getLayoutInflater());
         setContentView(binding.getRoot());
 
         authViewModel = new ViewModelProvider(this).get(AuthViewModel.class);
         progressLoader = new ProgressLoaderController(this);
+        progressLoader.setOverlayColor(ContextCompat.getColor(this, R.color.semi_transparent_white));
 
         setupUiActions();
         observeNetworkStatus();
-        observePasswordResetStatus();
+        observeSetNewPasswordStatus();
     }
 
     private void setupUiActions() {
@@ -64,7 +66,7 @@ public class PasswordChangeActivity extends AppCompatActivity {
         setupPasswordVisibilityToggle();
 
         binding.btnBackBefore.setOnClickListener(v -> finish());
-        binding.btnChangePassword.setOnClickListener(v -> attemptPasswordReset());
+        binding.btnResetPassword.setOnClickListener(v -> attemptPasswordReset());
     }
 
     // OBSERVERS =========
@@ -85,25 +87,25 @@ public class PasswordChangeActivity extends AppCompatActivity {
                 message);
     }
 
-    private void observePasswordResetStatus() {
-        authViewModel.getChangeUserPasswordResult().observe(this, event -> {
+    private void observeSetNewPasswordStatus() {
+        authViewModel.getSetNewPasswordLiveData().observe(this, event -> {
             Result<String> result = event.getContentIfNotHandled();
             if (result != null) {
                 switch (result.getStatus()) {
                     case LOADING -> progressLoader.show();
-                    case SUCCESS -> onPasswordResetStatusSuccess();
-                    case ERROR -> onPasswordResetStatusError(result.getMessage());
+                    case SUCCESS -> onSetNewPasswordStatusSuccess();
+                    case FAILURE -> onSetNewPasswordStatusError(result.getError());
                 }
             }
         });
     }
 
-    private void onPasswordResetStatusSuccess() {
+    private void onSetNewPasswordStatusSuccess() {
         showSuccessDialog();
         progressLoader.hide();
     }
 
-    private void onPasswordResetStatusError(String error) {
+    private void onSetNewPasswordStatusError(String error) {
         binding.txtError.setText(error);
         binding.txtError.setVisibility(View.VISIBLE);
         progressLoader.hide();
@@ -141,11 +143,11 @@ public class PasswordChangeActivity extends AppCompatActivity {
         String email = getIntent().getStringExtra("email");
         String newPassword = binding.editTxtPassword.getText().toString().trim();
 
-        initiateUserPasswordChange(email, newPassword);
+        setNewPassword(email, newPassword);
     }
 
-    private void initiateUserPasswordChange(String email, String newPassword) {
-        authViewModel.changeUserPassword(email, newPassword);
+    private void setNewPassword(String email, String newPassword) {
+        authViewModel.setNewPassword(email, newPassword);
     }
 
     private void validatePassword() {
@@ -157,7 +159,7 @@ public class PasswordChangeActivity extends AppCompatActivity {
     }
 
     private void updateResetButtonState(boolean isEnabled) {
-        binding.btnChangePassword.setEnabled(isEnabled);
+        binding.btnResetPassword.setEnabled(isEnabled);
     }
 
     private boolean validatePasswordRequirements(String password, String confirm) {
@@ -258,13 +260,6 @@ public class PasswordChangeActivity extends AppCompatActivity {
         return super.dispatchTouchEvent(event);
     }
 
-    private void hideKeyboard(View view) {
-        InputMethodManager imm = (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
-        if (imm != null) {
-            imm.hideSoftInputFromWindow(view.getWindowToken(), 0);
-        }
-    }
-
     private void clearFocusOnEditTextField() {
         binding.editTxtConfirmPassword.setOnEditorActionListener((v, actionId, event) -> {
             if (actionId == EditorInfo.IME_ACTION_DONE) {
@@ -275,5 +270,12 @@ public class PasswordChangeActivity extends AppCompatActivity {
             }
             return false;
         });
+    }
+
+    private void hideKeyboard(View view) {
+        InputMethodManager imm = (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
+        if (imm != null) {
+            imm.hideSoftInputFromWindow(view.getWindowToken(), 0);
+        }
     }
 }

@@ -45,7 +45,7 @@ public class CommissionWithdrawalActivity extends AppCompatActivity {
 
             switch (user.getStatus()) {
                 case SUCCESS -> onUserDataSuccess(user.getData());
-                case ERROR -> {
+                case FAILURE -> {
                     // TODO: handle error
                 }
             }

@@ -115,7 +115,7 @@ public class HomeDashboardFragment extends Fragment {
         binding.btnUserCommissionBalanceLayout.setOnClickListener(v -> navigateToActivity(CommissionWithdrawalActivity.class));
         binding.btnDeposit.setOnClickListener(v -> toggleBrandAwareness());
         binding.btnReceive.setOnClickListener(v -> navigateToActivity(ReceiveActivity.class));
-        binding.btnTransfer.setOnClickListener(v -> navigateToActivity(PayAFriendActivity.class));
+        binding.btnTransfer.setOnClickListener(v -> navigateToActivity(TransferFundsActivity.class));
         binding.btnNotification.setOnClickListener(v -> StringUtil.showNotImplementedToast(requireContext()));
         binding.btnSupport.setOnClickListener(v -> StringUtil.showNotImplementedToast(requireContext()));
         binding.btnViewAllTransaction.setOnClickListener(v -> StringUtil.showNotImplementedToast(requireContext()));
@@ -155,7 +155,7 @@ public class HomeDashboardFragment extends Fragment {
             switch (user.getStatus()) {
                 case LOADING -> onUserDataStatusLoading();
                 case SUCCESS -> onUserDataStatusSuccess(user.getData());
-                case ERROR -> onUserDataStatusError();
+                case FAILURE -> onUserDataStatusError();
             }
         });
     }
@@ -241,7 +241,7 @@ public class HomeDashboardFragment extends Fragment {
             switch (transactions.getStatus()) {
                 case LOADING -> onTransactionStatusLoading();
                 case SUCCESS -> onTransactionStatusSuccess(transactions);
-                case ERROR -> onTransactionStatusError();
+                case FAILURE -> onTransactionStatusError();
             }
         });
     }

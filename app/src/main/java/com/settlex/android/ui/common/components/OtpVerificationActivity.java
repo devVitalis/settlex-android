@@ -7,6 +7,7 @@ import android.os.Bundle;
 import android.os.CountDownTimer;
 import android.text.Editable;
 import android.text.TextWatcher;
+import android.util.Log;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.inputmethod.InputMethodManager;
@@ -17,7 +18,7 @@ import androidx.lifecycle.ViewModelProvider;
 
 import com.settlex.android.R;
 import com.settlex.android.databinding.ActivityOtpVerificationBinding;
-import com.settlex.android.ui.auth.activity.PasswordChangeActivity;
+import com.settlex.android.ui.auth.activity.SetNewPasswordActivity;
 import com.settlex.android.ui.auth.viewmodel.AuthViewModel;
 import com.settlex.android.ui.common.util.ProgressLoaderController;
 import com.settlex.android.utils.event.Result;
@@ -33,7 +34,7 @@ import dagger.hilt.android.AndroidEntryPoint;
 @AndroidEntryPoint
 public class OtpVerificationActivity extends AppCompatActivity {
 
-    private boolean isConnected;
+    private boolean isConnected = false;
 
     // dependencies
     private String userEmail;
@@ -53,22 +54,30 @@ public class OtpVerificationActivity extends AppCompatActivity {
 
         setupUiActions();
         observeNetworkStatus();
-        observeSendOtpStatus();
-        observeVerifyOtpStatus();
+        observeSendPasswordResetStatus();
+        observeVerifyPasswordResetStatus();
     }
 
     private void setupUiActions() {
         StatusBarUtil.setStatusBarColor(this, R.color.white);
+        handleIntent();
         setupOtpInputWatcher();
         startResendOtpCooldown();
         maskAndDisplayUserEmail();
 
         binding.btnBackBefore.setOnClickListener(v -> finish());
         binding.btnResendOtp.setOnClickListener(v -> resendOtpCode());
-        binding.btnConfirm.setOnClickListener(v -> attemptOtpVerification());
+        binding.btnConfirm.setOnClickListener(v -> verifyPasswordReset());
         binding.btnHelp.setOnClickListener(v -> StringUtil.showNotImplementedToast(this));
     }
 
+    private void handleIntent() {
+        String intent = getIntent().getStringExtra("forgot_pin");
+        if (intent != null) {
+            binding.btnHelp.setVisibility(View.GONE);
+        }
+        Log.d("Intent", "intent: " + intent);
+    }
 
     private void observeNetworkStatus() {
         NetworkMonitor.getNetworkStatus().observe(this, isConnected -> {
@@ -87,21 +96,21 @@ public class OtpVerificationActivity extends AppCompatActivity {
                 message);
     }
 
-    private void observeVerifyOtpStatus() {
-        authViewModel.getVerifyEmailResetOtpResult().observe(this, event -> {
+    private void observeVerifyPasswordResetStatus() {
+        authViewModel.getVerifyPasswordResetLiveData().observe(this, event -> {
             Result<String> result = event.getContentIfNotHandled();
             if (result != null) {
                 switch (result.getStatus()) {
                     case LOADING -> progressLoader.show();
-                    case SUCCESS -> onVerifyOtpStatusSuccess();
-                    case ERROR -> onOtpStatusError(result.getMessage());
+                    case SUCCESS -> onVerifyPasswordResetStatusSuccess();
+                    case FAILURE -> onVerifyPasswordResetStatusError(result.getError());
                 }
             }
         });
     }
 
-    private void onVerifyOtpStatusSuccess() {
-        Intent intent = new Intent(this, PasswordChangeActivity.class);
+    private void onVerifyPasswordResetStatusSuccess() {
+        Intent intent = new Intent(this, SetNewPasswordActivity.class);
         intent.putExtra("email", userEmail);
         startActivity(intent);
         finish();
@@ -109,36 +118,42 @@ public class OtpVerificationActivity extends AppCompatActivity {
         progressLoader.hide();
     }
 
-    private void observeSendOtpStatus() {
-        authViewModel.getSendPasswordResetOtpResult().observe(this, event -> {
-            Result<String> result = event.getContentIfNotHandled();
-            if (result != null) {
-                switch (result.getStatus()) {
-                    case LOADING -> progressLoader.show();
-                    case SUCCESS -> onSendOtpStatusSuccess();
-                    case ERROR -> onOtpStatusError(result.getMessage());
-                }
-            }
-        });
-    }
-
-    private void onSendOtpStatusSuccess() {
-        startResendOtpCooldown();
-        progressLoader.hide();
-    }
-
-    private void onOtpStatusError(String message) {
+    private void onVerifyPasswordResetStatusError(String message) {
         binding.txtOtpFeedback.setText(message);
         binding.txtOtpFeedback.setVisibility(View.VISIBLE);
         progressLoader.hide();
     }
 
-    private void attemptOtpVerification() {
+    private void observeSendPasswordResetStatus() {
+        authViewModel.getSendPasswordResetCodeLiveData().observe(this, event -> {
+            Result<String> result = event.getContentIfNotHandled();
+            if (result != null) {
+                switch (result.getStatus()) {
+                    case LOADING -> progressLoader.show();
+                    case SUCCESS -> onSendPasswordResetCodeStatusSuccess();
+                    case FAILURE -> onSendPasswordResetCodeStatusError(result.getError());
+                }
+            }
+        });
+    }
+
+    private void onSendPasswordResetCodeStatusSuccess() {
+        startResendOtpCooldown();
+        progressLoader.hide();
+    }
+
+    private void onSendPasswordResetCodeStatusError(String error) {
+        binding.txtOtpFeedback.setText(error);
+        binding.txtOtpFeedback.setVisibility(View.VISIBLE);
+        progressLoader.hide();
+    }
+
+    private void verifyPasswordReset() {
         if (!isConnected) {
             showNoInternetDialog();
             return;
         }
-        authViewModel.verifyPasswordResetOtp(userEmail, getEnteredOtpCode());
+        authViewModel.verifyPasswordReset(userEmail, getEnteredOtpCode());
     }
 
     private void resendOtpCode() {
@@ -146,7 +161,7 @@ public class OtpVerificationActivity extends AppCompatActivity {
             showNoInternetDialog();
             return;
         }
-        authViewModel.sendPasswordResetOtp(userEmail);
+        authViewModel.sendPasswordResetCode(userEmail);
     }
 
     private void setupOtpInputWatcher() {
@@ -162,13 +177,16 @@ public class OtpVerificationActivity extends AppCompatActivity {
             @Override
             public void onTextChanged(CharSequence otp, int start, int before, int count) {
                 if (otp.toString().isEmpty()) binding.txtOtpFeedback.setVisibility(View.GONE);
-                binding.btnConfirm.setEnabled(isOtpComplete());
+                updateButtonConfirmState();
             }
         });
     }
 
+    private void updateButtonConfirmState() {
+        binding.btnConfirm.setEnabled(isOtpBoxFilled());
+    }
 
-    private boolean isOtpComplete() {
+    private boolean isOtpBoxFilled() {
         return binding.otpBox.length() == binding.otpBox.getItemCount();
     }
 

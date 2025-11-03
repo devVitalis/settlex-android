@@ -86,11 +86,7 @@ public class SignUpUserInfoFragment extends Fragment {
 
         binding.btnBackBefore.setOnClickListener(v -> NavHostFragment.findNavController(this).popBackStack());
         binding.btnContinue.setOnClickListener(v -> submitUserInfoAndProceed());
-
-        binding.btnHelp.setOnClickListener(v -> Toast.makeText(
-                requireContext(),
-                "Feature not yet implementation",
-                Toast.LENGTH_SHORT).show());
+        binding.btnHelp.setOnClickListener(v -> StringUtil.showNotImplementedToast(requireContext()));
     }
 
     private void setupInputValidation() {
@@ -108,7 +104,7 @@ public class SignUpUserInfoFragment extends Fragment {
                 updateContinueButtonState();
             }
         };
-        binding.editTxtFirstName.addTextChangedListener(validationWatcher);
+        binding.editTxtFirstname.addTextChangedListener(validationWatcher);
         binding.editTxtLastName.addTextChangedListener(validationWatcher);
     }
 
@@ -118,7 +114,7 @@ public class SignUpUserInfoFragment extends Fragment {
             return;
         }
 
-        String firstName = StringUtil.capitalizeEachWord(Objects.requireNonNull(binding.editTxtFirstName.getText()).toString().trim());
+        String firstName = StringUtil.capitalizeEachWord(Objects.requireNonNull(binding.editTxtFirstname.getText()).toString().trim());
         String lastName = StringUtil.capitalizeEachWord(Objects.requireNonNull(binding.editTxtLastName.getText()).toString().trim());
 
         authViewModel.updateFirstName(firstName);
@@ -133,7 +129,7 @@ public class SignUpUserInfoFragment extends Fragment {
     }
 
     private void updateContinueButtonState() {
-        String firstName = Objects.requireNonNull(binding.editTxtFirstName.getText()).toString().trim();
+        String firstName = Objects.requireNonNull(binding.editTxtFirstname.getText()).toString().trim();
         String lastName = Objects.requireNonNull(binding.editTxtLastName.getText()).toString().trim();
 
         boolean isValidFirstName = !firstName.isEmpty() && firstName.matches("^[a-zA-Z]{2,}(?:\\s[a-zA-Z]{2,})*$");
@@ -148,7 +144,6 @@ public class SignUpUserInfoFragment extends Fragment {
                 // Hide the keyboard
                 InputMethodManager imm = (InputMethodManager) v.getContext().getSystemService(Context.INPUT_METHOD_SERVICE);
                 imm.hideSoftInputFromWindow(v.getWindowToken(), 0);
-
                 v.clearFocus();
                 return true;
             }

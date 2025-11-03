@@ -18,7 +18,7 @@ import androidx.core.content.ContextCompat;
 import androidx.lifecycle.ViewModelProvider;
 
 import com.settlex.android.R;
-import com.settlex.android.databinding.ActivityPasswordResetBinding;
+import com.settlex.android.databinding.ActivityForgotPasswordBinding;
 import com.settlex.android.ui.auth.viewmodel.AuthViewModel;
 import com.settlex.android.ui.common.components.OtpVerificationActivity;
 import com.settlex.android.ui.common.util.ProgressLoaderController;
@@ -29,24 +29,19 @@ import com.settlex.android.utils.ui.UiUtil;
 
 import dagger.hilt.android.AndroidEntryPoint;
 
-/**
- * Handles password reset initiation flow:
- */
 @AndroidEntryPoint
-public class PasswordResetActivity extends AppCompatActivity {
+public class ForgotPasswordActivity extends AppCompatActivity {
 
+    // dependencies
     private ProgressLoaderController progressLoader;
-    private ActivityPasswordResetBinding binding;
+    private ActivityForgotPasswordBinding binding;
     private AuthViewModel authViewModel;
     private boolean isConnected = false;
-
-    // instance var
-    private String email;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        binding = ActivityPasswordResetBinding.inflate(getLayoutInflater());
+        binding = ActivityForgotPasswordBinding.inflate(getLayoutInflater());
         setContentView(binding.getRoot());
 
         authViewModel = new ViewModelProvider(this).get(AuthViewModel.class);
@@ -55,7 +50,7 @@ public class PasswordResetActivity extends AppCompatActivity {
 
         setupUiActions();
         observeNetworkStatus();
-        observeOtpRequestAndHandleResult();
+        observeSendPasswordResetCode();
     }
 
     private void setupUiActions() {
@@ -65,7 +60,7 @@ public class PasswordResetActivity extends AppCompatActivity {
         clearFocusOnEditTextField();
 
         binding.btnBackBefore.setOnClickListener(v -> finish());
-        binding.btnContinue.setOnClickListener(v -> requestPasswordResetOtp());
+        binding.btnContinue.setOnClickListener(v -> sendPasswordResetCode());
     }
 
 
@@ -88,48 +83,40 @@ public class PasswordResetActivity extends AppCompatActivity {
                 message);
     }
 
-    private void observeOtpRequestAndHandleResult() {
-        authViewModel.getSendPasswordResetOtpResult().observe(this, event -> {
+    private void observeSendPasswordResetCode() {
+        authViewModel.getSendPasswordResetCodeLiveData().observe(this, event -> {
             Result<String> result = event.getContentIfNotHandled();
             if (result == null) return;
 
             switch (result.getStatus()) {
                 case LOADING -> progressLoader.show();
-                case SUCCESS -> handleOtpRequestSuccess();
-                case ERROR -> handleOtpRequestError(result.getMessage());
+                case SUCCESS -> onSendPasswordResetCodeStatusSuccess();
+                case FAILURE -> onSendPasswordResetCodeStatusError(result.getError());
             }
         });
     }
 
-    private void handleOtpRequestSuccess() {
-        startActivity(new Intent(this, OtpVerificationActivity.class).putExtra("email", email));
+    private void onSendPasswordResetCodeStatusSuccess() {
+        startActivity(new Intent(this, OtpVerificationActivity.class).putExtra("email", getEnteredEmail()));
         progressLoader.hide();
     }
 
-    private void handleOtpRequestError(String error) {
+    private void onSendPasswordResetCodeStatusError(String error) {
         binding.txtError.setText(error);
         binding.txtError.setVisibility(View.VISIBLE);
         progressLoader.hide();
     }
 
-    private void requestPasswordResetOtp() {
+    private void sendPasswordResetCode() {
         if (!isConnected) {
             showNoInternetDialog();
             return;
         }
-        authViewModel.sendPasswordResetOtp(binding.editTxtEmail.getText().toString().trim());
+        authViewModel.sendPasswordResetCode(binding.editTxtEmail.getText().toString().trim());
     }
 
     private void setupEmailInputValidation() {
         binding.editTxtEmail.addTextChangedListener(new TextWatcher() {
-            @Override
-            public void onTextChanged(CharSequence s, int start, int before, int count) {
-                email = s.toString().trim().toLowerCase();
-
-                binding.txtError.setVisibility(View.GONE);
-                updateContinueButtonState();
-            }
-
             @Override
             public void beforeTextChanged(CharSequence s, int start, int count, int after) {
             }
@@ -137,19 +124,25 @@ public class PasswordResetActivity extends AppCompatActivity {
             @Override
             public void afterTextChanged(Editable s) {
             }
+
+            @Override
+            public void onTextChanged(CharSequence s, int start, int before, int count) {
+                binding.txtError.setVisibility(View.GONE);
+                updateContinueButtonState();
+            }
         });
     }
 
+    private String getEnteredEmail() {
+        return binding.editTxtEmail.getText().toString().toLowerCase().trim();
+    }
+
     private void updateContinueButtonState() {
-        enableButtonContinue(isEmailValid(email));
+        binding.btnContinue.setEnabled(isEmailValid(getEnteredEmail()));
     }
 
     private boolean isEmailValid(String email) {
         return (Patterns.EMAIL_ADDRESS.matcher(email).matches());
-    }
-
-    private void enableButtonContinue(boolean emailValid) {
-        binding.btnContinue.setEnabled(emailValid);
     }
 
     private void setupEditTextFocusHandlers() {
@@ -157,8 +150,7 @@ public class PasswordResetActivity extends AppCompatActivity {
         int defaultBgRes = R.drawable.bg_edit_txt_custom_gray_not_focused;
 
         // background changes
-        binding.editTxtEmail.setOnFocusChangeListener((v, hasFocus) ->
-                binding.editTxtEmailBackground.setBackgroundResource(hasFocus ? focusBgRes : defaultBgRes));
+        binding.editTxtEmail.setOnFocusChangeListener((v, hasFocus) -> binding.editTxtEmailBg.setBackgroundResource(hasFocus ? focusBgRes : defaultBgRes));
     }
 
 

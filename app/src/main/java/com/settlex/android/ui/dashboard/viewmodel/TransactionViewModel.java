@@ -59,7 +59,7 @@ public class TransactionViewModel extends ViewModel {
 
             @Override
             public void onFailure(String reason) {
-                recipientSearchResult.postValue(Result.error(reason));
+                recipientSearchResult.postValue(Result.failure(reason));
             }
         });
     }
@@ -85,7 +85,7 @@ public class TransactionViewModel extends ViewModel {
 
                     @Override
                     public void onPayFriendFailed(String reason) {
-                        payFriendLiveData.setValue(new Event<>(Result.error("Transaction Failed")));
+                        payFriendLiveData.setValue(new Event<>(Result.failure("Transaction Failed")));
                     }
                 });
     }
@@ -143,7 +143,7 @@ public class TransactionViewModel extends ViewModel {
 
             @Override
             public void onError(String reason) {
-                transactionLiveData.setValue(Result.error("Failed to load transactions"));
+                transactionLiveData.setValue(Result.failure("Failed to load transactions"));
             }
         });
         return transactionLiveData;

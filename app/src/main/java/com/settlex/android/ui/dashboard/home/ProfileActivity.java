@@ -86,7 +86,7 @@ public class ProfileActivity extends AppCompatActivity {
 
             switch (user.getStatus()) {
                 case SUCCESS -> onUserDataStatusSuccess(user.getData());
-                case ERROR -> onUserDataStatusError(user.getMessage());
+                case FAILURE -> onUserDataStatusError(user.getError());
             }
         });
     }
@@ -113,7 +113,7 @@ public class ProfileActivity extends AppCompatActivity {
             switch (upload.getStatus()) {
                 case LOADING -> progressLoader.show();
                 case SUCCESS -> progressLoader.hide();
-                case ERROR -> onProfilePicUploadStatusError(upload.getMessage());
+                case FAILURE -> onProfilePicUploadStatusError(upload.getError());
             }
         });
     }

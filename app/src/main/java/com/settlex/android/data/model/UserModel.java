@@ -12,99 +12,83 @@ public class UserModel {
     private String phone;
     private String fcmToken;
     private String referralCode;
-    private String pin;
-    private String pinSalt;
     public boolean hasPin;
 
     public UserModel() {
     }
 
-    public UserModel(String firstName, String lastName, String email, String phone, String fcmToken, String referralCode, String pin, String pinSalt, boolean hasPin) {
+    public UserModel(String firstName, String lastName, String email, String phone, String fcmToken, String referralCode, boolean hasPin) {
         this.firstName = firstName;
         this.lastName = lastName;
         this.email = email;
         this.phone = phone;
         this.fcmToken = fcmToken;
         this.referralCode = referralCode;
-        this.pin = pin;
-        this.pinSalt = pinSalt;
         this.hasPin = hasPin;
     }
 
+    // Getters
+
     public String getUid() {
         return uid;
-    }
-
-    public void setUid(String uid) {
-        this.uid = uid;
     }
 
     public String getFirstName() {
         return firstName;
     }
 
-    public void setFirstName(String firstName) {
-        this.firstName = firstName;
-    }
-
     public String getLastName() {
         return lastName;
-    }
-
-    public void setLastName(String lastName) {
-        this.lastName = lastName;
     }
 
     public String getEmail() {
         return email;
     }
 
-    public void setEmail(String email) {
-        this.email = email;
-    }
-
     public String getPhone() {
         return phone;
-    }
-
-    public void setPhone(String phone) {
-        this.phone = phone;
     }
 
     public String getFcmToken() {
         return fcmToken;
     }
 
-    public void setFcmToken(String fcmToken) {
-        this.fcmToken = fcmToken;
-    }
-
     public String getReferralCode() {
         return referralCode;
     }
 
+    public boolean isHasPin() {
+        return hasPin;
+    }
+
+    // Setters
+
+    public void setUid(String uid) {
+        this.uid = uid;
+    }
+
+    public void setFirstName(String firstName) {
+        this.firstName = firstName;
+    }
+
+    public void setLastName(String lastName) {
+        this.lastName = lastName;
+    }
+
+    public void setEmail(String email) {
+        this.email = email;
+    }
+
+    public void setPhone(String phone) {
+        this.phone = phone;
+    }
+
+    public void setFcmToken(String fcmToken) {
+        this.fcmToken = fcmToken;
+    }
+
     public void setReferralCode(String referralCode) {
         this.referralCode = referralCode;
-    }
-
-    public String getPin() {
-        return pin;
-    }
-
-    public void setPin(String pin) {
-        this.pin = pin;
-    }
-
-    public String getPinSalt() {
-        return pinSalt;
-    }
-
-    public void setPinSalt(String pinSalt) {
-        this.pinSalt = pinSalt;
-    }
-
-    public boolean getHasPin() {
-        return hasPin;
     }
 
     public void setHasPin(boolean hasPin) {

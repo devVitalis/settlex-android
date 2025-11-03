@@ -72,8 +72,8 @@ public class SignUpEmailVerificationFragment extends Fragment {
         super.onViewCreated(view, savedInstanceState);
 
         startResendOtpCooldown();
-        observeSendEmailOtpStatus();
-        observeOtpVerificationStatus();
+        observeSendVerificationCodeStatus();
+        observeEmailVerificationStatus();
     }
 
     @Override
@@ -97,7 +97,7 @@ public class SignUpEmailVerificationFragment extends Fragment {
 
         binding.btnBackBefore.setOnClickListener(v -> NavHostFragment.findNavController(this).popBackStack());
         binding.btnResendOtp.setOnClickListener(v -> resendOtp());
-        binding.btnVerify.setOnClickListener(v -> verifyOtp());
+        binding.btnContinue.setOnClickListener(v -> verifyOtp());
         binding.btnHelp.setOnClickListener(v -> StringUtil.showNotImplementedToast(requireContext()));
     }
 
@@ -110,20 +110,20 @@ public class SignUpEmailVerificationFragment extends Fragment {
         });
     }
 
-    private void observeOtpVerificationStatus() {
-        authViewModel.getVerifyEmailVerificationOtpResult().observe(getViewLifecycleOwner(), event -> {
+    private void observeEmailVerificationStatus() {
+        authViewModel.getVerifyEmailLiveData().observe(getViewLifecycleOwner(), event -> {
             Result<String> result = event.getContentIfNotHandled();
             if (result == null) return;
 
             switch (result.getStatus()) {
                 case LOADING -> progressLoader.show();
-                case SUCCESS -> onOtpVerificationSuccess();
-                case ERROR -> onSendOrVerifyOtpStatusError(result.getMessage());
+                case SUCCESS -> onEmailVerificationSuccess();
+                case FAILURE -> onEmailVerificationStatusError(result.getError());
             }
         });
     }
 
-    private void onOtpVerificationSuccess() {
+    private void onEmailVerificationSuccess() {
         NavOptions navOptions = new NavOptions.Builder()
                 .setPopUpTo(R.id.signUpEmailVerificationFragment, true)
                 .build();
@@ -134,27 +134,33 @@ public class SignUpEmailVerificationFragment extends Fragment {
         progressLoader.hide();
     }
 
-    private void observeSendEmailOtpStatus() {
-        authViewModel.getSendEmailVerificationOtpResult().observe(getViewLifecycleOwner(), event -> {
+    private void onEmailVerificationStatusError(String error) {
+        binding.txtError.setText(error);
+        binding.txtError.setVisibility(View.VISIBLE);
+        progressLoader.hide();
+    }
+
+    private void observeSendVerificationCodeStatus() {
+        authViewModel.getSendVerificationCodeLiveData().observe(getViewLifecycleOwner(), event -> {
             Result<String> result = event.getContentIfNotHandled();
             if (result == null) return;
 
             switch (result.getStatus()) {
                 case LOADING -> progressLoader.show();
-                case SUCCESS -> onSendNewOtpVerificationStatusSuccess();
-                case ERROR -> onSendOrVerifyOtpStatusError(result.getMessage());
+                case SUCCESS -> onSendVerificationCodeStatusSuccess();
+                case FAILURE -> onVerificationCodeStatusError(result.getError());
             }
         });
     }
 
-    private void onSendNewOtpVerificationStatusSuccess() {
+    private void onSendVerificationCodeStatusSuccess() {
         startResendOtpCooldown();
         progressLoader.hide();
     }
 
-    private void onSendOrVerifyOtpStatusError(String reason) {
-        binding.otpError.setText(reason);
-        binding.otpError.setVisibility(View.VISIBLE);
+    private void onVerificationCodeStatusError(String error) {
+        binding.txtError.setText(error);
+        binding.txtError.setVisibility(View.VISIBLE);
         progressLoader.hide();
     }
 
@@ -171,7 +177,7 @@ public class SignUpEmailVerificationFragment extends Fragment {
 
     private void verifyOtp() {
         if (isConnected) {
-            authViewModel.verifyEmailOtp(email, getEnteredOtpDigits());
+            authViewModel.verifyEmail(email, getEnteredOtpDigits());
             return;
         }
         showNoInternet();
@@ -179,14 +185,14 @@ public class SignUpEmailVerificationFragment extends Fragment {
 
     private void resendOtp() {
         if (isConnected) {
-            authViewModel.sendEmailVerificationOtp(email);
+            authViewModel.sendVerificationCode(email);
             return;
         }
         showNoInternet();
     }
 
     private void maskAndDisplayEmail() {
-        binding.txtUserEmail.setText(StringUtil.maskEmail(email));
+        binding.userEmail.setText(StringUtil.maskEmail(email));
     }
 
     private void styleSpamHintText() {
@@ -250,8 +256,8 @@ public class SignUpEmailVerificationFragment extends Fragment {
 
             @Override
             public void onTextChanged(CharSequence otp, int start, int before, int count) {
-                if (otp.toString().isEmpty()) binding.otpError.setVisibility(View.GONE);
-                binding.btnVerify.setEnabled(isOtpDigitsFilled());
+                if (otp.toString().isEmpty()) binding.txtError.setVisibility(View.GONE);
+                binding.btnContinue.setEnabled(isOtpDigitsFilled());
             }
         });
     }

@@ -28,48 +28,55 @@ import jakarta.inject.Inject;
 public class AuthRepository {
     private final String TAG = AuthRepository.class.getSimpleName();
     private final String ERROR_NO_INTERNET = "Connection lost. Please check your Wi-Fi or cellular data and try again";
+    private final String ERROR_FALLBACK = "Something went wrong. Try again";
 
     private final FirebaseAuth auth;
-    private final FirebaseFirestore firestore;
     private final FirebaseFunctions functions;
     private final FirebaseMessaging firebaseMessaging;
 
     @Inject
-    public AuthRepository(FirebaseAuth uth, FirebaseFirestore firestore, FirebaseFunctions functions, FirebaseMessaging firebaseMessaging) {
-        this.auth = uth;
-        this.firestore = firestore;
+    public AuthRepository(FirebaseAuth auth, FirebaseFunctions functions, FirebaseMessaging firebaseMessaging) {
+        this.auth = auth;
         this.functions = functions;
         this.firebaseMessaging = firebaseMessaging;
     }
 
     /**
-     * Handles email/password authentication with Firebase Auth
+     * Sign in user using email/password with Firebase Auth
      */
     public void loginWithEmail(String email, String password, LoginCallback callback) {
         auth.signInWithEmailAndPassword(email, password)
                 .addOnSuccessListener(authResult -> callback.onSuccess())
                 .addOnFailureListener(e -> {
                     if (e instanceof FirebaseAuthInvalidCredentialsException) {
-                        callback.onFailure("Invalid email or password");
+                        callback.onFailure("Incorrect email or password");
                         return;
                     }
                     if (e instanceof FirebaseNetworkException || e instanceof IOException) {
                         callback.onFailure(ERROR_NO_INTERNET);
                         return;
                     }
-                    if (((FirebaseAuthInvalidUserException) e).getErrorCode().equals("ERROR_USER_DISABLED")) {
-                        callback.onFailure("Your account has been disabled, contact support.");
-                        return;
+                    if (e instanceof FirebaseAuthInvalidUserException ex) {
+                        if ("ERROR_USER_DISABLED".equals(ex.getErrorCode())) {
+                            callback.onFailure("Your account has been disabled, contact support");
+                            return;
+                        }
                     }
-                    callback.onFailure(e.getMessage());
+                    callback.onFailure(ERROR_FALLBACK);
+                    Log.e(TAG, "Login failed: " + e.getMessage(), e);
                 });
+    }
+
+    public interface LoginCallback {
+        void onSuccess();
+
+        void onFailure(String error);
     }
 
     /**
      * Registers new user with Firebase Auth and stores profile data
-     * Includes collision detection for existing accounts
      */
-    public void registerUser(UserModel user, String email, String password, RegisterCallback callback) {
+    public void createAccount(UserModel user, String email, String password, CreateAccountCallback callback) {
         auth.createUserWithEmailAndPassword(email, password)
                 .addOnSuccessListener(authResult -> {
                     FirebaseUser currentUser = authResult.getUser();
@@ -77,8 +84,9 @@ public class AuthRepository {
                         callback.onFailure("Authentication failed. User not found.");
                         return;
                     }
+                    // get, set user unique id and store profile data
                     user.setUid(currentUser.getUid());
-                    storeUserProfile(user, callback);
+                    createProfileData(user, callback);
                 })
                 .addOnFailureListener(e -> {
                     if (e instanceof FirebaseAuthUserCollisionException) {
@@ -90,23 +98,73 @@ public class AuthRepository {
                         callback.onFailure(ERROR_NO_INTERNET);
                         return;
                     }
-                    callback.onFailure(e.getMessage());
+                    callback.onFailure(ERROR_FALLBACK);
+                    Log.e(TAG, "Account creation failed: " + e.getMessage(), e);
                 });
     }
 
     /**
-     * Checks email availability via Cloud Function
-     * Used during registration to prevent duplicate accounts
+     * Stores user profile and mark email as verify
      */
-    public void checkEmailExistence(String email, EmailExistenceCallback callback) {
+    private void createProfileData(UserModel user, CreateAccountCallback callback) {
+        Map<String, Object> data = new HashMap<>();
+        data.put("user", new Gson().toJson(user));
+
+        functions.getHttpsCallable("default-createProfileData")
+                .call(data)
+                .addOnSuccessListener(result -> {
+                    callback.onSuccess(); // return
+                    setEmailVerified(user.getUid());
+                    setUserDisplayName(user.getFirstName() + " " + user.getLastName());
+                })
+                .addOnFailureListener(e -> {
+                    if (e instanceof FirebaseNetworkException || e instanceof IOException) {
+                        callback.onFailure(ERROR_NO_INTERNET);
+                        return;
+                    }
+                    callback.onFailure(ERROR_FALLBACK);
+                    Log.e(TAG, "Profile creation failed: " + e.getMessage(), e);
+                });
+    }
+
+    public interface CreateAccountCallback {
+        void onSuccess();
+
+        void onFailure(String error);
+    }
+
+    private void setEmailVerified(String uid) {
+        Map<String, Object> data = new HashMap<>();
+        data.put("uid", uid);
+
+        functions.getHttpsCallable("default-setEmailVerified")
+                .call(data)
+                .addOnFailureListener(e -> Log.e(TAG, "Failed to mark email verified: " + e.getMessage(), e));
+    }
+
+    private void setUserDisplayName(String fullName) {
+        FirebaseUser user = getCurrentUser();
+        if (user == null) return;
+
+        UserProfileChangeRequest displayName = new UserProfileChangeRequest.Builder()
+                .setDisplayName(fullName)
+                .build();
+        user.updateProfile(displayName);
+    }
+
+    /**
+     * Checks email availability
+     */
+    public void checkEmailExists(String email, CheckEmailExistsCallback callback) {
         Map<String, Object> data = new HashMap<>();
         data.put("email", email);
-        functions.getHttpsCallable("default-checkEmailExistence")
+
+        functions.getHttpsCallable("default-checkEmailExists")
                 .call(data)
                 .addOnSuccessListener(result -> {
                     if (result.getData() != null) {
-                        boolean exists = Boolean.TRUE.equals(((Map<?, ?>) result.getData()).get("exists"));
-                        callback.onSuccess(exists);
+                        Map<?, ?> resultData = (Map<?, ?>) result.getData();
+                        callback.onSuccess((boolean) resultData.get("exists"));
                     } else {
                         callback.onFailure("Something went wrong. Please try again");
                     }
@@ -116,19 +174,26 @@ public class AuthRepository {
                         callback.onFailure(ERROR_NO_INTERNET);
                         return;
                     }
-                    callback.onFailure(e.getMessage());
+                    callback.onFailure(ERROR_FALLBACK);
+                    Log.e(TAG, "Check email exist failed: " + e.getMessage(), e);
                 });
     }
 
+    public interface CheckEmailExistsCallback {
+        void onSuccess(boolean exists);
+
+        void onFailure(String error);
+    }
+
+
     /**
-     * Manages the complete email verification flow:
-     * 1. Sends verification code
+     * Sends verification code to provided email
      */
-    public void sendEmailVerificationOtp(String email, SendOtpCallback callback) {
+    public void sendVerificationCode(String email, SendVerificationCodeCallback callback) {
         Map<String, Object> data = new HashMap<>();
         data.put("email", email);
 
-        functions.getHttpsCallable("default-sendVerifyEmail")
+        functions.getHttpsCallable("default-sendVerificationCode")
                 .call(data)
                 .addOnSuccessListener(result -> callback.onSuccess())
                 .addOnFailureListener(e -> {
@@ -136,17 +201,20 @@ public class AuthRepository {
                         callback.onFailure(ERROR_NO_INTERNET);
                         return;
                     }
-                    callback.onFailure(e.getMessage());
+                    callback.onFailure(ERROR_FALLBACK);
+                    Log.e(TAG, "Send verification code failed: " + e.getMessage(), e);
                 });
     }
 
-    // 2. Validates entered code
-    public void verifyEmailVerificationOtp(String email, String otp, VerifyOtpCallback callback) {
+    /**
+     * Validates entered verification
+     */
+    public void verifyEmail(String email, String otp, VerifyEmailCallback callback) {
         Map<String, Object> data = new HashMap<>();
         data.put("email", email);
         data.put("otp", otp);
 
-        functions.getHttpsCallable("default-verifyEmailOtp")
+        functions.getHttpsCallable("default-verifyEmail")
                 .call(data)
                 .addOnSuccessListener(result -> callback.onSuccess())
                 .addOnFailureListener(e -> {
@@ -154,19 +222,25 @@ public class AuthRepository {
                         callback.onFailure(ERROR_NO_INTERNET);
                         return;
                     }
-                    callback.onFailure(e.getMessage());
+                    callback.onFailure(ERROR_FALLBACK);
+                    Log.e(TAG, "Email verification failed: " + e.getMessage(), e);
                 });
+    }
+
+    public interface VerifyEmailCallback {
+        void onSuccess();
+
+        void onFailure(String error);
     }
 
     /**
-     * Handles password reset flow including:
-     * 1. Sends OTP code
+     * Sends verification code during password reset
      */
-    public void sendEmailPasswordResetOtp(String email, SendOtpCallback callback) {
+    public void sendPasswordResetCode(String email, SendVerificationCodeCallback callback) {
         Map<String, Object> data = new HashMap<>();
         data.put("email", email);
 
-        functions.getHttpsCallable("default-sendPasswordResetEmail")
+        functions.getHttpsCallable("default-sendPasswordResetCode")
                 .call(data)
                 .addOnSuccessListener(result -> callback.onSuccess())
                 .addOnFailureListener(e -> {
@@ -174,17 +248,26 @@ public class AuthRepository {
                         callback.onFailure(ERROR_NO_INTERNET);
                         return;
                     }
-                    callback.onFailure(e.getMessage());
+                    callback.onFailure(ERROR_FALLBACK);
+                    Log.e(TAG, "Send password reset code failed: " + e.getMessage(), e);
                 });
     }
 
-    // 2. OTP verification
-    public void verifyEmailPasswordResetOtp(String email, String otp, VerifyOtpCallback callback) {
+    public interface SendVerificationCodeCallback {
+        void onSuccess();
+
+        void onFailure(String error);
+    }
+
+    /**
+     * Verify authenticity of the password rest with code
+     */
+    public void verifyPasswordReset(String email, String otp, VerifyPasswordCallback callback) {
         Map<String, Object> data = new HashMap<>();
         data.put("email", email);
         data.put("otp", otp);
 
-        functions.getHttpsCallable("default-verifyPasswordResetOtp")
+        functions.getHttpsCallable("default-verifyPasswordReset")
                 .call(data)
                 .addOnSuccessListener(result -> callback.onSuccess())
                 .addOnFailureListener(e -> {
@@ -192,22 +275,28 @@ public class AuthRepository {
                         callback.onFailure(ERROR_NO_INTERNET);
                         return;
                     }
-                    callback.onFailure(e.getMessage());
+                    callback.onFailure(ERROR_FALLBACK);
+                    Log.e(TAG, "Password reset verification failed: " + e.getMessage(), e);
                 });
     }
 
+    public interface VerifyPasswordCallback {
+        void onSuccess();
+
+        void onFailure(String error);
+    }
+
     /**
-     * 3. Password update
-     * Collects device metadata for fraud detection
+     * Update user password
      */
-    public void changeUserPassword(String email, String newPassword, ChangePasswordCallback callback) {
+    public void setNewPassword(String email, String newPassword, SetNewPasswordCallback callback) {
         MetadataService.collectAsync(metadata -> {
             Map<String, Object> data = new HashMap<>();
             data.put("email", email);
             data.put("newPassword", newPassword);
             data.put("metadata", new Gson().toJson(metadata));
 
-            functions.getHttpsCallable("default-changePassword")
+            functions.getHttpsCallable("default-setNewPassword")
                     .call(data)
                     .addOnSuccessListener(result -> callback.onSuccess())
                     .addOnFailureListener(e -> {
@@ -215,59 +304,30 @@ public class AuthRepository {
                             callback.onFailure(ERROR_NO_INTERNET);
                             return;
                         }
-                        callback.onFailure(e.getMessage());
+                        callback.onFailure(ERROR_FALLBACK);
+                        Log.e(TAG, "Password update failed: " + e.getMessage(), e);
                     });
         });
     }
 
-    /**
-     * Stores user profile and mark email as verify
-     * Maintains data consistency with rollback on failure
-     */
-    private void storeUserProfile(UserModel user, RegisterCallback callback) {
-        Map<String, Object> data = new HashMap<>();
-        data.put("user", new Gson().toJson(user));
+    public interface SetNewPasswordCallback {
+        void onSuccess();
 
-        functions.getHttpsCallable("default-storeUserProfile")
-                .call(data)
-                .addOnSuccessListener(result -> {
-                    callback.onSuccess(); // return
-                    markEmailVerified(user.getUid(), new RegisterCallback() {
-                        @Override
-                        public void onSuccess() {
-                        }
-
-                        @Override
-                        public void onFailure(String reason) {
-                            markEmailAsUnverified(user.getUid());
-                        }
-                    });
-                    setUserDisplayName(user.getFirstName() + " " + user.getLastName());
-                })
-                .addOnFailureListener(e -> {
-                    if (e instanceof FirebaseNetworkException || e instanceof IOException) {
-                        callback.onFailure(ERROR_NO_INTERNET);
-                        return;
-                    }
-                    callback.onFailure(e.getMessage());
-                });
+        void onFailure(String error);
     }
 
-    public void generateUserFcmToken(FcmTokenCallback callback) {
+    public void getFcmToken(FcmTokenCallback callback) {
         firebaseMessaging.getToken()
                 .addOnSuccessListener(callback::onTokenReceived)
                 .addOnFailureListener(e -> {
                     callback.onTokenError();
-                    Log.e(TAG, "Failed to fetch token", e);
+                    Log.e(TAG, "Failed to fetch token: " + e.getMessage(), e);
                 });
     }
 
-    /**
-     * Sends the updated FCM token to your backend or Firestore.
-     */
-    public void storeNewTokenToServer(String token) {
+    public void storeNewToken(String token) {
         FirebaseUser user = getCurrentUser();
-        if (user == null) return; // user not logged in, skip
+        if (user == null) return;
 
         FirebaseFirestore db = FirebaseFirestore.getInstance();
         db.collection("users")
@@ -283,81 +343,12 @@ public class AuthRepository {
         void onTokenError();
     }
 
-    private void markEmailVerified(String uid, RegisterCallback callback) {
-        Map<String, Object> data = new HashMap<>();
-        data.put("uid", uid);
-        functions.getHttpsCallable("default-markEmailVerified")
-                .call(data)
-                .addOnSuccessListener(result -> callback.onSuccess())
-                .addOnFailureListener(e -> callback.onFailure(e.getMessage()));
-    }
-
-    /**
-     * Fallback method to maintain data consistency when markEmailVerified fails
-     */
-    private void markEmailAsUnverified(String uid) {
-        firestore.collection("users")
-                .document(uid)
-                .update("emailVerified", false);
-    }
-
-    /**
-     * Updates user display name in Firebase Auth during registration with user firstName
-     */
-    private void setUserDisplayName(String fullName) {
-        FirebaseUser user = getCurrentUser();
-        if (user == null) return;
-
-        UserProfileChangeRequest displayName = new UserProfileChangeRequest.Builder()
-                .setDisplayName(fullName)
-                .build();
-        user.updateProfile(displayName);
-    }
-
+    // Session
     public FirebaseUser getCurrentUser() {
-        // Get current signed in user
         return FirebaseAuth.getInstance().getCurrentUser();
     }
 
     public void signOut() {
         auth.signOut();
-    }
-
-
-    // Callback Interfaces =====
-    public interface LoginCallback {
-        void onSuccess();
-
-        void onFailure(String reason);
-    }
-
-    public interface RegisterCallback {
-        void onSuccess();
-
-        void onFailure(String reason);
-    }
-
-    public interface EmailExistenceCallback {
-        void onSuccess(boolean exists);
-
-        void onFailure(String reason);
-    }
-
-    public interface SendOtpCallback {
-        void onSuccess();
-
-        void onFailure(String reason);
-    }
-
-    public interface VerifyOtpCallback {
-        void onSuccess();
-
-        void onFailure(String reason);
-    }
-
-    public interface ChangePasswordCallback {
-        void onSuccess();
-
-        void onFailure(String reason);
     }
 }

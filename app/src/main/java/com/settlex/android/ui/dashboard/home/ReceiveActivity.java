@@ -50,7 +50,7 @@ public class ReceiveActivity extends AppCompatActivity {
 
             switch (user.getStatus()) {
                 case SUCCESS -> onUserDataStatusSuccess(user.getData());
-                case ERROR -> {
+                case FAILURE -> {
                     // TODO: handle error
                 }
             }

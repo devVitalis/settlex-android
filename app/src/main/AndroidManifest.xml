@@ -60,7 +60,7 @@
             android:name=".ui.dashboard.home.TransactionStatusActivity"
             android:exported="false" />
         <activity
-            android:name=".ui.dashboard.home.PayAFriendActivity"
+            android:name=".ui.dashboard.home.TransferFundsActivity"
             android:exported="false" />
         <activity
             android:name=".ui.dashboard.home.ProfileActivity"
@@ -90,13 +90,13 @@
             android:name=".ui.dashboard.home.TransactionActivity"
             android:exported="false" />
         <activity
-            android:name=".ui.auth.activity.PasswordChangeActivity"
+            android:name=".ui.auth.activity.SetNewPasswordActivity"
             android:exported="false" />
         <activity
             android:name=".ui.common.components.OtpVerificationActivity"
             android:exported="false" />
         <activity
-            android:name=".ui.auth.activity.PasswordResetActivity"
+            android:name=".ui.auth.activity.ForgotPasswordActivity"
             android:exported="false" />
         <activity
             android:name=".ui.info.legal.PrivacyPolicyActivity"

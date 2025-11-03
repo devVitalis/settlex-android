@@ -37,7 +37,7 @@ public class TransactionRepository {
     }
 
     public void searchRecipient(String paymentId, SearchRecipientCallback callback) {
-        functions.getHttpsCallable("default-searchPaymentId")
+        functions.getHttpsCallable("default-findRecipientByPaymentId")
                 .call(Collections.singletonMap("paymentId", paymentId))
                 .addOnSuccessListener(result -> {
                     Map<?, ?> data = (Map<?, ?>) result.getData();
@@ -79,7 +79,7 @@ public class TransactionRepository {
         data.put("serviceType", serviceType);
         data.put("description", description);
 
-        functions.getHttpsCallable("default-payAFriend")
+        functions.getHttpsCallable("default-transferFunds")
                 .call(data).addOnSuccessListener(result -> callback.onPayFriendSuccess())
                 .addOnFailureListener(e -> {
                     if (e instanceof FirebaseNetworkException || e instanceof IOException) {

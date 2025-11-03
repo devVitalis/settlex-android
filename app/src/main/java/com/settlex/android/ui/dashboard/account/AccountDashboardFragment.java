@@ -72,7 +72,7 @@ public class AccountDashboardFragment extends Fragment {
 
             switch (user.getStatus()) {
                 case SUCCESS -> onUserDataStatusSuccess(user.getData());
-                case ERROR -> onUserDataStatusError(user.getMessage());
+                case FAILURE -> onUserDataStatusError(user.getError());
             }
         });
     }

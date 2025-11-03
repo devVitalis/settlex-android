@@ -61,7 +61,7 @@ public class UserViewModel extends ViewModel {
 
             @Override
             public void onFailure(String error) {
-                uploadProfilePicLiveData.setValue(Result.error(error));
+                uploadProfilePicLiveData.setValue(Result.failure(error));
             }
         });
     }
@@ -80,7 +80,7 @@ public class UserViewModel extends ViewModel {
 
             @Override
             public void onFailure(String error) {
-                checkPaymentIdExistsLiveData.setValue(new Event<>(Result.error(error)));
+                checkPaymentIdExistsLiveData.setValue(new Event<>(Result.failure(error)));
             }
         });
     }
@@ -99,7 +99,7 @@ public class UserViewModel extends ViewModel {
 
             @Override
             public void onFailure(String error) {
-                storeUserPaymentIdLiveData.setValue(new Event<>(Result.error(error)));
+                storeUserPaymentIdLiveData.setValue(new Event<>(Result.failure(error)));
             }
         });
     }
@@ -118,7 +118,7 @@ public class UserViewModel extends ViewModel {
 
             @Override
             public void onError(String error) {
-                createPaymentLiveData.setValue(new Event<>(Result.error(error)));
+                createPaymentLiveData.setValue(new Event<>(Result.failure(error)));
             }
         });
     }
@@ -138,7 +138,7 @@ public class UserViewModel extends ViewModel {
 
             @Override
             public void onError(String error) {
-                verifyPaymentLiveData.setValue(new Event<>(Result.error(error)));
+                verifyPaymentLiveData.setValue(new Event<>(Result.failure(error)));
             }
         });
     }
@@ -191,7 +191,7 @@ public class UserViewModel extends ViewModel {
                         dto.getData().commissionBalance,
                         dto.getData().referralBalance
                 )));
-                case ERROR -> userLiveData.setValue(Result.error(dto.getMessage()));
+                case FAILURE -> userLiveData.setValue(Result.failure(dto.getError()));
             }
         });
     }

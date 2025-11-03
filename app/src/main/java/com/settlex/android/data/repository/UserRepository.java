@@ -30,6 +30,7 @@ import jakarta.inject.Singleton;
 public class UserRepository {
     private final String TAG = UserRepository.class.getSimpleName();
     private final String ERROR_NO_INTERNET = "Connection lost. Please check your Wi-Fi or cellular data and try again";
+    private final String ERROR_FALLBACK = "Something went wrong. Try again";
 
     private final MutableLiveData<Result<UserDto>> sharedUserLiveData = new MutableLiveData<>();
     private final MutableLiveData<FirebaseUser> sharedUserAuthState = new MutableLiveData<>();
@@ -94,7 +95,7 @@ public class UserRepository {
                 .addSnapshotListener((snapshot, error) -> {
                     if (error != null) {
                         Log.e(TAG, "User listener error" + error.getMessage(), error);
-                        sharedUserLiveData.postValue(Result.error(error.getMessage()));
+                        sharedUserLiveData.postValue(Result.failure(error.getMessage()));
                         return;
                     }
                     if (snapshot == null || !snapshot.exists()) {
@@ -135,7 +136,7 @@ public class UserRepository {
 
 
     public void uploadUserProfilePicToServer(String imageBase64, UploadProfilePicCallback callback) {
-        functions.getHttpsCallable("default-uploadProfilePic")
+        functions.getHttpsCallable("default-uploadProfilePicture")
                 .call(Collections.singletonMap("imageBase64", imageBase64))
                 .addOnSuccessListener(result -> {
                     callback.onSuccess();
@@ -146,7 +147,8 @@ public class UserRepository {
                         callback.onFailure(ERROR_NO_INTERNET);
                         return;
                     }
-                    callback.onFailure(e.getMessage());
+                    callback.onFailure(ERROR_FALLBACK);
+                    Log.e(TAG, "Failed to upload picture: " + e.getMessage(), e);
                 });
     }
 
@@ -175,8 +177,8 @@ public class UserRepository {
                         callback.onFailure(ERROR_NO_INTERNET);
                         return;
                     }
-                    callback.onFailure(e.getMessage());
-                    Log.e(TAG, "Failed to check Payment ID availability", e);
+                    callback.onFailure(ERROR_FALLBACK);
+                    Log.e(TAG, "Failed to check Payment ID availability " + e.getMessage(), e);
                 });
     }
 
@@ -209,7 +211,7 @@ public class UserRepository {
                         callback.onFailure(ERROR_NO_INTERNET);
                         return;
                     }
-                    callback.onFailure(e.getMessage());
+                    callback.onFailure(ERROR_FALLBACK);
                     Log.e(TAG, "failed to store user payment ID: " + e.getMessage(), e);
                 });
     }
@@ -221,7 +223,7 @@ public class UserRepository {
     }
 
     public void createPaymentPin(String pin, CreatePaymentPinCallback callback) {
-        functions.getHttpsCallable("default-createPaymentPin")
+        functions.getHttpsCallable("default-setPaymentPin")
                 .call(Collections.singletonMap("pin", pin))
                 .addOnSuccessListener(result -> callback.onSuccess())
                 .addOnFailureListener(e -> {
@@ -229,8 +231,8 @@ public class UserRepository {
                         callback.onError(ERROR_NO_INTERNET);
                         return;
                     }
-                    callback.onError(e.getMessage());
-                    Log.e(TAG, "Failed to create Payment PIN: ", e);
+                    callback.onError(ERROR_FALLBACK);
+                    Log.e(TAG, "Failed to create Payment PIN: " + e.getMessage(), e);
                 });
     }
 
@@ -241,7 +243,7 @@ public class UserRepository {
     }
 
     public void VerifyPaymentPin(String pin, VerifyPaymentPinCallback callback) {
-        functions.getHttpsCallable("default-verifyPaymentPin")
+        functions.getHttpsCallable("default-validatePaymentPin")
                 .call(Collections.singletonMap("pin", pin))
                 .addOnSuccessListener(result -> {
                     Map<?, ?> data = (Map<?, ?>) result.getData();
@@ -255,8 +257,8 @@ public class UserRepository {
                         callback.onError(ERROR_NO_INTERNET);
                         return;
                     }
-                    callback.onError(e.getMessage());
-                    Log.e(TAG, "Failed to verify user Payment PIN: ", e);
+                    callback.onError(ERROR_FALLBACK);
+                    Log.e(TAG, "Failed to verify user Payment PIN: " + e.getMessage(), e);
                 });
     }
 

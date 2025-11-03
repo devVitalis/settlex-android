@@ -9,7 +9,6 @@
     android:fitsSystemWindows="true"
     tools:context=".ui.auth.fragment.SignUpEmailVerificationFragment">
 
-    <!--Header-->
     <androidx.constraintlayout.widget.ConstraintLayout
         android:id="@+id/header"
         android:layout_width="match_parent"
@@ -19,7 +18,7 @@
         app:layout_constraintTop_toTopOf="parent">
 
         <ImageView
-            android:id="@+id/btnBackBefore"
+            android:id="@+id/btn_back_before"
             android:layout_width="20dp"
             android:layout_height="20dp"
             android:layout_marginStart="15dp"
@@ -32,7 +31,7 @@
             app:layout_constraintTop_toTopOf="parent" />
 
         <LinearLayout
-            android:id="@+id/btnHelp"
+            android:id="@+id/btn_help"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginEnd="15dp"
@@ -63,7 +62,6 @@
     </androidx.constraintlayout.widget.ConstraintLayout>
 
 
-    <!-- Content -->
     <ScrollView
         android:layout_width="match_parent"
         android:layout_height="0dp"
@@ -80,7 +78,6 @@
             android:orientation="vertical"
             android:paddingHorizontal="15dp">
 
-            <!-- Title -->
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
@@ -103,7 +100,6 @@
                 android:textColor="@color/black"
                 android:textSize="15sp" />
 
-            <!-- Pages Count -->
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
@@ -117,7 +113,6 @@
                 android:textSize="14sp"
                 android:textStyle="bold" />
 
-            <!-- Progress Bar -->
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
@@ -151,7 +146,6 @@
                     android:background="@drawable/bg_24dp_light_blue" />
             </LinearLayout>
 
-            <!-- Email Sent Image -->
             <ImageView
                 android:layout_width="match_parent"
                 android:layout_height="90dp"
@@ -159,34 +153,21 @@
                 android:scaleType="fitCenter"
                 android:src="@drawable/img_email_sent" />
 
-            <!-- OTP Section -->
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:fontFamily="@font/inter_regular"
                 android:includeFontPadding="false"
-                android:text="Enter your verification code"
+                android:text="Enter the verification code"
                 android:textColor="@color/black"
                 android:textSize="20sp"
                 android:textStyle="bold" />
 
             <TextView
+                android:id="@+id/user_email"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="5dp"
-                android:fontFamily="@font/inter_regular"
-                android:gravity="center"
-                android:includeFontPadding="false"
-                android:text="Enter the OTP sent to your email"
-                android:textAlignment="center"
-                android:textColor="@color/gray"
-                android:textSize="14sp" />
-
-            <TextView
-                android:id="@+id/txtUserEmail"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:fontFamily="@font/inter_regular"
+                android:fontFamily="@font/poppins_regular"
                 android:gravity="center"
                 android:includeFontPadding="false"
                 android:text="(*****@gmail.com)"
@@ -198,28 +179,26 @@
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="15dp"
-                android:layout_marginTop="20dp"
                 android:fontFamily="@font/inter_regular"
                 android:includeFontPadding="false"
                 android:text="Enter the OTP Code"
                 android:textColor="@color/black"
-                android:textSize="13sp" />
+                android:textSize="13sp"
+                android:visibility="gone" />
 
-            <!-- OTP Field -->
             <com.chaos.view.PinView
-                android:id="@+id/otpBox"
+                android:id="@+id/otp_box"
                 style="@style/MyPinBox.Gray.Light"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="5dp"
+                android:layout_marginTop="20dp"
                 android:inputType="number"
                 app:itemCount="6"
                 app:itemHeight="50dp"
                 app:itemWidth="50dp" />
 
-            <!-- Feedback Message -->
             <TextView
-                android:id="@+id/otpError"
+                android:id="@+id/txt_error"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="5dp"
@@ -230,7 +209,6 @@
                 android:visibility="gone"
                 tools:text="message" />
 
-            <!-- Resend OTP -->
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
@@ -248,7 +226,7 @@
                     android:textSize="14sp" />
 
                 <com.google.android.material.button.MaterialButton
-                    android:id="@+id/btnResendOtp"
+                    android:id="@+id/btn_resend_otp"
                     style="@style/Button.Outlined.Blue"
                     android:layout_width="wrap_content"
                     android:layout_height="40dp"
@@ -260,9 +238,8 @@
                     android:textSize="13sp" />
             </LinearLayout>
 
-            <!-- Info -->
             <TextView
-                android:id="@+id/txtInfo"
+                android:id="@+id/txt_info"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="10dp"
@@ -276,16 +253,15 @@
         </LinearLayout>
     </ScrollView>
 
-    <!-- Verify Button -->
     <com.google.android.material.button.MaterialButton
-        android:id="@+id/btnVerify"
+        android:id="@+id/btn_continue"
         style="@style/Button.Filled.Rounded8.Blue"
         android:layout_width="match_parent"
         android:layout_height="55dp"
         android:layout_marginHorizontal="15dp"
         android:layout_marginBottom="25dp"
         android:enabled="false"
-        android:text="Verify"
+        android:text="Continue"
         android:textSize="14sp"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"

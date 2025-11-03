@@ -17,7 +17,6 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.view.inputmethod.EditorInfo;
 import android.view.inputmethod.InputMethodManager;
-import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -70,7 +69,7 @@ public class SignUpUserContactInfoFragment extends Fragment {
         super.onViewCreated(view, savedInstanceState);
 
         observeNetworkStatus();
-        observeSendVerificationOtpStatus();
+        observeSendVerificationCodeStatus();
     }
 
     @Override
@@ -79,7 +78,20 @@ public class SignUpUserContactInfoFragment extends Fragment {
         super.onDestroyView();
     }
 
-    // OBSERVERS ==========
+    private void setupUiActions() {
+        StatusBarUtil.setStatusBarColor(requireActivity(), R.color.white);
+        setupEditTextInputValidation();
+        setupLegalLinks();
+        setupEditTextFocusHandlers();
+        clearFocusOnLastEditTextField();
+
+        binding.btnSignIn.setOnClickListener(view -> navigateToActivity(LoginActivity.class, true));
+        binding.btnBackBefore.setOnClickListener(v -> onBackButtonPressed());
+        binding.btnContinue.setOnClickListener(v -> storeUserInfoInModel());
+        binding.btnHelp.setOnClickListener(v -> StringUtil.showNotImplementedToast(requireContext()));
+    }
+
+    // OBSERVERS =======
     private void observeNetworkStatus() {
         NetworkMonitor.getNetworkStatus().observe(getViewLifecycleOwner(), isConnected -> {
             if (!isConnected) {
@@ -89,8 +101,8 @@ public class SignUpUserContactInfoFragment extends Fragment {
         });
     }
 
-    private void observeSendVerificationOtpStatus() {
-        authViewModel.getSendEmailVerificationOtpResult().observe(getViewLifecycleOwner(), event -> {
+    private void observeSendVerificationCodeStatus() {
+        authViewModel.getSendVerificationCodeLiveData().observe(getViewLifecycleOwner(), event -> {
             Result<String> result = event.getContentIfNotHandled();
             if (result == null) {
                 return;
@@ -98,42 +110,22 @@ public class SignUpUserContactInfoFragment extends Fragment {
 
             switch (result.getStatus()) {
                 case LOADING -> progressLoader.show();
-                case SUCCESS -> onSendVerificationOtpStatusSuccess();
-                case ERROR -> onSendVerificationOtpStatusError(result.getMessage());
+                case SUCCESS -> onSendVerificationCodeStatusSuccess();
+                case FAILURE -> onSendVerificationCodeStatusError(result.getError());
             }
         });
     }
 
-    private void onSendVerificationOtpStatusSuccess() {
+    private void onSendVerificationCodeStatusSuccess() {
         NavController navController = NavHostFragment.findNavController(this);
         navController.navigate(R.id.signUpEmailVerificationFragment);
         progressLoader.hide();
     }
 
-    private void onSendVerificationOtpStatusError(String reason) {
+    private void onSendVerificationCodeStatusError(String reason) {
         binding.txtError.setText(reason);
         binding.txtError.setVisibility(View.VISIBLE);
         progressLoader.hide();
-    }
-
-    // UI ACTIONS =========
-    private void setupUiActions() {
-        StatusBarUtil.setStatusBarColor(requireActivity(), R.color.white);
-        setupEditTextInputValidation();
-        setupLegalLinks();
-        setupEditTextFocusHandlers();
-        clearFocusOnLastEditTextField();
-
-        binding.btnSignIn.setOnClickListener(view -> navigateToActivity(
-                LoginActivity.class,
-                true));
-        binding.btnBackBefore.setOnClickListener(v -> onBackButtonPressed());
-        binding.btnContinue.setOnClickListener(v -> storeUserInfoInModel());
-
-        binding.btnHelp.setOnClickListener(v -> Toast.makeText(
-                requireContext(),
-                "Feature not yet implementation",
-                Toast.LENGTH_SHORT).show());
     }
 
     private void storeUserInfoInModel() {
@@ -143,7 +135,7 @@ public class SignUpUserContactInfoFragment extends Fragment {
         }
 
         String email = binding.editTxtEmail.getText().toString().trim().toLowerCase();
-        String phoneNumber = binding.editTxtPhoneNumber.getText().toString().trim();
+        String phoneNumber = binding.editTxtPhone.getText().toString().trim();
 
         authViewModel.updateEmail(email);
         authViewModel.updatePhone(StringUtil.formatPhoneNumberWithCountryCode(phoneNumber));
@@ -153,7 +145,7 @@ public class SignUpUserContactInfoFragment extends Fragment {
     }
 
     private void sendEmailVerificationOtp(String email) {
-        authViewModel.sendEmailVerificationOtp(email);
+        authViewModel.sendVerificationCode(email);
     }
 
     private void showNoInternetDialog() {
@@ -172,7 +164,7 @@ public class SignUpUserContactInfoFragment extends Fragment {
         int focusBgRes = R.drawable.bg_edit_txt_custom_white_focused;
         int defaultBgRes = R.drawable.bg_edit_txt_custom_white_not_focused;
 
-        binding.editTxtPhoneNumber.setOnFocusChangeListener((v, hasFocus) -> binding.editTxtPhoneNumberBackground.setBackgroundResource(hasFocus ? focusBgRes : defaultBgRes));
+        binding.editTxtPhone.setOnFocusChangeListener((v, hasFocus) -> binding.editTxtPhoneBg.setBackgroundResource(hasFocus ? focusBgRes : defaultBgRes));
         binding.editTxtEmail.setOnFocusChangeListener((v, hasFocus) -> binding.editTxtEmailBg.setBackgroundResource(hasFocus ? focusBgRes : defaultBgRes));
     }
 
@@ -195,13 +187,13 @@ public class SignUpUserContactInfoFragment extends Fragment {
 
         // attach validation watcher
         binding.editTxtEmail.addTextChangedListener(validationWatcher);
-        binding.editTxtPhoneNumber.addTextChangedListener(validationWatcher);
+        binding.editTxtPhone.addTextChangedListener(validationWatcher);
         binding.checkBoxTermsPrivacy.setOnCheckedChangeListener((buttonView, isChecked) -> updateContinueButtonState());
     }
 
     private void updateContinueButtonState() {
         String email = binding.editTxtEmail.getText().toString().trim().toLowerCase();
-        String phoneNumber = binding.editTxtPhoneNumber.getText().toString().trim();
+        String phoneNumber = binding.editTxtPhone.getText().toString().trim();
 
         setContinueButtonEnabled(isEmailValid(email) && isPhoneNumberValid(phoneNumber) && isCheckBoxTermsPrivacyChecked());
     }
@@ -229,7 +221,7 @@ public class SignUpUserContactInfoFragment extends Fragment {
         ClickableSpan termsSpan = new ClickableSpan() {
             @Override
             public void onClick(@NonNull View widget) {
-                startActivity(new Intent(requireActivity(), TermsAndConditionsActivity.class));
+                navigateToActivity(TermsAndConditionsActivity.class, false);
             }
 
             @Override
@@ -242,7 +234,7 @@ public class SignUpUserContactInfoFragment extends Fragment {
         ClickableSpan privacySpan = new ClickableSpan() {
             @Override
             public void onClick(@NonNull View widget) {
-                startActivity(new Intent(requireActivity(), PrivacyPolicyActivity.class));
+                navigateToActivity(PrivacyPolicyActivity.class, false);
             }
 
             @Override
@@ -261,10 +253,10 @@ public class SignUpUserContactInfoFragment extends Fragment {
 
     private void navigateToActivity(Class<? extends Activity> activityClass, boolean clearBackStack) {
         if (!clearBackStack) {
-            startActivity(new Intent(requireActivity(), activityClass));
+            startActivity(new Intent(requireContext(), activityClass));
             return;
         }
-        startActivity(new Intent(requireActivity(), activityClass));
+        startActivity(new Intent(requireContext(), activityClass));
         requireActivity().finish();
     }
 
@@ -274,12 +266,11 @@ public class SignUpUserContactInfoFragment extends Fragment {
     }
 
     private void clearFocusOnLastEditTextField() {
-        binding.editTxtPhoneNumber.setOnEditorActionListener((v, actionId, event) -> {
+        binding.editTxtPhone.setOnEditorActionListener((v, actionId, event) -> {
             if (actionId == EditorInfo.IME_ACTION_DONE) {
                 // Hide the keyboard
                 InputMethodManager imm = (InputMethodManager) v.getContext().getSystemService(Context.INPUT_METHOD_SERVICE);
                 imm.hideSoftInputFromWindow(v.getWindowToken(), 0);
-
                 v.clearFocus();
                 return true;
             }

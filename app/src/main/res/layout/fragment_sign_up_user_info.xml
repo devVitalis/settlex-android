@@ -24,7 +24,7 @@
             app:layout_constraintTop_toTopOf="parent">
 
             <ImageView
-                android:id="@+id/btnBackBefore"
+                android:id="@+id/btn_back_before"
                 android:layout_width="20dp"
                 android:layout_height="20dp"
                 android:layout_marginStart="15dp"
@@ -37,7 +37,7 @@
                 app:layout_constraintTop_toTopOf="parent" />
 
             <LinearLayout
-                android:id="@+id/btnHelp"
+                android:id="@+id/btn_help"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginEnd="15dp"
@@ -160,13 +160,12 @@
                     android:layout_marginTop="20dp"
                     android:fontFamily="@font/inter_regular"
                     android:includeFontPadding="false"
-                    android:text="Please enter your first name and last name as it appears on your NIN"
+                    android:text="Enter your full name"
                     android:textColor="@color/black"
                     android:textSize="14sp" />
 
                 <!-- Firstname Field -->
                 <com.google.android.material.textfield.TextInputLayout
-                    android:id="@+id/txtInputLayoutFirstname"
                     style="@style/MyTextInputLayoutThemeOutlined"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
@@ -177,7 +176,7 @@
                     app:endIconMode="clear_text">
 
                     <com.google.android.material.textfield.TextInputEditText
-                        android:id="@+id/editTxtFirstName"
+                        android:id="@+id/edit_txt_firstname"
                         android:layout_width="match_parent"
                         android:layout_height="55dp"
                         android:fontFamily="@font/inter_regular"
@@ -193,7 +192,6 @@
 
                 <!-- Lastname Field -->
                 <com.google.android.material.textfield.TextInputLayout
-                    android:id="@+id/txtInputLayoutPassword"
                     style="@style/MyTextInputLayoutThemeOutlined"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
@@ -204,7 +202,7 @@
                     app:endIconMode="clear_text">
 
                     <com.google.android.material.textfield.TextInputEditText
-                        android:id="@+id/editTxtLastName"
+                        android:id="@+id/edit_txt_lastName"
                         android:layout_width="match_parent"
                         android:layout_height="55dp"
                         android:fontFamily="@font/inter_regular"
@@ -234,7 +232,7 @@
             app:layout_constraintStart_toStartOf="parent">
 
             <com.google.android.material.button.MaterialButton
-                android:id="@+id/btnContinue"
+                android:id="@+id/btn_continue"
                 style="@style/Button.Filled.Rounded8.Blue"
                 android:layout_width="match_parent"
                 android:layout_height="55dp"

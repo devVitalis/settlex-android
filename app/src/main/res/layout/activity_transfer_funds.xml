@@ -7,7 +7,7 @@
     android:layout_height="match_parent"
     android:background="@color/white"
     android:fitsSystemWindows="true"
-    tools:context=".ui.dashboard.home.PayAFriendActivity">
+    tools:context=".ui.dashboard.home.TransferFundsActivity">
 
     <!--Header-->
     <LinearLayout
@@ -37,7 +37,7 @@
             android:fontFamily="@font/inter_bold"
             android:gravity="center"
             android:includeFontPadding="false"
-            android:text="Pay a Friend"
+            android:text="Transfer"
             android:textColor="@color/black"
             android:textSize="15sp"
             android:textStyle="bold" />
