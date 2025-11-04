@@ -62,8 +62,23 @@ public class AccountDashboardFragment extends Fragment {
     @Override
     public void onDestroyView() {
         super.onDestroyView();
-        // clear resources
         binding = null;
+    }
+
+    private void setupUIActions() {
+        StatusBarUtil.setStatusBarColor(requireActivity(), R.color.blue_200);
+        binding.appVersion.setText(getAppVersion());
+
+        binding.btnProfilePic.setOnClickListener(view -> navigateToActivity(ProfileActivity.class));
+        binding.btnSettings.setOnClickListener(view -> navigateToActivity(SettingsActivity.class));
+        binding.btnSettingsHeader.setOnClickListener(view -> navigateToActivity(SettingsActivity.class));
+        binding.btnEarnRewards.setOnClickListener(view -> navigateToFragment(R.id.rewardsFragment));
+        binding.btnTermsAndCondition.setOnClickListener(view -> navigateToActivity(TermsAndConditionsActivity.class));
+        binding.btnPrivacyPolicy.setOnClickListener(view -> navigateToActivity(PrivacyPolicyActivity.class));
+        binding.btnSignOut.setOnClickListener(view -> {
+            userViewModel.signOut();
+            navigateToActivity(LoginActivity.class);
+        });
     }
 
     private void observeUserDataStatus() {
@@ -86,32 +101,16 @@ public class AccountDashboardFragment extends Fragment {
         Log.e(TAG, "User data error: " + error);
     }
 
-    private void setupUIActions() {
-        StatusBarUtil.setStatusBarColor(requireActivity(), R.color.blue_400);
-
-        binding.btnProfilePic.setOnClickListener(view -> navigateToActivity(ProfileActivity.class));
-        binding.btnSettings.setOnClickListener(view -> navigateToActivity(SettingsActivity.class));
-        binding.btnSettingsHeader.setOnClickListener(view -> navigateToActivity(SettingsActivity.class));
-        binding.btnEarnRewards.setOnClickListener(view -> navigateToFragment(R.id.rewardsFragment));
-        binding.btnTermsAndCondition.setOnClickListener(view -> navigateToActivity(TermsAndConditionsActivity.class));
-        binding.btnPrivacyPolicy.setOnClickListener(view -> navigateToActivity(PrivacyPolicyActivity.class));
-        binding.btnSignOut.setOnClickListener(view -> {
-            userViewModel.signOut();
-            navigateToActivity(LoginActivity.class);
-        });
-        binding.appVersion.setText(getAppVersion());
-    }
-
     private String getAppVersion() {
         Context context = SettleXApp.getAppContext();
         try {
             PackageManager packageManager = context.getPackageManager();
             PackageInfo packageInfo = packageManager.getPackageInfo(context.getPackageName(), 0);
-            return "Version: " + packageInfo.versionName;
+            return "v" + packageInfo.versionName;
         } catch (PackageManager.NameNotFoundException e) {
             Log.e(TAG, "NameNotFoundException: " + e.getMessage(), e);
         }
-        return "Version: N/A";
+        return "N/A";
     }
 
     private void navigateToActivity(Class<? extends Activity> activityClass) {

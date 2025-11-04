@@ -35,7 +35,6 @@ public class UserRepository {
 
     private final MutableLiveData<Result<UserDto>> sharedUserLiveData = new MutableLiveData<>();
     private final MutableLiveData<FirebaseUser> sharedUserAuthState = new MutableLiveData<>();
-    private final MutableLiveData<Boolean> isBalanceHiddenLiveData = new MutableLiveData<>();
 
     // Dependencies
     private final FirebaseFunctions functions;
@@ -127,25 +126,20 @@ public class UserRepository {
         return userPrefs;
     }
 
-    public boolean getIsFingerPrintEnabled() {
-        return getUserPrefs().isFingerPrintEnabled();
+    public boolean getBiometricsEnabled() {
+        return getUserPrefs().isBiometricsEnabled();
     }
 
-    public void setFingerPrintEnabled(boolean enable) {
-        getUserPrefs().setBalanceHidden(enable);
+    public void setBiometricsEnabled(boolean enable) {
+        getUserPrefs().setBiometricsEnabled(enable);
     }
 
-    public LiveData<Boolean> getIsBalanceHiddenLiveData() {
-        isBalanceHiddenLiveData.setValue(getUserPrefs().isBalanceHidden());
-        return isBalanceHiddenLiveData;
+    public boolean getBalanceHidden() {
+        return getUserPrefs().isBalanceHidden();
     }
 
-    public void toggleBalanceVisibility() {
-        boolean isBalanceCurrentlyHidden = getUserPrefs().isBalanceHidden();
-        boolean shouldHideBalance = !isBalanceCurrentlyHidden;
-
+    public void toggleBalanceVisibility(boolean shouldHideBalance) {
         getUserPrefs().setBalanceHidden(shouldHideBalance);
-        isBalanceHiddenLiveData.setValue(shouldHideBalance);
     }
 
     public void uploadUserProfilePicToServer(String imageBase64, UploadProfilePicCallback callback) {

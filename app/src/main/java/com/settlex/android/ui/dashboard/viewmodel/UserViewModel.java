@@ -1,10 +1,9 @@
 package com.settlex.android.ui.dashboard.viewmodel;
 
-import android.util.Log;
-
 import androidx.lifecycle.LiveData;
 import androidx.lifecycle.MediatorLiveData;
 import androidx.lifecycle.MutableLiveData;
+import androidx.lifecycle.Transformations;
 import androidx.lifecycle.ViewModel;
 
 import com.settlex.android.data.repository.UserRepository;
@@ -24,7 +23,8 @@ public class UserViewModel extends ViewModel {
     private final MutableLiveData<Event<Result<String>>> storeUserPaymentIdLiveData = new MutableLiveData<>();
     private final MutableLiveData<Event<Result<String>>> createPaymentLiveData = new MutableLiveData<>();
     private final MutableLiveData<Event<Result<Boolean>>> verifyPaymentLiveData = new MutableLiveData<>();
-    private final MutableLiveData<Boolean> isFingerEnabledLiveData = new MutableLiveData<>();
+    private final MutableLiveData<Boolean> isBalanceHiddenLiveData = new MutableLiveData<>();
+    private final MutableLiveData<Boolean> isBiometricsEnabledLiveData = new MutableLiveData<>();
 
 
     // dependencies
@@ -36,25 +36,31 @@ public class UserViewModel extends ViewModel {
 
         initAuthObserver();
         initUserLiveDataObserver();
-        Log.d("Debug", "ViewModel Instance created: " + this);
+
+        isBiometricsEnabledLiveData.setValue(userRepo.getBiometricsEnabled());
+        isBalanceHiddenLiveData.setValue(userRepo.getBalanceHidden());
     }
 
     // Public APIs
     public void toggleBalanceVisibility() {
-        userRepo.toggleBalanceVisibility();
+        boolean isBalanceCurrentlyHidden = isBalanceHiddenLiveData.getValue() != null && isBalanceHiddenLiveData.getValue();
+        boolean shouldHideBalance = !isBalanceCurrentlyHidden;
+
+        isBalanceHiddenLiveData.setValue(shouldHideBalance);
+        userRepo.toggleBalanceVisibility(shouldHideBalance);
     }
 
-    public LiveData<Boolean> getIsBalanceHiddenLiveData() {
-        return userRepo.getIsBalanceHiddenLiveData();
+    public LiveData<Boolean> getBalanceHiddenLiveData() {
+        return Transformations.distinctUntilChanged(isBalanceHiddenLiveData);
     }
 
-    public LiveData<Boolean> getIsFingerPrintEnabled() {
-        isFingerEnabledLiveData.setValue(userRepo.getIsFingerPrintEnabled());
-        return isFingerEnabledLiveData;
+    public LiveData<Boolean> getBiometricsEnabled() {
+        return Transformations.distinctUntilChanged(isBiometricsEnabledLiveData);
     }
 
-    public void setFingerEnabledLiveData(boolean enable) {
-        userRepo.setFingerPrintEnabled(enable);
+    public void setBiometricsEnabledLiveData(boolean enabled) {
+        isBiometricsEnabledLiveData.setValue(enabled);
+        userRepo.setBiometricsEnabled(enabled);
     }
 
     public void signOut() {

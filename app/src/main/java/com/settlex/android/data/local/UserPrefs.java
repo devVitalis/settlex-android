@@ -10,7 +10,7 @@ public class UserPrefs {
 
     private static final String PREFS_NAME = "user_prefs_";
     private static final String KEY_HIDE_BALANCE = "hide_balance";
-    private static final String KEY_ENABLE_FINGERPRINT = "enable_fingerprint";
+    private static final String KEY_BIOMETRIC_ENABLED  = "biometric_enabled";
 
     private final SharedPreferences prefs;
 
@@ -18,13 +18,13 @@ public class UserPrefs {
         prefs = context.getSharedPreferences(PREFS_NAME + uid, Context.MODE_PRIVATE);
     }
 
-    // Fingerprint state
-    public boolean isFingerPrintEnabled() {
-        return prefs.getBoolean(KEY_ENABLE_FINGERPRINT, false);
+    // Biometric state
+    public boolean isBiometricsEnabled() {
+        return prefs.getBoolean(KEY_BIOMETRIC_ENABLED, false);
     }
 
-    public void setFingerprintEnabled(boolean enabled) {
-        prefs.edit().putBoolean(KEY_ENABLE_FINGERPRINT, enabled).apply();
+    public void setBiometricsEnabled(boolean enabled) {
+        prefs.edit().putBoolean(KEY_BIOMETRIC_ENABLED , enabled).apply();
     }
 
     // Balance state

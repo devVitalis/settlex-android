@@ -13,7 +13,6 @@ import androidx.lifecycle.ViewModelProvider;
 import com.settlex.android.data.local.OnboardingPrefs;
 import com.settlex.android.ui.auth.activity.LoginActivity;
 import com.settlex.android.ui.auth.viewmodel.AuthViewModel;
-import com.settlex.android.ui.dashboard.DashboardActivity;
 import com.settlex.android.ui.onboarding.activity.OnboardingActivity;
 import com.settlex.android.utils.permission.NotificationPermissionUtil;
 
@@ -62,7 +61,8 @@ public class SplashActivity extends AppCompatActivity {
 
         Class<? extends Activity> destination =
                 (!prefs.isIntroViewed()) ? OnboardingActivity.class :
-                        (authViewModel.isUserLoggedIn()) ? LoginActivity.class : DashboardActivity.class;
+                        LoginActivity.class;
+        // (authViewModel.isUserLoggedIn()) ? LoginActivity.class : DashboardActivity.class; // TODO: set !isUserLoggedIn = DashboardActivity
 
         startActivity(new Intent(this, destination));
         finish();

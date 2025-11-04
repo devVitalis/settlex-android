@@ -219,7 +219,7 @@ public class HomeDashboardFragment extends Fragment {
     }
 
     private void observeAndLoadUserPrefs(long balance, long commissionBalance) {
-        userViewModel.getIsBalanceHiddenLiveData().observe(getViewLifecycleOwner(), hidden -> {
+        userViewModel.getBalanceHiddenLiveData().observe(getViewLifecycleOwner(), hidden -> {
             if (hidden) {
                 // balance hidden set asterisk
                 binding.btnBalanceToggle.setImageResource(R.drawable.ic_visibility_off);

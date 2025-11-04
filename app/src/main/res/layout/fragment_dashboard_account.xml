@@ -9,7 +9,6 @@
     android:fitsSystemWindows="true"
     tools:context=".ui.dashboard.account.AccountDashboardFragment">
 
-    <!--Header-->
     <androidx.constraintlayout.widget.ConstraintLayout
         android:id="@+id/header"
         android:layout_width="match_parent"
@@ -23,7 +22,7 @@
         app:layout_constraintTop_toTopOf="parent">
 
         <com.google.android.material.imageview.ShapeableImageView
-            android:id="@+id/btnProfilePic"
+            android:id="@+id/btn_profile_pic"
             android:layout_width="50dp"
             android:layout_height="50dp"
             android:contentDescription="@null"
@@ -33,14 +32,14 @@
             app:shapeAppearance="@style/Oval_Shape" />
 
         <LinearLayout
-            android:id="@+id/greetingContainer"
+            android:id="@+id/greeting_container"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginStart="10dp"
             android:orientation="vertical"
-            app:layout_constraintBottom_toBottomOf="@id/btnProfilePic"
-            app:layout_constraintStart_toEndOf="@id/btnProfilePic"
-            app:layout_constraintTop_toTopOf="@id/btnProfilePic">
+            app:layout_constraintBottom_toBottomOf="@id/btn_profile_pic"
+            app:layout_constraintStart_toEndOf="@id/btn_profile_pic"
+            app:layout_constraintTop_toTopOf="@id/btn_profile_pic">
 
             <LinearLayout
                 android:layout_width="wrap_content"
@@ -59,7 +58,7 @@
             </LinearLayout>
 
             <TextView
-                android:id="@id/fullName"
+                android:id="@+id/full_name"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:fontFamily="@font/poppins_regular"
@@ -72,20 +71,19 @@
         </LinearLayout>
 
         <ImageView
-            android:id="@+id/btnSettingsHeader"
+            android:id="@+id/btn_settings_header"
             android:layout_width="25dp"
             android:layout_height="25dp"
             android:contentDescription="Settings"
             android:src="@drawable/ic_settings"
-            app:layout_constraintBottom_toBottomOf="@id/greetingContainer"
+            app:layout_constraintBottom_toBottomOf="@id/greeting_container"
             app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintTop_toTopOf="@id/greetingContainer"
+            app:layout_constraintTop_toTopOf="@id/greeting_container"
             app:tint="@color/black" />
     </androidx.constraintlayout.widget.ConstraintLayout>
 
-    <!-- Scroll Content -->
     <ScrollView
-        android:id="@+id/scrollView"
+        android:id="@+id/scroll_view"
         android:layout_width="match_parent"
         android:layout_height="0dp"
         android:layout_gravity="bottom"
@@ -122,9 +120,8 @@
                 android:paddingHorizontal="5dp"
                 android:paddingVertical="10dp">
 
-                <!-- Transaction History -->
                 <LinearLayout
-                    android:id="@+id/btnTransactions"
+                    android:id="@+id/btn_transactions"
                     android:layout_width="match_parent"
                     android:layout_height="45dp"
                     android:background="@drawable/bg_8dp_white_ripple_yes"
@@ -158,9 +155,8 @@
                         app:tint="@color/gray" />
                 </LinearLayout>
 
-                <!-- Security Settings -->
                 <LinearLayout
-                    android:id="@+id/btnSettings"
+                    android:id="@+id/btn_settings"
                     android:layout_width="match_parent"
                     android:layout_height="45dp"
                     android:layout_marginTop="10dp"
@@ -204,7 +200,8 @@
                 android:includeFontPadding="false"
                 android:text="Engagement and Rewards"
                 android:textColor="@color/gray"
-                android:textSize="11sp" />
+                android:textSize="11sp"
+                android:visibility="gone" />
 
             <LinearLayout
                 android:layout_width="match_parent"
@@ -213,11 +210,11 @@
                 android:background="@drawable/bg_8dp_white"
                 android:orientation="vertical"
                 android:paddingHorizontal="5dp"
-                android:paddingVertical="10dp">
+                android:paddingVertical="10dp"
+                android:visibility="gone">
 
-                <!-- Rewards -->
                 <LinearLayout
-                    android:id="@+id/btnEarnRewards"
+                    android:id="@+id/btn_earn_rewards"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:background="@drawable/bg_8dp_white_ripple_yes"
@@ -267,9 +264,8 @@
                         app:tint="@color/gray" />
                 </LinearLayout>
 
-                <!-- Rating -->
                 <LinearLayout
-                    android:id="@+id/btnRateUs"
+                    android:id="@+id/btn_rate_us"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_marginTop="10dp"
@@ -320,9 +316,8 @@
                         app:tint="@color/gray" />
                 </LinearLayout>
 
-                <!-- Rating -->
                 <LinearLayout
-                    android:id="@+id/btnFeedback"
+                    android:id="@+id/btn_feedback"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_marginTop="10dp"
@@ -374,7 +369,6 @@
                 </LinearLayout>
             </LinearLayout>
 
-            <!-- Legal -->
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
@@ -394,9 +388,8 @@
                 android:paddingHorizontal="5dp"
                 android:paddingVertical="10dp">
 
-                <!-- Terms -->
                 <LinearLayout
-                    android:id="@+id/btnTermsAndCondition"
+                    android:id="@+id/btn_terms_and_condition"
                     android:layout_width="match_parent"
                     android:layout_height="45dp"
                     android:background="@drawable/bg_8dp_white_ripple_yes"
@@ -430,9 +423,8 @@
                         app:tint="@color/gray" />
                 </LinearLayout>
 
-                <!-- Privacy Policy -->
                 <LinearLayout
-                    android:id="@+id/btnPrivacyPolicy"
+                    android:id="@+id/btn_privacy_policy"
                     android:layout_width="match_parent"
                     android:layout_height="45dp"
                     android:layout_marginTop="5dp"
@@ -468,7 +460,6 @@
                 </LinearLayout>
             </LinearLayout>
 
-            <!-- Closed Account -->
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="50dp"
@@ -504,9 +495,8 @@
                     app:tint="@color/gray" />
             </LinearLayout>
 
-            <!-- Sign out -->
             <LinearLayout
-                android:id="@+id/btnSignOut"
+                android:id="@+id/btn_sign_out"
                 android:layout_width="match_parent"
                 android:layout_height="50dp"
                 android:layout_marginTop="15dp"
@@ -533,18 +523,35 @@
                     android:textSize="14sp" />
             </LinearLayout>
 
-            <TextView
-                android:id="@+id/appVersion"
-                android:layout_width="wrap_content"
+            <LinearLayout
+                android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_gravity="center"
                 android:layout_marginTop="30dp"
                 android:layout_marginBottom="20dp"
-                android:fontFamily="@font/inter_regular"
-                android:includeFontPadding="false"
-                android:textColor="@color/black"
-                android:textSize="14sp"
-                tools:text="Version: 1.0" />
+                android:gravity="center"
+                android:orientation="horizontal">
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center"
+                    android:fontFamily="@font/inter_regular"
+                    android:includeFontPadding="false"
+                    android:text="SettleX: "
+                    android:textColor="@color/gray"
+                    android:textSize="14sp" />
+
+                <TextView
+                    android:id="@+id/app_version"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center"
+                    android:fontFamily="@font/inter_regular"
+                    android:includeFontPadding="false"
+                    android:textColor="@color/black"
+                    android:textSize="14sp"
+                    tools:text="v1.0" />
+            </LinearLayout>
         </LinearLayout>
     </ScrollView>
 </androidx.constraintlayout.widget.ConstraintLayout>

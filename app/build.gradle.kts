@@ -115,6 +115,9 @@ dependencies {
 
     // Pin/OTP EditText
     implementation(libs.pinview)
+
+    // Biometric
+    implementation("androidx.biometric:biometric:1.1.0")
 }
 
 tasks.withType<JavaCompile>().configureEach {

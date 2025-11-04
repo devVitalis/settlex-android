@@ -58,25 +58,13 @@
             android:padding="15dp">
 
             <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_gravity="center"
-                android:layout_marginTop="10dp"
-                android:fontFamily="@font/inter_bold"
-                android:includeFontPadding="false"
-                android:text="SettleX - Privacy Policy"
-                android:textColor="@color/black"
-                android:textSize="18sp"
-                android:textStyle="bold" />
-
-            <TextView
                 android:id="@+id/txt_last_updated"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_gravity="center"
                 android:fontFamily="@font/inter_regular"
                 android:includeFontPadding="false"
-                android:text="Last Updated: October 2025"
+                android:text="Last updated: October 2025"
                 android:textColor="@color/gray"
                 android:textSize="14sp" />
 

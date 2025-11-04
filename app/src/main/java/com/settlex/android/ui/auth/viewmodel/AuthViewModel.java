@@ -52,7 +52,7 @@ public class AuthViewModel extends ViewModel {
 
     // user prefs
     public LiveData<Boolean> getIsFingerPrintEnabled() {
-        isFingerEnabledLiveData.setValue(userRepo.getIsFingerPrintEnabled());
+        isFingerEnabledLiveData.setValue(userRepo.getBiometricsEnabled());
         return isFingerEnabledLiveData;
     }
 

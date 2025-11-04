@@ -13,12 +13,12 @@ import android.text.SpannableString;
 import android.text.Spanned;
 import android.text.TextWatcher;
 import android.text.style.ForegroundColorSpan;
-import android.util.Log;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.inputmethod.EditorInfo;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.EditText;
+import android.widget.Toast;
 
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.lifecycle.ViewModelProvider;
@@ -28,6 +28,7 @@ import com.settlex.android.data.remote.profile.ProfileService;
 import com.settlex.android.databinding.ActivityLoginBinding;
 import com.settlex.android.ui.auth.model.LoginUiModel;
 import com.settlex.android.ui.auth.viewmodel.AuthViewModel;
+import com.settlex.android.ui.common.components.BiometricAuthHelper;
 import com.settlex.android.ui.common.util.ProgressLoaderController;
 import com.settlex.android.ui.dashboard.DashboardActivity;
 import com.settlex.android.ui.info.help.AuthHelpActivity;
@@ -83,6 +84,7 @@ public class LoginActivity extends AppCompatActivity {
             authViewModel.signOut();
             showLoggedOutLayout();
         });
+        binding.btnFingerprint.setOnClickListener(v -> promptBiometricsAuth());
     }
 
     private void syncUserStateWithUI() {
@@ -101,6 +103,30 @@ public class LoginActivity extends AppCompatActivity {
         // check user pref
         boolean isFingerPrintEnabled = Boolean.TRUE.equals(authViewModel.getIsFingerPrintEnabled().getValue());
         binding.btnFingerprint.setVisibility(isFingerPrintEnabled ? View.VISIBLE : View.GONE);
+        if (isFingerPrintEnabled) promptBiometricsAuth();
+    }
+
+    private void promptBiometricsAuth() {
+        if (BiometricAuthHelper.isBiometricAvailable(this)) {
+            BiometricAuthHelper biometric = new BiometricAuthHelper(
+                    this,
+                    this,
+                    new BiometricAuthHelper.BiometricAuthCallback() {
+                        @Override
+                        public void onAuthenticated() {
+                            navigateTo(DashboardActivity.class);
+                        }
+
+                        @Override
+                        public void onError(String message) {
+                        }
+
+                        @Override
+                        public void onFailed() {
+                        }
+                    });
+            biometric.authenticate("Use Password");
+        }
     }
 
     // OBSERVERS ====
