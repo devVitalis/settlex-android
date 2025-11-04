@@ -7,6 +7,7 @@ import androidx.lifecycle.ViewModel;
 import com.google.firebase.auth.FirebaseUser;
 import com.settlex.android.data.model.UserModel;
 import com.settlex.android.data.repository.AuthRepository;
+import com.settlex.android.data.repository.UserRepository;
 import com.settlex.android.ui.auth.model.LoginUiModel;
 import com.settlex.android.utils.event.Event;
 import com.settlex.android.utils.event.Result;
@@ -15,19 +16,10 @@ import dagger.hilt.android.lifecycle.HiltViewModel;
 import jakarta.inject.Inject;
 
 /**
- * ViewModel responsible for managing all authentication flows
- * and temporary user state during onboarding.
+ * ViewModel responsible for managing all authentication flows and temporary user state during onboarding.
  */
 @HiltViewModel
 public class AuthViewModel extends ViewModel {
-
-    private final AuthRepository authRepo;
-
-    @Inject
-    public AuthViewModel(AuthRepository authRepo) {
-        this.authRepo = authRepo;
-        loadCurrentUserState(); // Sync Firebase user on startup
-    }
 
     private final MutableLiveData<UserModel> sharedUserLiveData = new MutableLiveData<>();
     private final MutableLiveData<LoginUiModel> currentUserLiveData = new MutableLiveData<>();
@@ -43,7 +35,26 @@ public class AuthViewModel extends ViewModel {
     private final MutableLiveData<Event<Result<String>>> verifyPasswordResetLiveData = new MutableLiveData<>();
     private final MutableLiveData<Event<Result<String>>> sendVerificationCodeLiveData = new MutableLiveData<>();
     private final MutableLiveData<Event<Result<String>>> verifyEmailLiveData = new MutableLiveData<>();
+    private final MutableLiveData<Boolean> isFingerEnabledLiveData = new MutableLiveData<>();
 
+    // dependencies
+    private final AuthRepository authRepo;
+    private final UserRepository userRepo;
+
+    @Inject
+    public AuthViewModel(AuthRepository authRepo, UserRepository userRepo) {
+        this.authRepo = authRepo;
+        this.userRepo = userRepo;
+
+        // Sync Firebase user on startup
+        loadCurrentUserState();
+    }
+
+    // user prefs
+    public LiveData<Boolean> getIsFingerPrintEnabled() {
+        isFingerEnabledLiveData.setValue(userRepo.getIsFingerPrintEnabled());
+        return isFingerEnabledLiveData;
+    }
 
     /**
      * Creates a new account

@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <!-- 1. Semantic Colors (Mapped to Light values) -->
+    <!-- Semantic Colors (Mapped to Light values) -->
     <color name="color_background_page">@color/white</color>
     <color name="color_text_primary">@color/black</color>
     <color name="color_text_secondary">@color/gray</color>

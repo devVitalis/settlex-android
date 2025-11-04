@@ -78,7 +78,7 @@ public class AccountDashboardFragment extends Fragment {
     }
 
     private void onUserDataStatusSuccess(UserUiModel user) {
-        ProfileService.loadProfilePic(user.getProfileUrl(), binding.btnProfilePic);
+        ProfileService.loadProfilePic(user.getPhotoUrl(), binding.btnProfilePic);
         binding.fullName.setText(user.getFullName());
     }
 

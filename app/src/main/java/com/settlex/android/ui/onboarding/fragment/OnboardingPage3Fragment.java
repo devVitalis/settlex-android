@@ -1,13 +1,16 @@
 package com.settlex.android.ui.onboarding.fragment;
 
 import android.os.Bundle;
-import android.text.Html;
+import android.text.SpannableString;
+import android.text.Spanned;
+import android.text.style.ForegroundColorSpan;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
+import androidx.core.content.ContextCompat;
 import androidx.fragment.app.Fragment;
 
 import com.bumptech.glide.Glide;
@@ -22,7 +25,7 @@ public class OnboardingPage3Fragment extends Fragment {
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         binding = FragmentOnboardingPage3Binding.inflate(inflater, container, false);
 
-        styleHeaderTxt();
+        highlightWordInHeader();
         loadOptimizedImage();
 
         return binding.getRoot();
@@ -34,15 +37,26 @@ public class OnboardingPage3Fragment extends Fragment {
         binding = null;
     }
 
-    private void styleHeaderTxt() {
-        String htmlText = "Never Miss <br/>Your <font color='#0044CC'>Shows</font>";
-        binding.header.setText(Html.fromHtml(htmlText, Html.FROM_HTML_MODE_LEGACY));
+    private void highlightWordInHeader() {
+        String fullText = "Never Miss\nYour Shows";
+        String textToHighlight = "Shows";
+        int startIndex = fullText.indexOf(textToHighlight);
+        int endIndex = startIndex + textToHighlight.length();
+
+        SpannableString header = new SpannableString(fullText);
+        header.setSpan(
+                new ForegroundColorSpan(ContextCompat.getColor(requireContext(), R.color.blue)),
+                startIndex,
+                endIndex,
+                Spanned.SPAN_EXCLUSIVE_EXCLUSIVE
+        );
+        binding.header.setText(header);
     }
 
     private void loadOptimizedImage() {
         Glide.with(this)
                 .load(R.drawable.img_intro_slide_3)
                 .centerCrop()
-                .into(binding.ImgIntroSlide3);
+                .into(binding.imgIntroSlide3);
     }
 }

@@ -24,6 +24,8 @@ public class UserViewModel extends ViewModel {
     private final MutableLiveData<Event<Result<String>>> storeUserPaymentIdLiveData = new MutableLiveData<>();
     private final MutableLiveData<Event<Result<String>>> createPaymentLiveData = new MutableLiveData<>();
     private final MutableLiveData<Event<Result<Boolean>>> verifyPaymentLiveData = new MutableLiveData<>();
+    private final MutableLiveData<Boolean> isFingerEnabledLiveData = new MutableLiveData<>();
+
 
     // dependencies
     private final UserRepository userRepo;
@@ -44,6 +46,15 @@ public class UserViewModel extends ViewModel {
 
     public LiveData<Boolean> getIsBalanceHiddenLiveData() {
         return userRepo.getIsBalanceHiddenLiveData();
+    }
+
+    public LiveData<Boolean> getIsFingerPrintEnabled() {
+        isFingerEnabledLiveData.setValue(userRepo.getIsFingerPrintEnabled());
+        return isFingerEnabledLiveData;
+    }
+
+    public void setFingerEnabledLiveData(boolean enable) {
+        userRepo.setFingerPrintEnabled(enable);
     }
 
     public void signOut() {
@@ -148,11 +159,9 @@ public class UserViewModel extends ViewModel {
     }
 
     /**
-     * Initializes LiveData observers and sets up data flow from repositories.
-     * These setup methods are called once during ViewModel initialization.
+     * Called once during ViewModel initialization.
      */
     private void initAuthObserver() {
-        // Auth state → updates UID
         authStateLiveData.addSource(userRepo.getSharedUserAuthState(), user -> {
             if (user == null) {
                 // Logged out
@@ -160,7 +169,7 @@ public class UserViewModel extends ViewModel {
                 // transactionLiveData.setValue(Result.success(Collections.emptyList()));
                 return;
             }
-            // Logged in → set UID and attach Firestore listener
+            // Logged in -> set UID
             authStateLiveData.setValue(user.getUid());
         });
     }
@@ -185,7 +194,7 @@ public class UserViewModel extends ViewModel {
                         dto.getData().createdAt,
                         dto.getData().phone,
                         dto.getData().paymentId,
-                        dto.getData().profileUrl,
+                        dto.getData().photoUrl,
                         dto.getData().hasPin,
                         dto.getData().balance,
                         dto.getData().commissionBalance,

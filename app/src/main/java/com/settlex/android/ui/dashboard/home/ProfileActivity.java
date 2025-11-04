@@ -93,7 +93,7 @@ public class ProfileActivity extends AppCompatActivity {
 
     private void onUserDataStatusSuccess(UserUiModel user) {
         // display data
-        ProfileService.loadProfilePic(user.getProfileUrl(), binding.profilePic);
+        ProfileService.loadProfilePic(user.getPhotoUrl(), binding.profilePic);
         binding.paymentId.setText(user.getPaymentId() != null ? StringUtil.addAtToPaymentId(user.getPaymentId()) : "Setup Payment ID");
         binding.fullName.setText(user.getFullName().toUpperCase());
         binding.email.setText(StringUtil.maskEmail(user.getEmail()));

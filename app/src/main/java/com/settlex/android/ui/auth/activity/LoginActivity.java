@@ -13,6 +13,7 @@ import android.text.SpannableString;
 import android.text.Spanned;
 import android.text.TextWatcher;
 import android.text.style.ForegroundColorSpan;
+import android.util.Log;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.inputmethod.EditorInfo;
@@ -25,6 +26,7 @@ import androidx.lifecycle.ViewModelProvider;
 import com.settlex.android.R;
 import com.settlex.android.data.remote.profile.ProfileService;
 import com.settlex.android.databinding.ActivityLoginBinding;
+import com.settlex.android.ui.auth.model.LoginUiModel;
 import com.settlex.android.ui.auth.viewmodel.AuthViewModel;
 import com.settlex.android.ui.common.util.ProgressLoaderController;
 import com.settlex.android.ui.dashboard.DashboardActivity;
@@ -58,7 +60,7 @@ public class LoginActivity extends AppCompatActivity {
         progressLoader = new ProgressLoaderController(this);
 
         setupUiActions();
-        observeUserState();
+        syncUserStateWithUI();
         observeNetworkStatus();
         observeLoginStatus();
     }
@@ -75,30 +77,37 @@ public class LoginActivity extends AppCompatActivity {
         binding.btnBackBefore.setOnClickListener(v -> getOnBackPressedDispatcher().onBackPressed());
         binding.btnSignUp.setOnClickListener(v -> navigateTo(SignUpActivity.class));
         binding.btnHelp.setOnClickListener(v -> navigateTo(AuthHelpActivity.class));
-        binding.btnSwitchAccount.setOnClickListener(view -> showLoggedOutLayout());
         binding.btnForgotPassword.setOnClickListener(v -> navigateTo(ForgotPasswordActivity.class));
         binding.btnSignIn.setOnClickListener(v -> attemptLogin());
+        binding.btnSwitchAccount.setOnClickListener(v -> {
+            authViewModel.signOut();
+            showLoggedOutLayout();
+        });
     }
 
-    // OBSERVERS ======
+    private void syncUserStateWithUI() {
+        LoginUiModel currentUser = authViewModel.getCurrentUserLiveData().getValue();
+        if (currentUser == null) {
+            showLoggedOutLayout();
+            return;
+        }
+
+        // user is logged in
+        showLoggedInLayout(
+                currentUser.getPhotoUrl(),
+                currentUser.getDisplayName(),
+                currentUser.getEmail());
+
+        // check user pref
+        boolean isFingerPrintEnabled = Boolean.TRUE.equals(authViewModel.getIsFingerPrintEnabled().getValue());
+        binding.btnFingerprint.setVisibility(isFingerPrintEnabled ? View.VISIBLE : View.GONE);
+    }
+
+    // OBSERVERS ====
     private void observeNetworkStatus() {
         NetworkMonitor.getNetworkStatus().observe(this, isConnected -> {
             if (!isConnected) showNoInternetDialog();
             this.isConnected = isConnected;
-        });
-    }
-
-    private void observeUserState() {
-        authViewModel.getCurrentUserLiveData().observe(this, currentUser -> {
-            if (currentUser != null) {
-                // user is logged in
-                showLoggedInLayout(
-                        currentUser.getPhotoUrl(),
-                        currentUser.getDisplayName(),
-                        currentUser.getEmail());
-                return;
-            }
-            showLoggedOutLayout();
         });
     }
 
@@ -127,7 +136,6 @@ public class LoginActivity extends AppCompatActivity {
         progressLoader.hide();
     }
 
-
     private void attemptLogin() {
         if (!isConnected) {
             showNoInternetDialog();
@@ -155,7 +163,6 @@ public class LoginActivity extends AppCompatActivity {
 
         // Show
         binding.showCurrentUserLayout.setVisibility(View.VISIBLE);
-        binding.btnFingerprint.setVisibility(View.VISIBLE);
         binding.btnSwitchAccount.setVisibility(View.VISIBLE);
 
         // Hide
@@ -165,9 +172,6 @@ public class LoginActivity extends AppCompatActivity {
     }
 
     private void showLoggedOutLayout() {
-        // sign out
-        authViewModel.signOut();
-
         // Hide
         binding.showCurrentUserLayout.setVisibility(View.GONE);
         binding.btnFingerprint.setVisibility(View.GONE);

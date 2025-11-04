@@ -1,12 +1,15 @@
 package com.settlex.android.ui.onboarding.fragment;
 
 import android.os.Bundle;
-import android.text.Html;
+import android.text.SpannableString;
+import android.text.Spanned;
+import android.text.style.ForegroundColorSpan;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
 import androidx.annotation.NonNull;
+import androidx.core.content.ContextCompat;
 import androidx.fragment.app.Fragment;
 
 import com.bumptech.glide.Glide;
@@ -31,7 +34,7 @@ public class OnboardingPage4Fragment extends Fragment {
     public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         binding = FragmentOnboardingPage4Binding.inflate(inflater, container, false);
 
-        styleHeaderTxt();
+        highlightWordInHeader();
         loadOptimizedImage();
 
         return binding.getRoot();
@@ -43,16 +46,26 @@ public class OnboardingPage4Fragment extends Fragment {
         binding = null;
     }
 
-    private void styleHeaderTxt() {
-        String htmlText = "<font color='#0044CC'>Secure</font> <br/>By Design";
-        binding.header.setText(Html.fromHtml(htmlText, Html.FROM_HTML_MODE_LEGACY));
+    private void highlightWordInHeader() {
+        String fullText = "Secure By\nDesign";
+        String textToHighlight = "Design";
+        int startIndex = fullText.indexOf(textToHighlight);
+        int endIndex = startIndex + textToHighlight.length();
+
+        SpannableString header = new SpannableString(fullText);
+        header.setSpan(
+                new ForegroundColorSpan(ContextCompat.getColor(requireContext(), R.color.blue)),
+                startIndex,
+                endIndex,
+                Spanned.SPAN_EXCLUSIVE_EXCLUSIVE
+        );
+        binding.header.setText(header);
     }
 
-
     private void loadOptimizedImage() {
-        Glide.with(this)
+        Glide.with(requireContext())
                 .load(R.drawable.img_intro_slide_4)
                 .centerCrop()
-                .into(binding.ImgIntroSlide4);
+                .into(binding.imgIntroSlide4);
     }
 }

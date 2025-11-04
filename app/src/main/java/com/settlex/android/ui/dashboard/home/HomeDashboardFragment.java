@@ -109,7 +109,7 @@ public class HomeDashboardFragment extends Fragment {
         initTransactionRecyclerView();
         setupDoubleBackToExit();
 
-        binding.btnProfilePic.setOnClickListener(view -> navigateToActivity(ProfileActivity.class));
+        binding.btnProfilePic.setOnClickListener(v -> navigateToActivity(ProfileActivity.class));
         binding.btnLogin.setOnClickListener(v -> navigateToActivity(LoginActivity.class));
         binding.btnBalanceToggle.setOnClickListener(v -> userViewModel.toggleBalanceVisibility());
         binding.btnUserCommissionBalanceLayout.setOnClickListener(v -> navigateToActivity(CommissionWithdrawalActivity.class));
@@ -194,7 +194,7 @@ public class HomeDashboardFragment extends Fragment {
         binding.userBalance.setVisibility(View.VISIBLE);
         binding.btnUserCommissionBalanceLayout.setVisibility(View.VISIBLE);
 
-        ProfileService.loadProfilePic(user.getProfileUrl(), binding.btnProfilePic);
+        ProfileService.loadProfilePic(user.getPhotoUrl(), binding.btnProfilePic);
         binding.fullName.setText(user.getFullName());
         observeAndLoadUserPrefs(user.getBalance(), user.getCommissionBalance());
     }
@@ -363,10 +363,7 @@ public class HomeDashboardFragment extends Fragment {
         binding.btnBalanceToggle.setVisibility(View.GONE);
         binding.greetingContainer.setVisibility(View.GONE);
         binding.actionButtons.setVisibility(View.GONE);
-        binding.moneyFlowContainer.setVisibility(View.GONE);
         binding.txnContainer.setVisibility(View.GONE);
-
-        // Explicitly reset the user data UI components
         binding.userBalance.setText(StringUtil.setAsterisks());
         binding.userCommissionBalance.setText(StringUtil.setAsterisks());
 

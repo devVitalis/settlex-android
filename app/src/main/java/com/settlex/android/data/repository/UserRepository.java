@@ -15,6 +15,7 @@ import com.google.firebase.firestore.FirebaseFirestoreException;
 import com.google.firebase.firestore.ListenerRegistration;
 import com.google.firebase.firestore.SetOptions;
 import com.google.firebase.functions.FirebaseFunctions;
+import com.settlex.android.SettleXApp;
 import com.settlex.android.data.local.UserPrefs;
 import com.settlex.android.data.remote.dto.UserDto;
 import com.settlex.android.utils.event.Result;
@@ -40,7 +41,7 @@ public class UserRepository {
     private final FirebaseFunctions functions;
     private final FirebaseFirestore firestore;
     private final FirebaseAuth auth;
-    private final UserPrefs userPrefs;
+    private UserPrefs userPrefs;
     private final TransactionRepository transactionRepo;
 
     // Internal listeners
@@ -48,34 +49,35 @@ public class UserRepository {
     private FirebaseAuth.AuthStateListener authStateListener;
 
     @Inject
-    public UserRepository(FirebaseAuth auth, FirebaseFirestore firestore, FirebaseFunctions functions, UserPrefs userPrefs, TransactionRepository transactionRepo) {
+    public UserRepository(FirebaseAuth auth, FirebaseFirestore firestore, FirebaseFunctions functions, TransactionRepository transactionRepo) {
         this.auth = auth;
         this.firestore = firestore;
         this.functions = functions;
-        this.userPrefs = userPrefs;
         this.transactionRepo = transactionRepo;
 
         // setup once (single source of truth)
         initAuthStateListener();
+        Log.d(TAG, "user repo is active: " + this);
     }
 
     private void initAuthStateListener() {
-        if (authStateListener != null) return; // already attached
+        if (authStateListener != null) return;
 
         authStateListener = firebaseAuth -> {
             FirebaseUser currentUser = firebaseAuth.getCurrentUser();
             sharedUserAuthState.postValue(currentUser);
 
             if (currentUser == null) {
-                // logged out | clear cached user
+                // Logged out | clear cached user
                 clearUserSession();
                 sharedUserLiveData.postValue(null);
+                userPrefs = null;
                 return;
             }
 
-            // logged in → setup user listener
+            // Logged in
             initSharedUserListener(currentUser.getUid());
-            initIsBalanceHiddenLiveData();
+            userPrefs = new UserPrefs(SettleXApp.getAppContext(), currentUser.getUid());
         };
         auth.addAuthStateListener(authStateListener);
     }
@@ -117,23 +119,34 @@ public class UserRepository {
         userListener = null;
     }
 
-    // User preference
-    private void initIsBalanceHiddenLiveData() {
-        isBalanceHiddenLiveData.setValue(userPrefs.isBalanceHidden());
+    // user preference
+    private UserPrefs getUserPrefs() {
+        if (userPrefs == null) {
+            throw new IllegalStateException("UserPrefs unavailable. User not logged in");
+        }
+        return userPrefs;
     }
 
-    public void toggleBalanceVisibility() {
-        boolean isBalanceCurrentlyHidden = userPrefs.isBalanceHidden();
-        boolean shouldHideBalance = !isBalanceCurrentlyHidden;
+    public boolean getIsFingerPrintEnabled() {
+        return getUserPrefs().isFingerPrintEnabled();
+    }
 
-        userPrefs.setBalanceHidden(shouldHideBalance);
-        isBalanceHiddenLiveData.setValue(shouldHideBalance);
+    public void setFingerPrintEnabled(boolean enable) {
+        getUserPrefs().setBalanceHidden(enable);
     }
 
     public LiveData<Boolean> getIsBalanceHiddenLiveData() {
+        isBalanceHiddenLiveData.setValue(getUserPrefs().isBalanceHidden());
         return isBalanceHiddenLiveData;
     }
 
+    public void toggleBalanceVisibility() {
+        boolean isBalanceCurrentlyHidden = getUserPrefs().isBalanceHidden();
+        boolean shouldHideBalance = !isBalanceCurrentlyHidden;
+
+        getUserPrefs().setBalanceHidden(shouldHideBalance);
+        isBalanceHiddenLiveData.setValue(shouldHideBalance);
+    }
 
     public void uploadUserProfilePicToServer(String imageBase64, UploadProfilePicCallback callback) {
         functions.getHttpsCallable("default-uploadProfilePicture")
@@ -269,7 +282,7 @@ public class UserRepository {
     }
 
     public void signOut() {
-        // End session
+        // end session
         auth.signOut();
     }
 

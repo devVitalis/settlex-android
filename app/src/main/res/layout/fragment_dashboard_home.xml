@@ -14,16 +14,15 @@
         android:layout_height="match_parent"
         android:orientation="vertical">
 
-        <!--Header-->
         <androidx.constraintlayout.widget.ConstraintLayout
             android:id="@+id/header"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:paddingHorizontal="15dp"
-            android:paddingTop="5dp">
+            android:paddingVertical="5dp">
 
             <com.google.android.material.imageview.ShapeableImageView
-                android:id="@+id/btnProfilePic"
+                android:id="@+id/btn_profile_pic"
                 android:layout_width="40dp"
                 android:layout_height="40dp"
                 android:contentDescription="@null"
@@ -34,14 +33,14 @@
                 app:shapeAppearance="@style/Oval_Shape" />
 
             <LinearLayout
-                android:id="@+id/greetingContainer"
+                android:id="@+id/greeting_container"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginStart="10dp"
                 android:orientation="vertical"
-                app:layout_constraintBottom_toBottomOf="@id/btnProfilePic"
-                app:layout_constraintStart_toEndOf="@id/btnProfilePic"
-                app:layout_constraintTop_toTopOf="@id/btnProfilePic">
+                app:layout_constraintBottom_toBottomOf="@id/btn_profile_pic"
+                app:layout_constraintStart_toEndOf="@id/btn_profile_pic"
+                app:layout_constraintTop_toTopOf="@id/btn_profile_pic">
 
                 <TextView
                     android:id="@+id/greeting"
@@ -58,7 +57,7 @@
                     android:layout_height="wrap_content">
 
                     <TextView
-                        android:id="@id/fullName"
+                        android:id="@+id/full_name"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_gravity="center"
@@ -67,11 +66,10 @@
                         android:textColor="@color/black"
                         android:textSize="14sp"
                         android:textStyle="bold"
-                        tools:text="Firstname Lastname" />
+                        tools:text="Benjamin Nnaemeka" />
 
-                    <!-- Shimmer user fullName -->
                     <com.facebook.shimmer.ShimmerFrameLayout
-                        android:id="@+id/userFullNameShimmer"
+                        android:id="@+id/user_full_name_shimmer"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_gravity="center"
@@ -89,7 +87,7 @@
             </LinearLayout>
 
             <com.google.android.material.button.MaterialButton
-                android:id="@+id/btnLogin"
+                android:id="@+id/btn_login"
                 style="@style/Button.Outlined.Blue"
                 android:layout_width="80dp"
                 android:layout_height="40dp"
@@ -97,20 +95,20 @@
                 android:paddingHorizontal="0dp"
                 android:text="Login"
                 android:visibility="gone"
-                app:layout_constraintBottom_toBottomOf="@id/btnProfilePic"
-                app:layout_constraintStart_toEndOf="@id/btnProfilePic"
-                app:layout_constraintTop_toTopOf="@id/btnProfilePic" />
+                app:layout_constraintBottom_toBottomOf="@id/btn_profile_pic"
+                app:layout_constraintStart_toEndOf="@id/btn_profile_pic"
+                app:layout_constraintTop_toTopOf="@id/btn_profile_pic" />
 
             <FrameLayout
-                android:id="@+id/btnSupport"
+                android:id="@+id/btn_support"
                 android:layout_width="40dp"
                 android:layout_height="40dp"
                 android:layout_marginEnd="10dp"
                 android:background="@drawable/bg_oval_semi_transparent_black10"
                 android:padding="5dp"
-                app:layout_constraintBottom_toBottomOf="@+id/btnNotification"
-                app:layout_constraintEnd_toStartOf="@+id/btnNotification"
-                app:layout_constraintTop_toTopOf="@id/btnNotification">
+                app:layout_constraintBottom_toBottomOf="@+id/btn_notification"
+                app:layout_constraintEnd_toStartOf="@+id/btn_notification"
+                app:layout_constraintTop_toTopOf="@id/btn_notification">
 
                 <ImageView
                     android:layout_width="25dp"
@@ -120,9 +118,8 @@
                     android:src="@drawable/ic_support_agent" />
             </FrameLayout>
 
-            <!--Notification Layout-->
             <androidx.constraintlayout.widget.ConstraintLayout
-                android:id="@+id/btnNotification"
+                android:id="@+id/btn_notification"
                 android:layout_width="40dp"
                 android:layout_height="40dp"
                 android:background="@drawable/bg_oval_semi_transparent_black10"
@@ -131,7 +128,6 @@
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintTop_toTopOf="parent">
 
-                <!-- Bell Icon -->
                 <ImageView
                     android:id="@+id/notification"
                     android:layout_width="25dp"
@@ -143,9 +139,8 @@
                     app:layout_constraintStart_toStartOf="parent"
                     app:layout_constraintTop_toTopOf="parent" />
 
-                <!-- Red Badge -->
                 <TextView
-                    android:id="@+id/unreadNotificationBadge"
+                    android:id="@+id/unread_notification_badge"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:background="@drawable/bg_oval_red"
@@ -161,7 +156,6 @@
             </androidx.constraintlayout.widget.ConstraintLayout>
         </androidx.constraintlayout.widget.ConstraintLayout>
 
-        <!--Scroll Layout-->
         <ScrollView
             android:layout_width="match_parent"
             android:layout_height="match_parent"
@@ -177,9 +171,8 @@
                 android:paddingHorizontal="15dp"
                 android:paddingVertical="10dp">
 
-                <!--Marquee Container-->
                 <LinearLayout
-                    android:id="@+id/brandAwarenessContainer"
+                    android:id="@+id/brand_awareness_container"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:background="@drawable/bg_8dp_orange_light"
@@ -197,7 +190,7 @@
                         app:tint="@color/orange" />
 
                     <TextView
-                        android:id="@+id/txtBrandAwareness"
+                        android:id="@+id/txt_brand_awareness"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:ellipsize="marquee"
@@ -211,17 +204,15 @@
                         android:textSize="12sp" />
                 </LinearLayout>
 
-                <!--Wallet Layout-->
                 <LinearLayout
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_marginTop="10dp"
+                    android:layout_marginTop="5dp"
                     android:background="@drawable/bg_16dp_gradient"
                     android:gravity="center_vertical"
                     android:orientation="vertical"
                     android:padding="15dp">
 
-                    <!-- Header Row -->
                     <TextView
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
@@ -233,19 +224,18 @@
                         app:layout_constraintStart_toStartOf="parent"
                         app:layout_constraintTop_toTopOf="parent" />
 
-                    <!-- Balance Section -->
                     <androidx.constraintlayout.widget.ConstraintLayout
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:layout_marginTop="15dp">
 
                         <LinearLayout
-                            android:id="@+id/protectionContainer"
+                            android:id="@+id/protection_container"
                             android:layout_width="0dp"
                             android:layout_height="wrap_content"
                             android:gravity="start|center"
                             android:orientation="horizontal"
-                            app:layout_constraintEnd_toStartOf="@id/commissionContainer"
+                            app:layout_constraintEnd_toStartOf="@id/commission_container"
                             app:layout_constraintHorizontal_weight="1"
                             app:layout_constraintStart_toStartOf="parent"
                             app:layout_constraintTop_toTopOf="parent">
@@ -269,7 +259,7 @@
                                 android:textSize="14sp" />
 
                             <ImageView
-                                android:id="@+id/btnBalanceToggle"
+                                android:id="@+id/btn_balance_toggle"
                                 android:layout_width="18dp"
                                 android:layout_height="18dp"
                                 android:layout_marginStart="5dp"
@@ -282,15 +272,15 @@
                         </LinearLayout>
 
                         <FrameLayout
-                            android:id="@+id/balanceValueContainer"
+                            android:id="@+id/balance_value_container"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:layout_marginTop="10dp"
                             app:layout_constraintStart_toStartOf="parent"
-                            app:layout_constraintTop_toBottomOf="@id/protectionContainer">
+                            app:layout_constraintTop_toBottomOf="@id/protection_container">
 
                             <TextView
-                                android:id="@+id/userBalance"
+                                android:id="@+id/user_balance"
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
                                 android:layout_gravity="center"
@@ -301,7 +291,7 @@
                                 tools:text="₦2,500.00" />
 
                             <com.facebook.shimmer.ShimmerFrameLayout
-                                android:id="@+id/userBalanceShimmer"
+                                android:id="@+id/user_balance_shimmer"
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
                                 android:layout_gravity="center"
@@ -316,20 +306,19 @@
                             </com.facebook.shimmer.ShimmerFrameLayout>
                         </FrameLayout>
 
-                        <!-- Commission stack -->
                         <LinearLayout
-                            android:id="@+id/commissionContainer"
+                            android:id="@+id/commission_container"
                             android:layout_width="0dp"
                             android:layout_height="wrap_content"
                             android:orientation="vertical"
-                            app:layout_constraintBottom_toBottomOf="@id/balanceValueContainer"
+                            app:layout_constraintBottom_toBottomOf="@id/balance_value_container"
                             app:layout_constraintEnd_toEndOf="parent"
                             app:layout_constraintHorizontal_weight="1"
-                            app:layout_constraintStart_toEndOf="@id/protectionContainer"
-                            app:layout_constraintTop_toTopOf="@id/protectionContainer">
+                            app:layout_constraintStart_toEndOf="@id/protection_container"
+                            app:layout_constraintTop_toTopOf="@id/protection_container">
 
                             <TextView
-                                android:id="@+id/commissionBalance"
+                                android:id="@+id/commission_balance"
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
                                 android:includeFontPadding="false"
@@ -343,7 +332,7 @@
                                 android:layout_marginTop="10dp">
 
                                 <LinearLayout
-                                    android:id="@+id/btnUserCommissionBalanceLayout"
+                                    android:id="@+id/btn_user_commission_balance_layout"
                                     android:layout_width="wrap_content"
                                     android:layout_height="wrap_content"
                                     android:layout_gravity="center"
@@ -352,7 +341,7 @@
                                     android:orientation="horizontal">
 
                                     <TextView
-                                        android:id="@+id/userCommissionBalance"
+                                        android:id="@+id/user_commission_balance"
                                         android:layout_width="wrap_content"
                                         android:layout_height="wrap_content"
                                         android:includeFontPadding="false"
@@ -371,7 +360,7 @@
                                 </LinearLayout>
 
                                 <com.facebook.shimmer.ShimmerFrameLayout
-                                    android:id="@+id/userCommissionBalanceShimmer"
+                                    android:id="@+id/user_commission_balance_shimmer"
                                     android:layout_width="wrap_content"
                                     android:layout_height="wrap_content"
                                     android:layout_gravity="center"
@@ -388,23 +377,21 @@
                         </LinearLayout>
                     </androidx.constraintlayout.widget.ConstraintLayout>
 
-                    <!-- Action Buttons -->
                     <androidx.constraintlayout.widget.ConstraintLayout
-                        android:id="@+id/actionButtons"
+                        android:id="@+id/action_buttons"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:layout_marginTop="15dp">
 
-                        <!-- Add Money -->
                         <LinearLayout
-                            android:id="@+id/btnDeposit"
+                            android:id="@+id/btn_deposit"
                             android:layout_width="0dp"
                             android:layout_height="wrap_content"
                             android:background="@drawable/bg_8dp_transparent_white"
                             android:gravity="center"
                             android:orientation="vertical"
                             android:paddingVertical="5dp"
-                            app:layout_constraintEnd_toStartOf="@id/btnReceive"
+                            app:layout_constraintEnd_toStartOf="@id/btn_receive"
                             app:layout_constraintHorizontal_weight="1"
                             app:layout_constraintStart_toStartOf="parent"
                             app:layout_constraintTop_toTopOf="parent">
@@ -424,9 +411,8 @@
                                 android:textSize="11sp" />
                         </LinearLayout>
 
-                        <!-- Receive Money -->
                         <LinearLayout
-                            android:id="@+id/btnReceive"
+                            android:id="@+id/btn_receive"
                             android:layout_width="0dp"
                             android:layout_height="wrap_content"
                             android:layout_marginStart="20dp"
@@ -435,9 +421,9 @@
                             android:gravity="center"
                             android:orientation="vertical"
                             android:paddingVertical="5dp"
-                            app:layout_constraintEnd_toStartOf="@+id/btnTransfer"
+                            app:layout_constraintEnd_toStartOf="@+id/btn_transfer"
                             app:layout_constraintHorizontal_weight="1"
-                            app:layout_constraintStart_toEndOf="@+id/btnDeposit"
+                            app:layout_constraintStart_toEndOf="@+id/btn_deposit"
                             app:layout_constraintTop_toTopOf="parent">
 
                             <ImageView
@@ -455,9 +441,8 @@
                                 android:textSize="11sp" />
                         </LinearLayout>
 
-                        <!-- Send Money -->
                         <LinearLayout
-                            android:id="@+id/btnTransfer"
+                            android:id="@+id/btn_transfer"
                             android:layout_width="0dp"
                             android:layout_height="wrap_content"
                             android:background="@drawable/bg_8dp_transparent_white"
@@ -466,7 +451,7 @@
                             android:paddingVertical="5dp"
                             app:layout_constraintEnd_toEndOf="parent"
                             app:layout_constraintHorizontal_weight="1"
-                            app:layout_constraintStart_toEndOf="@id/btnReceive"
+                            app:layout_constraintStart_toEndOf="@id/btn_receive"
                             app:layout_constraintTop_toTopOf="parent">
 
                             <ImageView
@@ -486,96 +471,9 @@
                     </androidx.constraintlayout.widget.ConstraintLayout>
                 </LinearLayout>
 
-                <!--Money flow (Hidden) -->
-                <androidx.constraintlayout.widget.ConstraintLayout
-                    android:id="@+id/moneyFlowContainer"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_marginTop="15dp"
-                    android:background="@drawable/bg_8dp_white_ripple_yes"
-                    android:padding="8dp"
-                    android:visibility="gone">
-
-                    <TextView
-                        android:id="@+id/txtMoneyFlow"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:fontFamily="@font/inter_regular"
-                        android:includeFontPadding="false"
-                        android:text="Money Flow"
-                        android:textColor="@color/gray"
-                        android:textSize="12sp"
-                        app:layout_constraintStart_toStartOf="parent"
-                        app:layout_constraintTop_toTopOf="parent" />
-
-                    <ImageView
-                        android:id="@+id/icInFlow"
-                        android:layout_width="20dp"
-                        android:layout_height="20dp"
-                        android:layout_marginTop="10dp"
-                        android:contentDescription="@null"
-                        android:src="@drawable/ic_inflow"
-                        app:layout_constraintStart_toStartOf="parent"
-                        app:layout_constraintTop_toBottomOf="@id/txtMoneyFlow" />
-
-                    <ImageView
-                        android:id="@+id/icOutFlow"
-                        android:layout_width="20dp"
-                        android:layout_height="20dp"
-                        android:layout_marginTop="5dp"
-                        android:contentDescription="@null"
-                        android:src="@drawable/ic_outflow"
-                        app:layout_constraintStart_toStartOf="parent"
-                        app:layout_constraintTop_toBottomOf="@id/icInFlow" />
-
-                    <LinearLayout
-                        android:id="@+id/flowContainer"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_marginStart="10dp"
-                        android:orientation="vertical"
-                        app:layout_constraintBottom_toBottomOf="@id/icOutFlow"
-                        app:layout_constraintStart_toEndOf="@id/icInFlow"
-                        app:layout_constraintTop_toTopOf="@id/icInFlow">
-
-                        <TextView
-                            android:id="@+id/inFlow"
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:fontFamily="@font/inter_regular"
-                            android:includeFontPadding="false"
-                            android:textColor="@color/black"
-                            android:textSize="16sp"
-                            android:textStyle="bold"
-                            tools:text="N200,000.00" />
-
-                        <TextView
-                            android:id="@+id/outFlow"
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:layout_marginTop="5dp"
-                            android:fontFamily="@font/inter_regular"
-                            android:includeFontPadding="false"
-                            android:textColor="@color/black"
-                            android:textSize="16sp"
-                            android:textStyle="bold"
-                            tools:text="N200,000.00" />
-                    </LinearLayout>
-
-                    <com.github.mikephil.charting.charts.PieChart
-                        android:id="@+id/moneyFlowPieChart"
-                        android:layout_width="0dp"
-                        android:layout_height="0dp"
-                        android:layout_marginStart="10dp"
-                        app:layout_constraintBottom_toBottomOf="parent"
-                        app:layout_constraintEnd_toEndOf="parent"
-                        app:layout_constraintStart_toEndOf="@id/flowContainer"
-                        app:layout_constraintTop_toTopOf="parent" />
-                </androidx.constraintlayout.widget.ConstraintLayout>
-
-                <!-- connection lost layout (Hidden) -->
+                <!-- No internet connection -->
                 <LinearLayout
-                    android:id="@+id/connectionLost"
+                    android:id="@+id/connection_lost"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_marginTop="15dp"
@@ -596,7 +494,7 @@
                         android:textSize="12sp" />
 
                     <com.google.android.material.button.MaterialButton
-                        android:id="@+id/btnOkay"
+                        android:id="@+id/btn_okay"
                         style="@style/Button.Outlined.Blue"
                         android:layout_width="70dp"
                         android:layout_height="40dp"
@@ -606,9 +504,8 @@
                         android:textSize="12sp" />
                 </LinearLayout>
 
-                <!--Services-->
                 <androidx.recyclerview.widget.RecyclerView
-                    android:id="@+id/serviceRecyclerView"
+                    android:id="@+id/service_recycler_view"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_marginTop="15dp"
@@ -617,9 +514,8 @@
                     android:nestedScrollingEnabled="false"
                     android:padding="8dp" />
 
-                <!--Recent Transaction-->
                 <LinearLayout
-                    android:id="@+id/txnContainer"
+                    android:id="@+id/txn_container"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_marginTop="15dp"
@@ -646,7 +542,7 @@
                             android:textSize="12sp" />
 
                         <LinearLayout
-                            android:id="@+id/btnViewAllTransaction"
+                            android:id="@+id/btn_view_all_transaction"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:background="?attr/selectableItemBackground"
@@ -678,7 +574,7 @@
                         android:layout_marginTop="5dp">
 
                         <androidx.recyclerview.widget.RecyclerView
-                            android:id="@+id/txnRecyclerView"
+                            android:id="@+id/txn_recycler_view"
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
                             android:clipToPadding="false"
@@ -686,7 +582,7 @@
                             android:visibility="gone" />
 
                         <com.facebook.shimmer.ShimmerFrameLayout
-                            android:id="@+id/txnShimmerEffect"
+                            android:id="@+id/txn_shimmer_effect"
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
                             android:visibility="gone"
@@ -699,14 +595,14 @@
                                 android:layout_height="wrap_content" />
                         </com.facebook.shimmer.ShimmerFrameLayout>
 
-                        <!-- No transaction data -->
                         <LinearLayout
-                            android:id="@+id/emptyTransactionsState"
+                            android:id="@+id/empty_transactions_state"
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
                             android:gravity="center"
                             android:orientation="vertical"
-                            android:paddingVertical="15dp">
+                            android:paddingVertical="8dp"
+                            android:visibility="gone">
 
                             <TextView
                                 android:layout_width="wrap_content"
@@ -738,9 +634,8 @@
                     </FrameLayout>
                 </LinearLayout>
 
-                <!--Promotion-->
                 <FrameLayout
-                    android:id="@+id/promoBannerContainer"
+                    android:id="@+id/promo_banner_container"
                     android:layout_width="match_parent"
                     android:layout_height="120dp"
                     android:layout_marginTop="15dp"
@@ -748,22 +643,20 @@
                     android:visibility="visible">
 
                     <androidx.viewpager2.widget.ViewPager2
-                        android:id="@+id/promoViewPager"
+                        android:id="@+id/promo_view_pager"
                         android:layout_width="match_parent"
                         android:layout_height="match_parent" />
 
-                    <!-- Loading Progress bar -->
                     <com.google.android.material.progressindicator.CircularProgressIndicator
-                        android:id="@+id/promoProgressBar"
+                        android:id="@+id/promo_progress_bar"
                         style="@style/Widget.SettleX.CircularProgressIndicator"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_gravity="center"
                         android:visibility="gone" />
 
-                    <!--Dots Indicator-->
                     <com.tbuonomo.viewpagerdotsindicator.DotsIndicator
-                        android:id="@+id/dotsIndicator"
+                        android:id="@+id/dots_indicator"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_gravity="bottom|center_horizontal"
