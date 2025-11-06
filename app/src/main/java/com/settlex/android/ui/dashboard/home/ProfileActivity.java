@@ -69,8 +69,8 @@ public class ProfileActivity extends AppCompatActivity {
     }
 
     private void showJoinedDateInSimpleDialog() {
-        String title = "Joined Date";
-        String message = StringUtil.formatTimeStampToFullDateAndTime(joinedDate);
+        String title = "Member since";
+        String message = StringUtil.formatTimeStampToFullDate(joinedDate);
 
         UiUtil.showSimpleAlertDialog(
                 this,
@@ -97,7 +97,7 @@ public class ProfileActivity extends AppCompatActivity {
         binding.paymentId.setText(user.getPaymentId() != null ? StringUtil.addAtToPaymentId(user.getPaymentId()) : "Setup Payment ID");
         binding.fullName.setText(user.getFullName().toUpperCase());
         binding.email.setText(StringUtil.maskEmail(user.getEmail()));
-        binding.phoneNumber.setText(user.getPhone());
+        binding.phoneNumber.setText(StringUtil.maskPhoneNumber(user.getPhone()));
         binding.joinedDate.setText(StringUtil.formatTimestampToRelative(user.getCreatedAt()));
         this.joinedDate = user.getCreatedAt();
     }

@@ -7,7 +7,6 @@ import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.net.Uri;
 import android.os.Build;
-import android.text.format.DateUtils;
 import android.util.Base64;
 import android.util.Log;
 import android.widget.Toast;
@@ -21,7 +20,6 @@ import java.math.RoundingMode;
 import java.text.DecimalFormat;
 import java.text.NumberFormat;
 import java.text.SimpleDateFormat;
-import java.util.Date;
 import java.util.Locale;
 import java.util.Objects;
 
@@ -40,7 +38,7 @@ public class StringUtil {
      * Masks email for privacy, e.g. johndoe@gmail.com → j***e@gmail.com
      */
     public static String maskEmail(String email) {
-        if (email == null) return "";
+        if (email == null || email.isEmpty()) return email;
 
         String[] parts = email.split("@");
         String emailPrefix = parts[0];
@@ -53,6 +51,27 @@ public class StringUtil {
         String masked = emailPrefix.charAt(0) + "***" + emailPrefix.charAt(emailPrefix.length() - 1);
         return masked + "@" + domain;
     }
+
+    public static String maskPhoneNumber(String phoneNumber) {
+        if (phoneNumber == null || phoneNumber.isEmpty()) return phoneNumber;
+
+        int prefixLength = 7; // +234707
+        int suffixLength = 3;
+
+        // Extract visible parts
+        String prefix = phoneNumber.substring(0, prefixLength);
+        String suffix = phoneNumber.substring(phoneNumber.length() - suffixLength);
+
+        // Build masked section with asterisks
+        int maskLength = phoneNumber.length() - (prefixLength + suffixLength);
+        StringBuilder mask = new StringBuilder();
+        for (int i = 0; i < maskLength; i++) {
+            mask.append("*");
+        }
+
+        return prefix + mask + suffix;
+    }
+
 
     /**
      * Capitalizes each word: "john doe" → "John Doe"
@@ -195,20 +214,56 @@ public class StringUtil {
                 .format(timestamp.toDate());
     }
 
-    public static String formatTimeStampToFullDateAndTime(Timestamp timestamp) {
-        return new SimpleDateFormat("EEEE MMMM yyyy, hh:mm a", Locale.US)
+    public static String formatTimeStampToFullDate(Timestamp timestamp) {
+        return new SimpleDateFormat("dd MMMM yyyy", Locale.US)
                 .format(timestamp.toDate());
     }
 
     public static String formatTimestampToRelative(Timestamp timestamp) {
-        Date date = timestamp.toDate();
-        long now = System.currentTimeMillis();
+        if (timestamp == null) return "";
 
-        return DateUtils.getRelativeTimeSpanString(
-                date.getTime(),
-                now,
-                DateUtils.MINUTE_IN_MILLIS, // minimum resolution to display
-                DateUtils.FORMAT_ABBREV_RELATIVE).toString(); // Flag to use shortened words
+        final long SECOND = 1000;
+        final long MINUTE = 60 * SECOND;
+        final long HOUR = 60 * MINUTE;
+        final long DAY = 24 * HOUR;
+        final long WEEK = 7 * DAY;
+        final long MONTH = 30 * DAY;
+        final long YEAR = 365 * DAY;
+
+        final long time = timestamp.toDate().getTime();
+        final long now = System.currentTimeMillis();
+        final long diff = now - time;
+
+
+        if (diff < MINUTE) return "Just now";
+
+        if (diff < HOUR) {
+            long mins = diff / MINUTE;
+            return diff / MINUTE + " min" + (mins > 1 ? "s" : "") + " ago";
+        }
+
+        if (diff < DAY) {
+            long hrs = diff / HOUR;
+            return hrs + " hr" + (hrs > 1 ? "s" : "") + " ago";
+        }
+
+        if (diff < WEEK) {
+            long days = diff / DAY;
+            return days + " day" + (days > 1 ? "s" : "") + " ago";
+        }
+
+        if (diff < MONTH) {
+            long weeks = diff / WEEK;
+            return weeks + " week" + (weeks > 1 ? "s" : "") + " ago";
+        }
+
+        if (diff < YEAR) {
+            long months = diff / MONTH;
+            return months + " month" + (months > 1 ? "s" : "") + " ago";
+        }
+
+        long years = diff / YEAR;
+        return years + " yr" + (years > 1 ? "s" : "") + " ago";
     }
 
     /**
