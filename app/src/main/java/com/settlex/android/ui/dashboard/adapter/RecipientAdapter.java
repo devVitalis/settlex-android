@@ -60,11 +60,9 @@ public class RecipientAdapter extends ListAdapter<RecipientUiModel, RecipientAda
         }
 
         public void bind(RecipientUiModel recipient, OnItemClickListener listener) {
-            ProfileService.loadProfilePic(recipient.getProfileUrl(), binding.profilePic);
+            ProfileService.loadProfilePic(recipient.getPhotoUrl(), binding.profilePic);
             binding.fullName.setText(recipient.getFullName());
             binding.paymentId.setText(recipient.getPaymentId());
-
-            // handle click
             binding.getRoot().setOnClickListener(v -> listener.onItemClick(recipient));
         }
     }

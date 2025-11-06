@@ -96,7 +96,7 @@
                             android:layout_marginTop="2dp"
                             android:fontFamily="@font/inter_regular"
                             android:includeFontPadding="false"
-                            android:text="Biometric not available on this device"
+                            tools:text="Biometric not available on this device"
                             android:textColor="@color/red"
                             android:textSize="11sp" />
                     </LinearLayout>

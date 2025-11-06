@@ -89,7 +89,7 @@ public class UserRepository {
     private void initSharedUserListener(String uid) {
         sharedUserLiveData.postValue(Result.loading());
 
-        Log.d("Repository", "Attaching a new user listener");
+        Log.d(TAG, "Attaching a new user listener");
 
         userListener = firestore.collection("users")
                 .document(uid)

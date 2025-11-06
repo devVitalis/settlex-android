@@ -5,12 +5,12 @@ import java.util.Objects;
 public class RecipientUiModel {
     private final String paymentId;
     private final String fullName;
-    private final String profileUrl;
+    private final String photoUrl;
 
-    public RecipientUiModel(String paymentId, String fullName, String profileUrl) {
+    public RecipientUiModel(String paymentId, String fullName, String photoUrl) {
         this.paymentId = paymentId;
         this.fullName = fullName;
-        this.profileUrl = profileUrl;
+        this.photoUrl = photoUrl;
     }
 
     public String getPaymentId() {
@@ -21,8 +21,8 @@ public class RecipientUiModel {
         return fullName;
     }
 
-    public String getProfileUrl() {
-        return profileUrl;
+    public String getPhotoUrl() {
+        return photoUrl;
     }
 
     @Override
@@ -30,11 +30,11 @@ public class RecipientUiModel {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
         RecipientUiModel that = (RecipientUiModel) o;
-        return Objects.equals(getPaymentId(), that.getPaymentId()) && Objects.equals(getFullName(), that.getFullName()) && Objects.equals(getProfileUrl(), that.getProfileUrl());
+        return Objects.equals(getPaymentId(), that.getPaymentId()) && Objects.equals(getFullName(), that.getFullName()) && Objects.equals(getPhotoUrl(), that.getPhotoUrl());
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(getPaymentId(), getFullName(), getProfileUrl());
+        return Objects.hash(getPaymentId(), getFullName(), getPhotoUrl());
     }
 }

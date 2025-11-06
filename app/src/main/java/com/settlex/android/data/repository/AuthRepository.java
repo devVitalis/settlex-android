@@ -13,7 +13,6 @@ import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.functions.FirebaseFunctions;
 import com.google.firebase.messaging.FirebaseMessaging;
 import com.google.gson.Gson;
-import com.settlex.android.data.local.UserPrefs;
 import com.settlex.android.data.model.UserModel;
 import com.settlex.android.data.remote.api.MetadataService;
 

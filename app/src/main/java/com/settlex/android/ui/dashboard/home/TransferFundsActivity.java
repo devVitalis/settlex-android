@@ -46,7 +46,7 @@ import dagger.hilt.android.AndroidEntryPoint;
 @AndroidEntryPoint
 public class TransferFundsActivity extends AppCompatActivity {
 
-    private String recipientProfileUrl;
+    private String recipientPhotoUrl;
     private String recipientPaymentId;
     private long amountToSend;
     private boolean isPinVerified = false;
@@ -122,7 +122,7 @@ public class TransferFundsActivity extends AppCompatActivity {
     }
 
     private void observePayFriendStatus() {
-        transactionViewModel.getPayFriendLiveData().observe(this, event -> {
+        transactionViewModel.getTransferFundsLiveData().observe(this, event -> {
             Result<String> result = event.getContentIfNotHandled();
             if (result == null) return;
 
@@ -154,7 +154,7 @@ public class TransferFundsActivity extends AppCompatActivity {
         bottomSheetDialog.dismiss();
         String formattedAmount = StringUtil.formatToNaira(this.amountToSend);
 
-        // pass txn data
+        // Pass txn data
         Intent intent = new Intent(this, TransactionStatusActivity.class);
         intent.putExtra("amount", formattedAmount);
         intent.putExtra("status", transactionStatus.name());
@@ -292,7 +292,7 @@ public class TransferFundsActivity extends AppCompatActivity {
                 this,
                 recipientPaymentId,
                 recipientName,
-                recipientProfileUrl,
+                recipientPhotoUrl,
                 amountToSend,
                 currentUser.getBalance(),
                 currentUser.getCommissionBalance(),
@@ -312,7 +312,7 @@ public class TransferFundsActivity extends AppCompatActivity {
     }
 
     private void startPayFriendTransaction(String fromSenderUid, String toRecipient, long amountToSend, String description) {
-        transactionViewModel.payFriend(
+        transactionViewModel.transferFunds(
                 fromSenderUid,
                 toRecipient,
                 TransactionIdGenerator.generate(fromSenderUid),
@@ -354,7 +354,7 @@ public class TransferFundsActivity extends AppCompatActivity {
             binding.txtError.setVisibility(View.VISIBLE);
             return;
         }
-        transactionViewModel.searchRecipient(paymentId);
+        transactionViewModel.findRecipientByPaymentId(paymentId);
     }
 
     private void setupRecipientRecyclerView() {
@@ -375,8 +375,8 @@ public class TransferFundsActivity extends AppCompatActivity {
             recipientAdapter.submitList(Collections.emptyList());
             binding.recipientRecyclerView.setVisibility(View.GONE);
 
-            recipientProfileUrl = recipient.getProfileUrl();
-            ProfileService.loadProfilePic(recipientProfileUrl, binding.selectedRecipientProfilePic);
+            recipientPhotoUrl = recipient.getPhotoUrl();
+            ProfileService.loadProfilePic(recipientPhotoUrl, binding.selectedRecipientProfilePic);
             binding.selectedRecipientName.setText(recipient.getFullName());
             binding.selectedRecipientPaymentId.setText(recipient.getPaymentId());
             binding.selectedRecipient.setVisibility(View.VISIBLE);

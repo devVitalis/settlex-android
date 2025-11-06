@@ -122,9 +122,9 @@ public class HomeDashboardFragment extends Fragment {
     }
 
     private void toggleBrandAwareness() {
-        boolean isVisible = binding.brandAwarenessContainer.getVisibility() == View.VISIBLE;
-        binding.brandAwarenessContainer.setVisibility(isVisible ? View.GONE : View.VISIBLE);
-        binding.txtBrandAwareness.setSelected(!isVisible);
+        boolean isVisible = binding.marqueeContainer.getVisibility() == View.VISIBLE;
+        binding.marqueeContainer.setVisibility(isVisible ? View.GONE : View.VISIBLE);
+        binding.marqueeTxt.setSelected(!isVisible);
     }
 
     //  OBSERVERS ======
@@ -235,7 +235,7 @@ public class HomeDashboardFragment extends Fragment {
     }
 
     private void observeAndLoadRecentTransactions(String uid) {
-        transactionViewModel.getTransactionLiveData(uid, 2).observe(getViewLifecycleOwner(), transactions -> {
+        transactionViewModel.fetchTransactionsLiveData(uid, 2).observe(getViewLifecycleOwner(), transactions -> {
             if (transactions == null) return;
 
             switch (transactions.getStatus()) {
@@ -359,7 +359,7 @@ public class HomeDashboardFragment extends Fragment {
     private void showLoggedOutLayout() {
         // Hide all logged-in UI elements
         binding.btnProfilePic.setVisibility(View.GONE);
-        binding.brandAwarenessContainer.setVisibility(View.GONE);
+        binding.marqueeContainer.setVisibility(View.GONE);
         binding.btnBalanceToggle.setVisibility(View.GONE);
         binding.greetingContainer.setVisibility(View.GONE);
         binding.actionButtons.setVisibility(View.GONE);

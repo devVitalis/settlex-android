@@ -23,6 +23,7 @@ import java.util.stream.Collectors;
 import jakarta.inject.Inject;
 
 public class TransactionRepository {
+    private final String TAG = TransactionRepository.class.getSimpleName();
     private final String ERROR_NO_INTERNET = "Connection lost. Please check your Wi-Fi or cellular data and try again";
 
     // dependencies
@@ -36,16 +37,19 @@ public class TransactionRepository {
         this.firestore = firestore;
     }
 
-    public void searchRecipient(String paymentId, SearchRecipientCallback callback) {
+    public void findRecipientByPaymentId(String paymentId, SearchRecipientCallback callback) {
+        Map<String, Object> data = new HashMap<>();
+        data.put("paymentId", paymentId);
+
         functions.getHttpsCallable("default-findRecipientByPaymentId")
-                .call(Collections.singletonMap("paymentId", paymentId))
+                .call(data)
                 .addOnSuccessListener(result -> {
-                    Map<?, ?> data = (Map<?, ?>) result.getData();
+                    Map<?, ?> resultData = (Map<?, ?>) result.getData();
                     List<RecipientDto> recipientDto = new ArrayList<>();
 
-                    if (data != null && Boolean.TRUE.equals(data.get("success"))) {
+                    if (resultData != null && Boolean.TRUE.equals(resultData.get("success"))) {
                         //noinspection unchecked
-                        List<Map<String, Object>> dtoList = (List<Map<String, Object>>) data.get("recipient");
+                        List<Map<String, Object>> dtoList = (List<Map<String, Object>>) resultData.get("recipient");
 
                         if (dtoList != null) {
                             ObjectMapper mapper = new ObjectMapper();
@@ -62,6 +66,7 @@ public class TransactionRepository {
                         return;
                     }
                     callback.onFailure(e.getMessage());
+                    Log.e(TAG, "Find recipient by Payment ID failed: " + e.getMessage(), e);
                 });
     }
 
@@ -70,7 +75,7 @@ public class TransactionRepository {
         void onFailure(String reason);
     }
 
-    public void payFriend(String senderUid, String recipient, String transactionId, double amount, String serviceType, String description, PayFriendCallback callback) {
+    public void transferFunds(String senderUid, String recipient, String transactionId, long amount, String serviceType, String description, PayFriendCallback callback) {
         Map<String, Object> data = new HashMap<>();
         data.put("senderUid", senderUid);
         data.put("recipient", recipient);
@@ -87,6 +92,7 @@ public class TransactionRepository {
                         return;
                     }
                     callback.onPayFriendFailed(e.getMessage());
+                    Log.e(TAG, "Failed to transfer funds: " + e.getMessage(), e);
                 });
     }
 
@@ -95,11 +101,10 @@ public class TransactionRepository {
         void onPayFriendFailed(String reason);
     }
 
-
-    public void getTransactions(String uid, int limit, TransactionCallback callback) {
+    public void fetchTransactions(String uid, int limit, TransactionCallback callback) {
         removeTransactionListener(); // avoid multiple listeners
 
-        Log.d("Repository", "fetching new transactions for user: " + uid);
+        Log.d(TAG, "fetching new transactions for user: " + uid);
         transactionListener = firestore.collection("users")
                 .document(uid)
                 .collection("transactions")
@@ -108,6 +113,7 @@ public class TransactionRepository {
                 .addSnapshotListener((snapshots, error) -> {
                     if (error != null) {
                         callback.onError(error.getMessage());
+                        Log.e(TAG, "Failed to fetch transactions: " + error.getMessage(), error);
                         return;
                     }
 

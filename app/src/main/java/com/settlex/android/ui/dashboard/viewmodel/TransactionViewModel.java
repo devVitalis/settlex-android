@@ -28,21 +28,21 @@ import jakarta.inject.Inject;
 @HiltViewModel
 public class TransactionViewModel extends ViewModel {
     private final MutableLiveData<Result<List<RecipientUiModel>>> recipientSearchResult = new MutableLiveData<>();
-    private final MutableLiveData<Event<Result<String>>> payFriendLiveData = new MutableLiveData<>();
+    private final MutableLiveData<Event<Result<String>>> transferFundsLiveData = new MutableLiveData<>();
     private final MediatorLiveData<Result<MoneyFlowUiModel>> moneyFlowLiveData = new MediatorLiveData<>();
     private final MutableLiveData<Result<List<TransactionUiModel>>> transactionLiveData = new MutableLiveData<>();
 
     // dependencies
-    private final TransactionRepository transactionRepo;
+    private final TransactionRepository txnRepo;
 
     @Inject
     public TransactionViewModel(TransactionRepository transactionRepo) {
-        this.transactionRepo = transactionRepo;
+        this.txnRepo = transactionRepo;
     }
 
-    public void searchRecipient(String paymentId) {
+    public void findRecipientByPaymentId(String paymentId) {
         recipientSearchResult.postValue(Result.loading());
-        transactionRepo.searchRecipient(paymentId, new TransactionRepository.SearchRecipientCallback() {
+        txnRepo.findRecipientByPaymentId(paymentId, new TransactionRepository.SearchRecipientCallback() {
             @Override
             public void onResult(List<RecipientDto> recipientDto) {
                 // Map DTO -> UI Model
@@ -52,7 +52,7 @@ public class TransactionViewModel extends ViewModel {
                     recipientUiModelList.add(new RecipientUiModel(
                             StringUtil.addAtToPaymentId(dto.paymentId),
                             dto.firstName + " " + dto.lastName,
-                            dto.profileUrl));
+                            dto.photoUrl));
                 }
                 recipientSearchResult.postValue(Result.success(recipientUiModelList));
             }
@@ -68,38 +68,33 @@ public class TransactionViewModel extends ViewModel {
         return recipientSearchResult;
     }
 
-    public void payFriend(String senderUid, String recipient, String transactionId, double amount, String serviceType, String description) {
-        payFriendLiveData.setValue(new Event<>(Result.loading()));
-        transactionRepo.payFriend(
-                senderUid,
-                recipient,
-                transactionId,
-                amount,
-                serviceType,
-                description,
+    public void transferFunds(String senderUid, String recipient, String transactionId, long amount, String serviceType, String description) {
+        transferFundsLiveData.setValue(new Event<>(Result.loading()));
+
+        txnRepo.transferFunds(senderUid, recipient, transactionId, amount, serviceType, description,
                 new TransactionRepository.PayFriendCallback() {
                     @Override
                     public void onPayFriendSuccess() {
-                        payFriendLiveData.setValue(new Event<>(Result.success("Transaction Successful")));
+                        transferFundsLiveData.setValue(new Event<>(Result.success("Transaction Successful")));
                     }
 
                     @Override
                     public void onPayFriendFailed(String reason) {
-                        payFriendLiveData.setValue(new Event<>(Result.failure("Transaction Failed")));
+                        transferFundsLiveData.setValue(new Event<>(Result.failure("Transaction Failed")));
                     }
                 });
     }
 
-    public LiveData<Event<Result<String>>> getPayFriendLiveData() {
-        return payFriendLiveData;
+    public LiveData<Event<Result<String>>> getTransferFundsLiveData() {
+        return transferFundsLiveData;
     }
 
 
-    public LiveData<Result<List<TransactionUiModel>>> getTransactionLiveData(String uid, int limit) {
+    public LiveData<Result<List<TransactionUiModel>>> fetchTransactionsLiveData(String uid, int limit) {
         if (transactionLiveData.getValue() != null) return transactionLiveData;
 
         transactionLiveData.setValue(Result.loading());
-        transactionRepo.getTransactions(uid, limit, new TransactionRepository.TransactionCallback() {
+        txnRepo.fetchTransactions(uid, limit, new TransactionRepository.TransactionCallback() {
             @Override
             public void onResult(List<TransactionDto> dtolist) {
                 if (dtolist == null || dtolist.isEmpty()) {
