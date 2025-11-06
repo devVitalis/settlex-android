@@ -24,7 +24,8 @@ public class UserViewModel extends ViewModel {
     private final MutableLiveData<Event<Result<String>>> createPaymentLiveData = new MutableLiveData<>();
     private final MutableLiveData<Event<Result<Boolean>>> verifyPaymentLiveData = new MutableLiveData<>();
     private final MutableLiveData<Boolean> isBalanceHiddenLiveData = new MutableLiveData<>();
-    private final MutableLiveData<Boolean> isBiometricsEnabledLiveData = new MutableLiveData<>();
+    private final MutableLiveData<Boolean> isPayBiometricsEnabledLiveData = new MutableLiveData<>();
+    private final MutableLiveData<Boolean> isLoginBiometricsEnabledLiveData = new MutableLiveData<>();
 
 
     // dependencies
@@ -37,7 +38,7 @@ public class UserViewModel extends ViewModel {
         initAuthObserver();
         initUserLiveDataObserver();
 
-        isBiometricsEnabledLiveData.setValue(userRepo.getBiometricsEnabled());
+        isPayBiometricsEnabledLiveData.setValue(userRepo.getPayBiometricsEnabled());
         isBalanceHiddenLiveData.setValue(userRepo.getBalanceHidden());
     }
 
@@ -54,13 +55,22 @@ public class UserViewModel extends ViewModel {
         return Transformations.distinctUntilChanged(isBalanceHiddenLiveData);
     }
 
-    public LiveData<Boolean> getBiometricsEnabled() {
-        return Transformations.distinctUntilChanged(isBiometricsEnabledLiveData);
+    public LiveData<Boolean> getPayBiometricsEnabled() {
+        return Transformations.distinctUntilChanged(isPayBiometricsEnabledLiveData);
     }
 
-    public void setBiometricsEnabledLiveData(boolean enabled) {
-        isBiometricsEnabledLiveData.setValue(enabled);
-        userRepo.setBiometricsEnabled(enabled);
+    public void setPayBiometricsEnabledLiveData(boolean enabled) {
+        isPayBiometricsEnabledLiveData.setValue(enabled);
+        userRepo.setPayBiometricsEnabled(enabled);
+    }
+
+    public LiveData<Boolean> getLoginBiometricsEnabled() {
+        return Transformations.distinctUntilChanged(isLoginBiometricsEnabledLiveData);
+    }
+
+    public void setLoginBiometricsEnabledLiveData(boolean enabled) {
+        isLoginBiometricsEnabledLiveData.setValue(enabled);
+        userRepo.setLoginBiometricsEnabled(enabled);
     }
 
     public void signOut() {

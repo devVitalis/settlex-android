@@ -126,12 +126,20 @@ public class UserRepository {
         return userPrefs;
     }
 
-    public boolean getBiometricsEnabled() {
-        return getUserPrefs().isBiometricsEnabled();
+    public boolean getPayBiometricsEnabled() {
+        return getUserPrefs().isPayBiometricsEnabled();
     }
 
-    public void setBiometricsEnabled(boolean enable) {
-        getUserPrefs().setBiometricsEnabled(enable);
+    public void setPayBiometricsEnabled(boolean enable) {
+        getUserPrefs().setPayBiometricsEnabled(enable);
+    }
+
+    public boolean getLoginBiometricsEnabled() {
+        return getUserPrefs().isLoginBiometricsEnabled();
+    }
+
+    public void setLoginBiometricsEnabled(boolean enable) {
+        getUserPrefs().setLoginBiometricsEnabled(enable);
     }
 
     public boolean getBalanceHidden() {

@@ -18,7 +18,6 @@ import android.view.View;
 import android.view.inputmethod.EditorInfo;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.EditText;
-import android.widget.Toast;
 
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.lifecycle.ViewModelProvider;
@@ -101,7 +100,7 @@ public class LoginActivity extends AppCompatActivity {
                 currentUser.getEmail());
 
         // check user pref
-        boolean isFingerPrintEnabled = Boolean.TRUE.equals(authViewModel.getIsFingerPrintEnabled().getValue());
+        boolean isFingerPrintEnabled = Boolean.TRUE.equals(authViewModel.getLoginBiometricsEnabled().getValue());
         binding.btnFingerprint.setVisibility(isFingerPrintEnabled ? View.VISIBLE : View.GONE);
         if (isFingerPrintEnabled) promptBiometricsAuth();
     }

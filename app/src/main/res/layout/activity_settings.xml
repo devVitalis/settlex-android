@@ -53,9 +53,19 @@
             android:layout_height="wrap_content"
             android:background="@color/gray_light"
             android:orientation="vertical"
-            android:padding="20dp">
+            android:padding="15dp">
 
             <!-- 1st Card -->
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="5dp"
+                android:fontFamily="@font/inter_regular"
+                android:includeFontPadding="false"
+                android:text="Payment"
+                android:textColor="@color/gray"
+                android:textSize="12sp" />
+
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
@@ -64,8 +74,198 @@
                 android:paddingHorizontal="5dp"
                 android:paddingVertical="10dp">
 
+                <!-- btn_change_payment_pin -->
                 <LinearLayout
-                    android:id="@+id/btn_biometrics"
+                    android:id="@+id/btn_change_payment_pin"
+                    android:layout_width="match_parent"
+                    android:layout_height="45dp"
+                    android:background="@drawable/bg_8dp_white_ripple_yes"
+                    android:gravity="center_vertical"
+                    android:orientation="horizontal"
+                    android:padding="5dp">
+
+                    <TextView
+                        android:id="@+id/txt_change_payment_pin"
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        android:fontFamily="@font/inter_regular"
+                        android:includeFontPadding="false"
+                        android:text="Change Payment Pin"
+                        android:textColor="@color/black"
+                        android:textSize="14sp" />
+
+                    <TextView
+                        android:id="@+id/txt_set_payment_pin"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginEnd="5dp"
+                        android:fontFamily="@font/inter_regular"
+                        android:includeFontPadding="false"
+                        android:text="Set up"
+                        android:textColor="@color/blue"
+                        android:textSize="14sp" />
+
+                    <ImageView
+                        android:layout_width="15dp"
+                        android:layout_height="15dp"
+                        android:contentDescription="@null"
+                        android:src="@drawable/ic_arrow_forward"
+                        app:tint="@color/gray" />
+                </LinearLayout>
+
+                <!-- btn_forgot_payment_pin -->
+                <LinearLayout
+                    android:id="@+id/btn_forgot_payment_pin"
+                    android:layout_width="match_parent"
+                    android:layout_height="45dp"
+                    android:background="@drawable/bg_8dp_white_ripple_yes"
+                    android:gravity="center_vertical"
+                    android:orientation="horizontal"
+                    android:padding="5dp">
+
+                    <TextView
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        android:fontFamily="@font/inter_regular"
+                        android:includeFontPadding="false"
+                        android:text="Forgot Payment Pin"
+                        android:textColor="@color/black"
+                        android:textSize="14sp" />
+
+                    <ImageView
+                        android:layout_width="15dp"
+                        android:layout_height="15dp"
+                        android:contentDescription="@null"
+                        android:src="@drawable/ic_arrow_forward"
+                        app:tint="@color/gray" />
+                </LinearLayout>
+
+                <!-- btn_biometrics -->
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="45dp"
+                    android:background="@drawable/bg_8dp_white_ripple_yes"
+                    android:gravity="center_vertical"
+                    android:orientation="horizontal"
+                    android:padding="5dp">
+
+                    <LinearLayout
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        android:gravity="center_vertical"
+                        android:orientation="vertical">
+
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:fontFamily="@font/inter_regular"
+                            android:includeFontPadding="false"
+                            android:text="Pay with Fingerprint"
+                            android:textColor="@color/black"
+                            android:textSize="14sp" />
+
+                        <TextView
+                            android:id="@+id/pay_with_biometrics_error"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_marginTop="2dp"
+                            android:fontFamily="@font/inter_regular"
+                            android:includeFontPadding="false"
+                            android:textColor="@color/red"
+                            android:textSize="11sp"
+                            tools:text="Biometric not available on this device" />
+                    </LinearLayout>
+
+                    <com.google.android.material.materialswitch.MaterialSwitch
+                        android:id="@+id/btn_switch_pay_with_biometrics"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        app:trackDecorationTint="@color/switch_track_decoration_tint_selector"
+                        app:trackTint="@color/switch_track_color_selector" />
+                </LinearLayout>
+            </LinearLayout>
+
+            <!-- 2nd Card -->
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="15dp"
+                android:layout_marginBottom="5dp"
+                android:fontFamily="@font/inter_regular"
+                android:includeFontPadding="false"
+                android:text="Login"
+                android:textColor="@color/gray"
+                android:textSize="12sp" />
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:background="@drawable/bg_8dp_white"
+                android:orientation="vertical"
+                android:paddingHorizontal="5dp"
+                android:paddingVertical="10dp">
+
+                <!-- btn_change_password -->
+                <LinearLayout
+                    android:id="@+id/btn_change_password"
+                    android:layout_width="match_parent"
+                    android:layout_height="45dp"
+                    android:background="@drawable/bg_8dp_white_ripple_yes"
+                    android:gravity="center_vertical"
+                    android:orientation="horizontal"
+                    android:padding="5dp">
+
+                    <TextView
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        android:fontFamily="@font/inter_regular"
+                        android:includeFontPadding="false"
+                        android:text="Change Payment Pin"
+                        android:textColor="@color/black"
+                        android:textSize="14sp" />
+
+                    <ImageView
+                        android:layout_width="15dp"
+                        android:layout_height="15dp"
+                        android:contentDescription="@null"
+                        android:src="@drawable/ic_arrow_forward"
+                        app:tint="@color/gray" />
+                </LinearLayout>
+
+                <!-- btn_forgot_password -->
+                <LinearLayout
+                    android:id="@+id/btn_forgot_password"
+                    android:layout_width="match_parent"
+                    android:layout_height="45dp"
+                    android:background="@drawable/bg_8dp_white_ripple_yes"
+                    android:gravity="center_vertical"
+                    android:orientation="horizontal"
+                    android:padding="5dp">
+
+                    <TextView
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        android:fontFamily="@font/inter_regular"
+                        android:includeFontPadding="false"
+                        android:text="Forgot Payment Pin"
+                        android:textColor="@color/black"
+                        android:textSize="14sp" />
+
+                    <ImageView
+                        android:layout_width="15dp"
+                        android:layout_height="15dp"
+                        android:contentDescription="@null"
+                        android:src="@drawable/ic_arrow_forward"
+                        app:tint="@color/gray" />
+                </LinearLayout>
+
+                <!-- btn_biometrics -->
+                <LinearLayout
                     android:layout_width="match_parent"
                     android:layout_height="45dp"
                     android:background="@drawable/bg_8dp_white_ripple_yes"
@@ -90,60 +290,23 @@
                             android:textSize="14sp" />
 
                         <TextView
-                            android:id="@+id/biometrics_error"
+                            android:id="@+id/login_with_biometrics_error"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:layout_marginTop="2dp"
                             android:fontFamily="@font/inter_regular"
                             android:includeFontPadding="false"
-                            tools:text="Biometric not available on this device"
                             android:textColor="@color/red"
-                            android:textSize="11sp" />
+                            android:textSize="11sp"
+                            tools:text="Biometric not available on this device" />
                     </LinearLayout>
 
                     <com.google.android.material.materialswitch.MaterialSwitch
-                        android:id="@+id/btn_switch_enable_biometrics"
+                        android:id="@+id/btn_switch_login_with_biometrics"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         app:trackDecorationTint="@color/switch_track_decoration_tint_selector"
                         app:trackTint="@color/switch_track_color_selector" />
-                </LinearLayout>
-
-                <LinearLayout
-                    android:id="@+id/btn_login_settings"
-                    android:layout_width="match_parent"
-                    android:layout_height="45dp"
-                    android:layout_marginTop="10dp"
-                    android:background="@drawable/bg_8dp_white_ripple_yes"
-                    android:gravity="center_vertical"
-                    android:orientation="horizontal"
-                    android:padding="5dp"
-                    android:visibility="gone">
-
-                    <ImageView
-                        android:layout_width="25dp"
-                        android:layout_height="25dp"
-                        android:contentDescription="@null"
-                        android:src="@drawable/ic_receipt"
-                        app:tint="@color/blue" />
-
-                    <TextView
-                        android:layout_width="0dp"
-                        android:layout_height="wrap_content"
-                        android:layout_marginStart="15dp"
-                        android:layout_weight="1"
-                        android:fontFamily="@font/inter_regular"
-                        android:includeFontPadding="false"
-                        android:text="Login Settings"
-                        android:textColor="@color/black"
-                        android:textSize="14sp" />
-
-                    <ImageView
-                        android:layout_width="15dp"
-                        android:layout_height="15dp"
-                        android:contentDescription="@null"
-                        android:src="@drawable/ic_arrow_forward"
-                        app:tint="@color/gray" />
                 </LinearLayout>
             </LinearLayout>
         </LinearLayout>

@@ -29,6 +29,8 @@ import com.settlex.android.ui.dashboard.model.UserUiModel;
 import com.settlex.android.ui.dashboard.viewmodel.UserViewModel;
 import com.settlex.android.ui.info.legal.PrivacyPolicyActivity;
 import com.settlex.android.ui.info.legal.TermsAndConditionsActivity;
+import com.settlex.android.utils.event.Result;
+import com.settlex.android.utils.string.StringUtil;
 import com.settlex.android.utils.ui.StatusBarUtil;
 
 import dagger.hilt.android.AndroidEntryPoint;
@@ -37,6 +39,7 @@ import dagger.hilt.android.AndroidEntryPoint;
 public class AccountDashboardFragment extends Fragment {
     private final String TAG = AccountDashboardFragment.class.getSimpleName();
 
+    // dependencies
     private FragmentDashboardAccountBinding binding;
     private UserViewModel userViewModel;
 
@@ -55,7 +58,7 @@ public class AccountDashboardFragment extends Fragment {
         binding = FragmentDashboardAccountBinding.inflate(inflater, container, false);
 
         setupUIActions();
-        observeUserDataStatus();
+        observeUserData();
         return binding.getRoot();
     }
 
@@ -73,21 +76,19 @@ public class AccountDashboardFragment extends Fragment {
         binding.btnSettings.setOnClickListener(view -> navigateToActivity(SettingsActivity.class));
         binding.btnSettingsHeader.setOnClickListener(view -> navigateToActivity(SettingsActivity.class));
         binding.btnEarnRewards.setOnClickListener(view -> navigateToFragment(R.id.rewardsFragment));
-        binding.btnTermsAndCondition.setOnClickListener(view -> navigateToActivity(TermsAndConditionsActivity.class));
-        binding.btnPrivacyPolicy.setOnClickListener(view -> navigateToActivity(PrivacyPolicyActivity.class));
+        binding.btnAbout.setOnClickListener(view -> navigateToActivity(AboutActivity.class));
+        binding.btnTransactions.setOnClickListener(view -> StringUtil.showNotImplementedToast(requireContext()));
+
         binding.btnSignOut.setOnClickListener(view -> {
             userViewModel.signOut();
             navigateToActivity(LoginActivity.class);
         });
     }
 
-    private void observeUserDataStatus() {
-        userViewModel.getUserLiveData().observe(getViewLifecycleOwner(), user -> {
-            if (user == null) return;
-
-            switch (user.getStatus()) {
-                case SUCCESS -> onUserDataStatusSuccess(user.getData());
-                case FAILURE -> onUserDataStatusError(user.getError());
+    private void observeUserData() {
+        userViewModel.getUserLiveData().observe(getViewLifecycleOwner(), result -> {
+            if (result != null && result.getStatus() == Result.Status.SUCCESS) {
+                onUserDataStatusSuccess(result.getData());
             }
         });
     }
@@ -95,10 +96,6 @@ public class AccountDashboardFragment extends Fragment {
     private void onUserDataStatusSuccess(UserUiModel user) {
         ProfileService.loadProfilePic(user.getPhotoUrl(), binding.btnProfilePic);
         binding.fullName.setText(user.getFullName());
-    }
-
-    private void onUserDataStatusError(String error) {
-        Log.e(TAG, "User data error: " + error);
     }
 
     private String getAppVersion() {

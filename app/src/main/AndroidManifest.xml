@@ -19,7 +19,9 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/Theme.SettleX" >
-
+        <activity
+            android:name=".ui.dashboard.account.AboutActivity"
+            android:exported="false" />
         <!-- Firebase Messaging Service -->
         <service
             android:name=".data.remote.messaging.AppFirebaseMessagingService"
@@ -27,9 +29,7 @@
             <intent-filter>
                 <action android:name="com.google.firebase.MESSAGING_EVENT" />
             </intent-filter>
-        </service>
-
-        <!-- Dashboard -->
+        </service> <!-- Dashboard -->
         <activity
             android:name=".ui.dashboard.DashboardActivity"
             android:exported="true"

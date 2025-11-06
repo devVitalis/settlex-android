@@ -101,6 +101,7 @@
             android:paddingHorizontal="15dp"
             android:paddingVertical="8dp">
 
+            <!-- Account settings -->
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
@@ -120,6 +121,7 @@
                 android:paddingHorizontal="5dp"
                 android:paddingVertical="10dp">
 
+                <!-- btn_transactions -->
                 <LinearLayout
                     android:id="@+id/btn_transactions"
                     android:layout_width="match_parent"
@@ -155,6 +157,7 @@
                         app:tint="@color/gray" />
                 </LinearLayout>
 
+                <!-- btn_settings -->
                 <LinearLayout
                     android:id="@+id/btn_settings"
                     android:layout_width="match_parent"
@@ -369,112 +372,33 @@
                 </LinearLayout>
             </LinearLayout>
 
+            <!-- About -->
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="15dp"
                 android:fontFamily="@font/inter_regular"
                 android:includeFontPadding="false"
-                android:text="Legal"
+                android:text="About us"
                 android:textColor="@color/gray"
                 android:textSize="11sp" />
 
             <LinearLayout
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="5dp"
-                android:background="@drawable/bg_8dp_white"
-                android:orientation="vertical"
-                android:paddingHorizontal="5dp"
-                android:paddingVertical="10dp">
-
-                <LinearLayout
-                    android:id="@+id/btn_terms_and_condition"
-                    android:layout_width="match_parent"
-                    android:layout_height="45dp"
-                    android:background="@drawable/bg_8dp_white_ripple_yes"
-                    android:gravity="center_vertical"
-                    android:orientation="horizontal"
-                    android:padding="5dp">
-
-                    <ImageView
-                        android:layout_width="25dp"
-                        android:layout_height="25dp"
-                        android:contentDescription="@null"
-                        android:src="@drawable/ic_file_text"
-                        app:tint="@color/blue" />
-
-                    <TextView
-                        android:layout_width="0dp"
-                        android:layout_height="wrap_content"
-                        android:layout_marginStart="15dp"
-                        android:layout_weight="1"
-                        android:fontFamily="@font/inter_regular"
-                        android:includeFontPadding="false"
-                        android:text="Terms &amp; Conditions"
-                        android:textColor="@color/black"
-                        android:textSize="14sp" />
-
-                    <ImageView
-                        android:layout_width="15dp"
-                        android:layout_height="15dp"
-                        android:contentDescription="@null"
-                        android:src="@drawable/ic_arrow_forward"
-                        app:tint="@color/gray" />
-                </LinearLayout>
-
-                <LinearLayout
-                    android:id="@+id/btn_privacy_policy"
-                    android:layout_width="match_parent"
-                    android:layout_height="45dp"
-                    android:layout_marginTop="5dp"
-                    android:background="@drawable/bg_8dp_white_ripple_yes"
-                    android:gravity="center_vertical"
-                    android:orientation="horizontal"
-                    android:padding="5dp">
-
-                    <ImageView
-                        android:layout_width="25dp"
-                        android:layout_height="25dp"
-                        android:contentDescription="@null"
-                        android:src="@drawable/ic_file_text"
-                        app:tint="@color/blue" />
-
-                    <TextView
-                        android:layout_width="0dp"
-                        android:layout_height="wrap_content"
-                        android:layout_marginStart="15dp"
-                        android:layout_weight="1"
-                        android:fontFamily="@font/inter_regular"
-                        android:includeFontPadding="false"
-                        android:text="Privacy Policy"
-                        android:textColor="@color/black"
-                        android:textSize="14sp" />
-
-                    <ImageView
-                        android:layout_width="15dp"
-                        android:layout_height="15dp"
-                        android:contentDescription="@null"
-                        android:src="@drawable/ic_arrow_forward"
-                        app:tint="@color/gray" />
-                </LinearLayout>
-            </LinearLayout>
-
-            <LinearLayout
+                android:id="@+id/btn_about"
                 android:layout_width="match_parent"
                 android:layout_height="50dp"
-                android:layout_marginTop="15dp"
+                android:layout_marginTop="5dp"
                 android:background="@drawable/bg_8dp_white_ripple_yes"
                 android:gravity="center_vertical"
                 android:orientation="horizontal"
-                android:padding="10dp">
+                android:padding="5dp">
 
                 <ImageView
-                    android:layout_width="30dp"
-                    android:layout_height="30dp"
+                    android:layout_width="25dp"
+                    android:layout_height="25dp"
                     android:contentDescription="@null"
-                    android:src="@drawable/ic_power_off"
-                    app:tint="@color/red" />
+                    android:src="@drawable/ic_info_outline"
+                    app:tint="@color/blue" />
 
                 <TextView
                     android:layout_width="0dp"
@@ -483,8 +407,8 @@
                     android:layout_weight="1"
                     android:fontFamily="@font/inter_regular"
                     android:includeFontPadding="false"
-                    android:text="Close Account"
-                    android:textColor="@color/red"
+                    android:text="About"
+                    android:textColor="@color/black"
                     android:textSize="14sp" />
 
                 <ImageView
@@ -510,7 +434,7 @@
                     android:layout_height="25dp"
                     android:contentDescription="@null"
                     android:src="@drawable/ic_log_out"
-                    app:tint="@color/gray" />
+                    app:tint="@color/red" />
 
                 <TextView
                     android:layout_width="wrap_content"
@@ -522,6 +446,12 @@
                     android:textColor="@color/black"
                     android:textSize="14sp" />
             </LinearLayout>
+
+            <!-- Push down app version -->
+            <Space
+                android:layout_width="match_parent"
+                android:layout_height="0dp"
+                android:layout_weight="1" />
 
             <LinearLayout
                 android:layout_width="match_parent"
@@ -537,7 +467,7 @@
                     android:layout_gravity="center"
                     android:fontFamily="@font/inter_regular"
                     android:includeFontPadding="false"
-                    android:text="SettleX: "
+                    android:text="SettleX "
                     android:textColor="@color/gray"
                     android:textSize="14sp" />
 

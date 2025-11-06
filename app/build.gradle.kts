@@ -39,6 +39,12 @@ android {
         sourceCompatibility = JavaVersion.VERSION_17
         targetCompatibility = JavaVersion.VERSION_17
     }
+
+    kotlin {
+        compilerOptions {
+            jvmTarget.set(org.jetbrains.kotlin.gradle.dsl.JvmTarget.JVM_17)
+        }
+    }
 }
 
 dependencies {
@@ -61,7 +67,6 @@ dependencies {
     implementation(libs.firebase.storage)
     implementation(libs.firebase.messaging)
     implementation(libs.firebase.config)
-    implementation(libs.google.firebase.messaging)
 
     // Dots Indicator
     implementation(libs.dotsindicator)
@@ -117,9 +122,10 @@ dependencies {
     implementation(libs.pinview)
 
     // Biometric
-    implementation("androidx.biometric:biometric:1.1.0")
+    implementation(libs.biometric)
 }
 
 tasks.withType<JavaCompile>().configureEach {
     options.compilerArgs.add("-Xlint:deprecation")
 }
+

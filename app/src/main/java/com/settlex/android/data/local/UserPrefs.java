@@ -10,7 +10,8 @@ public class UserPrefs {
 
     private static final String PREFS_NAME = "user_prefs_";
     private static final String KEY_HIDE_BALANCE = "hide_balance";
-    private static final String KEY_BIOMETRIC_ENABLED  = "biometric_enabled";
+    private static final String KEY_PAY_BIOMETRIC_ENABLED = "pay_biometric_enabled";
+    private static final String KEY_LOGIN_BIOMETRIC_ENABLED = "login_biometric_enabled";
 
     private final SharedPreferences prefs;
 
@@ -19,12 +20,20 @@ public class UserPrefs {
     }
 
     // Biometric state
-    public boolean isBiometricsEnabled() {
-        return prefs.getBoolean(KEY_BIOMETRIC_ENABLED, false);
+    public boolean isPayBiometricsEnabled() {
+        return prefs.getBoolean(KEY_PAY_BIOMETRIC_ENABLED, false);
     }
 
-    public void setBiometricsEnabled(boolean enabled) {
-        prefs.edit().putBoolean(KEY_BIOMETRIC_ENABLED , enabled).apply();
+    public void setPayBiometricsEnabled(boolean enabled) {
+        prefs.edit().putBoolean(KEY_PAY_BIOMETRIC_ENABLED, enabled).apply();
+    }
+
+    public boolean isLoginBiometricsEnabled() {
+        return prefs.getBoolean(KEY_LOGIN_BIOMETRIC_ENABLED, false);
+    }
+
+    public void setLoginBiometricsEnabled(boolean enabled) {
+        prefs.edit().putBoolean(KEY_LOGIN_BIOMETRIC_ENABLED, enabled).apply();
     }
 
     // Balance state

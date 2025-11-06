@@ -35,7 +35,7 @@ public class AuthViewModel extends ViewModel {
     private final MutableLiveData<Event<Result<String>>> verifyPasswordResetLiveData = new MutableLiveData<>();
     private final MutableLiveData<Event<Result<String>>> sendVerificationCodeLiveData = new MutableLiveData<>();
     private final MutableLiveData<Event<Result<String>>> verifyEmailLiveData = new MutableLiveData<>();
-    private final MutableLiveData<Boolean> isFingerEnabledLiveData = new MutableLiveData<>();
+    private final MutableLiveData<Boolean> isLoginBiometricsEnabledLiveData = new MutableLiveData<>();
 
     // dependencies
     private final AuthRepository authRepo;
@@ -51,9 +51,9 @@ public class AuthViewModel extends ViewModel {
     }
 
     // user prefs
-    public LiveData<Boolean> getIsFingerPrintEnabled() {
-        isFingerEnabledLiveData.setValue(userRepo.getBiometricsEnabled());
-        return isFingerEnabledLiveData;
+    public LiveData<Boolean> getLoginBiometricsEnabled() {
+        isLoginBiometricsEnabledLiveData.setValue(userRepo.getLoginBiometricsEnabled());
+        return isLoginBiometricsEnabledLiveData;
     }
 
     /**
