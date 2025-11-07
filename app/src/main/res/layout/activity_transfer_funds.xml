@@ -105,7 +105,7 @@
 
                     <com.google.android.material.button.MaterialButton
                         android:id="@+id/btnVerify"
-                        style="@style/DefaultButton.Filled.Blue"
+                        style="@style/Widget.SettleX.Button.Filled"
                         android:layout_width="60dp"
                         android:layout_height="35dp"
                         android:layout_marginEnd="10dp"
@@ -151,7 +151,7 @@
                         android:layout_height="50dp"
                         android:layout_marginEnd="10dp"
                         android:contentDescription="@null"
-                        app:shapeAppearanceOverlay="@style/Oval_Shape"
+                        app:shapeAppearanceOverlay="@style/ShapeAppearance.SettleX.Circular"
                         app:srcCompat="@drawable/ic_no_profile_pic" />
 
                     <LinearLayout
@@ -369,7 +369,7 @@
 
                 <com.google.android.material.button.MaterialButton
                     android:id="@+id/btnNext"
-                    style="@style/DefaultButton.Filled.Blue"
+                    style="@style/Widget.SettleX.Button.Filled"
                     android:layout_width="match_parent"
                     android:layout_height="55dp"
                     android:layout_marginTop="25dp"

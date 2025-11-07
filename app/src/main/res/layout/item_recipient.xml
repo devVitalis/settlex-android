@@ -16,7 +16,7 @@
         android:layout_height="50dp"
         android:layout_marginEnd="10dp"
         android:contentDescription="@null"
-        app:shapeAppearance="@style/Oval_Shape"
+        app:shapeAppearance="@style/ShapeAppearance.SettleX.Circular"
         app:srcCompat="@drawable/ic_no_profile_pic" />
 
     <LinearLayout

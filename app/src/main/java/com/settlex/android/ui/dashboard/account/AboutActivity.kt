@@ -2,17 +2,19 @@ package com.settlex.android.ui.dashboard.account
 
 import android.app.Activity
 import android.content.Intent
+import android.content.pm.PackageManager
 import android.os.Bundle
+import android.util.Log
 import androidx.appcompat.app.AppCompatActivity
 import com.settlex.android.R
+import com.settlex.android.SettleXApp
 import com.settlex.android.databinding.ActivityAboutBinding
 import com.settlex.android.ui.info.legal.PrivacyPolicyActivity
 import com.settlex.android.ui.info.legal.TermsAndConditionsActivity
 import com.settlex.android.utils.ui.StatusBarUtil
 
-
 class AboutActivity : AppCompatActivity() {
-
+    private fun getTAG(): String? = AboutActivity::class.simpleName
     private lateinit var binding: ActivityAboutBinding
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -25,6 +27,8 @@ class AboutActivity : AppCompatActivity() {
 
     private fun setupUiActions() {
         StatusBarUtil.setStatusBarColor(this, R.color.white)
+        binding.appVersion.text = getAppVersion()
+
 
         binding.btnTermsAndCondition.setOnClickListener {
             routeToDestination(
@@ -34,6 +38,18 @@ class AboutActivity : AppCompatActivity() {
 
         binding.btnPrivacyPolicy.setOnClickListener { routeToDestination(PrivacyPolicyActivity::class.java) }
         binding.btnBackBefore.setOnClickListener { finish() }
+    }
+
+    private fun getAppVersion(): String {
+        val context = SettleXApp.getAppContext()
+        try {
+            val packageManager = context.packageManager
+            val packageInfo = packageManager.getPackageInfo(context.packageName, 0)
+            return "v" + packageInfo.versionName
+        } catch (e: PackageManager.NameNotFoundException) {
+            Log.e(getTAG(), "NameNotFoundException: " + e.message, e)
+        }
+        return "N/A"
     }
 
     private fun routeToDestination(activityClass: Class<out Activity>) {

@@ -9,7 +9,6 @@
     android:fitsSystemWindows="true"
     tools:context=".ui.dashboard.account.CreatePaymentPinActivity">
 
-    <!--Header-->
     <LinearLayout
         android:id="@+id/header"
         android:layout_width="match_parent"
@@ -21,7 +20,7 @@
         app:layout_constraintTop_toTopOf="parent">
 
         <ImageView
-            android:id="@+id/btnBackBefore"
+            android:id="@+id/btn_back_before"
             android:layout_width="20dp"
             android:layout_height="20dp"
             android:layout_marginStart="15dp"
@@ -76,17 +75,16 @@
                 android:textSize="12sp" />
 
             <com.chaos.view.PinView
-                android:id="@+id/pin"
-                style="@style/MyPinBox.Gray.Light"
+                android:id="@+id/pin_view"
+                style="@style/Widget.SettleX.PinView"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="5dp"
                 android:imeOptions="actionNext"
                 android:inputType="number" />
 
-            <!-- Pin error -->
             <TextView
-                android:id="@+id/pinError"
+                android:id="@+id/pin_view_error"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="5dp"
@@ -108,17 +106,16 @@
                 android:textSize="12sp" />
 
             <com.chaos.view.PinView
-                android:id="@+id/confirmPin"
-                style="@style/MyPinBox.Gray.Light"
+                android:id="@+id/confirm_pin_view"
+                style="@style/Widget.SettleX.PinView"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="5dp"
                 android:imeOptions="actionDone"
                 android:inputType="number" />
 
-            <!--  Confirm pin error -->
             <TextView
-                android:id="@+id/confirmPinError"
+                android:id="@+id/confirm_pin_view_error"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="5dp"
@@ -131,8 +128,8 @@
 
 
             <com.google.android.material.button.MaterialButton
-                android:id="@+id/btnConfirm"
-                style="@style/DefaultButton.Filled.Blue"
+                android:id="@+id/btn_confirm"
+                style="@style/Widget.SettleX.Button.Filled"
                 android:layout_width="match_parent"
                 android:layout_height="55dp"
                 android:layout_marginTop="50dp"

@@ -1,23 +1,24 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
+
     <!-- Shape appearance -->
-    <style name="Rounded_Shape_8dp">
+    <style name="ShapeAppearance.SettleX.Rounded.8dp" parent="ShapeAppearance.Material3.Corner.None">
         <item name="cornerSize">8dp</item>
         <item name="cornerFamily">rounded</item>
     </style>
 
-    <style name="Rounded_Shape_16dp">
+    <style name="ShapeAppearance.SettleX.Rounded.16dp" parent="ShapeAppearance.Material3.Corner.None">
         <item name="cornerFamily">rounded</item>
         <item name="cornerSize">16dp</item>
     </style>
 
-    <style name="Oval_Shape">
+    <style name="ShapeAppearance.SettleX.Circular" parent="ShapeAppearance.Material3.Corner.None">
         <item name="cornerFamily">rounded</item>
         <item name="cornerSize">50%</item>
     </style>
 
     <!-- Buttons -->
-    <style name="DefaultButton.Filled.Blue" parent="Widget.Material3.Button">
+    <style name="Widget.SettleX.Button.Filled" parent="Widget.Material3.Button">
         <item name="backgroundTint">@color/btn_filled_color_selector_blue</item>
         <item name="android:textColor">@color/white</item>
         <item name="android:fontFamily">sans-serif</item>
@@ -25,7 +26,7 @@
         <item name="android:textAllCaps">false</item>
     </style>
 
-    <style name="Button.Filled.Gradient" parent="Widget.Material3.Button">
+    <style name="Widget.SettleX.Button.Filled.Gradient" parent="Widget.Material3.Button">
         <item name="android:background">@drawable/btn_gradient_blue</item>
         <item name="backgroundTint">@null</item>
         <item name="android:fontFamily">sans-serif</item>
@@ -34,16 +35,16 @@
         <item name="android:textAllCaps">false</item>
     </style>
 
-    <style name="Button.Filled.Rounded8.Blue" parent="Widget.Material3.Button">
+    <style name="Widget.SettleX.Button.Filled.Rounded8" parent="Widget.Material3.Button">
         <item name="backgroundTint">@color/btn_filled_color_selector_blue</item>
         <item name="android:textColor">@color/white</item>
         <item name="android:fontFamily">sans-serif</item>
         <item name="android:includeFontPadding">false</item>
         <item name="android:textAllCaps">false</item>
-        <item name="shapeAppearance">@style/Rounded_Shape_8dp</item>
+        <item name="shapeAppearance">@style/ShapeAppearance.SettleX.Rounded.8dp</item>
     </style>
 
-    <style name="Button.Filled.Tonal.BlueLight" parent="Widget.Material3.Button">
+    <style name="Widget.SettleX.Button.Tonal" parent="Widget.Material3.Button">
         <item name="backgroundTint">@color/btn_filled_color_selector_light_blue</item>
         <item name="android:textColor">@color/blue</item>
         <item name="android:fontFamily">sans-serif</item>
@@ -51,16 +52,16 @@
         <item name="android:textAllCaps">false</item>
     </style>
 
-    <style name="Button.Filled.Tonal.Rounded8.BlueLight" parent="Widget.Material3.Button">
+    <style name="Widget.SettleX.Button.Tonal.Rounded8" parent="Widget.Material3.Button">
         <item name="backgroundTint">@color/btn_filled_color_selector_light_blue</item>
         <item name="android:textColor">@color/blue</item>
         <item name="android:includeFontPadding">false</item>
         <item name="android:fontFamily">sans-serif</item>
         <item name="android:textAllCaps">false</item>
-        <item name="shapeAppearance">@style/Rounded_Shape_8dp</item>
+        <item name="shapeAppearance">@style/ShapeAppearance.SettleX.Rounded.8dp</item>
     </style>
 
-    <style name="Button.Outlined.Blue" parent="Widget.Material3.Button.OutlinedButton">
+    <style name="Widget.SettleX.Button.Outlined" parent="Widget.Material3.Button.OutlinedButton">
         <item name="android:textColor">@color/btn_outlined_text_color_selector</item>
         <item name="strokeColor">@color/btn_outlined_color_selector</item>
         <item name="android:fontFamily">sans-serif</item>
@@ -68,7 +69,7 @@
         <item name="android:textAllCaps">false</item>
     </style>
 
-    <style name="Button.Numeric.KeyPad" parent="Widget.Material3.Button">
+    <style name="Widget.SettleX.Button.KeyPad" parent="Widget.Material3.Button">
         <item name="android:layout_width">0dp</item>
         <item name="android:layout_height">60dp</item>
         <item name="android:layout_margin">3dp</item>
@@ -80,19 +81,19 @@
         <item name="android:background">@drawable/bg_numeric_keypad</item>
     </style>
 
-    <!-- CheckBox -->
-    <style name="Widget.SettleXApp.CheckBox" parent="Widget.Material3.CompoundButton.CheckBox">
+    <!-- Check box -->
+    <style name="Widget.SettleX.CheckBox" parent="Widget.Material3.CompoundButton.CheckBox">
         <item name="buttonTint">@color/checkbox_color_selector_blue</item>
         <item name="android:textColor">@color/black</item>
         <item name="android:textSize">12sp</item>
     </style>
 
-    <!-- TextInputLayout, Outlined -->
-    <style name="MyTextInputLayoutThemeOutlined" parent="Widget.Material3.TextInputLayout.OutlinedBox">
+    <!-- Text input layout  -->
+    <style name="Widget.SettleX.TextInputLayout.Outlined" parent="Widget.Material3.TextInputLayout.OutlinedBox">
         <item name="boxBackgroundColor">@color/white</item>
         <item name="boxStrokeColor">@color/text_input_layout_stroke_color_selector</item>
         <item name="strokeWidth">0.5dp</item>
-        <item name="shapeAppearance">@style/Rounded_Shape_8dp</item>
+        <item name="shapeAppearance">@style/ShapeAppearance.SettleX.Rounded.8dp</item>
         <item name="fontFamily">@font/inter_regular</item>
         <item name="boxStrokeErrorColor">@color/red</item>
         <item name="endIconTint">@color/gray</item>
@@ -102,30 +103,8 @@
         <item name="android:includeFontPadding">false</item>
     </style>
 
-    <!-- Pin Box EditText (for OTP/PIN) -->
-    <style name="Widget.SettleXApp.EditText.PinBox" parent="Base.Widget.AppCompat.EditText">
-        <item name="android:layout_width">50dp</item>
-        <item name="android:layout_height">50dp</item>
-        <item name="android:textSize">14sp</item>
-        <item name="android:background">@drawable/bg_pin_box_edit_txt</item>
-        <item name="android:textColor">@color/black</item>
-        <item name="android:textAlignment">center</item>
-        <item name="android:gravity">center</item>
-        <item name="android:includeFontPadding">false</item>
-    </style>
-
-    <style name="Widget.SettleXApp.EditText.PinBox.GrayLight" parent="Base.Widget.AppCompat.EditText">
-        <item name="android:layout_width">50dp</item>
-        <item name="android:layout_height">50dp</item>
-        <item name="android:textSize">14sp</item>
-        <item name="android:background">@drawable/bg_pin_box_edit_txt_gray_light</item>
-        <item name="android:textColor">@color/black</item>
-        <item name="android:textAlignment">center</item>
-        <item name="android:gravity">center</item>
-        <item name="android:includeFontPadding">false</item>
-    </style>
-
-    <style name="MyPinBox.Gray.Light" parent="PinWidget.PinView">
+    <!-- Pin box (for OTP/PIN) -->
+    <style name="Widget.SettleX.PinView" parent="PinWidget.PinView">
         <item name="itemCount">4</item>
         <item name="itemSpacing">10dp</item>
         <item name="viewType">rectangle</item>
@@ -138,47 +117,46 @@
         <item name="itemHeight">48dp</item>
     </style>
 
-    <!-- Bottom Navigation Active Indicator -->
-    <style name="Widget.SettleX.BottomNavigation.ActiveIndicator" parent="Widget.Material3.BottomNavigationView.ActiveIndicator">
-        <item name="android:color">@color/blue_light</item>
-    </style>
-
-    <!-- Bottom Navigation - Override height -->
+    <!-- Bottom navigation -->
     <style name="Widget.SettleX.BottomNavigation" parent="Widget.Material3.BottomNavigationView">
         <item name="android:minHeight">72dp</item>
         <item name="android:includeFontPadding">false</item>
     </style>
 
-    <!-- Disable dialog fragment bg DIM -->
-    <style name="TransparentDialog" parent="Theme.MaterialComponents.Dialog">
-        <item name="android:windowBackground">@android:color/transparent</item>
-        <item name="android:backgroundDimEnabled">false</item>
+    <style name="Widget.SettleX.BottomNavigation.ActiveIndicator" parent="Widget.Material3.BottomNavigationView.ActiveIndicator">
+        <item name="android:color">@color/blue_light</item>
     </style>
 
-    <!-- CardView -->
-    <style name="Widget.SettleX.CardView.Oval.Elevated" parent="Widget.Material3.CardView.Elevated">
-        <item name="cardElevation">5dp</item>
-        <item name="shapeAppearance">@style/Oval_Shape</item>
-        <item name="cardBackgroundColor">@color/white</item>
-    </style>
-
-    <!-- Progress Indicator -->
+    <!-- Progress indicator -->
     <style name="Widget.SettleX.CircularProgressIndicator" parent="Widget.Material3.CircularProgressIndicator">
         <item name="trackColor">@color/gray</item>
         <item name="indicatorColor">@color/blue</item>
         <item name="android:indeterminate">true</item>
     </style>
 
-    <!-- Dialog's -->
-    <style name="MyBottomSheetDialogTheme" parent="ThemeOverlay.Material3.BottomSheetDialog">
+    <!-- Dialog fragment -->
+    <style name="Theme_SettleX_Dialog_Transparent" parent="Theme.MaterialComponents.Dialog">
+        <item name="android:windowBackground">@android:color/transparent</item>
+        <item name="android:backgroundDimEnabled">false</item>
+    </style>
+
+    <!-- Dialog -->
+    <style name="Theme_SettleX_Dialog_BottomSheet" parent="ThemeOverlay.Material3.BottomSheetDialog">
         <item name="android:backgroundTint">@android:color/white</item>
     </style>
 
-    <style name="MyAlertDialogTheme" parent="MaterialAlertDialog.Material3">
+    <style name="Theme_SettleX_Dialog_Alert" parent="MaterialAlertDialog.Material3">
         <item name="android:backgroundTint">@color/white</item>
     </style>
 
-    <style name="CustomMaterialDialog" parent="MaterialAlertDialog.Material3">
-        <item name="shapeAppearanceOverlay">@style/Rounded_Shape_16dp</item>
+    <style name="Theme_SettleX_Dialog_Alert_Rounded16dp" parent="MaterialAlertDialog.Material3">
+        <item name="shapeAppearanceOverlay">@style/ShapeAppearance.SettleX.Rounded.16dp</item>
+    </style>
+
+    <!-- Card view -->
+    <style name="Widget.SettleX.CardView.Circular.Elevated" parent="Widget.Material3.CardView.Elevated">
+        <item name="cardElevation">5dp</item>
+        <item name="shapeAppearance">@style/ShapeAppearance.SettleX.Circular</item>
+        <item name="cardBackgroundColor">@color/white</item>
     </style>
 </resources>

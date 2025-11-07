@@ -94,7 +94,7 @@
             android:layout_width="17dp"
             android:layout_height="17dp"
             android:layout_marginEnd="3dp"
-            app:shapeAppearanceOverlay="@style/Oval_Shape"
+            app:shapeAppearanceOverlay="@style/ShapeAppearance.SettleX.Circular"
             app:srcCompat="@drawable/ic_no_profile_pic" />
 
         <TextView
@@ -327,7 +327,7 @@
 
     <com.google.android.material.button.MaterialButton
         android:id="@+id/btnPay"
-        style="@style/DefaultButton.Filled.Blue"
+        style="@style/Widget.SettleX.Button.Filled"
         android:layout_width="match_parent"
         android:layout_height="55dp"
         android:enabled="false"

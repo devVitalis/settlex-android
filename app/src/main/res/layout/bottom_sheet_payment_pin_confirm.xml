@@ -28,7 +28,7 @@
 
     <com.chaos.view.PinView
         android:id="@+id/pinBox"
-        style="@style/MyPinBox.Gray.Light"
+        style="@style/Widget.SettleX.PinView"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginTop="15dp"

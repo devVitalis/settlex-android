@@ -7,7 +7,6 @@ import android.os.Bundle;
 import android.os.CountDownTimer;
 import android.text.Editable;
 import android.text.TextWatcher;
-import android.util.Log;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.inputmethod.InputMethodManager;
@@ -72,11 +71,10 @@ public class OtpVerificationActivity extends AppCompatActivity {
     }
 
     private void handleIntent() {
-        String intent = getIntent().getStringExtra("forgot_pin");
+        String intent = getIntent().getStringExtra("session");
         if (intent != null) {
             binding.btnHelp.setVisibility(View.GONE);
         }
-        Log.d("Intent", "intent: " + intent);
     }
 
     private void observeNetworkStatus() {
@@ -87,13 +85,7 @@ public class OtpVerificationActivity extends AppCompatActivity {
     }
 
     private void showNoInternetDialog() {
-        String title = "Network Unavailable";
-        String message = "Please check your Wi-Fi or cellular data and try again";
-
-        UiUtil.showSimpleAlertDialog(
-                this,
-                title,
-                message);
+        UiUtil.showNoInternetAlertDialog(this);
     }
 
     private void observeVerifyPasswordResetStatus() {
@@ -112,6 +104,7 @@ public class OtpVerificationActivity extends AppCompatActivity {
     private void onVerifyPasswordResetStatusSuccess() {
         Intent intent = new Intent(this, SetNewPasswordActivity.class);
         intent.putExtra("email", userEmail);
+        intent.putExtra("session", getIntent().getStringExtra("session"));
         startActivity(intent);
         finish();
 

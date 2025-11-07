@@ -43,9 +43,9 @@ public class BiometricAuthHelper {
         });
     }
 
-    public void authenticate(String setNegativeButtonText) {
+    public void authenticate(String title, String setNegativeButtonText) {
         promptInfo = new BiometricPrompt.PromptInfo.Builder()
-                .setTitle("Confirm your identity")
+                .setTitle(title)
                 .setNegativeButtonText(setNegativeButtonText)
                 .setAllowedAuthenticators(BiometricManager.Authenticators.BIOMETRIC_STRONG)
                 .build();

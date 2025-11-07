@@ -38,8 +38,9 @@ public class UserViewModel extends ViewModel {
         initAuthObserver();
         initUserLiveDataObserver();
 
-        isPayBiometricsEnabledLiveData.setValue(userRepo.getPayBiometricsEnabled());
         isBalanceHiddenLiveData.setValue(userRepo.getBalanceHidden());
+        isPayBiometricsEnabledLiveData.setValue(userRepo.getPayBiometricsEnabled());
+        isLoginBiometricsEnabledLiveData.setValue(userRepo.getLoginBiometricsEnabled());
     }
 
     // Public APIs

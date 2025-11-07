@@ -124,7 +124,7 @@ public class LoginActivity extends AppCompatActivity {
                         public void onFailed() {
                         }
                     });
-            biometric.authenticate("Use Password");
+            biometric.authenticate("Confirm your identity", "Use Password");
         }
     }
 

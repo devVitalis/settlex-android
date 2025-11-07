@@ -1,7 +1,8 @@
 package com.settlex.android.ui.dashboard.account;
 
+import android.app.Activity;
+import android.content.Intent;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.View;
 import android.widget.Toast;
 
@@ -10,18 +11,30 @@ import androidx.lifecycle.ViewModelProvider;
 
 import com.settlex.android.R;
 import com.settlex.android.databinding.ActivitySettingsBinding;
+import com.settlex.android.ui.auth.viewmodel.AuthViewModel;
 import com.settlex.android.ui.common.components.BiometricAuthHelper;
+import com.settlex.android.ui.common.components.OtpVerificationActivity;
 import com.settlex.android.ui.dashboard.model.UserUiModel;
+import com.settlex.android.ui.dashboard.util.DashboardUiUtil;
 import com.settlex.android.ui.dashboard.viewmodel.UserViewModel;
 import com.settlex.android.utils.event.Result;
+import com.settlex.android.utils.network.NetworkMonitor;
+import com.settlex.android.utils.string.StringUtil;
 import com.settlex.android.utils.ui.StatusBarUtil;
+import com.settlex.android.utils.ui.UiUtil;
 
 import dagger.hilt.android.AndroidEntryPoint;
 
 @AndroidEntryPoint
 public class SettingsActivity extends AppCompatActivity {
+    private String userEmail;
+    private boolean hasPin;
+    private boolean isConnected;
+
+    // dependencies
     private ActivitySettingsBinding binding;
     private UserViewModel userViewModel;
+    private AuthViewModel authViewModel;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -30,47 +43,103 @@ public class SettingsActivity extends AppCompatActivity {
         setContentView(binding.getRoot());
 
         userViewModel = new ViewModelProvider(this).get(UserViewModel.class);
+        authViewModel = new ViewModelProvider(this).get(AuthViewModel.class);
 
-        setupUiActions();
+        observeNetworkStatus();
         observeUserData();
+        setupUiActions();
         observePayBiometricEnabled();
         observeLoginBiometricEnabled();
-    }
-
-    private void observeUserData() {
-        userViewModel.getUserLiveData().observe(this, result -> {
-            if (result != null && result.getStatus() == Result.Status.SUCCESS) {
-                onUserDataStatusSuccess(result.getData());
-            }
-        });
-    }
-
-    private void onUserDataStatusSuccess(UserUiModel user) {
-        boolean hasPin = user.hasPin();
-
-        binding.txtChangePaymentPin.setText(hasPin ? "Change payment pin" : "Set new payment pin");
-        binding.txtSetPaymentPin.setVisibility(!hasPin ? View.VISIBLE : View.GONE);
     }
 
     private void setupUiActions() {
         StatusBarUtil.setStatusBarColor(this, R.color.white);
         shouldEnableBiometricOption();
 
-        binding.btnChangePaymentPin.setOnClickListener(view -> {
-        });
-        binding.btnForgotPaymentPin.setOnClickListener(view -> {
+        binding.btnForgotPassword.setOnClickListener(view -> showNextActionDialog(true));
+        binding.btnForgotPaymentPin.setOnClickListener(view -> showNextActionDialog(false));
+    }
+
+    private void observeNetworkStatus() {
+        NetworkMonitor.getNetworkStatus().observe(this, isConnected -> {
+            this.isConnected = isConnected;
         });
     }
 
-    private void showDialog(){
+    private void observeUserData() {
+        userViewModel.getUserLiveData().observe(this, result -> {
+            if (result != null && result.getStatus() == Result.Status.SUCCESS) {
+                onUserDataStatusSuccess(result.getData());
+                this.userEmail = result.getData().getEmail();
+            }
+        });
+    }
 
+    private void onUserDataStatusSuccess(UserUiModel user) {
+        boolean hasPin = user.hasPin();
+        this.hasPin = hasPin;
+
+        // Set text based on if user already has a pin
+        binding.txtChangePaymentPin.setText(hasPin ? "Change payment pin" : "Create payment pin");
+        binding.txtSetPaymentPin.setVisibility(!hasPin ? View.VISIBLE : View.GONE);
+
+        binding.btnChangePaymentPin.setOnClickListener(view -> {
+            if (hasPin) {
+                showNextActionDialog(false);
+                return;
+            }
+            navigateToActivity(CreatePaymentPinActivity.class);
+        });
+    }
+
+    private void sendPasswordResetCode() {
+        if (!isConnected) {
+            UiUtil.showNoInternetAlertDialog(this);
+            return;
+        }
+        authViewModel.sendPasswordResetCode(userEmail);
+    }
+
+    private void showNextActionDialog(boolean isPasswordReset) {
+        final String message = "To continue, we will send you a one-time password (OTP) to your registered email address " + StringUtil.maskEmail(userEmail);
+        final String btnSecondary = "Cancel";
+        final String btnPrimary = "Continue";
+
+        DashboardUiUtil.showAlertDialogMessage(
+                this,
+                (dialog, binding) -> {
+                    binding.message.setText(message);
+                    binding.btnSecondary.setText(btnSecondary);
+                    binding.btnPrimary.setText(btnPrimary);
+
+                    binding.btnSecondary.setOnClickListener(view -> dialog.dismiss());
+                    binding.btnPrimary.setOnClickListener(view -> {
+                        if (isPasswordReset) {
+                            sendPasswordResetCode();
+                        } else {
+                            sendPasswordResetCode();
+                            // TODO pin reset
+                        }
+                        Intent intent = new Intent(this, OtpVerificationActivity.class);
+                        intent.putExtra("email", userEmail);
+                        intent.putExtra("session", "LoggedIn");
+                        startActivity(intent);
+
+                        dialog.dismiss();
+                    });
+                }
+        );
+    }
+
+    private void navigateToActivity(Class<? extends Activity> activityClass) {
+        startActivity(new Intent(this, activityClass));
     }
 
     private void shouldEnableBiometricOption() {
         boolean isBiometricAvailable = BiometricAuthHelper.isBiometricAvailable(this);
 
         // Payment
-        binding.btnSwitchPayWithBiometrics.setEnabled(isBiometricAvailable);
+        binding.btnSwitchPayWithBiometrics.setEnabled(isBiometricAvailable && hasPin);
         binding.payWithBiometricsError.setText(BiometricAuthHelper.getBiometricFeedback(this));
         binding.payWithBiometricsError.setVisibility(!isBiometricAvailable ? View.VISIBLE : View.GONE);
 
@@ -86,25 +155,17 @@ public class SettingsActivity extends AppCompatActivity {
             binding.btnSwitchPayWithBiometrics.setOnCheckedChangeListener(null);
             binding.btnSwitchPayWithBiometrics.setChecked(isEnabled);
 
-            binding.btnSwitchPayWithBiometrics.setOnCheckedChangeListener((btn, isChecked) -> {
-                promptPayBiometricsAuth(isChecked);
-                Log.d("Settings", "login biometrics is checked");
-            });
+            binding.btnSwitchPayWithBiometrics.setOnCheckedChangeListener((btn, isChecked) -> promptPayBiometricsAuth(isChecked));
         });
     }
 
     private void observeLoginBiometricEnabled() {
-        Log.d("Settings", "observing login biometric enabled...");
-
         userViewModel.getLoginBiometricsEnabled().observe(this, isEnabled -> {
             // UI is updating
             binding.btnSwitchLoginWithBiometrics.setOnCheckedChangeListener(null);
             binding.btnSwitchLoginWithBiometrics.setChecked(isEnabled);
 
-            binding.btnSwitchLoginWithBiometrics.setOnCheckedChangeListener((btn, isChecked) -> {
-                promptLoginBiometricsAuth(isChecked);
-                Log.d("Settings", "login biometrics is checked");
-            });
+            binding.btnSwitchLoginWithBiometrics.setOnCheckedChangeListener((btn, isChecked) -> promptLoginBiometricsAuth(isChecked));
         });
     }
 
@@ -130,7 +191,7 @@ public class SettingsActivity extends AppCompatActivity {
                             binding.btnSwitchPayWithBiometrics.setChecked(false);
                         }
                     });
-            biometric.authenticate("Cancel");
+            biometric.authenticate("Enable Fingerprint Payment", "Cancel");
         } else {
             userViewModel.setPayBiometricsEnabledLiveData(false);
         }
@@ -158,7 +219,7 @@ public class SettingsActivity extends AppCompatActivity {
                             binding.btnSwitchLoginWithBiometrics.setChecked(false);
                         }
                     });
-            biometric.authenticate("Cancel");
+            biometric.authenticate("Enable Fingerprint Login", "Cancel");
         } else {
             userViewModel.setLoginBiometricsEnabledLiveData(false);
         }

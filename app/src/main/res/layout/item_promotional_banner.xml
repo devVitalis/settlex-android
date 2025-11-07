@@ -9,5 +9,5 @@
         android:layout_width="match_parent"
         android:layout_height="120dp"
         android:scaleType="centerCrop"
-        app:shapeAppearanceOverlay="@style/Rounded_Shape_16dp" />
+        app:shapeAppearanceOverlay="@style/ShapeAppearance.SettleX.Rounded.16dp" />
 </FrameLayout>

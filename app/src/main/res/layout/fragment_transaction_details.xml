@@ -388,7 +388,7 @@
 
             <com.google.android.material.button.MaterialButton
                 android:id="@+id/btnSendReceipt"
-                style="@style/DefaultButton.Filled.Blue"
+                style="@style/Widget.SettleX.Button.Filled"
                 android:layout_width="match_parent"
                 android:layout_height="55dp"
                 android:text="Send Receipt" />

@@ -327,7 +327,7 @@ public class TransferFundsActivity extends AppCompatActivity {
         String btnPriText = "Create PIN";
         String btnSecText = "Cancel";
 
-        DashboardUiUtil.showDialogWithIcon(
+        DashboardUiUtil.showAlertDialogWithIcon(
                 this,
                 (dialog, dialogBinding) -> {
                     dialogBinding.title.setText(title);

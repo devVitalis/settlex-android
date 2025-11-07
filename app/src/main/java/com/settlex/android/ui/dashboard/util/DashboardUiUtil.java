@@ -33,7 +33,7 @@ public class DashboardUiUtil {
 
     public static BottomSheetDialog showPayConfirmation(Context context, String recipientUsername, String recipientName, String recipientProfileUrl, long amountToSend, long senderWalletBalance, long senderCommissionBalance, final Runnable onPay) {
         BottomSheetConfirmPaymentBinding binding = BottomSheetConfirmPaymentBinding.inflate(LayoutInflater.from(context));
-        BottomSheetDialog dialog = new BottomSheetDialog(context, R.style.MyBottomSheetDialogTheme);
+        BottomSheetDialog dialog = new BottomSheetDialog(context, R.style.Theme_SettleX_Dialog_BottomSheet);
         dialog.setContentView(binding.getRoot());
 
         dialog.setCancelable(false);
@@ -136,7 +136,7 @@ public class DashboardUiUtil {
 
     public static void showBottomSheetPaymentPinConfirmation(Context context, BiConsumer<BottomSheetPaymentPinConfirmBinding, Runnable[]> config) {
         BottomSheetPaymentPinConfirmBinding binding = BottomSheetPaymentPinConfirmBinding.inflate(LayoutInflater.from(context));
-        BottomSheetDialog dialog = new BottomSheetDialog(context, R.style.MyBottomSheetDialogTheme);
+        BottomSheetDialog dialog = new BottomSheetDialog(context, R.style.Theme_SettleX_Dialog_BottomSheet);
         dialog.setContentView(binding.getRoot());
 
         dialog.setCancelable(false);
@@ -149,7 +149,8 @@ public class DashboardUiUtil {
 
         // disable the system keyboard
         InputMethodManager imm = (InputMethodManager) context.getSystemService(Context.INPUT_METHOD_SERVICE);
-        if (dialog.getCurrentFocus() != null) imm.hideSoftInputFromWindow(dialog.getCurrentFocus().getWindowToken(), 0);
+        if (dialog.getCurrentFocus() != null)
+            imm.hideSoftInputFromWindow(dialog.getCurrentFocus().getWindowToken(), 0);
         binding.pinBox.setShowSoftInputOnFocus(false);
 
         final Runnable[] onPinVerified = new Runnable[1];
@@ -185,10 +186,10 @@ public class DashboardUiUtil {
         dialog.show();
     }
 
-    public static void showDialogWithIcon(Context context, BiConsumer<AlertDialog, AlertDialogWithIconBinding> config) {
+    public static void showAlertDialogWithIcon(Context context, BiConsumer<AlertDialog, AlertDialogWithIconBinding> config) {
         AlertDialogWithIconBinding binding = AlertDialogWithIconBinding.inflate(LayoutInflater.from(context));
 
-        MaterialAlertDialogBuilder builder = new MaterialAlertDialogBuilder(context, R.style.CustomMaterialDialog)
+        MaterialAlertDialogBuilder builder = new MaterialAlertDialogBuilder(context, R.style.Theme_SettleX_Dialog_Alert_Rounded16dp)
                 .setView(binding.getRoot())
                 .setCancelable(false);
 
@@ -201,7 +202,7 @@ public class DashboardUiUtil {
     public static void showAlertDialogMessage(Context context, BiConsumer<AlertDialog, AlertDialogMessageBinding> config) {
         AlertDialogMessageBinding binding = AlertDialogMessageBinding.inflate(LayoutInflater.from(context));
 
-        MaterialAlertDialogBuilder builder = new MaterialAlertDialogBuilder(context, R.style.CustomMaterialDialog)
+        MaterialAlertDialogBuilder builder = new MaterialAlertDialogBuilder(context, R.style.Theme_SettleX_Dialog_Alert_Rounded16dp)
                 .setView(binding.getRoot())
                 .setCancelable(false);
 

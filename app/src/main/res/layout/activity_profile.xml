@@ -11,9 +11,10 @@
     <LinearLayout
         android:id="@+id/header"
         android:layout_width="match_parent"
-        android:layout_height="35dp"
+        android:layout_height="wrap_content"
         android:gravity="center_vertical"
         android:orientation="horizontal"
+        android:paddingVertical="15dp"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent">
@@ -73,7 +74,7 @@
                         android:id="@+id/profilePic"
                         android:layout_width="60dp"
                         android:layout_height="60dp"
-                        app:shapeAppearanceOverlay="@style/Oval_Shape"
+                        app:shapeAppearanceOverlay="@style/ShapeAppearance.SettleX.Circular"
                         app:srcCompat="@drawable/ic_no_profile_pic" />
 
                     <ImageView

@@ -103,7 +103,7 @@
 
                 <com.google.android.material.button.MaterialButton
                     android:id="@+id/btnCopy"
-                    style="@style/Button.Filled.Tonal.BlueLight"
+                    style="@style/Widget.SettleX.Button.Tonal"
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
                     android:layout_marginEnd="20dp"
@@ -112,7 +112,7 @@
 
                 <com.google.android.material.button.MaterialButton
                     android:id="@+id/btnShareDetails"
-                    style="@style/DefaultButton.Filled.Blue"
+                    style="@style/Widget.SettleX.Button.Filled"
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
                     android:layout_weight="1"

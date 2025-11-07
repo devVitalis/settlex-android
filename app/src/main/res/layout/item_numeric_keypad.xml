@@ -41,61 +41,61 @@
         android:rowCount="4">
 
         <com.google.android.material.button.MaterialButton
-            style="@style/Button.Numeric.KeyPad"
+            style="@style/Widget.SettleX.Button.KeyPad"
             android:layout_row="0"
             android:layout_column="0"
             android:text="1" />
 
         <com.google.android.material.button.MaterialButton
-            style="@style/Button.Numeric.KeyPad"
+            style="@style/Widget.SettleX.Button.KeyPad"
             android:layout_row="0"
             android:layout_column="1"
             android:text="2" />
 
         <com.google.android.material.button.MaterialButton
-            style="@style/Button.Numeric.KeyPad"
+            style="@style/Widget.SettleX.Button.KeyPad"
             android:layout_row="0"
             android:layout_column="2"
             android:text="3" />
 
         <com.google.android.material.button.MaterialButton
-            style="@style/Button.Numeric.KeyPad"
+            style="@style/Widget.SettleX.Button.KeyPad"
             android:layout_row="1"
             android:layout_column="0"
             android:text="4" />
 
         <com.google.android.material.button.MaterialButton
-            style="@style/Button.Numeric.KeyPad"
+            style="@style/Widget.SettleX.Button.KeyPad"
             android:layout_row="1"
             android:layout_column="1"
             android:text="5" />
 
         <com.google.android.material.button.MaterialButton
-            style="@style/Button.Numeric.KeyPad"
+            style="@style/Widget.SettleX.Button.KeyPad"
             android:layout_row="1"
             android:layout_column="2"
             android:text="6" />
 
         <com.google.android.material.button.MaterialButton
-            style="@style/Button.Numeric.KeyPad"
+            style="@style/Widget.SettleX.Button.KeyPad"
             android:layout_row="2"
             android:layout_column="0"
             android:text="7" />
 
         <com.google.android.material.button.MaterialButton
-            style="@style/Button.Numeric.KeyPad"
+            style="@style/Widget.SettleX.Button.KeyPad"
             android:layout_row="2"
             android:layout_column="1"
             android:text="8" />
 
         <com.google.android.material.button.MaterialButton
-            style="@style/Button.Numeric.KeyPad"
+            style="@style/Widget.SettleX.Button.KeyPad"
             android:layout_row="2"
             android:layout_column="2"
             android:text="9" />
 
         <com.google.android.material.button.MaterialButton
-            style="@style/Button.Numeric.KeyPad"
+            style="@style/Widget.SettleX.Button.KeyPad"
             android:layout_row="3"
             android:layout_column="0"
             android:layout_columnSpan="2"
@@ -103,7 +103,7 @@
 
         <com.google.android.material.button.MaterialButton
             android:id="@+id/btnKeyDelete"
-            style="@style/Button.Numeric.KeyPad"
+            style="@style/Widget.SettleX.Button.KeyPad"
             android:layout_row="3"
             android:layout_column="2"
             app:icon="@drawable/ic_backspace"

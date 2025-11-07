@@ -50,7 +50,7 @@ public class CreatePaymentPinActivity extends AppCompatActivity {
         setupPinInputWatcher();
 
         binding.btnBackBefore.setOnClickListener(v -> finish());
-        binding.btnConfirm.setOnClickListener(view -> createPaymentPin(Objects.requireNonNull(binding.pin.getText()).toString()));
+        binding.btnConfirm.setOnClickListener(view -> createPaymentPin(Objects.requireNonNull(binding.pinView.getText()).toString()));
     }
 
     private void createPaymentPin(String pin) {
@@ -115,32 +115,32 @@ public class CreatePaymentPinActivity extends AppCompatActivity {
 
             @Override
             public void onTextChanged(CharSequence charSequence, int i, int i1, int i2) {
-                String pin = Objects.requireNonNull(binding.pin.getText()).toString();
-                String confirmPin = Objects.requireNonNull(binding.confirmPin.getText()).toString();
+                String pin = Objects.requireNonNull(binding.pinView.getText()).toString();
+                String confirmPin = Objects.requireNonNull(binding.confirmPinView.getText()).toString();
 
                 String ERROR_REPEATED_NUMBERS = "PIN must not contain any repeated digits";
                 boolean hasConsecutive = hasConsecutive(pin);
 
-                binding.pinError.setText((hasConsecutive) ? ERROR_REPEATED_NUMBERS : "");
-                binding.pinError.setVisibility((hasConsecutive) ? View.VISIBLE : View.GONE);
+                binding.pinViewError.setText((hasConsecutive) ? ERROR_REPEATED_NUMBERS : "");
+                binding.pinViewError.setVisibility((hasConsecutive) ? View.VISIBLE : View.GONE);
 
                 // config confirm pin
                 String ERROR_PIN_MISMATCH = "Pin does not match";
                 boolean isMatch = isPinMatch(pin, confirmPin);
 
-                binding.confirmPinError.setText((!isMatch && !confirmPin.isEmpty()) ? ERROR_PIN_MISMATCH : "");
-                binding.confirmPinError.setVisibility((!isMatch && !confirmPin.isEmpty()) ? View.VISIBLE : View.GONE);
+                binding.confirmPinViewError.setText((!isMatch && !confirmPin.isEmpty()) ? ERROR_PIN_MISMATCH : "");
+                binding.confirmPinViewError.setVisibility((!isMatch && !confirmPin.isEmpty()) ? View.VISIBLE : View.GONE);
 
                 updateButtonConfirmState(pin, confirmPin);
             }
         };
-        binding.pin.addTextChangedListener(watcher);
-        binding.confirmPin.addTextChangedListener(watcher);
+        binding.pinView.addTextChangedListener(watcher);
+        binding.confirmPinView.addTextChangedListener(watcher);
     }
 
     private void updateButtonConfirmState(String pin, String confirmPin) {
         boolean hasConsecutive = hasConsecutive(pin);
-        boolean isPinFilled = pin.length() == binding.pin.getItemCount();
+        boolean isPinFilled = pin.length() == binding.pinView.getItemCount();
         boolean isPinMatch = isPinMatch(pin, confirmPin);
 
         binding.btnConfirm.setEnabled(!pin.isEmpty() && isPinFilled && !hasConsecutive && isPinMatch);
@@ -151,7 +151,7 @@ public class CreatePaymentPinActivity extends AppCompatActivity {
     }
 
     private boolean isPinMatch(String pin, String confirmPin) {
-        return pin.length() == binding.pin.getItemCount() && pin.equals(confirmPin);
+        return pin.length() == binding.pinView.getItemCount() && pin.equals(confirmPin);
     }
 
     @Override

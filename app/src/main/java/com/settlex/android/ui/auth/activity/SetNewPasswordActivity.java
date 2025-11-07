@@ -1,5 +1,6 @@
 package com.settlex.android.ui.auth.activity;
 
+import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 import android.graphics.Rect;
@@ -22,6 +23,7 @@ import com.settlex.android.R;
 import com.settlex.android.databinding.ActivitySetNewPasswordBinding;
 import com.settlex.android.ui.auth.viewmodel.AuthViewModel;
 import com.settlex.android.ui.common.util.ProgressLoaderController;
+import com.settlex.android.ui.dashboard.account.SettingsActivity;
 import com.settlex.android.utils.event.Result;
 import com.settlex.android.utils.network.NetworkMonitor;
 import com.settlex.android.utils.ui.StatusBarUtil;
@@ -69,22 +71,11 @@ public class SetNewPasswordActivity extends AppCompatActivity {
         binding.btnResetPassword.setOnClickListener(v -> attemptPasswordReset());
     }
 
-    // OBSERVERS =========
     private void observeNetworkStatus() {
         NetworkMonitor.getNetworkStatus().observe(this, isConnected -> {
-            if (!isConnected) showNoInternetDialog();
+            if (!isConnected) UiUtil.showNoInternetAlertDialog(this);
             this.isConnected = isConnected;
         });
-    }
-
-    private void showNoInternetDialog() {
-        String title = "Network Unavailable";
-        String message = "Please check your Wi-Fi or cellular data and try again";
-
-        UiUtil.showSimpleAlertDialog(
-                this,
-                title,
-                message);
     }
 
     private void observeSetNewPasswordStatus() {
@@ -123,20 +114,27 @@ public class SetNewPasswordActivity extends AppCompatActivity {
             binding.anim.playAnimation();
 
             binding.btnContinue.setOnClickListener(v -> {
-                navigateToSignInActivity();
+                String destination = getIntent().getStringExtra("session");
+
+                if (destination != null && destination.equals("LoggedIn")) {
+                    routeToDestination(SettingsActivity.class);
+                } else {
+                    routeToDestination(LoginActivity.class);
+                }
+
                 dialog.dismiss();
             });
         });
     }
 
-    private void navigateToSignInActivity() {
-        startActivity(new Intent(this, LoginActivity.class));
-        finishAffinity();
+    private void routeToDestination(Class<? extends Activity> activityClass) {
+        startActivity(new Intent(this, activityClass));
+        finish();
     }
 
     private void attemptPasswordReset() {
         if (!isConnected) {
-            showNoInternetDialog();
+            UiUtil.showNoInternetAlertDialog(this);
             return;
         }
 

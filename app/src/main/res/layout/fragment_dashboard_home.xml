@@ -30,7 +30,7 @@
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toTopOf="parent"
-                app:shapeAppearance="@style/Oval_Shape" />
+                app:shapeAppearance="@style/ShapeAppearance.SettleX.Circular" />
 
             <LinearLayout
                 android:id="@+id/greeting_container"
@@ -88,7 +88,7 @@
 
             <com.google.android.material.button.MaterialButton
                 android:id="@+id/btn_login"
-                style="@style/Button.Outlined.Blue"
+                style="@style/Widget.SettleX.Button.Outlined"
                 android:layout_width="80dp"
                 android:layout_height="40dp"
                 android:layout_marginStart="5dp"
@@ -496,7 +496,7 @@
 
                     <com.google.android.material.button.MaterialButton
                         android:id="@+id/btn_okay"
-                        style="@style/Button.Outlined.Blue"
+                        style="@style/Widget.SettleX.Button.Outlined"
                         android:layout_width="70dp"
                         android:layout_height="40dp"
                         android:layout_marginStart="5dp"

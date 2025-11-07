@@ -1,12 +1,8 @@
 package com.settlex.android.ui.dashboard.account;
 
 import android.app.Activity;
-import android.content.Context;
 import android.content.Intent;
-import android.content.pm.PackageInfo;
-import android.content.pm.PackageManager;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -20,15 +16,12 @@ import androidx.navigation.NavController;
 import androidx.navigation.fragment.NavHostFragment;
 
 import com.settlex.android.R;
-import com.settlex.android.SettleXApp;
 import com.settlex.android.data.remote.profile.ProfileService;
 import com.settlex.android.databinding.FragmentDashboardAccountBinding;
 import com.settlex.android.ui.auth.activity.LoginActivity;
 import com.settlex.android.ui.dashboard.home.ProfileActivity;
 import com.settlex.android.ui.dashboard.model.UserUiModel;
 import com.settlex.android.ui.dashboard.viewmodel.UserViewModel;
-import com.settlex.android.ui.info.legal.PrivacyPolicyActivity;
-import com.settlex.android.ui.info.legal.TermsAndConditionsActivity;
 import com.settlex.android.utils.event.Result;
 import com.settlex.android.utils.string.StringUtil;
 import com.settlex.android.utils.ui.StatusBarUtil;
@@ -37,7 +30,6 @@ import dagger.hilt.android.AndroidEntryPoint;
 
 @AndroidEntryPoint
 public class AccountDashboardFragment extends Fragment {
-    private final String TAG = AccountDashboardFragment.class.getSimpleName();
 
     // dependencies
     private FragmentDashboardAccountBinding binding;
@@ -70,7 +62,6 @@ public class AccountDashboardFragment extends Fragment {
 
     private void setupUIActions() {
         StatusBarUtil.setStatusBarColor(requireActivity(), R.color.blue_200);
-        binding.appVersion.setText(getAppVersion());
 
         binding.btnProfilePic.setOnClickListener(view -> navigateToActivity(ProfileActivity.class));
         binding.btnSettings.setOnClickListener(view -> navigateToActivity(SettingsActivity.class));
@@ -88,26 +79,12 @@ public class AccountDashboardFragment extends Fragment {
     private void observeUserData() {
         userViewModel.getUserLiveData().observe(getViewLifecycleOwner(), result -> {
             if (result != null && result.getStatus() == Result.Status.SUCCESS) {
-                onUserDataStatusSuccess(result.getData());
+                UserUiModel user = result.getData();
+
+                ProfileService.loadProfilePic(user.getPhotoUrl(), binding.btnProfilePic);
+                binding.fullName.setText(user.getFullName());
             }
         });
-    }
-
-    private void onUserDataStatusSuccess(UserUiModel user) {
-        ProfileService.loadProfilePic(user.getPhotoUrl(), binding.btnProfilePic);
-        binding.fullName.setText(user.getFullName());
-    }
-
-    private String getAppVersion() {
-        Context context = SettleXApp.getAppContext();
-        try {
-            PackageManager packageManager = context.getPackageManager();
-            PackageInfo packageInfo = packageManager.getPackageInfo(context.getPackageName(), 0);
-            return "v" + packageInfo.versionName;
-        } catch (PackageManager.NameNotFoundException e) {
-            Log.e(TAG, "NameNotFoundException: " + e.getMessage(), e);
-        }
-        return "N/A";
     }
 
     private void navigateToActivity(Class<? extends Activity> activityClass) {

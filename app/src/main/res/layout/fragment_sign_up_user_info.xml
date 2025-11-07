@@ -166,7 +166,7 @@
 
                 <!-- Firstname Field -->
                 <com.google.android.material.textfield.TextInputLayout
-                    style="@style/MyTextInputLayoutThemeOutlined"
+                    style="@style/Widget.SettleX.TextInputLayout.Outlined"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_gravity="center"
@@ -192,7 +192,7 @@
 
                 <!-- Lastname Field -->
                 <com.google.android.material.textfield.TextInputLayout
-                    style="@style/MyTextInputLayoutThemeOutlined"
+                    style="@style/Widget.SettleX.TextInputLayout.Outlined"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_gravity="center"
@@ -233,7 +233,7 @@
 
             <com.google.android.material.button.MaterialButton
                 android:id="@+id/btn_continue"
-                style="@style/Button.Filled.Rounded8.Blue"
+                style="@style/Widget.SettleX.Button.Filled.Rounded8"
                 android:layout_width="match_parent"
                 android:layout_height="55dp"
                 android:layout_gravity="center"

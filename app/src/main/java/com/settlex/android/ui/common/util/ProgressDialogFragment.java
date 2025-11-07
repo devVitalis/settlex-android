@@ -16,6 +16,7 @@ import androidx.annotation.Nullable;
 import androidx.fragment.app.DialogFragment;
 
 import com.settlex.android.R;
+import com.settlex.android.databinding.ProgressbarOverlayBinding;
 
 public class ProgressDialogFragment extends DialogFragment {
     private AnimatorSet zoomAnimator;
@@ -33,7 +34,7 @@ public class ProgressDialogFragment extends DialogFragment {
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setStyle(DialogFragment.STYLE_NO_FRAME, R.style.TransparentDialog);
+        setStyle(DialogFragment.STYLE_NO_FRAME, R.style.Theme_SettleX_Dialog_Transparent);
     }
 
     @NonNull
@@ -56,10 +57,10 @@ public class ProgressDialogFragment extends DialogFragment {
     @Nullable
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
-        View overlayView = inflater.inflate(R.layout.progressbar_overlay, container, false);
-        overlayView.setBackgroundColor(overlayColor);
+        ProgressbarOverlayBinding binding = ProgressbarOverlayBinding.inflate(inflater, container, false);
+        binding.getRoot().setBackgroundColor(overlayColor);
 
-        ImageView logo = overlayView.findViewById(R.id.logo);
+        ImageView logo = binding.getRoot().findViewById(R.id.logo);
 
         // Animate logo
         ObjectAnimator scaleX = ObjectAnimator.ofFloat(logo, View.SCALE_X, 1f, 1.1f, 1f);
@@ -75,7 +76,7 @@ public class ProgressDialogFragment extends DialogFragment {
         zoomAnimator.setDuration(1000);
         zoomAnimator.start();
 
-        return overlayView;
+        return binding.getRoot();
     }
 
     @Override

@@ -30,7 +30,7 @@ public class UiUtil {
 
     public static void showSuccessBottomSheetDialog(@NonNull Context context, @Nullable BiConsumer<BottomSheetDialog, BottomSheetSuccessDialogBinding> config) {
         BottomSheetSuccessDialogBinding binding = BottomSheetSuccessDialogBinding.inflate(LayoutInflater.from(context));
-        BottomSheetDialog dialog = new BottomSheetDialog(context, R.style.MyBottomSheetDialogTheme);
+        BottomSheetDialog dialog = new BottomSheetDialog(context, R.style.Theme_SettleX_Dialog_BottomSheet);
         dialog.setContentView(binding.getRoot());
 
         dialog.setCancelable(false);
@@ -47,10 +47,20 @@ public class UiUtil {
     }
 
     public static void showSimpleAlertDialog(Context context, String title, String message) {
-        new MaterialAlertDialogBuilder(context, R.style.MyAlertDialogTheme)
+        new MaterialAlertDialogBuilder(context, R.style.Theme_SettleX_Dialog_Alert)
                 .setCancelable(true)
                 .setTitle(title)
                 .setMessage(message)
+                .setPositiveButton("OK", (dialog, i) -> dialog.dismiss())
+                .show();
+    }
+
+
+    public static void showNoInternetAlertDialog(Context context) {
+        new MaterialAlertDialogBuilder(context, R.style.Theme_SettleX_Dialog_Alert)
+                .setCancelable(true)
+                .setTitle("Network Unavailable")
+                .setMessage("Please check your Wi-Fi or cellular data and try again")
                 .setPositiveButton("OK", (dialog, i) -> dialog.dismiss())
                 .show();
     }

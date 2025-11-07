@@ -221,7 +221,7 @@
                             android:textSize="11sp" />
 
                         <com.google.android.material.imageview.ShapeableImageView
-                            style="@style/Oval_Shape"
+                            style="@style/ShapeAppearance.SettleX.Circular"
                             android:layout_width="50dp"
                             android:layout_height="50dp"
                             android:layout_marginTop="5dp"
@@ -280,7 +280,7 @@
                             android:textSize="11sp" />
 
                         <com.google.android.material.imageview.ShapeableImageView
-                            style="@style/Oval_Shape"
+                            style="@style/ShapeAppearance.SettleX.Circular"
                             android:layout_width="50dp"
                             android:layout_height="50dp"
                             android:layout_marginTop="5dp"
@@ -340,7 +340,7 @@
                             android:textSize="11sp" />
 
                         <com.google.android.material.imageview.ShapeableImageView
-                            style="@style/Oval_Shape"
+                            style="@style/ShapeAppearance.SettleX.Circular"
                             android:layout_width="50dp"
                             android:layout_height="50dp"
                             android:layout_marginTop="5dp"
@@ -368,7 +368,7 @@
 
                 <com.google.android.material.button.MaterialButton
                     android:id="@+id/btnShareInvitationLink"
-                    style="@style/Button.Filled.Gradient"
+                    style="@style/Widget.SettleX.Button.Filled.Gradient"
                     android:layout_width="match_parent"
                     android:layout_height="48dp"
                     android:layout_marginTop="20dp"
