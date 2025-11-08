@@ -99,7 +99,7 @@ public class CreatePaymentIdActivity extends AppCompatActivity {
             switch (result.getStatus()) {
                 case LOADING -> progressLoader.show();
                 case SUCCESS -> onPaymentIdStoreStatusSuccess();
-                case FAILURE -> onPaymentIdStoreStatusError(result.getError());
+                case FAILURE -> onPaymentIdStoreStatusError(result.getErrorMessage());
             }
         });
     }
@@ -136,7 +136,7 @@ public class CreatePaymentIdActivity extends AppCompatActivity {
             switch (result.getStatus()) {
                 case LOADING -> onPaymentIdAvailabilityCheckStatusLoading();
                 case SUCCESS -> onPaymentIdAvailabilityCheckStatusSuccess(result.getData());
-                case FAILURE -> onPaymentIdAvailabilityCheckStatusError(result.getError());
+                case FAILURE -> onPaymentIdAvailabilityCheckStatusError(result.getErrorMessage());
             }
         });
     }

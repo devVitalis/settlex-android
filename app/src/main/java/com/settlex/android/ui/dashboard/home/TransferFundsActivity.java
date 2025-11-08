@@ -130,7 +130,7 @@ public class TransferFundsActivity extends AppCompatActivity {
                 case LOADING -> progressLoader.show();
                 case PENDING -> onTransactionStatusPending();
                 case SUCCESS -> onTransactionStatusSuccess();
-                case FAILURE -> onTransactionStatusFailed(result.getError());
+                case FAILURE -> onTransactionStatusFailed(result.getErrorMessage());
             }
         });
     }
@@ -223,7 +223,7 @@ public class TransferFundsActivity extends AppCompatActivity {
             switch (result.getStatus()) {
                 case LOADING -> progressLoader.show();
                 case SUCCESS -> onVerifyPaymentPinStatusSuccess(result.getData());
-                case FAILURE -> onVerifyPaymentPinStatusError(result.getError());
+                case FAILURE -> onVerifyPaymentPinStatusError(result.getErrorMessage());
             }
         });
     }

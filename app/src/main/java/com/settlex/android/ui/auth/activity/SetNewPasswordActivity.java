@@ -24,6 +24,7 @@ import com.settlex.android.databinding.ActivitySetNewPasswordBinding;
 import com.settlex.android.ui.auth.viewmodel.AuthViewModel;
 import com.settlex.android.ui.common.util.ProgressLoaderController;
 import com.settlex.android.ui.dashboard.account.SettingsActivity;
+import com.settlex.android.ui.dashboard.viewmodel.UserViewModel;
 import com.settlex.android.utils.event.Result;
 import com.settlex.android.utils.network.NetworkMonitor;
 import com.settlex.android.utils.ui.StatusBarUtil;
@@ -38,11 +39,13 @@ public class SetNewPasswordActivity extends AppCompatActivity {
 
     private boolean isPasswordVisible = false;
     private boolean isConfirmPasswordVisible = false;
+    private boolean isCurrentPasswordVisible = false;
 
     // dependencies
     private ProgressLoaderController progressLoader;
     private ActivitySetNewPasswordBinding binding;
     private AuthViewModel authViewModel;
+    private UserViewModel userViewModel;
     private boolean isConnected = false;
 
     @Override
@@ -52,12 +55,14 @@ public class SetNewPasswordActivity extends AppCompatActivity {
         setContentView(binding.getRoot());
 
         authViewModel = new ViewModelProvider(this).get(AuthViewModel.class);
+        userViewModel = new ViewModelProvider(this).get(UserViewModel.class);
         progressLoader = new ProgressLoaderController(this);
         progressLoader.setOverlayColor(ContextCompat.getColor(this, R.color.semi_transparent_white));
 
         setupUiActions();
         observeNetworkStatus();
         observeSetNewPasswordStatus();
+        observeUpdatePasswordStatus();
     }
 
     private void setupUiActions() {
@@ -68,7 +73,12 @@ public class SetNewPasswordActivity extends AppCompatActivity {
         setupPasswordVisibilityToggle();
 
         binding.btnBackBefore.setOnClickListener(v -> finish());
-        binding.btnResetPassword.setOnClickListener(v -> attemptPasswordReset());
+        binding.btnChangePassword.setOnClickListener(v -> attemptPasswordReset());
+        binding.currentPasswordContainer.setVisibility((getIntentExtra() != null && getIntentExtra().equals("change_password_from_settings") ? View.VISIBLE : View.GONE));
+    }
+
+    private String getIntentExtra() {
+        return getIntent().getStringExtra("purpose");
     }
 
     private void observeNetworkStatus() {
@@ -78,6 +88,29 @@ public class SetNewPasswordActivity extends AppCompatActivity {
         });
     }
 
+    private void observeUpdatePasswordStatus() {
+        userViewModel.getUpdatePasswordLiveData().observe(this, event -> {
+            Result<String> result = event.getContentIfNotHandled();
+            if (result == null) return;
+            switch (result.getStatus()) {
+                case LOADING -> progressLoader.show();
+                case SUCCESS -> onUpdatePasswordStatusSuccess();
+                case FAILURE -> onUpdatePasswordStatusFailed(result.getErrorMessage());
+            }
+        });
+    }
+
+    private void onUpdatePasswordStatusSuccess() {
+        showSuccessDialog();
+        progressLoader.hide();
+    }
+
+    private void onUpdatePasswordStatusFailed(String error) {
+        binding.txtCurrentPasswordError.setText(error);
+        binding.txtCurrentPasswordError.setVisibility(View.VISIBLE);
+        progressLoader.hide();
+    }
+
     private void observeSetNewPasswordStatus() {
         authViewModel.getSetNewPasswordLiveData().observe(this, event -> {
             Result<String> result = event.getContentIfNotHandled();
@@ -85,7 +118,7 @@ public class SetNewPasswordActivity extends AppCompatActivity {
                 switch (result.getStatus()) {
                     case LOADING -> progressLoader.show();
                     case SUCCESS -> onSetNewPasswordStatusSuccess();
-                    case FAILURE -> onSetNewPasswordStatusError(result.getError());
+                    case FAILURE -> onSetNewPasswordStatusError(result.getErrorMessage());
                 }
             }
         });
@@ -97,8 +130,8 @@ public class SetNewPasswordActivity extends AppCompatActivity {
     }
 
     private void onSetNewPasswordStatusError(String error) {
-        binding.txtError.setText(error);
-        binding.txtError.setVisibility(View.VISIBLE);
+        binding.txtConfirmPasswordError.setText(error);
+        binding.txtConfirmPasswordError.setVisibility(View.VISIBLE);
         progressLoader.hide();
     }
 
@@ -114,14 +147,14 @@ public class SetNewPasswordActivity extends AppCompatActivity {
             binding.anim.playAnimation();
 
             binding.btnContinue.setOnClickListener(v -> {
-                String destination = getIntent().getStringExtra("session");
-
-                if (destination != null && destination.equals("LoggedIn")) {
-                    routeToDestination(SettingsActivity.class);
-                } else {
-                    routeToDestination(LoginActivity.class);
+                String purpose = getIntentExtra();
+                if (purpose != null) {
+                    if (purpose.equals("forgot_password_from_settings") || purpose.equals("change_password_from_settings")) {
+                        routeToDestination(SettingsActivity.class);
+                    } else {
+                        routeToDestination(LoginActivity.class);
+                    }
                 }
-
                 dialog.dismiss();
             });
         });
@@ -139,28 +172,37 @@ public class SetNewPasswordActivity extends AppCompatActivity {
         }
 
         String email = getIntent().getStringExtra("email");
+        String oldPassword = Objects.requireNonNull(binding.editTxtCurrentPassword.getText()).toString().trim();
         String newPassword = binding.editTxtPassword.getText().toString().trim();
 
-        setNewPassword(email, newPassword);
+        if (getIntentExtra() != null && getIntentExtra().equals("change_password_from_settings")) {
+            updatePassword(email, oldPassword, newPassword);
+        } else {
+            setNewPassword(email, newPassword);
+        }
     }
 
     private void setNewPassword(String email, String newPassword) {
         authViewModel.setNewPassword(email, newPassword);
     }
 
+    private void updatePassword(String email, String oldPassword, String newPassword) {
+        userViewModel.updatePassword(email, oldPassword, newPassword);
+    }
+
     private void validatePassword() {
         String password = Objects.requireNonNull(binding.editTxtPassword.getText()).toString().trim();
         String confirm = Objects.requireNonNull(binding.editTxtConfirmPassword.getText()).toString().trim();
 
-        boolean isValid = validatePasswordRequirements(password, confirm);
+        boolean isValid = isPasswordRequirementsMet(password, confirm);
         updateResetButtonState(isValid);
     }
 
     private void updateResetButtonState(boolean isEnabled) {
-        binding.btnResetPassword.setEnabled(isEnabled);
+        binding.btnChangePassword.setEnabled(isEnabled);
     }
 
-    private boolean validatePasswordRequirements(String password, String confirm) {
+    private boolean isPasswordRequirementsMet(String password, String confirm) {
         boolean hasLength = password.length() >= 8;
         boolean hasUpper = password.matches(".*[A-Z].*");
         boolean hasLower = password.matches(".*[a-z].*");
@@ -169,10 +211,10 @@ public class SetNewPasswordActivity extends AppCompatActivity {
 
         if (!confirm.isEmpty() && !matches) {
             String ERROR_PASSWORD_MISMATCH = "Passwords do not match!";
-            binding.txtError.setText(ERROR_PASSWORD_MISMATCH);
-            binding.txtError.setVisibility(View.VISIBLE);
+            binding.txtConfirmPasswordError.setText(ERROR_PASSWORD_MISMATCH);
+            binding.txtConfirmPasswordError.setVisibility(View.VISIBLE);
         } else {
-            binding.txtError.setVisibility(View.GONE);
+            binding.txtConfirmPasswordError.setVisibility(View.GONE);
         }
 
         return hasLength && hasUpper && hasLower && hasSpecial && matches;
@@ -192,7 +234,7 @@ public class SetNewPasswordActivity extends AppCompatActivity {
             binding.togglePasswordVisibility.setImageResource(isPasswordVisible ? icVisibleOn : icVisibleOff);
 
             binding.editTxtPassword.setTypeface(currentTypeface);
-            binding.editTxtPassword.setSelection(binding.editTxtPassword.getText().length());
+            binding.editTxtPassword.setSelection(binding.editTxtPassword.length());
         });
 
         binding.toggleConfirmPasswordVisibility.setOnClickListener(v -> {
@@ -202,10 +244,23 @@ public class SetNewPasswordActivity extends AppCompatActivity {
             int inputType = isConfirmPasswordVisible ? InputType.TYPE_TEXT_VARIATION_VISIBLE_PASSWORD : InputType.TYPE_TEXT_VARIATION_PASSWORD;
 
             binding.editTxtConfirmPassword.setInputType(InputType.TYPE_CLASS_TEXT | inputType);
-            binding.toggleConfirmPasswordVisibility.setImageResource(isPasswordVisible ? icVisibleOn : icVisibleOff);
+            binding.toggleConfirmPasswordVisibility.setImageResource(isConfirmPasswordVisible ? icVisibleOn : icVisibleOff);
 
             binding.editTxtConfirmPassword.setTypeface(currentTypeface);
-            binding.editTxtConfirmPassword.setSelection(binding.editTxtPassword.getText().length());
+            binding.editTxtConfirmPassword.setSelection(binding.editTxtConfirmPassword.length());
+        });
+
+        binding.toggleCurrentPasswordVisibility.setOnClickListener(v -> {
+            Typeface currentTypeface = binding.editTxtCurrentPassword.getTypeface();
+
+            isCurrentPasswordVisible = !isCurrentPasswordVisible;
+            int inputType = isCurrentPasswordVisible ? InputType.TYPE_TEXT_VARIATION_VISIBLE_PASSWORD : InputType.TYPE_TEXT_VARIATION_PASSWORD;
+
+            binding.editTxtCurrentPassword.setInputType(InputType.TYPE_CLASS_TEXT | inputType);
+            binding.toggleCurrentPasswordVisibility.setImageResource(isCurrentPasswordVisible ? icVisibleOn : icVisibleOff);
+
+            binding.editTxtCurrentPassword.setTypeface(currentTypeface);
+            binding.editTxtCurrentPassword.setSelection(binding.editTxtCurrentPassword.length());
         });
     }
 
@@ -213,11 +268,31 @@ public class SetNewPasswordActivity extends AppCompatActivity {
         int focusBgRes = R.drawable.bg_edit_txt_custom_white_focused;
         int defaultBgRes = R.drawable.bg_edit_txt_custom_gray_not_focused;
 
+        binding.editTxtCurrentPassword.setOnFocusChangeListener((v, hasFocus) -> binding.editTxtCurrentPasswordBg.setBackgroundResource(hasFocus ? focusBgRes : defaultBgRes));
         binding.editTxtPassword.setOnFocusChangeListener((v, hasFocus) -> binding.editTxtPasswordBg.setBackgroundResource(hasFocus ? focusBgRes : defaultBgRes));
         binding.editTxtConfirmPassword.setOnFocusChangeListener((v, hasFocus) -> binding.editTxtConfirmPasswordBg.setBackgroundResource(hasFocus ? focusBgRes : defaultBgRes));
     }
 
     private void setupPasswordValidation() {
+        binding.editTxtCurrentPassword.addTextChangedListener(new TextWatcher() {
+            @Override
+            public void afterTextChanged(Editable editable) {
+
+            }
+
+            @Override
+            public void beforeTextChanged(CharSequence charSequence, int i, int i1, int i2) {
+
+            }
+
+            @Override
+            public void onTextChanged(CharSequence currentPassword, int i, int i1, int i2) {
+                binding.txtConfirmPasswordError.setVisibility(View.GONE);
+                binding.toggleCurrentPasswordVisibility.setVisibility(!currentPassword.toString().isEmpty() ? View.VISIBLE : View.INVISIBLE);
+
+            }
+        });
+
         TextWatcher watcher = new TextWatcher() {
             @Override
             public void beforeTextChanged(CharSequence s, int start, int count, int after) {

@@ -65,7 +65,7 @@ public class CreatePaymentPinActivity extends AppCompatActivity {
             switch (result.getStatus()) {
                 case LOADING -> progressLoader.show();
                 case SUCCESS -> onCreatePaymentPinStatusSuccess();
-                case FAILURE -> onCreatePaymentPinStatusError(result.getError());
+                case FAILURE -> onCreatePaymentPinStatusError(result.getErrorMessage());
             }
         });
     }

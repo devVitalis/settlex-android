@@ -118,7 +118,7 @@ public class SignUpEmailVerificationFragment extends Fragment {
             switch (result.getStatus()) {
                 case LOADING -> progressLoader.show();
                 case SUCCESS -> onEmailVerificationSuccess();
-                case FAILURE -> onEmailVerificationStatusError(result.getError());
+                case FAILURE -> onEmailVerificationStatusError(result.getErrorMessage());
             }
         });
     }
@@ -148,7 +148,7 @@ public class SignUpEmailVerificationFragment extends Fragment {
             switch (result.getStatus()) {
                 case LOADING -> progressLoader.show();
                 case SUCCESS -> onSendVerificationCodeStatusSuccess();
-                case FAILURE -> onVerificationCodeStatusError(result.getError());
+                case FAILURE -> onVerificationCodeStatusError(result.getErrorMessage());
             }
         });
     }
@@ -165,14 +165,7 @@ public class SignUpEmailVerificationFragment extends Fragment {
     }
 
     private void showNoInternet() {
-        String title = "Network Unavailable";
-        String message = "Please check your Wi-Fi or cellular data and try again";
-
-        UiUtil.showSimpleAlertDialog(
-                requireContext(),
-                title,
-                message
-        );
+        UiUtil.showNoInternetAlertDialog(requireContext());
     }
 
     private void verifyOtp() {

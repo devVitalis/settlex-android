@@ -111,7 +111,7 @@ public class SignUpUserContactInfoFragment extends Fragment {
             switch (result.getStatus()) {
                 case LOADING -> progressLoader.show();
                 case SUCCESS -> onSendVerificationCodeStatusSuccess();
-                case FAILURE -> onSendVerificationCodeStatusError(result.getError());
+                case FAILURE -> onSendVerificationCodeStatusError(result.getErrorMessage());
             }
         });
     }

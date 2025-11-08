@@ -104,7 +104,7 @@ public class SignUpUserPasswordFragment extends Fragment {
             switch (result.getStatus()) {
                 case LOADING -> progressLoader.show();
                 case SUCCESS -> onRegistrationStatusSuccess();
-                case FAILURE -> onRegistrationStatusFailure(result.getError());
+                case FAILURE -> onRegistrationStatusFailure(result.getErrorMessage());
             }
         });
     }
@@ -124,14 +124,7 @@ public class SignUpUserPasswordFragment extends Fragment {
     }
 
     private void showNoInternetConnection() {
-        String title = "Network Unavailable";
-        String message = "Please check your Wi-Fi or cellular data and try again";
-
-        UiUtil.showSimpleAlertDialog(
-                requireContext(),
-                title,
-                message
-        );
+        UiUtil.showNoInternetAlertDialog(requireContext());
     }
 
     // UI ACTIONS ========

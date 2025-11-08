@@ -6,7 +6,10 @@ import androidx.lifecycle.LiveData;
 import androidx.lifecycle.MutableLiveData;
 
 import com.google.firebase.FirebaseNetworkException;
+import com.google.firebase.auth.AuthCredential;
+import com.google.firebase.auth.EmailAuthProvider;
 import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseAuthInvalidCredentialsException;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.DocumentSnapshot;
@@ -66,17 +69,16 @@ public class UserRepository {
             FirebaseUser currentUser = firebaseAuth.getCurrentUser();
             sharedUserAuthState.postValue(currentUser);
 
-            if (currentUser == null) {
-                // Logged out | clear cached user
-                clearUserSession();
-                sharedUserLiveData.postValue(null);
-                userPrefs = null;
+            if (currentUser != null) {
+                initSharedUserListener(currentUser.getUid());
+                userPrefs = new UserPrefs(SettleXApp.getAppContext(), currentUser.getUid());
                 return;
             }
 
-            // Logged in
-            initSharedUserListener(currentUser.getUid());
-            userPrefs = new UserPrefs(SettleXApp.getAppContext(), currentUser.getUid());
+            // Logged out | clear cached user
+            clearUserSession();
+            userPrefs = null;
+            sharedUserLiveData.postValue(null);
         };
         auth.addAuthStateListener(authStateListener);
     }
@@ -120,9 +122,6 @@ public class UserRepository {
 
     // user preference
     private UserPrefs getUserPrefs() {
-        if (userPrefs == null) {
-            throw new IllegalStateException("UserPrefs unavailable. User not logged in");
-        }
         return userPrefs;
     }
 
@@ -203,7 +202,7 @@ public class UserRepository {
         void onFailure(String error);
     }
 
-    public void storeUserPaymentIdToDatabase(String paymentId, String uid, StorePaymentIdCallback callback) {
+    public void storePaymentId(String paymentId, String uid, StorePaymentIdCallback callback) {
         DocumentReference globalDocRef = firestore.collection("payment_ids").document(paymentId);
         DocumentReference userDocRef = firestore.collection("users").document(uid);
 
@@ -214,9 +213,7 @@ public class UserRepository {
                         throw new FirebaseFirestoreException("Payment ID is already taken", FirebaseFirestoreException.Code.ABORTED);
                     }
 
-                    // Save Payment ID
-                    // Merge so existing content remains
-                    transaction.set(globalDocRef, Collections.singletonMap("UserId", uid));
+                    transaction.set(globalDocRef, Collections.singletonMap("uid", uid));
                     transaction.set(userDocRef, Collections.singletonMap("paymentId", paymentId), SetOptions.merge());
                     return null;
                 })
@@ -225,6 +222,13 @@ public class UserRepository {
                     if (e instanceof FirebaseNetworkException || e instanceof IOException) {
                         callback.onFailure(ERROR_NO_INTERNET);
                         return;
+                    }
+
+                    if (e instanceof FirebaseFirestoreException eff) {
+                        if (eff.getCode() == FirebaseFirestoreException.Code.ABORTED) {
+                            callback.onFailure(e.getMessage());
+                            return;
+                        }
                     }
                     callback.onFailure(ERROR_FALLBACK);
                     Log.e(TAG, "failed to store user payment ID: " + e.getMessage(), e);
@@ -281,6 +285,47 @@ public class UserRepository {
         void onSuccess(boolean isVerified);
 
         void onError(String error);
+    }
+
+    public void updatePassword(String email, String oldPassword, String newPassword, UpdatePasswordCallback callback) {
+        FirebaseUser user = auth.getCurrentUser();
+        AuthCredential authCredential = EmailAuthProvider.getCredential(email, oldPassword);
+        if (user != null) {
+            // Validate old password
+            user.reauthenticate(authCredential)
+                    .addOnCompleteListener(task -> {
+                        if (!task.isSuccessful()) {
+                            Exception e = task.getException();
+                            if (e instanceof FirebaseNetworkException || e instanceof IOException) {
+                                callback.onFailure(ERROR_NO_INTERNET);
+                                return;
+                            }
+
+                            if (e instanceof FirebaseAuthInvalidCredentialsException) {
+                                callback.onFailure("Oops! The Current Password you entered doesn't match our records. Please check it and try again.");
+                            }
+                            return;
+                        }
+
+                        // Set new password
+                        user.updatePassword(newPassword)
+                                .addOnSuccessListener(unused -> callback.onSuccess())
+                                .addOnFailureListener(e -> {
+                                    if (e instanceof FirebaseNetworkException || e instanceof IOException) {
+                                        callback.onFailure(ERROR_NO_INTERNET);
+                                        return;
+                                    }
+
+                                    callback.onFailure(ERROR_FALLBACK);
+                                });
+                    });
+        }
+    }
+
+    public interface UpdatePasswordCallback {
+        void onSuccess();
+
+        void onFailure(String error);
     }
 
     public void signOut() {

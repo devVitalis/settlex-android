@@ -23,6 +23,7 @@ public class UserViewModel extends ViewModel {
     private final MutableLiveData<Event<Result<String>>> storeUserPaymentIdLiveData = new MutableLiveData<>();
     private final MutableLiveData<Event<Result<String>>> createPaymentLiveData = new MutableLiveData<>();
     private final MutableLiveData<Event<Result<Boolean>>> verifyPaymentLiveData = new MutableLiveData<>();
+    private final MutableLiveData<Event<Result<String>>> updatePasswordLiveData = new MutableLiveData<>();
     private final MutableLiveData<Boolean> isBalanceHiddenLiveData = new MutableLiveData<>();
     private final MutableLiveData<Boolean> isPayBiometricsEnabledLiveData = new MutableLiveData<>();
     private final MutableLiveData<Boolean> isLoginBiometricsEnabledLiveData = new MutableLiveData<>();
@@ -79,6 +80,25 @@ public class UserViewModel extends ViewModel {
         userRepo.signOut();
     }
 
+    public void updatePassword(String email, String oldPassword, String newPassword) {
+        updatePasswordLiveData.setValue(new Event<>(Result.loading()));
+        userRepo.updatePassword(email, oldPassword, newPassword, new UserRepository.UpdatePasswordCallback() {
+            @Override
+            public void onSuccess() {
+                updatePasswordLiveData.setValue(new Event<>(Result.success("Password update success")));
+            }
+
+            @Override
+            public void onFailure(String error) {
+                updatePasswordLiveData.setValue(new Event<>(Result.failure(error)));
+            }
+        });
+    }
+
+    public LiveData<Event<Result<String>>> getUpdatePasswordLiveData() {
+        return updatePasswordLiveData;
+    }
+
     public void uploadProfilePic(String imageBase64) {
         uploadProfilePicLiveData.setValue(Result.loading());
         userRepo.uploadUserProfilePicToServer(imageBase64, new UserRepository.UploadProfilePicCallback() {
@@ -119,7 +139,7 @@ public class UserViewModel extends ViewModel {
 
     public void storeUserPaymentIdToServer(String paymentId, String uid) {
         storeUserPaymentIdLiveData.setValue(new Event<>(Result.loading()));
-        userRepo.storeUserPaymentIdToDatabase(paymentId, uid, new UserRepository.StorePaymentIdCallback() {
+        userRepo.storePaymentId(paymentId, uid, new UserRepository.StorePaymentIdCallback() {
             @Override
             public void onSuccess() {
                 storeUserPaymentIdLiveData.setValue(new Event<>(Result.success("success")));
@@ -217,7 +237,7 @@ public class UserViewModel extends ViewModel {
                         dto.getData().commissionBalance,
                         dto.getData().referralBalance
                 )));
-                case FAILURE -> userLiveData.setValue(Result.failure(dto.getError()));
+                case FAILURE -> userLiveData.setValue(Result.failure(dto.getErrorMessage()));
             }
         });
     }

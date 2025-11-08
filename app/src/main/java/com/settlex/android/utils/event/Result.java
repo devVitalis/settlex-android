@@ -61,7 +61,7 @@ public class Result<T> {
         return message;
     }
 
-    public String getError() {
+    public String getErrorMessage() {
         return error;
     }
 }

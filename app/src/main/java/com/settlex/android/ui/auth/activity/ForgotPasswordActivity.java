@@ -91,7 +91,7 @@ public class ForgotPasswordActivity extends AppCompatActivity {
             switch (result.getStatus()) {
                 case LOADING -> progressLoader.show();
                 case SUCCESS -> onSendPasswordResetCodeStatusSuccess();
-                case FAILURE -> onSendPasswordResetCodeStatusError(result.getError());
+                case FAILURE -> onSendPasswordResetCodeStatusError(result.getErrorMessage());
             }
         });
     }

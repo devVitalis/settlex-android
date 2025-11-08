@@ -9,7 +9,6 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.view.inputmethod.EditorInfo;
 import android.view.inputmethod.InputMethodManager;
-import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -69,14 +68,7 @@ public class SignUpUserInfoFragment extends Fragment {
     }
 
     private void showNoInternet() {
-        String title = "Network Unavailable";
-        String message = "Please check your Wi-Fi or cellular data and try again";
-
-        UiUtil.showSimpleAlertDialog(
-                requireContext(),
-                title,
-                message
-        );
+        UiUtil.showNoInternetAlertDialog(requireContext());
     }
 
     private void setupUiActions() {

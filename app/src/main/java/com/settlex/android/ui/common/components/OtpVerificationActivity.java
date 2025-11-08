@@ -95,7 +95,7 @@ public class OtpVerificationActivity extends AppCompatActivity {
                 switch (result.getStatus()) {
                     case LOADING -> progressLoader.show();
                     case SUCCESS -> onVerifyPasswordResetStatusSuccess();
-                    case FAILURE -> onVerifyPasswordResetStatusError(result.getError());
+                    case FAILURE -> onVerifyPasswordResetStatusError(result.getErrorMessage());
                 }
             }
         });
@@ -124,7 +124,7 @@ public class OtpVerificationActivity extends AppCompatActivity {
                 switch (result.getStatus()) {
                     case LOADING -> progressLoader.show();
                     case SUCCESS -> onSendPasswordResetCodeStatusSuccess();
-                    case FAILURE -> onSendPasswordResetCodeStatusError(result.getError());
+                    case FAILURE -> onSendPasswordResetCodeStatusError(result.getErrorMessage());
                 }
             }
         });
