@@ -10,41 +10,68 @@ import com.settlex.android.data.repository.UserRepository;
 import com.settlex.android.ui.dashboard.model.UserUiModel;
 import com.settlex.android.utils.event.Event;
 import com.settlex.android.utils.event.Result;
+import com.settlex.android.utils.network.NetworkMonitor;
 
 import dagger.hilt.android.lifecycle.HiltViewModel;
 import jakarta.inject.Inject;
 
 @HiltViewModel
 public class UserViewModel extends ViewModel {
+
+    // --------------------------------------------------------------------------------
+    // Dependencies
+    // --------------------------------------------------------------------------------
+    private final UserRepository userRepo;
+
+    // --------------------------------------------------------------------------------
+    // LiveData State
+    // --------------------------------------------------------------------------------
+
+    // User & Auth State (Mediators)
     private final MediatorLiveData<String> authStateLiveData = new MediatorLiveData<>();
     private final MediatorLiveData<Result<UserUiModel>> userLiveData = new MediatorLiveData<>();
-    private final MutableLiveData<Result<String>> uploadProfilePicLiveData = new MutableLiveData<>();
+
+    // Network Operation State
+    private final MutableLiveData<Event<Result<String>>> uploadProfilePicLiveData = new MutableLiveData<>();
     private final MutableLiveData<Event<Result<Boolean>>> checkPaymentIdExistsLiveData = new MutableLiveData<>();
-    private final MutableLiveData<Event<Result<String>>> storeUserPaymentIdLiveData = new MutableLiveData<>();
+    private final MutableLiveData<Event<Result<String>>> setPaymentIdLiveData = new MutableLiveData<>();
     private final MutableLiveData<Event<Result<String>>> createPaymentLiveData = new MutableLiveData<>();
     private final MutableLiveData<Event<Result<Boolean>>> verifyPaymentLiveData = new MutableLiveData<>();
     private final MutableLiveData<Event<Result<String>>> updatePasswordLiveData = new MutableLiveData<>();
+    private final MutableLiveData<Event<Result<String>>> changePaymentPinLiveData = new MutableLiveData<>();
+
+    // Local UI Preferences State
     private final MutableLiveData<Boolean> isBalanceHiddenLiveData = new MutableLiveData<>();
     private final MutableLiveData<Boolean> isPayBiometricsEnabledLiveData = new MutableLiveData<>();
     private final MutableLiveData<Boolean> isLoginBiometricsEnabledLiveData = new MutableLiveData<>();
 
-
-    // dependencies
-    private final UserRepository userRepo;
-
+    // --------------------------------------------------------------------------------
+    // Constructor
+    // --------------------------------------------------------------------------------
     @Inject
     public UserViewModel(UserRepository userRepo) {
         this.userRepo = userRepo;
 
+        // Initialize observers
         initAuthObserver();
         initUserLiveDataObserver();
 
+        // Load initial state from repository (preferences)
         isBalanceHiddenLiveData.setValue(userRepo.getBalanceHidden());
         isPayBiometricsEnabledLiveData.setValue(userRepo.getPayBiometricsEnabled());
         isLoginBiometricsEnabledLiveData.setValue(userRepo.getLoginBiometricsEnabled());
     }
 
-    // Public APIs
+    // --------------------------------------------------------------------------------
+    // Public API - Actions (Called by UI)
+    // --------------------------------------------------------------------------------
+
+    public void signOut() {
+        userRepo.signOut();
+    }
+
+    // --- Local Preferences ---
+
     public void toggleBalanceVisibility() {
         boolean isBalanceCurrentlyHidden = isBalanceHiddenLiveData.getValue() != null && isBalanceHiddenLiveData.getValue();
         boolean shouldHideBalance = !isBalanceCurrentlyHidden;
@@ -53,21 +80,9 @@ public class UserViewModel extends ViewModel {
         userRepo.toggleBalanceVisibility(shouldHideBalance);
     }
 
-    public LiveData<Boolean> getBalanceHiddenLiveData() {
-        return Transformations.distinctUntilChanged(isBalanceHiddenLiveData);
-    }
-
-    public LiveData<Boolean> getPayBiometricsEnabled() {
-        return Transformations.distinctUntilChanged(isPayBiometricsEnabledLiveData);
-    }
-
     public void setPayBiometricsEnabledLiveData(boolean enabled) {
         isPayBiometricsEnabledLiveData.setValue(enabled);
         userRepo.setPayBiometricsEnabled(enabled);
-    }
-
-    public LiveData<Boolean> getLoginBiometricsEnabled() {
-        return Transformations.distinctUntilChanged(isLoginBiometricsEnabledLiveData);
     }
 
     public void setLoginBiometricsEnabledLiveData(boolean enabled) {
@@ -75,12 +90,13 @@ public class UserViewModel extends ViewModel {
         userRepo.setLoginBiometricsEnabled(enabled);
     }
 
-    public void signOut() {
-        // Log out current user / end session
-        userRepo.signOut();
-    }
-
+    // --- Network Operations ---
     public void updatePassword(String email, String oldPassword, String newPassword) {
+        if (getNetworkStatus() == null || !getNetworkStatus()) {
+            updatePasswordLiveData.setValue(new Event<>(Result.noInternet()));
+            return;
+        }
+
         updatePasswordLiveData.setValue(new Event<>(Result.loading()));
         userRepo.updatePassword(email, oldPassword, newPassword, new UserRepository.UpdatePasswordCallback() {
             @Override
@@ -95,30 +111,32 @@ public class UserViewModel extends ViewModel {
         });
     }
 
-    public LiveData<Event<Result<String>>> getUpdatePasswordLiveData() {
-        return updatePasswordLiveData;
-    }
-
     public void uploadProfilePic(String imageBase64) {
-        uploadProfilePicLiveData.setValue(Result.loading());
+        if (getNetworkStatus() == null || !getNetworkStatus()) {
+            uploadProfilePicLiveData.setValue(new Event<>(Result.noInternet()));
+            return;
+        }
+
+        uploadProfilePicLiveData.setValue(new Event<>(Result.loading()));
         userRepo.uploadUserProfilePicToServer(imageBase64, new UserRepository.UploadProfilePicCallback() {
             @Override
             public void onSuccess() {
-                uploadProfilePicLiveData.setValue(Result.success("Profile changed successful"));
+                uploadProfilePicLiveData.setValue(new Event<>(Result.success("Profile changed successful")));
             }
 
             @Override
             public void onFailure(String error) {
-                uploadProfilePicLiveData.setValue(Result.failure(error));
+                uploadProfilePicLiveData.setValue(new Event<>(Result.failure(error)));
             }
         });
     }
 
-    public LiveData<Result<String>> getProfilePicUploadResult() {
-        return uploadProfilePicLiveData;
-    }
-
     public void checkPaymentIdExists(String paymentId) {
+        if (getNetworkStatus() == null || !getNetworkStatus()) {
+            checkPaymentIdExistsLiveData.setValue(new Event<>(Result.noInternet()));
+            return;
+        }
+
         checkPaymentIdExistsLiveData.setValue(new Event<>(Result.loading()));
         userRepo.checkPaymentIdAvailability(paymentId, new UserRepository.PaymentIdAvailableCallback() {
             @Override
@@ -133,30 +151,32 @@ public class UserViewModel extends ViewModel {
         });
     }
 
-    public LiveData<Event<Result<Boolean>>> getPaymentIdExistsStatus() {
-        return checkPaymentIdExistsLiveData;
-    }
+    public void setPaymentId(String paymentId, String uid) {
+        if (getNetworkStatus() == null || !getNetworkStatus()) {
+            setPaymentIdLiveData.setValue(new Event<>(Result.noInternet()));
+            return;
+        }
 
-    public void storeUserPaymentIdToServer(String paymentId, String uid) {
-        storeUserPaymentIdLiveData.setValue(new Event<>(Result.loading()));
+        setPaymentIdLiveData.setValue(new Event<>(Result.loading()));
         userRepo.storePaymentId(paymentId, uid, new UserRepository.StorePaymentIdCallback() {
             @Override
             public void onSuccess() {
-                storeUserPaymentIdLiveData.setValue(new Event<>(Result.success("success")));
+                setPaymentIdLiveData.setValue(new Event<>(Result.success("success")));
             }
 
             @Override
             public void onFailure(String error) {
-                storeUserPaymentIdLiveData.setValue(new Event<>(Result.failure(error)));
+                setPaymentIdLiveData.setValue(new Event<>(Result.failure(error)));
             }
         });
     }
 
-    public LiveData<Event<Result<String>>> getStoreUserPaymentIdStatus() {
-        return storeUserPaymentIdLiveData;
-    }
-
     public void createPaymentPin(String pin) {
+        if (getNetworkStatus() == null || !getNetworkStatus()) {
+            createPaymentLiveData.setValue(new Event<>(Result.noInternet()));
+            return;
+        }
+
         createPaymentLiveData.setValue(new Event<>(Result.loading()));
         userRepo.createPaymentPin(pin, new UserRepository.CreatePaymentPinCallback() {
             @Override
@@ -171,14 +191,14 @@ public class UserViewModel extends ViewModel {
         });
     }
 
-    public LiveData<Event<Result<String>>> getCreatePaymentPinLiveData() {
-        return createPaymentLiveData;
-    }
-
     public void verifyPaymentPin(String pin) {
-        verifyPaymentLiveData.setValue(new Event<>(Result.loading()));
+        if (getNetworkStatus() == null || !getNetworkStatus()) {
+            verifyPaymentLiveData.setValue(new Event<>(Result.noInternet()));
+            return;
+        }
 
-        userRepo.VerifyPaymentPin(pin, new UserRepository.VerifyPaymentPinCallback() {
+        verifyPaymentLiveData.setValue(new Event<>(Result.loading()));
+        userRepo.validatePaymentPin(pin, new UserRepository.ValidatePaymentPinCallback() {
             @Override
             public void onSuccess(boolean isVerified) {
                 verifyPaymentLiveData.setValue(new Event<>(Result.success(isVerified)));
@@ -191,12 +211,85 @@ public class UserViewModel extends ViewModel {
         });
     }
 
+    public void changePaymentPin(String oldPin, String newPin) {
+        if (getNetworkStatus() == null || !getNetworkStatus()) {
+            changePaymentPinLiveData.setValue(new Event<>(Result.noInternet()));
+            return;
+        }
+
+        changePaymentPinLiveData.setValue(new Event<>(Result.loading()));
+        userRepo.changePaymentPin(oldPin, newPin, new UserRepository.ChangePaymentPinCallback() {
+            @Override
+            public void onSuccess() {
+                changePaymentPinLiveData.setValue(new Event<>(Result.success("Success")));
+            }
+
+            @Override
+            public void onError(String error) {
+                changePaymentPinLiveData.setValue(new Event<>(Result.failure(error)));
+            }
+        });
+    }
+
+    // --------------------------------------------------------------------------------
+    // Public API - Observers (LiveData Getters)
+    // --------------------------------------------------------------------------------
+
+    public LiveData<String> getAuthStateLiveData() {
+        return authStateLiveData;
+    }
+
+    public LiveData<Result<UserUiModel>> getUserLiveData() {
+        return userLiveData;
+    }
+
+    public LiveData<Boolean> getBalanceHiddenLiveData() {
+        return Transformations.distinctUntilChanged(isBalanceHiddenLiveData);
+    }
+
+    public LiveData<Boolean> getPayBiometricsEnabled() {
+        return Transformations.distinctUntilChanged(isPayBiometricsEnabledLiveData);
+    }
+
+    public LiveData<Boolean> getLoginBiometricsEnabled() {
+        return Transformations.distinctUntilChanged(isLoginBiometricsEnabledLiveData);
+    }
+
+    public LiveData<Event<Result<String>>> getUpdatePasswordLiveData() {
+        return updatePasswordLiveData;
+    }
+
+    public LiveData<Event<Result<String>>> getProfilePicUploadResult() {
+        return uploadProfilePicLiveData;
+    }
+
+    public LiveData<Event<Result<Boolean>>> getPaymentIdExistsStatus() {
+        return checkPaymentIdExistsLiveData;
+    }
+
+    public LiveData<Event<Result<String>>> getSetPaymentIdLiveData() {
+        return setPaymentIdLiveData;
+    }
+
+    public LiveData<Event<Result<String>>> getCreatePaymentPinLiveData() {
+        return createPaymentLiveData;
+    }
+
     public LiveData<Event<Result<Boolean>>> getVerifyPaymentPinLiveData() {
         return verifyPaymentLiveData;
     }
 
+    public LiveData<Event<Result<String>>> getChangePaymentPinLiveData() {
+        return changePaymentPinLiveData;
+    }
+
+    // --------------------------------------------------------------------------------
+    // Private Helpers
+    // --------------------------------------------------------------------------------
+
     /**
      * Called once during ViewModel initialization.
+     * Observes the repository's auth state.
      */
     private void initAuthObserver() {
         authStateLiveData.addSource(userRepo.getSharedUserAuthState(), user -> {
@@ -211,10 +304,10 @@ public class UserViewModel extends ViewModel {
         });
     }
 
-    public LiveData<String> getAuthStateLiveData() {
-        return authStateLiveData;
-    }
-
+    /**
+     * Called. once during ViewModel initialization.
+     * Observes the repository's user data and maps it to a UI model.
+     */
     private void initUserLiveDataObserver() {
         userLiveData.addSource(userRepo.getSharedUserLiveData(), dto -> {
             if (dto == null) {
@@ -242,7 +335,10 @@ public class UserViewModel extends ViewModel {
         });
     }
 
-    public LiveData<Result<UserUiModel>> getUserLiveData() {
-        return userLiveData;
+    /**
+     * Helper to get the current network status.
+     */
+    private Boolean getNetworkStatus() {
+        return NetworkMonitor.getNetworkStatus().getValue();
     }
 }

@@ -11,10 +11,6 @@ import androidx.lifecycle.MutableLiveData;
 
 import com.settlex.android.SettleXApp;
 
-/**
- * Monitors network connectivity status and provides observable LiveData for network availability.
- * Call startNetworkCallback() once during application initialization to begin monitoring.
- */
 public class NetworkMonitor {
     private static final MutableLiveData<Boolean> networkStatus = new MutableLiveData<>();
 
@@ -58,7 +54,6 @@ public class NetworkMonitor {
 
     /**
      * Returns LiveData observable for network connectivity status.
-     * @return LiveData<Boolean> where true indicates internet connectivity is available
      */
     public static LiveData<Boolean> getNetworkStatus() {
         return networkStatus;

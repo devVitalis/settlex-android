@@ -151,7 +151,7 @@ public class DashboardUiUtil {
         InputMethodManager imm = (InputMethodManager) context.getSystemService(Context.INPUT_METHOD_SERVICE);
         if (dialog.getCurrentFocus() != null)
             imm.hideSoftInputFromWindow(dialog.getCurrentFocus().getWindowToken(), 0);
-        binding.pinBox.setShowSoftInputOnFocus(false);
+        binding.pinView.setShowSoftInputOnFocus(false);
 
         final Runnable[] onPinVerified = new Runnable[1];
 
@@ -159,13 +159,13 @@ public class DashboardUiUtil {
         binding.numericKeypad.setOnKeypadInputListener(new CustomNumericKeypad.OnKeypadInputListener() {
             @Override
             public void onNumberPressed(String number) {
-                if (binding.pinBox.length() < binding.pinBox.getItemCount()) {
-                    binding.pinBox.append(number);
+                if (binding.pinView.length() < binding.pinView.getItemCount()) {
+                    binding.pinView.append(number);
                 }
 
-                String pin = Objects.requireNonNull(binding.pinBox.getText()).toString();
+                String pin = Objects.requireNonNull(binding.pinView.getText()).toString();
 
-                if (pin.length() == binding.pinBox.getItemCount()) {
+                if (pin.length() == binding.pinView.getItemCount()) {
                     if (onPinVerified[0] != null) {
                         onPinVerified[0].run();
                         dialog.dismiss();
@@ -175,10 +175,10 @@ public class DashboardUiUtil {
 
             @Override
             public void onDeletePressed() {
-                String current = Objects.requireNonNull(binding.pinBox.getText()).toString();
+                String current = Objects.requireNonNull(binding.pinView.getText()).toString();
 
                 if (!current.isEmpty()) {
-                    binding.pinBox.setText(current.subSequence(0, current.length() - 1));
+                    binding.pinView.setText(current.subSequence(0, current.length() - 1));
                 }
             }
         });

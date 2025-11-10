@@ -32,13 +32,12 @@ import dagger.hilt.android.AndroidEntryPoint;
 @AndroidEntryPoint
 public class SettingsActivity extends AppCompatActivity {
     private String userEmail;
-    private boolean hasPin;
-    private boolean isConnected;
 
     // dependencies
     private ActivitySettingsBinding binding;
     private UserViewModel userViewModel;
     private AuthViewModel authViewModel;
+    private boolean isInternetConnected;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -49,20 +48,23 @@ public class SettingsActivity extends AppCompatActivity {
         userViewModel = new ViewModelProvider(this).get(UserViewModel.class);
         authViewModel = new ViewModelProvider(this).get(AuthViewModel.class);
 
+        initObservers();
+        setupUiActions();
+    }
+
+    private void initObservers() {
         observeNetworkStatus();
         observeUserData();
-        setupUiActions();
         observePayBiometricEnabled();
         observeLoginBiometricEnabled();
     }
 
     private void setupUiActions() {
         StatusBarUtil.setStatusBarColor(this, R.color.white);
-        shouldEnableBiometricOption();
 
-        binding.btnForgotPaymentPin.setOnClickListener(view -> showNextActionDialog(false));
-        binding.btnForgotPassword.setOnClickListener(view -> showNextActionDialog(true));
+        binding.btnBackBefore.setOnClickListener(view -> finish());
 
+        binding.btnForgotPassword.setOnClickListener(view -> showOtpConfirmationDialog(true));
         binding.btnChangePassword.setOnClickListener(view -> {
             Intent intent = new Intent(this, SetNewPasswordActivity.class);
             intent.putExtra("email", userEmail);
@@ -70,99 +72,33 @@ public class SettingsActivity extends AppCompatActivity {
             startActivity(intent);
         });
 
+        binding.btnCreatePaymentPin.setOnClickListener(view -> startActivity(new Intent(this, CreatePaymentPinActivity.class)));
+        binding.btnForgotPaymentPin.setOnClickListener(view -> showOtpConfirmationDialog(false));
         binding.btnChangePaymentPin.setOnClickListener(view -> {
-            if (hasPin) {
-                showNextActionDialog(false);
-                return;
-            }
-            startActivity(new Intent(this, CreatePaymentPinActivity.class));
+            Intent intent = new Intent(this, CreatePaymentPinActivity.class);
+            intent.putExtra("purpose", "change_payment_pin");
+            startActivity(intent);
         });
     }
 
+    // Observers
     private void observeNetworkStatus() {
-        NetworkMonitor.getNetworkStatus().observe(this, isConnected -> {
-            this.isConnected = isConnected;
-        });
+        NetworkMonitor.getNetworkStatus().observe(this, isConnected -> this.isInternetConnected = isConnected);
     }
 
     private void observeUserData() {
         userViewModel.getUserLiveData().observe(this, result -> {
             if (result != null && result.getStatus() == Result.Status.SUCCESS) {
-                onUserDataStatusSuccess(result.getData());
+
+                UserUiModel user = result.getData();
                 this.userEmail = result.getData().getEmail();
+
+                binding.btnCreatePaymentPin.setVisibility(!user.hasPin() ? View.VISIBLE : View.GONE);
+                binding.btnChangePaymentPin.setVisibility(!user.hasPin() ? View.GONE : View.VISIBLE);
+
+                shouldEnableBiometricOption(user.hasPin());
             }
         });
-    }
-
-    private void onUserDataStatusSuccess(UserUiModel user) {
-        this.hasPin = user.hasPin();
-
-        // Set text based on if user already has a pin
-        binding.txtChangePaymentPin.setText(hasPin ? "Change Payment Pin" : "Create Payment Pin");
-        binding.txtSetPaymentPin.setVisibility(!hasPin ? View.VISIBLE : View.GONE);
-    }
-
-    private void sendPasswordResetCode() {
-        if (!isConnected) {
-            UiUtil.showNoInternetAlertDialog(this);
-            return;
-        }
-        authViewModel.sendPasswordResetCode(userEmail);
-    }
-
-    private void showNextActionDialog(boolean isPasswordReset) {
-        final String maskEmail = StringUtil.maskEmail(userEmail);
-        final String message = "To continue, we will send you a one-time password (OTP) to your registered email address " + maskEmail;
-        final String btnSecondary = "Cancel";
-        final String btnPrimary = "Continue";
-
-        // Set masked email bold
-        SpannableString spannable = new SpannableString(message);
-        spannable.setSpan(
-                new StyleSpan(Typeface.BOLD),
-                message.indexOf(maskEmail),
-                message.indexOf(maskEmail) + maskEmail.length(),
-                Spanned.SPAN_EXCLUSIVE_EXCLUSIVE
-        );
-
-        DashboardUiUtil.showAlertDialogMessage(
-                this,
-                (dialog, binding) -> {
-                    binding.message.setText(spannable);
-                    binding.btnSecondary.setText(btnSecondary);
-                    binding.btnPrimary.setText(btnPrimary);
-
-                    binding.btnSecondary.setOnClickListener(view -> dialog.dismiss());
-                    binding.btnPrimary.setOnClickListener(view -> {
-                        if (isPasswordReset) {
-                            sendPasswordResetCode();
-                        } else {
-                            sendPasswordResetCode();
-                            // TODO pin reset
-                        }
-                        Intent intent = new Intent(this, OtpVerificationActivity.class);
-                        intent.putExtra("email", userEmail);
-                        intent.putExtra("purpose", "forgot_password_from_settings");
-                        startActivity(intent);
-
-                        dialog.dismiss();
-                    });
-                }
-        );
-    }
-
-    private void shouldEnableBiometricOption() {
-        boolean isBiometricAvailable = BiometricAuthHelper.isBiometricAvailable(this);
-
-        // Payment
-        binding.btnSwitchPayWithBiometrics.setEnabled(isBiometricAvailable && hasPin);
-        binding.payWithBiometricsError.setText(BiometricAuthHelper.getBiometricFeedback(this));
-        binding.payWithBiometricsError.setVisibility(!isBiometricAvailable ? View.VISIBLE : View.GONE);
-
-        // Login
-        binding.btnSwitchLoginWithBiometrics.setEnabled(isBiometricAvailable);
-        binding.loginWithBiometricsError.setText(BiometricAuthHelper.getBiometricFeedback(this));
-        binding.loginWithBiometricsError.setVisibility(!isBiometricAvailable ? View.VISIBLE : View.GONE);
     }
 
     private void observePayBiometricEnabled() {
@@ -177,12 +113,25 @@ public class SettingsActivity extends AppCompatActivity {
 
     private void observeLoginBiometricEnabled() {
         userViewModel.getLoginBiometricsEnabled().observe(this, isEnabled -> {
-            // UI is updating
             binding.btnSwitchLoginWithBiometrics.setOnCheckedChangeListener(null);
             binding.btnSwitchLoginWithBiometrics.setChecked(isEnabled);
 
             binding.btnSwitchLoginWithBiometrics.setOnCheckedChangeListener((btn, isChecked) -> promptLoginBiometricsAuth(isChecked));
         });
+    }
+
+    private void shouldEnableBiometricOption(boolean hasPin) {
+        boolean isBiometricAvailable = BiometricAuthHelper.isBiometricAvailable(this);
+
+        // Payment biometrics
+        binding.btnSwitchPayWithBiometrics.setEnabled(isBiometricAvailable && hasPin);
+        binding.payWithBiometricsError.setText(BiometricAuthHelper.getBiometricFeedback(this));
+        binding.payWithBiometricsError.setVisibility(!isBiometricAvailable ? View.VISIBLE : View.GONE);
+
+        // Login biometrics
+        binding.btnSwitchLoginWithBiometrics.setEnabled(isBiometricAvailable);
+        binding.loginWithBiometricsError.setText(BiometricAuthHelper.getBiometricFeedback(this));
+        binding.loginWithBiometricsError.setVisibility(!isBiometricAvailable ? View.VISIBLE : View.GONE);
     }
 
     private void promptPayBiometricsAuth(boolean isChecked) {
@@ -239,5 +188,67 @@ public class SettingsActivity extends AppCompatActivity {
         } else {
             userViewModel.setLoginBiometricsEnabledLiveData(false);
         }
+    }
+
+    private void sendPinResetCode() {
+        if (!isInternetConnected) {
+            UiUtil.showNoInternetAlertDialog(this);
+            return;
+        }
+        authViewModel.sendPasswordResetCode(userEmail);
+    }
+
+    private void sendPasswordResetCode() {
+        if (!isInternetConnected) {
+            UiUtil.showNoInternetAlertDialog(this);
+            return;
+        }
+        authViewModel.sendPasswordResetCode(userEmail);
+    }
+
+    private void showOtpConfirmationDialog(boolean isPasswordReset) {
+        final String maskedEmail = StringUtil.maskEmail(userEmail);
+        final String message = "To continue, we will send you a one-time password (OTP) to your registered email address " + maskedEmail;
+        final String btnSecondary = "Cancel";
+        final String btnPrimary = "Continue";
+
+        int startIndex = message.indexOf(maskedEmail);
+        int endIndex = message.indexOf(maskedEmail) + maskedEmail.length();
+
+        SpannableString spannable = new SpannableString(message);
+        spannable.setSpan(
+                new StyleSpan(Typeface.BOLD),
+                startIndex,
+                endIndex,
+                Spanned.SPAN_EXCLUSIVE_EXCLUSIVE
+        );
+
+        DashboardUiUtil.showAlertDialogMessage(
+                this,
+                (dialog, binding) -> {
+                    binding.message.setText(spannable);
+                    binding.btnSecondary.setText(btnSecondary);
+                    binding.btnPrimary.setText(btnPrimary);
+
+                    binding.btnSecondary.setOnClickListener(view -> dialog.dismiss());
+                    binding.btnPrimary.setOnClickListener(view -> {
+                        if (isPasswordReset) {
+                            sendPasswordResetCode();
+                            Intent intent = new Intent(this, OtpVerificationActivity.class);
+                            intent.putExtra("email", userEmail);
+                            intent.putExtra("purpose", "forgot_password_from_settings");
+                            startActivity(intent);
+                        } else {
+                            // sendPinResetCode();
+                            // TODO pin reset
+                            Intent intent = new Intent(this, OtpVerificationActivity.class);
+                            intent.putExtra("email", userEmail);
+                            intent.putExtra("purpose", "forgot_payment_pin");
+                            startActivity(intent);
+                        }
+                        dialog.dismiss();
+                    });
+                }
+        );
     }
 }

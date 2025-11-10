@@ -25,6 +25,7 @@ import com.settlex.android.utils.event.Result;
 
 import java.io.IOException;
 import java.util.Collections;
+import java.util.HashMap;
 import java.util.Map;
 
 import jakarta.inject.Inject;
@@ -76,9 +77,9 @@ public class UserRepository {
             }
 
             // Logged out | clear cached user
-            clearUserSession();
-            userPrefs = null;
             sharedUserLiveData.postValue(null);
+            userPrefs = null;
+            clearUserSession();
         };
         auth.addAuthStateListener(authStateListener);
     }
@@ -91,13 +92,13 @@ public class UserRepository {
     private void initSharedUserListener(String uid) {
         sharedUserLiveData.postValue(Result.loading());
 
-        Log.d(TAG, "Attaching a new user listener");
+        Log.d(TAG, "Attaching a new user listener for user: " + uid);
 
         userListener = firestore.collection("users")
                 .document(uid)
                 .addSnapshotListener((snapshot, error) -> {
                     if (error != null) {
-                        Log.e(TAG, "User listener error" + error.getMessage(), error);
+                        Log.e(TAG, "User listener error: " + uid + error.getMessage(), error);
                         sharedUserLiveData.postValue(Result.failure(error.getMessage()));
                         return;
                     }
@@ -242,7 +243,7 @@ public class UserRepository {
     }
 
     public void createPaymentPin(String pin, CreatePaymentPinCallback callback) {
-        functions.getHttpsCallable("default-setPaymentPin")
+        functions.getHttpsCallable("default-setNewPaymentPin")
                 .call(Collections.singletonMap("pin", pin))
                 .addOnSuccessListener(result -> callback.onSuccess())
                 .addOnFailureListener(e -> {
@@ -261,7 +262,7 @@ public class UserRepository {
         void onError(String error);
     }
 
-    public void VerifyPaymentPin(String pin, VerifyPaymentPinCallback callback) {
+    public void validatePaymentPin(String pin, ValidatePaymentPinCallback callback) {
         functions.getHttpsCallable("default-validatePaymentPin")
                 .call(Collections.singletonMap("pin", pin))
                 .addOnSuccessListener(result -> {
@@ -281,8 +282,28 @@ public class UserRepository {
                 });
     }
 
-    public interface VerifyPaymentPinCallback {
+    public interface ValidatePaymentPinCallback {
         void onSuccess(boolean isVerified);
+
+        void onError(String error);
+    }
+
+    public void changePaymentPin(String oldPin, String newPin, ChangePaymentPinCallback callback) {
+        Map<String, Object> data = new HashMap<>();
+        data.put("oldPin", oldPin);
+        data.put("newPin", newPin);
+
+        functions.getHttpsCallable("default-changePaymentPin")
+                .call(data)
+                .addOnSuccessListener(result -> callback.onSuccess())
+                .addOnFailureListener(e -> {
+                    callback.onError(e.getMessage());
+                    Log.e(TAG, "Failed to update PIN: " + e.getMessage(), e);
+                });
+    }
+
+    public interface ChangePaymentPinCallback {
+        void onSuccess();
 
         void onError(String error);
     }
@@ -296,14 +317,20 @@ public class UserRepository {
                     .addOnCompleteListener(task -> {
                         if (!task.isSuccessful()) {
                             Exception e = task.getException();
+                            if (e != null) {
+                                Log.e(TAG, "Failed to update Password for user: " + user.getUid() + " " + e.getMessage(), e);
+                            }
+
                             if (e instanceof FirebaseNetworkException || e instanceof IOException) {
                                 callback.onFailure(ERROR_NO_INTERNET);
                                 return;
                             }
 
                             if (e instanceof FirebaseAuthInvalidCredentialsException) {
-                                callback.onFailure("Oops! The Current Password you entered doesn't match our records. Please check it and try again.");
+                                callback.onFailure("Oops! The current Password you entered doesn't match our records. Please check it and try again");
+                                return;
                             }
+                            callback.onFailure(ERROR_FALLBACK);
                             return;
                         }
 
@@ -315,7 +342,6 @@ public class UserRepository {
                                         callback.onFailure(ERROR_NO_INTERNET);
                                         return;
                                     }
-
                                     callback.onFailure(ERROR_FALLBACK);
                                 });
                     });
@@ -329,7 +355,6 @@ public class UserRepository {
     }
 
     public void signOut() {
-        // end session
         auth.signOut();
     }
 

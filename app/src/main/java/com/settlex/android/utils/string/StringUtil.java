@@ -215,7 +215,7 @@ public class StringUtil {
     }
 
     public static String formatTimeStampToFullDate(Timestamp timestamp) {
-        return new SimpleDateFormat("dd MMMM yyyy", Locale.US)
+        return new SimpleDateFormat("dd, MMMM yyyy", Locale.US)
                 .format(timestamp.toDate());
     }
 

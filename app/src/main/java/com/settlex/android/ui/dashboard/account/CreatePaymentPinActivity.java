@@ -13,9 +13,11 @@ import android.widget.EditText;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.lifecycle.ViewModelProvider;
 
+import com.chaos.view.PinView;
 import com.settlex.android.R;
 import com.settlex.android.databinding.ActivityCreatePaymentPinBinding;
 import com.settlex.android.ui.common.util.ProgressLoaderController;
+import com.settlex.android.ui.dashboard.util.DashboardUiUtil;
 import com.settlex.android.ui.dashboard.viewmodel.UserViewModel;
 import com.settlex.android.utils.event.Result;
 import com.settlex.android.utils.ui.StatusBarUtil;
@@ -27,7 +29,12 @@ import dagger.hilt.android.AndroidEntryPoint;
 
 @AndroidEntryPoint
 public class CreatePaymentPinActivity extends AppCompatActivity {
+    private final String ERROR_PIN_MISMATCH = "PIN does not match";
+    private final String ERROR_REPEATED_NUMBERS = "PIN must not contain any repeated digits";
+    private final String ERROR_CURRENT_PIN_IS_SAME_AS_NEW = "New PIN must not be the same as current";
 
+    // dependencies
+    private String intentPurpose;
     private ActivityCreatePaymentPinBinding binding;
     private ProgressLoaderController progressLoader;
     private UserViewModel userViewModel;
@@ -40,45 +47,89 @@ public class CreatePaymentPinActivity extends AppCompatActivity {
 
         userViewModel = new ViewModelProvider(this).get(UserViewModel.class);
         progressLoader = new ProgressLoaderController(this);
+        intentPurpose = getIntent().getStringExtra("purpose");
 
+        initObservers();
         setupUiActions();
-        observeCreatePaymentPinStatus();
+    }
+
+    private void initObservers() {
+        observePaymentPinStatus();
     }
 
     private void setupUiActions() {
         StatusBarUtil.setStatusBarColor(this, R.color.white);
         setupPinInputWatcher();
+        setupUiState();
 
         binding.btnBackBefore.setOnClickListener(v -> finish());
-        binding.btnConfirm.setOnClickListener(view -> createPaymentPin(Objects.requireNonNull(binding.pinView.getText()).toString()));
     }
 
-    private void createPaymentPin(String pin) {
-        userViewModel.createPaymentPin(pin);
-    }
+    private void setupUiState() {
+        boolean isPinChange = intentPurpose != null && intentPurpose.equals("change_payment_pin");
 
-    private void observeCreatePaymentPinStatus() {
-        userViewModel.getCreatePaymentPinLiveData().observe(this, event -> {
-            Result<String> result = event.getContentIfNotHandled();
-            if (result == null) return;
+        binding.title.setText(isPinChange ? "Reset Payment PIN" : "Create Payment PIN");
+        binding.currentPinViewContainer.setVisibility(isPinChange ? View.VISIBLE : View.GONE);
 
-            switch (result.getStatus()) {
-                case LOADING -> progressLoader.show();
-                case SUCCESS -> onCreatePaymentPinStatusSuccess();
-                case FAILURE -> onCreatePaymentPinStatusError(result.getErrorMessage());
+        binding.btnConfirm.setOnClickListener(view -> {
+            if (isPinChange) {
+                changePaymentPin();
+                return;
             }
+            createPaymentPin();
         });
     }
 
-    private void onCreatePaymentPinStatusSuccess() {
-        progressLoader.hide();
-        showSuccessBottomSheetDialog();
+    private void createPaymentPin() {
+        String pin = Objects.requireNonNull(binding.pinView.getText()).toString();
+
+        userViewModel.createPaymentPin(pin);
+    }
+
+    private void changePaymentPin() {
+        String oldPin = Objects.requireNonNull(binding.currentPinView.getText()).toString();
+        String newPin = Objects.requireNonNull(binding.pinView.getText()).toString();
+
+        userViewModel.changePaymentPin(oldPin, newPin);
+    }
+
+    // Observers
+    private void observePaymentPinStatus() {
+        userViewModel.getCreatePaymentPinLiveData().observe(this, event -> {
+            Result<String> result = event.getContentIfNotHandled();
+            handlePinOperationStatus(result);
+        });
+
+        userViewModel.getChangePaymentPinLiveData().observe(this, event -> {
+            Result<String> result = event.getContentIfNotHandled();
+            handlePinOperationStatus(result);
+        });
+    }
+
+    private void handlePinOperationStatus(Result<String> result) {
+        if (result == null) return;
+        switch (result.getStatus()) {
+            case NO_INTERNET -> showErrorDialog(result.getMessage());
+
+            case LOADING -> progressLoader.show();
+
+            case SUCCESS -> {
+                progressLoader.hide();
+                showSuccessBottomSheetDialog();
+            }
+            case FAILURE -> {
+                progressLoader.hide();
+                showErrorDialog(result.getErrorMessage());
+            }
+        }
     }
 
     private void showSuccessBottomSheetDialog() {
         String title = "Success";
-        String message = "Your payment PIN has been created successfully";
         String buttonTxt = "Continue";
+
+        boolean isPinChange = intentPurpose != null && intentPurpose.equals("change_payment_pin");
+        String message = (isPinChange) ? "Your payment PIN has been updated successfully" : "Your payment PIN has been created successfully";
 
         UiUtil.showSuccessBottomSheetDialog(
                 this,
@@ -86,18 +137,23 @@ public class CreatePaymentPinActivity extends AppCompatActivity {
                     binding.title.setText(title);
                     binding.message.setText(message);
                     binding.btnContinue.setText(buttonTxt);
-                    binding.btnContinue.setOnClickListener(view -> finish());
                     binding.anim.playAnimation();
+                    binding.btnContinue.setOnClickListener(view -> finish());
                 }
         );
     }
 
-    private void onCreatePaymentPinStatusError(String message) {
-        progressLoader.hide();
-        UiUtil.showSimpleAlertDialog(
+    private void showErrorDialog(String error) {
+        String priBtn = "Okay";
+
+        DashboardUiUtil.showAlertDialogMessage(
                 this,
-                "Error",
-                message
+                (dialog, binding) -> {
+                    binding.btnSecondary.setVisibility(View.GONE);
+                    binding.message.setText(error);
+                    binding.btnPrimary.setText(priBtn);
+                    binding.btnPrimary.setOnClickListener(v -> dialog.dismiss());
+                }
         );
     }
 
@@ -115,43 +171,71 @@ public class CreatePaymentPinActivity extends AppCompatActivity {
 
             @Override
             public void onTextChanged(CharSequence charSequence, int i, int i1, int i2) {
+                String currentPin = Objects.requireNonNull(binding.currentPinView.getText()).toString();
                 String pin = Objects.requireNonNull(binding.pinView.getText()).toString();
                 String confirmPin = Objects.requireNonNull(binding.confirmPinView.getText()).toString();
 
-                String ERROR_REPEATED_NUMBERS = "PIN must not contain any repeated digits";
-                boolean hasConsecutive = hasConsecutive(pin);
+                // Conditions
+                boolean hasRepeatedNumbers = hasRepeatedNumbers(pin);
+                boolean isPinMatchesConfirmPin = isPinMatch(pin, confirmPin);
+                boolean isNewPinSameAsCurrent = isPinMatch(pin, currentPin);
 
-                binding.pinViewError.setText((hasConsecutive) ? ERROR_REPEATED_NUMBERS : "");
-                binding.pinViewError.setVisibility((hasConsecutive) ? View.VISIBLE : View.GONE);
+                boolean isPinFilled = isPinViewFilled(pin, binding.pinView);
+                boolean isCurrentPinFilled = isPinViewFilled(currentPin, binding.currentPinView);
+                boolean isConfirmPinFilled = isPinViewFilled(confirmPin, binding.confirmPinView);
 
-                // config confirm pin
-                String ERROR_PIN_MISMATCH = "Pin does not match";
-                boolean isMatch = isPinMatch(pin, confirmPin);
+                boolean shouldShowPinMismatch = isConfirmPinFilled && isPinFilled && !isPinMatchesConfirmPin;
 
-                binding.confirmPinViewError.setText((!isMatch && !confirmPin.isEmpty()) ? ERROR_PIN_MISMATCH : "");
-                binding.confirmPinViewError.setVisibility((!isMatch && !confirmPin.isEmpty()) ? View.VISIBLE : View.GONE);
+                binding.pinViewError.setText((hasRepeatedNumbers) ? ERROR_REPEATED_NUMBERS : "");
+                binding.pinViewError.setVisibility((hasRepeatedNumbers) ? View.VISIBLE : View.GONE);
 
-                updateButtonConfirmState(pin, confirmPin);
+                if (intentPurpose != null && intentPurpose.equals("change_payment_pin")) {
+
+                    if (isPinFilled && isCurrentPinFilled && isNewPinSameAsCurrent) {
+                        binding.pinViewError.setText(ERROR_CURRENT_PIN_IS_SAME_AS_NEW);
+                        binding.pinViewError.setVisibility(View.VISIBLE);
+                    } else {
+                        binding.confirmPinViewError.setText(shouldShowPinMismatch ? ERROR_PIN_MISMATCH : "");
+                        binding.confirmPinViewError.setVisibility(shouldShowPinMismatch ? View.VISIBLE : View.GONE);
+                    }
+
+                } else {
+                    binding.confirmPinViewError.setText(shouldShowPinMismatch ? ERROR_PIN_MISMATCH : "");
+                    binding.confirmPinViewError.setVisibility(shouldShowPinMismatch ? View.VISIBLE : View.GONE);
+                }
+
+                updateButtonConfirmState(currentPin, pin, confirmPin);
             }
         };
         binding.pinView.addTextChangedListener(watcher);
         binding.confirmPinView.addTextChangedListener(watcher);
+        binding.currentPinView.addTextChangedListener(watcher);
     }
 
-    private void updateButtonConfirmState(String pin, String confirmPin) {
-        boolean hasConsecutive = hasConsecutive(pin);
-        boolean isPinFilled = pin.length() == binding.pinView.getItemCount();
+    private void updateButtonConfirmState(String currentPin, String pin, String confirmPin) {
+        boolean isPinChange = intentPurpose != null && intentPurpose.equals("change_payment_pin");
+        boolean isCurrentPinFilled = isPinViewFilled(currentPin, binding.currentPinView);
+        boolean isCurrentPinSameAsNew = isPinMatch(currentPin, pin);
+
+        boolean hasRepeatedNumbers = hasRepeatedNumbers(pin);
+        boolean isPinFilled = isPinViewFilled(pin, binding.pinView);
         boolean isPinMatch = isPinMatch(pin, confirmPin);
 
-        binding.btnConfirm.setEnabled(!pin.isEmpty() && isPinFilled && !hasConsecutive && isPinMatch);
+        binding.btnConfirm.setEnabled((isPinChange)
+                ? !isCurrentPinSameAsNew && isCurrentPinFilled && isPinFilled && !hasRepeatedNumbers && isPinMatch
+                : isPinFilled && !hasRepeatedNumbers && isPinMatch);
     }
 
-    private boolean hasConsecutive(String pin) {
+    private boolean hasRepeatedNumbers(String pin) {
         return !pin.isEmpty() && pin.matches(".*(\\d)\\1.*");
     }
 
-    private boolean isPinMatch(String pin, String confirmPin) {
-        return pin.length() == binding.pinView.getItemCount() && pin.equals(confirmPin);
+    private boolean isPinMatch(String pin, String pinToCompare) {
+        return pin.length() == binding.pinView.getItemCount() && pin.equals(pinToCompare);
+    }
+
+    private boolean isPinViewFilled(String pin, PinView view) {
+        return pin.length() == view.getItemCount();
     }
 
     @Override

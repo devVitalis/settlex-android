@@ -305,7 +305,7 @@ public class TransferFundsActivity extends AppCompatActivity {
                     DashboardUiUtil.showBottomSheetPaymentPinConfirmation(
                             this,
                             (binding, runnable) -> runnable[0] = () -> {
-                                verifyPaymentPin(Objects.requireNonNull(binding.pinBox.getText()).toString());
+                                verifyPaymentPin(Objects.requireNonNull(binding.pinView.getText()).toString());
                             });
                 }
         );

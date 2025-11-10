@@ -8,7 +8,7 @@
     android:paddingTop="15dp">
 
     <ImageView
-        android:id="@+id/btnClose"
+        android:id="@+id/btn_close"
         android:layout_width="25dp"
         android:layout_height="25dp"
         android:layout_gravity="end"
@@ -27,7 +27,7 @@
         android:textSize="14sp" />
 
     <com.chaos.view.PinView
-        android:id="@+id/pinBox"
+        android:id="@+id/pin_view"
         style="@style/Widget.SettleX.PinView"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
@@ -36,7 +36,7 @@
         android:textSize="11sp" />
 
     <TextView
-        android:id="@+id/btnForgotPaymentPin"
+        android:id="@+id/btn_forgot_payment_pin"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginVertical="15dp"
@@ -47,7 +47,7 @@
         android:textSize="12sp" />
 
     <com.settlex.android.ui.common.custom.CustomNumericKeypad
-        android:id="@+id/numericKeypad"
+        android:id="@+id/numeric_keypad"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_gravity="bottom" />

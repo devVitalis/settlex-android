@@ -92,7 +92,7 @@ public class CreatePaymentIdActivity extends AppCompatActivity {
     }
 
     private void observePaymentIdStoreStatus() {
-        userViewModel.getStoreUserPaymentIdStatus().observe(this, resultEvent -> {
+        userViewModel.getSetPaymentIdLiveData().observe(this, resultEvent -> {
             Result<String> result = resultEvent.getContentIfNotHandled();
             if (result == null) return;
 
@@ -178,7 +178,7 @@ public class CreatePaymentIdActivity extends AppCompatActivity {
     }
 
     private void storeUserPaymentId(String paymentId, String uid) {
-        userViewModel.storeUserPaymentIdToServer(paymentId, uid);
+        userViewModel.setPaymentId(paymentId, uid);
     }
 
     private void setupEditTextFocusHandler() {

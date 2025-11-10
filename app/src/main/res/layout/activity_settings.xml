@@ -25,7 +25,7 @@
             android:id="@+id/btn_back_before"
             android:layout_width="20dp"
             android:layout_height="20dp"
-            android:contentDescription="Back"
+            android:contentDescription="Back Button"
             app:srcCompat="@drawable/ic_arrow_back" />
 
         <TextView
@@ -55,7 +55,7 @@
             android:orientation="vertical"
             android:padding="15dp">
 
-            <!-- 1st Card -->
+            <!-- Payment Card -->
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
@@ -74,6 +74,44 @@
                 android:paddingHorizontal="5dp"
                 android:paddingVertical="10dp">
 
+                <!-- btn_create_payment_pin -->
+                <LinearLayout
+                    android:id="@+id/btn_create_payment_pin"
+                    android:layout_width="match_parent"
+                    android:layout_height="45dp"
+                    android:background="@drawable/bg_8dp_white_ripple_yes"
+                    android:gravity="center_vertical"
+                    android:orientation="horizontal"
+                    android:padding="5dp">
+
+                    <TextView
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        android:fontFamily="@font/inter_regular"
+                        android:includeFontPadding="false"
+                        android:text="Create Payment Pin"
+                        android:textColor="@color/black"
+                        android:textSize="14sp" />
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginEnd="5dp"
+                        android:fontFamily="@font/inter_regular"
+                        android:includeFontPadding="false"
+                        android:text="Setup"
+                        android:textColor="@color/blue"
+                        android:textSize="12sp" />
+
+                    <ImageView
+                        android:layout_width="15dp"
+                        android:layout_height="15dp"
+                        android:contentDescription="@null"
+                        android:src="@drawable/ic_arrow_forward"
+                        app:tint="@color/gray" />
+                </LinearLayout>
+
                 <!-- btn_change_payment_pin -->
                 <LinearLayout
                     android:id="@+id/btn_change_payment_pin"
@@ -85,7 +123,6 @@
                     android:padding="5dp">
 
                     <TextView
-                        android:id="@+id/txt_change_payment_pin"
                         android:layout_width="0dp"
                         android:layout_height="wrap_content"
                         android:layout_weight="1"
@@ -94,17 +131,6 @@
                         android:text="Change Payment Pin"
                         android:textColor="@color/black"
                         android:textSize="14sp" />
-
-                    <TextView
-                        android:id="@+id/txt_set_payment_pin"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_marginEnd="5dp"
-                        android:fontFamily="@font/inter_regular"
-                        android:includeFontPadding="false"
-                        android:text="Setup"
-                        android:textColor="@color/blue"
-                        android:textSize="12sp" />
 
                     <ImageView
                         android:layout_width="15dp"
@@ -142,7 +168,7 @@
                         app:tint="@color/gray" />
                 </LinearLayout>
 
-                <!-- btn_biometrics -->
+                <!-- btn_switch_pay_with_biometrics -->
                 <LinearLayout
                     android:layout_width="match_parent"
                     android:layout_height="45dp"
@@ -188,7 +214,7 @@
                 </LinearLayout>
             </LinearLayout>
 
-            <!-- 2nd Card -->
+            <!-- Login Card -->
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
@@ -264,7 +290,7 @@
                         app:tint="@color/gray" />
                 </LinearLayout>
 
-                <!-- btn_biometrics -->
+                <!-- btn_switch_login_with_biometrics -->
                 <LinearLayout
                     android:layout_width="match_parent"
                     android:layout_height="45dp"

@@ -74,10 +74,10 @@ public class SetNewPasswordActivity extends AppCompatActivity {
 
         binding.btnBackBefore.setOnClickListener(v -> finish());
         binding.btnChangePassword.setOnClickListener(v -> attemptPasswordReset());
-        binding.currentPasswordContainer.setVisibility((getIntentExtra() != null && getIntentExtra().equals("change_password_from_settings") ? View.VISIBLE : View.GONE));
+        binding.currentPasswordContainer.setVisibility((getIntentPurpose() != null && getIntentPurpose().equals("change_password_from_settings") ? View.VISIBLE : View.GONE));
     }
 
-    private String getIntentExtra() {
+    private String getIntentPurpose() {
         return getIntent().getStringExtra("purpose");
     }
 
@@ -147,14 +147,13 @@ public class SetNewPasswordActivity extends AppCompatActivity {
             binding.anim.playAnimation();
 
             binding.btnContinue.setOnClickListener(v -> {
-                String purpose = getIntentExtra();
+                String purpose = getIntentPurpose();
                 if (purpose != null) {
                     if (purpose.equals("forgot_password_from_settings") || purpose.equals("change_password_from_settings")) {
                         routeToDestination(SettingsActivity.class);
-                    } else {
-                        routeToDestination(LoginActivity.class);
                     }
                 }
+                routeToDestination(LoginActivity.class);
                 dialog.dismiss();
             });
         });
@@ -175,7 +174,7 @@ public class SetNewPasswordActivity extends AppCompatActivity {
         String oldPassword = Objects.requireNonNull(binding.editTxtCurrentPassword.getText()).toString().trim();
         String newPassword = binding.editTxtPassword.getText().toString().trim();
 
-        if (getIntentExtra() != null && getIntentExtra().equals("change_password_from_settings")) {
+        if (getIntentPurpose() != null && getIntentPurpose().equals("change_password_from_settings")) {
             updatePassword(email, oldPassword, newPassword);
         } else {
             setNewPassword(email, newPassword);
