@@ -45,9 +45,7 @@ public class UserViewModel extends ViewModel {
     private final MutableLiveData<Boolean> isPayBiometricsEnabledLiveData = new MutableLiveData<>();
     private final MutableLiveData<Boolean> isLoginBiometricsEnabledLiveData = new MutableLiveData<>();
 
-    // --------------------------------------------------------------------------------
-    // Constructor
-    // --------------------------------------------------------------------------------
+
     @Inject
     public UserViewModel(UserRepository userRepo) {
         this.userRepo = userRepo;
@@ -62,10 +60,7 @@ public class UserViewModel extends ViewModel {
 //        isLoginBiometricsEnabledLiveData.setValue(userRepo.getLoginBiometricsEnabled());
     }
 
-    // --------------------------------------------------------------------------------
     // Public API - Actions (Called by UI)
-    // --------------------------------------------------------------------------------
-
     public void signOut() {
         userRepo.signOut();
     }
@@ -231,10 +226,7 @@ public class UserViewModel extends ViewModel {
         });
     }
 
-    // --------------------------------------------------------------------------------
     // Public API - Observers (LiveData Getters)
-    // --------------------------------------------------------------------------------
-
     public LiveData<String> getAuthStateLiveData() {
         return authStateLiveData;
     }
@@ -283,10 +275,7 @@ public class UserViewModel extends ViewModel {
         return changePaymentPinLiveData;
     }
 
-    // --------------------------------------------------------------------------------
     // Private Helpers
-    // --------------------------------------------------------------------------------
-
     /**
      * Called once during ViewModel initialization.
      * Observes the repository's auth state.
