@@ -22,6 +22,7 @@ import com.settlex.android.databinding.ActivityProfileBinding;
 import com.settlex.android.ui.common.util.ProgressLoaderController;
 import com.settlex.android.ui.dashboard.model.UserUiModel;
 import com.settlex.android.ui.dashboard.viewmodel.UserViewModel;
+import com.settlex.android.utils.event.Result;
 import com.settlex.android.utils.string.StringUtil;
 import com.settlex.android.utils.ui.StatusBarUtil;
 import com.settlex.android.utils.ui.UiUtil;
@@ -86,7 +87,7 @@ public class ProfileActivity extends AppCompatActivity {
 
             switch (user.getStatus()) {
                 case SUCCESS -> onUserDataStatusSuccess(user.getData());
-                case FAILURE -> onUserDataStatusError(user.getErrorMessage());
+                case FAILURE -> onUserDataStatusError(user.getError());
             }
         });
     }
@@ -107,13 +108,14 @@ public class ProfileActivity extends AppCompatActivity {
     }
 
     private void observeProfilePicUploadStatus() {
-        userViewModel.getProfilePicUploadResult().observe(this, upload -> {
-            if (upload == null) return;
+        userViewModel.getProfilePicUploadResult().observe(this, event -> {
+            Result<String> result = event.getContentIfNotHandled();
+            if (result == null) return;
 
-            switch (upload.getStatus()) {
+            switch (result.getStatus()) {
                 case LOADING -> progressLoader.show();
                 case SUCCESS -> progressLoader.hide();
-                case FAILURE -> onProfilePicUploadStatusError(upload.getErrorMessage());
+                case FAILURE -> onProfilePicUploadStatusError(result.getError());
             }
         });
     }

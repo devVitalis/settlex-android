@@ -57,9 +57,9 @@ public class UserViewModel extends ViewModel {
         initUserLiveDataObserver();
 
         // Load initial state from repository (preferences)
-        isBalanceHiddenLiveData.setValue(userRepo.getBalanceHidden());
-        isPayBiometricsEnabledLiveData.setValue(userRepo.getPayBiometricsEnabled());
-        isLoginBiometricsEnabledLiveData.setValue(userRepo.getLoginBiometricsEnabled());
+//        isBalanceHiddenLiveData.setValue(userRepo.getBalanceHidden());
+//        isPayBiometricsEnabledLiveData.setValue(userRepo.getPayBiometricsEnabled());
+//        isLoginBiometricsEnabledLiveData.setValue(userRepo.getLoginBiometricsEnabled());
     }
 
     // --------------------------------------------------------------------------------
@@ -330,7 +330,7 @@ public class UserViewModel extends ViewModel {
                         dto.getData().commissionBalance,
                         dto.getData().referralBalance
                 )));
-                case FAILURE -> userLiveData.setValue(Result.failure(dto.getErrorMessage()));
+                case FAILURE -> userLiveData.setValue(Result.failure(dto.getError()));
             }
         });
     }

@@ -118,7 +118,7 @@ public class SignUpEmailVerificationFragment extends Fragment {
             switch (result.getStatus()) {
                 case LOADING -> progressLoader.show();
                 case SUCCESS -> onEmailVerificationSuccess();
-                case FAILURE -> onEmailVerificationStatusError(result.getErrorMessage());
+                case FAILURE -> onEmailVerificationStatusError(result.getError());
             }
         });
     }
@@ -148,7 +148,7 @@ public class SignUpEmailVerificationFragment extends Fragment {
             switch (result.getStatus()) {
                 case LOADING -> progressLoader.show();
                 case SUCCESS -> onSendVerificationCodeStatusSuccess();
-                case FAILURE -> onVerificationCodeStatusError(result.getErrorMessage());
+                case FAILURE -> onVerificationCodeStatusError(result.getError());
             }
         });
     }

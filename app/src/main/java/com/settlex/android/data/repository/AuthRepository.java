@@ -290,7 +290,7 @@ public class AuthRepository {
      * Update user password
      */
     public void setNewPassword(String email, String newPassword, SetNewPasswordCallback callback) {
-        MetadataService.collectAsync(metadata -> {
+        MetadataService.collectMetadata(metadata -> {
             Map<String, Object> data = new HashMap<>();
             data.put("email", email);
             data.put("newPassword", newPassword);

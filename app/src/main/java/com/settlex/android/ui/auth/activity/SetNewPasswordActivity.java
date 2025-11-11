@@ -95,7 +95,7 @@ public class SetNewPasswordActivity extends AppCompatActivity {
             switch (result.getStatus()) {
                 case LOADING -> progressLoader.show();
                 case SUCCESS -> onUpdatePasswordStatusSuccess();
-                case FAILURE -> onUpdatePasswordStatusFailed(result.getErrorMessage());
+                case FAILURE -> onUpdatePasswordStatusFailed(result.getError());
             }
         });
     }
@@ -118,7 +118,7 @@ public class SetNewPasswordActivity extends AppCompatActivity {
                 switch (result.getStatus()) {
                     case LOADING -> progressLoader.show();
                     case SUCCESS -> onSetNewPasswordStatusSuccess();
-                    case FAILURE -> onSetNewPasswordStatusError(result.getErrorMessage());
+                    case FAILURE -> onSetNewPasswordStatusError(result.getError());
                 }
             }
         });

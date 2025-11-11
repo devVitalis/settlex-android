@@ -142,7 +142,7 @@ public class LoginActivity extends AppCompatActivity {
                 switch (result.getStatus()) {
                     case LOADING -> progressLoader.show();
                     case SUCCESS -> onLoginStatusSuccess();
-                    case FAILURE -> onLoginStatusError(result.getErrorMessage());
+                    case FAILURE -> onLoginStatusError(result.getError());
                 }
             }
         });

@@ -119,7 +119,7 @@ public class CreatePaymentPinActivity extends AppCompatActivity {
             }
             case FAILURE -> {
                 progressLoader.hide();
-                showErrorDialog(result.getErrorMessage());
+                showErrorDialog(result.getError());
             }
         }
     }

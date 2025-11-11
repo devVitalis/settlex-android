@@ -8,7 +8,6 @@ package com.settlex.android.utils.event;
  * @param <T> The type of the data payload contained in a successful result.
  */
 public class Result<T> {
-    /** The standard user-facing error message for network disconnection. */
     private static final String ERROR_NO_INTERNET = "Connection lost. Please check your Wi-Fi or cellular data and try again";
 
     /**
@@ -118,7 +117,7 @@ public class Result<T> {
      * Retrieves the specific error description, typically only valid when the status is {@link Status#FAILURE}.
      * @return The error message, or null.
      */
-    public String getErrorMessage() {
+    public String getError() {
         return error;
     }
 }

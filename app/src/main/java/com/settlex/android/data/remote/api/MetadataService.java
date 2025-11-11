@@ -36,7 +36,7 @@ public class MetadataService {
      *
      * @param callback Receiver for the collected metadata
      */
-    public static void collectAsync(RequestMetadataServiceCallback callback) {
+    public static void collectMetadata(RequestMetadataServiceCallback callback) {
         new Thread(() -> {
             MetadataDto metadata = new MetadataDto();
 
