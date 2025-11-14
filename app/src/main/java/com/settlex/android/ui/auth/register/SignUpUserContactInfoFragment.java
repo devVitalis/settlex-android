@@ -28,17 +28,17 @@ import androidx.navigation.fragment.NavHostFragment;
 
 import com.settlex.android.R;
 import com.settlex.android.databinding.FragmentSignUpUserContactInfoBinding;
-import com.settlex.android.ui.auth.login.LoginActivity;
 import com.settlex.android.ui.auth.AuthViewModel;
-import com.settlex.android.util.string.CurrencyFormatter;
-import com.settlex.android.util.ui.ProgressLoaderController;
+import com.settlex.android.ui.auth.login.LoginActivity;
+import com.settlex.android.ui.common.util.DialogHelper;
 import com.settlex.android.ui.info.legal.PrivacyPolicyActivity;
 import com.settlex.android.ui.info.legal.TermsAndConditionsActivity;
 import com.settlex.android.util.event.Result;
 import com.settlex.android.util.network.NetworkMonitor;
+import com.settlex.android.util.string.CurrencyFormatter;
 import com.settlex.android.util.string.StringFormatter;
+import com.settlex.android.util.ui.ProgressLoaderController;
 import com.settlex.android.util.ui.StatusBar;
-import com.settlex.android.ui.common.util.DialogHelper;
 
 import dagger.hilt.android.AndroidEntryPoint;
 
@@ -92,7 +92,7 @@ public class SignUpUserContactInfoFragment extends Fragment {
         binding.btnHelp.setOnClickListener(v -> StringFormatter.showNotImplementedToast(requireContext()));
     }
 
-    // OBSERVERS =======
+    // Observers
     private void observeNetworkStatus() {
         NetworkMonitor.getNetworkStatus().observe(getViewLifecycleOwner(), isConnected -> {
             if (!isConnected) {
@@ -119,7 +119,7 @@ public class SignUpUserContactInfoFragment extends Fragment {
 
     private void onSendVerificationCodeStatusSuccess() {
         NavController navController = NavHostFragment.findNavController(this);
-        navController.navigate(R.id.signUpEmailVerificationFragment);
+        navController.navigate(R.id.sign_up_email_verification_fragment);
         progressLoader.hide();
     }
 
