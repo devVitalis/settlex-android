@@ -10,11 +10,11 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.splashscreen.SplashScreen;
 import androidx.lifecycle.ViewModelProvider;
 
-import com.settlex.android.data.local.OnboardingPrefs;
-import com.settlex.android.ui.auth.activity.LoginActivity;
-import com.settlex.android.ui.auth.viewmodel.AuthViewModel;
-import com.settlex.android.ui.onboarding.activity.OnboardingActivity;
-import com.settlex.android.utils.permission.NotificationPermissionUtil;
+import com.settlex.android.data.local.AppPrefs;
+import com.settlex.android.ui.auth.login.LoginActivity;
+import com.settlex.android.ui.auth.AuthViewModel;
+import com.settlex.android.ui.onboarding.OnboardingActivity;
+import com.settlex.android.util.permission.NotificationPermission;
 
 import dagger.hilt.android.AndroidEntryPoint;
 import jakarta.inject.Inject;
@@ -24,7 +24,7 @@ import jakarta.inject.Inject;
 public class SplashActivity extends AppCompatActivity {
 
     @Inject
-    NotificationPermissionUtil notification;
+    NotificationPermission notification;
     private AuthViewModel authViewModel;
 
     @Override
@@ -57,7 +57,7 @@ public class SplashActivity extends AppCompatActivity {
     }
 
     private void routeToDestination() {
-        OnboardingPrefs prefs = new OnboardingPrefs(this);
+        AppPrefs prefs = new AppPrefs(this);
 
         Class<? extends Activity> destination =
                 (!prefs.isIntroViewed()) ? OnboardingActivity.class :

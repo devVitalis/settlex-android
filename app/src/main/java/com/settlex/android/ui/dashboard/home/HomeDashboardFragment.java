@@ -23,7 +23,7 @@ import com.settlex.android.R;
 import com.settlex.android.data.enums.TransactionServiceType;
 import com.settlex.android.data.remote.profile.ProfileService;
 import com.settlex.android.databinding.FragmentDashboardHomeBinding;
-import com.settlex.android.ui.auth.activity.LoginActivity;
+import com.settlex.android.ui.auth.login.LoginActivity;
 import com.settlex.android.ui.dashboard.adapter.PromotionalBannerAdapter;
 import com.settlex.android.ui.dashboard.adapter.ServicesAdapter;
 import com.settlex.android.ui.dashboard.adapter.TransactionsAdapter;
@@ -39,10 +39,11 @@ import com.settlex.android.ui.dashboard.services.DataPurchaseActivity;
 import com.settlex.android.ui.dashboard.viewmodel.PromoBannerViewModel;
 import com.settlex.android.ui.dashboard.viewmodel.TransactionViewModel;
 import com.settlex.android.ui.dashboard.viewmodel.UserViewModel;
-import com.settlex.android.utils.event.Result;
-import com.settlex.android.utils.network.NetworkMonitor;
-import com.settlex.android.utils.string.StringUtil;
-import com.settlex.android.utils.ui.StatusBarUtil;
+import com.settlex.android.util.event.Result;
+import com.settlex.android.util.network.NetworkMonitor;
+import com.settlex.android.util.string.CurrencyFormatter;
+import com.settlex.android.util.string.StringFormatter;
+import com.settlex.android.util.ui.StatusBar;
 
 import java.util.Arrays;
 import java.util.Collections;
@@ -105,7 +106,7 @@ public class HomeDashboardFragment extends Fragment {
 
     // UI ACTIONS =======
     private void setupUiActions() {
-        StatusBarUtil.setStatusBarColor(requireActivity(), R.color.gray_light);
+        StatusBar.setStatusBarColor(requireActivity(), R.color.gray_light);
         initTransactionRecyclerView();
         setupDoubleBackToExit();
 
@@ -115,10 +116,10 @@ public class HomeDashboardFragment extends Fragment {
         binding.btnUserCommissionBalanceLayout.setOnClickListener(v -> navigateToActivity(CommissionWithdrawalActivity.class));
         binding.btnDeposit.setOnClickListener(v -> toggleBrandAwareness());
         binding.btnReceive.setOnClickListener(v -> navigateToActivity(ReceiveActivity.class));
-        binding.btnTransfer.setOnClickListener(v -> navigateToActivity(TransferFundsActivity.class));
-        binding.btnNotification.setOnClickListener(v -> StringUtil.showNotImplementedToast(requireContext()));
-        binding.btnSupport.setOnClickListener(v -> StringUtil.showNotImplementedToast(requireContext()));
-        binding.btnViewAllTransaction.setOnClickListener(v -> StringUtil.showNotImplementedToast(requireContext()));
+        binding.btnTransfer.setOnClickListener(v -> navigateToActivity(WalletTransferActivity.class));
+        binding.btnNotification.setOnClickListener(v -> StringFormatter.showNotImplementedToast(requireContext()));
+        binding.btnSupport.setOnClickListener(v -> StringFormatter.showNotImplementedToast(requireContext()));
+        binding.btnViewAllTransaction.setOnClickListener(v -> StringFormatter.showNotImplementedToast(requireContext()));
     }
 
     private void toggleBrandAwareness() {
@@ -199,7 +200,7 @@ public class HomeDashboardFragment extends Fragment {
         observeAndLoadUserPrefs(user.getBalance(), user.getCommissionBalance());
     }
 
-    private void hasPaymentId(String paymentId) {
+    private void hasPaymentId(java.lang.String paymentId) {
         if (paymentId == null || paymentId.isEmpty()) {
             navigateToActivity(CreatePaymentIdActivity.class);
         }
@@ -223,18 +224,18 @@ public class HomeDashboardFragment extends Fragment {
             if (hidden) {
                 // balance hidden set asterisk
                 binding.btnBalanceToggle.setImageResource(R.drawable.ic_visibility_off);
-                binding.userBalance.setText(StringUtil.setAsterisks());
-                binding.userCommissionBalance.setText(StringUtil.setAsterisks());
+                binding.userBalance.setText(StringFormatter.setAsterisks());
+                binding.userCommissionBalance.setText(StringFormatter.setAsterisks());
                 return;
             }
             // show balance
             binding.btnBalanceToggle.setImageResource(R.drawable.ic_visibility_on);
-            binding.userBalance.setText((balance > MILLION_THRESHOLD_KOBO) ? StringUtil.formatToNairaShort(balance) : StringUtil.formatToNaira(balance));
-            binding.userCommissionBalance.setText(StringUtil.formatToNairaShort(commissionBalance));
+            binding.userBalance.setText((balance > MILLION_THRESHOLD_KOBO) ? CurrencyFormatter.formatToNairaShort(balance) : CurrencyFormatter.formatToNaira(balance));
+            binding.userCommissionBalance.setText(CurrencyFormatter.formatToNairaShort(commissionBalance));
         });
     }
 
-    private void observeAndLoadRecentTransactions(String uid) {
+    private void observeAndLoadRecentTransactions(java.lang.String uid) {
         transactionViewModel.fetchTransactionsLiveData(uid, 2).observe(getViewLifecycleOwner(), transactions -> {
             if (transactions == null) return;
 
@@ -364,8 +365,8 @@ public class HomeDashboardFragment extends Fragment {
         binding.greetingContainer.setVisibility(View.GONE);
         binding.actionButtons.setVisibility(View.GONE);
         binding.txnContainer.setVisibility(View.GONE);
-        binding.userBalance.setText(StringUtil.setAsterisks());
-        binding.userCommissionBalance.setText(StringUtil.setAsterisks());
+        binding.userBalance.setText(StringFormatter.setAsterisks());
+        binding.userCommissionBalance.setText(StringFormatter.setAsterisks());
 
         // Show the logged-out UI elements
         binding.btnLogin.setVisibility(View.VISIBLE);
@@ -409,7 +410,7 @@ public class HomeDashboardFragment extends Fragment {
         ServicesAdapter adapter = new ServicesAdapter(false, services, serviceUiModel -> {
             ServiceDestination serviceDestination = serviceMap.get(serviceUiModel.getType());
             if (serviceDestination == null) {
-                StringUtil.showNotImplementedToast(requireContext());
+                StringFormatter.showNotImplementedToast(requireContext());
                 return;
             }
 

@@ -7,7 +7,7 @@ import androidx.appcompat.app.AppCompatActivity;
 
 import com.settlex.android.R;
 import com.settlex.android.databinding.ActivityTermsAndConditionsBinding;
-import com.settlex.android.utils.ui.StatusBarUtil;
+import com.settlex.android.util.ui.StatusBar;
 
 /**
  * Displays the app's Terms & Conditions with HTML formatting.
@@ -21,7 +21,7 @@ public class TermsAndConditionsActivity extends AppCompatActivity {
         ActivityTermsAndConditionsBinding binding = ActivityTermsAndConditionsBinding.inflate(getLayoutInflater());
         setContentView(binding.getRoot());
 
-        StatusBarUtil.setStatusBarColor(this, R.color.white);
+        StatusBar.setStatusBarColor(this, R.color.white);
         binding.btnBackBefore.setOnClickListener(v -> finish());
         binding.txtTermsAndConditions.setText(Html.fromHtml(getTermsHtml(), Html.FROM_HTML_MODE_LEGACY));
     }

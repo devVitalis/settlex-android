@@ -22,13 +22,13 @@ import androidx.lifecycle.ViewModelProvider;
 
 import com.settlex.android.R;
 import com.settlex.android.databinding.ActivityCreatePaymentIdBinding;
-import com.settlex.android.ui.common.util.ProgressLoaderController;
+import com.settlex.android.util.ui.ProgressLoaderController;
 import com.settlex.android.ui.dashboard.DashboardActivity;
 import com.settlex.android.ui.dashboard.model.UserUiModel;
 import com.settlex.android.ui.dashboard.viewmodel.UserViewModel;
-import com.settlex.android.utils.event.Result;
-import com.settlex.android.utils.ui.StatusBarUtil;
-import com.settlex.android.utils.ui.UiUtil;
+import com.settlex.android.util.event.Result;
+import com.settlex.android.util.ui.StatusBar;
+import com.settlex.android.ui.common.util.DialogHelper;
 
 import dagger.hilt.android.AndroidEntryPoint;
 
@@ -66,7 +66,7 @@ public class CreatePaymentIdActivity extends AppCompatActivity {
     }
 
     private void setupUiActions() {
-        StatusBarUtil.setStatusBarColor(this, R.color.white);
+        StatusBar.setStatusBarColor(this, R.color.white);
         setupPaymentIdInputWatcher();
         setupEditTextFocusHandler();
         handleOnBackPressed();
@@ -106,7 +106,7 @@ public class CreatePaymentIdActivity extends AppCompatActivity {
 
     private void onPaymentIdStoreStatusSuccess() {
         progressLoader.hide();
-        UiUtil.showSuccessBottomSheetDialog(
+        DialogHelper.showSuccessBottomSheetDialog(
                 this,
                 (dialog, dialogBinding) -> {
                     String title = "Success";

@@ -18,8 +18,8 @@ import com.settlex.android.databinding.FragmentDashboardServicesBinding;
 import com.settlex.android.ui.dashboard.adapter.ServicesAdapter;
 import com.settlex.android.ui.dashboard.model.ServiceDestination;
 import com.settlex.android.ui.dashboard.model.ServiceUiModel;
-import com.settlex.android.utils.string.StringUtil;
-import com.settlex.android.utils.ui.StatusBarUtil;
+import com.settlex.android.util.string.StringFormatter;
+import com.settlex.android.util.ui.StatusBar;
 
 import java.util.Arrays;
 import java.util.HashMap;
@@ -51,7 +51,7 @@ public class ServicesDashboardFragment extends Fragment {
     }
 
     private void setupUiActions() {
-        StatusBarUtil.setStatusBarColor(requireActivity(), R.color.white);
+        StatusBar.setStatusBarColor(requireActivity(), R.color.white);
     }
 
     private void setupRecyclerView(List<ServiceUiModel> services, androidx.recyclerview.widget.RecyclerView recyclerView) {
@@ -103,7 +103,7 @@ public class ServicesDashboardFragment extends Fragment {
 
     private void handleOnItemServiceClick(ServiceDestination destination) {
         if (destination == null) {
-            StringUtil.showNotImplementedToast(requireContext());
+            StringFormatter.showNotImplementedToast(requireContext());
             return;
         }
 

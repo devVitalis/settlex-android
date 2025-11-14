@@ -7,7 +7,7 @@
     android:layout_height="match_parent"
     android:background="@color/white"
     android:paddingHorizontal="20dp"
-    tools:context=".ui.onboarding.fragment.OnboardingPage4Fragment">
+    tools:context=".ui.onboarding.OnboardingPage4Fragment">
 
     <androidx.constraintlayout.widget.ConstraintLayout
         android:id="@+id/image_container"

@@ -14,24 +14,24 @@ import androidx.lifecycle.ViewModelProvider;
 
 import com.settlex.android.R;
 import com.settlex.android.databinding.ActivitySettingsBinding;
-import com.settlex.android.ui.auth.activity.SetNewPasswordActivity;
-import com.settlex.android.ui.auth.viewmodel.AuthViewModel;
+import com.settlex.android.ui.auth.forgot_password.CreatePasswordActivity;
+import com.settlex.android.ui.auth.AuthViewModel;
 import com.settlex.android.ui.common.components.BiometricAuthHelper;
-import com.settlex.android.ui.common.components.OtpVerificationActivity;
+import com.settlex.android.ui.auth.forgot_password.OtpVerificationActivity;
 import com.settlex.android.ui.dashboard.model.UserUiModel;
 import com.settlex.android.ui.dashboard.util.DashboardUiUtil;
 import com.settlex.android.ui.dashboard.viewmodel.UserViewModel;
-import com.settlex.android.utils.event.Result;
-import com.settlex.android.utils.network.NetworkMonitor;
-import com.settlex.android.utils.string.StringUtil;
-import com.settlex.android.utils.ui.StatusBarUtil;
-import com.settlex.android.utils.ui.UiUtil;
+import com.settlex.android.util.event.Result;
+import com.settlex.android.util.network.NetworkMonitor;
+import com.settlex.android.util.string.StringFormatter;
+import com.settlex.android.util.ui.StatusBar;
+import com.settlex.android.ui.common.util.DialogHelper;
 
 import dagger.hilt.android.AndroidEntryPoint;
 
 @AndroidEntryPoint
 public class SettingsActivity extends AppCompatActivity {
-    private String userEmail;
+    private java.lang.String userEmail;
 
     // dependencies
     private ActivitySettingsBinding binding;
@@ -60,13 +60,13 @@ public class SettingsActivity extends AppCompatActivity {
     }
 
     private void setupUiActions() {
-        StatusBarUtil.setStatusBarColor(this, R.color.white);
+        StatusBar.setStatusBarColor(this, R.color.white);
 
         binding.btnBackBefore.setOnClickListener(view -> finish());
 
         binding.btnForgotPassword.setOnClickListener(view -> showOtpConfirmationDialog(true));
         binding.btnChangePassword.setOnClickListener(view -> {
-            Intent intent = new Intent(this, SetNewPasswordActivity.class);
+            Intent intent = new Intent(this, CreatePasswordActivity.class);
             intent.putExtra("email", userEmail);
             intent.putExtra("purpose", "change_password_from_settings");
             startActivity(intent);
@@ -146,7 +146,7 @@ public class SettingsActivity extends AppCompatActivity {
                         }
 
                         @Override
-                        public void onError(String message) {
+                        public void onError(java.lang.String message) {
                             binding.btnSwitchPayWithBiometrics.setChecked(false);
                             Toast.makeText(SettingsActivity.this, message, Toast.LENGTH_SHORT).show();
                         }
@@ -174,7 +174,7 @@ public class SettingsActivity extends AppCompatActivity {
                         }
 
                         @Override
-                        public void onError(String message) {
+                        public void onError(java.lang.String message) {
                             binding.btnSwitchLoginWithBiometrics.setChecked(false);
                             Toast.makeText(SettingsActivity.this, message, Toast.LENGTH_SHORT).show();
                         }
@@ -192,7 +192,7 @@ public class SettingsActivity extends AppCompatActivity {
 
     private void sendPinResetCode() {
         if (!isInternetConnected) {
-            UiUtil.showNoInternetAlertDialog(this);
+            DialogHelper.showNoInternetAlertDialog(this);
             return;
         }
         authViewModel.sendPasswordResetCode(userEmail);
@@ -200,17 +200,17 @@ public class SettingsActivity extends AppCompatActivity {
 
     private void sendPasswordResetCode() {
         if (!isInternetConnected) {
-            UiUtil.showNoInternetAlertDialog(this);
+            DialogHelper.showNoInternetAlertDialog(this);
             return;
         }
         authViewModel.sendPasswordResetCode(userEmail);
     }
 
     private void showOtpConfirmationDialog(boolean isPasswordReset) {
-        final String maskedEmail = StringUtil.maskEmail(userEmail);
-        final String message = "To continue, we will send you a one-time password (OTP) to your registered email address " + maskedEmail;
-        final String btnSecondary = "Cancel";
-        final String btnPrimary = "Continue";
+        final java.lang.String maskedEmail = StringFormatter.maskEmail(userEmail);
+        final java.lang.String message = "To continue, we will send you a one-time password (OTP) to your registered email address " + maskedEmail;
+        final java.lang.String btnSecondary = "Cancel";
+        final java.lang.String btnPrimary = "Continue";
 
         int startIndex = message.indexOf(maskedEmail);
         int endIndex = message.indexOf(maskedEmail) + maskedEmail.length();

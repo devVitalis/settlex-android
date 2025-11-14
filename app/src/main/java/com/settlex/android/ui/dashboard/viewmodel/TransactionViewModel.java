@@ -14,9 +14,10 @@ import com.settlex.android.data.repository.TransactionRepository;
 import com.settlex.android.ui.dashboard.model.MoneyFlowUiModel;
 import com.settlex.android.ui.dashboard.model.RecipientUiModel;
 import com.settlex.android.ui.dashboard.model.TransactionUiModel;
-import com.settlex.android.utils.event.Event;
-import com.settlex.android.utils.event.Result;
-import com.settlex.android.utils.string.StringUtil;
+import com.settlex.android.util.event.Event;
+import com.settlex.android.util.event.Result;
+import com.settlex.android.util.string.CurrencyFormatter;
+import com.settlex.android.util.string.StringFormatter;
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -28,7 +29,7 @@ import jakarta.inject.Inject;
 @HiltViewModel
 public class TransactionViewModel extends ViewModel {
     private final MutableLiveData<Result<List<RecipientUiModel>>> recipientSearchResult = new MutableLiveData<>();
-    private final MutableLiveData<Event<Result<String>>> transferFundsLiveData = new MutableLiveData<>();
+    private final MutableLiveData<Event<Result<java.lang.String>>> transferFundsLiveData = new MutableLiveData<>();
     private final MediatorLiveData<Result<MoneyFlowUiModel>> moneyFlowLiveData = new MediatorLiveData<>();
     private final MutableLiveData<Result<List<TransactionUiModel>>> transactionLiveData = new MutableLiveData<>();
 
@@ -40,7 +41,7 @@ public class TransactionViewModel extends ViewModel {
         this.txnRepo = transactionRepo;
     }
 
-    public void findRecipientByPaymentId(String paymentId) {
+    public void findRecipientByPaymentId(java.lang.String paymentId) {
         recipientSearchResult.postValue(Result.loading());
         txnRepo.findRecipientByPaymentId(paymentId, new TransactionRepository.SearchRecipientCallback() {
             @Override
@@ -50,7 +51,7 @@ public class TransactionViewModel extends ViewModel {
 
                 for (RecipientDto dto : recipientDto) {
                     recipientUiModelList.add(new RecipientUiModel(
-                            StringUtil.addAtToPaymentId(dto.paymentId),
+                            StringFormatter.addAtToPaymentId(dto.paymentId),
                             dto.firstName + " " + dto.lastName,
                             dto.photoUrl));
                 }
@@ -58,7 +59,7 @@ public class TransactionViewModel extends ViewModel {
             }
 
             @Override
-            public void onFailure(String reason) {
+            public void onFailure(java.lang.String reason) {
                 recipientSearchResult.postValue(Result.failure(reason));
             }
         });
@@ -68,7 +69,7 @@ public class TransactionViewModel extends ViewModel {
         return recipientSearchResult;
     }
 
-    public void transferFunds(String senderUid, String recipient, String transactionId, long amount, String serviceType, String description) {
+    public void transferFunds(java.lang.String senderUid, java.lang.String recipient, java.lang.String transactionId, long amount, java.lang.String serviceType, java.lang.String description) {
         transferFundsLiveData.setValue(new Event<>(Result.loading()));
 
         txnRepo.transferFunds(senderUid, recipient, transactionId, amount, serviceType, description,
@@ -79,18 +80,18 @@ public class TransactionViewModel extends ViewModel {
                     }
 
                     @Override
-                    public void onPayFriendFailed(String reason) {
+                    public void onPayFriendFailed(java.lang.String reason) {
                         transferFundsLiveData.setValue(new Event<>(Result.failure("Transaction Failed")));
                     }
                 });
     }
 
-    public LiveData<Event<Result<String>>> getTransferFundsLiveData() {
+    public LiveData<Event<Result<java.lang.String>>> getTransferFundsLiveData() {
         return transferFundsLiveData;
     }
 
 
-    public LiveData<Result<List<TransactionUiModel>>> fetchTransactionsLiveData(String uid, int limit) {
+    public LiveData<Result<List<TransactionUiModel>>> fetchTransactionsLiveData(java.lang.String uid, int limit) {
         if (transactionLiveData.getValue() != null) return transactionLiveData;
 
         transactionLiveData.setValue(Result.loading());
@@ -126,8 +127,8 @@ public class TransactionViewModel extends ViewModel {
                             isSender ? dto.serviceType.getIconRes() : R.drawable.ic_service_payment_received,
                             operation.getSymbol(),
                             operation.getColorRes(),
-                            StringUtil.formatToNaira(dto.amount),
-                            StringUtil.formatTimeStampToSimpleDateAndTime(dto.createdAt),
+                            CurrencyFormatter.formatToNaira(dto.amount),
+                            StringFormatter.formatTimeStampToSimpleDateAndTime(dto.createdAt),
                             dto.status.getDisplayName(),
                             dto.status.getColorRes(),
                             dto.status.getBgColorRes()
@@ -137,14 +138,14 @@ public class TransactionViewModel extends ViewModel {
             }
 
             @Override
-            public void onError(String reason) {
+            public void onError(java.lang.String reason) {
                 transactionLiveData.setValue(Result.failure("Failed to load transactions"));
             }
         });
         return transactionLiveData;
     }
 
-    private void initMoneyFlow(String currentUserUid, List<TransactionDto> dtoList) {
+    private void initMoneyFlow(java.lang.String currentUserUid, List<TransactionDto> dtoList) {
         moneyFlowLiveData.setValue(Result.loading());
         double inFlow = 0;
         double outFlow = 0;

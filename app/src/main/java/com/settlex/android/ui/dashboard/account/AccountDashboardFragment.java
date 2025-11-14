@@ -18,13 +18,13 @@ import androidx.navigation.fragment.NavHostFragment;
 import com.settlex.android.R;
 import com.settlex.android.data.remote.profile.ProfileService;
 import com.settlex.android.databinding.FragmentDashboardAccountBinding;
-import com.settlex.android.ui.auth.activity.LoginActivity;
+import com.settlex.android.ui.auth.login.LoginActivity;
 import com.settlex.android.ui.dashboard.home.ProfileActivity;
 import com.settlex.android.ui.dashboard.model.UserUiModel;
 import com.settlex.android.ui.dashboard.viewmodel.UserViewModel;
-import com.settlex.android.utils.event.Result;
-import com.settlex.android.utils.string.StringUtil;
-import com.settlex.android.utils.ui.StatusBarUtil;
+import com.settlex.android.util.event.Result;
+import com.settlex.android.util.string.StringFormatter;
+import com.settlex.android.util.ui.StatusBar;
 
 import dagger.hilt.android.AndroidEntryPoint;
 
@@ -61,14 +61,14 @@ public class AccountDashboardFragment extends Fragment {
     }
 
     private void setupUIActions() {
-        StatusBarUtil.setStatusBarColor(requireActivity(), R.color.blue_200);
+        StatusBar.setStatusBarColor(requireActivity(), R.color.blue_200);
 
         binding.btnProfilePic.setOnClickListener(view -> navigateToActivity(ProfileActivity.class));
         binding.btnSettings.setOnClickListener(view -> navigateToActivity(SettingsActivity.class));
         binding.btnSettingsHeader.setOnClickListener(view -> navigateToActivity(SettingsActivity.class));
         binding.btnEarnRewards.setOnClickListener(view -> navigateToFragment(R.id.rewardsFragment));
         binding.btnAbout.setOnClickListener(view -> navigateToActivity(AboutActivity.class));
-        binding.btnTransactions.setOnClickListener(view -> StringUtil.showNotImplementedToast(requireContext()));
+        binding.btnTransactions.setOnClickListener(view -> StringFormatter.showNotImplementedToast(requireContext()));
 
         binding.btnSignOut.setOnClickListener(view -> {
             userViewModel.signOut();

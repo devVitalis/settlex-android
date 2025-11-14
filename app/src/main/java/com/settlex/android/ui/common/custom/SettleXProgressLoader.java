@@ -115,7 +115,7 @@ public class SettleXProgressLoader extends View {
         canvas.drawArc(ringBounds, 0, 360, false, ringPaint);
 
         // Draw rotating flash overlay
-        flashPaint.setAlpha(flashAlpha); // apply pulsing alpha here
+        flashPaint.setAlpha(flashAlpha);
 
         canvas.save();
         canvas.rotate(rotationAngle, getWidth() / 2f, getHeight() / 2f);

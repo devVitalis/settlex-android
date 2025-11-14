@@ -7,7 +7,7 @@ import androidx.appcompat.app.AppCompatActivity;
 
 import com.settlex.android.R;
 import com.settlex.android.databinding.ActivityPrivacyPolicyBinding;
-import com.settlex.android.utils.ui.StatusBarUtil;
+import com.settlex.android.util.ui.StatusBar;
 
 /**
  * Displays HTML-formatted privacy policy with light-themed status bar.
@@ -20,7 +20,7 @@ public class PrivacyPolicyActivity extends AppCompatActivity {
         ActivityPrivacyPolicyBinding binding = ActivityPrivacyPolicyBinding.inflate(getLayoutInflater());
         setContentView(binding.getRoot());
 
-        StatusBarUtil.setStatusBarColor(this, R.color.white);
+        StatusBar.setStatusBarColor(this, R.color.white);
         binding.btnBackBefore.setOnClickListener(v -> finish());
         binding.txtPrivacyPolicy.setText(Html.fromHtml(getPolicyHtml(), Html.FROM_HTML_MODE_LEGACY));
     }

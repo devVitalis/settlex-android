@@ -10,8 +10,9 @@ import com.settlex.android.R;
 import com.settlex.android.databinding.ActivityCommissionWithdrawalBinding;
 import com.settlex.android.ui.dashboard.model.UserUiModel;
 import com.settlex.android.ui.dashboard.viewmodel.UserViewModel;
-import com.settlex.android.utils.string.StringUtil;
-import com.settlex.android.utils.ui.StatusBarUtil;
+import com.settlex.android.util.string.CurrencyFormatter;
+import com.settlex.android.util.string.StringFormatter;
+import com.settlex.android.util.ui.StatusBar;
 
 import dagger.hilt.android.AndroidEntryPoint;
 
@@ -33,7 +34,7 @@ public class CommissionWithdrawalActivity extends AppCompatActivity {
     }
 
     private void setupUiActions() {
-        StatusBarUtil.setStatusBarColor(this, R.color.white);
+        StatusBar.setStatusBarColor(this, R.color.white);
 
         binding.btnWithdraw.setOnClickListener(v -> Toast.makeText(this, "This feature is not yet implemented", Toast.LENGTH_SHORT).show());
         binding.btnBackBefore.setOnClickListener(v -> finish());
@@ -53,6 +54,6 @@ public class CommissionWithdrawalActivity extends AppCompatActivity {
     }
 
     private void onUserDataSuccess(UserUiModel user) {
-        binding.userCommissionBalance.setText(StringUtil.formatToNaira(user.getCommissionBalance()));
+        binding.userCommissionBalance.setText(CurrencyFormatter.formatToNaira(user.getCommissionBalance()));
     }
 }

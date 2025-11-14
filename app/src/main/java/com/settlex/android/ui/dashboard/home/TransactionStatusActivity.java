@@ -12,7 +12,7 @@ import com.settlex.android.R;
 import com.settlex.android.data.enums.TransactionStatus;
 import com.settlex.android.databinding.ActivityTransactionStatusBinding;
 import com.settlex.android.ui.dashboard.DashboardActivity;
-import com.settlex.android.utils.ui.StatusBarUtil;
+import com.settlex.android.util.ui.StatusBar;
 
 import java.util.Objects;
 
@@ -36,7 +36,7 @@ public class TransactionStatusActivity extends AppCompatActivity {
     }
 
     private void setupUiActions() {
-        StatusBarUtil.setStatusBarColor(this, R.color.white);
+        StatusBar.setStatusBarColor(this, R.color.white);
 
         showTransactionData();
 

@@ -19,8 +19,9 @@ import com.settlex.android.databinding.AlertDialogMessageBinding;
 import com.settlex.android.databinding.AlertDialogWithIconBinding;
 import com.settlex.android.databinding.BottomSheetConfirmPaymentBinding;
 import com.settlex.android.databinding.BottomSheetPaymentPinConfirmBinding;
-import com.settlex.android.ui.common.custom.CustomNumericKeypad;
-import com.settlex.android.utils.string.StringUtil;
+import com.settlex.android.ui.common.custom.NumericKeypad;
+import com.settlex.android.util.string.CurrencyFormatter;
+import com.settlex.android.util.string.StringFormatter;
 
 import java.util.Objects;
 import java.util.function.BiConsumer;
@@ -31,7 +32,7 @@ public class DashboardUiUtil {
         // prevent instantiation
     }
 
-    public static BottomSheetDialog showPayConfirmation(Context context, String recipientUsername, String recipientName, String recipientProfileUrl, long amountToSend, long senderWalletBalance, long senderCommissionBalance, final Runnable onPay) {
+    public static BottomSheetDialog showPayConfirmation(Context context, java.lang.String recipientUsername, java.lang.String recipientName, java.lang.String recipientProfileUrl, long amountToSend, long senderWalletBalance, long senderCommissionBalance, final Runnable onPay) {
         BottomSheetConfirmPaymentBinding binding = BottomSheetConfirmPaymentBinding.inflate(LayoutInflater.from(context));
         BottomSheetDialog dialog = new BottomSheetDialog(context, R.style.Theme_SettleX_Dialog_BottomSheet);
         dialog.setContentView(binding.getRoot());
@@ -53,11 +54,11 @@ public class DashboardUiUtil {
         boolean IS_SENDER_TOTAL_BALANCE_SUFFICIENT = SENDER_TOTAL_BALANCE < amountToSend;
         boolean IS_SENDER_WALLET_BALANCE_SUFFICIENT = senderWalletBalance >= amountToSend;
 
-        String PAYMENT_METHOD = (IS_SENDER_WALLET_BALANCE_SUFFICIENT) ? "Wallet" : "ALL";
+        java.lang.String PAYMENT_METHOD = (IS_SENDER_WALLET_BALANCE_SUFFICIENT) ? "Wallet" : "ALL";
 
         if (IS_SENDER_TOTAL_BALANCE_SUFFICIENT) {
             // Not enough money at all
-            String ERROR_INSUFFICIENT_BALANCE = "Insufficient";
+            java.lang.String ERROR_INSUFFICIENT_BALANCE = "Insufficient";
 
             binding.txtFeedback.setVisibility(View.VISIBLE);
             binding.paymentMethod.setText(ERROR_INSUFFICIENT_BALANCE);
@@ -68,7 +69,7 @@ public class DashboardUiUtil {
 
         } else if (IS_SENDER_WALLET_BALANCE_SUFFICIENT) {
             // Wallet balance alone is enough
-            String DEBIT_FROM_SENDER_WALLET_BALANCE = "-" + StringUtil.formatToNaira(amountToSend);
+            java.lang.String DEBIT_FROM_SENDER_WALLET_BALANCE = "-" + CurrencyFormatter.formatToNaira(amountToSend);
 
             binding.paymentMethod.setText(PAYMENT_METHOD);
             binding.debitFromSenderWalletBalance.setVisibility(View.VISIBLE);
@@ -85,8 +86,8 @@ public class DashboardUiUtil {
             fromWallet = senderWalletBalance;
             long fromCommission = amountToSend - senderWalletBalance;
 
-            String DEBIT_FROM_SENDER_WALLET_BALANCE = "-" + StringUtil.formatToNaira(fromWallet);
-            String DEBIT_FROM_SENDER_COMM_BALANCE = "-" + StringUtil.formatToNaira(fromCommission);
+            java.lang.String DEBIT_FROM_SENDER_WALLET_BALANCE = "-" + CurrencyFormatter.formatToNaira(fromWallet);
+            java.lang.String DEBIT_FROM_SENDER_COMM_BALANCE = "-" + CurrencyFormatter.formatToNaira(fromCommission);
 
             binding.paymentMethod.setText(PAYMENT_METHOD);
 
@@ -106,17 +107,17 @@ public class DashboardUiUtil {
         }
 
         // Recipient details
-        binding.amountToSendHeader.setText(StringUtil.formatToNaira(amountToSend));
-        binding.amountToSend.setText(StringUtil.formatToNaira(amountToSend));
-        binding.recipientUsername.setText(StringUtil.addAtToPaymentId(recipientUsername));
+        binding.amountToSendHeader.setText(CurrencyFormatter.formatToNaira(amountToSend));
+        binding.amountToSend.setText(CurrencyFormatter.formatToNaira(amountToSend));
+        binding.recipientUsername.setText(StringFormatter.addAtToPaymentId(recipientUsername));
         binding.recipientName.setText(recipientName.toUpperCase());
         ProfileService.loadProfilePic(recipientProfileUrl, binding.recipientProfilePic);
 
         // Sender details
-        String SENDER_WALLET_BALANCE = "(" + StringUtil.formatToNaira(senderWalletBalance) + ")";
-        String SENDER_COMM_BALANCE = "(" + StringUtil.formatToNaira(senderCommissionBalance) + ")";
+        java.lang.String SENDER_WALLET_BALANCE = "(" + CurrencyFormatter.formatToNaira(senderWalletBalance) + ")";
+        java.lang.String SENDER_COMM_BALANCE = "(" + CurrencyFormatter.formatToNaira(senderCommissionBalance) + ")";
 
-        binding.senderTotalBalance.setText(StringUtil.formatToNaira(SENDER_TOTAL_BALANCE));
+        binding.senderTotalBalance.setText(CurrencyFormatter.formatToNaira(SENDER_TOTAL_BALANCE));
         binding.senderWalletBalance.setText(SENDER_WALLET_BALANCE);
         binding.senderCommissionBalance.setText(SENDER_COMM_BALANCE);
 
@@ -156,14 +157,14 @@ public class DashboardUiUtil {
         final Runnable[] onPinVerified = new Runnable[1];
 
         // handle keypad input
-        binding.numericKeypad.setOnKeypadInputListener(new CustomNumericKeypad.OnKeypadInputListener() {
+        binding.numericKeypad.setOnKeypadInputListener(new NumericKeypad.OnKeypadInputListener() {
             @Override
-            public void onNumberPressed(String number) {
+            public void onNumberPressed(java.lang.String number) {
                 if (binding.pinView.length() < binding.pinView.getItemCount()) {
                     binding.pinView.append(number);
                 }
 
-                String pin = Objects.requireNonNull(binding.pinView.getText()).toString();
+                java.lang.String pin = Objects.requireNonNull(binding.pinView.getText()).toString();
 
                 if (pin.length() == binding.pinView.getItemCount()) {
                     if (onPinVerified[0] != null) {
@@ -175,7 +176,7 @@ public class DashboardUiUtil {
 
             @Override
             public void onDeletePressed() {
-                String current = Objects.requireNonNull(binding.pinView.getText()).toString();
+                java.lang.String current = Objects.requireNonNull(binding.pinView.getText()).toString();
 
                 if (!current.isEmpty()) {
                     binding.pinView.setText(current.subSequence(0, current.length() - 1));

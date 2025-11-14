@@ -5,7 +5,7 @@ import android.content.Context;
 import androidx.appcompat.app.AppCompatActivity;
 
 import com.settlex.android.data.local.PermissionPrefs;
-import com.settlex.android.utils.permission.NotificationPermissionUtil;
+import com.settlex.android.util.permission.NotificationPermission;
 
 import dagger.Module;
 import dagger.Provides;
@@ -20,7 +20,7 @@ public class PermissionModule {
 
     @Provides
     @ActivityScoped
-    public static NotificationPermissionUtil provideNotificationPermissionUtil(@ActivityContext Context context, PermissionPrefs prefs) {
-        return new NotificationPermissionUtil((AppCompatActivity) context, prefs);
+    public static NotificationPermission provideNotificationPermissionUtil(@ActivityContext Context context, PermissionPrefs prefs) {
+        return new NotificationPermission((AppCompatActivity) context, prefs);
     }
 }

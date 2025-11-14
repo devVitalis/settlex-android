@@ -10,8 +10,8 @@ import com.settlex.android.R;
 import com.settlex.android.databinding.ActivityReceiveBinding;
 import com.settlex.android.ui.dashboard.model.UserUiModel;
 import com.settlex.android.ui.dashboard.viewmodel.UserViewModel;
-import com.settlex.android.utils.string.StringUtil;
-import com.settlex.android.utils.ui.StatusBarUtil;
+import com.settlex.android.util.string.StringFormatter;
+import com.settlex.android.util.ui.StatusBar;
 
 import dagger.hilt.android.AndroidEntryPoint;
 
@@ -33,7 +33,7 @@ public class ReceiveActivity extends AppCompatActivity {
     }
 
     private void setupUiActions() {
-        StatusBarUtil.setStatusBarColor(this, R.color.white);
+        StatusBar.setStatusBarColor(this, R.color.white);
 
         binding.btnCopy.setOnClickListener(v -> copyPaymentId());
         binding.btnBackBefore.setOnClickListener(v -> finish());
@@ -41,7 +41,7 @@ public class ReceiveActivity extends AppCompatActivity {
     }
 
     private void copyPaymentId() {
-        StringUtil.copyToClipboard(this, "Payment Id", binding.paymentId.getText().toString(), true);
+        StringFormatter.copyToClipboard(this, "Payment Id", binding.paymentId.getText().toString(), true);
     }
 
     private void observeUserDataStatus() {
@@ -58,6 +58,6 @@ public class ReceiveActivity extends AppCompatActivity {
     }
 
     private void onUserDataStatusSuccess(UserUiModel user) {
-        binding.paymentId.setText(StringUtil.addAtToPaymentId(user.getPaymentId()));
+        binding.paymentId.setText(StringFormatter.addAtToPaymentId(user.getPaymentId()));
     }
 }

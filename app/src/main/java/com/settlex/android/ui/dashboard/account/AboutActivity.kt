@@ -11,7 +11,7 @@ import com.settlex.android.SettleXApp
 import com.settlex.android.databinding.ActivityAboutBinding
 import com.settlex.android.ui.info.legal.PrivacyPolicyActivity
 import com.settlex.android.ui.info.legal.TermsAndConditionsActivity
-import com.settlex.android.utils.ui.StatusBarUtil
+import com.settlex.android.util.ui.StatusBar
 
 class AboutActivity : AppCompatActivity() {
     private fun getTAG(): String? = AboutActivity::class.simpleName
@@ -26,7 +26,7 @@ class AboutActivity : AppCompatActivity() {
     }
 
     private fun setupUiActions() {
-        StatusBarUtil.setStatusBarColor(this, R.color.white)
+        StatusBar.setStatusBarColor(this, R.color.white)
         binding.appVersion.text = getAppVersion()
 
 

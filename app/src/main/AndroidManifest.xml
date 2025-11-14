@@ -62,13 +62,13 @@
             android:name=".ui.dashboard.home.TransactionStatusActivity"
             android:exported="false" />
         <activity
-            android:name=".ui.dashboard.home.TransferFundsActivity"
+            android:name=".ui.dashboard.home.WalletTransferActivity"
             android:exported="false" />
         <activity
             android:name=".ui.dashboard.home.ProfileActivity"
             android:exported="false" />
         <activity
-            android:name=".ui.auth.activity.LoginActivity"
+            android:name=".ui.auth.login.LoginActivity"
             android:exported="false" />
         <activity
             android:name=".ui.dashboard.services.CableTvSubscriptionActivity"
@@ -92,13 +92,13 @@
             android:name=".ui.dashboard.home.TransactionActivity"
             android:exported="false" />
         <activity
-            android:name=".ui.auth.activity.SetNewPasswordActivity"
+            android:name=".ui.auth.forgot_password.CreatePasswordActivity"
             android:exported="false" />
         <activity
-            android:name=".ui.common.components.OtpVerificationActivity"
+            android:name=".ui.auth.forgot_password.OtpVerificationActivity"
             android:exported="false" />
         <activity
-            android:name=".ui.auth.activity.ForgotPasswordActivity"
+            android:name=".ui.auth.forgot_password.ForgotPasswordActivity"
             android:exported="false" />
         <activity
             android:name=".ui.info.legal.PrivacyPolicyActivity"
@@ -110,13 +110,10 @@
             android:name=".ui.info.help.AuthHelpActivity"
             android:exported="false" />
         <activity
-            android:name=".ui.auth.activity.PinLoginActivity"
+            android:name=".ui.auth.register.SignUpActivity"
             android:exported="false" />
         <activity
-            android:name=".ui.auth.activity.SignUpActivity"
-            android:exported="false" />
-        <activity
-            android:name=".ui.onboarding.activity.OnboardingActivity"
+            android:name=".ui.onboarding.OnboardingActivity"
             android:exported="false" />
         <activity
             android:name=".ui.splash.SplashActivity"

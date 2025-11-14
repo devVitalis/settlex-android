@@ -16,12 +16,12 @@ import androidx.lifecycle.ViewModelProvider;
 import com.chaos.view.PinView;
 import com.settlex.android.R;
 import com.settlex.android.databinding.ActivityCreatePaymentPinBinding;
-import com.settlex.android.ui.common.util.ProgressLoaderController;
+import com.settlex.android.util.ui.ProgressLoaderController;
 import com.settlex.android.ui.dashboard.util.DashboardUiUtil;
 import com.settlex.android.ui.dashboard.viewmodel.UserViewModel;
-import com.settlex.android.utils.event.Result;
-import com.settlex.android.utils.ui.StatusBarUtil;
-import com.settlex.android.utils.ui.UiUtil;
+import com.settlex.android.util.event.Result;
+import com.settlex.android.util.ui.StatusBar;
+import com.settlex.android.ui.common.util.DialogHelper;
 
 import java.util.Objects;
 
@@ -58,7 +58,7 @@ public class CreatePaymentPinActivity extends AppCompatActivity {
     }
 
     private void setupUiActions() {
-        StatusBarUtil.setStatusBarColor(this, R.color.white);
+        StatusBar.setStatusBarColor(this, R.color.white);
         setupPinInputWatcher();
         setupUiState();
 
@@ -131,7 +131,7 @@ public class CreatePaymentPinActivity extends AppCompatActivity {
         boolean isPinChange = intentPurpose != null && intentPurpose.equals("change_payment_pin");
         String message = (isPinChange) ? "Your payment PIN has been updated successfully" : "Your payment PIN has been created successfully";
 
-        UiUtil.showSuccessBottomSheetDialog(
+        DialogHelper.showSuccessBottomSheetDialog(
                 this,
                 (dialog, binding) -> {
                     binding.title.setText(title);

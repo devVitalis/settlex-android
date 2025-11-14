@@ -3,7 +3,6 @@ package com.settlex.android.di;
 import android.content.Context;
 
 import com.settlex.android.data.local.PermissionPrefs;
-import com.settlex.android.utils.network.NetworkMonitor;
 
 import dagger.Module;
 import dagger.Provides;

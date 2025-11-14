@@ -8,9 +8,9 @@ import androidx.lifecycle.ViewModel;
 
 import com.settlex.android.data.repository.UserRepository;
 import com.settlex.android.ui.dashboard.model.UserUiModel;
-import com.settlex.android.utils.event.Event;
-import com.settlex.android.utils.event.Result;
-import com.settlex.android.utils.network.NetworkMonitor;
+import com.settlex.android.util.event.Event;
+import com.settlex.android.util.event.Result;
+import com.settlex.android.util.network.NetworkMonitor;
 
 import dagger.hilt.android.lifecycle.HiltViewModel;
 import jakarta.inject.Inject;

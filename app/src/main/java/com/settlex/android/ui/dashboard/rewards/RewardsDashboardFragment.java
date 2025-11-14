@@ -18,8 +18,9 @@ import com.settlex.android.databinding.FragmentDashboardRewardsBinding;
 import com.settlex.android.ui.dashboard.home.CommissionWithdrawalActivity;
 import com.settlex.android.ui.dashboard.model.UserUiModel;
 import com.settlex.android.ui.dashboard.viewmodel.UserViewModel;
-import com.settlex.android.utils.string.StringUtil;
-import com.settlex.android.utils.ui.StatusBarUtil;
+import com.settlex.android.util.string.CurrencyFormatter;
+import com.settlex.android.util.string.StringFormatter;
+import com.settlex.android.util.ui.StatusBar;
 
 import dagger.hilt.android.AndroidEntryPoint;
 
@@ -88,13 +89,13 @@ public class RewardsDashboardFragment extends Fragment {
     }
 
     private void onUserDataStatusSuccess(UserUiModel user) {
-        binding.commissionBalance.setText(StringUtil.formatToNaira(user.getCommissionBalance()));
+        binding.commissionBalance.setText(CurrencyFormatter.formatToNaira(user.getCommissionBalance()));
         binding.referralCode.setText((user.getPaymentId() != null) ? user.getPaymentId() : "Get Referral Code");
-        binding.totalReferralEarning.setText(StringUtil.formatToNaira(user.getReferralBalance()));
+        binding.totalReferralEarning.setText(CurrencyFormatter.formatToNaira(user.getReferralBalance()));
     }
 
     private void setupUiActions() {
-        StatusBarUtil.setStatusBarColor(requireActivity(), R.color.blue_400);
+        StatusBar.setStatusBarColor(requireActivity(), R.color.blue_400);
         styleText();
 
         binding.btnCopy.setOnClickListener(v -> copyReferralCodeToClipboard(binding.referralCode.getText().toString()));
@@ -102,7 +103,7 @@ public class RewardsDashboardFragment extends Fragment {
         binding.btnViewCommissionBalance.setOnClickListener(v -> navigateToActivity(CommissionWithdrawalActivity.class));
     }
 
-    private void showToast(String text) {
+    private void showToast(java.lang.String text) {
         Toast.makeText(requireContext(), text, Toast.LENGTH_SHORT).show();
     }
 
@@ -110,12 +111,12 @@ public class RewardsDashboardFragment extends Fragment {
         startActivity(new Intent(requireContext(), activityClass));
     }
 
-    private void copyReferralCodeToClipboard(String textToCopy) {
-        StringUtil.copyToClipboard(requireContext(), "Referral Code", textToCopy, true);
+    private void copyReferralCodeToClipboard(java.lang.String textToCopy) {
+        StringFormatter.copyToClipboard(requireContext(), "Referral Code", textToCopy, true);
     }
 
     private void styleText() {
-        String htmlText = "Get <font color='#0044CC'><b>1% commission</b></font> on every transaction your referrals make, for " +
+        java.lang.String htmlText = "Get <font color='#0044CC'><b>1% commission</b></font> on every transaction your referrals make, for " +
                 "<font color='#0044CC'><b>a lifetime</b></font>. Start sharing and watch your rewards grow!";
         binding.txtReferralInfo.setText(Html.fromHtml(htmlText, Html.FROM_HTML_MODE_LEGACY));
     }

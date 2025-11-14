@@ -14,8 +14,8 @@ import androidx.fragment.app.Fragment;
 import com.settlex.android.R;
 import com.settlex.android.databinding.FragmentTransactionDetailsBinding;
 import com.settlex.android.ui.dashboard.model.TransactionUiModel;
-import com.settlex.android.utils.string.StringUtil;
-import com.settlex.android.utils.ui.StatusBarUtil;
+import com.settlex.android.util.string.StringFormatter;
+import com.settlex.android.util.ui.StatusBar;
 
 import dagger.hilt.android.AndroidEntryPoint;
 
@@ -32,7 +32,7 @@ public class TransactionDetailsFragment extends Fragment {
     public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         binding = FragmentTransactionDetailsBinding.inflate(inflater, container, false);
 
-        StatusBarUtil.setStatusBarColor(requireActivity(), R.color.white);
+        StatusBar.setStatusBarColor(requireActivity(), R.color.white);
         onBackButtonPressed();
         binding.btnBackBefore.setOnClickListener(view -> requireActivity().finish());
 
@@ -83,7 +83,7 @@ public class TransactionDetailsFragment extends Fragment {
         }
 
         binding.transactionId.setText(transaction.getTransactionId());
-        binding.copyTransactionId.setOnClickListener(v -> StringUtil.copyToClipboard(
+        binding.copyTransactionId.setOnClickListener(v -> StringFormatter.copyToClipboard(
                 requireContext(),
                 "Transaction ID",
                 binding.transactionId.getText().toString(),
