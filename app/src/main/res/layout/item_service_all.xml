@@ -17,14 +17,14 @@
         android:clipChildren="false">
 
         <androidx.constraintlayout.widget.Guideline
-            android:id="@+id/centerGuideLine"
+            android:id="@+id/center_guide_line"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:orientation="vertical"
             app:layout_constraintGuide_percent="0.5" />
 
         <FrameLayout
-            android:id="@+id/iconFrame"
+            android:id="@+id/icon_frame"
             android:layout_width="50dp"
             android:layout_height="50dp"
             android:background="@drawable/bg_oval_gray_light"
@@ -46,18 +46,18 @@
             android:id="@+id/badge"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:gravity="center"
-            android:minWidth="30dp"
             android:layout_marginTop="-2dp"
             android:background="@drawable/bg_service_badge"
+            android:gravity="center"
             android:includeFontPadding="false"
             android:maxLines="1"
+            android:minWidth="30dp"
             android:paddingHorizontal="5dp"
             android:paddingVertical="2dp"
             android:textColor="@color/white"
             android:textSize="8sp"
-            app:layout_constraintStart_toStartOf="@id/centerGuideLine"
-            app:layout_constraintTop_toTopOf="@+id/iconFrame"
+            app:layout_constraintStart_toStartOf="@id/center_guide_line"
+            app:layout_constraintTop_toTopOf="@+id/icon_frame"
             tools:ignore="SmallSp"
             tools:text="Hot" />
     </androidx.constraintlayout.widget.ConstraintLayout>

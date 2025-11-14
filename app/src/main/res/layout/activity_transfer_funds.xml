@@ -9,7 +9,6 @@
     android:fitsSystemWindows="true"
     tools:context=".ui.dashboard.home.TransferFundsActivity">
 
-    <!--Header-->
     <LinearLayout
         android:id="@+id/header"
         android:layout_width="match_parent"
@@ -21,7 +20,7 @@
         app:layout_constraintTop_toTopOf="parent">
 
         <ImageView
-            android:id="@+id/btnBackBefore"
+            android:id="@+id/btn_back_before"
             android:layout_width="20dp"
             android:layout_height="20dp"
             android:layout_marginStart="15dp"
@@ -67,7 +66,6 @@
                 android:orientation="vertical"
                 android:padding="8dp">
 
-                <!-- Label -->
                 <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
@@ -78,9 +76,8 @@
                     android:textColor="@color/gray_dark"
                     android:textSize="12sp" />
 
-                <!-- Username Field Background -->
                 <LinearLayout
-                    android:id="@+id/editTxtPaymentIdBackground"
+                    android:id="@+id/edit_txt_payment_id_background"
                     android:layout_width="match_parent"
                     android:layout_height="55dp"
                     android:layout_marginTop="5dp"
@@ -88,7 +85,7 @@
                     android:orientation="horizontal">
 
                     <EditText
-                        android:id="@+id/editTxtPaymentId"
+                        android:id="@+id/edit_txt_payment_id"
                         android:layout_width="0dp"
                         android:layout_height="match_parent"
                         android:layout_weight="1"
@@ -104,7 +101,7 @@
                         android:textSize="14sp" />
 
                     <com.google.android.material.button.MaterialButton
-                        android:id="@+id/btnVerify"
+                        android:id="@+id/btn_verify"
                         style="@style/Widget.SettleX.Button.Filled"
                         android:layout_width="60dp"
                         android:layout_height="35dp"
@@ -115,7 +112,6 @@
                         android:visibility="gone" />
                 </LinearLayout>
 
-                <!-- Feedback -->
                 <TextView
                     android:id="@+id/txt_error"
                     android:layout_width="match_parent"
@@ -133,9 +129,8 @@
                     app:drawableStartCompat="@drawable/ic_info_outline"
                     tools:text="You cannot send a payment to your own account. Please choose a different recipient" />
 
-                <!-- Selected recipient (Hidden)-->
                 <LinearLayout
-                    android:id="@+id/selectedRecipient"
+                    android:id="@+id/selected_recipient"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_marginTop="5dp"
@@ -146,7 +141,7 @@
                     android:visibility="gone">
 
                     <com.google.android.material.imageview.ShapeableImageView
-                        android:id="@+id/selectedRecipientProfilePic"
+                        android:id="@+id/selected_recipient_profile_pic"
                         android:layout_width="50dp"
                         android:layout_height="50dp"
                         android:layout_marginEnd="10dp"
@@ -162,7 +157,7 @@
                         android:orientation="vertical">
 
                         <TextView
-                            android:id="@+id/selectedRecipientName"
+                            android:id="@+id/selected_recipient_name"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:fontFamily="@font/poppins_regular"
@@ -172,7 +167,7 @@
                             tools:text="Benjamin Nnaemeka" />
 
                         <TextView
-                            android:id="@+id/selectedRecipientPaymentId"
+                            android:id="@+id/selected_recipient_payment_id"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:fontFamily="@font/poppins_regular"
@@ -193,9 +188,8 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content">
 
-                    <!--Shimmer Effect-->
                     <com.facebook.shimmer.ShimmerFrameLayout
-                        android:id="@+id/shimmerEffect"
+                        android:id="@+id/shimmer_effect"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:layout_marginTop="5dp"
@@ -209,9 +203,8 @@
                             android:layout_height="wrap_content" />
                     </com.facebook.shimmer.ShimmerFrameLayout>
 
-                    <!-- Recipient -->
                     <androidx.recyclerview.widget.RecyclerView
-                        android:id="@+id/recipientRecyclerView"
+                        android:id="@+id/recipient_recycler_view"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:layout_marginTop="5dp"
@@ -226,7 +219,6 @@
                     android:gravity="center_vertical"
                     android:orientation="horizontal">
 
-                    <!-- Label -->
                     <TextView
                         android:layout_width="0dp"
                         android:layout_height="wrap_content"
@@ -248,7 +240,7 @@
                         android:textSize="12sp" />
 
                     <TextView
-                        android:id="@+id/availableBalance"
+                        android:id="@+id/available_balance"
                         android:layout_width="wrap_content"
                         android:layout_height="match_parent"
                         android:layout_marginStart="5dp"
@@ -259,15 +251,13 @@
                         tools:text="₦100,000" />
                 </LinearLayout>
 
-                <!-- Amount Field Background -->
                 <androidx.constraintlayout.widget.ConstraintLayout
-                    android:id="@+id/editTxtAmountBackground"
+                    android:id="@+id/edit_txt_amount_background"
                     android:layout_width="match_parent"
                     android:layout_height="55dp"
                     android:layout_marginTop="5dp"
                     android:background="@drawable/bg_edit_txt_custom_gray_not_focused">
 
-                    <!-- Naira Symbol -->
                     <TextView
                         android:id="@+id/naira"
                         android:layout_width="wrap_content"
@@ -282,7 +272,6 @@
                         app:layout_constraintStart_toStartOf="parent"
                         app:layout_constraintTop_toTopOf="parent" />
 
-                    <!-- Divider -->
                     <com.google.android.material.divider.MaterialDivider
                         android:id="@+id/divider"
                         android:layout_width="1dp"
@@ -294,7 +283,7 @@
                         app:layout_constraintTop_toTopOf="@id/naira" />
 
                     <com.cottacush.android.currencyedittext.CurrencyEditText
-                        android:id="@+id/editTxtAmount"
+                        android:id="@+id/edit_txt_amount"
                         android:layout_width="0dp"
                         android:layout_height="match_parent"
                         android:layout_marginStart="10dp"
@@ -305,7 +294,7 @@
                         android:imeOptions="actionNext"
                         android:includeFontPadding="false"
                         android:inputType="numberDecimal"
-                        android:nextFocusDown="@id/editTxtDescription"
+                        android:nextFocusDown="@id/edit_txt_description"
                         android:textColor="@color/black"
                         android:textColorHint="@color/gray"
                         android:textSize="14sp"
@@ -317,9 +306,8 @@
                         app:maxNumberOfDecimalDigits="2" />
                 </androidx.constraintlayout.widget.ConstraintLayout>
 
-                <!-- Feedback -->
                 <TextView
-                    android:id="@+id/txtAmountFeedback"
+                    android:id="@+id/txt_amount_feedback"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_marginTop="5dp"
@@ -331,7 +319,6 @@
                     android:visibility="gone"
                     tools:text="Amount must be in range of ₦100 - ₦500,000.00" />
 
-                <!-- Label -->
                 <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
@@ -343,16 +330,15 @@
                     android:textColor="@color/gray_dark"
                     android:textSize="12sp" />
 
-                <!-- Username Field Background -->
                 <FrameLayout
-                    android:id="@+id/editTxtDescriptionBackground"
+                    android:id="@+id/edit_txt_description_background"
                     android:layout_width="match_parent"
                     android:layout_height="55dp"
                     android:layout_marginTop="5dp"
                     android:background="@drawable/bg_edit_txt_custom_gray_not_focused">
 
                     <EditText
-                        android:id="@+id/editTxtDescription"
+                        android:id="@+id/edit_txt_description"
                         android:layout_width="match_parent"
                         android:layout_height="match_parent"
                         android:background="@android:color/transparent"
@@ -368,7 +354,7 @@
                 </FrameLayout>
 
                 <com.google.android.material.button.MaterialButton
-                    android:id="@+id/btnNext"
+                    android:id="@+id/btn_next"
                     style="@style/Widget.SettleX.Button.Filled"
                     android:layout_width="match_parent"
                     android:layout_height="55dp"

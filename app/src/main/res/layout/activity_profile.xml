@@ -1,3 +1,4 @@
+<?xml version="1.0" encoding="utf-8"?>
 <androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
@@ -7,7 +8,6 @@
     android:fitsSystemWindows="true"
     tools:context=".ui.dashboard.home.ProfileActivity">
 
-    <!-- Header -->
     <LinearLayout
         android:id="@+id/header"
         android:layout_width="match_parent"
@@ -20,7 +20,7 @@
         app:layout_constraintTop_toTopOf="parent">
 
         <ImageView
-            android:id="@+id/btnBackBefore"
+            android:id="@+id/btn_back_before"
             android:layout_width="20dp"
             android:layout_height="20dp"
             android:layout_marginStart="15dp"
@@ -40,7 +40,6 @@
             android:textStyle="bold" />
     </LinearLayout>
 
-    <!-- Scrollable content -->
     <ScrollView
         android:layout_width="match_parent"
         android:layout_height="0dp"
@@ -56,7 +55,6 @@
             android:paddingHorizontal="15dp"
             android:paddingVertical="20dp">
 
-            <!-- First card -->
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
@@ -71,14 +69,14 @@
                     android:layout_gravity="center">
 
                     <com.google.android.material.imageview.ShapeableImageView
-                        android:id="@+id/profilePic"
+                        android:id="@+id/profile_pic"
                         android:layout_width="60dp"
                         android:layout_height="60dp"
                         app:shapeAppearanceOverlay="@style/ShapeAppearance.SettleX.Circular"
                         app:srcCompat="@drawable/ic_no_profile_pic" />
 
                     <ImageView
-                        android:id="@+id/btnChangeProfilePic"
+                        android:id="@+id/btn_change_profile_pic"
                         android:layout_width="25dp"
                         android:layout_height="25dp"
                         android:layout_gravity="bottom|end"
@@ -118,7 +116,7 @@
                         android:textSize="14sp" />
 
                     <TextView
-                        android:id="@+id/paymentId"
+                        android:id="@+id/payment_id"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:fontFamily="@font/inter_regular"
@@ -128,7 +126,7 @@
                         tools:text="\@vitalis" />
 
                     <ImageView
-                        android:id="@+id/btnCopyPaymentId"
+                        android:id="@+id/btn_copy_payment_id"
                         android:layout_width="15dp"
                         android:layout_height="15dp"
                         android:layout_marginStart="2dp"
@@ -165,7 +163,7 @@
                         android:textSize="14sp" />
 
                     <TextView
-                        android:id="@+id/fullName"
+                        android:id="@+id/full_name"
                         android:layout_width="0dp"
                         android:layout_height="wrap_content"
                         android:layout_marginStart="5dp"
@@ -197,7 +195,7 @@
                         android:textSize="14sp" />
 
                     <TextView
-                        android:id="@+id/phoneNumber"
+                        android:id="@+id/phone_number"
                         android:layout_width="0dp"
                         android:layout_height="wrap_content"
                         android:layout_marginStart="5dp"
@@ -261,7 +259,7 @@
                         android:textSize="14sp" />
 
                     <TextView
-                        android:id="@+id/joinedDate"
+                        android:id="@+id/joined_date"
                         android:layout_width="0dp"
                         android:layout_height="wrap_content"
                         android:layout_marginStart="5dp"
@@ -276,7 +274,7 @@
                         tools:text="2 years ago" />
 
                     <ImageView
-                        android:id="@+id/btnShowFullDate"
+                        android:id="@+id/btn_show_full_date"
                         android:layout_width="17dp"
                         android:layout_height="17dp"
                         android:layout_marginStart="5dp"

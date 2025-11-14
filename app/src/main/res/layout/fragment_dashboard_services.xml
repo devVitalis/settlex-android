@@ -8,7 +8,6 @@
     android:fitsSystemWindows="true"
     tools:context=".ui.dashboard.services.ServicesDashboardFragment">
 
-    <!--Header-->
     <LinearLayout
         android:id="@+id/header"
         android:layout_width="match_parent"
@@ -32,7 +31,6 @@
             android:textStyle="bold" />
     </LinearLayout>
 
-    <!-- Content -->
     <ScrollView
         android:layout_width="match_parent"
         android:layout_height="0dp"
@@ -66,7 +64,7 @@
                     android:textSize="12sp" />
 
                 <androidx.recyclerview.widget.RecyclerView
-                    android:id="@+id/telecomAndDigitalRecyclerView"
+                    android:id="@+id/telecom_and_digital_recycler_view"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_gravity="center"
@@ -93,7 +91,7 @@
                     android:textSize="12sp" />
 
                 <androidx.recyclerview.widget.RecyclerView
-                    android:id="@+id/entertainmentRecyclerView"
+                    android:id="@+id/entertainment_recycler_view"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_gravity="center"
@@ -120,7 +118,7 @@
                     android:textSize="12sp" />
 
                 <androidx.recyclerview.widget.RecyclerView
-                    android:id="@+id/utilitiesAndBillsRecyclerView"
+                    android:id="@+id/utilities_and_bills_recycler_view"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_gravity="center"
@@ -147,7 +145,7 @@
                     android:textSize="12sp" />
 
                 <androidx.recyclerview.widget.RecyclerView
-                    android:id="@+id/travelAndLifestyleRecyclerView"
+                    android:id="@+id/travel_and_lifestyle_recycler_view"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_gravity="center"

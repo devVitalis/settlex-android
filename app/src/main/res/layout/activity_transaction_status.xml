@@ -9,7 +9,6 @@
     android:fitsSystemWindows="true"
     tools:context=".ui.dashboard.home.TransactionStatusActivity">
 
-    <!-- Header -->
     <LinearLayout
         android:id="@+id/header"
         android:layout_width="0dp"
@@ -22,7 +21,7 @@
         app:layout_constraintTop_toTopOf="parent">
 
         <TextView
-            android:id="@+id/btnDone"
+            android:id="@+id/btn_done"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginEnd="15dp"
@@ -33,9 +32,8 @@
             android:textStyle="bold" />
     </LinearLayout>
 
-    <!-- Main Content Container -->
     <androidx.constraintlayout.widget.ConstraintLayout
-        android:id="@+id/contentContainer"
+        android:id="@+id/content_container"
         android:layout_width="0dp"
         android:layout_height="0dp"
         android:background="@color/gray_light"
@@ -45,9 +43,8 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@id/header">
 
-        <!-- Card background -->
         <LinearLayout
-            android:id="@+id/cardContainer"
+            android:id="@+id/card_container"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:background="@drawable/bg_8dp_white_ripple_yes"
@@ -59,15 +56,14 @@
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent">
 
-            <!-- Animation container -->
             <FrameLayout
-                android:id="@+id/animContainer"
+                android:id="@+id/anim_container"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_gravity="center">
 
                 <com.airbnb.lottie.LottieAnimationView
-                    android:id="@+id/txnPendingAnim"
+                    android:id="@+id/txn_pending_anim"
                     android:layout_width="70dp"
                     android:layout_height="70dp"
                     android:layout_gravity="center"
@@ -77,7 +73,7 @@
                     app:lottie_loop="false" />
 
                 <com.airbnb.lottie.LottieAnimationView
-                    android:id="@+id/txnSuccessAnim"
+                    android:id="@+id/txn_success_anim"
                     android:layout_width="80dp"
                     android:layout_height="80dp"
                     android:layout_gravity="center"
@@ -87,7 +83,7 @@
                     app:lottie_loop="false" />
 
                 <com.airbnb.lottie.LottieAnimationView
-                    android:id="@+id/txnFailedAnim"
+                    android:id="@+id/txn_failed_anim"
                     android:layout_width="40dp"
                     android:layout_height="40dp"
                     android:layout_gravity="center"
@@ -98,9 +94,8 @@
                     app:lottie_loop="false" />
             </FrameLayout>
 
-            <!-- status -->
             <TextView
-                android:id="@+id/txnStatus"
+                android:id="@+id/txn_status"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_gravity="center"
@@ -112,9 +107,8 @@
                 android:textStyle="bold"
                 tools:text="Transaction Successful" />
 
-            <!-- amount -->
             <TextView
-                android:id="@+id/txnAmount"
+                android:id="@+id/txn_amount"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_gravity="center"
@@ -126,7 +120,7 @@
                 tools:text="₦1,000" />
 
             <TextView
-                android:id="@+id/txtError"
+                android:id="@+id/txt_error"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_gravity="center"

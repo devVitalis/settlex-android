@@ -17,14 +17,14 @@
         android:clipChildren="false">
 
         <androidx.constraintlayout.widget.Guideline
-            android:id="@+id/centerGuideLine"
+            android:id="@+id/center_guide_line"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:orientation="vertical"
             app:layout_constraintGuide_percent="0.5" />
 
         <FrameLayout
-            android:id="@+id/iconFrame"
+            android:id="@+id/icon_frame"
             android:layout_width="50dp"
             android:layout_height="50dp"
             android:background="@drawable/bg_oval_blue_light"
@@ -57,8 +57,8 @@
             android:paddingVertical="2dp"
             android:textColor="@color/white"
             android:textSize="8sp"
-            app:layout_constraintStart_toStartOf="@+id/centerGuideLine"
-            app:layout_constraintTop_toTopOf="@+id/iconFrame"
+            app:layout_constraintStart_toStartOf="@+id/center_guide_line"
+            app:layout_constraintTop_toTopOf="@+id/icon_frame"
             tools:ignore="SmallSp"
             tools:text="up to 10%" />
     </androidx.constraintlayout.widget.ConstraintLayout>

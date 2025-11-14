@@ -9,9 +9,8 @@
     android:fitsSystemWindows="true"
     tools:context=".ui.dashboard.rewards.RewardsDashboardFragment">
 
-    <!-- Logged out view -->
     <LinearLayout
-        android:id="@+id/loggedOutState"
+        android:id="@+id/logged_out_state"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:gravity="center"
@@ -29,7 +28,6 @@
             android:src="@drawable/ic_rewards_logged_out_state" />
     </LinearLayout>
 
-    <!--Header-->
     <LinearLayout
         android:id="@+id/header"
         android:layout_width="match_parent"
@@ -42,7 +40,7 @@
         app:layout_constraintTop_toTopOf="parent">
 
         <TextView
-            android:id="@+id/headerTitle"
+            android:id="@+id/header_title"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:fontFamily="@font/inter_bold"
@@ -54,10 +52,8 @@
             android:textStyle="bold" />
     </LinearLayout>
 
-    <!-- Scrollable content -->
-    <!-- Logged in view -->
     <ScrollView
-        android:id="@+id/loggedInState"
+        android:id="@+id/logged_in_state"
         android:layout_width="match_parent"
         android:layout_height="0dp"
         android:background="@drawable/bg_0dp_gradient_blue_400"
@@ -76,7 +72,6 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content">
 
-                <!-- Rounded header -->
                 <FrameLayout
                     android:layout_width="match_parent"
                     android:layout_height="120dp"
@@ -100,7 +95,7 @@
                         android:textStyle="bold" />
 
                     <LinearLayout
-                        android:id="@+id/btnViewCommissionBalance"
+                        android:id="@+id/btn_view_commission_balance"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_marginTop="5dp"
@@ -117,7 +112,7 @@
                             android:src="@drawable/ic_naira_coin" />
 
                         <TextView
-                            android:id="@+id/commissionBalance"
+                            android:id="@+id/commission_balance"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:layout_marginStart="5dp"
@@ -168,7 +163,7 @@
                         android:src="@drawable/ic_referral" />
 
                     <TextView
-                        android:id="@+id/txtReferralInfo"
+                        android:id="@+id/txt_referral_info"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_marginTop="10dp"
@@ -367,7 +362,7 @@
                 </LinearLayout>
 
                 <com.google.android.material.button.MaterialButton
-                    android:id="@+id/btnShareInvitationLink"
+                    android:id="@+id/btn_share_invitation_link"
                     style="@style/Widget.SettleX.Button.Filled.Gradient"
                     android:layout_width="match_parent"
                     android:layout_height="48dp"
@@ -433,7 +428,7 @@
                     android:paddingVertical="10dp">
 
                     <TextView
-                        android:id="@+id/referralCode"
+                        android:id="@+id/referral_code"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:fontFamily="@font/inter_regular"
@@ -446,7 +441,7 @@
                         tools:text="\vitalis" />
 
                     <ImageView
-                        android:id="@+id/btnCopy"
+                        android:id="@+id/btn_copy"
                         android:layout_width="24dp"
                         android:layout_height="24dp"
                         android:contentDescription="Copy"
@@ -455,7 +450,6 @@
                 </LinearLayout>
             </LinearLayout>
 
-            <!-- Earnings -->
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
@@ -491,7 +485,7 @@
                         android:textSize="15sp" />
 
                     <TextView
-                        android:id="@+id/totalReferralEarning"
+                        android:id="@+id/total_referral_earning"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_marginStart="5dp"
@@ -509,7 +503,7 @@
                     app:dividerColor="@color/gray_light" />
 
                 <LinearLayout
-                    android:id="@+id/btnInvitationRecord"
+                    android:id="@+id/btn_invitation_record"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_marginTop="10dp"

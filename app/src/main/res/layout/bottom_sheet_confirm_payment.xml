@@ -19,7 +19,7 @@
         android:textStyle="bold" />
 
     <com.google.android.material.imageview.ShapeableImageView
-        android:id="@+id/btnClose"
+        android:id="@+id/btn_close"
         android:layout_width="20dp"
         android:layout_height="20dp"
         android:layout_gravity="end"
@@ -28,7 +28,7 @@
         app:tint="@color/gray" />
 
     <TextView
-        android:id="@+id/amountToSendHeader"
+        android:id="@+id/amount_to_send_header"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_gravity="center"
@@ -38,7 +38,6 @@
         android:textStyle="bold"
         tools:text="₦100,000" />
 
-    <!--Recipient username-->
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
@@ -58,7 +57,7 @@
             android:textSize="14sp" />
 
         <TextView
-            android:id="@+id/recipientUsername"
+            android:id="@+id/recipient_username"
             android:layout_width="wrap_content"
             android:layout_height="20dp"
             android:ellipsize="end"
@@ -70,7 +69,6 @@
             tools:text="\@vitalis" />
     </LinearLayout>
 
-    <!--Recipient Name-->
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
@@ -90,7 +88,7 @@
             android:textSize="14sp" />
 
         <com.google.android.material.imageview.ShapeableImageView
-            android:id="@+id/recipientProfilePic"
+            android:id="@+id/recipient_profile_pic"
             android:layout_width="17dp"
             android:layout_height="17dp"
             android:layout_marginEnd="3dp"
@@ -98,7 +96,7 @@
             app:srcCompat="@drawable/ic_no_profile_pic" />
 
         <TextView
-            android:id="@+id/recipientName"
+            android:id="@+id/recipient_name"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:ellipsize="end"
@@ -110,7 +108,6 @@
             tools:text="BENJAMIN CHISOM NNAEMEKA" />
     </LinearLayout>
 
-    <!--Amount-->
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
@@ -130,7 +127,7 @@
             android:textSize="14sp" />
 
         <TextView
-            android:id="@+id/amountToSend"
+            android:id="@+id/amount_to_send"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:ellipsize="end"
@@ -142,7 +139,6 @@
             tools:text="₦100,000.00" />
     </LinearLayout>
 
-    <!--Divider-->
     <com.google.android.material.divider.MaterialDivider
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
@@ -150,7 +146,6 @@
         app:dividerColor="@color/gray_light"
         app:dividerThickness="1dp" />
 
-    <!--Payment method-->
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
@@ -168,7 +163,7 @@
             android:textSize="14sp" />
 
         <TextView
-            android:id="@+id/paymentMethod"
+            android:id="@+id/payment_method"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:fontFamily="@font/inter_regular"
@@ -178,7 +173,6 @@
             tools:text="ALL" />
     </LinearLayout>
 
-    <!--Balance summary-->
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
@@ -206,7 +200,7 @@
                 android:textSize="14sp" />
 
             <TextView
-                android:id="@+id/senderTotalBalance"
+                android:id="@+id/sender_total_balance"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
@@ -225,7 +219,6 @@
                 android:src="@drawable/ic_check" />
         </LinearLayout>
 
-        <!--Divider-->
         <com.google.android.material.divider.MaterialDivider
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
@@ -233,7 +226,6 @@
             app:dividerColor="@color/gray_whitish"
             app:dividerThickness="1dp" />
 
-        <!--Balance-->
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
@@ -251,7 +243,7 @@
                 android:textSize="12sp" />
 
             <TextView
-                android:id="@+id/senderWalletBalance"
+                android:id="@+id/sender_wallet_balance"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
@@ -262,7 +254,7 @@
                 tools:text="(₦198,000.32)" />
 
             <TextView
-                android:id="@+id/debitFromSenderWalletBalance"
+                android:id="@+id/debit_from_sender_wallet_balance"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:fontFamily="@font/inter_regular"
@@ -272,7 +264,6 @@
                 tools:text="-₦5,230.00" />
         </LinearLayout>
 
-        <!--Commission Balance-->
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
@@ -291,7 +282,7 @@
                 android:textSize="12sp" />
 
             <TextView
-                android:id="@+id/senderCommissionBalance"
+                android:id="@+id/sender_commission_balance"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
@@ -302,7 +293,7 @@
                 tools:text="(₦535.25)" />
 
             <TextView
-                android:id="@+id/debitFromSenderCommissionBalance"
+                android:id="@+id/debit_from_sender_commission_balance"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:fontFamily="@font/inter_regular"
@@ -314,7 +305,7 @@
     </LinearLayout>
 
     <TextView
-        android:id="@+id/txtFeedback"
+        android:id="@+id/txt_feedback"
         android:layout_width="wrap_content"
         android:fontFamily="@font/inter_regular"
         android:layout_height="wrap_content"
@@ -326,7 +317,7 @@
         android:visibility="gone" />
 
     <com.google.android.material.button.MaterialButton
-        android:id="@+id/btnPay"
+        android:id="@+id/btn_pay"
         style="@style/Widget.SettleX.Button.Filled"
         android:layout_width="match_parent"
         android:layout_height="55dp"

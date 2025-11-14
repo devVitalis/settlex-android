@@ -7,7 +7,6 @@
     android:orientation="vertical"
     android:padding="8dp">
 
-    <!--Icon & Divider Container-->
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
@@ -16,13 +15,11 @@
         android:paddingHorizontal="4dp"
         android:paddingVertical="8dp">
 
-        <!-- Shimmer icon -->
         <View
             android:layout_width="30dp"
             android:layout_height="30dp"
             android:background="@drawable/bg_oval_gray_whitish" />
 
-        <!--Text Containers-->
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
@@ -87,7 +84,7 @@
         android:layout_height="1dp"
         android:layout_marginTop="1.5dp"
         android:background="@color/gray_whitish" />
-    <!--Icon & Divider Container-->
+
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
@@ -96,13 +93,11 @@
         android:paddingHorizontal="4dp"
         android:paddingVertical="8dp">
 
-        <!-- Shimmer icon -->
         <View
             android:layout_width="30dp"
             android:layout_height="30dp"
             android:background="@drawable/bg_oval_gray_whitish" />
 
-        <!--Text Containers-->
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"

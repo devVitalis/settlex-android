@@ -3,28 +3,28 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/auth_nav_graph"
-    app:startDestination="@id/signUpUserContactInfoFragment">
+    app:startDestination="@id/sign_up_user_contact_info_fragment">
 
     <fragment
-        android:id="@+id/signUpUserContactInfoFragment"
+        android:id="@+id/sign_up_user_contact_info_fragment"
         android:name="com.settlex.android.ui.auth.fragment.SignUpUserContactInfoFragment"
         android:label="SignUpUserContactInfoFragment"
         tools:layout="@layout/fragment_sign_up_user_contact_info" />
 
     <fragment
-        android:id="@+id/signUpEmailVerificationFragment"
+        android:id="@+id/sign_up_email_verification_fragment"
         android:name="com.settlex.android.ui.auth.fragment.SignUpEmailVerificationFragment"
         android:label="SignUpEmailVerificationFragment"
         tools:layout="@layout/fragment_sign_up_email_verification" />
 
     <fragment
-        android:id="@+id/signUpUserInfoFragment"
+        android:id="@+id/sign_up_user_info_fragment"
         android:name="com.settlex.android.ui.auth.fragment.SignUpUserInfoFragment"
         android:label="SignUpUserInfoFragment"
         tools:layout="@layout/fragment_sign_up_user_info" />
 
     <fragment
-        android:id="@+id/signUpUserPasswordFragment"
+        android:id="@+id/sign_up_user_password_fragment"
         android:name="com.settlex.android.ui.auth.fragment.SignUpUserPasswordFragment"
         android:label="SignUpUserPasswordFragment"
         tools:layout="@layout/fragment_sign_up_user_password" />

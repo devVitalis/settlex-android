@@ -9,7 +9,6 @@
     android:fitsSystemWindows="true"
     tools:context=".ui.dashboard.account.SettingsActivity">
 
-    <!--Header-->
     <LinearLayout
         android:id="@+id/header"
         android:layout_width="match_parent"

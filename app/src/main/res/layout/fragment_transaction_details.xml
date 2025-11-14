@@ -8,7 +8,6 @@
     android:fitsSystemWindows="true"
     tools:context=".ui.dashboard.home.TransactionDetailsFragment">
 
-    <!--Header-->
     <LinearLayout
         android:id="@+id/header"
         android:layout_width="match_parent"
@@ -20,7 +19,7 @@
         app:layout_constraintTop_toTopOf="parent">
 
         <ImageView
-            android:id="@+id/btnBackBefore"
+            android:id="@+id/btn_back_before"
             android:layout_width="20dp"
             android:layout_height="20dp"
             android:layout_marginStart="15dp"
@@ -64,7 +63,6 @@
                 android:paddingHorizontal="15dp"
                 android:paddingVertical="20dp">
 
-                <!-- Card -->
                 <androidx.constraintlayout.widget.ConstraintLayout
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content">
@@ -135,7 +133,6 @@
                             tools:text="Success" />
                     </LinearLayout>
 
-                    <!-- Floating header -->
                     <FrameLayout
                         android:layout_width="50dp"
                         android:layout_height="50dp"
@@ -184,7 +181,7 @@
                             android:textSize="14sp" />
 
                         <TextView
-                            android:id="@+id/dateTime"
+                            android:id="@+id/date_time"
                             android:layout_width="0dp"
                             android:layout_height="wrap_content"
                             android:layout_weight="1"
@@ -280,7 +277,7 @@
                             android:textSize="14sp" />
 
                         <TextView
-                            android:id="@+id/recipientName"
+                            android:id="@+id/recipient_name"
                             android:layout_width="0dp"
                             android:layout_height="wrap_content"
                             android:layout_weight="1"
@@ -295,7 +292,7 @@
                     </LinearLayout>
 
                     <LinearLayout
-                        android:id="@+id/descriptionContainer"
+                        android:id="@+id/description_container"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:layout_marginTop="10dp"
@@ -326,7 +323,6 @@
                             tools:text="Bills Payment" />
                     </LinearLayout>
 
-                    <!--Divider-->
                     <com.google.android.material.divider.MaterialDivider
                         android:layout_width="match_parent"
                         android:layout_height="1dp"
@@ -351,7 +347,7 @@
                             android:textSize="14sp" />
 
                         <TextView
-                            android:id="@+id/transactionId"
+                            android:id="@+id/transaction_id"
                             android:layout_width="0dp"
                             android:layout_height="wrap_content"
                             android:layout_weight="1"
@@ -365,7 +361,7 @@
                             tools:text="fe367bfgndhdgdtrvebjs5892gfdtja" />
 
                         <ImageView
-                            android:id="@+id/copyTransactionId"
+                            android:id="@+id/copy_transaction_id"
                             android:layout_width="20dp"
                             android:layout_height="20dp"
                             android:contentDescription="Copy"
@@ -375,7 +371,6 @@
             </LinearLayout>
         </ScrollView>
 
-        <!--Footer-->
         <LinearLayout
             android:id="@+id/footer"
             android:layout_width="match_parent"
@@ -387,7 +382,7 @@
             android:paddingVertical="15dp">
 
             <com.google.android.material.button.MaterialButton
-                android:id="@+id/btnSendReceipt"
+                android:id="@+id/btn_send_receipt"
                 style="@style/Widget.SettleX.Button.Filled"
                 android:layout_width="match_parent"
                 android:layout_height="55dp"

@@ -14,9 +14,8 @@
         android:layout_height="match_parent"
         android:orientation="vertical">
 
-        <!-- Skip -->
         <TextView
-            android:id="@+id/btnSkip"
+            android:id="@+id/btn_skip"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_gravity="end"
@@ -41,9 +40,8 @@
             android:gravity="center"
             android:orientation="horizontal">
 
-            <!--Page Indicator-->
             <com.zhpan.indicator.IndicatorView
-                android:id="@+id/roundRectIndicator"
+                android:id="@+id/round_rect_indicator"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 app:vpi_orientation="horizontal"
@@ -53,18 +51,16 @@
                 app:vpi_style="round_rect" />
         </LinearLayout>
 
-        <!--ViewPager2 (Fragment Container)-->
         <androidx.viewpager2.widget.ViewPager2
-            android:id="@+id/introViewPager"
+            android:id="@+id/intro_view_pager"
             android:layout_width="match_parent"
             android:layout_height="0dp"
             android:layout_marginTop="30dp"
             android:layout_weight="1"
             android:scrollbars="none" />
 
-        <!--Footer-->
         <LinearLayout
-            android:id="@+id/btnContainer"
+            android:id="@+id/btn_container"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:gravity="center_horizontal"
@@ -72,9 +68,8 @@
             android:paddingHorizontal="15dp"
             android:paddingVertical="25dp">
 
-            <!--Btn Create Account-->
             <com.google.android.material.button.MaterialButton
-                android:id="@+id/btnCreateAccount"
+                android:id="@+id/btn_create_account"
                 style="@style/Widget.SettleX.Button.Filled"
                 android:layout_width="match_parent"
                 android:layout_height="60dp"
@@ -82,9 +77,8 @@
                 android:textColor="@color/white"
                 android:textStyle="bold" />
 
-            <!--Btn Login-->
             <com.google.android.material.button.MaterialButton
-                android:id="@+id/btnLogin"
+                android:id="@+id/btn_login"
                 style="@style/Widget.SettleX.Button.Tonal"
                 android:layout_width="match_parent"
                 android:layout_height="60dp"

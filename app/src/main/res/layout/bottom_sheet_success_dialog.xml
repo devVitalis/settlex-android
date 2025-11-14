@@ -42,7 +42,7 @@
         tools:text="Your password has been changed successfully. You will now need to use your new password to sign in on all your devices." />
 
     <com.google.android.material.button.MaterialButton
-        android:id="@+id/btnContinue"
+        android:id="@+id/btn_continue"
         style="@style/Widget.SettleX.Button.Filled"
         android:layout_width="match_parent"
         android:layout_height="55dp"

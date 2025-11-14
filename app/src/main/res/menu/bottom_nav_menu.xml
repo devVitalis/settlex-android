@@ -1,23 +1,23 @@
 <?xml version="1.0" encoding="utf-8"?>
 <menu xmlns:android="http://schemas.android.com/apk/res/android">
     <item
-        android:id="@+id/homeFragment"
-        android:icon="@drawable/ic_nav_home_selector"
+        android:id="@+id/home_fragment"
+        android:icon="@drawable/ic_nav_home_outlined"
         android:iconTint="@color/gray"
-        android:title="Home" />
+        android:title="@string/nav_home" />
 
     <item
-        android:id="@+id/servicesFragment"
-        android:icon="@drawable/ic_nav_services_selector"
-        android:title="Services" />
+        android:id="@+id/services_fragment"
+        android:icon="@drawable/ic_nav_services_outlined"
+        android:title="@string/nav_services" />
 
     <item
-        android:id="@+id/rewardsFragment"
-        android:icon="@drawable/ic_nav_rewards_selector"
-        android:title="Rewards" />
+        android:id="@+id/rewards_fragment"
+        android:icon="@drawable/ic_nav_rewards_outlined"
+        android:title="@string/nav_rewards" />
 
     <item
-        android:id="@+id/accountFragment"
-        android:icon="@drawable/ic_nav_account_selector"
-        android:title="Account" />
+        android:id="@+id/account_fragment"
+        android:icon="@drawable/ic_nav_account_outlined"
+        android:title="@string/nav_account" />
 </menu>
