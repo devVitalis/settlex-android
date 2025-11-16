@@ -44,8 +44,8 @@ public class CommissionWithdrawalActivity extends AppCompatActivity {
         userViewModel.getUserLiveData().observe(this, user -> {
             if (user == null) return;
 
-            switch (user.getStatus()) {
-                case SUCCESS -> onUserDataSuccess(user.getData());
+            switch (user.status) {
+                case SUCCESS -> onUserDataSuccess(user.data);
                 case FAILURE -> {
                     // TODO: handle error
                 }

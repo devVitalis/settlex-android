@@ -26,7 +26,7 @@ import com.settlex.android.util.ui.ProgressLoaderController;
 import com.settlex.android.ui.dashboard.DashboardActivity;
 import com.settlex.android.ui.dashboard.model.UserUiModel;
 import com.settlex.android.ui.dashboard.viewmodel.UserViewModel;
-import com.settlex.android.util.event.Result;
+import com.settlex.android.util.event.UiState;
 import com.settlex.android.util.ui.StatusBar;
 import com.settlex.android.ui.common.util.DialogHelper;
 
@@ -78,8 +78,8 @@ public class CreatePaymentIdActivity extends AppCompatActivity {
         userViewModel.getUserLiveData().observe(this, user -> {
             if (user == null) return;
 
-            switch (user.getStatus()) {
-                case SUCCESS -> onUserDataStatusSuccess(user.getData());
+            switch (user.status) {
+                case SUCCESS -> onUserDataStatusSuccess(user.data);
                 case FAILURE -> {
                     // TODO: Handle error
                 }
@@ -93,10 +93,10 @@ public class CreatePaymentIdActivity extends AppCompatActivity {
 
     private void observePaymentIdStoreStatus() {
         userViewModel.getSetPaymentIdLiveData().observe(this, resultEvent -> {
-            Result<String> result = resultEvent.getContentIfNotHandled();
+            UiState<String> result = resultEvent.getContentIfNotHandled();
             if (result == null) return;
 
-            switch (result.getStatus()) {
+            switch (result.status) {
                 case LOADING -> progressLoader.show();
                 case SUCCESS -> onPaymentIdStoreStatusSuccess();
                 case FAILURE -> onPaymentIdStoreStatusError(result.getError());
@@ -130,12 +130,12 @@ public class CreatePaymentIdActivity extends AppCompatActivity {
 
     private void observePaymentIdAvailabilityStatus() {
         userViewModel.getPaymentIdExistsStatus().observe(this, resultEvent -> {
-            Result<Boolean> result = resultEvent.getContentIfNotHandled();
+            UiState<Boolean> result = resultEvent.getContentIfNotHandled();
             if (result == null) return;
 
-            switch (result.getStatus()) {
+            switch (result.status) {
                 case LOADING -> onPaymentIdAvailabilityCheckStatusLoading();
-                case SUCCESS -> onPaymentIdAvailabilityCheckStatusSuccess(result.getData());
+                case SUCCESS -> onPaymentIdAvailabilityCheckStatusSuccess(result.data);
                 case FAILURE -> onPaymentIdAvailabilityCheckStatusError(result.getError());
             }
         });

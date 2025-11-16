@@ -24,7 +24,7 @@ import com.settlex.android.R;
 import com.settlex.android.databinding.FragmentSignUpEmailVerificationBinding;
 import com.settlex.android.ui.auth.AuthViewModel;
 import com.settlex.android.util.ui.ProgressLoaderController;
-import com.settlex.android.util.event.Result;
+import com.settlex.android.util.event.UiState;
 import com.settlex.android.util.network.NetworkMonitor;
 import com.settlex.android.util.string.StringFormatter;
 import com.settlex.android.util.ui.StatusBar;
@@ -112,10 +112,10 @@ public class SignUpEmailVerificationFragment extends Fragment {
 
     private void observeEmailVerificationStatus() {
         authViewModel.getVerifyEmailLiveData().observe(getViewLifecycleOwner(), event -> {
-            Result<java.lang.String> result = event.getContentIfNotHandled();
+            UiState<java.lang.String> result = event.getContentIfNotHandled();
             if (result == null) return;
 
-            switch (result.getStatus()) {
+            switch (result.status) {
                 case LOADING -> progressLoader.show();
                 case SUCCESS -> onEmailVerificationSuccess();
                 case FAILURE -> onEmailVerificationStatusError(result.getError());
@@ -142,10 +142,10 @@ public class SignUpEmailVerificationFragment extends Fragment {
 
     private void observeSendVerificationCodeStatus() {
         authViewModel.getSendVerificationCodeLiveData().observe(getViewLifecycleOwner(), event -> {
-            Result<java.lang.String> result = event.getContentIfNotHandled();
+            UiState<java.lang.String> result = event.getContentIfNotHandled();
             if (result == null) return;
 
-            switch (result.getStatus()) {
+            switch (result.status) {
                 case LOADING -> progressLoader.show();
                 case SUCCESS -> onSendVerificationCodeStatusSuccess();
                 case FAILURE -> onVerificationCodeStatusError(result.getError());

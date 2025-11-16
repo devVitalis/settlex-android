@@ -10,7 +10,7 @@ import androidx.core.app.NotificationCompat;
 import com.google.firebase.messaging.FirebaseMessagingService;
 import com.google.firebase.messaging.RemoteMessage;
 import com.settlex.android.R;
-import com.settlex.android.data.repository.AuthRepository;
+import com.settlex.android.domain.repository.AuthRepository;
 
 import java.util.Map;
 import java.util.Random;

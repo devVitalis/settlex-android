@@ -33,7 +33,7 @@ import com.settlex.android.ui.auth.login.LoginActivity;
 import com.settlex.android.ui.common.util.DialogHelper;
 import com.settlex.android.ui.info.legal.PrivacyPolicyActivity;
 import com.settlex.android.ui.info.legal.TermsAndConditionsActivity;
-import com.settlex.android.util.event.Result;
+import com.settlex.android.util.event.UiState;
 import com.settlex.android.util.network.NetworkMonitor;
 import com.settlex.android.util.string.CurrencyFormatter;
 import com.settlex.android.util.string.StringFormatter;
@@ -104,12 +104,12 @@ public class SignUpUserContactInfoFragment extends Fragment {
 
     private void observeSendVerificationCodeStatus() {
         authViewModel.getSendVerificationCodeLiveData().observe(getViewLifecycleOwner(), event -> {
-            Result<java.lang.String> result = event.getContentIfNotHandled();
+            UiState<java.lang.String> result = event.getContentIfNotHandled();
             if (result == null) {
                 return;
             }
 
-            switch (result.getStatus()) {
+            switch (result.status) {
                 case LOADING -> progressLoader.show();
                 case SUCCESS -> onSendVerificationCodeStatusSuccess();
                 case FAILURE -> onSendVerificationCodeStatusError(result.getError());

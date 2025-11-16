@@ -48,8 +48,8 @@ public class ReceiveActivity extends AppCompatActivity {
         userViewModel.getUserLiveData().observe(this, user -> {
             if (user == null) return;
 
-            switch (user.getStatus()) {
-                case SUCCESS -> onUserDataStatusSuccess(user.getData());
+            switch (user.status) {
+                case SUCCESS -> onUserDataStatusSuccess(user.data);
                 case FAILURE -> {
                     // TODO: handle error
                 }

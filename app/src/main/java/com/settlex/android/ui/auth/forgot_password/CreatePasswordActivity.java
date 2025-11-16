@@ -26,7 +26,7 @@ import com.settlex.android.ui.auth.login.LoginActivity;
 import com.settlex.android.util.ui.ProgressLoaderController;
 import com.settlex.android.ui.dashboard.account.SettingsActivity;
 import com.settlex.android.ui.dashboard.viewmodel.UserViewModel;
-import com.settlex.android.util.event.Result;
+import com.settlex.android.util.event.UiState;
 import com.settlex.android.util.network.NetworkMonitor;
 import com.settlex.android.util.ui.StatusBar;
 import com.settlex.android.ui.common.util.DialogHelper;
@@ -91,9 +91,9 @@ public class CreatePasswordActivity extends AppCompatActivity {
 
     private void observeUpdatePasswordStatus() {
         userViewModel.getUpdatePasswordLiveData().observe(this, event -> {
-            Result<String> result = event.getContentIfNotHandled();
+            UiState<String> result = event.getContentIfNotHandled();
             if (result == null) return;
-            switch (result.getStatus()) {
+            switch (result.status) {
                 case LOADING -> progressLoader.show();
                 case SUCCESS -> onUpdatePasswordStatusSuccess();
                 case FAILURE -> onUpdatePasswordStatusFailed(result.getError());
@@ -114,9 +114,9 @@ public class CreatePasswordActivity extends AppCompatActivity {
 
     private void observeSetNewPasswordStatus() {
         authViewModel.getSetNewPasswordLiveData().observe(this, event -> {
-            Result<String> result = event.getContentIfNotHandled();
+            UiState<String> result = event.getContentIfNotHandled();
             if (result != null) {
-                switch (result.getStatus()) {
+                switch (result.status) {
                     case LOADING -> progressLoader.show();
                     case SUCCESS -> onSetNewPasswordStatusSuccess();
                     case FAILURE -> onSetNewPasswordStatusError(result.getError());

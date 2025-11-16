@@ -67,6 +67,9 @@ dependencies {
     implementation(libs.firebase.messaging)
     implementation(libs.firebase.config)
 
+    // Coroutines
+    implementation(libs.kotlinx.coroutines.play.services)
+
     // Dots Indicator
     implementation(libs.dotsindicator)
 

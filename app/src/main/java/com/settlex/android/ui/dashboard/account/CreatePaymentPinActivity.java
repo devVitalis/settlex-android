@@ -19,7 +19,7 @@ import com.settlex.android.databinding.ActivityCreatePaymentPinBinding;
 import com.settlex.android.util.ui.ProgressLoaderController;
 import com.settlex.android.ui.dashboard.util.DashboardUiUtil;
 import com.settlex.android.ui.dashboard.viewmodel.UserViewModel;
-import com.settlex.android.util.event.Result;
+import com.settlex.android.util.event.UiState;
 import com.settlex.android.util.ui.StatusBar;
 import com.settlex.android.ui.common.util.DialogHelper;
 
@@ -96,20 +96,20 @@ public class CreatePaymentPinActivity extends AppCompatActivity {
     // Observers
     private void observePaymentPinStatus() {
         userViewModel.getCreatePaymentPinLiveData().observe(this, event -> {
-            Result<String> result = event.getContentIfNotHandled();
+            UiState<String> result = event.getContentIfNotHandled();
             handlePinOperationStatus(result);
         });
 
         userViewModel.getChangePaymentPinLiveData().observe(this, event -> {
-            Result<String> result = event.getContentIfNotHandled();
+            UiState<String> result = event.getContentIfNotHandled();
             handlePinOperationStatus(result);
         });
     }
 
-    private void handlePinOperationStatus(Result<String> result) {
+    private void handlePinOperationStatus(UiState<String> result) {
         if (result == null) return;
-        switch (result.getStatus()) {
-            case NO_INTERNET -> showErrorDialog(result.getMessage());
+        switch (result.status) {
+            case NO_INTERNET -> showErrorDialog(result.message);
 
             case LOADING -> progressLoader.show();
 

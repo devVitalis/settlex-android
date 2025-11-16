@@ -21,7 +21,7 @@ import com.google.firebase.functions.FirebaseFunctions;
 import com.settlex.android.SettleXApp;
 import com.settlex.android.data.local.UserPrefs;
 import com.settlex.android.data.remote.dto.UserDto;
-import com.settlex.android.util.event.Result;
+import com.settlex.android.util.event.UiState;
 
 import java.io.IOException;
 import java.util.Collections;
@@ -37,7 +37,7 @@ public class UserRepository {
     private final String ERROR_NO_INTERNET = "Connection lost. Please check your Wi-Fi or cellular data and try again";
     private final String ERROR_FALLBACK = "Something went wrong. Try again";
 
-    private final MutableLiveData<Result<UserDto>> sharedUserLiveData = new MutableLiveData<>();
+    private final MutableLiveData<UiState<UserDto>> sharedUserLiveData = new MutableLiveData<>();
     private final MutableLiveData<FirebaseUser> sharedUserAuthState = new MutableLiveData<>();
 
     // Dependencies
@@ -90,7 +90,7 @@ public class UserRepository {
     }
 
     private void initSharedUserListener(String uid) {
-        sharedUserLiveData.postValue(Result.loading());
+        sharedUserLiveData.postValue(UiState.loading());
 
         Log.d(TAG, "Attaching a new user listener for user: " + uid);
 
@@ -99,18 +99,18 @@ public class UserRepository {
                 .addSnapshotListener((snapshot, error) -> {
                     if (error != null) {
                         Log.e(TAG, "User listener error: " + uid + error.getMessage(), error);
-                        sharedUserLiveData.postValue(Result.failure(error.getMessage()));
+                        sharedUserLiveData.postValue(UiState.failure(error.getMessage()));
                         return;
                     }
                     if (snapshot == null || !snapshot.exists()) {
                         sharedUserLiveData.postValue(null);
                         return;
                     }
-                    sharedUserLiveData.postValue(Result.success(snapshot.toObject(UserDto.class)));
+                    sharedUserLiveData.postValue(UiState.success(snapshot.toObject(UserDto.class)));
                 });
     }
 
-    public LiveData<Result<UserDto>> getSharedUserLiveData() {
+    public LiveData<UiState<UserDto>> getSharedUserLiveData() {
         // Expose user data
         return sharedUserLiveData;
     }

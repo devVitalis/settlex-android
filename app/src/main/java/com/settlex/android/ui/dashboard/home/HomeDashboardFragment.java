@@ -39,7 +39,7 @@ import com.settlex.android.ui.dashboard.services.DataPurchaseActivity;
 import com.settlex.android.ui.dashboard.viewmodel.PromoBannerViewModel;
 import com.settlex.android.ui.dashboard.viewmodel.TransactionViewModel;
 import com.settlex.android.ui.dashboard.viewmodel.UserViewModel;
-import com.settlex.android.util.event.Result;
+import com.settlex.android.util.event.UiState;
 import com.settlex.android.util.network.NetworkMonitor;
 import com.settlex.android.util.string.CurrencyFormatter;
 import com.settlex.android.util.string.StringFormatter;
@@ -153,9 +153,9 @@ public class HomeDashboardFragment extends Fragment {
         userViewModel.getUserLiveData().observe(getViewLifecycleOwner(), user -> {
             if (user == null) return;
 
-            switch (user.getStatus()) {
+            switch (user.status) {
                 case LOADING -> onUserDataStatusLoading();
-                case SUCCESS -> onUserDataStatusSuccess(user.getData());
+                case SUCCESS -> onUserDataStatusSuccess(user.data);
                 case FAILURE -> onUserDataStatusError();
             }
         });
@@ -239,7 +239,7 @@ public class HomeDashboardFragment extends Fragment {
         transactionViewModel.fetchTransactionsLiveData(uid, 2).observe(getViewLifecycleOwner(), transactions -> {
             if (transactions == null) return;
 
-            switch (transactions.getStatus()) {
+            switch (transactions.status) {
                 case LOADING -> onTransactionStatusLoading();
                 case SUCCESS -> onTransactionStatusSuccess(transactions);
                 case FAILURE -> onTransactionStatusError();
@@ -254,8 +254,8 @@ public class HomeDashboardFragment extends Fragment {
         binding.txnShimmerEffect.startShimmer();
     }
 
-    private void onTransactionStatusSuccess(Result<List<TransactionUiModel>> transactions) {
-        if (transactions.getData().isEmpty()) {
+    private void onTransactionStatusSuccess(UiState<List<TransactionUiModel>> transactions) {
+        if (transactions.data.isEmpty()) {
             // zero transaction history
             binding.txnShimmerEffect.stopShimmer();
             binding.txnShimmerEffect.setVisibility(View.GONE);
@@ -270,7 +270,7 @@ public class HomeDashboardFragment extends Fragment {
         }
 
         // transaction exists
-        adapter.submitList(transactions.getData());
+        adapter.submitList(transactions.data);
         binding.txnRecyclerView.setAdapter(adapter);
 
         binding.txnShimmerEffect.stopShimmer();
@@ -300,9 +300,9 @@ public class HomeDashboardFragment extends Fragment {
                 return;
             }
 
-            switch (banner.getStatus()) {
+            switch (banner.status) {
                 case LOADING -> onPromoBannerLoading();
-                case SUCCESS -> onPromoBannersSuccess(banner.getData());
+                case SUCCESS -> onPromoBannersSuccess(banner.data);
             }
         });
     }

@@ -79,8 +79,8 @@ public class RewardsDashboardFragment extends Fragment {
         userViewModel.getUserLiveData().observe(requireActivity(), user -> {
             if (user == null) return;
 
-            switch (user.getStatus()) {
-                case SUCCESS -> onUserDataStatusSuccess(user.getData());
+            switch (user.status) {
+                case SUCCESS -> onUserDataStatusSuccess(user.data);
                 case FAILURE -> {
                     // TODO: handle error
                 }

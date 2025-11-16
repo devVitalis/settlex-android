@@ -31,7 +31,7 @@ import com.settlex.android.ui.dashboard.util.DashboardUiUtil;
 import com.settlex.android.ui.dashboard.util.TransactionIdGenerator;
 import com.settlex.android.ui.dashboard.viewmodel.TransactionViewModel;
 import com.settlex.android.ui.dashboard.viewmodel.UserViewModel;
-import com.settlex.android.util.event.Result;
+import com.settlex.android.util.event.UiState;
 import com.settlex.android.util.string.CurrencyFormatter;
 import com.settlex.android.util.string.StringFormatter;
 import com.settlex.android.util.ui.ProgressLoaderController;
@@ -107,8 +107,8 @@ public class WalletTransferActivity extends AppCompatActivity {
         userViewModel.getUserLiveData().observe(this, userData -> {
             if (userData == null) return;
 
-            switch (userData.getStatus()) {
-                case SUCCESS -> onUserDataStatusSuccess(userData.getData());
+            switch (userData.status) {
+                case SUCCESS -> onUserDataStatusSuccess(userData.data);
                 case FAILURE -> {
                     // Handle error
                 }
@@ -124,10 +124,10 @@ public class WalletTransferActivity extends AppCompatActivity {
 
     private void observePayFriendStatus() {
         transactionViewModel.getTransferFundsLiveData().observe(this, event -> {
-            Result<java.lang.String> result = event.getContentIfNotHandled();
+            UiState<java.lang.String> result = event.getContentIfNotHandled();
             if (result == null) return;
 
-            switch (result.getStatus()) {
+            switch (result.status) {
                 case LOADING -> progressLoader.show();
                 // case PENDING -> onTransactionStatusPending();
                 case SUCCESS -> onTransactionStatusSuccess();
@@ -168,9 +168,9 @@ public class WalletTransferActivity extends AppCompatActivity {
         transactionViewModel.getRecipientSearchResult().observe(this, result -> {
             if (result == null) return;
 
-            switch (result.getStatus()) {
+            switch (result.status) {
                 case LOADING -> onRecipientSearchStatusLoading();
-                case SUCCESS -> onRecipientSearchStatusSuccess(result.getData());
+                case SUCCESS -> onRecipientSearchStatusSuccess(result.data);
                 case FAILURE -> onRecipientSearchStatusFailed();
             }
         });
@@ -218,12 +218,12 @@ public class WalletTransferActivity extends AppCompatActivity {
 
     private void observeVerifyPaymentPinStatus() {
         userViewModel.getVerifyPaymentPinLiveData().observe(this, event -> {
-            Result<Boolean> result = event.getContentIfNotHandled();
+            UiState<Boolean> result = event.getContentIfNotHandled();
             if (result == null) return;
 
-            switch (result.getStatus()) {
+            switch (result.status) {
                 case LOADING -> progressLoader.show();
-                case SUCCESS -> onVerifyPaymentPinStatusSuccess(result.getData());
+                case SUCCESS -> onVerifyPaymentPinStatusSuccess(result.data);
                 case FAILURE -> onVerifyPaymentPinStatusError(result.getError());
             }
         });

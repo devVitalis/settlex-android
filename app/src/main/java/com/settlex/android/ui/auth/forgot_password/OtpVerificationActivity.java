@@ -19,7 +19,7 @@ import com.settlex.android.R;
 import com.settlex.android.databinding.ActivityOtpVerificationBinding;
 import com.settlex.android.ui.auth.AuthViewModel;
 import com.settlex.android.util.ui.ProgressLoaderController;
-import com.settlex.android.util.event.Result;
+import com.settlex.android.util.event.UiState;
 import com.settlex.android.util.network.NetworkMonitor;
 import com.settlex.android.util.string.StringFormatter;
 import com.settlex.android.util.ui.StatusBar;
@@ -89,9 +89,9 @@ public class OtpVerificationActivity extends AppCompatActivity {
 
     private void observeVerifyPasswordResetStatus() {
         authViewModel.getVerifyPasswordResetLiveData().observe(this, event -> {
-            Result<java.lang.String> result = event.getContentIfNotHandled();
+            UiState<java.lang.String> result = event.getContentIfNotHandled();
             if (result != null) {
-                switch (result.getStatus()) {
+                switch (result.status) {
                     case LOADING -> progressLoader.show();
                     case SUCCESS -> onVerifyPasswordResetStatusSuccess();
                     case FAILURE -> onVerifyPasswordResetStatusError(result.getError());
@@ -118,9 +118,9 @@ public class OtpVerificationActivity extends AppCompatActivity {
 
     private void observeSendPasswordResetStatus() {
         authViewModel.getSendPasswordResetCodeLiveData().observe(this, event -> {
-            Result<java.lang.String> result = event.getContentIfNotHandled();
+            UiState<java.lang.String> result = event.getContentIfNotHandled();
             if (result != null) {
-                switch (result.getStatus()) {
+                switch (result.status) {
                     case LOADING -> progressLoader.show();
                     case SUCCESS -> onSendPasswordResetCodeStatusSuccess();
                     case FAILURE -> onSendPasswordResetCodeStatusError(result.getError());

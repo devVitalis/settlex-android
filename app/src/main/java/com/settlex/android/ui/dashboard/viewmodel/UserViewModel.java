@@ -9,7 +9,7 @@ import androidx.lifecycle.ViewModel;
 import com.settlex.android.data.repository.UserRepository;
 import com.settlex.android.ui.dashboard.model.UserUiModel;
 import com.settlex.android.util.event.Event;
-import com.settlex.android.util.event.Result;
+import com.settlex.android.util.event.UiState;
 import com.settlex.android.util.network.NetworkMonitor;
 
 import dagger.hilt.android.lifecycle.HiltViewModel;
@@ -29,16 +29,16 @@ public class UserViewModel extends ViewModel {
 
     // User & Auth State (Mediators)
     private final MediatorLiveData<String> authStateLiveData = new MediatorLiveData<>();
-    private final MediatorLiveData<Result<UserUiModel>> userLiveData = new MediatorLiveData<>();
+    private final MediatorLiveData<UiState<UserUiModel>> userLiveData = new MediatorLiveData<>();
 
     // Network Operation State
-    private final MutableLiveData<Event<Result<String>>> uploadProfilePicLiveData = new MutableLiveData<>();
-    private final MutableLiveData<Event<Result<Boolean>>> checkPaymentIdExistsLiveData = new MutableLiveData<>();
-    private final MutableLiveData<Event<Result<String>>> setPaymentIdLiveData = new MutableLiveData<>();
-    private final MutableLiveData<Event<Result<String>>> createPaymentLiveData = new MutableLiveData<>();
-    private final MutableLiveData<Event<Result<Boolean>>> verifyPaymentLiveData = new MutableLiveData<>();
-    private final MutableLiveData<Event<Result<String>>> updatePasswordLiveData = new MutableLiveData<>();
-    private final MutableLiveData<Event<Result<String>>> changePaymentPinLiveData = new MutableLiveData<>();
+    private final MutableLiveData<Event<UiState<String>>> uploadProfilePicLiveData = new MutableLiveData<>();
+    private final MutableLiveData<Event<UiState<Boolean>>> checkPaymentIdExistsLiveData = new MutableLiveData<>();
+    private final MutableLiveData<Event<UiState<String>>> setPaymentIdLiveData = new MutableLiveData<>();
+    private final MutableLiveData<Event<UiState<String>>> createPaymentLiveData = new MutableLiveData<>();
+    private final MutableLiveData<Event<UiState<Boolean>>> verifyPaymentLiveData = new MutableLiveData<>();
+    private final MutableLiveData<Event<UiState<String>>> updatePasswordLiveData = new MutableLiveData<>();
+    private final MutableLiveData<Event<UiState<String>>> changePaymentPinLiveData = new MutableLiveData<>();
 
     // Local UI Preferences State
     private final MutableLiveData<Boolean> isBalanceHiddenLiveData = new MutableLiveData<>();
@@ -88,140 +88,140 @@ public class UserViewModel extends ViewModel {
     // --- Network Operations ---
     public void updatePassword(String email, String oldPassword, String newPassword) {
         if (getNetworkStatus() == null || !getNetworkStatus()) {
-            updatePasswordLiveData.setValue(new Event<>(Result.noInternet()));
+            updatePasswordLiveData.setValue(new Event<>(UiState.noInternet()));
             return;
         }
 
-        updatePasswordLiveData.setValue(new Event<>(Result.loading()));
+        updatePasswordLiveData.setValue(new Event<>(UiState.loading()));
         userRepo.updatePassword(email, oldPassword, newPassword, new UserRepository.UpdatePasswordCallback() {
             @Override
             public void onSuccess() {
-                updatePasswordLiveData.setValue(new Event<>(Result.success("Password update success")));
+                updatePasswordLiveData.setValue(new Event<>(UiState.success("Password update success")));
             }
 
             @Override
             public void onFailure(String error) {
-                updatePasswordLiveData.setValue(new Event<>(Result.failure(error)));
+                updatePasswordLiveData.setValue(new Event<>(UiState.failure(error)));
             }
         });
     }
 
     public void uploadProfilePic(String imageBase64) {
         if (getNetworkStatus() == null || !getNetworkStatus()) {
-            uploadProfilePicLiveData.setValue(new Event<>(Result.noInternet()));
+            uploadProfilePicLiveData.setValue(new Event<>(UiState.noInternet()));
             return;
         }
 
-        uploadProfilePicLiveData.setValue(new Event<>(Result.loading()));
+        uploadProfilePicLiveData.setValue(new Event<>(UiState.loading()));
         userRepo.uploadUserProfilePicToServer(imageBase64, new UserRepository.UploadProfilePicCallback() {
             @Override
             public void onSuccess() {
-                uploadProfilePicLiveData.setValue(new Event<>(Result.success("Profile changed successful")));
+                uploadProfilePicLiveData.setValue(new Event<>(UiState.success("Profile changed successful")));
             }
 
             @Override
             public void onFailure(String error) {
-                uploadProfilePicLiveData.setValue(new Event<>(Result.failure(error)));
+                uploadProfilePicLiveData.setValue(new Event<>(UiState.failure(error)));
             }
         });
     }
 
     public void checkPaymentIdExists(String paymentId) {
         if (getNetworkStatus() == null || !getNetworkStatus()) {
-            checkPaymentIdExistsLiveData.setValue(new Event<>(Result.noInternet()));
+            checkPaymentIdExistsLiveData.setValue(new Event<>(UiState.noInternet()));
             return;
         }
 
-        checkPaymentIdExistsLiveData.setValue(new Event<>(Result.loading()));
+        checkPaymentIdExistsLiveData.setValue(new Event<>(UiState.loading()));
         userRepo.checkPaymentIdAvailability(paymentId, new UserRepository.PaymentIdAvailableCallback() {
             @Override
             public void onSuccess(boolean exists) {
-                checkPaymentIdExistsLiveData.setValue(new Event<>(Result.success(exists)));
+                checkPaymentIdExistsLiveData.setValue(new Event<>(UiState.success(exists)));
             }
 
             @Override
             public void onFailure(String error) {
-                checkPaymentIdExistsLiveData.setValue(new Event<>(Result.failure(error)));
+                checkPaymentIdExistsLiveData.setValue(new Event<>(UiState.failure(error)));
             }
         });
     }
 
     public void setPaymentId(String paymentId, String uid) {
         if (getNetworkStatus() == null || !getNetworkStatus()) {
-            setPaymentIdLiveData.setValue(new Event<>(Result.noInternet()));
+            setPaymentIdLiveData.setValue(new Event<>(UiState.noInternet()));
             return;
         }
 
-        setPaymentIdLiveData.setValue(new Event<>(Result.loading()));
+        setPaymentIdLiveData.setValue(new Event<>(UiState.loading()));
         userRepo.storePaymentId(paymentId, uid, new UserRepository.StorePaymentIdCallback() {
             @Override
             public void onSuccess() {
-                setPaymentIdLiveData.setValue(new Event<>(Result.success("success")));
+                setPaymentIdLiveData.setValue(new Event<>(UiState.success("success")));
             }
 
             @Override
             public void onFailure(String error) {
-                setPaymentIdLiveData.setValue(new Event<>(Result.failure(error)));
+                setPaymentIdLiveData.setValue(new Event<>(UiState.failure(error)));
             }
         });
     }
 
     public void createPaymentPin(String pin) {
         if (getNetworkStatus() == null || !getNetworkStatus()) {
-            createPaymentLiveData.setValue(new Event<>(Result.noInternet()));
+            createPaymentLiveData.setValue(new Event<>(UiState.noInternet()));
             return;
         }
 
-        createPaymentLiveData.setValue(new Event<>(Result.loading()));
+        createPaymentLiveData.setValue(new Event<>(UiState.loading()));
         userRepo.createPaymentPin(pin, new UserRepository.CreatePaymentPinCallback() {
             @Override
             public void onSuccess() {
-                createPaymentLiveData.setValue(new Event<>(Result.success("Success")));
+                createPaymentLiveData.setValue(new Event<>(UiState.success("Success")));
             }
 
             @Override
             public void onError(String error) {
-                createPaymentLiveData.setValue(new Event<>(Result.failure(error)));
+                createPaymentLiveData.setValue(new Event<>(UiState.failure(error)));
             }
         });
     }
 
     public void verifyPaymentPin(String pin) {
         if (getNetworkStatus() == null || !getNetworkStatus()) {
-            verifyPaymentLiveData.setValue(new Event<>(Result.noInternet()));
+            verifyPaymentLiveData.setValue(new Event<>(UiState.noInternet()));
             return;
         }
 
-        verifyPaymentLiveData.setValue(new Event<>(Result.loading()));
+        verifyPaymentLiveData.setValue(new Event<>(UiState.loading()));
         userRepo.validatePaymentPin(pin, new UserRepository.ValidatePaymentPinCallback() {
             @Override
             public void onSuccess(boolean isVerified) {
-                verifyPaymentLiveData.setValue(new Event<>(Result.success(isVerified)));
+                verifyPaymentLiveData.setValue(new Event<>(UiState.success(isVerified)));
             }
 
             @Override
             public void onError(String error) {
-                verifyPaymentLiveData.setValue(new Event<>(Result.failure(error)));
+                verifyPaymentLiveData.setValue(new Event<>(UiState.failure(error)));
             }
         });
     }
 
     public void changePaymentPin(String oldPin, String newPin) {
         if (getNetworkStatus() == null || !getNetworkStatus()) {
-            changePaymentPinLiveData.setValue(new Event<>(Result.noInternet()));
+            changePaymentPinLiveData.setValue(new Event<>(UiState.noInternet()));
             return;
         }
 
-        changePaymentPinLiveData.setValue(new Event<>(Result.loading()));
+        changePaymentPinLiveData.setValue(new Event<>(UiState.loading()));
         userRepo.changePaymentPin(oldPin, newPin, new UserRepository.ChangePaymentPinCallback() {
             @Override
             public void onSuccess() {
-                changePaymentPinLiveData.setValue(new Event<>(Result.success("Success")));
+                changePaymentPinLiveData.setValue(new Event<>(UiState.success("Success")));
             }
 
             @Override
             public void onError(String error) {
-                changePaymentPinLiveData.setValue(new Event<>(Result.failure(error)));
+                changePaymentPinLiveData.setValue(new Event<>(UiState.failure(error)));
             }
         });
     }
@@ -231,7 +231,7 @@ public class UserViewModel extends ViewModel {
         return authStateLiveData;
     }
 
-    public LiveData<Result<UserUiModel>> getUserLiveData() {
+    public LiveData<UiState<UserUiModel>> getUserLiveData() {
         return userLiveData;
     }
 
@@ -247,31 +247,31 @@ public class UserViewModel extends ViewModel {
         return Transformations.distinctUntilChanged(isLoginBiometricsEnabledLiveData);
     }
 
-    public LiveData<Event<Result<String>>> getUpdatePasswordLiveData() {
+    public LiveData<Event<UiState<String>>> getUpdatePasswordLiveData() {
         return updatePasswordLiveData;
     }
 
-    public LiveData<Event<Result<String>>> getProfilePicUploadResult() {
+    public LiveData<Event<UiState<String>>> getProfilePicUploadResult() {
         return uploadProfilePicLiveData;
     }
 
-    public LiveData<Event<Result<Boolean>>> getPaymentIdExistsStatus() {
+    public LiveData<Event<UiState<Boolean>>> getPaymentIdExistsStatus() {
         return checkPaymentIdExistsLiveData;
     }
 
-    public LiveData<Event<Result<String>>> getSetPaymentIdLiveData() {
+    public LiveData<Event<UiState<String>>> getSetPaymentIdLiveData() {
         return setPaymentIdLiveData;
     }
 
-    public LiveData<Event<Result<String>>> getCreatePaymentPinLiveData() {
+    public LiveData<Event<UiState<String>>> getCreatePaymentPinLiveData() {
         return createPaymentLiveData;
     }
 
-    public LiveData<Event<Result<Boolean>>> getVerifyPaymentPinLiveData() {
+    public LiveData<Event<UiState<Boolean>>> getVerifyPaymentPinLiveData() {
         return verifyPaymentLiveData;
     }
 
-    public LiveData<Event<Result<String>>> getChangePaymentPinLiveData() {
+    public LiveData<Event<UiState<String>>> getChangePaymentPinLiveData() {
         return changePaymentPinLiveData;
     }
 
@@ -303,23 +303,23 @@ public class UserViewModel extends ViewModel {
                 return;
             }
 
-            switch (dto.getStatus()) {
-                case LOADING -> userLiveData.setValue(Result.loading());
-                case SUCCESS -> userLiveData.setValue(Result.success(new UserUiModel(
-                        dto.getData().uid,
-                        dto.getData().email,
-                        dto.getData().firstName,
-                        dto.getData().lastName,
-                        dto.getData().createdAt,
-                        dto.getData().phone,
-                        dto.getData().paymentId,
-                        dto.getData().photoUrl,
-                        dto.getData().hasPin,
-                        dto.getData().balance,
-                        dto.getData().commissionBalance,
-                        dto.getData().referralBalance
+            switch (dto.status) {
+                case LOADING -> userLiveData.setValue(UiState.loading());
+                case SUCCESS -> userLiveData.setValue(UiState.success(new UserUiModel(
+                        dto.data.uid,
+                        dto.data.email,
+                        dto.data.firstName,
+                        dto.data.lastName,
+                        dto.data.createdAt,
+                        dto.data.phone,
+                        dto.data.paymentId,
+                        dto.data.photoUrl,
+                        dto.data.hasPin,
+                        dto.data.balance,
+                        dto.data.commissionBalance,
+                        dto.data.referralBalance
                 )));
-                case FAILURE -> userLiveData.setValue(Result.failure(dto.getError()));
+                case FAILURE -> userLiveData.setValue(UiState.failure(dto.getError()));
             }
         });
     }

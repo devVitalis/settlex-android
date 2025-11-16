@@ -21,7 +21,7 @@ import com.settlex.android.ui.auth.forgot_password.OtpVerificationActivity;
 import com.settlex.android.ui.dashboard.model.UserUiModel;
 import com.settlex.android.ui.dashboard.util.DashboardUiUtil;
 import com.settlex.android.ui.dashboard.viewmodel.UserViewModel;
-import com.settlex.android.util.event.Result;
+import com.settlex.android.util.event.UiState;
 import com.settlex.android.util.network.NetworkMonitor;
 import com.settlex.android.util.string.StringFormatter;
 import com.settlex.android.util.ui.StatusBar;
@@ -88,10 +88,10 @@ public class SettingsActivity extends AppCompatActivity {
 
     private void observeUserData() {
         userViewModel.getUserLiveData().observe(this, result -> {
-            if (result != null && result.getStatus() == Result.Status.SUCCESS) {
+            if (result != null && result.status == UiState.Status.SUCCESS) {
 
-                UserUiModel user = result.getData();
-                this.userEmail = result.getData().getEmail();
+                UserUiModel user = result.data;
+                this.userEmail = result.data.getEmail();
 
                 binding.btnCreatePaymentPin.setVisibility(!user.hasPin() ? View.VISIBLE : View.GONE);
                 binding.btnChangePaymentPin.setVisibility(!user.hasPin() ? View.GONE : View.VISIBLE);

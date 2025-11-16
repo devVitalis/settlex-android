@@ -19,5 +19,5 @@ data class UserModel(
     val email: String,
     val phone: String,
     val fcmToken: String? = null,
-    val referralCode: String? = null,
+    var referralCode: String? = null,
 )
