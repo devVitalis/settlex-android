@@ -10,8 +10,8 @@ sealed class UiState<out T> {
 
     data class Success<out T>(val data: T?) : UiState<T>()
     data class Failure(val message: String?) : UiState<Nothing>()
-
     object Loading : UiState<Nothing>()
 
-    fun toData(): T? = if (this is Success) this.data else null
+    fun toData(): T? =
+        if (this is Success) this.data else null
 }

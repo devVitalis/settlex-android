@@ -1,4 +1,4 @@
-package com.settlex.android.data.common
+package com.settlex.android.data.exception
 
 import android.util.Log
 import com.google.firebase.FirebaseNetworkException

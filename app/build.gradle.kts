@@ -125,6 +125,15 @@ dependencies {
 
     // Biometric
     implementation(libs.biometric)
+
+    //  Core Testing Dependencies
+    testImplementation(libs.mockk)
+    testImplementation(libs.core.testing)
+    testImplementation("junit:junit:4.13.2")
+    testImplementation(libs.kotlinx.coroutines.test.v173) // or latest version
+    //  Flow Testing Dependency
+    testImplementation(libs.turbine)
+
 }
 
 tasks.withType<JavaCompile>().configureEach {

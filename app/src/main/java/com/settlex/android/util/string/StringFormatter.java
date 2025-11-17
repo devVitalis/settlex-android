@@ -63,6 +63,14 @@ public class StringFormatter {
         return prefix + mask + suffix;
     }
 
+    /**
+     * Converts Nigerian phone numbers (starting with 0) to +234 format
+     */
+    public static java.lang.String formatPhoneNumberWithCountryCode(java.lang.String phone) {
+        if (phone == null || phone.isEmpty()) return phone;
+        if (phone.startsWith("0")) phone = phone.substring(1);
+        return "+234" + phone;
+    }
 
     /**
      * Capitalizes each word: "john doe" → "John Doe"

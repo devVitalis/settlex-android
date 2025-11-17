@@ -1,7 +1,5 @@
 package com.settlex.android.ui.auth
 
-import androidx.lifecycle.LiveData
-import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.settlex.android.data.enums.OtpType
@@ -12,12 +10,21 @@ import com.settlex.android.domain.usecase.SendOtpUseCase
 import com.settlex.android.domain.usecase.SetNewPasswordUseCase
 import com.settlex.android.domain.usecase.VerifyEmailUseCase
 import com.settlex.android.domain.usecase.VerifyPasswordResetUseCase
-import com.settlex.android.util.event.Event
 import com.settlex.android.util.event.UiState
 import dagger.hilt.android.lifecycle.HiltViewModel
 import jakarta.inject.Inject
+import kotlinx.coroutines.flow.MutableSharedFlow
+import kotlinx.coroutines.flow.asSharedFlow
 import kotlinx.coroutines.launch
 
+/**
+ * ViewModel for handling authentication-related business logic and state.
+ *
+ * This ViewModel orchestrates authentication flows such as login, registration,
+ * email verification, and password reset. It interacts with various use cases
+ * from the domain layer to perform these actions and exposes the results to the UI
+ * through `SharedFlow`s representing different UI states.
+ */
 @HiltViewModel
 class AuthViewModel @Inject constructor(
     private val loginUseCase: LoginUseCase,
@@ -28,65 +35,84 @@ class AuthViewModel @Inject constructor(
     private val setNewPasswordUseCase: SetNewPasswordUseCase
 ) : ViewModel() {
 
-    private val _uiState = MutableLiveData<Event<UiState<Any?>>>()
-    val uiState: LiveData<Event<UiState<Any?>>> = _uiState
+    private val _loginEvent = MutableSharedFlow<UiState<Unit>>()
+    val loginEvent = _loginEvent.asSharedFlow()
 
-    private val _userLiveData = MutableLiveData<UserModel>()
-    val userLiveData: LiveData<UserModel> = _userLiveData
+    private val _registrationEvent = MutableSharedFlow<UiState<Unit>>()
+    val registrationEvent = _registrationEvent.asSharedFlow()
 
+    private val _otpEvent = MutableSharedFlow<UiState<String>>()
+    val otpEvent = _otpEvent.asSharedFlow()
 
+    private val _verifyEmailEvent = MutableSharedFlow<UiState<String>>()
+    val verifyEmailEvent = _verifyEmailEvent.asSharedFlow()
+
+    private val _verifyPasswordResetEvent = MutableSharedFlow<UiState<String>>()
+    val verifyPasswordResetEvent = _verifyPasswordResetEvent.asSharedFlow()
+
+    private val _setNewPasswordEvent = MutableSharedFlow<UiState<String>>()
+    val setNewPasswordEvent = _setNewPasswordEvent.asSharedFlow()
+
+    /**
+     * Attempts to log in a user with the provided credentials.
+     */
     fun login(email: String, password: String) {
-        _uiState.value = Event(UiState.Loading)
         viewModelScope.launch {
-            _uiState.value = Event(mapResultToUiState(loginUseCase(email, password)))
+            _loginEvent.emit(UiState.Loading)
+
+            loginUseCase(email, password)
+                .onSuccess { _loginEvent.emit(UiState.Success(Unit)) }
+                .onFailure { _loginEvent.emit(UiState.Failure(it.message)) }
         }
     }
 
     fun register(user: UserModel, password: String) {
-        _uiState.value = Event(UiState.Loading)
         viewModelScope.launch {
-            _uiState.value = Event(mapResultToUiState(registerUseCase(user, password)))
+            _registrationEvent.emit(UiState.Loading)
+
+            registerUseCase(user, password)
+                .onSuccess { _registrationEvent.emit(UiState.Success(Unit)) }
+                .onFailure { _registrationEvent.emit(UiState.Failure(it.message)) }
         }
     }
 
     fun sendVerificationCode(email: String, type: OtpType) {
-        _uiState.value = Event(UiState.Loading)
         viewModelScope.launch {
-            _uiState.value = Event(mapResultToUiState(sendOtpUseCase(email, type)))
+            _otpEvent.emit(UiState.Loading)
+
+            sendOtpUseCase(email, type)
+                .onSuccess { _otpEvent.emit(UiState.Success(it.data)) }
+                .onFailure { _otpEvent.emit(UiState.Failure(it.message)) }
         }
     }
 
     fun verifyEmail(email: String, otp: String) {
-        _uiState.value = Event(UiState.Loading)
         viewModelScope.launch {
-            _uiState.value = Event(mapResultToUiState(verifyEmailUseCase(email, otp)))
+            _verifyEmailEvent.emit(UiState.Loading)
+
+            verifyEmailUseCase(email, otp)
+                .onSuccess { _verifyEmailEvent.emit(UiState.Success(it.data)) }
+                .onFailure { _verifyEmailEvent.emit(UiState.Failure(it.message)) }
         }
     }
 
     fun verifyPasswordReset(email: String, otp: String) {
-        _uiState.value = Event(UiState.Loading)
         viewModelScope.launch {
-            _uiState.value = Event(mapResultToUiState(verifyPasswordResetUseCase(email, otp)))
+            _verifyPasswordResetEvent.emit(UiState.Loading)
+
+            verifyPasswordResetUseCase(email, otp)
+                .onSuccess { _verifyPasswordResetEvent.emit(UiState.Success(it.data)) }
+                .onFailure { _verifyPasswordResetEvent.emit(UiState.Failure(it.message)) }
         }
     }
 
     fun setNewPassword(email: String, oldPassword: String, newPassword: String) {
-        _uiState.value = Event(UiState.Loading)
         viewModelScope.launch {
-            val result = setNewPasswordUseCase(email, oldPassword, newPassword)
-            _uiState.value = Event(mapResultToUiState(result))
-        }
-    }
+            _setNewPasswordEvent.emit(UiState.Loading)
 
-    private fun <T> mapResultToUiState(result: UiState<T>): UiState<T?> {
-        return when (result) {
-            is UiState.Success -> UiState.Success(result.data)
-            is UiState.Failure -> UiState.Failure(result.message)
-            is UiState.Loading -> UiState.Loading
+            setNewPasswordUseCase(email, oldPassword, newPassword)
+                .onSuccess { _setNewPasswordEvent.emit(UiState.Success(it.data)) }
+                .onFailure { _setNewPasswordEvent.emit(UiState.Failure(it.message)) }
         }
-    }
-
-    fun updateUser(user: UserModel) {
-        _userLiveData.value = user
     }
 }

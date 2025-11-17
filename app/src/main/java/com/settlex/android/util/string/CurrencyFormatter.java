@@ -13,14 +13,7 @@ public class CurrencyFormatter {
 
     }
 
-    /**
-     * Converts Nigerian phone numbers (starting with 0) to +234 format
-     */
-    public static java.lang.String formatPhoneNumberWithCountryCode(java.lang.String phone) {
-        if (phone == null || phone.isEmpty()) return phone;
-        if (phone.startsWith("0")) phone = phone.substring(1);
-        return "+234" + phone;
-    }
+
 
     /**
      * Converts Kobo (long) to a formatted Naira currency string, e.g. 123450 → ₦1,234.50

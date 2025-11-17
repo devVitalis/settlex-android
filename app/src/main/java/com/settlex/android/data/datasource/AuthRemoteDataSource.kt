@@ -8,9 +8,10 @@ import com.google.firebase.firestore.FirebaseFirestore
 import com.google.firebase.functions.FirebaseFunctions
 import com.google.firebase.messaging.FirebaseMessaging
 import com.google.gson.Gson
+import com.google.gson.reflect.TypeToken
 import com.settlex.android.data.enums.OtpType
 import com.settlex.android.data.remote.api.MetadataService
-import com.settlex.android.data.remote.dto.BackendResponseDto
+import com.settlex.android.data.remote.dto.ApiResponse
 import com.settlex.android.data.remote.dto.MetadataDto
 import com.settlex.android.domain.model.UserModel
 import jakarta.inject.Inject
@@ -69,21 +70,21 @@ class AuthRemoteDataSource @Inject constructor(
     }
 
     // CLOUD FUNCTIONS
-    suspend fun sendOtp(email: String, type: OtpType): BackendResponseDto {
+    suspend fun sendOtp(email: String, type: OtpType): ApiResponse<String> {
         return runCloudFunction(
             "api-sendOtp",
             mapOf("email" to email, "type" to type.name)
         )
     }
 
-    suspend fun verifyEmail(email: String, otp: String): BackendResponseDto {
+    suspend fun verifyEmail(email: String, otp: String): ApiResponse<String> {
         return runCloudFunction(
             "api-verifyEmail",
             mapOf("email" to email, "otp" to otp)
         )
     }
 
-    suspend fun verifyPasswordReset(email: String, otp: String): BackendResponseDto {
+    suspend fun verifyPasswordReset(email: String, otp: String): ApiResponse<String> {
         return runCloudFunction(
             "api-verifyPasswordReset",
             mapOf("email" to email, "otp" to otp)
@@ -94,7 +95,7 @@ class AuthRemoteDataSource @Inject constructor(
         email: String,
         oldPassword: String,
         newPassword: String
-    ): BackendResponseDto {
+    ): ApiResponse<String> {
 
         val metadata = collectMetadata()
 
@@ -137,13 +138,11 @@ class AuthRemoteDataSource @Inject constructor(
     }
 
     // FUNCTION WRAPPER
-    private suspend fun runCloudFunction(name: String, data: Map<String, Any?>): BackendResponseDto {
-        val response = functions.getHttpsCallable(name)
-            .call(data)
-            .await()
-
+    private suspend inline fun <reified T> runCloudFunction(name: String, data: Map<String, Any?>): ApiResponse<T> {
+        val response = functions.getHttpsCallable(name).call(data).await()
         val json = gson.toJson(response.data)
 
-        return gson.fromJson(json, BackendResponseDto::class.java)
+        val type = object : TypeToken<ApiResponse<T>>() {}.type
+        return gson.fromJson(json, type)
     }
 }

@@ -37,7 +37,7 @@ public class AppFirebaseMessagingService extends FirebaseMessagingService {
     @Override
     public void onNewToken(@NonNull String token) {
         super.onNewToken(token);
-        authRepository.storeNewToken(token);
+//        authRepository.storeNewToken(token);
     }
 
     private void handleDataMessageAndTiggerNotification(Map<String, String> data) {
