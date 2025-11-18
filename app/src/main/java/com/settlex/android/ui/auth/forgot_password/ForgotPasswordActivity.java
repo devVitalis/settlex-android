@@ -53,7 +53,7 @@ public class ForgotPasswordActivity extends AppCompatActivity {
     }
 
     private void setupUiActions() {
-        StatusBar.setStatusBarColor(this, R.color.white);
+        StatusBar.setColor(this, R.color.white);
         setupEmailInputValidation();
         setupEditTextFocusHandlers();
         clearFocusOnEditTextField();

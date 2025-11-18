@@ -26,7 +26,7 @@ import com.settlex.android.R;
 import com.settlex.android.data.remote.profile.ProfileService;
 import com.settlex.android.databinding.ActivityLoginBinding;
 import com.settlex.android.ui.auth.forgot_password.ForgotPasswordActivity;
-import com.settlex.android.ui.auth.register.SignUpActivity;
+import com.settlex.android.ui.auth.register.RegisterActivity;
 import com.settlex.android.ui.auth.AuthViewModel;
 import com.settlex.android.ui.common.components.BiometricAuthHelper;
 import com.settlex.android.util.ui.ProgressLoaderController;
@@ -67,7 +67,7 @@ public class LoginActivity extends AppCompatActivity {
     }
 
     private void setupUiActions() {
-        StatusBar.setStatusBarColor(this, R.color.white);
+        StatusBar.setColor(this, R.color.white);
         setupEditTextFocusHandler();
         setupAuthActionTexts();
         setupInputValidation();
@@ -76,7 +76,7 @@ public class LoginActivity extends AppCompatActivity {
 
         // Click listeners
         binding.btnBackBefore.setOnClickListener(v -> getOnBackPressedDispatcher().onBackPressed());
-        binding.btnSignUp.setOnClickListener(v -> navigateTo(SignUpActivity.class));
+        binding.btnSignUp.setOnClickListener(v -> navigateTo(RegisterActivity.class));
         binding.btnHelp.setOnClickListener(v -> navigateTo(AuthHelpActivity.class));
         binding.btnForgotPassword.setOnClickListener(v -> navigateTo(ForgotPasswordActivity.class));
         binding.btnSignIn.setOnClickListener(v -> attemptLogin());

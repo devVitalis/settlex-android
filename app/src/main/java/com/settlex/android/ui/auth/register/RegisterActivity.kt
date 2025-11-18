@@ -14,7 +14,7 @@ import dagger.hilt.android.AndroidEntryPoint
  * Hosts the multi-step user registration flow using fragments.
  */
 @AndroidEntryPoint
-class SignUpActivity : AppCompatActivity() {
+class RegisterActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_sign_up)

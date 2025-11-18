@@ -33,7 +33,7 @@ public class ReceiveActivity extends AppCompatActivity {
     }
 
     private void setupUiActions() {
-        StatusBar.setStatusBarColor(this, R.color.white);
+        StatusBar.setColor(this, R.color.white);
 
         binding.btnCopy.setOnClickListener(v -> copyPaymentId());
         binding.btnBackBefore.setOnClickListener(v -> finish());

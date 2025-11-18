@@ -61,7 +61,7 @@ public class AccountDashboardFragment extends Fragment {
     }
 
     private void setupUIActions() {
-        StatusBar.setStatusBarColor(requireActivity(), R.color.blue_200);
+        StatusBar.setColor(requireActivity(), R.color.blue_200);
 
         binding.btnProfilePic.setOnClickListener(view -> navigateToActivity(ProfileActivity.class));
         binding.btnSettings.setOnClickListener(view -> navigateToActivity(SettingsActivity.class));

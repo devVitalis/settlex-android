@@ -1,8 +1,5 @@
 <resources>
-    <!-- Semantic Colors (Mapped to Dark values) -->
-    <color name="color_background_page">@color/material_dark</color>
-    <color name="color_text_primary">@color/white</color>
-    <color name="color_text_secondary">@color/gray</color>
+
 
     <!-- Literal Colors -->
     <color name="black">#FF000000</color>

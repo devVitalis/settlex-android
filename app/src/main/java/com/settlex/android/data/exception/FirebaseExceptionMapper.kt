@@ -27,8 +27,17 @@ class FirebaseExceptionMapper @Inject constructor() {
             is FirebaseAuthUserCollisionException -> "This email address is already in use."
             is FirebaseAuthInvalidUserException -> "This account does not exist or has been disabled."
             is FirebaseNetworkException, is IOException -> "Connection lost. Please check your Wi-Fi or cellular data and try again."
-            is FirebaseFunctionsException -> e.message ?: ERROR_FALLBACK
-            else -> ERROR_FALLBACK
+            is FirebaseFunctionsException -> {
+                when (e.code) {
+                    FirebaseFunctionsException.Code.NOT_FOUND -> "Service unavailable. Please try again later."
+                    FirebaseFunctionsException.Code.INTERNAL -> "A server error occurred. Please try again."
+                    FirebaseFunctionsException.Code.FAILED_PRECONDITION -> "Your request could be completed right now."
+                    FirebaseFunctionsException.Code.DEADLINE_EXCEEDED -> "A server timeout occurred. Please try again."
+                    else -> e.message ?: ERROR_FALLBACK
+                }
+            }
+
+            else -> e.message ?: ERROR_FALLBACK
         }
         return Exception(message)
     }

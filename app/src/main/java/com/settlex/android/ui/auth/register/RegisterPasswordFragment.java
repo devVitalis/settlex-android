@@ -36,7 +36,7 @@ import com.settlex.android.ui.common.util.DialogHelper;
 
 import java.util.Objects;
 
-public class SignUpUserPasswordFragment extends Fragment {
+public class RegisterPasswordFragment extends Fragment {
 
     private FragmentSignUpUserPasswordBinding binding;
     private ProgressLoaderController progressLoader;
@@ -129,7 +129,7 @@ public class SignUpUserPasswordFragment extends Fragment {
 
     // UI ACTIONS ========
     private void setupUiActions() {
-        StatusBar.setStatusBarColor(requireActivity(), R.color.white);
+        StatusBar.setColor(requireActivity(), R.color.white);
         setupInputValidation();
         clearFocusOnLastEditTextField();
         togglePasswordVisibilityIcons(false);

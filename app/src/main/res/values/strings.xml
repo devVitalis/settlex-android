@@ -1,10 +1,42 @@
 <resources>
     <string name="app_name">SettleX</string>
     <string name="error_no_internet">Connection lost. Please check your Wi-Fi or cellular data and try again</string>
-    <!-- TODO: Remove or change this placeholder text -->
-    <string name="hello_blank_fragment">Hello blank fragment</string>
+
+    <!-- DASHBOARD NAVIGATION -->
     <string name="nav_home">Home</string>
     <string name="nav_services">Services</string>
     <string name="nav_rewards">Rewards</string>
     <string name="nav_account">Account</string>
+
+    <!--  XML IDS -->
+    <!-- REGISTER CONTACT FRAGMENT -->
+    <string name="tv_sign_in">Sign in</string>
+    <string name="btn_back_before">Back</string>
+    <string name="tv_help">Help</string>
+    <string name="title_create_your_account">Create Your Account</string>
+    <string name="subtitle_lets_get_you_started">Lets get you started</string>
+    <string name="body_contact_body">Please enter a valid email address and phone number. An OTP will be sent to your email address.</string>
+    <string name="tv_step_1_of_4">Step 1 of 4</string>
+    <string name="hint_enter_your_email_address">Enter your email address</string>
+    <string name="tv_country_code">+234</string>
+    <string name="hint_enter_your_phone_number">Enter your phone number</string>
+    <string name="btn_continue">Continue</string>
+
+    <!-- REGISTER EMAIL VERIFICATION FRAGMENT -->
+    <string name="title_email_verification">Email Verification</string>
+    <string name="subtitle_enter_the_6_digit_code_sent_to_your_email">Enter the 6-digit code sent to your email</string>
+    <string name="body_enter_the_verification_code_sent_to">Enter the verification code sent to:</string>
+    <string name="tv_step_2_of_4">Step 2 of 4</string>
+    <string name="tv_didnt_receive_the_otp">Didn\'t receive the OTP?</string>
+    <string name="btn_resend">Resend</string>
+
+    <!-- REGISTER NAME FRAGMENT -->
+    <string name="title_let_s_get_to_know_you">Let\'s Get to Know You</string>
+    <string name="subtitle_what_should_we_call_you">What should we call you?</string>
+    <string name="body_enter_your_legal_name">Enter your legal name</string>
+    <string name="hint_first_name">First Name</string>
+    <string name="hint_last_name">Last Name</string>
+    <string name="tv_step_3_of_4">Step 3 of 4</string>
+
+
 </resources>

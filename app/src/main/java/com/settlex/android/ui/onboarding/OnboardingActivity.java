@@ -12,7 +12,7 @@ import com.settlex.android.R;
 import com.settlex.android.data.local.AppPrefs;
 import com.settlex.android.databinding.ActivityOnboardingBinding;
 import com.settlex.android.ui.auth.login.LoginActivity;
-import com.settlex.android.ui.auth.register.SignUpActivity;
+import com.settlex.android.ui.auth.register.RegisterActivity;
 import com.settlex.android.util.ui.StatusBar;
 
 /**
@@ -32,7 +32,7 @@ public class OnboardingActivity extends AppCompatActivity {
 
         prefs = new AppPrefs(this);
 
-        StatusBar.setStatusBarColor(this, R.color.white);
+        StatusBar.setColor(this, R.color.white);
         setupViewPager();
         setupUiActions();
     }
@@ -50,9 +50,9 @@ public class OnboardingActivity extends AppCompatActivity {
     }
 
     private void setupUiActions() {
-        attachNavigation(binding.btnCreateAccount, SignUpActivity.class);
+        attachNavigation(binding.btnCreateAccount, RegisterActivity.class);
         attachNavigation(binding.btnLogin, LoginActivity.class);
-        attachNavigation(binding.btnSkip, SignUpActivity.class);
+        attachNavigation(binding.btnSkip, RegisterActivity.class);
     }
 
     private void attachNavigation(View button, Class<? extends AppCompatActivity> targetActivity) {

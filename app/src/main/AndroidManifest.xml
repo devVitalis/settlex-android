@@ -110,7 +110,7 @@
             android:name=".ui.info.help.AuthHelpActivity"
             android:exported="false" />
         <activity
-            android:name=".ui.auth.register.SignUpActivity"
+            android:name=".ui.auth.register.RegisterActivity"
             android:exported="false" />
         <activity
             android:name=".ui.onboarding.OnboardingActivity"

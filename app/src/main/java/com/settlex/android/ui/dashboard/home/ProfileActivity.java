@@ -55,7 +55,7 @@ public class ProfileActivity extends AppCompatActivity {
     }
 
     private void setupUiActions() {
-        StatusBar.setStatusBarColor(this, R.color.white);
+        StatusBar.setColor(this, R.color.white);
         initGalleryPermissionLauncher();
         initProfilePicPicker();
 
@@ -98,7 +98,7 @@ public class ProfileActivity extends AppCompatActivity {
         binding.paymentId.setText(user.getPaymentId() != null ? StringFormatter.addAtToPaymentId(user.getPaymentId()) : "Setup Payment ID");
         binding.fullName.setText(user.getFullName().toUpperCase());
         binding.email.setText(StringFormatter.maskEmail(user.getEmail()));
-        binding.phoneNumber.setText(StringFormatter.maskPhoneNumber(user.getPhone()));
+        binding.phoneNumber.setText(StringFormatter.maskPhone(user.getPhone()));
         binding.joinedDate.setText(StringFormatter.formatTimestampToRelative(user.getCreatedAt()));
         this.joinedDate = user.getCreatedAt();
     }

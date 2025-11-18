@@ -78,7 +78,7 @@ public class WalletTransferActivity extends AppCompatActivity {
     }
 
     private void setupUiActions() {
-        StatusBar.setStatusBarColor(this, R.color.white);
+        StatusBar.setColor(this, R.color.white);
         setupRecipientRecyclerView();
         setupTextInputWatcher();
         setupEditTextFocusHandlers();

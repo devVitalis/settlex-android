@@ -26,7 +26,7 @@ class AboutActivity : AppCompatActivity() {
     }
 
     private fun setupUiActions() {
-        StatusBar.setStatusBarColor(this, R.color.white)
+        StatusBar.setColor(this, R.color.white)
         binding.appVersion.text = getAppVersion()
 
 

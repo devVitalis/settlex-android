@@ -58,7 +58,7 @@ public class CreatePaymentPinActivity extends AppCompatActivity {
     }
 
     private void setupUiActions() {
-        StatusBar.setStatusBarColor(this, R.color.white);
+        StatusBar.setColor(this, R.color.white);
         setupPinInputWatcher();
         setupUiState();
 

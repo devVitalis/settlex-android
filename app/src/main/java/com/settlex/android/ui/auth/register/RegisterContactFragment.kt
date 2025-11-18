@@ -25,7 +25,7 @@ import androidx.lifecycle.repeatOnLifecycle
 import androidx.navigation.fragment.NavHostFragment
 import com.settlex.android.R
 import com.settlex.android.data.enums.OtpType
-import com.settlex.android.databinding.FragmentSignUpUserContactInfoBinding
+import com.settlex.android.databinding.FragmentRegisterContactBinding
 import com.settlex.android.ui.auth.AuthViewModel
 import com.settlex.android.ui.auth.login.LoginActivity
 import com.settlex.android.ui.info.legal.PrivacyPolicyActivity
@@ -36,23 +36,38 @@ import com.settlex.android.util.ui.ProgressLoaderController
 import com.settlex.android.util.ui.StatusBar
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.launch
-import java.util.Locale
 
+/**
+ * A [Fragment] that handles the user's contact information input during the registration process.
+ *
+ * This screen prompts the user to enter their email address and phone number. It performs
+ * validation on the inputs and requires the user to agree to the Terms & Conditions and
+ * Privacy Policy before proceeding.
+ *
+ * This fragment is part of the registration navigation graph and uses shared ViewModels
+ * ([AuthViewModel], [RegisterViewModel]) to maintain state across different registration steps.
+ *
+ * @see AuthViewModel
+ * @see RegisterViewModel
+ */
 @AndroidEntryPoint
-class SignUpUserContactInfoFragment : Fragment() {
+class RegisterContactFragment : Fragment() {
     private val authViewModel: AuthViewModel by activityViewModels()
     private val registerViewModel: RegisterViewModel by activityViewModels()
     private val progressLoader by lazy { ProgressLoaderController(requireActivity()) }
-    private var _binding: FragmentSignUpUserContactInfoBinding? = null
+    private var _binding: FragmentRegisterContactBinding? = null
     private val binding get() = _binding!!
 
+    companion object {
+        private const val PHONE_NUMBER_REGEX = "^(0)?[7-9][0-1]\\d{8}$"
+    }
 
     override fun onCreateView(
         inflater: LayoutInflater,
         container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View {
-        _binding = FragmentSignUpUserContactInfoBinding.inflate(
+        _binding = FragmentRegisterContactBinding.inflate(
             inflater,
             container,
             false
@@ -66,7 +81,6 @@ class SignUpUserContactInfoFragment : Fragment() {
 
         setupUiActions()
         observeOtpState()
-        setupDoneActionOnPhoneEditText()
     }
 
     override fun onDestroyView() {
@@ -75,10 +89,11 @@ class SignUpUserContactInfoFragment : Fragment() {
     }
 
     private fun setupUiActions() {
-        StatusBar.setStatusBarColor(requireActivity(), R.color.white)
+        StatusBar.setColor(requireActivity(), R.color.white)
+        setupLegalLinks()
         setupInputValidation()
         setupEditTextFocusHandlers()
-        setupLegalLinks()
+        setupDoneActionOnPhoneEditText()
 
         binding.btnSignIn.setOnClickListener {
             startActivity(Intent(requireContext(), LoginActivity::class.java))
@@ -112,29 +127,26 @@ class SignUpUserContactInfoFragment : Fragment() {
 
     private fun onOtpSendSuccess() {
         val navController = NavHostFragment.findNavController(this)
-        navController.navigate(R.id.sign_up_email_verification_fragment)
+        navController.navigate(R.id.register_email_verification_fragment)
         progressLoader.hide()
     }
 
-    private fun onOtpSendFailure(errorMessage: String?) {
-        binding.txtError.text = errorMessage
+    private fun onOtpSendFailure(error: String?) {
+        binding.txtError.text = error
         binding.txtError.visibility = View.VISIBLE
         progressLoader.hide()
     }
 
     private fun onContinueClicked() {
-        val email =
-            binding.editTxtEmail.text.toString().trim { it <= ' ' }.lowercase(Locale.getDefault())
-        val phone = binding.editTxtPhone.text.toString().trim { it <= ' ' }
+        val email = binding.editTxtEmail.text.toString().trim().lowercase()
+        val phone = binding.editTxtPhone.text.toString().trim()
+        val formattedPhone = StringFormatter.formatPhoneWithCode(phone)
 
-        val formattedPhone = StringFormatter.formatPhoneNumberWithCountryCode(phone)
-        registerViewModel.storeUserContactInfo(email, formattedPhone)
-
-        // Send OTP
-        sendEmailVerificationCode(email)
+        registerViewModel.updateContact(email, formattedPhone)
+        sendVerificationCode(email)
     }
 
-    private fun sendEmailVerificationCode(email: String) {
+    private fun sendVerificationCode(email: String) {
         authViewModel.sendVerificationCode(email, OtpType.EMAIL_VERIFICATION)
     }
 
@@ -144,14 +156,10 @@ class SignUpUserContactInfoFragment : Fragment() {
         val defaultBgRes = R.drawable.bg_edit_txt_custom_white_not_focused
 
         binding.editTxtPhone.setOnFocusChangeListener { _, hasFocus: Boolean ->
-            binding.editTxtPhoneBg.setBackgroundResource(
-                if (hasFocus) focusBgRes else defaultBgRes
-            )
+            binding.editTxtPhoneBg.setBackgroundResource(if (hasFocus) focusBgRes else defaultBgRes)
         }
         binding.editTxtEmail.setOnFocusChangeListener { _, hasFocus: Boolean ->
-            binding.editTxtEmailBg.setBackgroundResource(
-                if (hasFocus) focusBgRes else defaultBgRes
-            )
+            binding.editTxtEmailBg.setBackgroundResource(if (hasFocus) focusBgRes else defaultBgRes)
         }
     }
 
@@ -179,26 +187,26 @@ class SignUpUserContactInfoFragment : Fragment() {
     }
 
     private fun updateContinueButtonState() {
-        val email = binding.editTxtEmail.text.toString().trim { it <= ' ' }
-            .lowercase(Locale.getDefault())
-        val phoneNumber = binding.editTxtPhone.text.toString().trim { it <= ' ' }
+        val email = binding.editTxtEmail.text.toString().trim().lowercase()
+        val phoneNumber = binding.editTxtPhone.text.toString().trim()
 
-        setContinueButtonEnabled(isEmailValid(email) && isPhoneNumberValid(phoneNumber) && isTermsAndPrivacyChecked)
+        setContinueButtonEnabled(isEmailValid(email) && isPhoneValid(phoneNumber) && isTermsAndPrivacyChecked())
     }
 
     private fun isEmailValid(email: String): Boolean {
         return email.isNotEmpty() && Patterns.EMAIL_ADDRESS.matcher(email).matches()
     }
 
-    private fun isPhoneNumberValid(phone: String): Boolean {
-        return phone.isNotEmpty() && phone.matches("^(0)?[7-9][0-1]\\d{8}$".toRegex())
+    private fun isPhoneValid(phone: String): Boolean {
+        return phone.isNotEmpty() && phone.matches(PHONE_NUMBER_REGEX.toRegex())
     }
 
-    private val isTermsAndPrivacyChecked: Boolean
-        get() = binding.checkBoxTermsPrivacy.isChecked
+    private fun isTermsAndPrivacyChecked(): Boolean {
+        return binding.checkBoxTermsPrivacy.isChecked
+    }
 
-    private fun setContinueButtonEnabled(isContinueButtonEnabled: Boolean) {
-        binding.btnContinue.isEnabled = isContinueButtonEnabled
+    private fun setContinueButtonEnabled(allValid: Boolean) {
+        binding.btnContinue.isEnabled = allValid
     }
 
     private fun setupLegalLinks() {
@@ -208,7 +216,7 @@ class SignUpUserContactInfoFragment : Fragment() {
 
         val termsSpan: ClickableSpan = object : ClickableSpan() {
             override fun onClick(widget: View) {
-                navigateToActivity(TermsAndConditionsActivity::class.java)
+                routeToDestination(TermsAndConditionsActivity::class.java)
             }
 
             override fun updateDrawState(textPaint: TextPaint) {
@@ -219,7 +227,7 @@ class SignUpUserContactInfoFragment : Fragment() {
 
         val privacySpan: ClickableSpan = object : ClickableSpan() {
             override fun onClick(widget: View) {
-                navigateToActivity(PrivacyPolicyActivity::class.java)
+                routeToDestination(PrivacyPolicyActivity::class.java)
             }
 
             override fun updateDrawState(textPaint: TextPaint) {
@@ -245,7 +253,7 @@ class SignUpUserContactInfoFragment : Fragment() {
         binding.txtTermsPrivacy.movementMethod = LinkMovementMethod.getInstance()
     }
 
-    private fun navigateToActivity(activityClass: Class<out Activity>) {
+    private fun routeToDestination(activityClass: Class<out Activity>) {
         startActivity(Intent(requireContext(), activityClass))
     }
 

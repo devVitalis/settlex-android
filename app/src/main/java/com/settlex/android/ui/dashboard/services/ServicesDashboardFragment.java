@@ -51,7 +51,7 @@ public class ServicesDashboardFragment extends Fragment {
     }
 
     private void setupUiActions() {
-        StatusBar.setStatusBarColor(requireActivity(), R.color.white);
+        StatusBar.setColor(requireActivity(), R.color.white);
     }
 
     private void setupRecyclerView(List<ServiceUiModel> services, androidx.recyclerview.widget.RecyclerView recyclerView) {

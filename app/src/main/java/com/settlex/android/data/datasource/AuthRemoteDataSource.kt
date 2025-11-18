@@ -42,8 +42,7 @@ class AuthRemoteDataSource @Inject constructor(
 
     suspend fun register(user: UserModel, password: String) {
         val authResult = auth.createUserWithEmailAndPassword(user.email, password).await()
-        val createdUser = authResult.user ?: throw Exception("Registration failed")
-
+        val createdUser = authResult.user!!
         val finalUser = user.copy(uid = createdUser.uid)
 
         createProfile(finalUser)
@@ -138,7 +137,10 @@ class AuthRemoteDataSource @Inject constructor(
     }
 
     // FUNCTION WRAPPER
-    private suspend inline fun <reified T> runCloudFunction(name: String, data: Map<String, Any?>): ApiResponse<T> {
+    private suspend inline fun <reified T> runCloudFunction(
+        name: String,
+        data: Map<String, Any?>
+    ): ApiResponse<T> {
         val response = functions.getHttpsCallable(name).call(data).await()
         val json = gson.toJson(response.data)
 

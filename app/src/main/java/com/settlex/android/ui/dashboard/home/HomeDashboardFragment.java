@@ -106,7 +106,7 @@ public class HomeDashboardFragment extends Fragment {
 
     // UI ACTIONS =======
     private void setupUiActions() {
-        StatusBar.setStatusBarColor(requireActivity(), R.color.gray_light);
+        StatusBar.setColor(requireActivity(), R.color.gray_light);
         initTransactionRecyclerView();
         setupDoubleBackToExit();
 

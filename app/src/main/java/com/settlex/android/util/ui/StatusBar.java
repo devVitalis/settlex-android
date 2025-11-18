@@ -24,7 +24,7 @@ public class StatusBar {
      * @param activity The target activity.
      * @param colorRes The color resource to apply to the status bar.
      */
-    public static void setStatusBarColor(Activity activity, @ColorRes int colorRes) {
+    public static void setColor(Activity activity, @ColorRes int colorRes) {
         if (activity == null) return;
         enableStatusBarColorControl(activity);
 

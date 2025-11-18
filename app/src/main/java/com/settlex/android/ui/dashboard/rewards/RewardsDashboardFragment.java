@@ -95,7 +95,7 @@ public class RewardsDashboardFragment extends Fragment {
     }
 
     private void setupUiActions() {
-        StatusBar.setStatusBarColor(requireActivity(), R.color.blue_400);
+        StatusBar.setColor(requireActivity(), R.color.blue_400);
         styleText();
 
         binding.btnCopy.setOnClickListener(v -> copyReferralCodeToClipboard(binding.referralCode.getText().toString()));

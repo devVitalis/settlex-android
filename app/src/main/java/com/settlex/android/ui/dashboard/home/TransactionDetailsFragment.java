@@ -32,7 +32,7 @@ public class TransactionDetailsFragment extends Fragment {
     public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         binding = FragmentTransactionDetailsBinding.inflate(inflater, container, false);
 
-        StatusBar.setStatusBarColor(requireActivity(), R.color.white);
+        StatusBar.setColor(requireActivity(), R.color.white);
         onBackButtonPressed();
         binding.btnBackBefore.setOnClickListener(view -> requireActivity().finish());
 

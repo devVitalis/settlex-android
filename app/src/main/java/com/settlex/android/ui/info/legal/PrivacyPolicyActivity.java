@@ -20,7 +20,7 @@ public class PrivacyPolicyActivity extends AppCompatActivity {
         ActivityPrivacyPolicyBinding binding = ActivityPrivacyPolicyBinding.inflate(getLayoutInflater());
         setContentView(binding.getRoot());
 
-        StatusBar.setStatusBarColor(this, R.color.white);
+        StatusBar.setColor(this, R.color.white);
         binding.btnBackBefore.setOnClickListener(v -> finish());
         binding.txtPrivacyPolicy.setText(Html.fromHtml(getPolicyHtml(), Html.FROM_HTML_MODE_LEGACY));
     }

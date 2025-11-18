@@ -36,7 +36,7 @@ public class TransactionStatusActivity extends AppCompatActivity {
     }
 
     private void setupUiActions() {
-        StatusBar.setStatusBarColor(this, R.color.white);
+        StatusBar.setColor(this, R.color.white);
 
         showTransactionData();
 
