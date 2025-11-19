@@ -8,8 +8,8 @@ import androidx.lifecycle.ViewModel;
 
 import com.settlex.android.data.repository.UserRepository;
 import com.settlex.android.ui.dashboard.model.UserUiModel;
-import com.settlex.android.util.event.Event;
-import com.settlex.android.util.event.UiState;
+import com.settlex.android.ui.common.event.Event;
+import com.settlex.android.ui.common.event.UiState;
 import com.settlex.android.util.network.NetworkMonitor;
 
 import dagger.hilt.android.lifecycle.HiltViewModel;

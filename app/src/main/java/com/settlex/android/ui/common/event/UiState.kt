@@ -1,4 +1,4 @@
-package com.settlex.android.util.event
+package com.settlex.android.ui.common.event
 
 /**
  * A sealed class representing the state of an operation, typically an asynchronous one like a network request.

@@ -21,7 +21,7 @@ import com.settlex.android.ui.auth.forgot_password.OtpVerificationActivity;
 import com.settlex.android.ui.dashboard.model.UserUiModel;
 import com.settlex.android.ui.dashboard.util.DashboardUiUtil;
 import com.settlex.android.ui.dashboard.viewmodel.UserViewModel;
-import com.settlex.android.util.event.UiState;
+import com.settlex.android.ui.common.event.UiState;
 import com.settlex.android.util.network.NetworkMonitor;
 import com.settlex.android.util.string.StringFormatter;
 import com.settlex.android.util.ui.StatusBar;

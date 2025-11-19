@@ -30,7 +30,7 @@ import com.settlex.android.ui.auth.AuthViewModel
 import com.settlex.android.ui.auth.login.LoginActivity
 import com.settlex.android.ui.info.legal.PrivacyPolicyActivity
 import com.settlex.android.ui.info.legal.TermsAndConditionsActivity
-import com.settlex.android.util.event.UiState
+import com.settlex.android.ui.common.event.UiState
 import com.settlex.android.util.string.StringFormatter
 import com.settlex.android.util.ui.ProgressLoaderController
 import com.settlex.android.util.ui.StatusBar
@@ -132,14 +132,14 @@ class RegisterContactFragment : Fragment() {
     }
 
     private fun onOtpSendFailure(error: String?) {
-        binding.txtError.text = error
-        binding.txtError.visibility = View.VISIBLE
+        binding.tvError.text = error
+        binding.tvError.visibility = View.VISIBLE
         progressLoader.hide()
     }
 
     private fun onContinueClicked() {
-        val email = binding.editTxtEmail.text.toString().trim().lowercase()
-        val phone = binding.editTxtPhone.text.toString().trim()
+        val email = binding.etEmail.text.toString().trim().lowercase()
+        val phone = binding.etPhone.text.toString().trim()
         val formattedPhone = StringFormatter.formatPhoneWithCode(phone)
 
         registerViewModel.updateContact(email, formattedPhone)
@@ -151,15 +151,15 @@ class RegisterContactFragment : Fragment() {
     }
 
     private fun setupEditTextFocusHandlers() {
-        // cache drawables
+        // Cache drawables
         val focusBgRes = R.drawable.bg_edit_txt_custom_white_focused
         val defaultBgRes = R.drawable.bg_edit_txt_custom_white_not_focused
 
-        binding.editTxtPhone.setOnFocusChangeListener { _, hasFocus: Boolean ->
-            binding.editTxtPhoneBg.setBackgroundResource(if (hasFocus) focusBgRes else defaultBgRes)
+        binding.etPhone.setOnFocusChangeListener { _, hasFocus: Boolean ->
+            binding.etPhoneBg.setBackgroundResource(if (hasFocus) focusBgRes else defaultBgRes)
         }
-        binding.editTxtEmail.setOnFocusChangeListener { _, hasFocus: Boolean ->
-            binding.editTxtEmailBg.setBackgroundResource(if (hasFocus) focusBgRes else defaultBgRes)
+        binding.etEmail.setOnFocusChangeListener { _, hasFocus: Boolean ->
+            binding.etEmailBg.setBackgroundResource(if (hasFocus) focusBgRes else defaultBgRes)
         }
     }
 
@@ -177,18 +177,18 @@ class RegisterContactFragment : Fragment() {
             }
 
             override fun onTextChanged(text: CharSequence?, start: Int, before: Int, count: Int) {
-                binding.txtError.visibility = View.GONE
+                binding.tvError.visibility = View.GONE
                 updateContinueButtonState()
             }
         }
-        binding.editTxtEmail.addTextChangedListener(validationWatcher)
-        binding.editTxtPhone.addTextChangedListener(validationWatcher)
+        binding.etEmail.addTextChangedListener(validationWatcher)
+        binding.etPhone.addTextChangedListener(validationWatcher)
         binding.checkBoxTermsPrivacy.setOnCheckedChangeListener { _, _ -> updateContinueButtonState() }
     }
 
     private fun updateContinueButtonState() {
-        val email = binding.editTxtEmail.text.toString().trim().lowercase()
-        val phoneNumber = binding.editTxtPhone.text.toString().trim()
+        val email = binding.etEmail.text.toString().trim().lowercase()
+        val phoneNumber = binding.etPhone.text.toString().trim()
 
         setContinueButtonEnabled(isEmailValid(email) && isPhoneValid(phoneNumber) && isTermsAndPrivacyChecked())
     }
@@ -249,8 +249,8 @@ class RegisterContactFragment : Fragment() {
             Spanned.SPAN_EXCLUSIVE_EXCLUSIVE
         )
 
-        binding.txtTermsPrivacy.text = span
-        binding.txtTermsPrivacy.movementMethod = LinkMovementMethod.getInstance()
+        binding.tvTermsPrivacy.text = span
+        binding.tvTermsPrivacy.movementMethod = LinkMovementMethod.getInstance()
     }
 
     private fun routeToDestination(activityClass: Class<out Activity>) {
@@ -258,7 +258,7 @@ class RegisterContactFragment : Fragment() {
     }
 
     private fun setupDoneActionOnPhoneEditText() {
-        binding.editTxtPhone.setOnEditorActionListener { view, actionId, _ ->
+        binding.etPhone.setOnEditorActionListener { view, actionId, _ ->
             if (actionId == EditorInfo.IME_ACTION_DONE) {
                 val inputMethodManager =
                     ContextCompat.getSystemService(view.context, InputMethodManager::class.java)

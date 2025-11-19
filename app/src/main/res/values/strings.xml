@@ -38,5 +38,17 @@
     <string name="hint_last_name">Last Name</string>
     <string name="tv_step_3_of_4">Step 3 of 4</string>
 
+    <!-- REGISTER PASSWORD FRAGMENT -->
+    <string name="title_create_your_password">Create Your Password</string>
+    <string name="subtitle_lets_safeguard_your_account">Lets safeguard your account</string>
+    <string name="tv_step_4_of_4">Step 4 of 4</string>
+    <string name="body_create_a_strong_password_to_complete_your_account_setup">Create a strong password to complete your account setup.</string>
+    <string name="hint_create_your_password">Create your password</string>
+    <string name="hint_confirm_your_password">Confirm your password</string>
+    <string name="tv_have_an_invitation_code_optional">Have an Invitation Code? (Optional)</string>
+    <string name="btn_expend">Expend</string>
+    <string name="hint_invitation_code">Invitation Code</string>
+    <string name="btn_create_account">Create Account</string>
+
 
 </resources>

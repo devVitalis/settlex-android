@@ -10,36 +10,36 @@ import javax.inject.Inject
 @HiltViewModel
 class RegisterViewModel @Inject constructor() : ViewModel() {
 
-    private val _registrationState = MutableStateFlow(RegistrationState())
+    private val registrationState = MutableStateFlow(RegistrationState())
 
     fun updateContact(newEmail: String, newPhoneNumber: String) {
-        _registrationState.update { it.copy(email = newEmail, phone = newPhoneNumber) }
+        registrationState.update { it.copy(email = newEmail, phone = newPhoneNumber) }
     }
 
-    val email: String get() = _registrationState.value.email
+    val email: String get() = registrationState.value.email
 
     fun updateName(newFirstName: String, newLastName: String) {
-        _registrationState.update { it.copy(firstName = newFirstName, lastName = newLastName) }
+        registrationState.update { it.copy(firstName = newFirstName, lastName = newLastName) }
     }
 
     fun updateReferralCode(newReferralCode: String?) {
-        _registrationState.update { it.copy(referralCode = newReferralCode) }
+        registrationState.update { it.copy(referralCode = newReferralCode) }
     }
 
     fun updateFcmToken(newFcmToken: String) {
-        _registrationState.update { it.copy(fcmToken = newFcmToken) }
+        registrationState.update { it.copy(fcmToken = newFcmToken) }
     }
 
     fun buildUserModel(uid: String): UserModel {
-        val user = _registrationState.value
+        val currentState = registrationState.value
         return UserModel(
             uid = uid,
-            firstName = user.firstName,
-            lastName = user.lastName,
-            email = user.email,
-            phone = user.phone,
-            referralCode = user.referralCode,
-            fcmToken = user.fcmToken,
+            firstName = currentState.firstName,
+            lastName = currentState.lastName,
+            email = currentState.email,
+            phone = currentState.phone,
+            referralCode = currentState.referralCode,
+            fcmToken = currentState.fcmToken,
         )
     }
 

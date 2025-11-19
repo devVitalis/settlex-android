@@ -31,7 +31,7 @@ import com.settlex.android.ui.dashboard.util.DashboardUiUtil;
 import com.settlex.android.ui.dashboard.util.TransactionIdGenerator;
 import com.settlex.android.ui.dashboard.viewmodel.TransactionViewModel;
 import com.settlex.android.ui.dashboard.viewmodel.UserViewModel;
-import com.settlex.android.util.event.UiState;
+import com.settlex.android.ui.common.event.UiState;
 import com.settlex.android.util.string.CurrencyFormatter;
 import com.settlex.android.util.string.StringFormatter;
 import com.settlex.android.util.ui.ProgressLoaderController;

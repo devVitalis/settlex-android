@@ -21,7 +21,7 @@ import com.settlex.android.R;
 import com.settlex.android.databinding.ActivityForgotPasswordBinding;
 import com.settlex.android.ui.auth.AuthViewModel;
 import com.settlex.android.util.ui.ProgressLoaderController;
-import com.settlex.android.util.event.UiState;
+import com.settlex.android.ui.common.event.UiState;
 import com.settlex.android.util.network.NetworkMonitor;
 import com.settlex.android.util.ui.StatusBar;
 import com.settlex.android.ui.common.util.DialogHelper;

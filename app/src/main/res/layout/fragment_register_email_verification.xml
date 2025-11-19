@@ -166,7 +166,7 @@
                 android:textStyle="bold" />
 
             <TextView
-                android:id="@+id/user_email"
+                android:id="@+id/tv_user_email"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:fontFamily="@font/poppins_regular"
@@ -200,7 +200,7 @@
                 app:itemWidth="50dp" />
 
             <TextView
-                android:id="@+id/txt_error"
+                android:id="@+id/tv_error"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="5dp"
@@ -240,7 +240,7 @@
             </LinearLayout>
 
             <TextView
-                android:id="@+id/txt_info"
+                android:id="@+id/tv_info"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="10dp"

@@ -39,7 +39,7 @@ import com.settlex.android.ui.dashboard.services.DataPurchaseActivity;
 import com.settlex.android.ui.dashboard.viewmodel.PromoBannerViewModel;
 import com.settlex.android.ui.dashboard.viewmodel.TransactionViewModel;
 import com.settlex.android.ui.dashboard.viewmodel.UserViewModel;
-import com.settlex.android.util.event.UiState;
+import com.settlex.android.ui.common.event.UiState;
 import com.settlex.android.util.network.NetworkMonitor;
 import com.settlex.android.util.string.CurrencyFormatter;
 import com.settlex.android.util.string.StringFormatter;

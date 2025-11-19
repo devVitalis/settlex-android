@@ -14,8 +14,8 @@ import com.settlex.android.data.repository.TransactionRepository;
 import com.settlex.android.ui.dashboard.model.MoneyFlowUiModel;
 import com.settlex.android.ui.dashboard.model.RecipientUiModel;
 import com.settlex.android.ui.dashboard.model.TransactionUiModel;
-import com.settlex.android.util.event.Event;
-import com.settlex.android.util.event.UiState;
+import com.settlex.android.ui.common.event.Event;
+import com.settlex.android.ui.common.event.UiState;
 import com.settlex.android.util.string.CurrencyFormatter;
 import com.settlex.android.util.string.StringFormatter;
 

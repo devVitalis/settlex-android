@@ -22,7 +22,7 @@ import com.settlex.android.ui.auth.login.LoginActivity;
 import com.settlex.android.ui.dashboard.home.ProfileActivity;
 import com.settlex.android.ui.dashboard.model.UserUiModel;
 import com.settlex.android.ui.dashboard.viewmodel.UserViewModel;
-import com.settlex.android.util.event.UiState;
+import com.settlex.android.ui.common.event.UiState;
 import com.settlex.android.util.string.StringFormatter;
 import com.settlex.android.util.ui.StatusBar;
 

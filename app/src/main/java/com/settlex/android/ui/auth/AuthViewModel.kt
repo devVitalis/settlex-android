@@ -10,7 +10,7 @@ import com.settlex.android.domain.usecase.SendOtpUseCase
 import com.settlex.android.domain.usecase.SetNewPasswordUseCase
 import com.settlex.android.domain.usecase.VerifyEmailUseCase
 import com.settlex.android.domain.usecase.VerifyPasswordResetUseCase
-import com.settlex.android.util.event.UiState
+import com.settlex.android.ui.common.event.UiState
 import dagger.hilt.android.lifecycle.HiltViewModel
 import jakarta.inject.Inject
 import kotlinx.coroutines.flow.MutableSharedFlow

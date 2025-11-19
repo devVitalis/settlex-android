@@ -22,7 +22,7 @@ import com.settlex.android.R
 import com.settlex.android.data.enums.OtpType
 import com.settlex.android.databinding.FragmentRegisterEmailVerificationBinding
 import com.settlex.android.ui.auth.AuthViewModel
-import com.settlex.android.util.event.UiState
+import com.settlex.android.ui.common.event.UiState
 import com.settlex.android.util.string.StringFormatter
 import com.settlex.android.util.ui.ProgressLoaderController
 import com.settlex.android.util.ui.StatusBar
@@ -129,7 +129,7 @@ class RegisterEmailVerificationFragment : Fragment() {
     }
 
     private fun displayMaskedEmail() {
-        binding.userEmail.text = StringFormatter.maskEmail(email)
+        binding.tvUserEmail.text = StringFormatter.maskEmail(email)
     }
 
     // Observers
@@ -159,8 +159,8 @@ class RegisterEmailVerificationFragment : Fragment() {
     }
 
     private fun onEmailVerificationFailure(errorMessage: String?) {
-        binding.txtError.text = errorMessage
-        binding.txtError.visibility = View.VISIBLE
+        binding.tvError.text = errorMessage
+        binding.tvError.visibility = View.VISIBLE
         progressLoader.hide()
     }
 
@@ -184,8 +184,8 @@ class RegisterEmailVerificationFragment : Fragment() {
     }
 
     private fun onOtpResendFailure(errorMessage: String?) {
-        binding.txtError.text = errorMessage
-        binding.txtError.visibility = View.VISIBLE
+        binding.tvError.text = errorMessage
+        binding.tvError.visibility = View.VISIBLE
         progressLoader.hide()
     }
 
@@ -205,7 +205,7 @@ class RegisterEmailVerificationFragment : Fragment() {
             Spanned.SPAN_EXCLUSIVE_EXCLUSIVE
         )
 
-        binding.txtInfo.text = styledMessage
+        binding.tvInfo.text = styledMessage
     }
 
     private fun startOtpResendCooldownTimer() {
@@ -250,7 +250,7 @@ class RegisterEmailVerificationFragment : Fragment() {
                 before: Int,
                 count: Int
             ) {
-                if (enteredOtp.toString().isEmpty()) binding.txtError.visibility = View.GONE
+                if (enteredOtp.toString().isEmpty()) binding.tvError.visibility = View.GONE
                 binding.btnContinue.isEnabled = isOtpInputComplete()
             }
         })

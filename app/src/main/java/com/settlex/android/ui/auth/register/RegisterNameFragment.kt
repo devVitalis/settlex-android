@@ -60,7 +60,7 @@ class RegisterNameFragment : Fragment() {
     private fun setupUiActions() {
         StatusBar.setColor(requireActivity(), R.color.white)
         setupInputValidation()
-        clearFocusOnLastEditTextField()
+        setupActionDoneOnLastnameEditText()
 
         binding!!.btnBackBefore.setOnClickListener {
             NavHostFragment.findNavController(
@@ -89,13 +89,13 @@ class RegisterNameFragment : Fragment() {
                 updateContinueButtonState()
             }
         }
-        binding!!.editTxtFirstname.addTextChangedListener(validationWatcher)
-        binding!!.editTxtLastName.addTextChangedListener(validationWatcher)
+        binding!!.etFirstname.addTextChangedListener(validationWatcher)
+        binding!!.etLastname.addTextChangedListener(validationWatcher)
     }
 
     private fun updateNameAndContinue() {
-        val firstName = binding!!.editTxtFirstname.getText().toString().trim()
-        val lastName = binding!!.editTxtLastName.getText().toString().trim()
+        val firstName = binding!!.etFirstname.getText().toString().trim()
+        val lastName = binding!!.etLastname.getText().toString().trim()
 
         registerViewModel.updateName(
             StringFormatter.capitalizeEachWord(firstName),
@@ -114,17 +114,17 @@ class RegisterNameFragment : Fragment() {
     }
 
     private fun isFirstNameValid(): Boolean {
-        val firstName = binding!!.editTxtFirstname.toString().trim()
+        val firstName = binding!!.etFirstname.toString().trim()
         return firstName.isNotEmpty() && firstName.matches(NAME_VALIDATION_REGEX.toRegex())
     }
 
     private fun isLastNameValid(): Boolean {
-        val lastName = binding!!.editTxtLastName.toString().trim()
+        val lastName = binding!!.etLastname.toString().trim()
         return lastName.isNotEmpty() && lastName.matches(NAME_VALIDATION_REGEX.toRegex())
     }
 
-    private fun clearFocusOnLastEditTextField() {
-        binding!!.editTxtLastName.setOnEditorActionListener { v: TextView, actionId: Int, _ ->
+    private fun setupActionDoneOnLastnameEditText() {
+        binding!!.etLastname.setOnEditorActionListener { v: TextView, actionId: Int, _ ->
             if (actionId == EditorInfo.IME_ACTION_DONE) {
                 val imm = v.context
                     .getSystemService(Context.INPUT_METHOD_SERVICE) as InputMethodManager

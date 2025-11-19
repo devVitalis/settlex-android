@@ -169,7 +169,7 @@
                 app:endIconMode="clear_text">
 
                 <com.google.android.material.textfield.TextInputEditText
-                    android:id="@+id/edit_txt_firstname"
+                    android:id="@+id/et_firstname"
                     android:layout_width="match_parent"
                     android:layout_height="55dp"
                     android:fontFamily="@font/inter_regular"
@@ -195,7 +195,7 @@
                 app:endIconMode="clear_text">
 
                 <com.google.android.material.textfield.TextInputEditText
-                    android:id="@+id/edit_txt_lastName"
+                    android:id="@+id/et_lastname"
                     android:layout_width="match_parent"
                     android:layout_height="55dp"
                     android:fontFamily="@font/inter_regular"

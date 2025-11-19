@@ -179,14 +179,14 @@
                 android:textSize="14sp" />
 
             <FrameLayout
-                android:id="@+id/edit_txt_email_bg"
+                android:id="@+id/et_email_bg"
                 android:layout_width="match_parent"
                 android:layout_height="55dp"
                 android:layout_marginTop="10dp"
                 android:background="@drawable/bg_edit_txt_custom_white_not_focused">
 
                 <com.google.android.material.textfield.TextInputEditText
-                    android:id="@+id/edit_txt_email"
+                    android:id="@+id/et_email"
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
                     android:background="@android:color/transparent"
@@ -202,7 +202,7 @@
             </FrameLayout>
 
             <TextView
-                android:id="@+id/txt_error"
+                android:id="@+id/tv_error"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="5dp"
@@ -214,7 +214,7 @@
                 tools:text="message" />
 
             <androidx.constraintlayout.widget.ConstraintLayout
-                android:id="@+id/edit_txt_phone_bg"
+                android:id="@+id/et_phone_bg"
                 android:layout_width="match_parent"
                 android:layout_height="55dp"
                 android:layout_marginTop="10dp"
@@ -232,7 +232,7 @@
                     app:layout_constraintTop_toTopOf="parent" />
 
                 <TextView
-                    android:id="@+id/country_code"
+                    android:id="@+id/tv_country_code"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_marginStart="8dp"
@@ -242,7 +242,7 @@
                     android:textColor="@color/black"
                     android:textSize="14sp"
                     app:layout_constraintBottom_toBottomOf="parent"
-                    app:layout_constraintStart_toEndOf="@id/flag_icon"
+                    app:layout_constraintStart_toEndOf="@+id/flag_icon"
                     app:layout_constraintTop_toTopOf="parent" />
 
                 <com.google.android.material.divider.MaterialDivider
@@ -252,11 +252,11 @@
                     android:layout_marginStart="8dp"
                     app:dividerColor="@color/gray"
                     app:layout_constraintBottom_toBottomOf="parent"
-                    app:layout_constraintStart_toEndOf="@id/country_code"
+                    app:layout_constraintStart_toEndOf="@id/tv_country_code"
                     app:layout_constraintTop_toTopOf="parent" />
 
                 <com.google.android.material.textfield.TextInputEditText
-                    android:id="@+id/edit_txt_phone"
+                    android:id="@+id/et_phone"
                     android:layout_width="0dp"
                     android:layout_height="0dp"
                     android:layout_marginStart="10dp"
@@ -304,7 +304,7 @@
                 android:gravity="center" />
 
             <TextView
-                android:id="@+id/txt_terms_privacy"
+                android:id="@+id/tv_terms_privacy"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:fontFamily="@font/inter_regular"

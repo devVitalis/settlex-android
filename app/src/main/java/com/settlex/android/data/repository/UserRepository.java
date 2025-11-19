@@ -21,7 +21,7 @@ import com.google.firebase.functions.FirebaseFunctions;
 import com.settlex.android.SettleXApp;
 import com.settlex.android.data.local.UserPrefs;
 import com.settlex.android.data.remote.dto.UserDto;
-import com.settlex.android.util.event.UiState;
+import com.settlex.android.ui.common.event.UiState;
 
 import java.io.IOException;
 import java.util.Collections;

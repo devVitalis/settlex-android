@@ -1,7 +1,7 @@
 package com.settlex.android.domain.usecase
 
 import com.settlex.android.data.remote.dto.ApiResponse
-import com.settlex.android.data.repository.AuthRepositoryImpl
+import com.settlex.android.domain.repository.AuthRepositoryImpl
 import jakarta.inject.Inject
 
 class VerifyPasswordResetUseCase @Inject constructor(private val authRepositoryImpl: AuthRepositoryImpl) {

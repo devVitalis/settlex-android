@@ -1,6 +1,6 @@
 package com.settlex.android.domain.usecase
 
-import com.settlex.android.data.repository.AuthRepositoryImpl
+import com.settlex.android.domain.repository.AuthRepositoryImpl
 import jakarta.inject.Inject
 
 class LoginUseCase @Inject constructor(private val authRepositoryImpl: AuthRepositoryImpl) {
