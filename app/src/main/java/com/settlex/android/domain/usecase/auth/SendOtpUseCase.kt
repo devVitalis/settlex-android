@@ -1,4 +1,4 @@
-package com.settlex.android.domain.usecase
+package com.settlex.android.domain.usecase.auth
 
 import com.settlex.android.data.enums.OtpType
 import com.settlex.android.data.remote.dto.ApiResponse

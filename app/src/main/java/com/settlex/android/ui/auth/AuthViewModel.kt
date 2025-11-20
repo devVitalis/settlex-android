@@ -2,19 +2,21 @@ package com.settlex.android.ui.auth
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.settlex.android.R
+import com.settlex.android.SettleXApp
 import com.settlex.android.data.enums.OtpType
+import com.settlex.android.data.exception.AppException
 import com.settlex.android.domain.model.UserModel
-import com.settlex.android.domain.usecase.LoginUseCase
-import com.settlex.android.domain.usecase.RegisterUseCase
-import com.settlex.android.domain.usecase.SendOtpUseCase
-import com.settlex.android.domain.usecase.SetNewPasswordUseCase
-import com.settlex.android.domain.usecase.VerifyEmailUseCase
-import com.settlex.android.domain.usecase.VerifyPasswordResetUseCase
+import com.settlex.android.domain.usecase.auth.AuthUseCases
+import com.settlex.android.ui.auth.login.LoginState
 import com.settlex.android.ui.common.event.UiState
+import com.settlex.android.util.network.NetworkMonitor
 import dagger.hilt.android.lifecycle.HiltViewModel
 import jakarta.inject.Inject
 import kotlinx.coroutines.flow.MutableSharedFlow
+import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asSharedFlow
+import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.launch
 
 /**
@@ -26,14 +28,14 @@ import kotlinx.coroutines.launch
  * through `SharedFlow`s representing different UI states.
  */
 @HiltViewModel
-class AuthViewModel @Inject constructor(
-    private val loginUseCase: LoginUseCase,
-    private val registerUseCase: RegisterUseCase,
-    private val sendOtpUseCase: SendOtpUseCase,
-    private val verifyEmailUseCase: VerifyEmailUseCase,
-    private val verifyPasswordResetUseCase: VerifyPasswordResetUseCase,
-    private val setNewPasswordUseCase: SetNewPasswordUseCase
-) : ViewModel() {
+class AuthViewModel @Inject constructor(private val authUseCases: AuthUseCases) : ViewModel() {
+
+    private val errorNoNetwork by lazy {
+        SettleXApp.appContext.getString(R.string.error_no_internet)
+    }
+
+    private val _userState = MutableStateFlow<LoginState>(LoginState.NoUser)
+    val userState = _userState.asStateFlow()
 
     private val _loginEvent = MutableSharedFlow<UiState<Unit>>()
     val loginEvent = _loginEvent.asSharedFlow()
@@ -53,66 +55,168 @@ class AuthViewModel @Inject constructor(
     private val _setNewPasswordEvent = MutableSharedFlow<UiState<String>>()
     val setNewPasswordEvent = _setNewPasswordEvent.asSharedFlow()
 
+
+    init {
+        initUserState()
+    }
+
+    private fun initUserState() {
+        viewModelScope.launch {
+            val currentUser = authUseCases.getCurrentUser()
+            if (currentUser == null) {
+                _userState.emit(LoginState.NoUser)
+                return@launch
+            }
+            _userState.emit(
+                LoginState.CurrentUser(
+                    currentUser.uid,
+                    currentUser.email ?: "",
+                    currentUser.displayName ?: "",
+                    currentUser.photoUrl?.toString()
+                )
+            )
+        }
+    }
+
     /**
      * Attempts to log in a user with the provided credentials.
      */
     fun login(email: String, password: String) {
         viewModelScope.launch {
+            if (!isNetworkConnected()) {
+                _loginEvent.emit(
+                    UiState.Failure(
+                        AppException.NetworkException(
+                            errorNoNetwork
+                        )
+                    )
+                )
+                return@launch
+            }
+
             _loginEvent.emit(UiState.Loading)
 
-            loginUseCase(email, password)
+            authUseCases.login(email, password)
                 .onSuccess { _loginEvent.emit(UiState.Success(Unit)) }
-                .onFailure { _loginEvent.emit(UiState.Failure(it.message)) }
+                .onFailure { _loginEvent.emit(UiState.Failure(it as AppException)) }
         }
     }
 
     fun register(user: UserModel, password: String) {
         viewModelScope.launch {
+            if (!isNetworkConnected()) {
+                _registrationEvent.emit(
+                    UiState.Failure(
+                        AppException.NetworkException(
+                            errorNoNetwork
+                        )
+                    )
+                )
+                return@launch
+            }
+
             _registrationEvent.emit(UiState.Loading)
 
-            registerUseCase(user, password)
+            authUseCases.register(user, password)
                 .onSuccess { _registrationEvent.emit(UiState.Success(Unit)) }
-                .onFailure { _registrationEvent.emit(UiState.Failure(it.message)) }
+                .onFailure { _registrationEvent.emit(UiState.Failure(it as AppException)) }
         }
     }
 
     fun sendVerificationCode(email: String, type: OtpType) {
         viewModelScope.launch {
+            if (!isNetworkConnected()) {
+                _otpEvent.emit(
+                    UiState.Failure(
+                        AppException.NetworkException(
+                            errorNoNetwork
+                        )
+                    )
+                )
+                return@launch
+            }
+
             _otpEvent.emit(UiState.Loading)
 
-            sendOtpUseCase(email, type)
+            authUseCases.sendOtp(email, type)
                 .onSuccess { _otpEvent.emit(UiState.Success(it.data)) }
-                .onFailure { _otpEvent.emit(UiState.Failure(it.message)) }
+                .onFailure { _otpEvent.emit(UiState.Failure(it as AppException)) }
         }
     }
 
     fun verifyEmail(email: String, otp: String) {
         viewModelScope.launch {
+            if (!isNetworkConnected()) {
+                _verifyEmailEvent.emit(
+                    UiState.Failure(
+                        AppException.NetworkException(
+                            errorNoNetwork
+                        )
+                    )
+                )
+                return@launch
+            }
+
             _verifyEmailEvent.emit(UiState.Loading)
 
-            verifyEmailUseCase(email, otp)
+            authUseCases.verifyEmail(email, otp)
                 .onSuccess { _verifyEmailEvent.emit(UiState.Success(it.data)) }
-                .onFailure { _verifyEmailEvent.emit(UiState.Failure(it.message)) }
+                .onFailure { _verifyEmailEvent.emit(UiState.Failure(it as AppException)) }
         }
     }
 
     fun verifyPasswordReset(email: String, otp: String) {
         viewModelScope.launch {
+            if (!isNetworkConnected()) {
+                _verifyPasswordResetEvent.emit(
+                    UiState.Failure(
+                        AppException.NetworkException(
+                            errorNoNetwork
+                        )
+                    )
+                )
+                return@launch
+            }
+
             _verifyPasswordResetEvent.emit(UiState.Loading)
 
-            verifyPasswordResetUseCase(email, otp)
+            authUseCases.verifyPasswordReset(email, otp)
                 .onSuccess { _verifyPasswordResetEvent.emit(UiState.Success(it.data)) }
-                .onFailure { _verifyPasswordResetEvent.emit(UiState.Failure(it.message)) }
+                .onFailure { _verifyPasswordResetEvent.emit(UiState.Failure(it as AppException)) }
         }
     }
 
     fun setNewPassword(email: String, oldPassword: String, newPassword: String) {
         viewModelScope.launch {
+            if (!isNetworkConnected()) {
+                _setNewPasswordEvent.emit(
+                    UiState.Failure(
+                        AppException.NetworkException(
+                            errorNoNetwork
+                        )
+                    )
+                )
+                return@launch
+            }
+
             _setNewPasswordEvent.emit(UiState.Loading)
 
-            setNewPasswordUseCase(email, oldPassword, newPassword)
+            authUseCases.setNewPassword(email, oldPassword, newPassword)
                 .onSuccess { _setNewPasswordEvent.emit(UiState.Success(it.data)) }
-                .onFailure { _setNewPasswordEvent.emit(UiState.Failure(it.message)) }
+                .onFailure { _setNewPasswordEvent.emit(UiState.Failure(it as AppException)) }
         }
+    }
+
+    /**
+     * Checks if the device has an active network connection.
+     *
+     * This function is intended to be implemented to verify network availability
+     * before making network requests, ensuring the app can gracefully handle
+     * offline scenarios.
+     *
+     * @return `true` if the device is connected to a network, `false` otherwise.
+     */
+    fun isNetworkConnected(): Boolean {
+        return NetworkMonitor.networkStatus.value
     }
 }

@@ -49,6 +49,7 @@ class RegisterNameFragment : Fragment() {
         binding = FragmentRegisterNameBinding.inflate(inflater, container, false)
 
         setupUiActions()
+        setupClickListeners()
         return binding!!.getRoot()
     }
 
@@ -61,7 +62,9 @@ class RegisterNameFragment : Fragment() {
         StatusBar.setColor(requireActivity(), R.color.white)
         setupInputValidation()
         setupActionDoneOnLastnameEditText()
+    }
 
+    private fun setupClickListeners() {
         binding!!.btnBackBefore.setOnClickListener {
             NavHostFragment.findNavController(
                 this

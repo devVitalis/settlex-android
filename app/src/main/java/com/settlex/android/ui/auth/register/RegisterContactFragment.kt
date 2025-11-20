@@ -25,12 +25,13 @@ import androidx.lifecycle.repeatOnLifecycle
 import androidx.navigation.fragment.NavHostFragment
 import com.settlex.android.R
 import com.settlex.android.data.enums.OtpType
+import com.settlex.android.data.exception.AppException
 import com.settlex.android.databinding.FragmentRegisterContactBinding
 import com.settlex.android.ui.auth.AuthViewModel
 import com.settlex.android.ui.auth.login.LoginActivity
+import com.settlex.android.ui.common.event.UiState
 import com.settlex.android.ui.info.legal.PrivacyPolicyActivity
 import com.settlex.android.ui.info.legal.TermsAndConditionsActivity
-import com.settlex.android.ui.common.event.UiState
 import com.settlex.android.util.string.StringFormatter
 import com.settlex.android.util.ui.ProgressLoaderController
 import com.settlex.android.util.ui.StatusBar
@@ -80,7 +81,7 @@ class RegisterContactFragment : Fragment() {
         super.onViewCreated(view, savedInstanceState)
 
         setupUiActions()
-        observeOtpState()
+        observeOtpSendState()
     }
 
     override fun onDestroyView() {
@@ -111,14 +112,14 @@ class RegisterContactFragment : Fragment() {
         binding.btnContinue.setOnClickListener { onContinueClicked() }
     }
 
-    private fun observeOtpState() {
+    private fun observeOtpSendState() {
         viewLifecycleOwner.lifecycleScope.launch {
             viewLifecycleOwner.repeatOnLifecycle(Lifecycle.State.STARTED) {
-                authViewModel.otpEvent.collect { otpSendState ->
-                    when (otpSendState) {
-                        is UiState.Success -> onOtpSendSuccess()
-                        is UiState.Failure -> onOtpSendFailure(otpSendState.message)
+                authViewModel.otpEvent.collect {
+                    when (it) {
                         is UiState.Loading -> progressLoader.show()
+                        is UiState.Success -> onOtpSendSuccess()
+                        is UiState.Failure -> onOtpSendFailure(it.exception)
                     }
                 }
             }
@@ -131,8 +132,8 @@ class RegisterContactFragment : Fragment() {
         progressLoader.hide()
     }
 
-    private fun onOtpSendFailure(error: String?) {
-        binding.tvError.text = error
+    private fun onOtpSendFailure(error: AppException) {
+        binding.tvError.text = error.message
         binding.tvError.visibility = View.VISIBLE
         progressLoader.hide()
     }

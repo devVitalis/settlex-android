@@ -20,6 +20,7 @@ import androidx.navigation.NavOptions
 import androidx.navigation.fragment.NavHostFragment
 import com.settlex.android.R
 import com.settlex.android.data.enums.OtpType
+import com.settlex.android.data.exception.AppException
 import com.settlex.android.databinding.FragmentRegisterEmailVerificationBinding
 import com.settlex.android.ui.auth.AuthViewModel
 import com.settlex.android.ui.common.event.UiState
@@ -83,7 +84,7 @@ class RegisterEmailVerificationFragment : Fragment() {
 
         startOtpResendCooldownTimer()
         observeEmailVerificationStatus()
-        observeSendVerificationCodeStatus()
+        observeOtpSendState()
     }
 
     override fun onDestroyView() {
@@ -136,11 +137,11 @@ class RegisterEmailVerificationFragment : Fragment() {
     private fun observeEmailVerificationStatus() {
         viewLifecycleOwner.lifecycleScope.launch {
             viewLifecycleOwner.repeatOnLifecycle(Lifecycle.State.STARTED) {
-                authViewModel.verifyEmailEvent.collect { uiState ->
-                    when (uiState) {
+                authViewModel.verifyEmailEvent.collect { state ->
+                    when (state) {
                         is UiState.Loading -> progressLoader.show()
                         is UiState.Success -> onEmailVerificationSuccess()
-                        is UiState.Failure -> onEmailVerificationFailure(uiState.message)
+                        is UiState.Failure -> onEmailVerificationFailure(state.exception)
                     }
                 }
             }
@@ -158,39 +159,40 @@ class RegisterEmailVerificationFragment : Fragment() {
         progressLoader.hide()
     }
 
-    private fun onEmailVerificationFailure(errorMessage: String?) {
-        binding.tvError.text = errorMessage
+    private fun onEmailVerificationFailure(error: AppException) {
+        binding.tvError.text = error.message
         binding.tvError.visibility = View.VISIBLE
         progressLoader.hide()
     }
 
-    private fun observeSendVerificationCodeStatus() {
+    private fun observeOtpSendState() {
         viewLifecycleOwner.lifecycleScope.launch {
             viewLifecycleOwner.repeatOnLifecycle(Lifecycle.State.STARTED) {
-                authViewModel.otpEvent.collect { uiState ->
-                    when (uiState) {
+                authViewModel.otpEvent.collect { state ->
+                    when (state) {
                         is UiState.Loading -> progressLoader.show()
-                        is UiState.Success -> onOtpResendSuccess()
-                        is UiState.Failure -> onOtpResendFailure(uiState.message)
+                        is UiState.Success -> onResendOtpSuccess()
+                        is UiState.Failure -> onResendOtpFailure(state.exception)
                     }
                 }
             }
         }
     }
 
-    private fun onOtpResendSuccess() {
+    private fun onResendOtpSuccess() {
         startOtpResendCooldownTimer()
         progressLoader.hide()
     }
 
-    private fun onOtpResendFailure(errorMessage: String?) {
-        binding.tvError.text = errorMessage
+    private fun onResendOtpFailure(error: AppException) {
+        binding.tvError.text = error.message
         binding.tvError.visibility = View.VISIBLE
         progressLoader.hide()
     }
 
     private fun styleSpamHintText() {
-        val message = "Didn’t get the email? Make sure to also check your spam/junk folder if you can't find the email in your inbox"
+        val message =
+            "Didn’t get the email? Make sure to also check your spam/junk folder if you can't find the email in your inbox"
         val highlightedPhrase = "check your spam/junk folder"
 
         // Find the phrase location inside the full text

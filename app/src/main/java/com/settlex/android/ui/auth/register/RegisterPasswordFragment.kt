@@ -23,6 +23,7 @@ import androidx.lifecycle.lifecycleScope
 import androidx.lifecycle.repeatOnLifecycle
 import androidx.navigation.fragment.NavHostFragment
 import com.settlex.android.R
+import com.settlex.android.data.exception.AppException
 import com.settlex.android.databinding.FragmentRegisterPasswordBinding
 import com.settlex.android.ui.auth.AuthViewModel
 import com.settlex.android.ui.common.event.UiState
@@ -105,26 +106,26 @@ class RegisterPasswordFragment : Fragment() {
     private fun observeRegistrationState() {
         viewLifecycleOwner.lifecycleScope.launch {
             viewLifecycleOwner.repeatOnLifecycle(Lifecycle.State.STARTED) {
-                authViewModel.registrationEvent.collect { uiState ->
-                    when (uiState) {
+                authViewModel.registrationEvent.collect { state ->
+                    when (state) {
                         is UiState.Loading -> progressLoader.show()
-                        is UiState.Success -> onRegistrationStatusSuccess()
-                        is UiState.Failure -> onRegistrationStatusFailure(uiState.message)
+                        is UiState.Success -> onRegistrationSuccess()
+                        is UiState.Failure -> onRegistrationFailure(state.exception)
                     }
                 }
             }
         }
     }
 
-    private fun onRegistrationStatusSuccess() {
+    private fun onRegistrationSuccess() {
         startActivity(Intent(requireContext(), DashboardActivity::class.java))
         requireActivity().finishAffinity()
 
         progressLoader.hide()
     }
 
-    private fun onRegistrationStatusFailure(message: String?) {
-        binding!!.tvError.text = message
+    private fun onRegistrationFailure(error: AppException) {
+        binding!!.tvError.text = error.message
         binding!!.tvError.visibility = View.VISIBLE
 
         progressLoader.hide()
@@ -144,10 +145,10 @@ class RegisterPasswordFragment : Fragment() {
         val confirmPassword = binding!!.etConfirmPassword.text.toString().trim()
 
         val allValid = validatePasswordRequirements(password, confirmPassword)
-        enableCreateAccountButton(allValid)
+        setCreateAccountBtnEnabled(allValid)
     }
 
-    private fun enableCreateAccountButton(isPasswordValid: Boolean) {
+    private fun setCreateAccountBtnEnabled(isPasswordValid: Boolean) {
         binding!!.btnCreateAccount.isEnabled = isPasswordValid
     }
 

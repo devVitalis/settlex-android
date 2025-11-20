@@ -3,7 +3,7 @@ package com.settlex.android.domain.repository
 import com.google.firebase.auth.FirebaseUser
 import com.settlex.android.data.datasource.AuthRemoteDataSource
 import com.settlex.android.data.enums.OtpType
-import com.settlex.android.data.exception.FirebaseExceptionMapper
+import com.settlex.android.data.exception.ApiException
 import com.settlex.android.data.remote.dto.ApiResponse
 import com.settlex.android.data.repository.AuthRepository
 import com.settlex.android.domain.model.UserModel
@@ -11,7 +11,7 @@ import jakarta.inject.Inject
 
 class AuthRepositoryImpl @Inject constructor(
     private val remote: AuthRemoteDataSource,
-    private val exceptionMapper: FirebaseExceptionMapper
+    private val exception: ApiException
 ) : AuthRepository {
 
     override fun signOut() = remote.signOut()
@@ -23,7 +23,7 @@ class AuthRepositoryImpl @Inject constructor(
             remote.login(email, password)
             Result.success(Unit)
         } catch (e: Exception) {
-            Result.failure(exceptionMapper.map(e))
+            Result.failure(exception.map(e))
         }
 
     override suspend fun register(user: UserModel, password: String): Result<Unit> =
@@ -31,7 +31,7 @@ class AuthRepositoryImpl @Inject constructor(
             remote.register(user, password)
             Result.success(Unit)
         } catch (e: Exception) {
-            Result.failure(exceptionMapper.map(e))
+            Result.failure(exception.map(e))
         }
 
     override suspend fun sendOtp(email: String, type: OtpType): Result<ApiResponse<String>> =
@@ -39,7 +39,7 @@ class AuthRepositoryImpl @Inject constructor(
             val response = remote.sendOtp(email, type)
             Result.success(response)
         } catch (e: Exception) {
-            Result.failure(exceptionMapper.map(e))
+            Result.failure(exception.map(e))
         }
 
     override suspend fun verifyEmail(email: String, otp: String): Result<ApiResponse<String>> =
@@ -47,7 +47,7 @@ class AuthRepositoryImpl @Inject constructor(
             val response = remote.verifyEmail(email, otp)
             Result.success(response)
         } catch (e: Exception) {
-            Result.failure(exceptionMapper.map(e))
+            Result.failure(exception.map(e))
         }
 
     override suspend fun verifyPasswordReset(
@@ -58,7 +58,7 @@ class AuthRepositoryImpl @Inject constructor(
             val response = remote.verifyPasswordReset(email, otp)
             Result.success(response)
         } catch (e: Exception) {
-            Result.failure(exceptionMapper.map(e))
+            Result.failure(exception.map(e))
         }
 
     override suspend fun setNewPassword(
@@ -70,7 +70,7 @@ class AuthRepositoryImpl @Inject constructor(
             val response = remote.setNewPassword(email, oldPassword, newPassword)
             Result.success(response)
         } catch (e: Exception) {
-            Result.failure(exceptionMapper.map(e))
+            Result.failure(exception.map(e))
         }
 
     override suspend fun getFcmToken(): Result<String> =
@@ -78,7 +78,7 @@ class AuthRepositoryImpl @Inject constructor(
             val token = remote.getFcmToken()
             Result.success(token)
         } catch (e: Exception) {
-            Result.failure(exceptionMapper.map(e))
+            Result.failure(exception.map(e))
         }
 
     override suspend fun storeFcmToken(token: String): Result<Unit> =
@@ -86,6 +86,6 @@ class AuthRepositoryImpl @Inject constructor(
             remote.storeFcmToken(token)
             Result.success(Unit)
         } catch (e: Exception) {
-            Result.failure(exceptionMapper.map(e))
+            Result.failure(exception.map(e))
         }
 }

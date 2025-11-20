@@ -50,5 +50,11 @@
     <string name="hint_invitation_code">Invitation Code</string>
     <string name="btn_create_account">Create Account</string>
 
+    <!-- LOGIN ACTIVITY -->
+    <string name="hint_enter_your_password">Enter your password</string>
+    <string name="tv_forgot_password">Forgot Password?</string>
+    <string name="btn_sign_in">Sign in</string>
+    <string name="tv_don_t_have_an_account_yet_nclick_here_to_register">Don\'t have an account yet?\nClick here to register</string>
+    <string name="tv_not_you_switch_account">Not you? Switch Account</string>
 
 </resources>

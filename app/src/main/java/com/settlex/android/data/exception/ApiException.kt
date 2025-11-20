@@ -1,0 +1,57 @@
+package com.settlex.android.data.exception
+
+import android.util.Log
+import com.google.firebase.FirebaseNetworkException
+import com.google.firebase.auth.FirebaseAuthInvalidCredentialsException
+import com.google.firebase.auth.FirebaseAuthInvalidUserException
+import com.google.firebase.auth.FirebaseAuthUserCollisionException
+import com.google.firebase.functions.FirebaseFunctionsException
+import java.io.IOException
+import javax.inject.Inject
+
+class ApiException @Inject constructor() {
+
+    companion object {
+        private const val TAG = "FirebaseExceptionMapper"
+        private const val ERROR_NO_NETWORK = "Connection lost. Please check your Wi-Fi or cellular data and try again."
+        private const val ERROR_INVALID_CREDENTIALS = "Invalid email or password."
+        private const val ERROR_USER_COLLISION = "This email address is already in use."
+        private const val ERROR_INVALID_USER = "This account does not exist or has been disabled."
+
+
+        private const val NOT_FOUND = "Service unavailable. Please try again later."
+        private const val INTERNAL = "A server error occurred. Please try again."
+        private const val FAILED_PRECONDITION = "Your request could be completed right now."
+        private const val DEADLINE_EXCEEDED = "A server timeout occurred. Please try again."
+        private const val UNAVAILABLE = "Server unavailable. Please try again later."
+
+        private const val ERROR_FALLBACK = "Something went wrong. Please try again."
+    }
+
+    /**
+     * Maps Firebase exceptions into clean domain-level exceptions.
+     */
+    fun map(e: Exception): AppException {
+        Log.e(TAG, "Firebase error caught", e)
+
+        return when (e) {
+            is FirebaseNetworkException, is IOException -> AppException.NetworkException(ERROR_NO_NETWORK)
+            is FirebaseAuthInvalidCredentialsException -> AppException.AuthException(ERROR_INVALID_CREDENTIALS)
+            is FirebaseAuthUserCollisionException -> AppException.AuthException(ERROR_USER_COLLISION)
+            is FirebaseAuthInvalidUserException -> AppException.AuthException(ERROR_INVALID_USER)
+
+            is FirebaseFunctionsException -> {
+                when (e.code) {
+                    FirebaseFunctionsException.Code.NOT_FOUND -> AppException.ServerException(NOT_FOUND)
+                    FirebaseFunctionsException.Code.UNAVAILABLE -> AppException.ServerException(UNAVAILABLE)
+                    FirebaseFunctionsException.Code.INTERNAL -> AppException.ServerException(INTERNAL)
+                    FirebaseFunctionsException.Code.FAILED_PRECONDITION -> AppException.ServerException(FAILED_PRECONDITION)
+                    FirebaseFunctionsException.Code.DEADLINE_EXCEEDED -> AppException.ServerException(DEADLINE_EXCEEDED)
+                    else -> AppException.ServerException(e.message ?: ERROR_FALLBACK)
+                }
+            }
+
+            else -> AppException.ServerException(e.message ?: ERROR_FALLBACK)
+        }
+    }
+}

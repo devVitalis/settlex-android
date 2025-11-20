@@ -1,11 +1,11 @@
-package com.settlex.android.domain.usecase
+package com.settlex.android.domain.usecase.auth
 
 import com.settlex.android.data.remote.dto.ApiResponse
 import com.settlex.android.domain.repository.AuthRepositoryImpl
 import jakarta.inject.Inject
 
-class VerifyPasswordResetUseCase @Inject constructor(private val authRepositoryImpl: AuthRepositoryImpl) {
+class VerifyEmailUseCase @Inject constructor(private val authRepositoryImpl: AuthRepositoryImpl) {
     suspend operator fun invoke(email: String, otp: String): Result<ApiResponse<String>> {
-        return authRepositoryImpl.verifyPasswordReset(email, otp)
+        return authRepositoryImpl.verifyEmail(email, otp)
     }
 }
