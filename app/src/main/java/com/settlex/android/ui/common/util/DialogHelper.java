@@ -25,7 +25,7 @@ import java.util.function.BiConsumer;
 public class DialogHelper {
 
     private DialogHelper() {
-        // Utility class - prevent instantiation
+        // prevent instantiation
     }
 
     public static void showSuccessBottomSheetDialog(@NonNull Context context, @Nullable BiConsumer<BottomSheetDialog, BottomSheetSuccessDialogBinding> config) {

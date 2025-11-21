@@ -49,7 +49,7 @@
             android:layout_height="20dp"
             android:layout_marginStart="15dp"
             android:background="?attr/selectableItemBackgroundBorderless"
-            android:contentDescription="@string/btn_back_before"
+            android:contentDescription="@string/cd_back_before"
             android:src="@drawable/ic_arrow_back"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintStart_toStartOf="parent"

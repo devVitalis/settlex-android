@@ -22,7 +22,7 @@
             android:layout_height="20dp"
             android:layout_marginStart="15dp"
             android:background="?attr/selectableItemBackgroundBorderless"
-            android:contentDescription="Back"
+            android:contentDescription="@string/cd_back_before"
             android:scaleType="centerCrop"
             android:src="@drawable/ic_arrow_back"
             app:layout_constraintBottom_toBottomOf="parent"
@@ -34,7 +34,7 @@
             android:layout_height="wrap_content"
             android:fontFamily="@font/inter_bold"
             android:includeFontPadding="false"
-            android:text="OTP Verification"
+            android:text="@string/title_otp_verification"
             android:textColor="@color/black"
             android:textSize="15sp"
             android:textStyle="bold"
@@ -60,7 +60,7 @@
             <ImageView
                 android:layout_width="15dp"
                 android:layout_height="15dp"
-                android:contentDescription="Help"
+                android:contentDescription="@null"
                 android:src="@drawable/ic_help" />
 
             <TextView
@@ -68,7 +68,7 @@
                 android:layout_height="wrap_content"
                 android:fontFamily="@font/inter_regular"
                 android:includeFontPadding="false"
-                android:text="Help"
+                android:text="@string/tv_help"
                 android:textColor="@color/white"
                 android:textSize="12sp" />
         </LinearLayout>
@@ -101,7 +101,7 @@
                     android:layout_height="wrap_content"
                     android:fontFamily="@font/inter_regular"
                     android:includeFontPadding="false"
-                    android:text="We've sent a 6-digit code"
+                    android:text="@string/subtitle_we_ve_sent_a_6_digit_code"
                     android:textColor="@color/black"
                     android:textSize="16sp"
                     android:textStyle="bold" />
@@ -112,13 +112,13 @@
                     android:layout_marginTop="10dp">
 
                     <TextView
-                        android:id="@+id/txt_info"
+                        android:id="@+id/tv_info"
                         android:layout_width="0dp"
                         android:layout_height="wrap_content"
                         android:layout_marginEnd="50dp"
                         android:fontFamily="@font/inter_regular"
                         android:includeFontPadding="false"
-                        android:text="Please check the OTP that has been sent to your email and fill the box:"
+                        android:text="@string/body_please_check_the_otp_that_has_been_sent_to_your_email_and_fill_the_box"
                         android:textColor="@color/black"
                         android:textSize="14sp"
                         app:layout_constraintEnd_toStartOf="@id/cloud_lock"
@@ -126,7 +126,7 @@
                         app:layout_constraintTop_toTopOf="parent" />
 
                     <TextView
-                        android:id="@+id/txt_user_email"
+                        android:id="@+id/tv_user_email"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:fontFamily="@font/poppins_regular"
@@ -135,7 +135,7 @@
                         android:textSize="15sp"
                         android:textStyle="bold"
                         app:layout_constraintStart_toStartOf="parent"
-                        app:layout_constraintTop_toBottomOf="@id/txt_info"
+                        app:layout_constraintTop_toBottomOf="@id/tv_info"
                         tools:text="be****k@gmail.com" />
 
                     <ImageView
@@ -150,7 +150,7 @@
                 </androidx.constraintlayout.widget.ConstraintLayout>
 
                 <com.chaos.view.PinView
-                    android:id="@+id/otp_box"
+                    android:id="@+id/otp_view"
                     style="@style/Widget.SettleX.PinView"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
@@ -162,7 +162,7 @@
                     app:itemWidth="50dp" />
 
                 <TextView
-                    android:id="@+id/txt_otp_feedback"
+                    android:id="@+id/tv_otp_feedback"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_gravity="start"
@@ -191,7 +191,7 @@
                     android:layout_height="wrap_content"
                     android:fontFamily="@font/inter_regular"
                     android:includeFontPadding="false"
-                    android:text="Didn't receive the OTP?"
+                    android:text="@string/tv_didnt_receive_the_otp"
                     android:textColor="@color/black"
                     android:textSize="13sp" />
 
@@ -204,12 +204,12 @@
                     android:layout_marginStart="5dp"
                     android:paddingHorizontal="0dp"
                     android:paddingVertical="0dp"
-                    android:text="Resend"
+                    android:text="@string/btn_resend"
                     android:textSize="13sp" />
             </LinearLayout>
 
             <TextView
-                android:id="@+id/txt_otp_info"
+                android:id="@+id/tv_otp_info"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="10dp"
@@ -219,7 +219,7 @@
                 android:gravity="center_vertical"
                 android:includeFontPadding="false"
                 android:padding="10dp"
-                android:text="Never share this code with anyone, including SettleX staff"
+                android:text="@string/tv_never_share_this_code_with_anyone_including_settlex_staff"
                 android:textColor="@color/black"
                 android:textSize="11sp"
                 app:drawableStartCompat="@drawable/ic_privacy_tip"
@@ -230,9 +230,9 @@
                 style="@style/Widget.SettleX.Button.Filled.Rounded8"
                 android:layout_width="match_parent"
                 android:layout_height="55dp"
-                android:layout_marginTop="20dp"
+                android:layout_marginTop="10dp"
                 android:enabled="false"
-                android:text="Confirm" />
+                android:text="@string/btn_confirm" />
         </LinearLayout>
     </ScrollView>
 </LinearLayout>

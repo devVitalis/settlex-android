@@ -30,8 +30,10 @@ import kotlinx.coroutines.launch
 @HiltViewModel
 class AuthViewModel @Inject constructor(private val authUseCases: AuthUseCases) : ViewModel() {
 
-    private val errorNoNetwork by lazy {
-        SettleXApp.appContext.getString(R.string.error_no_internet)
+    companion object {
+        private val ERROR_NO_INTERNET by lazy {
+            SettleXApp.appContext.getString(R.string.error_no_internet)
+        }
     }
 
     private val _userState = MutableStateFlow<LoginState>(LoginState.NoUser)
@@ -87,7 +89,7 @@ class AuthViewModel @Inject constructor(private val authUseCases: AuthUseCases) 
                 _loginEvent.emit(
                     UiState.Failure(
                         AppException.NetworkException(
-                            errorNoNetwork
+                            ERROR_NO_INTERNET
                         )
                     )
                 )
@@ -108,7 +110,7 @@ class AuthViewModel @Inject constructor(private val authUseCases: AuthUseCases) 
                 _registrationEvent.emit(
                     UiState.Failure(
                         AppException.NetworkException(
-                            errorNoNetwork
+                            ERROR_NO_INTERNET
                         )
                     )
                 )
@@ -129,7 +131,7 @@ class AuthViewModel @Inject constructor(private val authUseCases: AuthUseCases) 
                 _otpEvent.emit(
                     UiState.Failure(
                         AppException.NetworkException(
-                            errorNoNetwork
+                            ERROR_NO_INTERNET
                         )
                     )
                 )
@@ -150,7 +152,7 @@ class AuthViewModel @Inject constructor(private val authUseCases: AuthUseCases) 
                 _verifyEmailEvent.emit(
                     UiState.Failure(
                         AppException.NetworkException(
-                            errorNoNetwork
+                            ERROR_NO_INTERNET
                         )
                     )
                 )
@@ -171,7 +173,7 @@ class AuthViewModel @Inject constructor(private val authUseCases: AuthUseCases) 
                 _verifyPasswordResetEvent.emit(
                     UiState.Failure(
                         AppException.NetworkException(
-                            errorNoNetwork
+                            ERROR_NO_INTERNET
                         )
                     )
                 )
@@ -192,7 +194,7 @@ class AuthViewModel @Inject constructor(private val authUseCases: AuthUseCases) 
                 _setNewPasswordEvent.emit(
                     UiState.Failure(
                         AppException.NetworkException(
-                            errorNoNetwork
+                            ERROR_NO_INTERNET
                         )
                     )
                 )

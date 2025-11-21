@@ -11,7 +11,7 @@
     <!--  XML IDS -->
     <!-- REGISTER CONTACT FRAGMENT -->
     <string name="tv_sign_in">Sign in</string>
-    <string name="btn_back_before">Back</string>
+    <string name="cd_back_before">Back</string>
     <string name="tv_help">Help</string>
     <string name="title_create_your_account">Create Your Account</string>
     <string name="subtitle_lets_get_you_started">Lets get you started</string>
@@ -56,5 +56,24 @@
     <string name="btn_sign_in">Sign in</string>
     <string name="tv_don_t_have_an_account_yet_nclick_here_to_register">Don\'t have an account yet?\nClick here to register</string>
     <string name="tv_not_you_switch_account">Not you? Switch Account</string>
+    <string name="subtitle_lets_help_you_reset_your_password">Lets help you reset your password</string>
+
+    <!-- OTP VERIFICATION ACTIVITY -->
+    <string name="title_otp_verification">OTP Verification</string>
+    <string name="subtitle_we_ve_sent_a_6_digit_code">We\'ve sent a 6-digit code</string>
+    <string name="body_please_check_the_otp_that_has_been_sent_to_your_email_and_fill_the_box">Please check the OTP that has been sent to your email and fill the box:</string>
+    <string name="tv_never_share_this_code_with_anyone_including_settlex_staff">Never share this code with anyone, including SettleX staff</string>
+    <string name="btn_confirm">Confirm</string>
+
+    <!-- CREATE PASSWORD ACTIVITY -->
+    <string name="title_create_a_new_password">Create a New Password</string>
+    <string name="subtitle_your_password_must_be_at_least_8_characters_long_and_contain_an_uppercase_letter_a_lowercase_letter_and_a_special_character_eg_amp"><![CDATA[Your password must be at least 8 characters long and contain an uppercase letter, a lowercase letter, and a special character(eg., @#$%^&+=!.)]]></string>
+    <string name="tv_current_password">Current Password</string>
+    <string name="hint_enter_your_current_password">Enter your current password</string>
+    <string name="tv_new_password">New Password</string>
+    <string name="hint_enter_your_new_password">Enter your new password</string>
+    <string name="tv_confirm_new_password">Confirm New Password</string>
+    <string name="hint_confirm_your_new_password">Confirm your new password</string>
+    <string name="btn_change_password">Change Password</string>
 
 </resources>

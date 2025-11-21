@@ -18,7 +18,7 @@
         app:lottie_loop="false" />
 
     <TextView
-        android:id="@+id/title"
+        android:id="@+id/tv_title"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginTop="10dp"
@@ -30,7 +30,7 @@
         tools:text="Password Updated" />
 
     <TextView
-        android:id="@+id/message"
+        android:id="@+id/tv_message"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginTop="10dp"
@@ -42,12 +42,12 @@
         tools:text="Your password has been changed successfully. You will now need to use your new password to sign in on all your devices." />
 
     <com.google.android.material.button.MaterialButton
-        android:id="@+id/btn_continue"
+        android:id="@+id/btn_action"
         style="@style/Widget.SettleX.Button.Filled"
         android:layout_width="match_parent"
         android:layout_height="55dp"
         android:layout_marginHorizontal="30dp"
         android:layout_marginTop="30dp"
-        android:text="Continue"
+        tools:text="Continue"
         android:textSize="15sp" />
 </LinearLayout>
