@@ -20,20 +20,19 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.SettleX">
         <activity
-            android:name=".ui.dashboard.account.ChangePasswordActivity"
+            android:name=".presentation.account.AboutActivity"
             android:exported="false" />
-        <activity
-            android:name=".ui.dashboard.account.AboutActivity"
-            android:exported="false" /> <!-- Firebase Messaging Service -->
+        <!-- Firebase Messaging Service -->
         <service
             android:name=".data.remote.messaging.AppFirebaseMessagingService"
             android:exported="false">
             <intent-filter>
                 <action android:name="com.google.firebase.MESSAGING_EVENT" />
             </intent-filter>
-        </service> <!-- Dashboard -->
+        </service>
+
         <activity
-            android:name=".ui.dashboard.DashboardActivity"
+            android:name=".presentation.dashboard.DashboardActivity"
             android:exported="true"
             android:launchMode="singleTop">
 
@@ -50,73 +49,73 @@
             </intent-filter>
         </activity>
         <activity
-            android:name=".ui.dashboard.account.CreatePaymentPinActivity"
+            android:name=".presentation.account.CreatePaymentPinActivity"
             android:exported="false" />
         <activity
-            android:name=".ui.dashboard.home.CreatePaymentIdActivity"
+            android:name=".presentation.account.CreatePaymentIdActivity"
             android:exported="false" />
         <activity
-            android:name=".ui.dashboard.account.SettingsActivity"
+            android:name=".presentation.account.SettingsActivity"
             android:exported="false" />
         <activity
-            android:name=".ui.dashboard.home.TransactionStatusActivity"
+            android:name=".presentation.transactions.TransactionStatusActivity"
             android:exported="false" />
         <activity
-            android:name=".ui.dashboard.home.WalletTransferActivity"
+            android:name=".presentation.wallet.WalletTransferActivity"
             android:exported="false" />
         <activity
-            android:name=".ui.dashboard.home.ProfileActivity"
+            android:name=".presentation.account.ProfileActivity"
             android:exported="false" />
         <activity
-            android:name=".ui.auth.login.LoginActivity"
+            android:name=".presentation.auth.login.LoginActivity"
             android:exported="false" />
         <activity
-            android:name=".ui.dashboard.services.CableTvSubscriptionActivity"
+            android:name=".presentation.services.CableTvSubscriptionActivity"
             android:exported="false" />
         <activity
-            android:name=".ui.dashboard.services.BettingTopUpActivity"
+            android:name=".presentation.services.BettingTopUpActivity"
             android:exported="false" />
         <activity
-            android:name=".ui.dashboard.services.DataPurchaseActivity"
+            android:name=".presentation.services.DataPurchaseActivity"
             android:exported="false" />
         <activity
-            android:name=".ui.dashboard.services.AirtimePurchaseActivity"
+            android:name=".presentation.services.AirtimePurchaseActivity"
             android:exported="false" />
         <activity
-            android:name=".ui.dashboard.home.CommissionWithdrawalActivity"
+            android:name=".presentation.wallet.CommissionWithdrawalActivity"
             android:exported="false" />
         <activity
-            android:name=".ui.dashboard.home.ReceiveActivity"
+            android:name=".presentation.wallet.ReceiveActivity"
             android:exported="false" />
         <activity
-            android:name=".ui.dashboard.home.TransactionActivity"
+            android:name=".presentation.transactions.TransactionActivity"
             android:exported="false" />
         <activity
-            android:name=".ui.auth.forgot_password.CreatePasswordActivity"
+            android:name=".presentation.auth.forgot_password.CreatePasswordActivity"
             android:exported="false" />
         <activity
-            android:name=".ui.auth.forgot_password.OtpVerificationActivity"
+            android:name=".presentation.auth.forgot_password.OtpVerificationActivity"
             android:exported="false" />
         <activity
-            android:name=".ui.auth.forgot_password.ForgotPasswordActivity"
+            android:name=".presentation.auth.forgot_password.ForgotPasswordActivity"
             android:exported="false" />
         <activity
-            android:name=".ui.info.legal.PrivacyPolicyActivity"
+            android:name=".presentation.legal.PrivacyPolicyActivity"
             android:exported="false" />
         <activity
-            android:name=".ui.info.legal.TermsAndConditionsActivity"
+            android:name=".presentation.legal.TermsAndConditionsActivity"
             android:exported="false" />
         <activity
-            android:name=".ui.info.help.AuthHelpActivity"
+            android:name=".presentation.help.AuthHelpActivity"
             android:exported="false" />
         <activity
-            android:name=".ui.auth.register.RegisterActivity"
+            android:name=".presentation.auth.register.RegisterActivity"
             android:exported="false" />
         <activity
-            android:name=".ui.onboarding.OnboardingActivity"
+            android:name=".presentation.onboarding.OnboardingActivity"
             android:exported="false" />
         <activity
-            android:name=".ui.splash.SplashActivity"
+            android:name=".presentation.splash.SplashActivity"
             android:exported="true"
             android:theme="@style/Theme.SettleX.Splash">
             <intent-filter>

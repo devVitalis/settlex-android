@@ -46,7 +46,7 @@
         android:textColor="@color/blue"
         android:textSize="12sp" />
 
-    <com.settlex.android.ui.common.custom.NumericKeypad
+    <com.settlex.android.presentation.common.custom.NumericKeypad
         android:id="@+id/numeric_keypad"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"

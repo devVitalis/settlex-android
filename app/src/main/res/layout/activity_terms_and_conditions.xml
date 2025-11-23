@@ -8,7 +8,7 @@
     android:background="@color/white"
     android:fitsSystemWindows="true"
     android:orientation="vertical"
-    tools:context=".ui.info.legal.TermsAndConditionsActivity">
+    tools:context=".presentation.legal.TermsAndConditionsActivity">
 
     <!--Header-->
     <androidx.constraintlayout.widget.ConstraintLayout

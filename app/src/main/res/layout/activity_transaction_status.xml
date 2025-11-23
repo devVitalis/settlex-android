@@ -7,7 +7,7 @@
     android:layout_height="match_parent"
     android:background="@color/white"
     android:fitsSystemWindows="true"
-    tools:context=".ui.dashboard.home.TransactionStatusActivity">
+    tools:context=".presentation.transactions.TransactionStatusActivity">
 
     <LinearLayout
         android:id="@+id/header"

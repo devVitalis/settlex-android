@@ -7,7 +7,7 @@
     android:layout_height="match_parent"
     android:background="@drawable/bg_0dp_gradient_blue_200"
     android:fitsSystemWindows="true"
-    tools:context=".ui.dashboard.account.AccountDashboardFragment">
+    tools:context=".presentation.account.AccountDashboardFragment">
 
     <androidx.constraintlayout.widget.ConstraintLayout
         android:id="@+id/header"

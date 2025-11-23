@@ -6,7 +6,7 @@
     android:layout_height="match_parent"
     android:background="@color/white"
     android:fitsSystemWindows="true"
-    tools:context=".ui.dashboard.home.ReceiveActivity">
+    tools:context=".presentation.wallet.ReceiveActivity">
 
     <LinearLayout
         android:id="@+id/header"

@@ -1,0 +1,63 @@
+package com.settlex.android.presentation.wallet;
+
+import android.os.Bundle;
+import android.widget.Toast;
+
+import androidx.appcompat.app.AppCompatActivity;
+import androidx.lifecycle.ViewModelProvider;
+
+import com.settlex.android.R;
+import com.settlex.android.databinding.ActivityReceiveBinding;
+import com.settlex.android.presentation.account.model.UserUiModel;
+import com.settlex.android.presentation.account.model.UserViewModel;
+import com.settlex.android.util.string.StringFormatter;
+import com.settlex.android.util.ui.StatusBar;
+
+import dagger.hilt.android.AndroidEntryPoint;
+
+@AndroidEntryPoint
+public class ReceiveActivity extends AppCompatActivity {
+    private ActivityReceiveBinding binding;
+    private UserViewModel userViewModel;
+
+    @Override
+    protected void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        binding = ActivityReceiveBinding.inflate(getLayoutInflater());
+        setContentView(binding.getRoot());
+
+        userViewModel = new ViewModelProvider(this).get(UserViewModel.class);
+
+        setupUiActions();
+        observeUserDataStatus();
+    }
+
+    private void setupUiActions() {
+        StatusBar.setColor(this, R.color.white);
+
+        binding.btnCopy.setOnClickListener(v -> copyPaymentId());
+        binding.btnBackBefore.setOnClickListener(v -> finish());
+        binding.btnShareDetails.setOnClickListener(v -> Toast.makeText(this, "This feature is not yet implemented", Toast.LENGTH_SHORT).show());
+    }
+
+    private void copyPaymentId() {
+        StringFormatter.copyToClipboard(this, "Payment Id", binding.paymentId.getText().toString(), true);
+    }
+
+    private void observeUserDataStatus() {
+        userViewModel.getUserLiveData().observe(this, user -> {
+            if (user == null) return;
+
+            switch (user.status) {
+                case SUCCESS -> onUserDataStatusSuccess(user.data);
+                case FAILURE -> {
+                    // TODO: handle error
+                }
+            }
+        });
+    }
+
+    private void onUserDataStatusSuccess(UserUiModel user) {
+        binding.paymentId.setText(StringFormatter.addAtToPaymentId(user.paymentId));
+    }
+}

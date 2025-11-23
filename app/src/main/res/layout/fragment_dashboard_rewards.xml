@@ -7,7 +7,7 @@
     android:layout_height="match_parent"
     android:background="@color/blue_400"
     android:fitsSystemWindows="true"
-    tools:context=".ui.dashboard.rewards.RewardsDashboardFragment">
+    tools:context=".presentation.rewards.RewardsDashboardFragment">
 
     <LinearLayout
         android:id="@+id/logged_out_state"

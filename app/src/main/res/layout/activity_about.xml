@@ -7,7 +7,7 @@
     android:layout_height="match_parent"
     android:background="@color/white"
     android:fitsSystemWindows="true"
-    tools:context=".ui.dashboard.account.AboutActivity">
+    tools:context=".presentation.account.AboutActivity">
 
     <LinearLayout
         android:id="@+id/header"

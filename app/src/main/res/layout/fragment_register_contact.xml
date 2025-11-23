@@ -7,7 +7,7 @@
     android:layout_height="match_parent"
     android:background="@color/white"
     android:fitsSystemWindows="true"
-    tools:context=".ui.auth.register.RegisterContactFragment">
+    tools:context=".presentation.auth.register.RegisterContactFragment">
 
     <androidx.constraintlayout.widget.ConstraintLayout
         android:id="@+id/header"

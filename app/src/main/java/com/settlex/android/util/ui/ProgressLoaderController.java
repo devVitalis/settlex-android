@@ -6,7 +6,7 @@ import androidx.annotation.NonNull;
 import androidx.fragment.app.FragmentActivity;
 import androidx.fragment.app.FragmentManager;
 
-import com.settlex.android.ui.common.components.ProgressDialogFragment;
+import com.settlex.android.presentation.common.components.ProgressDialogFragment;
 
 public class ProgressLoaderController {
     private final FragmentManager fragmentManager;

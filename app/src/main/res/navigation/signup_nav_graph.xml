@@ -7,25 +7,25 @@
 
     <fragment
         android:id="@+id/register_contact_fragment"
-        android:name="com.settlex.android.ui.auth.register.RegisterContactFragment"
+        android:name="com.settlex.android.presentation.auth.register.RegisterContactFragment"
         android:label="SignUpUserContactInfoFragment"
         tools:layout="@layout/fragment_register_contact" />
 
     <fragment
         android:id="@+id/register_email_verification_fragment"
-        android:name="com.settlex.android.ui.auth.register.RegisterEmailVerificationFragment"
+        android:name="com.settlex.android.presentation.auth.register.RegisterEmailVerificationFragment"
         android:label="SignUpEmailVerificationFragment"
         tools:layout="@layout/fragment_register_email_verification" />
 
     <fragment
         android:id="@+id/register_name_fragment"
-        android:name="com.settlex.android.ui.auth.register.RegisterNameFragment"
+        android:name="com.settlex.android.presentation.auth.register.RegisterNameFragment"
         android:label="SignUpUserInfoFragment"
         tools:layout="@layout/fragment_register_name" />
 
     <fragment
         android:id="@+id/register_password_fragment"
-        android:name="com.settlex.android.ui.auth.register.RegisterPasswordFragment"
+        android:name="com.settlex.android.presentation.auth.register.RegisterPasswordFragment"
         android:label="SignUpUserPasswordFragment"
         tools:layout="@layout/fragment_register_password" />
 </navigation>

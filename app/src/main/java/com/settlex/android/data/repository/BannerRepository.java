@@ -4,7 +4,7 @@ import com.google.firebase.remoteconfig.FirebaseRemoteConfig;
 import com.google.firebase.remoteconfig.FirebaseRemoteConfigSettings;
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
-import com.settlex.android.ui.dashboard.model.BannerUiModel;
+import com.settlex.android.presentation.home.model.BannerUiModel;
 
 import java.lang.reflect.Type;
 import java.util.Collections;

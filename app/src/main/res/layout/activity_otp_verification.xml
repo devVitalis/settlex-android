@@ -8,7 +8,7 @@
     android:background="@color/white"
     android:fitsSystemWindows="true"
     android:orientation="vertical"
-    tools:context=".ui.auth.forgot_password.OtpVerificationActivity">
+    tools:context=".presentation.auth.forgot_password.OtpVerificationActivity">
 
     <androidx.constraintlayout.widget.ConstraintLayout
         android:id="@+id/header"

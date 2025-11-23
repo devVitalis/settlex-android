@@ -5,7 +5,7 @@
     android:id="@+id/dashboardRoot"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".ui.dashboard.DashboardActivity">
+    tools:context=".presentation.dashboard.DashboardActivity">
 
     <androidx.fragment.app.FragmentContainerView
         android:id="@+id/dashboard_nav_host"

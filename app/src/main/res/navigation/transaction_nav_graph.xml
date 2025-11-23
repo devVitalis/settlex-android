@@ -7,7 +7,7 @@
 
     <fragment
         android:id="@+id/transaction_receipt_fragment"
-        android:name="com.settlex.android.ui.dashboard.home.TransactionDetailsFragment"
+        android:name="com.settlex.android.presentation.transactions.TransactionDetailsFragment"
         android:label="TransactionReceiptFragment"
         tools:layout="@layout/fragment_transaction_details" />
 </navigation>

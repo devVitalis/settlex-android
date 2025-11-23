@@ -7,7 +7,7 @@
     android:layout_height="match_parent"
     android:background="@color/white"
     android:fitsSystemWindows="true"
-    tools:context=".ui.dashboard.services.DataPurchaseActivity">
+    tools:context=".presentation.services.DataPurchaseActivity">
 
     <TextView
         android:layout_width="wrap_content"
