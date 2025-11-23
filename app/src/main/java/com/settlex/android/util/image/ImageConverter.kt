@@ -20,7 +20,7 @@ object ImageConverter {
     /**
      * Converts an image Uri to a compressed Base64 string.
      */
-    suspend fun imageUriToBase64(context: Context, imageUri: Uri): String? =
+    suspend fun toBase64(context: Context, imageUri: Uri): String? =
         withContext(Dispatchers.IO) {
             try {
                 // Step 1: Open stream safely

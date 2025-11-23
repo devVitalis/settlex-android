@@ -1,4 +1,4 @@
-package com.settlex.android.ui.common.event
+package com.settlex.android.ui.common.state
 
 import com.settlex.android.data.exception.AppException
 
@@ -10,7 +10,6 @@ import com.settlex.android.data.exception.AppException
  */
 sealed class UiState<out T> {
     object Loading : UiState<Nothing>()
-
     data class Success<out T>(val data: T?) : UiState<T>()
     data class Failure(val exception: AppException) : UiState<Nothing>()
 }

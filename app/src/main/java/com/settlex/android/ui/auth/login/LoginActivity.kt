@@ -31,7 +31,7 @@ import com.settlex.android.ui.auth.forgot_password.ForgotPasswordActivity
 import com.settlex.android.ui.auth.register.RegisterActivity
 import com.settlex.android.ui.common.components.BiometricAuthHelper
 import com.settlex.android.ui.common.components.BiometricAuthHelper.BiometricAuthCallback
-import com.settlex.android.ui.common.event.UiState
+import com.settlex.android.ui.common.state.UiState
 import com.settlex.android.ui.dashboard.DashboardActivity
 import com.settlex.android.util.string.StringFormatter
 import com.settlex.android.util.ui.ProgressLoaderController

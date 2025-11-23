@@ -43,16 +43,16 @@ public class CommissionWithdrawalActivity extends AppCompatActivity {
         userViewModel.getUserLiveData().observe(this, user -> {
             if (user == null) return;
 
-            switch (user.status) {
-                case SUCCESS -> onUserDataSuccess(user.data);
-                case FAILURE -> {
-                    // TODO: handle error
-                }
-            }
+//            switch (user.status) {
+//                case SUCCESS -> onUserDataSuccess(user.data);
+//                case FAILURE -> {
+//                    // TODO: handle error
+//                }
+//            }
         });
     }
 
     private void onUserDataSuccess(UserUiModel user) {
-        binding.userCommissionBalance.setText(CurrencyFormatter.formatToNaira(user.getCommissionBalance()));
+        binding.userCommissionBalance.setText(CurrencyFormatter.formatToNaira(user.commissionBalance));
     }
 }

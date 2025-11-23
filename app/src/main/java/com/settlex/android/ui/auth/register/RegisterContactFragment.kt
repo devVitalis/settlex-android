@@ -29,7 +29,7 @@ import com.settlex.android.data.exception.AppException
 import com.settlex.android.databinding.FragmentRegisterContactBinding
 import com.settlex.android.ui.auth.AuthViewModel
 import com.settlex.android.ui.auth.login.LoginActivity
-import com.settlex.android.ui.common.event.UiState
+import com.settlex.android.ui.common.state.UiState
 import com.settlex.android.ui.info.legal.PrivacyPolicyActivity
 import com.settlex.android.ui.info.legal.TermsAndConditionsActivity
 import com.settlex.android.util.string.StringFormatter

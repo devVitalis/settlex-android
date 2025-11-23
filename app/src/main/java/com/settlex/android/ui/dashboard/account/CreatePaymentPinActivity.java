@@ -17,11 +17,10 @@ import com.chaos.view.PinView;
 import com.settlex.android.R;
 import com.settlex.android.databinding.ActivityCreatePaymentPinBinding;
 import com.settlex.android.util.ui.ProgressLoaderController;
-import com.settlex.android.ui.dashboard.util.DashboardUiUtil;
+import com.settlex.android.ui.dashboard.util.DialogHelper;
 import com.settlex.android.ui.dashboard.viewmodel.UserViewModel;
-import com.settlex.android.ui.common.event.UiState;
+import com.settlex.android.ui.common.state.UiState;
 import com.settlex.android.util.ui.StatusBar;
-import com.settlex.android.ui.common.util.DialogHelper;
 
 import java.util.Objects;
 
@@ -131,7 +130,7 @@ public class CreatePaymentPinActivity extends AppCompatActivity {
         boolean isPinChange = intentPurpose != null && intentPurpose.equals("change_payment_pin");
         String message = (isPinChange) ? "Your payment PIN has been updated successfully" : "Your payment PIN has been created successfully";
 
-        DialogHelper.showSuccessBottomSheetDialog(
+        com.settlex.android.ui.common.util.DialogHelper.showSuccessBottomSheetDialog(
                 this,
                 (dialog, binding) -> {
                     binding.title.setText(title);
@@ -146,7 +145,7 @@ public class CreatePaymentPinActivity extends AppCompatActivity {
     private void showErrorDialog(String error) {
         String priBtn = "Okay";
 
-        DashboardUiUtil.showAlertDialogMessage(
+        DialogHelper.showAlertDialogMessage(
                 this,
                 (dialog, binding) -> {
                     binding.btnSecondary.setVisibility(View.GONE);

@@ -1,4 +1,4 @@
-package com.settlex.android.ui.common.event
+package com.settlex.android.ui.common.state
 
 /**
  * A wrapper class for data that represents a one-time event.

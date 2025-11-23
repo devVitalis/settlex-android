@@ -26,9 +26,9 @@ import com.settlex.android.util.string.StringFormatter;
 import java.util.Objects;
 import java.util.function.BiConsumer;
 
-public class DashboardUiUtil {
+public class DialogHelper {
 
-    private DashboardUiUtil() {
+    private DialogHelper() {
         // prevent instantiation
     }
 

@@ -58,6 +58,6 @@ public class ReceiveActivity extends AppCompatActivity {
     }
 
     private void onUserDataStatusSuccess(UserUiModel user) {
-        binding.paymentId.setText(StringFormatter.addAtToPaymentId(user.getPaymentId()));
+        binding.paymentId.setText(StringFormatter.addAtToPaymentId(user.paymentId));
     }
 }

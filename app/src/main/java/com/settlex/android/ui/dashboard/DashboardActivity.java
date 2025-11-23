@@ -36,9 +36,9 @@ public class DashboardActivity extends AppCompatActivity {
 
         // Override selection so Home always pops back
         binding.bottomNavigationView.setOnItemSelectedListener(item -> {
-            if (item.getItemId() == R.id.homeFragment) {
+            if (item.getItemId() == R.id.home_fragment) {
                 // Pop everything above home, leave home on top
-                navController.popBackStack(R.id.homeFragment, false);
+                navController.popBackStack(R.id.home_fragment, false);
                 return true;
             }
             return NavigationUI.onNavDestinationSelected(item, navController);

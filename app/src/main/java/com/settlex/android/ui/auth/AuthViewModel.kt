@@ -9,7 +9,7 @@ import com.settlex.android.data.exception.AppException
 import com.settlex.android.domain.model.UserModel
 import com.settlex.android.domain.usecase.auth.AuthUseCases
 import com.settlex.android.ui.auth.login.LoginState
-import com.settlex.android.ui.common.event.UiState
+import com.settlex.android.ui.common.state.UiState
 import com.settlex.android.util.network.NetworkMonitor
 import dagger.hilt.android.lifecycle.HiltViewModel
 import jakarta.inject.Inject

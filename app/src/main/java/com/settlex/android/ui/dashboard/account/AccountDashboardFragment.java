@@ -22,7 +22,7 @@ import com.settlex.android.ui.auth.login.LoginActivity;
 import com.settlex.android.ui.dashboard.home.ProfileActivity;
 import com.settlex.android.ui.dashboard.model.UserUiModel;
 import com.settlex.android.ui.dashboard.viewmodel.UserViewModel;
-import com.settlex.android.ui.common.event.UiState;
+import com.settlex.android.ui.common.state.UiState;
 import com.settlex.android.util.string.StringFormatter;
 import com.settlex.android.util.ui.StatusBar;
 
@@ -66,7 +66,7 @@ public class AccountDashboardFragment extends Fragment {
         binding.btnProfilePic.setOnClickListener(view -> navigateToActivity(ProfileActivity.class));
         binding.btnSettings.setOnClickListener(view -> navigateToActivity(SettingsActivity.class));
         binding.btnSettingsHeader.setOnClickListener(view -> navigateToActivity(SettingsActivity.class));
-        binding.btnEarnRewards.setOnClickListener(view -> navigateToFragment(R.id.rewardsFragment));
+        binding.btnEarnRewards.setOnClickListener(view -> navigateToFragment(R.id.rewards_fragment));
         binding.btnAbout.setOnClickListener(view -> navigateToActivity(AboutActivity.class));
         binding.btnTransactions.setOnClickListener(view -> StringFormatter.showNotImplementedToast(requireContext()));
 
@@ -81,7 +81,7 @@ public class AccountDashboardFragment extends Fragment {
             if (result != null && result.status == UiState.Status.SUCCESS) {
                 UserUiModel user = result.data;
 
-                ProfileService.loadProfilePic(user.getPhotoUrl(), binding.btnProfilePic);
+                ProfileService.loadProfilePic(user.photoUrl, binding.btnProfilePic);
                 binding.fullName.setText(user.getFullName());
             }
         });

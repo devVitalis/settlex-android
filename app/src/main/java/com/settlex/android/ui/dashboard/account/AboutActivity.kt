@@ -41,7 +41,7 @@ class AboutActivity : AppCompatActivity() {
     }
 
     private fun getAppVersion(): String {
-        val context = SettleXApp.getAppContext()
+        val context = SettleXApp.appContext
         try {
             val packageManager = context.packageManager
             val packageInfo = packageManager.getPackageInfo(context.packageName, 0)

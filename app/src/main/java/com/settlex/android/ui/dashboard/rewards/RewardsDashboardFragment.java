@@ -79,19 +79,19 @@ public class RewardsDashboardFragment extends Fragment {
         userViewModel.getUserLiveData().observe(requireActivity(), user -> {
             if (user == null) return;
 
-            switch (user.status) {
-                case SUCCESS -> onUserDataStatusSuccess(user.data);
-                case FAILURE -> {
-                    // TODO: handle error
-                }
-            }
+//            switch (user.status) {
+//                case SUCCESS -> onUserDataStatusSuccess(user.data);
+//                case FAILURE -> {
+//                    // TODO: handle error
+//                }
+//            }
         });
     }
 
     private void onUserDataStatusSuccess(UserUiModel user) {
-        binding.commissionBalance.setText(CurrencyFormatter.formatToNaira(user.getCommissionBalance()));
-        binding.referralCode.setText((user.getPaymentId() != null) ? user.getPaymentId() : "Get Referral Code");
-        binding.totalReferralEarning.setText(CurrencyFormatter.formatToNaira(user.getReferralBalance()));
+        binding.commissionBalance.setText(CurrencyFormatter.formatToNaira(user.commissionBalance));
+        binding.referralCode.setText((user.paymentId != null) ? user.paymentId : "Get Referral Code");
+        binding.totalReferralEarning.setText(CurrencyFormatter.formatToNaira(user.referralBalance));
     }
 
     private void setupUiActions() {

@@ -4,7 +4,7 @@ import com.google.firebase.remoteconfig.FirebaseRemoteConfig;
 import com.google.firebase.remoteconfig.FirebaseRemoteConfigSettings;
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
-import com.settlex.android.ui.dashboard.model.PromoBannerUiModel;
+import com.settlex.android.ui.dashboard.model.BannerUiModel;
 
 import java.lang.reflect.Type;
 import java.util.Collections;
@@ -12,11 +12,11 @@ import java.util.List;
 
 import jakarta.inject.Inject;
 
-public class PromoBannerRepository {
+public class BannerRepository {
     private final FirebaseRemoteConfig remoteConfig;
 
     @Inject
-    public PromoBannerRepository(FirebaseRemoteConfig remoteConfig) {
+    public BannerRepository(FirebaseRemoteConfig remoteConfig) {
         this.remoteConfig = remoteConfig;
         setFirebaseRemoteSettings();
     }
@@ -40,8 +40,8 @@ public class PromoBannerRepository {
 
                     try {
                         Gson gson = new Gson();
-                        Type listType = new TypeToken<List<PromoBannerUiModel>>() {}.getType();
-                        List<PromoBannerUiModel> promos = gson.fromJson(json, listType);
+                        Type listType = new TypeToken<List<BannerUiModel>>() {}.getType();
+                        List<BannerUiModel> promos = gson.fromJson(json, listType);
                         callback.onResult(promos);
                     } catch (Exception e) {
                         callback.onResult(Collections.emptyList());
@@ -49,12 +49,11 @@ public class PromoBannerRepository {
                 });
     }
 
-    // Callback interfaces
     public interface PromoBannersCallback {
-        void onResult(List<PromoBannerUiModel> bannerUiModel);
+        void onResult(List<BannerUiModel> bannerUiModel);
     }
 
-    // Firebase Config settings
+    // Config settings
     private void setFirebaseRemoteSettings() {
         FirebaseRemoteConfigSettings settings = new FirebaseRemoteConfigSettings.Builder()
                 .setMinimumFetchIntervalInSeconds(12 * 60 * 60) // fetch once per 12h

@@ -27,7 +27,7 @@ import com.settlex.android.ui.auth.login.LoginActivity;
 import com.settlex.android.ui.dashboard.adapter.PromotionalBannerAdapter;
 import com.settlex.android.ui.dashboard.adapter.ServicesAdapter;
 import com.settlex.android.ui.dashboard.adapter.TransactionsAdapter;
-import com.settlex.android.ui.dashboard.model.PromoBannerUiModel;
+import com.settlex.android.ui.dashboard.model.BannerUiModel;
 import com.settlex.android.ui.dashboard.model.ServiceDestination;
 import com.settlex.android.ui.dashboard.model.ServiceUiModel;
 import com.settlex.android.ui.dashboard.model.TransactionUiModel;
@@ -39,8 +39,7 @@ import com.settlex.android.ui.dashboard.services.DataPurchaseActivity;
 import com.settlex.android.ui.dashboard.viewmodel.PromoBannerViewModel;
 import com.settlex.android.ui.dashboard.viewmodel.TransactionViewModel;
 import com.settlex.android.ui.dashboard.viewmodel.UserViewModel;
-import com.settlex.android.ui.common.event.UiState;
-import com.settlex.android.util.network.NetworkMonitor;
+import com.settlex.android.ui.common.state.UiState;
 import com.settlex.android.util.string.CurrencyFormatter;
 import com.settlex.android.util.string.StringFormatter;
 import com.settlex.android.util.ui.StatusBar;
@@ -64,7 +63,6 @@ public class HomeDashboardFragment extends Fragment {
     private TransactionsAdapter adapter;
     private UserViewModel userViewModel;
     private TransactionViewModel transactionViewModel;
-    private boolean isConnected = false;
     private PromoBannerViewModel promoBannerViewModel;
     private final Handler autoScrollHandler = new Handler(Looper.getMainLooper());
     private Runnable autoScrollRunnable;
@@ -130,10 +128,10 @@ public class HomeDashboardFragment extends Fragment {
 
     //  OBSERVERS ======
     private void observeNetworkState() {
-        NetworkMonitor.getNetworkStatus().observe(getViewLifecycleOwner(), isConnected -> {
-            binding.connectionLost.setVisibility((!isConnected) ? View.VISIBLE : View.GONE);
-            this.isConnected = isConnected;
-        });
+//        NetworkMonitor.networkStatus.observe(getViewLifecycleOwner(), isConnected -> {
+//            binding.connectionLost.setVisibility((!isConnected) ? View.VISIBLE : View.GONE);
+//            this.isConnected = isConnected;
+//        });
     }
 
     private void observeUserAuthState() {
@@ -178,7 +176,7 @@ public class HomeDashboardFragment extends Fragment {
     }
 
     private void onUserDataStatusSuccess(UserUiModel user) {
-        hasPaymentId(user.getPaymentId());
+        hasPaymentId(user.paymentId);
 
         // dismiss shimmer
         binding.userFullNameShimmer.stopShimmer();
@@ -195,9 +193,9 @@ public class HomeDashboardFragment extends Fragment {
         binding.userBalance.setVisibility(View.VISIBLE);
         binding.btnUserCommissionBalanceLayout.setVisibility(View.VISIBLE);
 
-        ProfileService.loadProfilePic(user.getPhotoUrl(), binding.btnProfilePic);
+        ProfileService.loadProfilePic(user.photoUrl, binding.btnProfilePic);
         binding.fullName.setText(user.getFullName());
-        observeAndLoadUserPrefs(user.getBalance(), user.getCommissionBalance());
+        observeAndLoadUserPrefs(user.balance, user.commissionBalance);
     }
 
     private void hasPaymentId(java.lang.String paymentId) {
@@ -312,7 +310,7 @@ public class HomeDashboardFragment extends Fragment {
         binding.promoProgressBar.show();
     }
 
-    private void onPromoBannersSuccess(List<PromoBannerUiModel> banner) {
+    private void onPromoBannersSuccess(List<BannerUiModel> banner) {
         binding.promoProgressBar.hide();
         binding.promoProgressBar.setVisibility(View.GONE);
 
@@ -405,7 +403,7 @@ public class HomeDashboardFragment extends Fragment {
         serviceMap.put(TransactionServiceType.ELECTRICITY_BILL, null);
         serviceMap.put(TransactionServiceType.INTERNET, null);
         serviceMap.put(TransactionServiceType.GIFT_CARD, null);
-        serviceMap.put(TransactionServiceType.MORE, new ServiceDestination(R.id.servicesFragment));
+        serviceMap.put(TransactionServiceType.MORE, new ServiceDestination(R.id.services_fragment));
 
         ServicesAdapter adapter = new ServicesAdapter(false, services, serviceUiModel -> {
             ServiceDestination serviceDestination = serviceMap.get(serviceUiModel.getType());

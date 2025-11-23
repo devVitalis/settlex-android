@@ -26,7 +26,7 @@ import com.settlex.android.R
 import com.settlex.android.data.exception.AppException
 import com.settlex.android.databinding.FragmentRegisterPasswordBinding
 import com.settlex.android.ui.auth.AuthViewModel
-import com.settlex.android.ui.common.event.UiState
+import com.settlex.android.ui.common.state.UiState
 import com.settlex.android.ui.dashboard.DashboardActivity
 import com.settlex.android.util.ui.ProgressLoaderController
 import com.settlex.android.util.ui.StatusBar

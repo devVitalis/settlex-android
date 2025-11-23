@@ -23,7 +23,7 @@ import com.settlex.android.data.enums.OtpType
 import com.settlex.android.data.exception.AppException
 import com.settlex.android.databinding.FragmentRegisterEmailVerificationBinding
 import com.settlex.android.ui.auth.AuthViewModel
-import com.settlex.android.ui.common.event.UiState
+import com.settlex.android.ui.common.state.UiState
 import com.settlex.android.util.string.StringFormatter
 import com.settlex.android.util.ui.ProgressLoaderController
 import com.settlex.android.util.ui.StatusBar

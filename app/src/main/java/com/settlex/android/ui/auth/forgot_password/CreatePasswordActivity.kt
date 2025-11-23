@@ -19,7 +19,7 @@ import com.settlex.android.ui.auth.common.PasswordValidator
 import com.settlex.android.ui.auth.common.forgot_password.PasswordToggleController
 import com.settlex.android.ui.auth.utils.PasswordFlow
 import com.settlex.android.ui.auth.utils.PasswordFlowParser
-import com.settlex.android.ui.common.event.UiState
+import com.settlex.android.ui.common.state.UiState
 import com.settlex.android.ui.common.util.DialogHelper
 import com.settlex.android.util.ui.ProgressLoaderController
 import dagger.hilt.android.AndroidEntryPoint

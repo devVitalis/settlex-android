@@ -1,7 +1,6 @@
 package com.settlex.android.ui.dashboard.viewmodel;
 
 import androidx.lifecycle.LiveData;
-import androidx.lifecycle.MediatorLiveData;
 import androidx.lifecycle.MutableLiveData;
 import androidx.lifecycle.ViewModel;
 
@@ -11,11 +10,10 @@ import com.settlex.android.data.enums.TransactionStatus;
 import com.settlex.android.data.remote.dto.RecipientDto;
 import com.settlex.android.data.remote.dto.TransactionDto;
 import com.settlex.android.data.repository.TransactionRepository;
-import com.settlex.android.ui.dashboard.model.MoneyFlowUiModel;
+import com.settlex.android.ui.common.state.Event;
+import com.settlex.android.ui.common.state.UiState;
 import com.settlex.android.ui.dashboard.model.RecipientUiModel;
 import com.settlex.android.ui.dashboard.model.TransactionUiModel;
-import com.settlex.android.ui.common.event.Event;
-import com.settlex.android.ui.common.event.UiState;
 import com.settlex.android.util.string.CurrencyFormatter;
 import com.settlex.android.util.string.StringFormatter;
 
@@ -30,7 +28,6 @@ import jakarta.inject.Inject;
 public class TransactionViewModel extends ViewModel {
     private final MutableLiveData<UiState<List<RecipientUiModel>>> recipientSearchResult = new MutableLiveData<>();
     private final MutableLiveData<Event<UiState<java.lang.String>>> transferFundsLiveData = new MutableLiveData<>();
-    private final MediatorLiveData<UiState<MoneyFlowUiModel>> moneyFlowLiveData = new MediatorLiveData<>();
     private final MutableLiveData<UiState<List<TransactionUiModel>>> transactionLiveData = new MutableLiveData<>();
 
     // dependencies
@@ -103,7 +100,6 @@ public class TransactionViewModel extends ViewModel {
                     return;
                 }
 
-                initMoneyFlow(uid, dtolist);
                 List<TransactionUiModel> uiModel = new ArrayList<>();
                 for (TransactionDto dto : dtolist) {
                     boolean isSender = uid.equals(dto.senderUid);
@@ -143,36 +139,5 @@ public class TransactionViewModel extends ViewModel {
             }
         });
         return transactionLiveData;
-    }
-
-    private void initMoneyFlow(java.lang.String currentUserUid, List<TransactionDto> dtoList) {
-        moneyFlowLiveData.setValue(UiState.loading());
-        double inFlow = 0;
-        double outFlow = 0;
-
-        if (dtoList == null) {
-            // Zero transaction
-            moneyFlowLiveData.setValue(null);
-            return;
-        }
-
-        for (TransactionDto dto : dtoList) {
-
-            if (dto.status != TransactionStatus.SUCCESS) {
-                // Skip Failed,
-                // Reversed and
-                // Pending Transaction
-                continue;
-            }
-
-            boolean isInFlow = !currentUserUid.equals(dto.senderUid);
-            inFlow += (isInFlow) ? dto.amount : 0;
-            outFlow += (isInFlow) ? 0 : dto.amount;
-        }
-        moneyFlowLiveData.setValue(UiState.success(new MoneyFlowUiModel(inFlow, outFlow)));
-    }
-
-    public LiveData<UiState<MoneyFlowUiModel>> getMoneyFlow() {
-        return moneyFlowLiveData;
     }
 }

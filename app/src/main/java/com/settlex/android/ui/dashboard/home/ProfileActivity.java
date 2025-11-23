@@ -22,7 +22,7 @@ import com.settlex.android.databinding.ActivityProfileBinding;
 import com.settlex.android.util.ui.ProgressLoaderController;
 import com.settlex.android.ui.dashboard.model.UserUiModel;
 import com.settlex.android.ui.dashboard.viewmodel.UserViewModel;
-import com.settlex.android.ui.common.event.UiState;
+import com.settlex.android.ui.common.state.UiState;
 import com.settlex.android.util.string.StringFormatter;
 import com.settlex.android.util.ui.StatusBar;
 import com.settlex.android.ui.common.util.DialogHelper;
@@ -94,13 +94,13 @@ public class ProfileActivity extends AppCompatActivity {
 
     private void onUserDataStatusSuccess(UserUiModel user) {
         // display data
-        ProfileService.loadProfilePic(user.getPhotoUrl(), binding.profilePic);
-        binding.paymentId.setText(user.getPaymentId() != null ? StringFormatter.addAtToPaymentId(user.getPaymentId()) : "Setup Payment ID");
+        ProfileService.loadProfilePic(user.photoUrl, binding.profilePic);
+        binding.paymentId.setText(user.paymentId != null ? StringFormatter.addAtToPaymentId(user.paymentId) : "Setup Payment ID");
         binding.fullName.setText(user.getFullName().toUpperCase());
-        binding.email.setText(StringFormatter.maskEmail(user.getEmail()));
-        binding.phoneNumber.setText(StringFormatter.maskPhone(user.getPhone()));
-        binding.joinedDate.setText(StringFormatter.formatTimestampToRelative(user.getCreatedAt()));
-        this.joinedDate = user.getCreatedAt();
+        binding.email.setText(StringFormatter.maskEmail(user.email));
+        binding.phoneNumber.setText(StringFormatter.maskPhone(user.phone));
+        binding.joinedDate.setText(StringFormatter.formatTimestampToRelative(user.createdAt));
+        this.joinedDate = user.createdAt;
     }
 
     private void onUserDataStatusError(java.lang.String error) {

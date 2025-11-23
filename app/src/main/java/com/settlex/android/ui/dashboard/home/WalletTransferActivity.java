@@ -22,16 +22,15 @@ import com.settlex.android.data.enums.TransactionServiceType;
 import com.settlex.android.data.enums.TransactionStatus;
 import com.settlex.android.data.remote.profile.ProfileService;
 import com.settlex.android.databinding.ActivityWalletTransferBinding;
-import com.settlex.android.ui.common.util.DialogHelper;
 import com.settlex.android.ui.dashboard.account.CreatePaymentPinActivity;
 import com.settlex.android.ui.dashboard.adapter.RecipientAdapter;
 import com.settlex.android.ui.dashboard.model.RecipientUiModel;
 import com.settlex.android.ui.dashboard.model.UserUiModel;
-import com.settlex.android.ui.dashboard.util.DashboardUiUtil;
+import com.settlex.android.ui.dashboard.util.DialogHelper;
 import com.settlex.android.ui.dashboard.util.TransactionIdGenerator;
 import com.settlex.android.ui.dashboard.viewmodel.TransactionViewModel;
 import com.settlex.android.ui.dashboard.viewmodel.UserViewModel;
-import com.settlex.android.ui.common.event.UiState;
+import com.settlex.android.ui.common.state.UiState;
 import com.settlex.android.util.string.CurrencyFormatter;
 import com.settlex.android.util.string.StringFormatter;
 import com.settlex.android.util.ui.ProgressLoaderController;
@@ -118,7 +117,7 @@ public class WalletTransferActivity extends AppCompatActivity {
 
     private void onUserDataStatusSuccess(UserUiModel user) {
         if (user == null) return;
-        binding.availableBalance.setText(CurrencyFormatter.formatToNaira(user.getBalance() + user.getCommissionBalance()));
+        binding.availableBalance.setText(CurrencyFormatter.formatToNaira(user.balance + user.commissionBalance));
         this.currentUser = user;
     }
 
@@ -239,7 +238,7 @@ public class WalletTransferActivity extends AppCompatActivity {
 
         // start transaction
         startPayFriendTransaction(
-                currentUser.getUid(),
+                currentUser.uid,
                 recipientPaymentId,
                 amountToSend,
                 binding.editTxtDescription.getText().toString().trim()
@@ -256,7 +255,7 @@ public class WalletTransferActivity extends AppCompatActivity {
         java.lang.String priButton = "Forgot Pin";
         java.lang.String secButton = "Retry";
 
-        DashboardUiUtil.showAlertDialogMessage(
+        DialogHelper.showAlertDialogMessage(
                 this,
                 (dialog, binding) -> {
                     binding.message.setText(message);
@@ -272,7 +271,7 @@ public class WalletTransferActivity extends AppCompatActivity {
     }
 
     private void showSimpleAlertDialog(java.lang.String message) {
-        DialogHelper.showSimpleAlertDialog(
+        com.settlex.android.ui.common.util.DialogHelper.showSimpleAlertDialog(
                 this,
                 "Error",
                 message
@@ -289,21 +288,21 @@ public class WalletTransferActivity extends AppCompatActivity {
         java.lang.String recipientName = binding.selectedRecipientName.getText().toString();
 
         // Current user is sender
-        bottomSheetDialog = DashboardUiUtil.showPayConfirmation(
+        bottomSheetDialog = DialogHelper.showPayConfirmation(
                 this,
                 recipientPaymentId,
                 recipientName,
                 recipientPhotoUrl,
                 amountToSend,
-                currentUser.getBalance(),
-                currentUser.getCommissionBalance(),
+                currentUser.balance,
+                currentUser.commissionBalance,
                 () -> {
                     if (!currentUser.hasPin()) {
                         promptTransactionPinCreation();
                         return;
                     }
                     // ask for authorization
-                    DashboardUiUtil.showBottomSheetPaymentPinConfirmation(
+                    DialogHelper.showBottomSheetPaymentPinConfirmation(
                             this,
                             (binding, runnable) -> runnable[0] = () -> {
                                 verifyPaymentPin(Objects.requireNonNull(binding.pinView.getText()).toString());
@@ -328,7 +327,7 @@ public class WalletTransferActivity extends AppCompatActivity {
         java.lang.String btnPriText = "Create PIN";
         java.lang.String btnSecText = "Cancel";
 
-        DashboardUiUtil.showAlertDialogWithIcon(
+        DialogHelper.showAlertDialogWithIcon(
                 this,
                 (dialog, dialogBinding) -> {
                     dialogBinding.title.setText(title);
@@ -348,7 +347,7 @@ public class WalletTransferActivity extends AppCompatActivity {
 
     private void searchRecipient(java.lang.String paymentId) {
         // Prevent self search
-        if (StringFormatter.removeAtInPaymentId(paymentId).equals(currentUser.getPaymentId())) {
+        if (StringFormatter.removeAtInPaymentId(paymentId).equals(currentUser.paymentId)) {
             java.lang.String ERROR_CANNOT_SEND_TO_SELF = "You cannot send a payment to your own account. Please choose a different recipient";
 
             binding.txtError.setText(ERROR_CANNOT_SEND_TO_SELF);

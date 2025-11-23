@@ -14,7 +14,7 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.bumptech.glide.Glide;
 import com.settlex.android.databinding.ItemPromotionalBannerBinding;
-import com.settlex.android.ui.dashboard.model.PromoBannerUiModel;
+import com.settlex.android.ui.dashboard.model.BannerUiModel;
 import com.settlex.android.ui.dashboard.services.AirtimePurchaseActivity;
 import com.settlex.android.ui.dashboard.services.BettingTopUpActivity;
 import com.settlex.android.ui.dashboard.services.DataPurchaseActivity;
@@ -24,9 +24,9 @@ import java.util.Objects;
 
 public class PromotionalBannerAdapter extends RecyclerView.Adapter<PromotionalBannerAdapter.PromoViewHolder> {
     private static final String TAG = PromotionalBannerAdapter.class.getSimpleName();
-    private final List<PromoBannerUiModel> promoBanners;
+    private final List<BannerUiModel> promoBanners;
 
-    public PromotionalBannerAdapter(List<PromoBannerUiModel> promoBanners) {
+    public PromotionalBannerAdapter(List<BannerUiModel> promoBanners) {
         this.promoBanners = promoBanners;
     }
 
@@ -57,7 +57,7 @@ public class PromotionalBannerAdapter extends RecyclerView.Adapter<PromotionalBa
             context = binding.getRoot().getContext();
         }
 
-        public void onBind(PromoBannerUiModel bannerUiModel) {
+        public void onBind(BannerUiModel bannerUiModel) {
             // Load from URL
             Glide.with(context)
                     .load(bannerUiModel.getImageUrl())
