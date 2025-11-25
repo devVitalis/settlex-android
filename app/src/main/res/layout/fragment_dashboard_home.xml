@@ -7,7 +7,7 @@
     android:background="@color/gray_light"
     android:fitsSystemWindows="true"
     android:orientation="vertical"
-    tools:context=".presentation.home.HomeDashboardFragment">
+    tools:context=".presentation.dashboard.home.HomeDashboardFragment">
 
     <LinearLayout
         android:layout_width="match_parent"
@@ -644,7 +644,7 @@
                     android:visibility="visible">
 
                     <androidx.viewpager2.widget.ViewPager2
-                        android:id="@+id/promo_view_pager"
+                        android:id="@+id/banner_view_pager"
                         android:layout_width="match_parent"
                         android:layout_height="match_parent" />
 

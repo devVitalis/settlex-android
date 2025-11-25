@@ -14,7 +14,7 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.bumptech.glide.Glide;
 import com.settlex.android.databinding.ItemPromotionalBannerBinding;
-import com.settlex.android.presentation.home.model.BannerUiModel;
+import com.settlex.android.presentation.dashboard.home.model.PromoBannerUiModel;
 import com.settlex.android.presentation.services.AirtimePurchaseActivity;
 import com.settlex.android.presentation.services.BettingTopUpActivity;
 import com.settlex.android.presentation.services.DataPurchaseActivity;
@@ -24,9 +24,9 @@ import java.util.Objects;
 
 public class PromotionalBannerAdapter extends RecyclerView.Adapter<PromotionalBannerAdapter.PromoViewHolder> {
     private static final String TAG = PromotionalBannerAdapter.class.getSimpleName();
-    private final List<BannerUiModel> promoBanners;
+    private final List<PromoBannerUiModel> promoBanners;
 
-    public PromotionalBannerAdapter(List<BannerUiModel> promoBanners) {
+    public PromotionalBannerAdapter(List<PromoBannerUiModel> promoBanners) {
         this.promoBanners = promoBanners;
     }
 
@@ -57,14 +57,14 @@ public class PromotionalBannerAdapter extends RecyclerView.Adapter<PromotionalBa
             context = binding.getRoot().getContext();
         }
 
-        public void onBind(BannerUiModel bannerUiModel) {
+        public void onBind(PromoBannerUiModel bannerUiModel) {
             // Load from URL
             Glide.with(context)
-                    .load(bannerUiModel.getImageUrl())
+                    .load(bannerUiModel.imageUrl)
                     .centerCrop()
                     .into(binding.promoBanner);
 
-            String url = bannerUiModel.getActionUrl();
+            String url = bannerUiModel.actionUrl;
             binding.getRoot().setOnClickListener(v -> {
                 if (url != null && (url.startsWith("http://") || url.startsWith("https://"))) {
                     try {

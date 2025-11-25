@@ -10,26 +10,26 @@ import androidx.recyclerview.widget.ListAdapter;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.settlex.android.databinding.ItemTransactionBinding;
-import com.settlex.android.presentation.transactions.TransactionUiModel;
+import com.settlex.android.presentation.transactions.model.TransactionUiModel;
 
 /**
  * Base adapter for displaying transaction items in RecyclerView
  */
-public class TransactionsAdapter extends ListAdapter<TransactionUiModel, TransactionsAdapter.TransactionViewHolder> {
+public class TransactionListAdapter extends ListAdapter<TransactionUiModel, TransactionListAdapter.TransactionViewHolder> {
     private OnTransactionClickListener listener;
 
     public void setOnTransactionClickListener(OnTransactionClickListener listener) {
         this.listener = listener;
     }
 
-    public TransactionsAdapter() {
+    public TransactionListAdapter() {
         super(DIFF_CALLBACK);
     }
 
     private static final DiffUtil.ItemCallback<TransactionUiModel> DIFF_CALLBACK = new DiffUtil.ItemCallback<>() {
         @Override
         public boolean areItemsTheSame(@NonNull TransactionUiModel oldItem, @NonNull TransactionUiModel newItem) {
-            return oldItem.getTransactionId().equals(newItem.getTransactionId());
+            return oldItem.transactionId.equals(newItem.transactionId);
         }
 
         @Override
@@ -63,21 +63,21 @@ public class TransactionsAdapter extends ListAdapter<TransactionUiModel, Transac
         }
 
         public void Bind(TransactionUiModel transaction, OnTransactionClickListener listener) {
-            binding.icon.setImageResource(transaction.getServiceTypeIcon());
-            binding.name.setText(transaction.getServiceTypeName());
+            binding.icon.setImageResource(transaction.serviceTypeIcon);
+            binding.name.setText(transaction.serviceTypeName);
 
-            binding.operation.setText(transaction.getOperationSymbol());
-            binding.operation.setTextColor(ContextCompat.getColor(binding.getRoot().getContext(), transaction.getOperationColor()));
+            binding.operation.setText(transaction.operationSymbol);
+            binding.operation.setTextColor(ContextCompat.getColor(binding.getRoot().getContext(), transaction.operationColor));
 
-            binding.amount.setText(transaction.getAmount());
-            binding.amount.setTextColor(ContextCompat.getColor(binding.getRoot().getContext(), transaction.getOperationColor()));
+            binding.amount.setText(transaction.amount);
+            binding.amount.setTextColor(ContextCompat.getColor(binding.getRoot().getContext(), transaction.operationColor));
 
-            binding.dateTime.setText(transaction.getTimestamp());
-            binding.recipientOrSender.setText(transaction.getRecipientOrSender());
+            binding.dateTime.setText(transaction.timestamp);
+            binding.recipientOrSender.setText(transaction.displayName);
 
-            binding.status.setText(transaction.getStatus());
-            binding.status.setTextColor(ContextCompat.getColor(binding.getRoot().getContext(), transaction.getStatusColor()));
-            binding.status.setBackgroundResource(transaction.getStatusBgColor());
+            binding.status.setText(transaction.status);
+            binding.status.setTextColor(ContextCompat.getColor(binding.getRoot().getContext(), transaction.statusColor));
+            binding.status.setBackgroundResource(transaction.statusBgColor);
 
             binding.getRoot().setOnClickListener(v -> {
                 if (listener != null) {

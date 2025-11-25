@@ -21,7 +21,7 @@ import com.settlex.android.data.remote.profile.ProfileService;
 import com.settlex.android.databinding.ActivityProfileBinding;
 import com.settlex.android.util.ui.ProgressLoaderController;
 import com.settlex.android.presentation.account.model.UserUiModel;
-import com.settlex.android.presentation.account.model.UserViewModel;
+import com.settlex.android.presentation.account.viewmodel.UserViewModel;
 import com.settlex.android.presentation.common.state.UiState;
 import com.settlex.android.util.string.StringFormatter;
 import com.settlex.android.util.ui.StatusBar;

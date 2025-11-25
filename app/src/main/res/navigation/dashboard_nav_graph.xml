@@ -7,7 +7,7 @@
 
     <fragment
         android:id="@+id/home_fragment"
-        android:name="com.settlex.android.presentation.home.HomeDashboardFragment"
+        android:name="com.settlex.android.presentation.dashboard.home.HomeDashboardFragment"
         android:label="HomeDashboardFragment"
         tools:layout="@layout/fragment_dashboard_home">
         <action

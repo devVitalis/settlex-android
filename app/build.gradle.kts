@@ -5,6 +5,7 @@ plugins {
     id("com.google.devtools.ksp") // KSP
     id("com.google.dagger.hilt.android") // Dagger / hilt
     id("androidx.navigation.safeargs") // Safe Args
+    id("kotlin-parcelize")
 }
 
 android {

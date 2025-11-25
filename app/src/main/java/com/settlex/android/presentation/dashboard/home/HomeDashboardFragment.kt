@@ -1,0 +1,501 @@
+package com.settlex.android.presentation.dashboard.home
+
+import android.app.Activity
+import android.content.Intent
+import android.os.Bundle
+import android.os.Handler
+import android.os.Looper
+import android.view.LayoutInflater
+import android.view.View
+import android.view.ViewGroup
+import android.widget.Toast
+import androidx.activity.OnBackPressedCallback
+import androidx.core.view.isVisible
+import androidx.fragment.app.Fragment
+import androidx.fragment.app.activityViewModels
+import androidx.lifecycle.Lifecycle
+import androidx.lifecycle.lifecycleScope
+import androidx.lifecycle.repeatOnLifecycle
+import androidx.navigation.fragment.NavHostFragment
+import androidx.recyclerview.widget.GridLayoutManager
+import androidx.recyclerview.widget.LinearLayoutManager
+import com.settlex.android.R
+import com.settlex.android.data.enums.TransactionServiceType
+import com.settlex.android.data.remote.profile.ProfileService
+import com.settlex.android.databinding.FragmentDashboardHomeBinding
+import com.settlex.android.presentation.account.CreatePaymentIdActivity
+import com.settlex.android.presentation.account.ProfileActivity
+import com.settlex.android.presentation.account.model.UserUiModel
+import com.settlex.android.presentation.auth.login.LoginActivity
+import com.settlex.android.presentation.common.state.UiState
+import com.settlex.android.presentation.dashboard.home.model.PromoBannerUiModel
+import com.settlex.android.presentation.dashboard.home.viewmodel.HomeViewModel
+import com.settlex.android.presentation.dashboard.home.viewmodel.PromoBannerViewModel
+import com.settlex.android.presentation.services.AirtimePurchaseActivity
+import com.settlex.android.presentation.services.BettingTopUpActivity
+import com.settlex.android.presentation.services.CableTvSubscriptionActivity
+import com.settlex.android.presentation.services.DataPurchaseActivity
+import com.settlex.android.presentation.services.model.ServiceDestination
+import com.settlex.android.presentation.services.model.ServiceUiModel
+import com.settlex.android.presentation.transactions.TransactionActivity
+import com.settlex.android.presentation.transactions.model.TransactionUiModel
+import com.settlex.android.presentation.wallet.CommissionWithdrawalActivity
+import com.settlex.android.presentation.wallet.ReceiveActivity
+import com.settlex.android.presentation.wallet.WalletTransferActivity
+import com.settlex.android.presentation.wallet.adapter.PromotionalBannerAdapter
+import com.settlex.android.presentation.wallet.adapter.ServicesAdapter
+import com.settlex.android.presentation.wallet.adapter.ServicesAdapter.onItemClickedListener
+import com.settlex.android.presentation.wallet.adapter.TransactionListAdapter
+import com.settlex.android.util.string.StringFormatter
+import com.settlex.android.util.ui.StatusBar
+import dagger.hilt.android.AndroidEntryPoint
+import kotlinx.coroutines.launch
+
+@AndroidEntryPoint
+class HomeDashboardFragment : Fragment() {
+
+    companion object {
+        private const val MILLION_THRESHOLD_KOBO = 999999999L * 100
+
+    }
+
+    private var backPressedTime: Long = 0
+    private val autoScrollHandler = Handler(Looper.getMainLooper())
+    private var autoScrollRunnable: Runnable? = null
+
+    // dependencies
+    private var binding: FragmentDashboardHomeBinding? = null
+    private var adapter: TransactionListAdapter? = null
+    private val viewModel: HomeViewModel by activityViewModels()
+    private val bannerViewModel: PromoBannerViewModel by activityViewModels()
+
+    override fun onCreateView(
+        inflater: LayoutInflater,
+        container: ViewGroup?,
+        savedInstanceState: Bundle?
+    ): View? {
+        binding = FragmentDashboardHomeBinding.inflate(inflater, container, false)
+
+        setupUi()
+        initObservers()
+        initAppServices()
+        return binding!!.root
+    }
+
+    override fun onDestroyView() {
+        super.onDestroyView()
+        stopAutoScroll()
+        binding = null
+    }
+
+    private fun initObservers() {
+        observeUserState()
+        observePromotionalBanners()
+    }
+
+    private fun setupUi() {
+        StatusBar.setColor(requireActivity(), R.color.gray_light)
+        setupListeners()
+        setupDoubleBackPressToExit()
+        initTransactionRecyclerView()
+    }
+
+    private fun comingSoon() {
+        StringFormatter.showNotImplementedToast(
+            requireContext()
+        )
+    }
+
+    private fun toggleBrandAwareness() {
+        val isVisible = binding!!.marqueeContainer.isVisible
+        binding!!.marqueeContainer.visibility = if (isVisible) View.GONE else View.VISIBLE
+        binding!!.marqueeTxt.isSelected = !isVisible
+    }
+
+    private fun setupListeners() {
+
+        binding!!.btnProfilePic.setOnClickListener {
+            navigateToActivity(
+                ProfileActivity::class.java
+            )
+        }
+
+        binding!!.btnLogin.setOnClickListener {
+            navigateToActivity(
+                LoginActivity::class.java
+            )
+        }
+
+        binding!!.btnUserCommissionBalanceLayout.setOnClickListener {
+            navigateToActivity(
+                CommissionWithdrawalActivity::class.java
+            )
+        }
+
+        binding!!.btnReceive.setOnClickListener {
+            navigateToActivity(
+                ReceiveActivity::class.java
+            )
+        }
+
+        binding!!.btnTransfer.setOnClickListener { v: View? ->
+            navigateToActivity(
+                WalletTransferActivity::class.java
+            )
+        }
+        binding!!.btnNotification.setOnClickListener { comingSoon() }
+        binding!!.btnSupport.setOnClickListener { comingSoon() }
+        binding!!.btnViewAllTransaction.setOnClickListener { comingSoon() }
+        binding!!.btnDeposit.setOnClickListener { toggleBrandAwareness() }
+        binding!!.btnBalanceToggle.setOnClickListener { /** userViewModel.toggleBalanceVisibility() */ }
+    }
+
+    private fun observeUserState() {
+        viewLifecycleOwner.lifecycleScope.launch {
+            viewLifecycleOwner.repeatOnLifecycle(Lifecycle.State.STARTED) {
+                viewModel.userState.collect {
+                    when (it) {
+                        is UiState.Loading -> showUserLoadingState()
+                        is UiState.Success -> onUserDataReceived(it.data.user)
+                        is UiState.Failure -> handleUserErrorState()
+                    }
+                }
+            }
+        }
+    }
+
+    private fun showUserLoadingState() {
+        // Hide details
+        binding!!.fullName.visibility = View.GONE
+        binding!!.userBalance.visibility = View.GONE
+        binding!!.btnUserCommissionBalanceLayout.visibility = View.GONE
+
+        // Start and show shimmer
+        binding!!.userFullNameShimmer.startShimmer()
+        binding!!.userBalanceShimmer.startShimmer()
+        binding!!.userCommissionBalanceShimmer.startShimmer()
+
+        binding!!.userFullNameShimmer.visibility = View.VISIBLE
+        binding!!.userBalanceShimmer.visibility = View.VISIBLE
+        binding!!.userCommissionBalanceShimmer.visibility = View.VISIBLE
+    }
+
+    private fun onUserDataReceived(userModel: UserUiModel?) {
+        val user = userModel!!
+
+        if (user.paymentId == null) {
+            navigateToActivity(CreatePaymentIdActivity::class.java)
+        }
+
+        // Dismiss shimmer
+        binding!!.userFullNameShimmer.stopShimmer()
+        binding!!.userBalanceShimmer.stopShimmer()
+        binding!!.userCommissionBalanceShimmer.stopShimmer()
+
+        binding!!.userFullNameShimmer.visibility = View.GONE
+        binding!!.userBalanceShimmer.visibility = View.GONE
+        binding!!.userCommissionBalanceShimmer.visibility = View.GONE
+
+        // Show details
+        binding!!.fullName.visibility = View.VISIBLE
+        binding!!.userBalance.visibility = View.VISIBLE
+        binding!!.btnUserCommissionBalanceLayout.visibility = View.VISIBLE
+
+        ProfileService.loadProfilePic(user.photoUrl, binding!!.btnProfilePic)
+        binding!!.fullName.text = user.fullName
+//        observeAndLoadUserPrefs(user.balance, user.commissionBalance)
+    }
+
+    private fun handleUserErrorState() {
+        // Dismiss shimmer
+        binding!!.userFullNameShimmer.stopShimmer()
+        binding!!.userBalanceShimmer.stopShimmer()
+        binding!!.userCommissionBalanceShimmer.stopShimmer()
+
+        binding!!.userFullNameShimmer.visibility = View.GONE
+        binding!!.userBalanceShimmer.visibility = View.GONE
+        binding!!.userCommissionBalanceShimmer.visibility = View.GONE
+    }
+
+    /**
+    private fun observeAndLoadUserPrefs(balance: Long, commissionBalance: Long) {
+    userViewModel.getBalanceHiddenLiveData().observe(getViewLifecycleOwner(), { hidden ->
+    if (hidden) {
+    // balance hidden set asterisk
+    binding!!.btnBalanceToggle.setImageResource(R.drawable.ic_visibility_off)
+    binding!!.userBalance.text = StringFormatter.setAsterisks()
+    binding!!.userCommissionBalance.text = StringFormatter.setAsterisks()
+    return@observe
+    }
+    // show balance
+    binding!!.btnBalanceToggle.setImageResource(R.drawable.ic_visibility_on)
+    binding!!.userBalance.text = if (balance > MILLION_THRESHOLD_KOBO) CurrencyFormatter.formatToNairaShort(
+    balance
+    ) else CurrencyFormatter.formatToNaira(balance)
+    binding!!.userCommissionBalance.setText(
+    CurrencyFormatter.formatToNairaShort(
+    commissionBalance
+    )
+    )
+    })
+    }
+     */
+
+    private fun getRecentTransactions() {
+        viewLifecycleOwner.lifecycleScope.launch {
+            viewLifecycleOwner.repeatOnLifecycle(Lifecycle.State.STARTED) {
+                viewModel.recentTransactions.collect { transactions ->
+                    when (transactions) {
+                        is UiState.Loading -> onTransactionStatusLoading()
+                        is UiState.Success -> onTransactionStatusSuccess(transactions.data)
+                        is UiState.Failure -> onTransactionStatusError()
+                    }
+                }
+            }
+        }
+    }
+
+    private fun onTransactionStatusLoading() {
+        binding!!.emptyTransactionsState.visibility = View.GONE
+        binding!!.txnRecyclerView.visibility = View.GONE
+        binding!!.txnShimmerEffect.visibility = View.VISIBLE
+        binding!!.txnShimmerEffect.startShimmer()
+    }
+
+
+    private fun onTransactionStatusSuccess(transactions: List<TransactionUiModel>) {
+        if (transactions.isEmpty()) {
+            // zero transaction history
+            binding!!.txnShimmerEffect.stopShimmer()
+            binding!!.txnShimmerEffect.visibility = View.GONE
+
+            // clear recyclerview
+            adapter!!.submitList(mutableListOf())
+            binding!!.txnRecyclerView.setAdapter(adapter)
+
+            binding!!.btnViewAllTransaction.visibility = View.GONE
+            binding!!.emptyTransactionsState.visibility = View.VISIBLE
+            return
+        }
+
+        // Transaction exists
+        adapter!!.submitList(transactions)
+        binding!!.txnRecyclerView.setAdapter(adapter)
+
+        binding!!.txnShimmerEffect.stopShimmer()
+        binding!!.txnShimmerEffect.visibility = View.GONE
+        binding!!.emptyTransactionsState.visibility = View.GONE
+        binding!!.txnRecyclerView.visibility = View.VISIBLE
+    }
+
+    private fun onTransactionStatusError() {
+        binding!!.emptyTransactionsState.visibility = View.VISIBLE
+    }
+
+    private fun onItemTransactionClick() {
+        adapter!!.setOnTransactionClickListener { transaction: TransactionUiModel? ->
+            val intent = Intent(requireContext(), TransactionActivity::class.java)
+            intent.putExtra("transaction", transaction)
+            startActivity(intent)
+        }
+    }
+
+    private fun observePromotionalBanners() {
+        viewLifecycleOwner.lifecycleScope.launch {
+            viewLifecycleOwner.repeatOnLifecycle(Lifecycle.State.STARTED) {
+                bannerViewModel.banners.collect { banner ->
+                    when (banner) {
+                        is UiState.Loading -> onPromoBannerLoading()
+                        is UiState.Success -> onPromoBannersSuccess(banner.data)
+                        is UiState.Failure -> {}
+                    }
+                }
+            }
+        }
+    }
+
+    private fun onPromoBannerLoading() {
+        binding!!.promoProgressBar.visibility = View.VISIBLE
+        binding!!.promoProgressBar.show()
+    }
+
+    private fun onPromoBannersSuccess(banner: MutableList<PromoBannerUiModel>) {
+        binding!!.promoProgressBar.hide()
+        binding!!.promoProgressBar.visibility = View.GONE
+
+        if (banner.isEmpty()) {
+            binding!!.promoBannerContainer.visibility = View.GONE
+            return
+        }
+
+        val adapter = PromotionalBannerAdapter(banner)
+        binding!!.bannerViewPager.setAdapter(adapter)
+        binding!!.promoBannerContainer.visibility = View.VISIBLE
+
+        // Attach dots
+        binding!!.dotsIndicator.attachTo(binding!!.bannerViewPager)
+        setAutoScrollForPromoBanner(banner.size)
+    }
+
+    private fun setAutoScrollForPromoBanner(size: Int) {
+        if (size <= 1) return
+
+        autoScrollRunnable = object : Runnable {
+            var currentPosition: Int = 0
+
+            override fun run() {
+                if (binding!!.bannerViewPager.adapter == null) return
+
+                currentPosition = (currentPosition + 1) % size // loop back to 0
+                binding!!.bannerViewPager.setCurrentItem(currentPosition, true)
+
+                // schedule next slide
+                autoScrollHandler.postDelayed(this, 4000)
+            }
+        }
+        autoScrollHandler.postDelayed(autoScrollRunnable!!, 4000)
+    }
+
+    private fun stopAutoScroll() {
+        autoScrollHandler.removeCallbacks(autoScrollRunnable!!)
+    }
+
+    private fun showUnauthenticatedState() {
+        // Hide all logged-in UI elements
+        binding!!.btnProfilePic.visibility = View.GONE
+        binding!!.marqueeContainer.visibility = View.GONE
+        binding!!.btnBalanceToggle.visibility = View.GONE
+        binding!!.greetingContainer.visibility = View.GONE
+        binding!!.actionButtons.visibility = View.GONE
+        binding!!.txnContainer.visibility = View.GONE
+        binding!!.userBalance.text = StringFormatter.setAsterisks()
+        binding!!.userCommissionBalance.text = StringFormatter.setAsterisks()
+
+        // Show the logged-out UI elements
+        binding!!.btnLogin.visibility = View.VISIBLE
+    }
+
+    private fun initTransactionRecyclerView() {
+        val layoutManager = LinearLayoutManager(context)
+        layoutManager.setOrientation(LinearLayoutManager.VERTICAL)
+        binding!!.txnRecyclerView.setLayoutManager(layoutManager)
+
+        adapter = TransactionListAdapter()
+        onItemTransactionClick()
+    }
+
+    private fun initAppServices() {
+        val layoutManager = GridLayoutManager(requireContext(), 4)
+        binding!!.serviceRecyclerView.setLayoutManager(layoutManager)
+
+        val services = listOf(
+            ServiceUiModel(
+                "Airtime",
+                R.drawable.ic_service_airtime,
+                2,
+                TransactionServiceType.AIRTIME_RECHARGE
+            ),
+            ServiceUiModel(
+                "Data",
+                R.drawable.ic_service_data,
+                6,
+                TransactionServiceType.DATA_RECHARGE
+            ),
+            ServiceUiModel(
+                "Betting",
+                R.drawable.ic_service_betting,
+                "Hot",
+                TransactionServiceType.BETTING_TOPUP
+            ),
+            ServiceUiModel(
+                "TV",
+                R.drawable.ic_service_cable_tv,
+                TransactionServiceType.CABLE_TV_SUBSCRIPTION
+            ),
+            ServiceUiModel(
+                "Electricity",
+                R.drawable.ic_service_electricity,
+                TransactionServiceType.ELECTRICITY_BILL
+            ),
+            ServiceUiModel(
+                "Internet",
+                R.drawable.ic_service_internet,
+                TransactionServiceType.INTERNET
+            ),
+            ServiceUiModel(
+                "Gift Card",
+                R.drawable.ic_service_gift_card,
+                TransactionServiceType.GIFT_CARD
+            ),
+            ServiceUiModel("More", R.drawable.ic_service_more, TransactionServiceType.MORE)
+        )
+
+        // Map services to destinations
+        val serviceMap: MutableMap<TransactionServiceType, ServiceDestination?> = HashMap()
+        serviceMap.put(
+            TransactionServiceType.AIRTIME_RECHARGE,
+            ServiceDestination(AirtimePurchaseActivity::class.java)
+        )
+        serviceMap.put(
+            TransactionServiceType.DATA_RECHARGE,
+            ServiceDestination(DataPurchaseActivity::class.java)
+        )
+        serviceMap.put(
+            TransactionServiceType.BETTING_TOPUP,
+            ServiceDestination(BettingTopUpActivity::class.java)
+        )
+        serviceMap.put(
+            TransactionServiceType.CABLE_TV_SUBSCRIPTION,
+            ServiceDestination(CableTvSubscriptionActivity::class.java)
+        )
+        serviceMap.put(TransactionServiceType.ELECTRICITY_BILL, null)
+        serviceMap.put(TransactionServiceType.INTERNET, null)
+        serviceMap.put(TransactionServiceType.GIFT_CARD, null)
+        serviceMap.put(TransactionServiceType.MORE, ServiceDestination(R.id.services_fragment))
+
+        val adapter = ServicesAdapter(
+            false,
+            services,
+            onItemClickedListener { serviceUiModel: ServiceUiModel? ->
+                val serviceDestination = serviceMap[serviceUiModel!!.type]
+
+                if (serviceDestination == null) {
+                    StringFormatter.showNotImplementedToast(requireContext())
+                    return@onItemClickedListener
+                } else if (serviceDestination.isActivity) {
+                    navigateToActivity(serviceDestination.activity)
+                } else {
+                    navigateToFragment(serviceDestination.navDestinationId)
+                }
+            })
+
+        // Set adapter
+        binding!!.serviceRecyclerView.setAdapter(adapter)
+    }
+
+    private fun navigateToActivity(activityClass: Class<out Activity?>?) {
+        startActivity(Intent(requireContext(), activityClass))
+    }
+
+    private fun navigateToFragment(navigationId: Int) {
+        val navController = NavHostFragment.findNavController(this)
+        navController.navigate(navigationId)
+    }
+
+    private fun setupDoubleBackPressToExit() {
+        requireActivity().onBackPressedDispatcher.addCallback(
+            getViewLifecycleOwner(),
+            object : OnBackPressedCallback(true) {
+                override fun handleOnBackPressed() {
+                    if (backPressedTime + 2000 > System.currentTimeMillis()) {
+                        requireActivity().finish()
+                        return
+                    } else {
+                        Toast.makeText(requireActivity(), "Click again to exit", Toast.LENGTH_SHORT)
+                            .show()
+                    }
+                    backPressedTime = System.currentTimeMillis()
+                }
+            })
+    }
+}

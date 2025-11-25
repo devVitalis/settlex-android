@@ -1,12 +1,13 @@
-package com.settlex.android.presentation.account.model
+package com.settlex.android.presentation.account.viewmodel
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.settlex.android.data.exception.AppException
 import com.settlex.android.domain.session.UserSessionManager
 import com.settlex.android.domain.usecase.user.UserUseCases
-import com.settlex.android.presentation.common.state.UiState
 import com.settlex.android.presentation.account.extension.toUiModel
+import com.settlex.android.presentation.account.model.UserState
+import com.settlex.android.presentation.common.state.UiState
 import dagger.hilt.android.lifecycle.HiltViewModel
 import jakarta.inject.Inject
 import kotlinx.coroutines.flow.MutableSharedFlow
@@ -19,13 +20,13 @@ import kotlinx.coroutines.launch
 @HiltViewModel
 class UserViewModel @Inject constructor(
     private val userUseCase: UserUseCases,
-    userSession: UserSessionManager,
+    userSession: UserSessionManager
 ) : ViewModel() {
 
-    val userUiState = userSession.authState
+    val userState = userSession.authState
         .combine(userSession.userState) { auth, dto ->
             UiState.Success(
-                UserUiState(
+                UserState(
                     authUid = auth?.uid,
                     user = dto?.toUiModel()
                 )

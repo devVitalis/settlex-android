@@ -1,11 +1,12 @@
-package com.settlex.android.domain.repository
+package com.settlex.android.data.repository
 
 import android.content.Context
 import android.net.Uri
 import com.settlex.android.data.datasource.UserRemoteDataSource
 import com.settlex.android.data.exception.ApiException
 import com.settlex.android.data.remote.dto.ApiResponse
-import com.settlex.android.data.repository.UserRepository
+import com.settlex.android.data.remote.dto.PaymentRecipientDto
+import com.settlex.android.domain.repository.UserRepository
 import jakarta.inject.Inject
 
 class UserRepositoryImpl @Inject constructor(
@@ -86,5 +87,14 @@ class UserRepositoryImpl @Inject constructor(
 
     override suspend fun refreshUser() {
         runCatching { remoteDataSource.refreshUser() }
+    }
+
+    override suspend fun getRecipientByPaymentId(paymentId: String): Result<ApiResponse<List<PaymentRecipientDto>>> {
+        runCatching {
+            remoteDataSource.getRecipientByPaymentId(paymentId)
+        }.fold(
+            onSuccess = { return Result.success(it) },
+            onFailure = { return Result.failure(exception.map(it as Exception)) }
+        )
     }
 }

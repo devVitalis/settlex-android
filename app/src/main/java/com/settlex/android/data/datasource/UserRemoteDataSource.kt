@@ -6,19 +6,27 @@ import com.google.firebase.auth.EmailAuthProvider
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.firestore.FirebaseFirestore
 import com.google.firebase.firestore.FirebaseFirestoreException
+import com.google.firebase.firestore.Query
 import com.google.firebase.firestore.SetOptions
 import com.settlex.android.data.datasource.utils.CloudFunctions
+import com.settlex.android.data.enums.TransactionServiceType
+import com.settlex.android.data.exception.ApiException
 import com.settlex.android.data.remote.dto.ApiResponse
+import com.settlex.android.data.remote.dto.PaymentRecipientDto
+import com.settlex.android.data.remote.dto.TransactionDto
 import com.settlex.android.util.image.ImageConverter
 import jakarta.inject.Inject
 import jakarta.inject.Singleton
+import kotlinx.coroutines.channels.awaitClose
+import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.callbackFlow
 import kotlinx.coroutines.tasks.await
 
 @Singleton
 class UserRemoteDataSource @Inject constructor(
     private val firestore: FirebaseFirestore,
     private val auth: FirebaseAuth,
-    private val cloudFunctions: CloudFunctions
+    private val cloudFunctions: CloudFunctions,
 ) {
 
     suspend fun isPaymentIdTaken(id: String): Boolean {
@@ -92,5 +100,67 @@ class UserRemoteDataSource @Inject constructor(
 
     suspend fun refreshUser() {
         auth.currentUser?.reload()?.await()
+    }
+
+    suspend fun transferToFriend(
+        fromUid: String,
+        toPaymentId: String,
+        txnId: String,
+        amount: Long,
+        desc: String
+    ): ApiResponse<String> {
+        return cloudFunctions.call(
+           name =  "api-sendPayment",
+           data =  mapOf(
+                "fromUid" to fromUid,
+                "toPaymentId" to toPaymentId,
+                "txnId" to txnId,
+                "amount" to amount,
+                "serviceType" to TransactionServiceType.PAY_A_FRIEND,
+                "description" to desc
+            )
+        )
+    }
+
+    suspend fun getRecipientByPaymentId(paymentId: String): ApiResponse<List<PaymentRecipientDto>> {
+        return cloudFunctions.call(
+            name = "api-getRecipientByPaymentId",
+            data = mapOf("paymentId" to paymentId)
+        )
+    }
+
+    fun getRecentTransactions(uid: String): Flow<Result<List<TransactionDto>>> {
+        return callbackFlow {
+
+            val ref = firestore.collection("users")
+                .document(uid)
+                .collection("transactions")
+                .orderBy("createdAt", Query.Direction.DESCENDING)
+                .limit(2)
+
+            val listener = ref.addSnapshotListener { snapshot, error ->
+
+                if (error != null) {
+                    trySend(Result.failure(error))
+                    return@addSnapshotListener
+                }
+
+                // No snapshot or empty transactions
+                if (snapshot == null || snapshot.isEmpty) {
+                    trySend(Result.success(emptyList()))
+                    return@addSnapshotListener
+                }
+
+                // Convert snapshot → DTOs
+                val transactions = snapshot.documents.mapNotNull { doc ->
+                    doc.toObject(TransactionDto::class.java)
+                }
+
+                trySend(Result.success(transactions))
+            }
+
+            // Stop listening when flow is cancelled
+            awaitClose { listener.remove() }
+        }
     }
 }

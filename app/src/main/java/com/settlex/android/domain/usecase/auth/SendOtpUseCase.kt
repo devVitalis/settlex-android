@@ -2,7 +2,7 @@ package com.settlex.android.domain.usecase.auth
 
 import com.settlex.android.data.enums.OtpType
 import com.settlex.android.data.remote.dto.ApiResponse
-import com.settlex.android.domain.repository.AuthRepositoryImpl
+import com.settlex.android.data.repository.AuthRepositoryImpl
 import jakarta.inject.Inject
 
 class SendOtpUseCase @Inject constructor(private val authRepositoryImpl: AuthRepositoryImpl) {

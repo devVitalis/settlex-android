@@ -9,7 +9,7 @@ import androidx.lifecycle.ViewModelProvider;
 import com.settlex.android.R;
 import com.settlex.android.databinding.ActivityReceiveBinding;
 import com.settlex.android.presentation.account.model.UserUiModel;
-import com.settlex.android.presentation.account.model.UserViewModel;
+import com.settlex.android.presentation.account.viewmodel.UserViewModel;
 import com.settlex.android.util.string.StringFormatter;
 import com.settlex.android.util.ui.StatusBar;
 

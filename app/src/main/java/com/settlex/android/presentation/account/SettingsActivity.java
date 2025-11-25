@@ -19,7 +19,7 @@ import com.settlex.android.presentation.auth.AuthViewModel;
 import com.settlex.android.presentation.common.components.BiometricAuthHelper;
 import com.settlex.android.presentation.auth.forgot_password.OtpVerificationActivity;
 import com.settlex.android.presentation.account.model.UserUiModel;
-import com.settlex.android.presentation.account.model.UserViewModel;
+import com.settlex.android.presentation.account.viewmodel.UserViewModel;
 import com.settlex.android.presentation.common.state.UiState;
 import com.settlex.android.util.network.NetworkMonitor;
 import com.settlex.android.util.string.StringFormatter;

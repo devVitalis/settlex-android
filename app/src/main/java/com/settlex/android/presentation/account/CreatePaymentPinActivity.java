@@ -17,7 +17,7 @@ import com.chaos.view.PinView;
 import com.settlex.android.R;
 import com.settlex.android.databinding.ActivityCreatePaymentPinBinding;
 import com.settlex.android.util.ui.ProgressLoaderController;
-import com.settlex.android.presentation.account.model.UserViewModel;
+import com.settlex.android.presentation.account.viewmodel.UserViewModel;
 import com.settlex.android.presentation.common.state.UiState;
 import com.settlex.android.util.ui.StatusBar;
 

@@ -1,10 +1,10 @@
-package com.settlex.android.data.repository;
+package com.settlex.android.domain.repository;
 
 import com.google.firebase.remoteconfig.FirebaseRemoteConfig;
 import com.google.firebase.remoteconfig.FirebaseRemoteConfigSettings;
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
-import com.settlex.android.presentation.home.model.BannerUiModel;
+import com.settlex.android.presentation.dashboard.home.model.PromoBannerUiModel;
 
 import java.lang.reflect.Type;
 import java.util.Collections;
@@ -12,18 +12,15 @@ import java.util.List;
 
 import jakarta.inject.Inject;
 
-public class BannerRepository {
+public class PromoBannerRepository {
     private final FirebaseRemoteConfig remoteConfig;
 
     @Inject
-    public BannerRepository(FirebaseRemoteConfig remoteConfig) {
+    public PromoBannerRepository(FirebaseRemoteConfig remoteConfig) {
         this.remoteConfig = remoteConfig;
         setFirebaseRemoteSettings();
     }
 
-    /**
-     * Fetch promotional banners from firebase remote config
-     */
     public void fetchPromotionalBanners(PromoBannersCallback callback) {
         remoteConfig.fetchAndActivate()
                 .addOnCompleteListener(task -> {
@@ -32,7 +29,7 @@ public class BannerRepository {
                         return;
                     }
 
-                    String json = remoteConfig.getString("promo_banners");
+                    String json = remoteConfig.getString("promotional_banners");
                     if (json.isEmpty()) {
                         callback.onResult(Collections.emptyList());
                         return;
@@ -40,8 +37,8 @@ public class BannerRepository {
 
                     try {
                         Gson gson = new Gson();
-                        Type listType = new TypeToken<List<BannerUiModel>>() {}.getType();
-                        List<BannerUiModel> promos = gson.fromJson(json, listType);
+                        Type listType = new TypeToken<List<PromoBannerUiModel>>() {}.getType();
+                        List<PromoBannerUiModel> promos = gson.fromJson(json, listType);
                         callback.onResult(promos);
                     } catch (Exception e) {
                         callback.onResult(Collections.emptyList());
@@ -50,7 +47,7 @@ public class BannerRepository {
     }
 
     public interface PromoBannersCallback {
-        void onResult(List<BannerUiModel> bannerUiModel);
+        void onResult(List<PromoBannerUiModel> bannerUiModel);
     }
 
     // Config settings

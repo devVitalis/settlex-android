@@ -1,8 +1,9 @@
-package com.settlex.android.data.repository
+package com.settlex.android.domain.repository
 
 import android.content.Context
 import android.net.Uri
 import com.settlex.android.data.remote.dto.ApiResponse
+import com.settlex.android.data.remote.dto.PaymentRecipientDto
 
 interface UserRepository {
     suspend fun isPaymentIdTaken(id: String): Result<Boolean>
@@ -13,4 +14,5 @@ interface UserRepository {
     suspend fun resetPaymentPin(oldPin: String, newPin: String): Result<ApiResponse<String>>
     suspend fun setProfilePicture(context: Context, uri: Uri): Result<ApiResponse<String>>
     suspend fun refreshUser()
+    suspend fun getRecipientByPaymentId(paymentId: String): Result<ApiResponse<List<PaymentRecipientDto>>>
 }

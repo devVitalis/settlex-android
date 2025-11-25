@@ -1,6 +1,6 @@
 package com.settlex.android.domain.usecase.auth
 
-import com.settlex.android.domain.repository.AuthRepositoryImpl
+import com.settlex.android.data.repository.AuthRepositoryImpl
 import com.settlex.android.domain.model.UserModel
 import jakarta.inject.Inject
 

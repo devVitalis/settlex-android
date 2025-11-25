@@ -1,4 +1,4 @@
-package com.settlex.android.data.repository
+package com.settlex.android.domain.repository
 
 import com.google.firebase.auth.FirebaseUser
 import com.settlex.android.data.enums.OtpType

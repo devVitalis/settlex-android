@@ -10,10 +10,7 @@ import java.util.Objects;
 public class CurrencyFormatter {
 
     private CurrencyFormatter() {
-
     }
-
-
 
     /**
      * Converts Kobo (long) to a formatted Naira currency string, e.g. 123450 → ₦1,234.50

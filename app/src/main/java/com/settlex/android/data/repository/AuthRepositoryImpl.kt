@@ -1,12 +1,12 @@
-package com.settlex.android.domain.repository
+package com.settlex.android.data.repository
 
 import com.google.firebase.auth.FirebaseUser
 import com.settlex.android.data.datasource.AuthRemoteDataSource
 import com.settlex.android.data.enums.OtpType
 import com.settlex.android.data.exception.ApiException
 import com.settlex.android.data.remote.dto.ApiResponse
-import com.settlex.android.data.repository.AuthRepository
 import com.settlex.android.domain.model.UserModel
+import com.settlex.android.domain.repository.AuthRepository
 import jakarta.inject.Inject
 
 class AuthRepositoryImpl @Inject constructor(
