@@ -23,29 +23,28 @@ import com.settlex.android.R
 import com.settlex.android.data.enums.TransactionServiceType
 import com.settlex.android.data.remote.profile.ProfileService
 import com.settlex.android.databinding.FragmentDashboardHomeBinding
-import com.settlex.android.presentation.account.CreatePaymentIdActivity
-import com.settlex.android.presentation.account.ProfileActivity
-import com.settlex.android.presentation.account.model.UserUiModel
+import com.settlex.android.presentation.settings.CreatePaymentIdActivity
+import com.settlex.android.presentation.dashboard.account.ProfileActivity
 import com.settlex.android.presentation.auth.login.LoginActivity
 import com.settlex.android.presentation.common.state.UiState
+import com.settlex.android.presentation.dashboard.home.model.HomeUiModel
 import com.settlex.android.presentation.dashboard.home.model.PromoBannerUiModel
 import com.settlex.android.presentation.dashboard.home.viewmodel.HomeViewModel
 import com.settlex.android.presentation.dashboard.home.viewmodel.PromoBannerViewModel
-import com.settlex.android.presentation.services.AirtimePurchaseActivity
-import com.settlex.android.presentation.services.BettingTopUpActivity
-import com.settlex.android.presentation.services.CableTvSubscriptionActivity
-import com.settlex.android.presentation.services.DataPurchaseActivity
-import com.settlex.android.presentation.services.model.ServiceDestination
-import com.settlex.android.presentation.services.model.ServiceUiModel
+import com.settlex.android.presentation.dashboard.services.AirtimePurchaseActivity
+import com.settlex.android.presentation.dashboard.services.BettingTopUpActivity
+import com.settlex.android.presentation.dashboard.services.CableTvSubscriptionActivity
+import com.settlex.android.presentation.dashboard.services.DataPurchaseActivity
+import com.settlex.android.presentation.dashboard.services.model.ServiceDestination
+import com.settlex.android.presentation.dashboard.services.model.ServiceUiModel
 import com.settlex.android.presentation.transactions.TransactionActivity
-import com.settlex.android.presentation.transactions.model.TransactionUiModel
+import com.settlex.android.presentation.transactions.model.TransactionItemUiModel
 import com.settlex.android.presentation.wallet.CommissionWithdrawalActivity
 import com.settlex.android.presentation.wallet.ReceiveActivity
-import com.settlex.android.presentation.wallet.WalletTransferActivity
-import com.settlex.android.presentation.wallet.adapter.PromotionalBannerAdapter
-import com.settlex.android.presentation.wallet.adapter.ServicesAdapter
-import com.settlex.android.presentation.wallet.adapter.ServicesAdapter.onItemClickedListener
-import com.settlex.android.presentation.wallet.adapter.TransactionListAdapter
+import com.settlex.android.presentation.transactions.TransferToFriendActivity
+import com.settlex.android.presentation.dashboard.services.adapter.ServicesAdapter
+import com.settlex.android.presentation.dashboard.services.adapter.ServicesAdapter.onItemClickedListener
+import com.settlex.android.presentation.transactions.adapter.TransactionListAdapter
 import com.settlex.android.util.string.StringFormatter
 import com.settlex.android.util.ui.StatusBar
 import dagger.hilt.android.AndroidEntryPoint
@@ -90,6 +89,7 @@ class HomeDashboardFragment : Fragment() {
 
     private fun initObservers() {
         observeUserState()
+        observeRecentTransactions()
         observePromotionalBanners()
     }
 
@@ -140,9 +140,10 @@ class HomeDashboardFragment : Fragment() {
 
         binding!!.btnTransfer.setOnClickListener { v: View? ->
             navigateToActivity(
-                WalletTransferActivity::class.java
+                TransferToFriendActivity::class.java
             )
         }
+
         binding!!.btnNotification.setOnClickListener { comingSoon() }
         binding!!.btnSupport.setOnClickListener { comingSoon() }
         binding!!.btnViewAllTransaction.setOnClickListener { comingSoon() }
@@ -156,7 +157,7 @@ class HomeDashboardFragment : Fragment() {
                 viewModel.userState.collect {
                     when (it) {
                         is UiState.Loading -> showUserLoadingState()
-                        is UiState.Success -> onUserDataReceived(it.data.user)
+                        is UiState.Success -> onUserDataReceived(it.data.user as HomeUiModel)
                         is UiState.Failure -> handleUserErrorState()
                     }
                 }
@@ -180,8 +181,8 @@ class HomeDashboardFragment : Fragment() {
         binding!!.userCommissionBalanceShimmer.visibility = View.VISIBLE
     }
 
-    private fun onUserDataReceived(userModel: UserUiModel?) {
-        val user = userModel!!
+    private fun onUserDataReceived(homeUiModel: HomeUiModel) {
+        val user = homeUiModel
 
         if (user.paymentId == null) {
             navigateToActivity(CreatePaymentIdActivity::class.java)
@@ -241,21 +242,21 @@ class HomeDashboardFragment : Fragment() {
     }
      */
 
-    private fun getRecentTransactions() {
+    private fun observeRecentTransactions() {
         viewLifecycleOwner.lifecycleScope.launch {
             viewLifecycleOwner.repeatOnLifecycle(Lifecycle.State.STARTED) {
                 viewModel.recentTransactions.collect { transactions ->
                     when (transactions) {
-                        is UiState.Loading -> onTransactionStatusLoading()
-                        is UiState.Success -> onTransactionStatusSuccess(transactions.data)
-                        is UiState.Failure -> onTransactionStatusError()
+                        is UiState.Loading -> onTransactionsLoading()
+                        is UiState.Success -> showTransactions(transactions.data)
+                        is UiState.Failure -> onTransactionsError()
                     }
                 }
             }
         }
     }
 
-    private fun onTransactionStatusLoading() {
+    private fun onTransactionsLoading() {
         binding!!.emptyTransactionsState.visibility = View.GONE
         binding!!.txnRecyclerView.visibility = View.GONE
         binding!!.txnShimmerEffect.visibility = View.VISIBLE
@@ -263,7 +264,7 @@ class HomeDashboardFragment : Fragment() {
     }
 
 
-    private fun onTransactionStatusSuccess(transactions: List<TransactionUiModel>) {
+    private fun showTransactions(transactions: List<TransactionItemUiModel>) {
         if (transactions.isEmpty()) {
             // zero transaction history
             binding!!.txnShimmerEffect.stopShimmer()
@@ -288,12 +289,12 @@ class HomeDashboardFragment : Fragment() {
         binding!!.txnRecyclerView.visibility = View.VISIBLE
     }
 
-    private fun onTransactionStatusError() {
+    private fun onTransactionsError(){
         binding!!.emptyTransactionsState.visibility = View.VISIBLE
     }
 
     private fun onItemTransactionClick() {
-        adapter!!.setOnTransactionClickListener { transaction: TransactionUiModel? ->
+        adapter!!.setOnTransactionClickListener { transaction: TransactionItemUiModel? ->
             val intent = Intent(requireContext(), TransactionActivity::class.java)
             intent.putExtra("transaction", transaction)
             startActivity(intent)

@@ -20,7 +20,7 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.SettleX">
         <activity
-            android:name=".presentation.account.AboutActivity"
+            android:name=".presentation.dashboard.account.AboutActivity"
             android:exported="false" />
         <!-- Firebase Messaging Service -->
         <service
@@ -49,37 +49,37 @@
             </intent-filter>
         </activity>
         <activity
-            android:name=".presentation.account.CreatePaymentPinActivity"
+            android:name=".presentation.settings.CreatePaymentPinActivity"
             android:exported="false" />
         <activity
-            android:name=".presentation.account.CreatePaymentIdActivity"
+            android:name=".presentation.settings.CreatePaymentIdActivity"
             android:exported="false" />
         <activity
-            android:name=".presentation.account.SettingsActivity"
+            android:name=".presentation.settings.SettingsActivity"
             android:exported="false" />
         <activity
             android:name=".presentation.transactions.TransactionStatusActivity"
             android:exported="false" />
         <activity
-            android:name=".presentation.wallet.WalletTransferActivity"
+            android:name=".presentation.transactions.TransferToFriendActivity"
             android:exported="false" />
         <activity
-            android:name=".presentation.account.ProfileActivity"
+            android:name=".presentation.dashboard.account.ProfileActivity"
             android:exported="false" />
         <activity
             android:name=".presentation.auth.login.LoginActivity"
             android:exported="false" />
         <activity
-            android:name=".presentation.services.CableTvSubscriptionActivity"
+            android:name=".presentation.dashboard.services.CableTvSubscriptionActivity"
             android:exported="false" />
         <activity
-            android:name=".presentation.services.BettingTopUpActivity"
+            android:name=".presentation.dashboard.services.BettingTopUpActivity"
             android:exported="false" />
         <activity
-            android:name=".presentation.services.DataPurchaseActivity"
+            android:name=".presentation.dashboard.services.DataPurchaseActivity"
             android:exported="false" />
         <activity
-            android:name=".presentation.services.AirtimePurchaseActivity"
+            android:name=".presentation.dashboard.services.AirtimePurchaseActivity"
             android:exported="false" />
         <activity
             android:name=".presentation.wallet.CommissionWithdrawalActivity"

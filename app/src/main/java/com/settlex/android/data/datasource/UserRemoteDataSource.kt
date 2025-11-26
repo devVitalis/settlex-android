@@ -4,15 +4,15 @@ import android.content.Context
 import android.net.Uri
 import com.google.firebase.auth.EmailAuthProvider
 import com.google.firebase.auth.FirebaseAuth
+import com.google.firebase.auth.FirebaseUser
 import com.google.firebase.firestore.FirebaseFirestore
 import com.google.firebase.firestore.FirebaseFirestoreException
 import com.google.firebase.firestore.Query
 import com.google.firebase.firestore.SetOptions
-import com.settlex.android.data.datasource.utils.CloudFunctions
+import com.settlex.android.data.datasource.util.FirebaseFunctionsInvoker
 import com.settlex.android.data.enums.TransactionServiceType
-import com.settlex.android.data.exception.ApiException
 import com.settlex.android.data.remote.dto.ApiResponse
-import com.settlex.android.data.remote.dto.PaymentRecipientDto
+import com.settlex.android.data.remote.dto.RecipientDto
 import com.settlex.android.data.remote.dto.TransactionDto
 import com.settlex.android.util.image.ImageConverter
 import jakarta.inject.Inject
@@ -26,8 +26,10 @@ import kotlinx.coroutines.tasks.await
 class UserRemoteDataSource @Inject constructor(
     private val firestore: FirebaseFirestore,
     private val auth: FirebaseAuth,
-    private val cloudFunctions: CloudFunctions,
+    private val cloudFunctions: FirebaseFunctionsInvoker,
 ) {
+
+    fun getCurrentUser(): FirebaseUser? = auth.currentUser
 
     suspend fun isPaymentIdTaken(id: String): Boolean {
         val snapshot = firestore.collection("payment_ids")
@@ -37,7 +39,9 @@ class UserRemoteDataSource @Inject constructor(
         return snapshot.exists()
     }
 
-    suspend fun assignPaymentId(id: String, uid: String) {
+    suspend fun assignPaymentId(id: String) {
+        val uid: String = getCurrentUser()?.uid ?: return
+
         firestore.runTransaction { transaction ->
             val globalDocRef = firestore.collection("payment_ids").document(id)
             val userDocRef = firestore.collection("users").document(uid)
@@ -107,7 +111,7 @@ class UserRemoteDataSource @Inject constructor(
         toPaymentId: String,
         txnId: String,
         amount: Long,
-        desc: String
+        desc: String?
     ): ApiResponse<String> {
         return cloudFunctions.call(
            name =  "api-sendPayment",
@@ -122,7 +126,7 @@ class UserRemoteDataSource @Inject constructor(
         )
     }
 
-    suspend fun getRecipientByPaymentId(paymentId: String): ApiResponse<List<PaymentRecipientDto>> {
+    suspend fun getRecipientByPaymentId(paymentId: String): ApiResponse<List<RecipientDto>> {
         return cloudFunctions.call(
             name = "api-getRecipientByPaymentId",
             data = mapOf("paymentId" to paymentId)

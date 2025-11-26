@@ -7,12 +7,12 @@ import com.settlex.android.data.enums.TransactionOperation
 import com.settlex.android.data.enums.TransactionStatus
 import com.settlex.android.data.exception.AppException
 import com.settlex.android.data.remote.dto.TransactionDto
-import com.settlex.android.data.repository.TxnRepositoryImpl
+import com.settlex.android.data.repository.TransactionRepositoryImpl
 import com.settlex.android.domain.session.UserSessionManager
-import com.settlex.android.presentation.account.extension.toUiModel
-import com.settlex.android.presentation.account.model.UserState
+import com.settlex.android.presentation.common.mapper.toHomeUiModel
+import com.settlex.android.presentation.dashboard.UserState
 import com.settlex.android.presentation.common.state.UiState
-import com.settlex.android.presentation.transactions.model.TransactionUiModel
+import com.settlex.android.presentation.transactions.model.TransactionItemUiModel
 import com.settlex.android.util.string.CurrencyFormatter
 import com.settlex.android.util.string.DateFormatter
 import dagger.hilt.android.lifecycle.HiltViewModel
@@ -26,7 +26,7 @@ import kotlinx.coroutines.launch
 
 @HiltViewModel
 class HomeViewModel @Inject constructor(
-    private val txnRepoImpl: TxnRepositoryImpl,
+    private val transactionRepoImpl: TransactionRepositoryImpl,
     userSession: UserSessionManager
 ) : ViewModel() {
 
@@ -35,7 +35,7 @@ class HomeViewModel @Inject constructor(
             UiState.Success(
                 UserState(
                     authUid = auth?.uid,
-                    user = dto?.toUiModel()
+                    user = dto?.toHomeUiModel()
                 )
             )
         }.stateIn(
@@ -44,15 +44,14 @@ class HomeViewModel @Inject constructor(
             initialValue = UiState.Loading
         )
 
-    private val _recentTransactions = MutableStateFlow<UiState<List<TransactionUiModel>>>(UiState.Loading)
+    private val _recentTransactions = MutableStateFlow<UiState<List<TransactionItemUiModel>>>(UiState.Loading)
     val recentTransactions = _recentTransactions.asStateFlow()
 
     fun loadRecentTransactions(uid: String) {
         viewModelScope.launch {
-
             _recentTransactions.value = UiState.Loading
 
-            txnRepoImpl.getRecentTransactions(uid)
+            transactionRepoImpl.getRecentTransactions(uid)
                 .collect { result ->
 
                     result.fold(
@@ -75,7 +74,7 @@ class HomeViewModel @Inject constructor(
         }
     }
 
-    private fun toUiModel(uid: String, dto: TransactionDto): TransactionUiModel {
+    private fun toUiModel(uid: String, dto: TransactionDto): TransactionItemUiModel {
 
         val isSender = uid == dto.senderUid
 
@@ -84,14 +83,14 @@ class HomeViewModel @Inject constructor(
             else -> if (isSender) TransactionOperation.DEBIT else TransactionOperation.CREDIT
         }
 
-        return TransactionUiModel(
+        return TransactionItemUiModel(
             transactionId = dto.transactionId,
             description = dto.description,
-            sender = dto.sender,
+            senderId = dto.sender,
             senderName = dto.senderName.uppercase(),
-            recipient = dto.recipient,
+            recipientId = dto.recipient,
             recipientName = dto.recipientName.uppercase(),
-            displayName = if (isSender) dto.recipientName.uppercase() else dto.senderName.uppercase(),
+            recipientOrSenderName = if (isSender) dto.recipientName.uppercase() else dto.senderName.uppercase(),
             serviceTypeName = if (isSender) dto.serviceType.displayName else "Payment Received",
             serviceTypeIcon = if (isSender) dto.serviceType.iconRes else R.drawable.ic_service_payment_received,
             operationSymbol = operation.symbol,
@@ -100,7 +99,7 @@ class HomeViewModel @Inject constructor(
             timestamp = DateFormatter.formatTimeStampToDateAndTime(dto.createdAt),
             status = dto.status.displayName,
             statusColor = dto.status.colorRes,
-            statusBgColor = dto.status.bgColorRes
+            statusBackgroundColor = dto.status.bgColorRes
         )
     }
 }

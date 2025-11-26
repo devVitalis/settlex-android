@@ -13,6 +13,6 @@ interface TransactionsRepository {
         toPaymentId: String,
         txnId: String,
         amount: Long,
-        desc: String
+        desc: String?
     ): Result<ApiResponse<String>>
 }

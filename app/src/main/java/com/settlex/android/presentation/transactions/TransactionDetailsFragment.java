@@ -13,7 +13,7 @@ import androidx.fragment.app.Fragment;
 
 import com.settlex.android.R;
 import com.settlex.android.databinding.FragmentTransactionDetailsBinding;
-import com.settlex.android.presentation.transactions.model.TransactionUiModel;
+import com.settlex.android.presentation.transactions.model.TransactionItemUiModel;
 import com.settlex.android.util.string.StringFormatter;
 import com.settlex.android.util.ui.StatusBar;
 
@@ -43,7 +43,7 @@ public class TransactionDetailsFragment extends Fragment {
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
 
-        TransactionUiModel transaction = requireActivity().getIntent().getParcelableExtra("transaction");
+        TransactionItemUiModel transaction = requireActivity().getIntent().getParcelableExtra("transaction");
         if (transaction != null) {
             bindTransaction(transaction);
         }
@@ -55,7 +55,7 @@ public class TransactionDetailsFragment extends Fragment {
         binding = null;
     }
 
-    private void bindTransaction(TransactionUiModel transaction) {
+    private void bindTransaction(TransactionItemUiModel transaction) {
         binding.icon.setImageResource(transaction.serviceTypeIcon);
         binding.name.setText(transaction.serviceTypeName);
 
@@ -67,14 +67,14 @@ public class TransactionDetailsFragment extends Fragment {
 
         binding.status.setText(transaction.status);
         binding.status.setTextColor(ContextCompat.getColor(binding.getRoot().getContext(), transaction.statusColor));
-        binding.status.setBackgroundResource(transaction.statusBgColor);
+        binding.status.setBackgroundResource(transaction.statusBackgroundColor);
 
         binding.dateTime.setText(transaction.timestamp);
 
-        binding.recipient.setText(transaction.recipient);
+        binding.recipient.setText(transaction.recipientId);
         binding.recipientName.setText(transaction.recipientName);
 
-        binding.sender.setText(transaction.sender);
+        binding.sender.setText(transaction.senderId);
 
         // show description if there any
         if (transaction.description != null) {

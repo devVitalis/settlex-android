@@ -6,7 +6,7 @@
     android:layout_height="match_parent"
     android:background="@color/white"
     android:fitsSystemWindows="true"
-    tools:context=".presentation.account.ProfileActivity">
+    tools:context=".presentation.dashboard.account.ProfileActivity">
 
     <LinearLayout
         android:id="@+id/header"
@@ -87,7 +87,7 @@
                 </FrameLayout>
 
                 <TextView
-                    android:id="@+id/error"
+                    android:id="@+id/tv_error"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_gravity="center"
@@ -116,7 +116,7 @@
                         android:textSize="14sp" />
 
                     <TextView
-                        android:id="@+id/payment_id"
+                        android:id="@+id/tv_payment_id"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:fontFamily="@font/inter_regular"
@@ -163,7 +163,7 @@
                         android:textSize="14sp" />
 
                     <TextView
-                        android:id="@+id/full_name"
+                        android:id="@+id/tv_full_name"
                         android:layout_width="0dp"
                         android:layout_height="wrap_content"
                         android:layout_marginStart="5dp"
@@ -195,7 +195,7 @@
                         android:textSize="14sp" />
 
                     <TextView
-                        android:id="@+id/phone_number"
+                        android:id="@+id/tv_phone_number"
                         android:layout_width="0dp"
                         android:layout_height="wrap_content"
                         android:layout_marginStart="5dp"
@@ -227,7 +227,7 @@
                         android:textSize="14sp" />
 
                     <TextView
-                        android:id="@+id/email"
+                        android:id="@+id/tv_email"
                         android:layout_width="0dp"
                         android:layout_height="wrap_content"
                         android:layout_marginStart="5dp"
@@ -254,12 +254,12 @@
                         android:layout_height="wrap_content"
                         android:fontFamily="@font/inter_regular"
                         android:includeFontPadding="false"
-                        android:text="Joined Date"
+                        android:text="Member Since"
                         android:textColor="@color/black"
                         android:textSize="14sp" />
 
                     <TextView
-                        android:id="@+id/joined_date"
+                        android:id="@+id/tv_joined_date"
                         android:layout_width="0dp"
                         android:layout_height="wrap_content"
                         android:layout_marginStart="5dp"

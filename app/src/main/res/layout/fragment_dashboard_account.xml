@@ -7,7 +7,7 @@
     android:layout_height="match_parent"
     android:background="@drawable/bg_0dp_gradient_blue_200"
     android:fitsSystemWindows="true"
-    tools:context=".presentation.account.AccountDashboardFragment">
+    tools:context=".presentation.dashboard.account.AccountDashboardFragment">
 
     <androidx.constraintlayout.widget.ConstraintLayout
         android:id="@+id/header"
@@ -47,7 +47,7 @@
                 android:orientation="horizontal">
 
                 <TextView
-                    android:id="@+id/greeting"
+                    android:id="@+id/tv_greeting"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:fontFamily="@font/poppins_regular"
@@ -58,7 +58,7 @@
             </LinearLayout>
 
             <TextView
-                android:id="@+id/full_name"
+                android:id="@+id/tv_full_name"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:fontFamily="@font/poppins_regular"
@@ -71,7 +71,7 @@
         </LinearLayout>
 
         <ImageView
-            android:id="@+id/btn_settings_header"
+            android:id="@+id/btn_settings_icon"
             android:layout_width="25dp"
             android:layout_height="25dp"
             android:contentDescription="Settings"
