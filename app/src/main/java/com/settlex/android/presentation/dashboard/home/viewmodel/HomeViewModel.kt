@@ -8,8 +8,8 @@ import com.settlex.android.data.enums.TransactionStatus
 import com.settlex.android.data.exception.AppException
 import com.settlex.android.data.remote.dto.TransactionDto
 import com.settlex.android.data.repository.TransactionRepositoryImpl
-import com.settlex.android.domain.session.UserSessionManager
-import com.settlex.android.presentation.common.mapper.toHomeUiModel
+import com.settlex.android.data.session.UserSessionManager
+import com.settlex.android.data.mapper.toHomeUiModel
 import com.settlex.android.presentation.dashboard.UserState
 import com.settlex.android.presentation.common.state.UiState
 import com.settlex.android.presentation.transactions.model.TransactionItemUiModel

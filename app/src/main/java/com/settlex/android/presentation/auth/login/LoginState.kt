@@ -5,9 +5,9 @@ package com.settlex.android.presentation.auth.login
  */
 sealed class LoginState {
 
-    object NoUser : LoginState()
+    object LoggedOut : LoginState()
 
-    data class CurrentUser(
+    data class LoggedInUser(
         val uid: String,
         val email: String,
         val displayName: String,

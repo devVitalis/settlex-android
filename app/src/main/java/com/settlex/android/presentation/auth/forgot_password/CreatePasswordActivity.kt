@@ -15,8 +15,8 @@ import androidx.lifecycle.lifecycleScope
 import androidx.lifecycle.repeatOnLifecycle
 import com.settlex.android.databinding.ActivityCreatePasswordBinding
 import com.settlex.android.presentation.auth.AuthViewModel
-import com.settlex.android.presentation.auth.common.PasswordValidator
-import com.settlex.android.presentation.auth.common.forgot_password.PasswordToggleController
+import com.settlex.android.presentation.common.util.PasswordValidator
+import com.settlex.android.presentation.common.util.PasswordToggleController
 import com.settlex.android.presentation.auth.util.PasswordFlow
 import com.settlex.android.presentation.auth.util.PasswordFlowParser
 import com.settlex.android.presentation.common.state.UiState

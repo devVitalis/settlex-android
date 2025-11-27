@@ -1,4 +1,4 @@
-package com.settlex.android.presentation.common.mapper
+package com.settlex.android.data.mapper
 
 import com.settlex.android.data.remote.dto.UserDto
 import com.settlex.android.presentation.dashboard.account.model.ProfileUiModel

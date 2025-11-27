@@ -3,12 +3,12 @@ package com.settlex.android.presentation.transactions.viewmodel
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.settlex.android.data.exception.AppException
-import com.settlex.android.domain.session.UserSessionManager
+import com.settlex.android.data.session.UserSessionManager
 import com.settlex.android.domain.usecase.transaction.TransferToFriendUseCase
 import com.settlex.android.domain.usecase.user.AuthPaymentPinUseCase
 import com.settlex.android.domain.usecase.user.GetReceipientUseCase
-import com.settlex.android.presentation.common.mapper.toRecipientUiModel
-import com.settlex.android.presentation.common.mapper.toTransferToFriendUiModel
+import com.settlex.android.data.mapper.toRecipientUiModel
+import com.settlex.android.data.mapper.toTransferToFriendUiModel
 import com.settlex.android.presentation.common.state.UiState
 import com.settlex.android.presentation.dashboard.UserState
 import com.settlex.android.presentation.transactions.model.RecipientUiModel

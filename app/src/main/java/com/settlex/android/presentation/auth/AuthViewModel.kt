@@ -2,21 +2,17 @@ package com.settlex.android.presentation.auth
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.settlex.android.R
-import com.settlex.android.SettleXApp
 import com.settlex.android.data.enums.OtpType
+import com.settlex.android.data.exception.ApiException
 import com.settlex.android.data.exception.AppException
 import com.settlex.android.domain.model.UserModel
 import com.settlex.android.domain.usecase.auth.AuthUseCases
-import com.settlex.android.presentation.auth.login.LoginState
 import com.settlex.android.presentation.common.state.UiState
 import com.settlex.android.util.network.NetworkMonitor
 import dagger.hilt.android.lifecycle.HiltViewModel
 import jakarta.inject.Inject
 import kotlinx.coroutines.flow.MutableSharedFlow
-import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asSharedFlow
-import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.launch
 
 /**
@@ -28,81 +24,12 @@ import kotlinx.coroutines.launch
  * through `SharedFlow`s representing different UI states.
  */
 @HiltViewModel
-class AuthViewModel @Inject constructor(private val authUseCases: AuthUseCases) : ViewModel() {
-
-    companion object {
-        private val ERROR_NO_INTERNET by lazy {
-            SettleXApp.appContext.getString(R.string.error_no_internet)
-        }
-    }
-
-    private val _userState = MutableStateFlow<LoginState>(LoginState.NoUser)
-    val userState = _userState.asStateFlow()
-
-    private val _loginEvent = MutableSharedFlow<UiState<Unit>>()
-    val loginEvent = _loginEvent.asSharedFlow()
+class AuthViewModel @Inject constructor(
+    private val authUseCases: AuthUseCases
+) : ViewModel() {
 
     private val _registrationEvent = MutableSharedFlow<UiState<Unit>>()
     val registrationEvent = _registrationEvent.asSharedFlow()
-
-    private val _otpEvent = MutableSharedFlow<UiState<String>>()
-    val otpEvent = _otpEvent.asSharedFlow()
-
-    private val _verifyEmailEvent = MutableSharedFlow<UiState<String>>()
-    val verifyEmailEvent = _verifyEmailEvent.asSharedFlow()
-
-    private val _verifyPasswordResetEvent = MutableSharedFlow<UiState<String>>()
-    val verifyPasswordResetEvent = _verifyPasswordResetEvent.asSharedFlow()
-
-    private val _setNewPasswordEvent = MutableSharedFlow<UiState<String>>()
-    val setNewPasswordEvent = _setNewPasswordEvent.asSharedFlow()
-
-
-    init {
-        initUserState()
-    }
-
-    private fun initUserState() {
-        viewModelScope.launch {
-            val currentUser = authUseCases.getCurrentUser()
-            if (currentUser == null) {
-                _userState.emit(LoginState.NoUser)
-                return@launch
-            }
-            _userState.emit(
-                LoginState.CurrentUser(
-                    currentUser.uid,
-                    currentUser.email ?: "",
-                    currentUser.displayName ?: "",
-                    currentUser.photoUrl?.toString()
-                )
-            )
-        }
-    }
-
-    /**
-     * Attempts to log in a user with the provided credentials.
-     */
-    fun login(email: String, password: String) {
-        viewModelScope.launch {
-            if (!isNetworkConnected()) {
-                _loginEvent.emit(
-                    UiState.Failure(
-                        AppException.NetworkException(
-                            ERROR_NO_INTERNET
-                        )
-                    )
-                )
-                return@launch
-            }
-
-            _loginEvent.emit(UiState.Loading)
-
-            authUseCases.login(email, password)
-                .onSuccess { _loginEvent.emit(UiState.Success(Unit)) }
-                .onFailure { _loginEvent.emit(UiState.Failure(it as AppException)) }
-        }
-    }
 
     fun register(user: UserModel, password: String) {
         viewModelScope.launch {
@@ -110,7 +37,7 @@ class AuthViewModel @Inject constructor(private val authUseCases: AuthUseCases) 
                 _registrationEvent.emit(
                     UiState.Failure(
                         AppException.NetworkException(
-                            ERROR_NO_INTERNET
+                            ApiException.ERROR_NO_NETWORK
                         )
                     )
                 )
@@ -125,13 +52,16 @@ class AuthViewModel @Inject constructor(private val authUseCases: AuthUseCases) 
         }
     }
 
+    private val _otpEvent = MutableSharedFlow<UiState<String>>()
+    val otpEvent = _otpEvent.asSharedFlow()
+
     fun sendVerificationCode(email: String, type: OtpType) {
         viewModelScope.launch {
             if (!isNetworkConnected()) {
                 _otpEvent.emit(
                     UiState.Failure(
                         AppException.NetworkException(
-                            ERROR_NO_INTERNET
+                            ApiException.ERROR_NO_NETWORK
                         )
                     )
                 )
@@ -146,13 +76,16 @@ class AuthViewModel @Inject constructor(private val authUseCases: AuthUseCases) 
         }
     }
 
+    private val _verifyEmailEvent = MutableSharedFlow<UiState<String>>()
+    val verifyEmailEvent = _verifyEmailEvent.asSharedFlow()
+
     fun verifyEmail(email: String, otp: String) {
         viewModelScope.launch {
             if (!isNetworkConnected()) {
                 _verifyEmailEvent.emit(
                     UiState.Failure(
                         AppException.NetworkException(
-                            ERROR_NO_INTERNET
+                            ApiException.ERROR_NO_NETWORK
                         )
                     )
                 )
@@ -167,13 +100,16 @@ class AuthViewModel @Inject constructor(private val authUseCases: AuthUseCases) 
         }
     }
 
+    private val _verifyPasswordResetEvent = MutableSharedFlow<UiState<String>>()
+    val verifyPasswordResetEvent = _verifyPasswordResetEvent.asSharedFlow()
+
     fun verifyPasswordReset(email: String, otp: String) {
         viewModelScope.launch {
             if (!isNetworkConnected()) {
                 _verifyPasswordResetEvent.emit(
                     UiState.Failure(
                         AppException.NetworkException(
-                            ERROR_NO_INTERNET
+                            ApiException.ERROR_NO_NETWORK
                         )
                     )
                 )
@@ -188,13 +124,16 @@ class AuthViewModel @Inject constructor(private val authUseCases: AuthUseCases) 
         }
     }
 
+    private val _setNewPasswordEvent = MutableSharedFlow<UiState<String>>()
+    val setNewPasswordEvent = _setNewPasswordEvent.asSharedFlow()
+
     fun setNewPassword(email: String, oldPassword: String, newPassword: String) {
         viewModelScope.launch {
             if (!isNetworkConnected()) {
                 _setNewPasswordEvent.emit(
                     UiState.Failure(
                         AppException.NetworkException(
-                            ERROR_NO_INTERNET
+                            ApiException.ERROR_NO_NETWORK
                         )
                     )
                 )

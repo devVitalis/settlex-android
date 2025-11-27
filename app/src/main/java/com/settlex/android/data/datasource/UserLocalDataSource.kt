@@ -3,12 +3,11 @@ package com.settlex.android.data.datasource
 
 import android.content.Context
 import com.settlex.android.data.local.UserPrefs
-import jakarta.inject.Inject
 import jakarta.inject.Singleton
 
 
 @Singleton
-class UserLocalDataSource @Inject constructor(
+class UserLocalDataSource(
     context: Context,
     uid: String
 ) {

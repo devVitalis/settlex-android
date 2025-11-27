@@ -10,19 +10,14 @@ import androidx.core.app.NotificationCompat;
 import com.google.firebase.messaging.FirebaseMessagingService;
 import com.google.firebase.messaging.RemoteMessage;
 import com.settlex.android.R;
-import com.settlex.android.domain.repository.AuthRepository;
 
 import java.util.Map;
 import java.util.Random;
 
 import dagger.hilt.android.AndroidEntryPoint;
-import jakarta.inject.Inject;
 
 @AndroidEntryPoint
 public class AppFirebaseMessagingService extends FirebaseMessagingService {
-
-    @Inject
-    AuthRepository authRepository;
 
     @Override
     public void onMessageReceived(@NonNull RemoteMessage message) {

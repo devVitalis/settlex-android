@@ -2,36 +2,31 @@ package com.settlex.android.presentation.auth.login
 
 import android.app.Activity
 import android.content.Intent
-import android.graphics.Rect
 import android.os.Bundle
 import android.text.Editable
-import android.text.InputType
-import android.text.SpannableString
-import android.text.Spanned
 import android.text.TextWatcher
-import android.text.style.ForegroundColorSpan
+import android.util.Patterns
 import android.view.MotionEvent
-import android.view.View
-import android.view.View.OnFocusChangeListener
-import android.view.inputmethod.EditorInfo
-import android.view.inputmethod.InputMethodManager
-import android.widget.EditText
-import android.widget.TextView
 import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
-import androidx.core.graphics.toColorInt
 import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.lifecycleScope
 import androidx.lifecycle.repeatOnLifecycle
 import com.settlex.android.R
+import com.settlex.android.data.exception.AppException
 import com.settlex.android.data.remote.profile.ProfileService
 import com.settlex.android.databinding.ActivityLoginBinding
-import com.settlex.android.presentation.auth.AuthViewModel
 import com.settlex.android.presentation.auth.forgot_password.ForgotPasswordActivity
 import com.settlex.android.presentation.auth.register.RegisterActivity
-import com.settlex.android.presentation.common.components.BiometricAuthHelper
-import com.settlex.android.presentation.common.components.BiometricAuthHelper.BiometricAuthCallback
+import com.settlex.android.presentation.common.components.BiometricAuthManager
+import com.settlex.android.presentation.common.components.BiometricAuthManager.BiometricAuthCallback
+import com.settlex.android.presentation.common.extensions.gone
+import com.settlex.android.presentation.common.extensions.show
 import com.settlex.android.presentation.common.state.UiState
+import com.settlex.android.presentation.common.util.DialogHelper
+import com.settlex.android.presentation.common.util.EditTextFocusBackgroundChanger
+import com.settlex.android.presentation.common.util.KeyboardHelper
+import com.settlex.android.presentation.common.util.PasswordToggleController
 import com.settlex.android.presentation.dashboard.DashboardActivity
 import com.settlex.android.util.string.StringFormatter
 import com.settlex.android.util.ui.ProgressLoaderController
@@ -41,113 +36,130 @@ import kotlinx.coroutines.launch
 
 @AndroidEntryPoint
 class LoginActivity : AppCompatActivity() {
-    private var isPasswordVisible = false
 
-    // Dependencies
-    private val progressLoader: ProgressLoaderController by lazy { ProgressLoaderController(this) }
     private lateinit var binding: ActivityLoginBinding
-    private val authViewModel: AuthViewModel by viewModels()
+    private val keyboardHelper: KeyboardHelper by lazy { KeyboardHelper(this) }
+    private val progressLoader: ProgressLoaderController by lazy { ProgressLoaderController(this) }
+    private val viewModel: LoginViewModel by viewModels()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         binding = ActivityLoginBinding.inflate(layoutInflater)
         setContentView(binding.root)
 
-        setupUiActions()
-        observeLoginEvent()
+        initViews()
+        initObservers()
         syncUserStateWithUI()
-        setupClickListeners()
+        initListeners()
     }
 
-    private fun setupUiActions() {
+    private fun initViews() {
         StatusBar.setColor(this, R.color.white)
-        setupAuthActionTexts()
         setupInputValidation()
-        setupEditTextFocusHandler()
-        setupPasswordInputDoneAction()
+        setupFocusBackgroundChanger()
+        keyboardHelper.attachDoneAction(editText = binding.etPassword)
+
+//        with(binding) {
+//            tvSwitchAccount.text = SpannableTextFormatter.format(
+//                "Not you?\nSwitch Account",
+//                "Switch Account"
+//            )
+//
+//            tvSignUp.text = SpannableTextFormatter.format(
+//                "Don't have an account yet?\nClick here to register",
+//                "Click here to register"
+//            )
+//        }
     }
 
-    private fun setupClickListeners() {
-        binding.btnSignUp.setOnClickListener {
-            navigateTo(
-                RegisterActivity::class.java
-            )
-        }
-        binding.btnForgotPassword.setOnClickListener {
-            navigateTo(
-                ForgotPasswordActivity::class.java
-            )
-        }
-        binding.btnBackBefore.setOnClickListener { onBackPressedDispatcher.onBackPressed() }
-        binding.btnSwitchAccount.setOnClickListener { showUnauthenticatedUi() }
-        binding.btnFingerprint.setOnClickListener { promptBiometricsAuth() }
-        binding.btnTogglePassword.setOnClickListener { togglePasswordVisibility() }
-        binding.btnSignIn.setOnClickListener { attemptLogin() }
+    private fun initObservers() {
+        observeLoginEvent()
     }
 
-    private fun syncUserStateWithUI() {
-        val userState = authViewModel.userState.value
-        when (userState) {
-            is LoginState.NoUser -> {
-                showUnauthenticatedUi()
+    private fun initListeners() {
+        with(binding) {
+            btnForgotPassword.setOnClickListener {
+                toActivity(
+                    ForgotPasswordActivity::class.java
+                )
+            }
+            btnBackBefore.setOnClickListener { onBackPressedDispatcher.onBackPressed() }
+            tvSwitchAccount.setOnClickListener { showUnauthenticatedUi() }
+            ivFingerprint.setOnClickListener { authenticateWithBiometrics() }
+
+            btnTogglePassword.setOnClickListener {
+                PasswordToggleController(
+                    binding.etPassword,
+                    binding.btnTogglePassword
+                )
             }
 
-            is LoginState.CurrentUser -> {
-                showAuthenticatedUi(
-                    userState.photoUrl,
-                    userState.displayName,
-                    userState.email
+            btnSignIn.setOnClickListener { attemptLogin() }
+            tvSignUp.setOnClickListener {
+                toActivity(
+                    RegisterActivity::class.java
                 )
             }
         }
-
-        // check user pref
-        // val isFingerPrintEnabled =
-        // Boolean.TRUE == authViewModel.getLoginBiometricsEnabled().getValue()
-        // binding.btnFingerprint.visibility = if (isFingerPrintEnabled) View.VISIBLE else View.GONE
-        // if (isFingerPrintEnabled) promptBiometricsAuth()
     }
 
-    private fun showAuthenticatedUi(photoUrl: String?, displayName: String, email: String) {
-        val formattedDisplayName = "Hi, ${displayName.uppercase()}"
-        val formattedEmail = "( $email )"
+    private fun syncUserStateWithUI() {
+        val state = viewModel.userState.value
+        when (state) {
+            is LoginState.LoggedOut -> showUnauthenticatedUi()
+            is LoginState.LoggedInUser -> {
+                showAuthenticatedUi(state)
 
-        ProfileService.loadProfilePic(photoUrl, binding.userProfile)
-        binding.tvUserDisplayName.text = formattedDisplayName
-        binding.tvUserEmail.text = StringFormatter.maskEmail(email)
-        binding.etEmail.setText(formattedEmail)
+                with(binding) {
+                    // Enable/disable fingerprint auth
+                    val isFingerPrintEnabled = viewModel.isLoginBiometricsEnabled.value
+                    if (isFingerPrintEnabled) ivFingerprint.show() else ivFingerprint.gone()
+                    if (isFingerPrintEnabled) authenticateWithBiometrics()
+                }
+            }
+        }
+    }
 
-        // Show
-        binding.showCurrentUserLayout.visibility = View.VISIBLE
-        binding.btnSwitchAccount.visibility = View.VISIBLE
+    private fun showAuthenticatedUi(user: LoginState.LoggedInUser) {
+        with(binding) {
+            val formattedDisplayName = "Hi, ${user.displayName.uppercase()}"
+            val formattedEmail = "(${StringFormatter.maskEmail(user.email)})"
 
-        // Hide
-        binding.logo.visibility = View.GONE
-        binding.tilEmail.visibility = View.GONE
-        binding.btnSignUp.visibility = View.GONE
+            ProfileService.loadProfilePic(user.photoUrl, ivUserProfilePhoto)
+            tvUserDisplayName.text = formattedDisplayName
+            tvUserEmail.text = formattedEmail
+            etEmail.setText(user.email)
+
+            viewAuthenticatedUi.show()
+            tvSwitchAccount.show()
+
+            ivLogo.gone()
+            tilEmail.gone()
+            tvSignUp.gone()
+        }
     }
 
     private fun showUnauthenticatedUi() {
-        // Hide
-        binding.showCurrentUserLayout.visibility = View.GONE
-        binding.btnFingerprint.visibility = View.GONE
-        binding.btnSwitchAccount.visibility = View.GONE
+        with(binding) {
+            viewAuthenticatedUi.gone()
+            ivFingerprint.gone()
+            tvSwitchAccount.gone()
 
-        // Show
-        binding.tilEmail.visibility = View.VISIBLE
-        binding.btnSignUp.visibility = View.VISIBLE
-        binding.logo.visibility = View.VISIBLE
+            tilEmail.show()
+            tvSignUp.show()
+            ivLogo.show()
+        }
     }
 
     // Observers
     private fun observeLoginEvent() {
         lifecycleScope.launch {
             repeatOnLifecycle(Lifecycle.State.STARTED) {
-                authViewModel.loginEvent.collect {
+                viewModel.loginEvent.collect {
                     when (it) {
                         is UiState.Loading -> progressLoader.show()
                         is UiState.Success -> onLoginSuccess()
-                        is UiState.Failure -> onLoginFailure(it.exception.message)
+                        is UiState.Failure -> onLoginFailure(it.exception)
                     }
                 }
             }
@@ -155,122 +167,90 @@ class LoginActivity : AppCompatActivity() {
     }
 
     private fun onLoginSuccess() {
-        startActivity(Intent(this, DashboardActivity::class.java))
+        startActivity(
+            Intent(
+                this,
+                DashboardActivity::class.java
+            )
+        )
         finishAffinity()
 
         progressLoader.hide()
     }
 
-    private fun onLoginFailure(error: String?) {
-        binding.tvError.text = error
-        binding.tvError.visibility = View.VISIBLE
+    private fun onLoginFailure(error: AppException) {
+        when (error) {
+            is AppException.NetworkException -> showNetworkErrorDialog(error)
+            else -> {
+                binding.tvLoginError.text = error.message
+                binding.tvLoginError.show()
+            }
+        }
 
         progressLoader.hide()
     }
 
-    private fun attemptLogin() {
-        val email = binding.etEmail.text.toString().trim()
-        val password = binding.etPassword.text.toString().trim()
+    private fun showNetworkErrorDialog(error: AppException) {
+        DialogHelper.showAlertDialogMessage(
+            this
+        ) { dialog, binding ->
 
-        authViewModel.login(email, password)
+            with(binding) {
+                tvMessage.text = error.message
+                "Okay".also { btnPrimary.text = it }
+
+                btnPrimary.setOnClickListener { dialog.dismiss() }
+                btnSecondary.gone()
+            }
+        }
     }
 
-    private fun promptBiometricsAuth() {
-        if (BiometricAuthHelper.isBiometricAvailable(this)) {
-            val biometric = BiometricAuthHelper(
-                this,
-                this,
-                object : BiometricAuthCallback {
+    private fun attemptLogin() = with(binding) {
+        val email = etEmail.text.toString().trim()
+        val password = etPassword.text.toString().trim()
+
+        viewModel.login(email, password)
+    }
+
+    private fun authenticateWithBiometrics() {
+        if (BiometricAuthManager.isBiometricAvailable(this)) {
+            val biometric = BiometricAuthManager(
+                this, this, object : BiometricAuthCallback {
                     override fun onAuthenticated() {
-                        navigateTo(DashboardActivity::class.java)
+                        toActivity(DashboardActivity::class.java)
                     }
 
-                    override fun onError(message: String?) {
-                    }
-
-                    override fun onFailed() {
-                    }
+                    override fun onError(message: String?) {}
+                    override fun onFailed() {}
                 })
             biometric.authenticate("Confirm your identity", "Use Password")
         }
     }
 
-    private fun togglePasswordVisibility() {
-        val currentTypeface = binding.etPassword.typeface
-        isPasswordVisible = !isPasswordVisible
-
-        val inputType = if (isPasswordVisible) {
-            InputType.TYPE_TEXT_VARIATION_VISIBLE_PASSWORD
-        } else {
-            InputType.TYPE_TEXT_VARIATION_PASSWORD
-        }
-
-        binding.etPassword.inputType = InputType.TYPE_CLASS_TEXT or inputType
-        binding.btnTogglePassword.setImageResource(if (isPasswordVisible) R.drawable.ic_visibility_on_filled else R.drawable.ic_visibility_off_filled)
-
-        binding.etPassword.setTypeface(currentTypeface)
-        binding.etPassword.setSelection(binding.etPassword.getText()!!.length)
-    }
-
-    private fun setupAuthActionTexts() {
-        val fullText = "Don't have an account yet?\nClick here to register"
-        val textToHighlight = "Click here to register"
-
-        val startIndex = fullText.indexOf(textToHighlight)
-        val endIndex = fullText.length
-
-        val signUpText = SpannableString(fullText)
-        signUpText.setSpan(
-            ForegroundColorSpan("#0044CC".toColorInt()),
-            startIndex,
-            endIndex,
-            Spanned.SPAN_EXCLUSIVE_EXCLUSIVE
-        )
-        binding.btnSignUp.text = signUpText
-
-        setupSwitchAccount()
-    }
-
-    private fun setupSwitchAccount() {
-        val fullText = "Not you?\nSwitch Account"
-        val textToHighlight = "Switch Account"
-
-        val startIndex = fullText.indexOf(textToHighlight)
-        val endIndex = startIndex + textToHighlight.length
-
-        val switchText = SpannableString(fullText)
-        switchText.setSpan(
-            ForegroundColorSpan("#0044CC".toColorInt()),
-            startIndex,
-            endIndex,
-            Spanned.SPAN_EXCLUSIVE_EXCLUSIVE
-        )
-
-        binding.btnSwitchAccount.text = switchText
-    }
-
-    private fun navigateTo(activityClass: Class<out Activity>) {
+    private fun toActivity(activityClass: Class<out Activity>) {
         startActivity(Intent(this, activityClass))
     }
 
-    private fun setupEditTextFocusHandler() {
-        val focusBgRes = R.drawable.bg_edit_txt_custom_white_focused
-        val defaultBgRes = R.drawable.bg_edit_txt_custom_gray_not_focused
-
-        binding.etPassword.onFocusChangeListener =
-            OnFocusChangeListener { _, hasFocus: Boolean ->
-                binding.etPasswordBg.setBackgroundResource(if (hasFocus) focusBgRes else defaultBgRes)
-            }
+    private fun setupFocusBackgroundChanger() {
+        with(binding) {
+            EditTextFocusBackgroundChanger(
+                defaultBackgroundResource = R.drawable.bg_edit_txt_custom_gray_not_focused,
+                focusedBackgroundResource = R.drawable.bg_edit_txt_custom_white_focused,
+                editText = etPassword,
+                backgroundView = etPasswordBackground
+            )
+        }
     }
 
-    private fun updateSignInButtonState() {
-        val email = binding.etEmail.text.toString().trim()
-        val password = binding.etPassword.text.toString().trim()
+    private fun updateSignInButtonState() = with(binding) {
+        val email = etEmail.text.toString().trim()
+        val password = etPassword.text.toString().trim()
+        val isEmailValid = Patterns.EMAIL_ADDRESS.matcher(email).matches()
 
-        binding.btnSignIn.isEnabled = email.isNotEmpty() && password.isNotEmpty()
+        btnSignIn.isEnabled = isEmailValid && password.isNotEmpty()
     }
 
-    private fun setupInputValidation() {
+    private fun setupInputValidation() = with(binding) {
         val validationWatcher: TextWatcher = object : TextWatcher {
             override fun beforeTextChanged(
                 s: CharSequence?,
@@ -284,46 +264,20 @@ class LoginActivity : AppCompatActivity() {
             }
 
             override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int) {
-                val password = binding.etPassword.getText().toString().trim()
-                binding.btnTogglePassword.visibility =
-                    if (password.isNotEmpty()) View.VISIBLE else View.GONE
-                binding.tvError.visibility = View.GONE
+                val password = etPassword.text.toString().trim()
+                if (password.isNotEmpty()) btnTogglePassword.show() else btnTogglePassword.gone()
+
+                tvLoginError.gone()
                 updateSignInButtonState()
             }
         }
 
-        binding.etEmail.addTextChangedListener(validationWatcher)
-        binding.etPassword.addTextChangedListener(validationWatcher)
-    }
-
-    private fun setupPasswordInputDoneAction() {
-        binding.etPassword.setOnEditorActionListener { v: TextView?, actionId: Int, _ ->
-            if (actionId == EditorInfo.IME_ACTION_DONE) {
-                hideKeyboard(v!!)
-                v.clearFocus()
-                return@setOnEditorActionListener true
-            }
-            false
-        }
+        etEmail.addTextChangedListener(validationWatcher)
+        etPassword.addTextChangedListener(validationWatcher)
     }
 
     override fun dispatchTouchEvent(event: MotionEvent): Boolean {
-        if (event.action == MotionEvent.ACTION_DOWN) {
-            val v = currentFocus
-            if (v is EditText) {
-                val outRect = Rect()
-                v.getGlobalVisibleRect(outRect)
-                if (!outRect.contains(event.rawX.toInt(), event.rawY.toInt())) {
-                    v.clearFocus()
-                    hideKeyboard(v)
-                }
-            }
-        }
+        if (keyboardHelper.handleOutsideTouch(event)) return true
         return super.dispatchTouchEvent(event)
-    }
-
-    private fun hideKeyboard(view: View) {
-        val imm = getSystemService(INPUT_METHOD_SERVICE) as InputMethodManager?
-        imm!!.hideSoftInputFromWindow(view.windowToken, 0)
     }
 }

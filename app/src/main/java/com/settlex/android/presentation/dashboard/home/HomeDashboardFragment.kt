@@ -23,10 +23,9 @@ import com.settlex.android.R
 import com.settlex.android.data.enums.TransactionServiceType
 import com.settlex.android.data.remote.profile.ProfileService
 import com.settlex.android.databinding.FragmentDashboardHomeBinding
-import com.settlex.android.presentation.settings.CreatePaymentIdActivity
-import com.settlex.android.presentation.dashboard.account.ProfileActivity
 import com.settlex.android.presentation.auth.login.LoginActivity
 import com.settlex.android.presentation.common.state.UiState
+import com.settlex.android.presentation.dashboard.account.ProfileActivity
 import com.settlex.android.presentation.dashboard.home.model.HomeUiModel
 import com.settlex.android.presentation.dashboard.home.model.PromoBannerUiModel
 import com.settlex.android.presentation.dashboard.home.viewmodel.HomeViewModel
@@ -35,16 +34,17 @@ import com.settlex.android.presentation.dashboard.services.AirtimePurchaseActivi
 import com.settlex.android.presentation.dashboard.services.BettingTopUpActivity
 import com.settlex.android.presentation.dashboard.services.CableTvSubscriptionActivity
 import com.settlex.android.presentation.dashboard.services.DataPurchaseActivity
+import com.settlex.android.presentation.dashboard.services.adapter.ServicesAdapter
+import com.settlex.android.presentation.dashboard.services.adapter.ServicesAdapter.onItemClickedListener
 import com.settlex.android.presentation.dashboard.services.model.ServiceDestination
 import com.settlex.android.presentation.dashboard.services.model.ServiceUiModel
+import com.settlex.android.presentation.settings.CreatePaymentIdActivity
 import com.settlex.android.presentation.transactions.TransactionActivity
+import com.settlex.android.presentation.transactions.TransferToFriendActivity
+import com.settlex.android.presentation.transactions.adapter.TransactionListAdapter
 import com.settlex.android.presentation.transactions.model.TransactionItemUiModel
 import com.settlex.android.presentation.wallet.CommissionWithdrawalActivity
 import com.settlex.android.presentation.wallet.ReceiveActivity
-import com.settlex.android.presentation.transactions.TransferToFriendActivity
-import com.settlex.android.presentation.dashboard.services.adapter.ServicesAdapter
-import com.settlex.android.presentation.dashboard.services.adapter.ServicesAdapter.onItemClickedListener
-import com.settlex.android.presentation.transactions.adapter.TransactionListAdapter
 import com.settlex.android.util.string.StringFormatter
 import com.settlex.android.util.ui.StatusBar
 import dagger.hilt.android.AndroidEntryPoint
@@ -157,7 +157,7 @@ class HomeDashboardFragment : Fragment() {
                 viewModel.userState.collect {
                     when (it) {
                         is UiState.Loading -> showUserLoadingState()
-                        is UiState.Success -> onUserDataReceived(it.data.user as HomeUiModel)
+                        is UiState.Success -> onUserDataReceived(it.data.user)
                         is UiState.Failure -> handleUserErrorState()
                     }
                 }
@@ -181,8 +181,8 @@ class HomeDashboardFragment : Fragment() {
         binding!!.userCommissionBalanceShimmer.visibility = View.VISIBLE
     }
 
-    private fun onUserDataReceived(homeUiModel: HomeUiModel) {
-        val user = homeUiModel
+    private fun onUserDataReceived(user: HomeUiModel?) {
+        if (user == null) return
 
         if (user.paymentId == null) {
             navigateToActivity(CreatePaymentIdActivity::class.java)
@@ -264,8 +264,8 @@ class HomeDashboardFragment : Fragment() {
     }
 
 
-    private fun showTransactions(transactions: List<TransactionItemUiModel>) {
-        if (transactions.isEmpty()) {
+    private fun showTransactions(transactions: List<TransactionItemUiModel>?) {
+        if (transactions?.isEmpty() == true) {
             // zero transaction history
             binding!!.txnShimmerEffect.stopShimmer()
             binding!!.txnShimmerEffect.visibility = View.GONE
@@ -289,7 +289,7 @@ class HomeDashboardFragment : Fragment() {
         binding!!.txnRecyclerView.visibility = View.VISIBLE
     }
 
-    private fun onTransactionsError(){
+    private fun onTransactionsError() {
         binding!!.emptyTransactionsState.visibility = View.VISIBLE
     }
 
@@ -308,7 +308,10 @@ class HomeDashboardFragment : Fragment() {
                     when (banner) {
                         is UiState.Loading -> onPromoBannerLoading()
                         is UiState.Success -> onPromoBannersSuccess(banner.data)
-                        is UiState.Failure -> {}
+                        is UiState.Failure -> {
+                            binding!!.promoProgressBar.visibility = View.VISIBLE
+                            binding!!.promoProgressBar.show()
+                        }
                     }
                 }
             }
@@ -320,11 +323,11 @@ class HomeDashboardFragment : Fragment() {
         binding!!.promoProgressBar.show()
     }
 
-    private fun onPromoBannersSuccess(banner: MutableList<PromoBannerUiModel>) {
+    private fun onPromoBannersSuccess(banner: MutableList<PromoBannerUiModel>?) {
         binding!!.promoProgressBar.hide()
         binding!!.promoProgressBar.visibility = View.GONE
 
-        if (banner.isEmpty()) {
+        if (banner?.isEmpty() ?: return) {
             binding!!.promoBannerContainer.visibility = View.GONE
             return
         }

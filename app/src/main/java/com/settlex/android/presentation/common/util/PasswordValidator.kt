@@ -1,4 +1,4 @@
-package com.settlex.android.presentation.auth.common
+package com.settlex.android.presentation.common.util
 
 /**
  * An object that provides utility functions to validate password strings based on a set of rules.
@@ -8,12 +8,13 @@ package com.settlex.android.presentation.auth.common
  * matches its confirmation string.
  */
 object PasswordValidator {
+    private const val ALLOWED_SPECIAL_CHARS = "!@#$%^&*()_+-=[]{};:,.?"
 
     fun validate(password: String, confirm: String): Boolean {
         val hasLength = password.length >= 8
         val hasUpper = password.any { it.isUpperCase() }
         val hasLower = password.any { it.isLowerCase() }
-        val hasSpecial = password.any { "!@#$%^&*()_+-=[]{};:,.?".contains(it) }
+        val hasSpecial = password.any { ALLOWED_SPECIAL_CHARS.contains(it) }
         val matches = password == confirm
 
         return hasLength && hasUpper && hasLower && hasSpecial && matches
@@ -23,7 +24,7 @@ object PasswordValidator {
         val hasLength = password.length >= 8
         val hasUpper = password.any { it.isUpperCase() }
         val hasLower = password.any { it.isLowerCase() }
-        val hasSpecial = password.any { "!@#$%^&*()_+-=[]{};:,.?".contains(it) }
+        val hasSpecial = password.any { ALLOWED_SPECIAL_CHARS.contains(it) }
 
         return hasLength && hasUpper && hasLower && hasSpecial
     }

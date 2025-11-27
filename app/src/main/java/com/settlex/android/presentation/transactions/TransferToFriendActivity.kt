@@ -22,6 +22,8 @@ import com.settlex.android.data.enums.TransactionStatus
 import com.settlex.android.data.remote.profile.ProfileService.loadProfilePic
 import com.settlex.android.databinding.ActivityTransferToFriendBinding
 import com.settlex.android.domain.TransactionIdGenerator
+import com.settlex.android.presentation.common.extensions.gone
+import com.settlex.android.presentation.common.extensions.show
 import com.settlex.android.presentation.common.state.UiState
 import com.settlex.android.presentation.common.util.DialogHelper
 import com.settlex.android.presentation.settings.CreatePaymentPinActivity
@@ -194,7 +196,7 @@ class TransferToFriendActivity : AppCompatActivity() {
 
             // clear search results
             recipientAdapter.submitList(emptyList())
-            binding.recipientRecyclerView.hide()
+            binding.recipientRecyclerView.gone()
 
             // show selected recipient
             recipientPhotoUrl = recipient.photoUrl
@@ -210,11 +212,11 @@ class TransferToFriendActivity : AppCompatActivity() {
     private fun showRecipientLoading() = with(binding) {
         // reset adapter and hide list
         recipientAdapter.submitList(emptyList())
-        recipientRecyclerView.hide()
+        recipientRecyclerView.gone()
 
         // hide selected recipient and errors
-        selectedRecipient.hide()
-        txtError.hide()
+        selectedRecipient.gone()
+        txtError.gone()
         updateNextButtonState()
 
         shimmerEffect.show()
@@ -223,25 +225,25 @@ class TransferToFriendActivity : AppCompatActivity() {
 
     private fun displayRecipientData(recipientList: List<RecipientUiModel>) = with(binding) {
         shimmerEffect.stopShimmer()
-        shimmerEffect.hide()
+        shimmerEffect.gone()
 
         if (recipientList.isEmpty()) {
             recipientAdapter.submitList(emptyList())
             val paymentId = StringFormatter.addAtToPaymentId(recipientPaymentId)
             txtError.text = "No user found with Payment ID $paymentId"
             txtError.show()
-            recipientRecyclerView.hide()
+            recipientRecyclerView.gone()
             return
         }
 
-        txtError.hide()
+        txtError.gone()
         recipientAdapter.submitList(recipientList.toMutableList())
         recipientRecyclerView.show()
     }
 
     private fun handleRecipientFailure() = with(binding) {
         shimmerEffect.stopShimmer()
-        shimmerEffect.hide()
+        shimmerEffect.gone()
         // Optionally show a message or retry UI here
     }
 
@@ -274,7 +276,7 @@ class TransferToFriendActivity : AppCompatActivity() {
         DialogHelper.showAlertDialogMessage(
             this
         ) { dialog, dialogBinding ->
-            dialogBinding.message.text = message
+            dialogBinding.tvMessage.text = message
             dialogBinding.btnPrimary.text = priButton
             dialogBinding.btnSecondary.text = secButton
 
@@ -382,8 +384,8 @@ class TransferToFriendActivity : AppCompatActivity() {
                 null
             }
 
-            txtError.hide()
-            selectedRecipient.hide()
+            txtError.gone()
+            selectedRecipient.gone()
             btnVerify.isVisible = raw.length >= 5
             updateNextButtonState()
         }
@@ -496,14 +498,6 @@ class TransferToFriendActivity : AppCompatActivity() {
         imm?.hideSoftInputFromWindow(view.windowToken, 0)
     }
 
-
-    private fun View.show() {
-        this.visibility = View.VISIBLE
-    }
-
-    private fun View.hide() {
-        this.visibility = View.GONE
-    }
 
     private fun EditText.toBigDecimalSafe(): BigDecimal {
         val s = this.text.toString().trim().replace(",", "")

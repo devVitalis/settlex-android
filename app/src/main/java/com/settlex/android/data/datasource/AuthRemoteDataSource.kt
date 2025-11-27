@@ -24,8 +24,9 @@ class AuthRemoteDataSource @Inject constructor(
     private val functions: FirebaseFunctions,
     private val firebaseMessaging: FirebaseMessaging,
     private val firestore: FirebaseFirestore,
-    private val gson: Gson
 ) {
+    private lateinit var gson: Gson
+
 
     companion object {
         private val TAG = AuthRemoteDataSource::class.java.simpleName

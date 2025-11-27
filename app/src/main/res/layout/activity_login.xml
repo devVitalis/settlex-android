@@ -47,7 +47,7 @@
             android:paddingVertical="50dp">
 
             <ImageView
-                android:id="@+id/logo"
+                android:id="@+id/iv_logo"
                 android:layout_width="70dp"
                 android:layout_height="70dp"
                 android:layout_gravity="center"
@@ -55,7 +55,7 @@
                 android:src="@mipmap/ic_launcher" />
 
             <LinearLayout
-                android:id="@+id/show_current_user_layout"
+                android:id="@+id/view_authenticated_ui"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginVertical="20dp"
@@ -64,7 +64,7 @@
                 android:visibility="gone">
 
                 <com.google.android.material.imageview.ShapeableImageView
-                    android:id="@+id/user_profile"
+                    android:id="@+id/iv_user_profile_photo"
                     android:layout_width="65dp"
                     android:layout_height="65dp"
                     android:contentDescription="@null"
@@ -119,7 +119,7 @@
             </com.google.android.material.textfield.TextInputLayout>
 
             <FrameLayout
-                android:id="@+id/et_password_bg"
+                android:id="@+id/et_password_background"
                 android:layout_width="match_parent"
                 android:layout_height="55dp"
                 android:layout_marginTop="10dp"
@@ -142,18 +142,19 @@
 
                 <ImageView
                     android:id="@+id/btn_toggle_password"
-                    android:layout_width="20dp"
-                    android:layout_height="20dp"
+                    android:layout_width="25dp"
+                    android:layout_height="25dp"
                     android:layout_gravity="end|center_vertical"
-                    android:layout_marginEnd="15dp"
+                    android:layout_marginEnd="12dp"
                     android:contentDescription="@null"
+                    android:background="?attr/selectableItemBackgroundBorderless"
                     android:src="@drawable/ic_visibility_off_filled"
                     android:visibility="gone"
-                    app:tint="@color/black" />
+                    app:tint="@color/gray" />
             </FrameLayout>
 
             <TextView
-                android:id="@+id/tv_error"
+                android:id="@+id/tv_login_error"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="5dp"
@@ -195,7 +196,7 @@
                     android:textSize="14sp" />
 
                 <ImageView
-                    android:id="@+id/btn_fingerprint"
+                    android:id="@+id/iv_fingerprint"
                     android:layout_width="55dp"
                     android:layout_height="55dp"
                     android:layout_marginStart="10dp"
@@ -220,7 +221,7 @@
                 android:padding="8dp">
 
                 <TextView
-                    android:id="@+id/btn_sign_up"
+                    android:id="@+id/tv_sign_up"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:fontFamily="@font/inter_regular"
@@ -231,7 +232,7 @@
                     android:textSize="14sp" />
 
                 <TextView
-                    android:id="@+id/btn_switch_account"
+                    android:id="@+id/tv_switch_account"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:fontFamily="@font/inter_regular"

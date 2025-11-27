@@ -85,7 +85,7 @@ class ProfileActivity : AppCompatActivity() {
             repeatOnLifecycle(Lifecycle.State.STARTED) {
                 viewModel.userState.collect {
                     when (it) {
-                        is UiState.Success -> onUserDataStatusSuccess(it.data.user as ProfileUiModel)
+                        is UiState.Success -> onUserDataStatusSuccess(it.data?.user as ProfileUiModel)
                         else -> Unit
                     }
                 }
@@ -95,8 +95,7 @@ class ProfileActivity : AppCompatActivity() {
 
     private fun onUserDataStatusSuccess(user: ProfileUiModel) {
         ProfileService.loadProfilePic(user.photoUrl, binding.profilePic)
-        binding.tvPaymentId.text =
-            StringFormatter.addAtToPaymentId(user.paymentId) ?: "Setup Payment ID"
+        binding.tvPaymentId.text = StringFormatter.addAtToPaymentId(user.paymentId) ?: "Setup Payment ID"
         binding.tvFullName.text = user.fullName.uppercase(Locale.getDefault())
         binding.tvEmail.text = StringFormatter.maskEmail(user.email)
         binding.tvPhoneNumber.text = StringFormatter.maskPhone(user.phone)

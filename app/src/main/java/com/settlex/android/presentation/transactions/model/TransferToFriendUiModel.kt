@@ -6,7 +6,7 @@ data class TransferToFriendUiModel (
     val uid: String,
     val firstName: String,
     val lastName: String,
-    val createdAt: Timestamp,
+    val createdAt: Timestamp?,
     val paymentId: String?,
     val hasPin: Boolean,
     val balance: Long,

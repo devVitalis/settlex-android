@@ -5,10 +5,10 @@ import android.net.Uri
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.settlex.android.data.exception.AppException
-import com.settlex.android.domain.session.UserSessionManager
+import com.settlex.android.data.session.UserSessionManager
 import com.settlex.android.domain.usecase.user.SetPaymentPinUseCase
 import com.settlex.android.domain.usecase.user.SetProfilePictureUseCase
-import com.settlex.android.presentation.common.mapper.toProfileUiModel
+import com.settlex.android.data.mapper.toProfileUiModel
 import com.settlex.android.presentation.common.state.UiState
 import com.settlex.android.presentation.dashboard.UserState
 import dagger.hilt.android.lifecycle.HiltViewModel

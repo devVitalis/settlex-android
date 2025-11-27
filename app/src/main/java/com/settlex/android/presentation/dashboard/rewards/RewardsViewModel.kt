@@ -2,9 +2,9 @@ package com.settlex.android.presentation.dashboard.rewards
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.settlex.android.domain.session.UserSessionManager
+import com.settlex.android.data.session.UserSessionManager
 import com.settlex.android.presentation.dashboard.UserState
-import com.settlex.android.presentation.common.mapper.toRewardsUiModel
+import com.settlex.android.data.mapper.toRewardsUiModel
 import com.settlex.android.presentation.common.state.UiState
 import jakarta.inject.Inject
 import kotlinx.coroutines.flow.SharingStarted

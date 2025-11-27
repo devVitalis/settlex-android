@@ -1,10 +1,12 @@
-package com.settlex.android.domain.session
+package com.settlex.android.data.session
 
 import android.util.Log
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.auth.FirebaseUser
 import com.google.firebase.firestore.FirebaseFirestore
 import com.google.firebase.firestore.ListenerRegistration
+import com.settlex.android.SettleXApp
+import com.settlex.android.data.datasource.UserLocalDataSource
 import com.settlex.android.data.remote.dto.UserDto
 import jakarta.inject.Inject
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -14,8 +16,13 @@ import javax.inject.Singleton
 @Singleton
 class UserSessionManager @Inject constructor(
     private val auth: FirebaseAuth,
-    private val firestore: FirebaseFirestore
+    private val firestore: FirebaseFirestore,
 ) {
+
+    private var _userLocalDataSource: UserLocalDataSource? = null
+    val userLocalDataSource: UserLocalDataSource
+        get() = _userLocalDataSource
+            ?: throw IllegalStateException("UserLocalDataSource requested before login")
 
     companion object {
         private const val TAG = "UserSessionManager"
@@ -45,9 +52,16 @@ class UserSessionManager @Inject constructor(
 
             if (user != null) {
                 attachUserListener(user.uid)
+
+                _userLocalDataSource = UserLocalDataSource(
+                    SettleXApp.appContext,
+                    user.uid
+                )
+
             } else {
                 detachUserListener()
                 _userState.value = null
+                _userLocalDataSource = null
             }
         }
 

@@ -29,7 +29,7 @@ public class TransactionListAdapter extends ListAdapter<TransactionItemUiModel, 
     private static final DiffUtil.ItemCallback<TransactionItemUiModel> DIFF_CALLBACK = new DiffUtil.ItemCallback<>() {
         @Override
         public boolean areItemsTheSame(@NonNull TransactionItemUiModel oldItem, @NonNull TransactionItemUiModel newItem) {
-            return oldItem.transactionId.equals(newItem.transactionId);
+            return oldItem.getTransactionId().equals(newItem.getTransactionId());
         }
 
         @Override
@@ -63,21 +63,21 @@ public class TransactionListAdapter extends ListAdapter<TransactionItemUiModel, 
         }
 
         public void Bind(TransactionItemUiModel transaction, OnTransactionClickListener listener) {
-            binding.icon.setImageResource(transaction.serviceTypeIcon);
-            binding.name.setText(transaction.serviceTypeName);
+            binding.icon.setImageResource(transaction.getServiceTypeIcon());
+            binding.name.setText(transaction.getServiceTypeName());
 
-            binding.operation.setText(transaction.operationSymbol);
-            binding.operation.setTextColor(ContextCompat.getColor(binding.getRoot().getContext(), transaction.operationColor));
+            binding.operation.setText(transaction.getOperationSymbol());
+            binding.operation.setTextColor(ContextCompat.getColor(binding.getRoot().getContext(), transaction.getOperationColor()));
 
-            binding.amount.setText(transaction.amount);
-            binding.amount.setTextColor(ContextCompat.getColor(binding.getRoot().getContext(), transaction.operationColor));
+            binding.amount.setText(transaction.getAmount());
+            binding.amount.setTextColor(ContextCompat.getColor(binding.getRoot().getContext(), transaction.getOperationColor()));
 
-            binding.dateTime.setText(transaction.timestamp);
-            binding.recipientOrSender.setText(transaction.recipientOrSenderName);
+            binding.dateTime.setText(transaction.getTimestamp());
+            binding.recipientOrSender.setText(transaction.getRecipientOrSenderName());
 
-            binding.status.setText(transaction.status);
-            binding.status.setTextColor(ContextCompat.getColor(binding.getRoot().getContext(), transaction.statusColor));
-            binding.status.setBackgroundResource(transaction.statusBackgroundColor);
+            binding.status.setText(transaction.getStatus());
+            binding.status.setTextColor(ContextCompat.getColor(binding.getRoot().getContext(), transaction.getStatusColor()));
+            binding.status.setBackgroundResource(transaction.getStatusBackgroundColor());
 
             binding.getRoot().setOnClickListener(v -> {
                 if (listener != null) {

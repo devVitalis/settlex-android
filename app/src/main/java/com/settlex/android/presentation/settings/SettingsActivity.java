@@ -1,13 +1,7 @@
 package com.settlex.android.presentation.settings;
 
 import android.content.Intent;
-import android.graphics.Typeface;
 import android.os.Bundle;
-import android.text.SpannableString;
-import android.text.Spanned;
-import android.text.style.StyleSpan;
-import android.view.View;
-import android.widget.Toast;
 
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.lifecycle.ViewModelProvider;
@@ -16,13 +10,7 @@ import com.settlex.android.R;
 import com.settlex.android.databinding.ActivitySettingsBinding;
 import com.settlex.android.presentation.auth.forgot_password.CreatePasswordActivity;
 import com.settlex.android.presentation.auth.AuthViewModel;
-import com.settlex.android.presentation.common.components.BiometricAuthHelper;
-import com.settlex.android.presentation.auth.forgot_password.OtpVerificationActivity;
-import com.settlex.android.presentation.dashboard.account.model.ProfileUiModel;
 import com.settlex.android.presentation.dashboard.account.viewmodel.ProfileViewModel;
-import com.settlex.android.presentation.common.state.UiState;
-import com.settlex.android.util.network.NetworkMonitor;
-import com.settlex.android.util.string.StringFormatter;
 import com.settlex.android.util.ui.StatusBar;
 
 import dagger.hilt.android.AndroidEntryPoint;
@@ -117,25 +105,25 @@ public class SettingsActivity extends AppCompatActivity {
     }
 
     private void shouldEnableBiometricOption(boolean hasPin) {
-        boolean isBiometricAvailable = BiometricAuthHelper.isBiometricAvailable(this);
+        boolean isBiometricAvailable = BiometricAuthManager.isBiometricAvailable(this);
 
         // Payment biometrics
         binding.btnSwitchPayWithBiometrics.setEnabled(isBiometricAvailable && hasPin);
-        binding.payWithBiometricsError.setText(BiometricAuthHelper.getBiometricFeedback(this));
+        binding.payWithBiometricsError.setText(BiometricAuthManager.getBiometricFeedback(this));
         binding.payWithBiometricsError.setVisibility(!isBiometricAvailable ? View.VISIBLE : View.GONE);
 
         // Login biometrics
         binding.btnSwitchLoginWithBiometrics.setEnabled(isBiometricAvailable);
-        binding.loginWithBiometricsError.setText(BiometricAuthHelper.getBiometricFeedback(this));
+        binding.loginWithBiometricsError.setText(BiometricAuthManager.getBiometricFeedback(this));
         binding.loginWithBiometricsError.setVisibility(!isBiometricAvailable ? View.VISIBLE : View.GONE);
     }
 
     private void promptPayBiometricsAuth(boolean isChecked) {
         if (isChecked) {
-            BiometricAuthHelper biometric = new BiometricAuthHelper(
+            BiometricAuthManager biometric = new BiometricAuthManager(
                     this,
                     this,
-                    new BiometricAuthHelper.BiometricAuthCallback() {
+                    new BiometricAuthManager.BiometricAuthCallback() {
                         @Override
                         public void onAuthenticated() {
                             profileViewModel.setPayBiometricsEnabledLiveData(true);
@@ -160,10 +148,10 @@ public class SettingsActivity extends AppCompatActivity {
 
     private void promptLoginBiometricsAuth(boolean isChecked) {
         if (isChecked) {
-            BiometricAuthHelper biometric = new BiometricAuthHelper(
+            BiometricAuthManager biometric = new BiometricAuthManager(
                     this,
                     this,
-                    new BiometricAuthHelper.BiometricAuthCallback() {
+                    new BiometricAuthManager.BiometricAuthCallback() {
                         @Override
                         public void onAuthenticated() {
                             profileViewModel.setLoginBiometricsEnabledLiveData(true);

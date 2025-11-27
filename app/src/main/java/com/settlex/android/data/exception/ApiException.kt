@@ -14,7 +14,7 @@ class ApiException @Inject constructor() {
 
     companion object {
         private const val TAG = "FirebaseExceptionMapper"
-        private const val ERROR_NO_NETWORK = "Connection lost. Please check your Wi-Fi or cellular data and try again."
+        const val ERROR_NO_NETWORK = "Connection lost. Please check your Wi-Fi or cellular data and try again."
 
         // Firebase Auth
         private const val ERROR_INVALID_CREDENTIALS = "Invalid email or password."
