@@ -27,11 +27,13 @@ import kotlinx.coroutines.launch
 
 @AndroidEntryPoint
 class CreatePasswordActivity : AppCompatActivity() {
-    private lateinit var passwordFlow: PasswordFlow
+
     private lateinit var binding: ActivityCreatePasswordBinding
-    private val userEmail: String by lazy { intent.getStringExtra("email")!! }
     private val progressLoader: ProgressLoaderController by lazy { ProgressLoaderController(this) }
     private val viewModel: AuthViewModel by viewModels()
+
+    private lateinit var passwordFlow: PasswordFlow
+    private lateinit var userEmail: String
 
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -40,6 +42,7 @@ class CreatePasswordActivity : AppCompatActivity() {
         setContentView(binding.root)
 
         passwordFlow = PasswordFlowParser.fromIntent(intent)
+        userEmail =  intent.getStringExtra("email")!!
 
         updateUiForFlow()
         setupListeners()

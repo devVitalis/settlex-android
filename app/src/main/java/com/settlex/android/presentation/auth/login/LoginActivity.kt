@@ -27,6 +27,7 @@ import com.settlex.android.presentation.common.util.DialogHelper
 import com.settlex.android.presentation.common.util.EditTextFocusBackgroundChanger
 import com.settlex.android.presentation.common.util.KeyboardHelper
 import com.settlex.android.presentation.common.util.PasswordToggleController
+import com.settlex.android.presentation.common.util.SpannableTextFormatter
 import com.settlex.android.presentation.dashboard.DashboardActivity
 import com.settlex.android.util.string.StringFormatter
 import com.settlex.android.util.ui.ProgressLoaderController
@@ -59,17 +60,17 @@ class LoginActivity : AppCompatActivity() {
         setupFocusBackgroundChanger()
         keyboardHelper.attachDoneAction(editText = binding.etPassword)
 
-//        with(binding) {
-//            tvSwitchAccount.text = SpannableTextFormatter.format(
-//                "Not you?\nSwitch Account",
-//                "Switch Account"
-//            )
-//
-//            tvSignUp.text = SpannableTextFormatter.format(
-//                "Don't have an account yet?\nClick here to register",
-//                "Click here to register"
-//            )
-//        }
+        with(binding) {
+            tvSwitchAccount.text = SpannableTextFormatter.format(
+                "Not you?\nSwitch Account",
+                "Switch Account"
+            )
+
+            tvSignUp.text = SpannableTextFormatter.format(
+                "Don't have an account yet?\nClick here to register",
+                "Click here to register"
+            )
+        }
     }
 
     private fun initObservers() {

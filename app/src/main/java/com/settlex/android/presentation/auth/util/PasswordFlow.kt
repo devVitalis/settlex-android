@@ -1,7 +1,7 @@
 package com.settlex.android.presentation.auth.util
 
 /**
- * Represents the purpose of the screen
+ * Represents the purpose of the screen during password reset
  */
 sealed class PasswordFlow {
     data object Forgot : PasswordFlow()
