@@ -1,5 +1,6 @@
 package com.settlex.android.data.datasource.util
 
+import android.util.Log
 import com.google.firebase.functions.FirebaseFunctions
 import com.google.gson.Gson
 import com.google.gson.reflect.TypeToken
@@ -25,6 +26,9 @@ class FirebaseFunctionsInvoker @Inject constructor(val functions: FirebaseFuncti
         val json = gson.toJson(response.data)
 
         val type = object : TypeToken<ApiResponse<T>>() {}.type
+        val apiResponse: ApiResponse<T> = gson.fromJson(json, type)
+        Log.d("FirebaseFunctionsInvoker", "Raw JSON response: $json")
+        Log.d("FirebaseFunctionsInvoker", "Parsed ApiResponse: $apiResponse")
         return gson.fromJson(json, type)
     }
 }

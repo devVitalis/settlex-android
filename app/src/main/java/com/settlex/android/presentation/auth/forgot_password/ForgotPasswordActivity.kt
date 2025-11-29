@@ -101,7 +101,7 @@ class ForgotPasswordActivity : AppCompatActivity() {
     private fun onOtpRequestFailure(error: AppException) {
         with(binding) {
             tvError.text = error.message
-            tvError.visibility = View.VISIBLE
+            tvError.gone()
 
             progressLoader.hide()
         }

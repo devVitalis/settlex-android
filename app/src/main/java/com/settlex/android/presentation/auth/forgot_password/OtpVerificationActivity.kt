@@ -44,7 +44,7 @@ class OtpVerificationActivity : AppCompatActivity() {
         setContentView(binding.root)
 
         passwordFlow = PasswordFlowParser.fromIntent(intent)
-        intent.getStringExtra("email")!!
+        userEmail = intent.getStringExtra("email")!!
 
         initViews()
         initObservers()
@@ -187,7 +187,7 @@ class OtpVerificationActivity : AppCompatActivity() {
         object : CountDownTimer(60000, 1000) {
             override fun onTick(millisUntilFinished: Long) {
                 val seconds = (millisUntilFinished / 1000).toInt()
-                val countDown = "Resend in + $seconds"
+                val countDown = "Resend in $seconds seconds"
 
                 if (seconds > 0) btnResendOtp.text = countDown
             }

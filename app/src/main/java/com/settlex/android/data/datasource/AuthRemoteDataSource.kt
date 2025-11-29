@@ -8,7 +8,7 @@ import com.google.firebase.firestore.FirebaseFirestore
 import com.google.firebase.functions.FirebaseFunctions
 import com.google.firebase.messaging.FirebaseMessaging
 import com.google.gson.Gson
-import com.google.gson.reflect.TypeToken
+import com.settlex.android.data.datasource.util.FirebaseFunctionsInvoker
 import com.settlex.android.data.enums.OtpType
 import com.settlex.android.data.remote.api.MetadataService
 import com.settlex.android.data.remote.dto.ApiResponse
@@ -24,6 +24,7 @@ class AuthRemoteDataSource @Inject constructor(
     private val functions: FirebaseFunctions,
     private val firebaseMessaging: FirebaseMessaging,
     private val firestore: FirebaseFirestore,
+    private val cloudFunctions: FirebaseFunctionsInvoker
 ) {
     private lateinit var gson: Gson
 
@@ -71,21 +72,32 @@ class AuthRemoteDataSource @Inject constructor(
 
     // CLOUD FUNCTIONS
     suspend fun sendOtp(email: String, type: OtpType): ApiResponse<String> {
-        return runCloudFunction(
-            "api-sendOtp",
-            mapOf("email" to email, "type" to type.name)
-        )
+        return when (type) {
+            OtpType.EMAIL_VERIFICATION -> {
+                cloudFunctions.call(
+                    "api-sendEmailVerificationCode",
+                    mapOf("email" to email)
+                )
+            }
+
+            OtpType.PASSWORD_RESET -> {
+                cloudFunctions.call(
+                    "api-sendPasswordResetCode",
+                    mapOf("email" to email)
+                )
+            }
+        }
     }
 
     suspend fun verifyEmail(email: String, otp: String): ApiResponse<String> {
-        return runCloudFunction(
+        return cloudFunctions.call(
             "api-verifyEmail",
             mapOf("email" to email, "otp" to otp)
         )
     }
 
     suspend fun verifyPasswordReset(email: String, otp: String): ApiResponse<String> {
-        return runCloudFunction(
+        return cloudFunctions.call(
             "api-verifyPasswordReset",
             mapOf("email" to email, "otp" to otp)
         )
@@ -99,7 +111,7 @@ class AuthRemoteDataSource @Inject constructor(
 
         val metadata = collectMetadata()
 
-        return runCloudFunction(
+        return cloudFunctions.call(
             "api-setNewPassword",
             mapOf(
                 "email" to email,
@@ -135,17 +147,5 @@ class AuthRemoteDataSource @Inject constructor(
                 Log.w(TAG, "Failed to store FCM token", e)
             }
         }
-    }
-
-    // FUNCTION WRAPPER
-    private suspend inline fun <reified T> runCloudFunction(
-        name: String,
-        data: Map<String, Any?>
-    ): ApiResponse<T> {
-        val response = functions.getHttpsCallable(name).call(data).await()
-        val json = gson.toJson(response.data)
-
-        val type = object : TypeToken<ApiResponse<T>>() {}.type
-        return gson.fromJson(json, type)
     }
 }
