@@ -16,9 +16,8 @@ import androidx.lifecycle.ViewModelProvider;
 import com.chaos.view.PinView;
 import com.settlex.android.R;
 import com.settlex.android.databinding.ActivityCreatePaymentPinBinding;
-import com.settlex.android.presentation.common.state.UiState;
 import com.settlex.android.presentation.dashboard.account.viewmodel.ProfileViewModel;
-import com.settlex.android.util.ui.ProgressLoaderController;
+import com.settlex.android.util.ui.ProgressDialogManager;
 import com.settlex.android.util.ui.StatusBar;
 
 import java.util.Objects;
@@ -34,7 +33,7 @@ public class CreatePaymentPinActivity extends AppCompatActivity {
     // dependencies
     private String intentPurpose;
     private ActivityCreatePaymentPinBinding binding;
-    private ProgressLoaderController progressLoader;
+    private ProgressDialogManager progressLoader;
     private ProfileViewModel profileViewModel;
 
     @Override
@@ -44,7 +43,7 @@ public class CreatePaymentPinActivity extends AppCompatActivity {
         setContentView(binding.getRoot());
 
         profileViewModel = new ViewModelProvider(this).get(ProfileViewModel.class);
-        progressLoader = new ProgressLoaderController(this);
+        progressLoader = new ProgressDialogManager(this);
         intentPurpose = getIntent().getStringExtra("purpose");
 
 //        initObservers();

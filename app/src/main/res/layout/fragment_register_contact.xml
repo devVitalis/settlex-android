@@ -179,7 +179,7 @@
                 android:textSize="14sp" />
 
             <FrameLayout
-                android:id="@+id/et_email_bg"
+                android:id="@+id/et_email_background"
                 android:layout_width="match_parent"
                 android:layout_height="55dp"
                 android:layout_marginTop="10dp"
@@ -214,7 +214,7 @@
                 tools:text="message" />
 
             <androidx.constraintlayout.widget.ConstraintLayout
-                android:id="@+id/et_phone_bg"
+                android:id="@+id/et_phone_background"
                 android:layout_width="match_parent"
                 android:layout_height="55dp"
                 android:layout_marginTop="10dp"

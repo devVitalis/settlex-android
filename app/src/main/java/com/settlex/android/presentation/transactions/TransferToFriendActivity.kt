@@ -33,7 +33,7 @@ import com.settlex.android.presentation.transactions.model.TransferToFriendUiMod
 import com.settlex.android.presentation.transactions.viewmodel.TransactionViewModel
 import com.settlex.android.util.string.CurrencyFormatter
 import com.settlex.android.util.string.StringFormatter
-import com.settlex.android.util.ui.ProgressLoaderController
+import com.settlex.android.util.ui.ProgressDialogManager
 import com.settlex.android.util.ui.StatusBar
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.launch
@@ -50,7 +50,7 @@ class TransferToFriendActivity : AppCompatActivity() {
     private var amountToSend: Long = 0L
 
     // --- dependencies / helpers ---
-    private val progressLoader by lazy { ProgressLoaderController(this) }
+    private val progressLoader by lazy { ProgressDialogManager(this) }
     private val recipientAdapter by lazy { RecipientAdapter() }
     private val viewModel: TransactionViewModel by viewModels()
 

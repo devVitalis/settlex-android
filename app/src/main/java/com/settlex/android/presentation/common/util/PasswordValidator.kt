@@ -8,10 +8,12 @@ package com.settlex.android.presentation.common.util
  * matches its confirmation string.
  */
 object PasswordValidator {
-    private const val ALLOWED_SPECIAL_CHARS = "!@#$%^&*()_+-=[]{};:,.?"
+    private const val LENGTH = 8
+    const val ALLOWED_SPECIAL_CHARS = "!@#$%^&*()_+-=[]{};:,.?"
+    const val ERROR_PASSWORD_MISMATCH = "Passwords do not match!"
 
     fun validate(password: String, confirm: String): Boolean {
-        val hasLength = password.length >= 8
+        val hasLength = password.length >= LENGTH
         val hasUpper = password.any { it.isUpperCase() }
         val hasLower = password.any { it.isLowerCase() }
         val hasSpecial = password.any { ALLOWED_SPECIAL_CHARS.contains(it) }
@@ -21,7 +23,7 @@ object PasswordValidator {
     }
 
     fun validate(password: String): Boolean {
-        val hasLength = password.length >= 8
+        val hasLength = password.length >= LENGTH
         val hasUpper = password.any { it.isUpperCase() }
         val hasLower = password.any { it.isLowerCase() }
         val hasSpecial = password.any { ALLOWED_SPECIAL_CHARS.contains(it) }

@@ -22,7 +22,7 @@ import com.settlex.android.presentation.common.util.DialogHelper
 import com.settlex.android.presentation.common.util.KeyboardHelper
 import com.settlex.android.presentation.common.util.PasswordToggleController
 import com.settlex.android.presentation.common.util.PasswordValidator
-import com.settlex.android.util.ui.ProgressLoaderController
+import com.settlex.android.util.ui.ProgressDialogManager
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.launch
 
@@ -31,7 +31,7 @@ class CreatePasswordActivity : AppCompatActivity() {
 
     private lateinit var binding: ActivityCreatePasswordBinding
     private val keyboardHelper: KeyboardHelper by lazy { KeyboardHelper(this) }
-    private val progressLoader: ProgressLoaderController by lazy { ProgressLoaderController(this) }
+    private val progressLoader: ProgressDialogManager by lazy { ProgressDialogManager(this) }
     private val viewModel: AuthViewModel by viewModels()
 
     private lateinit var passwordFlow: PasswordFlow

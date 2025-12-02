@@ -8,7 +8,7 @@ import com.settlex.android.util.network.NetworkMonitor.startNetworkCallback
 import dagger.hilt.android.HiltAndroidApp
 
 /**
- * Core application class managing global dependencies and context.
+ * Application class managing global dependencies and context.
  */
 @HiltAndroidApp
 class SettleXApp : Application() {

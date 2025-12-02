@@ -189,7 +189,7 @@
                 android:visibility="gone" />
 
             <com.chaos.view.PinView
-                android:id="@+id/otp_box"
+                android:id="@+id/otp_view"
                 style="@style/Widget.SettleX.PinView"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
@@ -240,7 +240,7 @@
             </LinearLayout>
 
             <TextView
-                android:id="@+id/tv_info"
+                android:id="@+id/tv_spam_info"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="10dp"

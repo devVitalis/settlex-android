@@ -16,5 +16,5 @@ interface AuthRepository {
     suspend fun verifyPasswordReset(email: String, otp: String): Result<ApiResponse<String>>
     suspend fun setNewPassword(email: String, oldPassword: String, newPassword: String): Result<ApiResponse<String>>
     suspend fun getFcmToken(): Result<String>
-    suspend fun storeFcmToken(token: String): Result<Unit>
+    suspend fun setFcmToken(token: String): Result<Unit>
 }

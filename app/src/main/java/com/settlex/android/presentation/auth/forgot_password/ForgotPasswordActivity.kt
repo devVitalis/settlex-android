@@ -4,7 +4,6 @@ import android.content.Intent
 import android.os.Bundle
 import android.util.Patterns
 import android.view.MotionEvent
-import android.view.View
 import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.content.ContextCompat
@@ -21,7 +20,7 @@ import com.settlex.android.presentation.common.extensions.gone
 import com.settlex.android.presentation.common.state.UiState
 import com.settlex.android.presentation.common.util.EditTextFocusBackgroundChanger
 import com.settlex.android.presentation.common.util.KeyboardHelper
-import com.settlex.android.util.ui.ProgressLoaderController
+import com.settlex.android.util.ui.ProgressDialogManager
 import com.settlex.android.util.ui.StatusBar
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.launch
@@ -31,7 +30,7 @@ class ForgotPasswordActivity : AppCompatActivity() {
 
     private lateinit var binding: ActivityForgotPasswordBinding
     private val keyboardHelper: KeyboardHelper by lazy { KeyboardHelper(this) }
-    private val progressLoader: ProgressLoaderController by lazy { ProgressLoaderController(this) }
+    private val progressLoader: ProgressDialogManager by lazy { ProgressDialogManager(this) }
     private val authViewModel: AuthViewModel by viewModels()
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -60,11 +59,11 @@ class ForgotPasswordActivity : AppCompatActivity() {
 
         with(binding) {
             keyboardHelper.attachDoneAction(etEmail)
+
             EditTextFocusBackgroundChanger(
                 defaultBackgroundResource = R.drawable.bg_edit_txt_custom_gray_not_focused,
                 focusedBackgroundResource = R.drawable.bg_edit_txt_custom_white_focused,
-                editText = etEmail,
-                backgroundView = etEmailBackground
+                etEmail to etEmailBackground
             )
 
             btnBackBefore.setOnClickListener { finish() }

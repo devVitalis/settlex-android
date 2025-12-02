@@ -23,7 +23,7 @@ import com.settlex.android.presentation.common.extensions.show
 import com.settlex.android.presentation.common.state.UiState
 import com.settlex.android.presentation.common.util.KeyboardHelper
 import com.settlex.android.util.string.StringFormatter
-import com.settlex.android.util.ui.ProgressLoaderController
+import com.settlex.android.util.ui.ProgressDialogManager
 import com.settlex.android.util.ui.StatusBar
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.launch
@@ -35,7 +35,7 @@ class OtpVerificationActivity : AppCompatActivity() {
     private lateinit var passwordFlow: PasswordFlow
     private lateinit var userEmail: String
     private val authViewModel: AuthViewModel by viewModels()
-    private val progressLoader: ProgressLoaderController by lazy { ProgressLoaderController(this) }
+    private val progressLoader: ProgressDialogManager by lazy { ProgressDialogManager(this) }
     private val keyboardHelper: KeyboardHelper by lazy { KeyboardHelper(this) }
 
     override fun onCreate(savedInstanceState: Bundle?) {

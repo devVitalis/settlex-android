@@ -27,7 +27,7 @@ import com.settlex.android.databinding.BottomSheetSuccessDialogBinding
 import com.settlex.android.presentation.common.state.UiState
 import com.settlex.android.presentation.common.util.DialogHelper
 import com.settlex.android.presentation.dashboard.DashboardActivity
-import com.settlex.android.util.ui.ProgressLoaderController
+import com.settlex.android.util.ui.ProgressDialogManager
 import com.settlex.android.util.ui.StatusBar
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.launch
@@ -45,7 +45,7 @@ class CreatePaymentIdActivity : AppCompatActivity() {
     // Dependencies
     private lateinit var binding: ActivityCreatePaymentIdBinding
     private val viewModel: SettingsViewModel by viewModels()
-    private val progressLoader: ProgressLoaderController by lazy { ProgressLoaderController(this) }
+    private val progressLoader: ProgressDialogManager by lazy { ProgressDialogManager(this) }
     private val handler = Handler(Looper.getMainLooper())
     private var pendingCheckRunnable: Runnable? = null
 

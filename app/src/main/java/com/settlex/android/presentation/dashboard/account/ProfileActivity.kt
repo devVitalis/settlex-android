@@ -27,7 +27,7 @@ import com.settlex.android.presentation.dashboard.account.model.ProfileUiModel
 import com.settlex.android.presentation.dashboard.account.viewmodel.ProfileViewModel
 import com.settlex.android.util.string.DateFormatter
 import com.settlex.android.util.string.StringFormatter
-import com.settlex.android.util.ui.ProgressLoaderController
+import com.settlex.android.util.ui.ProgressDialogManager
 import com.settlex.android.util.ui.StatusBar
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.launch
@@ -37,7 +37,7 @@ import java.util.Locale
 class ProfileActivity : AppCompatActivity() {
     private val binding by lazy { ActivityProfileBinding.inflate(layoutInflater) }
     private val viewModel: ProfileViewModel by viewModels()
-    private val progressLoader: ProgressLoaderController by lazy { ProgressLoaderController(this) }
+    private val progressLoader: ProgressDialogManager by lazy { ProgressDialogManager(this) }
     private lateinit var requestPermissionLauncher: ActivityResultLauncher<String>
     private lateinit var pickImageLauncher: ActivityResultLauncher<PickVisualMediaRequest>
     private var joinedDate: Timestamp? = null

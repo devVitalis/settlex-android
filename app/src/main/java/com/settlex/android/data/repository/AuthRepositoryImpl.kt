@@ -80,9 +80,9 @@ class AuthRepositoryImpl @Inject constructor(
             Result.failure(exception.map(e))
         }
 
-    override suspend fun storeFcmToken(token: String): Result<Unit> =
+    override suspend fun setFcmToken(token: String): Result<Unit> =
         try {
-            remoteDataSource.storeFcmToken(token)
+            remoteDataSource.setFcmToken(token)
             Result.success(Unit)
         } catch (e: Exception) {
             Result.failure(exception.map(e))

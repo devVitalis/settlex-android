@@ -8,12 +8,12 @@ import androidx.fragment.app.FragmentManager;
 
 import com.settlex.android.presentation.common.components.ProgressDialogFragment;
 
-public class ProgressLoaderController {
+public class ProgressDialogManager {
     private final FragmentManager fragmentManager;
     private ProgressDialogFragment progressDialog;
     private int overlayColor = Color.TRANSPARENT;
 
-    public ProgressLoaderController(@NonNull FragmentActivity activity) {
+    public ProgressDialogManager(@NonNull FragmentActivity activity) {
         this.fragmentManager = activity.getSupportFragmentManager();
     }
 

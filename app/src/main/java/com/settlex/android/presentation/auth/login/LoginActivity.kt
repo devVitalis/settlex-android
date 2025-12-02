@@ -30,7 +30,7 @@ import com.settlex.android.presentation.common.util.PasswordToggleController
 import com.settlex.android.presentation.common.util.SpannableTextFormatter
 import com.settlex.android.presentation.dashboard.DashboardActivity
 import com.settlex.android.util.string.StringFormatter
-import com.settlex.android.util.ui.ProgressLoaderController
+import com.settlex.android.util.ui.ProgressDialogManager
 import com.settlex.android.util.ui.StatusBar
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.launch
@@ -40,7 +40,7 @@ class LoginActivity : AppCompatActivity() {
 
     private lateinit var binding: ActivityLoginBinding
     private val keyboardHelper: KeyboardHelper by lazy { KeyboardHelper(this) }
-    private val progressLoader: ProgressLoaderController by lazy { ProgressLoaderController(this) }
+    private val progressLoader: ProgressDialogManager by lazy { ProgressDialogManager(this) }
     private val viewModel: LoginViewModel by viewModels()
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -237,8 +237,7 @@ class LoginActivity : AppCompatActivity() {
             EditTextFocusBackgroundChanger(
                 defaultBackgroundResource = R.drawable.bg_edit_txt_custom_gray_not_focused,
                 focusedBackgroundResource = R.drawable.bg_edit_txt_custom_white_focused,
-                editText = etPassword,
-                backgroundView = etPasswordBackground
+                etPassword to etPasswordBackground
             )
         }
     }

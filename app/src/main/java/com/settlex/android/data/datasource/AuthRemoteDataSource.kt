@@ -28,7 +28,6 @@ class AuthRemoteDataSource @Inject constructor(
 ) {
     private lateinit var gson: Gson
 
-
     companion object {
         private val TAG = AuthRemoteDataSource::class.java.simpleName
     }
@@ -37,7 +36,6 @@ class AuthRemoteDataSource @Inject constructor(
 
     fun getCurrentUser(): FirebaseUser? = auth.currentUser
 
-    // AUTH
     suspend fun login(email: String, password: String) {
         auth.signInWithEmailAndPassword(email, password).await()
     }
@@ -45,32 +43,34 @@ class AuthRemoteDataSource @Inject constructor(
     suspend fun register(user: UserModel, password: String) {
         val authResult = auth.createUserWithEmailAndPassword(user.email, password).await()
         val createdUser = authResult.user!!
+
         val finalUser = user.copy(uid = createdUser.uid)
 
-        createProfile(finalUser)
-        setDisplayName("${finalUser.firstName} ${finalUser.lastName}")
+        runCatching {
+            createProfile(finalUser)
+            setDisplayName("${finalUser.firstName} ${finalUser.lastName}")
+        }.onFailure {
+            createdUser.delete().await()
+            Log.e("Register", "Failed to delete orphaned user after error", it)
+            throw it
+        }
     }
 
     private suspend fun createProfile(user: UserModel) {
         val data = mapOf("user" to gson.toJson(user))
-        functions.getHttpsCallable("api-createProfile").call(data).await()
+        functions.getHttpsCallable("api-createUserProfile").call(data).await()
     }
 
     private suspend fun setDisplayName(fullName: String) {
-        getCurrentUser()?.let { user ->
-            try {
-                user.updateProfile(
-                    UserProfileChangeRequest.Builder()
-                        .setDisplayName(fullName)
-                        .build()
-                ).await()
-            } catch (e: Exception) {
-                Log.w(TAG, "Failed to update user display name", e)
-            }
-        }
+        val user = getCurrentUser() ?: throw IllegalStateException("No logged-in user")
+
+        user.updateProfile(
+            UserProfileChangeRequest.Builder()
+                .setDisplayName(fullName)
+                .build()
+        ).await()
     }
 
-    // CLOUD FUNCTIONS
     suspend fun sendOtp(email: String, type: OtpType): ApiResponse<String> {
         return when (type) {
             OtpType.EMAIL_VERIFICATION -> {
@@ -122,7 +122,6 @@ class AuthRemoteDataSource @Inject constructor(
         )
     }
 
-    // METADATA
     suspend fun collectMetadata(): MetadataDto {
         return suspendCancellableCoroutine { cont ->
             MetadataService.collectMetadata { md ->
@@ -131,12 +130,11 @@ class AuthRemoteDataSource @Inject constructor(
         }
     }
 
-    // FCM
     suspend fun getFcmToken(): String {
         return firebaseMessaging.token.await()
     }
 
-    suspend fun storeFcmToken(token: String) {
+    suspend fun setFcmToken(token: String) {
         getCurrentUser()?.let { user ->
             try {
                 firestore.collection("users")

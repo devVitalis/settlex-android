@@ -16,7 +16,8 @@ class RegisterViewModel @Inject constructor() : ViewModel() {
         registrationState.update { it.copy(email = newEmail, phone = newPhoneNumber) }
     }
 
-    val email: String get() = registrationState.value.email
+    val email: String
+        get() = registrationState.value.email
 
     fun updateName(newFirstName: String, newLastName: String) {
         registrationState.update { it.copy(firstName = newFirstName, lastName = newLastName) }
@@ -43,7 +44,7 @@ class RegisterViewModel @Inject constructor() : ViewModel() {
         )
     }
 
-    data class RegistrationState(
+    private data class RegistrationState(
         val firstName: String = "",
         val lastName: String = "",
         val email: String = "",
