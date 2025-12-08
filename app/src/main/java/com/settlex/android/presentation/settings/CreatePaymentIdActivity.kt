@@ -2,7 +2,6 @@ package com.settlex.android.presentation.settings
 
 import android.content.Intent
 import android.content.res.ColorStateList
-import android.graphics.Rect
 import android.os.Bundle
 import android.os.Handler
 import android.os.Looper
@@ -10,9 +9,6 @@ import android.text.Editable
 import android.text.TextWatcher
 import android.view.MotionEvent
 import android.view.View
-import android.view.View.OnFocusChangeListener
-import android.view.inputmethod.InputMethodManager
-import android.widget.EditText
 import androidx.activity.OnBackPressedCallback
 import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
@@ -24,8 +20,11 @@ import com.google.android.material.bottomsheet.BottomSheetDialog
 import com.settlex.android.R
 import com.settlex.android.databinding.ActivityCreatePaymentIdBinding
 import com.settlex.android.databinding.BottomSheetSuccessDialogBinding
+import com.settlex.android.presentation.common.extensions.gone
 import com.settlex.android.presentation.common.state.UiState
 import com.settlex.android.presentation.common.util.DialogHelper
+import com.settlex.android.presentation.common.util.EditTextFocusBackgroundChanger
+import com.settlex.android.presentation.common.util.KeyboardHelper
 import com.settlex.android.presentation.dashboard.DashboardActivity
 import com.settlex.android.util.ui.ProgressDialogManager
 import com.settlex.android.util.ui.StatusBar
@@ -34,8 +33,6 @@ import kotlinx.coroutines.launch
 
 @AndroidEntryPoint
 class CreatePaymentIdActivity : AppCompatActivity() {
-    // Instance vars for user data
-    private var userUid: String? = null
     private var userPaymentId: String? = null
 
     // Validation
@@ -45,7 +42,8 @@ class CreatePaymentIdActivity : AppCompatActivity() {
     // Dependencies
     private lateinit var binding: ActivityCreatePaymentIdBinding
     private val viewModel: SettingsViewModel by viewModels()
-    private val progressLoader: ProgressDialogManager by lazy { ProgressDialogManager(this) }
+    private val progressLoader by lazy { ProgressDialogManager(this) }
+    private val keyboardHelper by lazy { KeyboardHelper(this) }
     private val handler = Handler(Looper.getMainLooper())
     private var pendingCheckRunnable: Runnable? = null
 
@@ -55,19 +53,23 @@ class CreatePaymentIdActivity : AppCompatActivity() {
         setContentView(binding.root)
 
         initViews()
-        observePaymentIdAvailabilityStatus()
-        observePaymentIdStoreStatus()
+        initObservers()
     }
 
     private fun initViews() {
         StatusBar.setColor(this, R.color.white)
         setupPaymentIdInputWatcher()
-        setupEditTextFocusHandler()
+        setupInputFocusHandler()
         disableBackButton()
 
         binding.btnContinue.setOnClickListener {
             viewModel.assignPaymentId(userPaymentId!!)
         }
+    }
+
+    private fun initObservers() {
+        observePaymentIdAvailabilityStatus()
+        observePaymentIdStoreStatus()
     }
 
     private fun observePaymentIdStoreStatus() {
@@ -90,22 +92,24 @@ class CreatePaymentIdActivity : AppCompatActivity() {
         DialogHelper.showSuccessBottomSheetDialog(
             this
         ) { dialog: BottomSheetDialog, dialogBinding: BottomSheetSuccessDialogBinding ->
-            val title = "Success"
-            val message = "Your Payment ID was successfully created."
+            with(dialogBinding) {
+                val title = "Success"
+                val message = "Your Payment ID was successfully created."
 
-            dialogBinding.anim.playAnimation()
-            dialogBinding.tvTitle.text = title
-            dialogBinding.tvMessage.text = message
+                tvTitle.text = title
+                tvMessage.text = message
+                "Okay".also { btnAction.text = it }
 
-            dialogBinding.btnAction.setOnClickListener {
-                startActivity(
-                    Intent(
-                        this,
-                        DashboardActivity::class.java
+                btnAction.setOnClickListener {
+                    startActivity(
+                        Intent(
+                            this@CreatePaymentIdActivity,
+                            DashboardActivity::class.java
+                        )
                     )
-                )
-                finish()
-                dialog.dismiss()
+                    finish()
+                    dialog.dismiss()
+                }
             }
         }
     }
@@ -161,25 +165,26 @@ class CreatePaymentIdActivity : AppCompatActivity() {
     }
 
     private fun onPaymentIdAvailabilityFailure(error: String?) {
-        binding.txtError.text = error
-        binding.txtError.visibility = View.VISIBLE
+        with(binding) {
+            txtError.text = error
+            txtError.gone()
 
-        binding.paymentIdProgressBar.hide()
-        binding.paymentIdProgressBar.visibility = View.GONE
-        binding.paymentIdAvailableCheck.visibility = View.GONE
-        binding.paymentIdAvailabilityFeedback.visibility = View.GONE
+            paymentIdProgressBar.hide()
+            paymentIdProgressBar.gone()
+            paymentIdAvailableCheck.gone()
+            paymentIdAvailabilityFeedback.gone()
+        }
     }
 
-    private fun setupEditTextFocusHandler() {
-        // cache drawables
-        val focus = ContextCompat.getDrawable(this, R.drawable.bg_edit_txt_custom_white_focused)
-        val notFocus =
-            ContextCompat.getDrawable(this, R.drawable.bg_edit_txt_custom_white_not_focused)
+    private fun setupInputFocusHandler() = with(binding) {
+        val defaultRes = R.drawable.bg_edit_txt_custom_white_not_focused
+        val focusedRes = R.drawable.bg_edit_txt_custom_white_focused
 
-        binding.editTxtPaymentId.onFocusChangeListener =
-            OnFocusChangeListener { _, hasFocus: Boolean ->
-                binding.editTxtPaymentIdBackground.background = if (hasFocus) focus else notFocus
-            }
+        EditTextFocusBackgroundChanger(
+            defaultRes,
+            focusedRes,
+            editTxtPaymentId to editTxtPaymentIdBackground
+        )
     }
 
     private fun setupPaymentIdInputWatcher() {
@@ -276,26 +281,11 @@ class CreatePaymentIdActivity : AppCompatActivity() {
     }
 
     override fun dispatchTouchEvent(event: MotionEvent): Boolean {
-        if (event.action == MotionEvent.ACTION_DOWN) {
-            val v = currentFocus
-            if (v is EditText) {
-                val outRect = Rect()
-                v.getGlobalVisibleRect(outRect)
-                if (!outRect.contains(event.rawX.toInt(), event.rawY.toInt())) {
-                    v.clearFocus()
-                    hideKeyboard(v)
-                }
-            }
-        }
+        if (keyboardHelper.handleOutsideTouch(event)) return true
         return super.dispatchTouchEvent(event)
     }
 
-    private fun hideKeyboard(view: View) {
-        val imm = getSystemService(INPUT_METHOD_SERVICE) as InputMethodManager?
-        imm?.hideSoftInputFromWindow(view.windowToken, 0)
-    }
-
-    fun disableBackButton() {
+    private fun disableBackButton() {
         onBackPressedDispatcher.addCallback(
             this,
             object : OnBackPressedCallback(true) {

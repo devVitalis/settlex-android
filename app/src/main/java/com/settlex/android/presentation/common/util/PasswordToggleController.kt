@@ -5,6 +5,22 @@ import android.widget.EditText
 import android.widget.ImageView
 import com.settlex.android.R
 
+/**
+ * A controller class to manage the visibility toggle functionality for a password [EditText].
+ *
+ * This class links an [ImageView] (acting as a toggle button) with an [EditText]
+ * to allow the user to show or hide the password they are entering.
+ *
+ * It handles:
+ * - Setting an `OnClickListener` on the toggle button.
+ * - Changing the icon of the toggle button to reflect the current visibility state
+ *   (e.g., a "visible" eye vs. a "slashed" eye).
+ * - Toggling the `inputType` of the [EditText] between a visible password and a hidden password.
+ * - Preserving the cursor position and typeface of the [EditText] after the `inputType` changes.
+ *
+ * @param editText The [EditText] field for the password input.
+ * @param toggleButton The [ImageView] that the user clicks to toggle password visibility.
+ */
 class PasswordToggleController(
     private val editText: EditText,
     private var toggleButton: ImageView

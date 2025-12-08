@@ -6,7 +6,6 @@ import android.util.Patterns
 import android.view.MotionEvent
 import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
-import androidx.core.content.ContextCompat
 import androidx.core.widget.doOnTextChanged
 import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.lifecycleScope
@@ -17,6 +16,7 @@ import com.settlex.android.data.exception.AppException
 import com.settlex.android.databinding.ActivityForgotPasswordBinding
 import com.settlex.android.presentation.auth.AuthViewModel
 import com.settlex.android.presentation.common.extensions.gone
+import com.settlex.android.presentation.common.extensions.show
 import com.settlex.android.presentation.common.state.UiState
 import com.settlex.android.presentation.common.util.EditTextFocusBackgroundChanger
 import com.settlex.android.presentation.common.util.KeyboardHelper
@@ -27,10 +27,9 @@ import kotlinx.coroutines.launch
 
 @AndroidEntryPoint
 class ForgotPasswordActivity : AppCompatActivity() {
-
     private lateinit var binding: ActivityForgotPasswordBinding
-    private val keyboardHelper: KeyboardHelper by lazy { KeyboardHelper(this) }
-    private val progressLoader: ProgressDialogManager by lazy { ProgressDialogManager(this) }
+    private val keyboardHelper by lazy { KeyboardHelper(this) }
+    private val progressLoader by lazy { ProgressDialogManager(this) }
     private val authViewModel: AuthViewModel by viewModels()
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -38,12 +37,12 @@ class ForgotPasswordActivity : AppCompatActivity() {
         binding = ActivityForgotPasswordBinding.inflate(layoutInflater)
         setContentView(binding.root)
 
-        progressLoader.setOverlayColor(
-            ContextCompat.getColor(
-                this,
-                R.color.semi_transparent_white
-            )
-        )
+//        progressLoader.setOverlayColor(
+//            ContextCompat.getColor(
+//                this,
+//                R.color.semi_transparent_white
+//            )
+//        )
 
         initViews()
         initObservers()
@@ -67,7 +66,10 @@ class ForgotPasswordActivity : AppCompatActivity() {
             )
 
             btnBackBefore.setOnClickListener { finish() }
-            btnContinue.setOnClickListener { sendVerificationCode() }
+            btnContinue.setOnClickListener {
+                tvError.gone()
+                sendVerificationCode()
+            }
         }
     }
 
@@ -100,7 +102,7 @@ class ForgotPasswordActivity : AppCompatActivity() {
     private fun onOtpRequestFailure(error: AppException) {
         with(binding) {
             tvError.text = error.message
-            tvError.gone()
+            tvError.show()
 
             progressLoader.hide()
         }

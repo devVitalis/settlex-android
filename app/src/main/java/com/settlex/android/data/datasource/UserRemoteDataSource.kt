@@ -5,11 +5,11 @@ import android.net.Uri
 import com.google.firebase.auth.EmailAuthProvider
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.auth.FirebaseUser
+import com.google.firebase.firestore.FieldValue
 import com.google.firebase.firestore.FirebaseFirestore
 import com.google.firebase.firestore.FirebaseFirestoreException
 import com.google.firebase.firestore.Query
 import com.google.firebase.firestore.SetOptions
-import com.settlex.android.data.datasource.util.FirebaseFunctionsInvoker
 import com.settlex.android.data.enums.TransactionServiceType
 import com.settlex.android.data.remote.dto.ApiResponse
 import com.settlex.android.data.remote.dto.RecipientDto
@@ -26,7 +26,7 @@ import kotlinx.coroutines.tasks.await
 class UserRemoteDataSource @Inject constructor(
     private val firestore: FirebaseFirestore,
     private val auth: FirebaseAuth,
-    private val cloudFunctions: FirebaseFunctionsInvoker,
+    private val cloudFunctions: FunctionsApiClient,
 ) {
 
     fun getCurrentUser(): FirebaseUser? = auth.currentUser
@@ -58,7 +58,10 @@ class UserRemoteDataSource @Inject constructor(
             transaction.set(globalDocRef, mapOf("uid" to uid))
             transaction.set(
                 userDocRef,
-                mapOf("paymentId" to id),
+                mapOf(
+                    "paymentId" to id,
+                    "lastUpdatedAt" to FieldValue.serverTimestamp()
+                ),
                 SetOptions.merge()
             )
         }.await()
@@ -97,7 +100,7 @@ class UserRemoteDataSource @Inject constructor(
         val base64 = ImageConverter.toBase64(context, uri)
 
         return cloudFunctions.call(
-            name = "api-setProfilePicture",
+            name = "api-setUserProfilePhoto",
             data = mapOf("imgBase64" to base64)
         )
     }
@@ -114,11 +117,11 @@ class UserRemoteDataSource @Inject constructor(
         desc: String?
     ): ApiResponse<String> {
         return cloudFunctions.call(
-           name =  "api-sendPayment",
-           data =  mapOf(
+            name = "api-transferToFriend",
+            data = mapOf(
                 "fromUid" to fromUid,
                 "toPaymentId" to toPaymentId,
-                "txnId" to txnId,
+                "transactionId" to txnId,
                 "amount" to amount,
                 "serviceType" to TransactionServiceType.PAY_A_FRIEND,
                 "description" to desc

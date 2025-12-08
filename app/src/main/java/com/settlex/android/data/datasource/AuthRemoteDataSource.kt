@@ -8,13 +8,15 @@ import com.google.firebase.firestore.FirebaseFirestore
 import com.google.firebase.functions.FirebaseFunctions
 import com.google.firebase.messaging.FirebaseMessaging
 import com.google.gson.Gson
-import com.settlex.android.data.datasource.util.FirebaseFunctionsInvoker
+import com.google.gson.GsonBuilder
 import com.settlex.android.data.enums.OtpType
 import com.settlex.android.data.remote.api.MetadataService
 import com.settlex.android.data.remote.dto.ApiResponse
 import com.settlex.android.data.remote.dto.MetadataDto
 import com.settlex.android.domain.model.UserModel
 import jakarta.inject.Inject
+import kotlinx.coroutines.async
+import kotlinx.coroutines.coroutineScope
 import kotlinx.coroutines.suspendCancellableCoroutine
 import kotlinx.coroutines.tasks.await
 import kotlin.coroutines.resume
@@ -24,9 +26,9 @@ class AuthRemoteDataSource @Inject constructor(
     private val functions: FirebaseFunctions,
     private val firebaseMessaging: FirebaseMessaging,
     private val firestore: FirebaseFirestore,
-    private val cloudFunctions: FirebaseFunctionsInvoker
+    private val cloudFunctions: FunctionsApiClient
 ) {
-    private lateinit var gson: Gson
+    private val gson: Gson by lazy { GsonBuilder().create() }
 
     companion object {
         private val TAG = AuthRemoteDataSource::class.java.simpleName
@@ -47,8 +49,11 @@ class AuthRemoteDataSource @Inject constructor(
         val finalUser = user.copy(uid = createdUser.uid)
 
         runCatching {
-            createProfile(finalUser)
-            setDisplayName("${finalUser.firstName} ${finalUser.lastName}")
+            // Parallel execution to increase performance
+            coroutineScope {
+                async { createProfile(finalUser) }.await()
+                async { setDisplayName("${finalUser.firstName} ${finalUser.lastName}") }.await()
+            }
         }.onFailure {
             createdUser.delete().await()
             Log.e("Register", "Failed to delete orphaned user after error", it)
@@ -75,7 +80,7 @@ class AuthRemoteDataSource @Inject constructor(
         return when (type) {
             OtpType.EMAIL_VERIFICATION -> {
                 cloudFunctions.call(
-                    "api-sendEmailVerificationCode",
+                    "api-sendSignupEmailVerificationCode",
                     mapOf("email" to email)
                 )
             }
@@ -91,14 +96,14 @@ class AuthRemoteDataSource @Inject constructor(
 
     suspend fun verifyEmail(email: String, otp: String): ApiResponse<String> {
         return cloudFunctions.call(
-            "api-verifyEmail",
+            "api-verifyEmailVerificationCode",
             mapOf("email" to email, "otp" to otp)
         )
     }
 
     suspend fun verifyPasswordReset(email: String, otp: String): ApiResponse<String> {
         return cloudFunctions.call(
-            "api-verifyPasswordReset",
+            "api-verifyPasswordResetCode",
             mapOf("email" to email, "otp" to otp)
         )
     }
@@ -112,7 +117,7 @@ class AuthRemoteDataSource @Inject constructor(
         val metadata = collectMetadata()
 
         return cloudFunctions.call(
-            "api-setNewPassword",
+            "api-resetUserPassword",
             mapOf(
                 "email" to email,
                 "oldPassword" to oldPassword,
@@ -124,8 +129,10 @@ class AuthRemoteDataSource @Inject constructor(
 
     suspend fun collectMetadata(): MetadataDto {
         return suspendCancellableCoroutine { cont ->
-            MetadataService.collectMetadata { md ->
-                cont.resume(md)
+            MetadataService.collectMetadata { metadata ->
+                if (cont.isActive) {
+                    cont.resume(metadata)
+                }
             }
         }
     }

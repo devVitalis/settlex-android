@@ -52,7 +52,7 @@ class AuthViewModel @Inject constructor(
         }
     }
 
-    private val _otpEvent = MutableSharedFlow<UiState<String>>()
+    private val _otpEvent = MutableSharedFlow<UiState<String>>(replay = 0)
     val otpEvent = _otpEvent.asSharedFlow()
 
     fun sendVerificationCode(email: String, type: OtpType) {

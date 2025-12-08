@@ -6,11 +6,13 @@ import com.settlex.android.data.exception.AppException
 import com.settlex.android.domain.usecase.user.AssignPaymentIdUseCase
 import com.settlex.android.domain.usecase.user.IsPaymentIdTakenUseCase
 import com.settlex.android.presentation.common.state.UiState
+import dagger.hilt.android.lifecycle.HiltViewModel
 import jakarta.inject.Inject
 import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.flow.asSharedFlow
 import kotlinx.coroutines.launch
 
+@HiltViewModel
 class SettingsViewModel @Inject constructor(
     private val isPaymentIdTakenUseCase: IsPaymentIdTakenUseCase,
     private val assignPaymentIdUseCase: AssignPaymentIdUseCase,

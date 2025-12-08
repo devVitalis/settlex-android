@@ -24,11 +24,11 @@
 
     <!-- REGISTER EMAIL VERIFICATION FRAGMENT -->
     <string name="title_email_verification">Email Verification</string>
-    <string name="subtitle_enter_the_6_digit_code_sent_to_your_email">Enter the 6-digit code sent to your email</string>
-    <string name="body_enter_the_verification_code_sent_to">Enter the verification code sent to:</string>
+    <string name="subtitle_we_sent_you_a_verification_code">We sent you a verification code</string>
+    <string name="body_enter_the_verification_code_sent_to_your_email">Enter the verification code sent to your email</string>
     <string name="tv_step_2_of_4">Step 2 of 4</string>
-    <string name="tv_didnt_receive_the_otp">Didn\'t receive the OTP?</string>
-    <string name="btn_resend">Resend</string>
+    <string name="tv_didnt_receive_the_code">Didn\'t receive the code?</string>
+    <string name="tv_resend_code">Resend code</string>
 
     <!-- REGISTER NAME FRAGMENT -->
     <string name="title_let_s_get_to_know_you">Let\'s Get to Know You</string>
@@ -64,6 +64,7 @@
     <string name="body_please_check_the_otp_that_has_been_sent_to_your_email_and_fill_the_box">Please check the OTP that has been sent to your email and fill the box:</string>
     <string name="tv_never_share_this_code_with_anyone_including_settlex_staff">Never share this code with anyone, including SettleX staff</string>
     <string name="btn_confirm">Confirm</string>
+    <string name="btn_resend">Resend</string>
 
     <!-- CREATE PASSWORD ACTIVITY -->
     <string name="title_create_a_new_password">Create a New Password</string>

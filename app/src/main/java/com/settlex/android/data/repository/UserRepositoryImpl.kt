@@ -20,51 +20,51 @@ class UserRepositoryImpl @Inject constructor(
     }
 
     override suspend fun isPaymentIdTaken(id: String): Result<Boolean> {
-        return try {
-            val available = remote.isPaymentIdTaken(id)
-            Result.success(available)
-        } catch (e: Exception) {
-            Result.failure(exception.map(e))
-        }
+        return runCatching {
+            remote.isPaymentIdTaken(id)
+        }.fold(
+            onSuccess = { Result.success(it) },
+            onFailure = { Result.failure(exception.map(it as Exception)) }
+        )
     }
 
     override suspend fun assignPaymentId(id: String): Result<Unit> {
-        return try {
+        return runCatching {
             remote.assignPaymentId(id)
-            Result.success(Unit)
-        } catch (e: Exception) {
-            Result.failure(exception.map(e))
-        }
+        }.fold(
+            onSuccess = { Result.success(Unit) },
+            onFailure = { Result.failure(exception.map(it as Exception)) }
+        )
     }
 
     override suspend fun setPaymentPin(pin: String): Result<ApiResponse<String>> {
-        return try {
-            val response = remote.setPaymentPin(pin)
-            Result.success(response)
-        } catch (e: Exception) {
-            Result.failure(exception.map(e))
-        }
+        return runCatching {
+            remote.setPaymentPin(pin)
+        }.fold(
+            onSuccess = { Result.success(it) },
+            onFailure = { Result.failure(exception.map(it as Exception)) }
+        )
     }
 
     override suspend fun authPaymentPin(pin: String): Result<ApiResponse<Boolean>> {
-        return try {
-            val authenticated = remote.authPaymentPin(pin)
-            Result.success(authenticated)
-        } catch (e: Exception) {
-            Result.failure(exception.map(e))
-        }
+        return runCatching {
+            remote.authPaymentPin(pin)
+        }.fold(
+            onSuccess = { Result.success(it) },
+            onFailure = { Result.failure(exception.map(it as Exception)) }
+        )
     }
 
     override suspend fun resetPaymentPin(
         oldPin: String,
         newPin: String
     ): Result<ApiResponse<String>> {
-        return try {
-            val response = remote.resetPaymentPin(oldPin, newPin)
-            Result.success(response)
-        } catch (e: Exception) {
-            Result.failure(exception.map(e))
-        }
+        return runCatching {
+            remote.resetPaymentPin(oldPin, newPin)
+        }.fold(
+            onSuccess = { Result.success(it) },
+            onFailure = { Result.failure(exception.map(it as Exception)) }
+        )
     }
 
     override suspend fun resetPassword(

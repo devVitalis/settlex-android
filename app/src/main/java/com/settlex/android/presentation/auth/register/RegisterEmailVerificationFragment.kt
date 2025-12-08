@@ -5,6 +5,7 @@ import android.os.CountDownTimer
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.core.content.ContextCompat
 import androidx.core.widget.doOnTextChanged
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
@@ -31,18 +32,12 @@ import kotlinx.coroutines.launch
 
 @AndroidEntryPoint
 class RegisterEmailVerificationFragment : Fragment() {
-
     private var _binding: FragmentRegisterEmailVerificationBinding? = null
-    private val binding = _binding!!
-    private val progressLoader: ProgressDialogManager by lazy {
-        ProgressDialogManager(
-            requireActivity()
-        )
-    }
+    private val binding get() = _binding!!
+    private val progressLoader by lazy { ProgressDialogManager(requireActivity()) }
+    private val email: String by lazy { registerViewModel.email }
     private val authViewModel: AuthViewModel by activityViewModels()
     private val registerViewModel: RegisterViewModel by activityViewModels()
-
-    private val email: String by lazy { registerViewModel.email }
     private var otpResendCountdownTimer: CountDownTimer? = null
 
     override fun onCreateView(
@@ -82,12 +77,12 @@ class RegisterEmailVerificationFragment : Fragment() {
         StatusBar.setColor(requireActivity(), R.color.white)
         setupInputWatcher()
 
-        tvUserEmail.text = StringFormatter.maskEmail(email)
+        "($email)".also { tvUserEmail.text = it }
 
         tvSpamInfo.text = SpannableTextFormatter.format(
             "Didn’t get the email? Make sure to also check your spam/junk folder if you can't find the email in your inbox",
             "check your spam/junk folder",
-            " #FFA500"
+            "#FFA500"
         )
 
         btnBackBefore.setOnClickListener {
@@ -102,7 +97,8 @@ class RegisterEmailVerificationFragment : Fragment() {
             )
         }
 
-        btnResendOtp.setOnClickListener {
+        tvResendCode.setOnClickListener {
+            tvError.gone()
             authViewModel.sendVerificationCode(
                 email,
                 OtpType.EMAIL_VERIFICATION
@@ -181,24 +177,37 @@ class RegisterEmailVerificationFragment : Fragment() {
     }
 
     private fun startOtpResendCooldownTimer() {
-        binding.btnResendOtp.isEnabled = false
-        val originalText = binding.btnResendOtp.text
+        with(binding) {
+            tvResendCode.isEnabled = false
+            tvResendCode.setTextColor(ContextCompat.getColor(requireContext(), R.color.gray))
 
-        otpResendCountdownTimer = object :
-            CountDownTimer(
-                OTP_RESEND_COOLDOWN_MS,
-                COUNTDOWN_INTERVAL_MS
-            ) {
-            override fun onTick(millisUntilFinished: Long) {
-                val countDown = "Resend in ${millisUntilFinished / 1000} seconds"
-                binding.btnResendOtp.text = countDown
-            }
+            tvResendCode.text.also { originalText ->
 
-            override fun onFinish() {
-                binding.btnResendOtp.text = originalText
-                binding.btnResendOtp.isEnabled = true
+                otpResendCountdownTimer = object :
+                    CountDownTimer(
+                        OTP_RESEND_COOLDOWN_MS,
+                        COUNTDOWN_INTERVAL_MS
+                    ) {
+                    override fun onTick(millisUntilFinished: Long) {
+                        val countDownTimer = (millisUntilFinished / 1000).toInt()
+                        val countDownText = "Resend in $countDownTimer seconds"
+
+                        if (countDownTimer > 0) tvResendCode.text = countDownText
+                    }
+
+                    override fun onFinish() {
+                        tvResendCode.text = originalText
+                        tvResendCode.isEnabled = true
+                        tvResendCode.setTextColor(
+                            ContextCompat.getColor(
+                                requireContext(),
+                                R.color.blue
+                            )
+                        )
+                    }
+                }.start()
             }
-        }.start()
+        }
     }
 
     companion object {
@@ -214,9 +223,8 @@ class RegisterEmailVerificationFragment : Fragment() {
     private fun setupInputWatcher() {
         with(binding) {
             otpView.doOnTextChanged { otp, _, _, _ ->
-                if (otp.toString().isEmpty()) binding.tvError.gone()
-
-                binding.btnContinue.isEnabled = isOtpInputComplete()
+                tvError.gone()
+                btnContinue.isEnabled = isOtpInputComplete()
             }
         }
     }

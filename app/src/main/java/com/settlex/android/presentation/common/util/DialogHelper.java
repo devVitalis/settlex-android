@@ -53,6 +53,8 @@ public class DialogHelper {
             rootView.setRenderEffect(RenderEffect.createBlurEffect(5, 5, Shader.TileMode.CLAMP));
         }
 
+        binding.anim.playAnimation();
+
         if (config != null) config.accept(dialog, binding);
         dialog.show();
     }

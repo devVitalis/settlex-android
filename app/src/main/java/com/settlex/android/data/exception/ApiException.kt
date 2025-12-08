@@ -13,7 +13,7 @@ import javax.inject.Inject
 class ApiException @Inject constructor() {
 
     companion object {
-        private const val TAG = "FirebaseExceptionMapper"
+        private const val TAG = "ApiException"
         const val ERROR_NO_NETWORK = "Connection lost. Please check your Wi-Fi or cellular data and try again."
 
         // Firebase Auth
@@ -48,11 +48,11 @@ class ApiException @Inject constructor() {
 
             is FirebaseFunctionsException -> {
                 when (e.code) {
-                    FirebaseFunctionsException.Code.NOT_FOUND -> AppException.ServerException(NOT_FOUND)
+                    FirebaseFunctionsException.Code.NOT_FOUND -> AppException.ServerException(e.message ?: NOT_FOUND)
+                    FirebaseFunctionsException.Code.DEADLINE_EXCEEDED -> AppException.ServerException(e.message ?: DEADLINE_EXCEEDED)
+                    FirebaseFunctionsException.Code.FAILED_PRECONDITION -> AppException.ServerException(e.message ?: FAILED_PRECONDITION)
+                    FirebaseFunctionsException.Code.INTERNAL -> AppException.ServerException(e.message ?: INTERNAL)
                     FirebaseFunctionsException.Code.UNAVAILABLE -> AppException.ServerException(UNAVAILABLE)
-                    FirebaseFunctionsException.Code.INTERNAL -> AppException.ServerException(INTERNAL)
-                    FirebaseFunctionsException.Code.FAILED_PRECONDITION -> AppException.ServerException(FAILED_PRECONDITION)
-                    FirebaseFunctionsException.Code.DEADLINE_EXCEEDED -> AppException.ServerException(DEADLINE_EXCEEDED)
                     else -> AppException.ServerException(e.message ?: ERROR_FALLBACK)
                 }
             }
@@ -64,7 +64,7 @@ class ApiException @Inject constructor() {
                 }
             }
 
-            else -> AppException.ServerException(e.message ?: ERROR_FALLBACK)
+            else -> AppException.ServerException(ERROR_FALLBACK)
         }
     }
 }

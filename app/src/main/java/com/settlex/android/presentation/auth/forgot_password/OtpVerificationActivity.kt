@@ -35,8 +35,8 @@ class OtpVerificationActivity : AppCompatActivity() {
     private lateinit var passwordFlow: PasswordFlow
     private lateinit var userEmail: String
     private val authViewModel: AuthViewModel by viewModels()
-    private val progressLoader: ProgressDialogManager by lazy { ProgressDialogManager(this) }
-    private val keyboardHelper: KeyboardHelper by lazy { KeyboardHelper(this) }
+    private val progressLoader by lazy { ProgressDialogManager(this) }
+    private val keyboardHelper by lazy { KeyboardHelper(this) }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -68,7 +68,7 @@ class OtpVerificationActivity : AppCompatActivity() {
         with(binding) {
             btnBackBefore.setOnClickListener { finish() }
             btnResendOtp.setOnClickListener { resendVerificationCode() }
-            btnConfirm.setOnClickListener { verifyPasswordReset() }
+            btnConfirm.setOnClickListener { onConfirmButtonClicked() }
 
             btnHelp.setOnClickListener {
                 StringFormatter.showNotImplementedToast(
@@ -107,13 +107,16 @@ class OtpVerificationActivity : AppCompatActivity() {
     }
 
     private fun proceedToCreatePassword() {
-        val intent = Intent(this, CreatePasswordActivity::class.java)
-        intent.putExtra("email", userEmail)
-        intent.putExtra("password_flow", this.intent)
-        startActivity(intent)
-        finish()
-
+        startActivity(
+            Intent(this, CreatePasswordActivity::class.java)
+                .putExtra("email", userEmail)
+                .putExtra(
+                    "password_flow",
+                    intent.getStringExtra("password_flow")
+                )
+        )
         progressLoader.hide()
+        finish()
     }
 
     private fun showPasswordResetError(error: AppException) {
@@ -150,6 +153,14 @@ class OtpVerificationActivity : AppCompatActivity() {
             tvOtpFeedback.show()
 
             progressLoader.hide()
+        }
+    }
+
+    private fun onConfirmButtonClicked() {
+        when (passwordFlow) {
+            is PasswordFlow.Forgot -> verifyPasswordReset()
+
+            else -> Unit
         }
     }
 

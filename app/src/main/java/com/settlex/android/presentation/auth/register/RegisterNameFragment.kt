@@ -103,12 +103,12 @@ class RegisterNameFragment : Fragment() {
     }
 
     private fun isFirstNameValid(): Boolean {
-        val firstName = binding!!.etFirstname.toString().trim()
+        val firstName = binding!!.etFirstname.text.toString().trim()
         return firstName.isNotEmpty() && firstName.matches(NAME_VALIDATION_REGEX.toRegex())
     }
 
     private fun isLastNameValid(): Boolean {
-        val lastName = binding!!.etLastname.toString().trim()
+        val lastName = binding!!.etLastname.text.toString().trim()
         return lastName.isNotEmpty() && lastName.matches(NAME_VALIDATION_REGEX.toRegex())
     }
 }

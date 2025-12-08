@@ -191,7 +191,7 @@
                     android:layout_height="wrap_content"
                     android:fontFamily="@font/inter_regular"
                     android:includeFontPadding="false"
-                    android:text="@string/tv_didnt_receive_the_otp"
+                    android:text="@string/tv_didnt_receive_the_code"
                     android:textColor="@color/black"
                     android:textSize="13sp" />
 

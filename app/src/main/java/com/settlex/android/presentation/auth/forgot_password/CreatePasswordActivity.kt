@@ -1,15 +1,15 @@
 package com.settlex.android.presentation.auth.forgot_password
 
 import android.os.Bundle
-import android.text.Editable
-import android.text.TextWatcher
 import android.view.MotionEvent
 import android.view.View
 import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
+import androidx.core.widget.doOnTextChanged
 import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.lifecycleScope
 import androidx.lifecycle.repeatOnLifecycle
+import com.settlex.android.R
 import com.settlex.android.data.exception.AppException
 import com.settlex.android.databinding.ActivityCreatePasswordBinding
 import com.settlex.android.presentation.auth.AuthViewModel
@@ -19,6 +19,7 @@ import com.settlex.android.presentation.common.extensions.gone
 import com.settlex.android.presentation.common.extensions.show
 import com.settlex.android.presentation.common.state.UiState
 import com.settlex.android.presentation.common.util.DialogHelper
+import com.settlex.android.presentation.common.util.EditTextFocusBackgroundChanger
 import com.settlex.android.presentation.common.util.KeyboardHelper
 import com.settlex.android.presentation.common.util.PasswordToggleController
 import com.settlex.android.presentation.common.util.PasswordValidator
@@ -56,8 +57,9 @@ class CreatePasswordActivity : AppCompatActivity() {
 
     private fun initViews() {
         updateUiFromIntent()
-        setupInputListeners()
         setupListeners()
+        setupInputValidation()
+        setupInputFocusHandler()
         setupPasswordToggles()
     }
 
@@ -71,19 +73,24 @@ class CreatePasswordActivity : AppCompatActivity() {
     }
 
     private fun setupListeners() {
-        binding.btnChangePassword.setOnClickListener { setNewPassword() }
+        binding.btnChangePassword.setOnClickListener { onChangePasswordClicked() }
+    }
+
+    private fun onChangePasswordClicked() = with(binding) {
+        when (passwordFlow) {
+            is PasswordFlow.Change -> {
+                // TODO: call authenticated password reset API
+            }
+
+            else -> setNewPassword()
+        }
     }
 
     private fun setNewPassword() = with(binding) {
         val oldPassword = etCurrentPassword.text.toString().trim()
         val newPassword = etPassword.text.toString().trim()
 
-        when(passwordFlow){
-            is PasswordFlow.Change -> {
-                // TODO: call authenticated password reset API
-            }
-            else -> viewModel.setNewPassword(userEmail, oldPassword, newPassword)
-        }
+        viewModel.setNewPassword(userEmail, oldPassword, newPassword)
     }
 
     // Observers
@@ -126,63 +133,31 @@ class CreatePasswordActivity : AppCompatActivity() {
         }
     }
 
-    private fun setupInputListeners() = with(binding) {
-        when (passwordFlow) {
-            is PasswordFlow.Forgot -> {
-                val validationWatcher = object : TextWatcher {
-                    override fun beforeTextChanged(
-                        p0: CharSequence?,
-                        p1: Int,
-                        p2: Int,
-                        p3: Int
-                    ) {
-                    }
+    private fun setupInputValidation() = with(binding) {
+        etPassword.doOnTextChanged { text, _, _, _ ->
+            val password = text.toString().trim()
+            if (password.isNotEmpty()) togglePasswordVisibility.show() else togglePasswordVisibility.gone()
+            updateChangePasswordButtonState()
+        }
 
-                    override fun onTextChanged(
-                        p0: CharSequence?,
-                        p1: Int,
-                        p2: Int,
-                        p3: Int
-                    ) {
-                        tvConfirmPasswordError.gone()
-                        btnChangePassword.isEnabled = isPasswordValidAndMatch()
-                    }
+        etConfirmPassword.doOnTextChanged { text, _, _, _ ->
+            val confirmPassword = text.toString().trim()
+            if (confirmPassword.isNotEmpty()) toggleConfirmPasswordVisibility.show() else toggleConfirmPasswordVisibility.gone()
+            updateChangePasswordButtonState()
+        }
 
-                    override fun afterTextChanged(p0: Editable?) {}
-                }
-                etPassword.addTextChangedListener(validationWatcher)
-                etConfirmPassword.addTextChangedListener(validationWatcher)
-            }
+        etCurrentPassword.doOnTextChanged { text, _, _, _ ->
+            val currentPassword = text.toString().trim()
+            if (currentPassword.isNotEmpty()) toggleCurrentPasswordVisibility.show() else toggleCurrentPasswordVisibility.gone()
+            updateChangePasswordButtonState()
+        }
+    }
 
-            else -> {
-                val validationWatcher = object : TextWatcher {
-                    override fun beforeTextChanged(
-                        p0: CharSequence?,
-                        p1: Int,
-                        p2: Int,
-                        p3: Int
-                    ) {
-                    }
-
-                    override fun afterTextChanged(p0: Editable?) {}
-
-                    override fun onTextChanged(
-                        p0: CharSequence?,
-                        p1: Int,
-                        p2: Int,
-                        p3: Int
-                    ) {
-                        tvCurrentPasswordError.gone()
-                        tvConfirmPasswordError.gone()
-
-                        // Update button state
-                        btnChangePassword.isEnabled =
-                            isCurrentPasswordValid() && isPasswordValidAndMatch()
-                    }
-                }
-                etPassword.addTextChangedListener(validationWatcher)
-                etConfirmPassword.addTextChangedListener(validationWatcher)
-                etCurrentPassword.addTextChangedListener(validationWatcher)
+    private fun updateChangePasswordButtonState() {
+        with(binding) {
+            btnChangePassword.isEnabled = when (passwordFlow) {
+                is PasswordFlow.Change -> isCurrentPasswordValid() && isPasswordValidAndMatch()
+                else -> isPasswordValidAndMatch()
             }
         }
     }
@@ -196,7 +171,7 @@ class CreatePasswordActivity : AppCompatActivity() {
     private fun isPasswordValidAndMatch(): Boolean {
         with(binding) {
             val newPassword = etPassword.text.toString().trim()
-            val confirmPassword = etCurrentPassword.text.toString().trim()
+            val confirmPassword = etConfirmPassword.text.toString().trim()
 
             return PasswordValidator.validate(newPassword, confirmPassword)
         }
@@ -219,9 +194,20 @@ class CreatePasswordActivity : AppCompatActivity() {
         )
     }
 
+    private fun setupInputFocusHandler() {
+        with(binding) {
+            EditTextFocusBackgroundChanger(
+                defaultBackgroundResource = R.drawable.bg_edit_txt_custom_gray_not_focused,
+                focusedBackgroundResource = R.drawable.bg_edit_txt_custom_white_focused,
+                etCurrentPassword to etCurrentPasswordBackground,
+                etPassword to etPasswordBackground,
+                etConfirmPassword to etConfirmPasswordBackground
+            )
+        }
+    }
+
     override fun dispatchTouchEvent(event: MotionEvent): Boolean {
         if (keyboardHelper.handleOutsideTouch(event)) return true
         return super.dispatchTouchEvent(event)
     }
 }
-

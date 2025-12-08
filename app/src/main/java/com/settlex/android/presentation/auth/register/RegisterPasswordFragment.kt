@@ -34,15 +34,12 @@ import com.settlex.android.util.ui.StatusBar
 import kotlinx.coroutines.launch
 
 class RegisterPasswordFragment : Fragment() {
-    private val progressLoader: ProgressDialogManager by lazy {
-        ProgressDialogManager(
-            requireActivity()
-        )
-    }
-    private val keyboardHelper by lazy { KeyboardHelper(requireActivity()) }
+
     private var binding: FragmentRegisterPasswordBinding? = null
     private val authViewModel: AuthViewModel by activityViewModels()
     private val registerViewModel: RegisterViewModel by activityViewModels()
+    private val keyboardHelper by lazy { KeyboardHelper(requireActivity()) }
+    private val progressLoader by lazy { ProgressDialogManager(requireActivity()) }
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -146,7 +143,7 @@ class RegisterPasswordFragment : Fragment() {
 
     companion object {
         private const val LENGTH = 8
-        private const val HAS_SPECIAL_CHAR_REGEX = PasswordValidator.ALLOWED_SPECIAL_CHARS
+        private const val HAS_ALLOWED_SPECIAL_CHARS = PasswordValidator.ALLOWED_SPECIAL_CHARS
         private const val ERROR_PASSWORD_MISMATCH = PasswordValidator.ERROR_PASSWORD_MISMATCH
     }
 
@@ -155,7 +152,7 @@ class RegisterPasswordFragment : Fragment() {
             val hasLength = password.length >= LENGTH
             val hasUpper = password.any { it.isUpperCase() }
             val hasLower = password.any { it.isLowerCase() }
-            val hasSpecial = password.matches(HAS_SPECIAL_CHAR_REGEX.toRegex())
+            val hasSpecial = password.any { HAS_ALLOWED_SPECIAL_CHARS.contains(it) }
             val matches = password == confirm
 
             when (confirm.isNotEmpty() && !matches) {
@@ -183,11 +180,10 @@ class RegisterPasswordFragment : Fragment() {
         appendRequirement(requirements, hasLength, "At least 8 characters")
         appendRequirement(requirements, hasUpper, "Contains uppercase letter")
         appendRequirement(requirements, hasLower, "Contains lowercase letter")
-        appendRequirement(requirements, hasSpecial, "Contains special character (e.g. @#$%^&;+=!.)")
+        appendRequirement(requirements, hasSpecial, "Contains special character (e.g. !@#$%^&*()_+-=[]{};:,.?)")
 
         with(binding!!) {
-            val showPasswordPrompt =
-                password.isEmpty() || (hasLength && hasUpper && hasLower && hasSpecial)
+            val showPasswordPrompt = password.isEmpty() || (hasLength && hasUpper && hasLower && hasSpecial)
             tvPasswordPrompt.visibility = if (!showPasswordPrompt) View.VISIBLE else View.GONE
             tvPasswordPrompt.text = requirements
         }
@@ -197,10 +193,10 @@ class RegisterPasswordFragment : Fragment() {
         val icon = ContextCompat.getDrawable(
             requireContext(),
             if (isMet) R.drawable.ic_checkbox_checked else R.drawable.ic_checkbox_unchecked
-        )
+        )!!
 
         val size = (binding!!.tvPasswordPrompt.textSize * 1.2f).toInt()
-        icon!!.setBounds(0, 0, size, size)
+        icon.setBounds(0, 0, size, size)
         builder.append(" ")
         builder.setSpan(
             ImageSpan(icon, ImageSpan.ALIGN_BOTTOM),
