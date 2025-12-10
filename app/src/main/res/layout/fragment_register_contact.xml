@@ -103,78 +103,56 @@
             android:paddingStart="15dp"
             android:paddingEnd="15dp">
 
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="25dp"
-                android:fontFamily="@font/inter_bold"
-                android:includeFontPadding="false"
-                android:text="@string/title_create_your_account"
-                android:textColor="@color/black"
-                android:textSize="25sp"
-                android:textStyle="bold" />
-
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:fontFamily="@font/inter_regular"
-                android:includeFontPadding="false"
-                android:text="@string/subtitle_lets_get_you_started"
-                android:textColor="@color/black"
-                android:textSize="15sp" />
-
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="20dp"
-                android:layout_marginBottom="5dp"
-                android:fontFamily="@font/inter_regular"
-                android:includeFontPadding="false"
-                android:text="@string/tv_step_1_of_4"
-                android:textColor="@color/gray"
-                android:textSize="14sp"
-                android:textStyle="bold" />
-
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
+                android:layout_marginTop="25dp"
+                android:gravity="center_vertical"
                 android:orientation="horizontal">
 
-                <View
+                <TextView
                     android:layout_width="0dp"
-                    android:layout_height="2dp"
-                    android:layout_marginEnd="10dp"
+                    android:layout_height="wrap_content"
                     android:layout_weight="1"
-                    android:background="@drawable/bg_24dp_blue" />
+                    android:fontFamily="@font/inter_bold"
+                    android:includeFontPadding="false"
+                    android:text="@string/title_create_your_account"
+                    android:textColor="@color/black"
+                    android:textSize="25sp"
+                    android:textStyle="bold" />
 
-                <View
-                    android:layout_width="0dp"
-                    android:layout_height="2dp"
-                    android:layout_marginEnd="10dp"
-                    android:layout_weight="1"
-                    android:background="@drawable/bg_24dp_light_blue" />
+                <!-- Step progress -->
+                <FrameLayout
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="end">
 
-                <View
-                    android:layout_width="0dp"
-                    android:layout_height="2dp"
-                    android:layout_marginEnd="10dp"
-                    android:layout_weight="1"
-                    android:background="@drawable/bg_24dp_light_blue" />
+                    <com.google.android.material.progressindicator.CircularProgressIndicator
+                        android:id="@+id/progress_circle"
+                        style="@style/Widget.SettleX.StepProgressIndicator"
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        android:progress="1" />
 
-                <View
-                    android:layout_width="0dp"
-                    android:layout_height="2dp"
-                    android:layout_weight="1"
-                    android:background="@drawable/bg_24dp_light_blue" />
+                    <TextView
+                        android:id="@+id/progress_text"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="center"
+                        android:fontFamily="@font/inter_regular"
+                        android:includeFontPadding="false"
+                        android:text="@string/tv_step_1_of_4"
+                        android:textColor="@android:color/black"
+                        android:textSize="13sp" />
+                </FrameLayout>
             </LinearLayout>
 
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="20dp"
                 android:fontFamily="@font/inter_regular"
                 android:includeFontPadding="false"
-                android:text="@string/body_contact_body"
+                android:text="@string/sub_title_enter_your_email_and_phone_number_we_ll_send_a_one_time_verification_code_otp_to_your_email_to_confirm_your_account"
                 android:textColor="@color/black"
                 android:textSize="14sp" />
 
@@ -182,23 +160,19 @@
                 android:id="@+id/et_email_background"
                 android:layout_width="match_parent"
                 android:layout_height="55dp"
-                android:layout_marginTop="10dp"
+                android:layout_marginTop="15dp"
                 android:background="@drawable/bg_edit_txt_custom_white_not_focused">
 
                 <com.google.android.material.textfield.TextInputEditText
                     android:id="@+id/et_email"
+                    style="@style/Widget.SettleX.TextInputEditText.Outlined"
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
                     android:background="@android:color/transparent"
-                    android:fontFamily="@font/inter_regular"
                     android:hint="@string/hint_enter_your_email_address"
                     android:imeOptions="actionNext"
-                    android:includeFontPadding="false"
                     android:inputType="textEmailAddress"
-                    android:paddingHorizontal="15dp"
-                    android:textColor="@color/black"
-                    android:textColorHint="@color/gray"
-                    android:textSize="14sp" />
+                    android:paddingHorizontal="15dp" />
             </FrameLayout>
 
             <TextView
@@ -211,7 +185,7 @@
                 android:textColor="@color/red"
                 android:textSize="13sp"
                 android:visibility="gone"
-                tools:text="message" />
+                tools:text="error message" />
 
             <androidx.constraintlayout.widget.ConstraintLayout
                 android:id="@+id/et_phone_background"
@@ -257,6 +231,7 @@
 
                 <com.google.android.material.textfield.TextInputEditText
                     android:id="@+id/et_phone"
+                    style="@style/Widget.SettleX.TextInputEditText.Outlined"
                     android:layout_width="0dp"
                     android:layout_height="0dp"
                     android:layout_marginStart="10dp"
@@ -264,12 +239,8 @@
                     android:fontFamily="@font/inter_regular"
                     android:hint="@string/hint_enter_your_phone_number"
                     android:imeOptions="actionDone"
-                    android:includeFontPadding="false"
                     android:inputType="phone"
                     android:maxLength="11"
-                    android:textColor="@color/black"
-                    android:textColorHint="@color/gray"
-                    android:textSize="14sp"
                     app:layout_constraintBottom_toBottomOf="parent"
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintStart_toEndOf="@id/divider_phone"
@@ -310,7 +281,7 @@
                 android:fontFamily="@font/inter_regular"
                 android:includeFontPadding="false"
                 android:textColor="@color/black"
-                android:textSize="12sp"
+                android:textSize="13sp"
                 tools:text="I have read, understood and agreed to the Terms &amp; Conditions and Privacy Policy." />
         </LinearLayout>
 

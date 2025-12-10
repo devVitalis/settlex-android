@@ -30,4 +30,8 @@ object PasswordValidator {
 
         return hasLength && hasUpper && hasLower && hasSpecial
     }
+
+    fun isMatch(password: String, confirm: String): Boolean {
+        return password == confirm
+    }
 }

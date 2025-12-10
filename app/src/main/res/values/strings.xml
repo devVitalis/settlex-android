@@ -14,9 +14,8 @@
     <string name="cd_back_before">Back</string>
     <string name="tv_help">Help</string>
     <string name="title_create_your_account">Create Your Account</string>
-    <string name="subtitle_lets_get_you_started">Lets get you started</string>
-    <string name="body_contact_body">Please enter a valid email address and phone number. An OTP will be sent to your email address.</string>
-    <string name="tv_step_1_of_4">Step 1 of 4</string>
+    <string name="sub_title_enter_your_email_and_phone_number_we_ll_send_a_one_time_verification_code_otp_to_your_email_to_confirm_your_account">Enter your email and phone number. We\'ll send a one-time verification code (OTP) to your email to confirm your account.</string>
+    <string name="tv_step_1_of_4">1/2</string>
     <string name="hint_enter_your_email_address">Enter your email address</string>
     <string name="tv_country_code">+234</string>
     <string name="hint_enter_your_phone_number">Enter your phone number</string>
@@ -26,23 +25,21 @@
     <string name="title_email_verification">Email Verification</string>
     <string name="subtitle_we_sent_you_a_verification_code">We sent you a verification code</string>
     <string name="body_enter_the_verification_code_sent_to_your_email">Enter the verification code sent to your email</string>
-    <string name="tv_step_2_of_4">Step 2 of 4</string>
+    <string name="tv_step_2_of_4">2/4</string>
     <string name="tv_didnt_receive_the_code">Didn\'t receive the code?</string>
     <string name="tv_resend_code">Resend code</string>
 
     <!-- REGISTER NAME FRAGMENT -->
     <string name="title_let_s_get_to_know_you">Let\'s Get to Know You</string>
     <string name="subtitle_what_should_we_call_you">What should we call you?</string>
-    <string name="body_enter_your_legal_name">Enter your legal name</string>
-    <string name="hint_first_name">First Name</string>
-    <string name="hint_last_name">Last Name</string>
-    <string name="tv_step_3_of_4">Step 3 of 4</string>
+    <string name="hint_enter_your_first_name">Enter your firstname</string>
+    <string name="hint_enter_your_last_name">Enter your lastname</string>
+    <string name="tv_step_3_of_4">3/4</string>
 
     <!-- REGISTER PASSWORD FRAGMENT -->
     <string name="title_create_your_password">Create Your Password</string>
-    <string name="subtitle_lets_safeguard_your_account">Lets safeguard your account</string>
-    <string name="tv_step_4_of_4">Step 4 of 4</string>
-    <string name="body_create_a_strong_password_to_complete_your_account_setup">Create a strong password to complete your account setup.</string>
+    <string name="sub_title_create_a_strong_password_to_complete_your_account_setup">Create a strong password to complete your account setup.</string>
+    <string name="tv_step_4_of_4">4/4</string>
     <string name="hint_create_your_password">Create your password</string>
     <string name="hint_confirm_your_password">Confirm your password</string>
     <string name="tv_have_an_invitation_code_optional">Have an Invitation Code? (Optional)</string>
@@ -67,14 +64,15 @@
     <string name="btn_resend">Resend</string>
 
     <!-- CREATE PASSWORD ACTIVITY -->
-    <string name="title_create_a_new_password">Create a New Password</string>
-    <string name="subtitle_your_password_must_be_at_least_8_characters_long_and_contain_an_uppercase_letter_a_lowercase_letter_and_a_special_character_eg_amp"><![CDATA[Your password must be at least 8 characters long and contain an uppercase letter, a lowercase letter, and a special character(eg., @#$%^&+=!.)]]></string>
+    <string name="title_change_your_password">Change Your Password</string>
+    <string name="sub_title_complete_the_fields_to_update_your_password">Complete the fields to update your password.</string>
     <string name="tv_current_password">Current Password</string>
     <string name="hint_enter_your_current_password">Enter your current password</string>
     <string name="tv_new_password">New Password</string>
     <string name="hint_enter_your_new_password">Enter your new password</string>
     <string name="tv_confirm_new_password">Confirm New Password</string>
     <string name="hint_confirm_your_new_password">Confirm your new password</string>
+    <string name="tv_password_requirements_info"><![CDATA[Your password must be at least 8 characters long and contain an uppercase letter, a lowercase letter, and a special character(eg., !@#$%^&*()_+-=[]{};:,.?)]]></string>
     <string name="btn_change_password">Change Password</string>
 
 </resources>

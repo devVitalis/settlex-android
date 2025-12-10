@@ -109,7 +109,7 @@ class LoginActivity : AppCompatActivity() {
         when (state) {
             is LoginState.LoggedOut -> showUnauthenticatedUi()
             is LoginState.LoggedInUser -> {
-                showAuthenticatedUi(state)
+                showLoggedUser(state)
 
                 with(binding) {
                     // Enable/disable fingerprint auth
@@ -121,7 +121,7 @@ class LoginActivity : AppCompatActivity() {
         }
     }
 
-    private fun showAuthenticatedUi(user: LoginState.LoggedInUser) {
+    private fun showLoggedUser(user: LoginState.LoggedInUser) {
         with(binding) {
             val formattedDisplayName = "Hi, ${user.displayName.uppercase()}"
             val formattedEmail = "(${StringFormatter.maskEmail(user.email)})"
@@ -131,7 +131,7 @@ class LoginActivity : AppCompatActivity() {
             tvUserEmail.text = formattedEmail
             etEmail.setText(user.email)
 
-            viewAuthenticatedUi.show()
+            viewLoggedInUi.show()
             tvSwitchAccount.show()
 
             ivLogo.gone()
@@ -142,7 +142,7 @@ class LoginActivity : AppCompatActivity() {
 
     private fun showUnauthenticatedUi() {
         with(binding) {
-            viewAuthenticatedUi.gone()
+            viewLoggedInUi.gone()
             ivFingerprint.gone()
             tvSwitchAccount.gone()
 

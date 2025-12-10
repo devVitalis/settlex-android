@@ -112,11 +112,11 @@ class RegisterContactFragment : Fragment() {
     private fun observeOtpSendState() {
         viewLifecycleOwner.lifecycleScope.launch {
             viewLifecycleOwner.repeatOnLifecycle(Lifecycle.State.STARTED) {
-                authViewModel.otpEvent.collect {
-                    when (it) {
+                authViewModel.otpEvent.collect { state ->
+                    when (state) {
                         is UiState.Loading -> progressLoader.show()
                         is UiState.Success -> onOtpSent()
-                        is UiState.Failure -> onOtpSendFailure(it.exception)
+                        is UiState.Failure -> onOtpSendFailure(state.exception)
                     }
                 }
             }
@@ -140,6 +140,8 @@ class RegisterContactFragment : Fragment() {
     }
 
     private fun onContinueClicked() = with(binding) {
+        tvError.gone()
+
         val email = etEmail.text.toString().trim().lowercase()
         val phone = etPhone.text.toString().trim()
         val formattedPhone = StringFormatter.formatPhoneWithCode(phone)
@@ -214,7 +216,8 @@ class RegisterContactFragment : Fragment() {
 
     private fun setupLegalLinks() {
         with(binding) {
-            val span = SpannableStringBuilder("I have read, understood and agreed to the Terms & Conditions and Privacy Policy.")
+            val span =
+                SpannableStringBuilder("I have read, understood and agreed to the Terms & Conditions and Privacy Policy.")
 
             val termsSpan: ClickableSpan = object : ClickableSpan() {
                 override fun onClick(widget: View) {

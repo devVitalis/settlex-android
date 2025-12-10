@@ -131,11 +131,11 @@ class OtpVerificationActivity : AppCompatActivity() {
     private fun observeOtpRequestEvent() {
         lifecycleScope.launch {
             repeatOnLifecycle(Lifecycle.State.STARTED) {
-                authViewModel.otpEvent.collect {
-                    when (it) {
+                authViewModel.otpEvent.collect { state ->
+                    when (state) {
                         is UiState.Loading -> progressLoader.show()
                         is UiState.Success -> onPasswordResetCodeSent()
-                        is UiState.Failure -> showPasswordResetCodeError(it.exception)
+                        is UiState.Failure -> showPasswordResetCodeError(state.exception)
                     }
                 }
             }

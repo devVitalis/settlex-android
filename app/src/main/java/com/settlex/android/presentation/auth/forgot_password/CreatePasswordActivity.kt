@@ -1,5 +1,6 @@
 package com.settlex.android.presentation.auth.forgot_password
 
+import android.content.Intent
 import android.os.Bundle
 import android.view.MotionEvent
 import android.view.View
@@ -9,19 +10,17 @@ import androidx.core.widget.doOnTextChanged
 import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.lifecycleScope
 import androidx.lifecycle.repeatOnLifecycle
-import com.settlex.android.R
 import com.settlex.android.data.exception.AppException
 import com.settlex.android.databinding.ActivityCreatePasswordBinding
 import com.settlex.android.presentation.auth.AuthViewModel
+import com.settlex.android.presentation.auth.login.LoginActivity
 import com.settlex.android.presentation.auth.util.PasswordFlow
 import com.settlex.android.presentation.auth.util.PasswordFlowParser
 import com.settlex.android.presentation.common.extensions.gone
 import com.settlex.android.presentation.common.extensions.show
 import com.settlex.android.presentation.common.state.UiState
 import com.settlex.android.presentation.common.util.DialogHelper
-import com.settlex.android.presentation.common.util.EditTextFocusBackgroundChanger
 import com.settlex.android.presentation.common.util.KeyboardHelper
-import com.settlex.android.presentation.common.util.PasswordToggleController
 import com.settlex.android.presentation.common.util.PasswordValidator
 import com.settlex.android.util.ui.ProgressDialogManager
 import dagger.hilt.android.AndroidEntryPoint
@@ -59,21 +58,23 @@ class CreatePasswordActivity : AppCompatActivity() {
         updateUiFromIntent()
         setupListeners()
         setupInputValidation()
-        setupInputFocusHandler()
-        setupPasswordToggles()
-    }
-
-    private fun updateUiFromIntent() {
-        binding.currentPasswordContainer.visibility =
-            when (passwordFlow) {
-                is PasswordFlow.Forgot -> View.GONE
-                is PasswordFlow.Change -> View.VISIBLE
-                is PasswordFlow.AuthenticatedReset -> View.GONE
-            }
+        hidePasswordToggles()
     }
 
     private fun setupListeners() {
-        binding.btnChangePassword.setOnClickListener { onChangePasswordClicked() }
+        with(binding) {
+
+            btnChangePassword.setOnClickListener { onChangePasswordClicked() }
+            btnBackBefore.setOnClickListener { finish() }
+        }
+    }
+
+    private fun updateUiFromIntent() {
+        binding.viewCurrentPassword.visibility =
+            when (passwordFlow) {
+                is PasswordFlow.Change -> View.VISIBLE
+                else -> View.GONE
+            }
     }
 
     private fun onChangePasswordClicked() = with(binding) {
@@ -116,8 +117,22 @@ class CreatePasswordActivity : AppCompatActivity() {
                 "Continue".also { btnAction.text = it }
 
                 btnAction.setOnClickListener {
-                    dialog.dismiss()
-                    finish()
+                    when (passwordFlow) {
+                        is PasswordFlow.Forgot -> {
+                            startActivity(
+                                Intent(
+                                    this@CreatePasswordActivity,
+                                    LoginActivity::class.java
+                                )
+                            )
+                            finishAffinity()
+                        }
+
+                        else -> {
+                            dialog.dismiss()
+                            finish()
+                        }
+                    }
                 }
             }
         }
@@ -134,22 +149,51 @@ class CreatePasswordActivity : AppCompatActivity() {
     }
 
     private fun setupInputValidation() = with(binding) {
+        etCurrentPassword.doOnTextChanged { text, _, _, _ ->
+            val currentPassword = text.toString().trim()
+            tilCurrentPassword.isEndIconVisible = currentPassword.isNotEmpty()
+            tvCurrentPasswordError.gone()
+
+            updateChangePasswordButtonState()
+        }
+
         etPassword.doOnTextChanged { text, _, _, _ ->
             val password = text.toString().trim()
-            if (password.isNotEmpty()) togglePasswordVisibility.show() else togglePasswordVisibility.gone()
+            tilPassword.isEndIconVisible = password.isNotEmpty()
+
+            validatePasswordMatch()
             updateChangePasswordButtonState()
         }
 
         etConfirmPassword.doOnTextChanged { text, _, _, _ ->
             val confirmPassword = text.toString().trim()
-            if (confirmPassword.isNotEmpty()) toggleConfirmPasswordVisibility.show() else toggleConfirmPasswordVisibility.gone()
+            tilConfirmPassword.isEndIconVisible = confirmPassword.isNotEmpty()
+
+            validatePasswordMatch()
             updateChangePasswordButtonState()
         }
+    }
 
-        etCurrentPassword.doOnTextChanged { text, _, _, _ ->
-            val currentPassword = text.toString().trim()
-            if (currentPassword.isNotEmpty()) toggleCurrentPasswordVisibility.show() else toggleCurrentPasswordVisibility.gone()
-            updateChangePasswordButtonState()
+    private fun validatePasswordMatch() {
+        with(binding) {
+
+            val password = etPassword.text.toString().trim()
+            val confirmPassword = etConfirmPassword.text.toString().trim()
+
+            when (password.isNotEmpty() && confirmPassword.isNotEmpty()) {
+                true -> {
+                    if (PasswordValidator.isMatch(
+                            password = password,
+                            confirm = confirmPassword
+                        )
+                    ) tvConfirmPasswordError.gone() else {
+                        tvConfirmPasswordError.text = PasswordValidator.ERROR_PASSWORD_MISMATCH
+                        tvConfirmPasswordError.show()
+                    }
+                }
+
+                else -> tvConfirmPasswordError.gone()
+            }
         }
     }
 
@@ -177,33 +221,10 @@ class CreatePasswordActivity : AppCompatActivity() {
         }
     }
 
-    private fun setupPasswordToggles() = with(binding) {
-        PasswordToggleController(
-            etPassword,
-            togglePasswordVisibility
-        )
-
-        PasswordToggleController(
-            etConfirmPassword,
-            toggleConfirmPasswordVisibility
-        )
-
-        PasswordToggleController(
-            etCurrentPassword,
-            toggleCurrentPasswordVisibility
-        )
-    }
-
-    private fun setupInputFocusHandler() {
-        with(binding) {
-            EditTextFocusBackgroundChanger(
-                defaultBackgroundResource = R.drawable.bg_edit_txt_custom_gray_not_focused,
-                focusedBackgroundResource = R.drawable.bg_edit_txt_custom_white_focused,
-                etCurrentPassword to etCurrentPasswordBackground,
-                etPassword to etPasswordBackground,
-                etConfirmPassword to etConfirmPasswordBackground
-            )
-        }
+    private fun hidePasswordToggles() = with(binding) {
+        tilCurrentPassword.isEndIconVisible = false
+        tilPassword.isEndIconVisible = false
+        tilConfirmPassword.isEndIconVisible = false
     }
 
     override fun dispatchTouchEvent(event: MotionEvent): Boolean {

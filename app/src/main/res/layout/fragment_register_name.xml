@@ -78,17 +78,50 @@
             android:paddingStart="15dp"
             android:paddingEnd="15dp">
 
-            <TextView
-                android:layout_width="wrap_content"
+
+            <LinearLayout
+                android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_gravity="start"
                 android:layout_marginTop="25dp"
-                android:fontFamily="@font/inter_bold"
-                android:includeFontPadding="false"
-                android:text="@string/title_let_s_get_to_know_you"
-                android:textColor="@color/black"
-                android:textSize="25sp"
-                android:textStyle="bold" />
+                android:gravity="center_vertical"
+                android:orientation="horizontal">
+
+                <TextView
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:fontFamily="@font/inter_bold"
+                    android:includeFontPadding="false"
+                    android:text="@string/title_let_s_get_to_know_you"
+                    android:textColor="@color/black"
+                    android:textSize="25sp"
+                    android:textStyle="bold" />
+
+                <!-- Step progress -->
+                <FrameLayout
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="end">
+
+                    <com.google.android.material.progressindicator.CircularProgressIndicator
+                        android:id="@+id/progress_circle"
+                        style="@style/Widget.SettleX.StepProgressIndicator"
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        android:progress="3" />
+
+                    <TextView
+                        android:id="@+id/progress_text"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="center"
+                        android:fontFamily="@font/inter_regular"
+                        android:includeFontPadding="false"
+                        android:text="@string/tv_step_3_of_4"
+                        android:textColor="@android:color/black"
+                        android:textSize="13sp" />
+                </FrameLayout>
+            </LinearLayout>
 
             <TextView
                 android:layout_width="wrap_content"
@@ -100,90 +133,27 @@
                 android:textColor="@color/black"
                 android:textSize="15sp" />
 
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_gravity="start"
-                android:layout_marginTop="20dp"
-                android:layout_marginBottom="5dp"
-                android:fontFamily="@font/inter_regular"
-                android:includeFontPadding="false"
-                android:text="@string/tv_step_3_of_4"
-                android:textColor="@color/gray"
-                android:textSize="14sp"
-                android:textStyle="bold" />
-
-            <LinearLayout
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:orientation="horizontal">
-
-                <View
-                    android:layout_width="0dp"
-                    android:layout_height="2dp"
-                    android:layout_marginEnd="10dp"
-                    android:layout_weight="1"
-                    android:background="@drawable/bg_24dp_blue" />
-
-                <View
-                    android:layout_width="0dp"
-                    android:layout_height="2dp"
-                    android:layout_marginEnd="10dp"
-                    android:layout_weight="1"
-                    android:background="@drawable/bg_24dp_blue" />
-
-                <View
-                    android:layout_width="0dp"
-                    android:layout_height="2dp"
-                    android:layout_marginEnd="10dp"
-                    android:layout_weight="1"
-                    android:background="@drawable/bg_24dp_blue" />
-
-                <View
-                    android:layout_width="0dp"
-                    android:layout_height="2dp"
-                    android:layout_weight="1"
-                    android:background="@drawable/bg_24dp_light_blue" />
-            </LinearLayout>
-
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_gravity="start"
-                android:layout_marginTop="20dp"
-                android:fontFamily="@font/inter_regular"
-                android:includeFontPadding="false"
-                android:text="@string/body_enter_your_legal_name"
-                android:textColor="@color/black"
-                android:textSize="14sp" />
-
-            <!-- Firstname Field -->
+            <!-- Firstname field -->
             <com.google.android.material.textfield.TextInputLayout
                 style="@style/Widget.SettleX.TextInputLayout.Outlined"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_gravity="center"
-                android:layout_marginTop="20dp"
+                android:layout_marginTop="15dp"
                 android:gravity="center"
-                android:hint="@string/hint_first_name"
+                android:hint="@string/hint_enter_your_first_name"
                 app:endIconMode="clear_text">
 
                 <com.google.android.material.textfield.TextInputEditText
                     android:id="@+id/et_firstname"
+                    style="@style/Widget.SettleX.TextInputEditText.Outlined"
                     android:layout_width="match_parent"
                     android:layout_height="55dp"
-                    android:fontFamily="@font/inter_regular"
-                    android:gravity="start|center_vertical"
                     android:imeOptions="actionNext"
-                    android:includeFontPadding="false"
-                    android:inputType="textPersonName"
-                    android:paddingHorizontal="20dp"
-                    android:textColor="@color/black"
-                    android:textColorHint="@color/gray"
-                    android:textSize="14sp" />
+                    android:inputType="textPersonName" />
             </com.google.android.material.textfield.TextInputLayout>
 
-            <!-- Lastname Field -->
+            <!-- Lastname field -->
             <com.google.android.material.textfield.TextInputLayout
                 style="@style/Widget.SettleX.TextInputLayout.Outlined"
                 android:layout_width="match_parent"
@@ -191,22 +161,17 @@
                 android:layout_gravity="center"
                 android:layout_marginTop="10dp"
                 android:gravity="center"
-                android:hint="@string/hint_last_name"
+                android:hint="@string/hint_enter_your_last_name"
                 app:endIconMode="clear_text">
 
                 <com.google.android.material.textfield.TextInputEditText
                     android:id="@+id/et_lastname"
+                    style="@style/Widget.SettleX.TextInputEditText.Outlined"
                     android:layout_width="match_parent"
                     android:layout_height="55dp"
-                    android:fontFamily="@font/inter_regular"
-                    android:gravity="start|center_vertical"
                     android:imeOptions="actionDone"
                     android:includeFontPadding="false"
-                    android:inputType="textPersonName"
-                    android:paddingHorizontal="20dp"
-                    android:textColor="@color/black"
-                    android:textColorHint="@color/gray"
-                    android:textSize="14sp" />
+                    android:inputType="textPersonName" />
             </com.google.android.material.textfield.TextInputLayout>
         </LinearLayout>
     </ScrollView>

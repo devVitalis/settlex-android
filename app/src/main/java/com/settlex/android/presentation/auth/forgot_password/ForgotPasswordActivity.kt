@@ -18,7 +18,6 @@ import com.settlex.android.presentation.auth.AuthViewModel
 import com.settlex.android.presentation.common.extensions.gone
 import com.settlex.android.presentation.common.extensions.show
 import com.settlex.android.presentation.common.state.UiState
-import com.settlex.android.presentation.common.util.EditTextFocusBackgroundChanger
 import com.settlex.android.presentation.common.util.KeyboardHelper
 import com.settlex.android.util.ui.ProgressDialogManager
 import com.settlex.android.util.ui.StatusBar
@@ -37,13 +36,6 @@ class ForgotPasswordActivity : AppCompatActivity() {
         binding = ActivityForgotPasswordBinding.inflate(layoutInflater)
         setContentView(binding.root)
 
-//        progressLoader.setOverlayColor(
-//            ContextCompat.getColor(
-//                this,
-//                R.color.semi_transparent_white
-//            )
-//        )
-
         initViews()
         initObservers()
     }
@@ -53,18 +45,25 @@ class ForgotPasswordActivity : AppCompatActivity() {
     }
 
     private fun initViews() {
-        StatusBar.setColor(this, R.color.white)
-        setupInputValidation()
-
         with(binding) {
+            StatusBar.setColor(this@ForgotPasswordActivity, R.color.white)
+            setupInputValidation()
+
             keyboardHelper.attachDoneAction(etEmail)
 
-            EditTextFocusBackgroundChanger(
-                defaultBackgroundResource = R.drawable.bg_edit_txt_custom_gray_not_focused,
-                focusedBackgroundResource = R.drawable.bg_edit_txt_custom_white_focused,
-                etEmail to etEmailBackground
-            )
-
+            /**
+             * For Testing
+            btnBackBefore.setOnClickListener {
+                startActivity(
+                    Intent(this@ForgotPasswordActivity, CreatePasswordActivity::class.java)
+                        .putExtra(
+                            "email",
+                            binding.etEmail.text.toString().lowercase()
+                        )
+                        .putExtra("password_flow", "forgot")
+                )
+            }
+            */
             btnBackBefore.setOnClickListener { finish() }
             btnContinue.setOnClickListener {
                 tvError.gone()
@@ -76,11 +75,11 @@ class ForgotPasswordActivity : AppCompatActivity() {
     private fun observeOtpRequestState() {
         lifecycleScope.launch {
             repeatOnLifecycle(Lifecycle.State.STARTED) {
-                authViewModel.otpEvent.collect {
-                    when (it) {
+                authViewModel.otpEvent.collect { state ->
+                    when (state) {
                         is UiState.Loading -> progressLoader.show()
                         is UiState.Success -> onOtpRequestSuccess()
-                        is UiState.Failure -> onOtpRequestFailure(it.exception)
+                        is UiState.Failure -> onOtpRequestFailure(state.exception)
                     }
                 }
             }

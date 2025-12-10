@@ -18,7 +18,7 @@ class ApiException @Inject constructor() {
 
         // Firebase Auth
         private const val ERROR_INVALID_CREDENTIALS = "Invalid email or password."
-        private const val ERROR_USER_COLLISION = "This email address is already in use."
+        private const val ERROR_USER_COLLISION = "Email already in use. Did you forget your password? Sign In"
         private const val ERROR_INVALID_USER = "This account does not exist or has been disabled."
 
         // Firebase Firestore

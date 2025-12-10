@@ -88,7 +88,7 @@
         <item name="android:textSize">12sp</item>
     </style>
 
-    <!-- Text input layout  -->
+    <!-- TextInputLayout  -->
     <style name="Widget.SettleX.TextInputLayout.Outlined" parent="Widget.Material3.TextInputLayout.OutlinedBox">
         <item name="boxBackgroundColor">@color/white</item>
         <item name="boxStrokeColor">@color/text_input_layout_stroke_color_selector</item>
@@ -98,9 +98,27 @@
         <item name="boxStrokeErrorColor">@color/red</item>
         <item name="endIconTint">@color/gray</item>
         <item name="android:textColor">@color/black</item>
+        <item name="height">55dp</item>
         <item name="android:textColorHint">@color/gray</item>
         <item name="hintTextColor">@color/text_input_layout_hint_color_selector</item>
         <item name="android:includeFontPadding">false</item>
+    </style>
+
+    <!-- EditText  -->
+    <style name="Widget.SettleX.TextInputEditText.Outlined" parent="ThemeOverlay.Material3.TextInputEditText.OutlinedBox">
+        <item name="fontFamily">@font/inter_regular</item>
+        <item name="android:textColor">@color/black</item>
+        <item name="android:includeFontPadding">false</item>
+        <item name="hintTextColor">@color/gray</item>
+        <item name="android:textSize">16sp</item>
+    </style>
+
+    <style name="Widget.SettleX.AppCompat.EditText" parent="Widget.AppCompat.EditText">
+        <item name="fontFamily">@font/inter_regular</item>
+        <item name="android:textColor">@color/black</item>
+        <item name="android:includeFontPadding">false</item>
+        <item name="hintTextColor">@color/gray</item>
+        <item name="android:textSize">16sp</item>
     </style>
 
     <!-- Pin box (for OTP/PIN) -->
@@ -132,6 +150,14 @@
         <item name="trackColor">@color/gray</item>
         <item name="indicatorColor">@color/blue</item>
         <item name="android:indeterminate">true</item>
+    </style>
+
+    <style name="Widget.SettleX.StepProgressIndicator" parent="Widget.Material3.CircularProgressIndicator">
+        <item name="indicatorColor">@color/blue</item>
+        <item name="trackColor">@color/gray_light</item>
+        <item name="trackThickness">3dp</item>"
+        <item name="android:max">4</item>
+        <item name="indicatorSize">35dp</item>
     </style>
 
     <!-- Dialog fragment -->

@@ -22,9 +22,11 @@ import com.settlex.android.R
 import com.settlex.android.data.exception.AppException
 import com.settlex.android.databinding.FragmentRegisterPasswordBinding
 import com.settlex.android.presentation.auth.AuthViewModel
+import com.settlex.android.presentation.auth.login.LoginActivity
 import com.settlex.android.presentation.common.extensions.gone
 import com.settlex.android.presentation.common.extensions.show
 import com.settlex.android.presentation.common.state.UiState
+import com.settlex.android.presentation.common.util.DialogHelper
 import com.settlex.android.presentation.common.util.KeyboardHelper
 import com.settlex.android.presentation.common.util.PasswordValidator
 import com.settlex.android.presentation.dashboard.DashboardActivity
@@ -111,10 +113,38 @@ class RegisterPasswordFragment : Fragment() {
 
     private fun onRegistrationFailure(error: AppException) {
         with(binding!!) {
-            tvError.text = error.message
-            tvError.show()
+            when (error) {
+                is AppException.AuthException -> showLoginRedirectDialog(error.message)
+                else -> {
+                    tvError.text = error.message
+                    tvError.show()
+                }
+            }
 
             progressLoader.hide()
+        }
+    }
+
+    private fun showLoginRedirectDialog(message: String) {
+        DialogHelper.showAlertDialogMessage(
+            requireContext()
+        ) { dialog, binding ->
+            with(binding) {
+                tvMessage.text = message
+                "Sign In".also { btnPrimary.text = it }
+
+                btnSecondary.gone()
+                btnPrimary.setOnClickListener {
+                    startActivity(
+                        Intent(
+                            requireContext(),
+                            LoginActivity::class.java
+                        )
+                    )
+                    requireActivity().finishAffinity()
+                    dialog.dismiss()
+                }
+            }
         }
     }
 
@@ -180,10 +210,15 @@ class RegisterPasswordFragment : Fragment() {
         appendRequirement(requirements, hasLength, "At least 8 characters")
         appendRequirement(requirements, hasUpper, "Contains uppercase letter")
         appendRequirement(requirements, hasLower, "Contains lowercase letter")
-        appendRequirement(requirements, hasSpecial, "Contains special character (e.g. !@#$%^&*()_+-=[]{};:,.?)")
+        appendRequirement(
+            requirements,
+            hasSpecial,
+            "Contains special character (e.g. !@#$%^&*()_+-=[]{};:,.?)"
+        )
 
         with(binding!!) {
-            val showPasswordPrompt = password.isEmpty() || (hasLength && hasUpper && hasLower && hasSpecial)
+            val showPasswordPrompt =
+                password.isEmpty() || (hasLength && hasUpper && hasLower && hasSpecial)
             tvPasswordPrompt.visibility = if (!showPasswordPrompt) View.VISIBLE else View.GONE
             tvPasswordPrompt.text = requirements
         }

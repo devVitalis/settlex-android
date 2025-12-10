@@ -55,7 +55,7 @@
                 android:src="@mipmap/ic_launcher" />
 
             <LinearLayout
-                android:id="@+id/view_authenticated_ui"
+                android:id="@+id/view_logged_in_ui"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginVertical="20dp"
@@ -105,17 +105,11 @@
 
                 <com.google.android.material.textfield.TextInputEditText
                     android:id="@+id/et_email"
+                    style="@style/Widget.SettleX.TextInputEditText.Outlined"
                     android:layout_width="match_parent"
                     android:layout_height="55dp"
-                    android:fontFamily="@font/inter_regular"
-                    android:gravity="start|center_vertical"
                     android:imeOptions="actionNext"
-                    android:includeFontPadding="false"
-                    android:inputType="textEmailAddress"
-                    android:paddingHorizontal="20dp"
-                    android:textColor="@color/black"
-                    android:textColorHint="@color/gray"
-                    android:textSize="14sp" />
+                    android:inputType="textEmailAddress" />
             </com.google.android.material.textfield.TextInputLayout>
 
             <FrameLayout
@@ -127,18 +121,14 @@
 
                 <com.google.android.material.textfield.TextInputEditText
                     android:id="@+id/et_password"
+                    style="@style/Widget.SettleX.TextInputEditText.Outlined"
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
                     android:background="@android:color/transparent"
-                    android:fontFamily="@font/inter_regular"
                     android:hint="@string/hint_enter_your_password"
                     android:imeOptions="actionDone"
-                    android:includeFontPadding="false"
                     android:inputType="textPassword"
-                    android:paddingHorizontal="15dp"
-                    android:textColor="@color/black"
-                    android:textColorHint="@color/gray"
-                    android:textSize="14sp" />
+                    android:paddingHorizontal="15dp" />
 
                 <ImageView
                     android:id="@+id/btn_toggle_password"
@@ -146,8 +136,8 @@
                     android:layout_height="25dp"
                     android:layout_gravity="end|center_vertical"
                     android:layout_marginEnd="12dp"
-                    android:contentDescription="@null"
                     android:background="?attr/selectableItemBackgroundBorderless"
+                    android:contentDescription="@null"
                     android:src="@drawable/ic_visibility_off_filled"
                     android:visibility="gone"
                     app:tint="@color/gray" />
@@ -172,6 +162,7 @@
                 android:layout_height="wrap_content"
                 android:layout_gravity="end"
                 android:layout_marginTop="10dp"
+                android:background="?attr/selectableItemBackground"
                 android:fontFamily="@font/inter_regular"
                 android:includeFontPadding="false"
                 android:text="@string/tv_forgot_password"
@@ -224,6 +215,7 @@
                     android:id="@+id/tv_sign_up"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
+                    android:background="?attr/selectableItemBackground"
                     android:fontFamily="@font/inter_regular"
                     android:gravity="center"
                     android:includeFontPadding="false"
@@ -235,6 +227,7 @@
                     android:id="@+id/tv_switch_account"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
+                    android:background="?attr/selectableItemBackground"
                     android:fontFamily="@font/inter_regular"
                     android:gravity="center"
                     android:includeFontPadding="false"
