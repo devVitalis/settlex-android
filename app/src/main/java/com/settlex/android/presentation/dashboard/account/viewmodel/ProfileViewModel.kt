@@ -8,16 +8,11 @@ import com.settlex.android.data.exception.AppException
 import com.settlex.android.data.session.UserSessionManager
 import com.settlex.android.domain.usecase.user.SetPaymentPinUseCase
 import com.settlex.android.domain.usecase.user.SetProfilePictureUseCase
-import com.settlex.android.data.mapper.toProfileUiModel
 import com.settlex.android.presentation.common.state.UiState
-import com.settlex.android.presentation.dashboard.UserState
 import dagger.hilt.android.lifecycle.HiltViewModel
 import jakarta.inject.Inject
 import kotlinx.coroutines.flow.MutableSharedFlow
-import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.asSharedFlow
-import kotlinx.coroutines.flow.combine
-import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.launch
 
 @HiltViewModel
@@ -27,19 +22,19 @@ class ProfileViewModel @Inject constructor(
     userSession: UserSessionManager
 ) : ViewModel() {
 
-    val userState = userSession.authState
-        .combine(userSession.userState) { auth, dto ->
-            UiState.Success(
-                UserState(
-                    authUid = auth?.uid,
-                    user = dto?.toProfileUiModel()
-                )
-            )
-        }.stateIn(
-            scope = viewModelScope,
-            started = SharingStarted.Companion.WhileSubscribed(5000),
-            initialValue = UiState.Loading
-        )
+//    val userSessionState = userSession.authState
+//        .combine(userSession.userState) { auth, dto ->
+//            UiState.Success(
+//                UserSessionState(
+//                    authUid = auth?.uid,
+//                    user = dto?.toProfileUiModel()
+//                )
+//            )
+//        }.stateIn(
+//            scope = viewModelScope,
+//            started = SharingStarted.Companion.WhileSubscribed(5000),
+//            initialValue = UiState.Loading
+//        )
 
     private val _setProfilePictureEvent = MutableSharedFlow<UiState<String>>()
     val setProfilePictureEvent = _setProfilePictureEvent.asSharedFlow()

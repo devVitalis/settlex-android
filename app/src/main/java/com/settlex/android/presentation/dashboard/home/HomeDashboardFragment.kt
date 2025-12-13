@@ -5,6 +5,7 @@ import android.content.Intent
 import android.os.Bundle
 import android.os.Handler
 import android.os.Looper
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -24,6 +25,8 @@ import com.settlex.android.data.enums.TransactionServiceType
 import com.settlex.android.data.remote.profile.ProfileService
 import com.settlex.android.databinding.FragmentDashboardHomeBinding
 import com.settlex.android.presentation.auth.login.LoginActivity
+import com.settlex.android.presentation.common.extensions.gone
+import com.settlex.android.presentation.common.extensions.show
 import com.settlex.android.presentation.common.state.UiState
 import com.settlex.android.presentation.dashboard.account.ProfileActivity
 import com.settlex.android.presentation.dashboard.home.model.HomeUiModel
@@ -45,6 +48,7 @@ import com.settlex.android.presentation.transactions.adapter.TransactionListAdap
 import com.settlex.android.presentation.transactions.model.TransactionItemUiModel
 import com.settlex.android.presentation.wallet.CommissionWithdrawalActivity
 import com.settlex.android.presentation.wallet.ReceiveActivity
+import com.settlex.android.util.string.CurrencyFormatter
 import com.settlex.android.util.string.StringFormatter
 import com.settlex.android.util.ui.StatusBar
 import dagger.hilt.android.AndroidEntryPoint
@@ -55,7 +59,6 @@ class HomeDashboardFragment : Fragment() {
 
     companion object {
         private const val MILLION_THRESHOLD_KOBO = 999999999L * 100
-
     }
 
     private var backPressedTime: Long = 0
@@ -63,8 +66,10 @@ class HomeDashboardFragment : Fragment() {
     private var autoScrollRunnable: Runnable? = null
 
     // dependencies
-    private var binding: FragmentDashboardHomeBinding? = null
+    private var _binding: FragmentDashboardHomeBinding? = null
+    private val binding get() = _binding!!
     private var adapter: TransactionListAdapter? = null
+
     private val viewModel: HomeViewModel by activityViewModels()
     private val bannerViewModel: PromoBannerViewModel by activityViewModels()
 
@@ -73,18 +78,18 @@ class HomeDashboardFragment : Fragment() {
         container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
-        binding = FragmentDashboardHomeBinding.inflate(inflater, container, false)
+        _binding = FragmentDashboardHomeBinding.inflate(inflater, container, false)
 
-        setupUi()
+        initViews()
         initObservers()
         initAppServices()
-        return binding!!.root
+        return binding.root
     }
 
     override fun onDestroyView() {
         super.onDestroyView()
         stopAutoScroll()
-        binding = null
+        _binding = null
     }
 
     private fun initObservers() {
@@ -93,7 +98,7 @@ class HomeDashboardFragment : Fragment() {
         observePromotionalBanners()
     }
 
-    private fun setupUi() {
+    private fun initViews() {
         StatusBar.setColor(requireActivity(), R.color.gray_light)
         setupListeners()
         setupDoubleBackPressToExit()
@@ -107,57 +112,73 @@ class HomeDashboardFragment : Fragment() {
     }
 
     private fun toggleBrandAwareness() {
-        val isVisible = binding!!.marqueeContainer.isVisible
-        binding!!.marqueeContainer.visibility = if (isVisible) View.GONE else View.VISIBLE
-        binding!!.marqueeTxt.isSelected = !isVisible
+        val isVisible = binding.marqueeContainer.isVisible
+        binding.marqueeContainer.visibility = if (isVisible) View.GONE else View.VISIBLE
+        binding.marqueeTxt.isSelected = !isVisible
     }
 
-    private fun setupListeners() {
-
-        binding!!.btnProfilePic.setOnClickListener {
-            navigateToActivity(
+    private fun setupListeners() = with(binding) {
+        btnProfilePic.setOnClickListener {
+            startActivity(
                 ProfileActivity::class.java
             )
         }
 
-        binding!!.btnLogin.setOnClickListener {
-            navigateToActivity(
+        btnLogin.setOnClickListener {
+            startActivity(
                 LoginActivity::class.java
             )
         }
 
-        binding!!.btnUserCommissionBalanceLayout.setOnClickListener {
-            navigateToActivity(
+        btnUserCommissionBalanceLayout.setOnClickListener {
+            startActivity(
                 CommissionWithdrawalActivity::class.java
             )
         }
 
-        binding!!.btnReceive.setOnClickListener {
-            navigateToActivity(
+        btnReceive.setOnClickListener {
+            startActivity(
                 ReceiveActivity::class.java
             )
         }
 
-        binding!!.btnTransfer.setOnClickListener { v: View? ->
-            navigateToActivity(
+        btnTransfer.setOnClickListener { v: View? ->
+            startActivity(
                 TransferToFriendActivity::class.java
             )
         }
 
-        binding!!.btnNotification.setOnClickListener { comingSoon() }
-        binding!!.btnSupport.setOnClickListener { comingSoon() }
-        binding!!.btnViewAllTransaction.setOnClickListener { comingSoon() }
-        binding!!.btnDeposit.setOnClickListener { toggleBrandAwareness() }
-        binding!!.btnBalanceToggle.setOnClickListener { /** userViewModel.toggleBalanceVisibility() */ }
+        btnNotification.setOnClickListener { comingSoon() }
+        btnSupport.setOnClickListener { comingSoon() }
+        btnViewAllTransaction.setOnClickListener { comingSoon() }
+        btnDeposit.setOnClickListener { toggleBrandAwareness() }
+        btnBalanceToggle.setOnClickListener { /** userViewModel.toggleBalanceVisibility() */ }
     }
 
     private fun observeUserState() {
         viewLifecycleOwner.lifecycleScope.launch {
             viewLifecycleOwner.repeatOnLifecycle(Lifecycle.State.STARTED) {
-                viewModel.userState.collect {
-                    when (it) {
-                        is UiState.Loading -> showUserLoadingState()
-                        is UiState.Success -> onUserDataReceived(it.data.user)
+                viewModel.userState.collect { state ->
+                    when (state) {
+                        is UiState.Loading -> {
+                            Log.d("HOME", "User is loading")
+                            showUserLoadingState()
+                        }
+
+                        is UiState.Success -> {
+                            when (state.data) {
+                                null -> {
+                                    Log.d("HOME", "User is logged out")
+                                    showUnauthenticatedState()
+                                }
+
+                                else -> {
+                                    Log.d("HOME", "User is logged in")
+                                    onUserDataReceived(state.data)
+                                }
+                            }
+                        }
+
                         is UiState.Failure -> handleUserErrorState()
                     }
                 }
@@ -166,81 +187,88 @@ class HomeDashboardFragment : Fragment() {
     }
 
     private fun showUserLoadingState() {
-        // Hide details
-        binding!!.fullName.visibility = View.GONE
-        binding!!.userBalance.visibility = View.GONE
-        binding!!.btnUserCommissionBalanceLayout.visibility = View.GONE
+        with(binding) {
+            // Hide details
+            fullName.gone()
+            userBalance.gone()
+            btnUserCommissionBalanceLayout.gone()
 
-        // Start and show shimmer
-        binding!!.userFullNameShimmer.startShimmer()
-        binding!!.userBalanceShimmer.startShimmer()
-        binding!!.userCommissionBalanceShimmer.startShimmer()
+            // Start shimmer
+            userFullNameShimmer.startShimmer()
+            userBalanceShimmer.startShimmer()
+            userCommissionBalanceShimmer.startShimmer()
 
-        binding!!.userFullNameShimmer.visibility = View.VISIBLE
-        binding!!.userBalanceShimmer.visibility = View.VISIBLE
-        binding!!.userCommissionBalanceShimmer.visibility = View.VISIBLE
+            userFullNameShimmer.show()
+            userBalanceShimmer.show()
+            userCommissionBalanceShimmer.show()
+        }
     }
 
-    private fun onUserDataReceived(user: HomeUiModel?) {
-        if (user == null) return
+    private fun onUserDataReceived(user: HomeUiModel) {
+        with(binding) {
+            if (user.paymentId == null) {
+                startActivity(CreatePaymentIdActivity::class.java)
+            }
 
-        if (user.paymentId == null) {
-            navigateToActivity(CreatePaymentIdActivity::class.java)
+            // Dismiss shimmer
+            userFullNameShimmer.stopShimmer()
+            userBalanceShimmer.stopShimmer()
+            userCommissionBalanceShimmer.stopShimmer()
+
+            userFullNameShimmer.visibility = View.GONE
+            userBalanceShimmer.visibility = View.GONE
+            userCommissionBalanceShimmer.visibility = View.GONE
+
+            // Show details
+            fullName.visibility = View.VISIBLE
+            userBalance.visibility = View.VISIBLE
+            btnUserCommissionBalanceLayout.visibility = View.VISIBLE
+
+            ProfileService.loadProfilePic(user.photoUrl, btnProfilePic)
+            fullName.text = user.fullName
+            observeAndLoadUserPrefs(user.balance, user.commissionBalance)
         }
-
-        // Dismiss shimmer
-        binding!!.userFullNameShimmer.stopShimmer()
-        binding!!.userBalanceShimmer.stopShimmer()
-        binding!!.userCommissionBalanceShimmer.stopShimmer()
-
-        binding!!.userFullNameShimmer.visibility = View.GONE
-        binding!!.userBalanceShimmer.visibility = View.GONE
-        binding!!.userCommissionBalanceShimmer.visibility = View.GONE
-
-        // Show details
-        binding!!.fullName.visibility = View.VISIBLE
-        binding!!.userBalance.visibility = View.VISIBLE
-        binding!!.btnUserCommissionBalanceLayout.visibility = View.VISIBLE
-
-        ProfileService.loadProfilePic(user.photoUrl, binding!!.btnProfilePic)
-        binding!!.fullName.text = user.fullName
-//        observeAndLoadUserPrefs(user.balance, user.commissionBalance)
     }
 
     private fun handleUserErrorState() {
         // Dismiss shimmer
-        binding!!.userFullNameShimmer.stopShimmer()
-        binding!!.userBalanceShimmer.stopShimmer()
-        binding!!.userCommissionBalanceShimmer.stopShimmer()
+        with(binding) {
+            userFullNameShimmer.stopShimmer()
+            userBalanceShimmer.stopShimmer()
+            userCommissionBalanceShimmer.stopShimmer()
 
-        binding!!.userFullNameShimmer.visibility = View.GONE
-        binding!!.userBalanceShimmer.visibility = View.GONE
-        binding!!.userCommissionBalanceShimmer.visibility = View.GONE
+            userFullNameShimmer.visibility = View.GONE
+            userBalanceShimmer.visibility = View.GONE
+            userCommissionBalanceShimmer.visibility = View.GONE
+        }
     }
 
-    /**
     private fun observeAndLoadUserPrefs(balance: Long, commissionBalance: Long) {
-    userViewModel.getBalanceHiddenLiveData().observe(getViewLifecycleOwner(), { hidden ->
-    if (hidden) {
-    // balance hidden set asterisk
-    binding!!.btnBalanceToggle.setImageResource(R.drawable.ic_visibility_off)
-    binding!!.userBalance.text = StringFormatter.setAsterisks()
-    binding!!.userCommissionBalance.text = StringFormatter.setAsterisks()
-    return@observe
+        with(binding) {
+            viewLifecycleOwner.lifecycleScope.launch {
+                viewLifecycleOwner.repeatOnLifecycle(Lifecycle.State.STARTED) {
+                    viewModel.isBalanceHidden.collect { isHidden ->
+                        if (isHidden) {
+                            // balance hidden set asterisk
+                            btnBalanceToggle.setImageResource(R.drawable.ic_visibility_off)
+                            userBalance.text = StringFormatter.setAsterisks()
+                            userCommissionBalance.text = StringFormatter.setAsterisks()
+                            return@collect
+                        }
+                        // show balance
+                        btnBalanceToggle.setImageResource(R.drawable.ic_visibility_on)
+                        userBalance.text =
+                            if (balance > MILLION_THRESHOLD_KOBO) CurrencyFormatter.formatToNairaShort(
+                                balance
+                            ) else CurrencyFormatter.formatToNaira(balance)
+                        userCommissionBalance.text = CurrencyFormatter.formatToNairaShort(
+                            commissionBalance
+                        )
+                    }
+                }
+            }
+        }
     }
-    // show balance
-    binding!!.btnBalanceToggle.setImageResource(R.drawable.ic_visibility_on)
-    binding!!.userBalance.text = if (balance > MILLION_THRESHOLD_KOBO) CurrencyFormatter.formatToNairaShort(
-    balance
-    ) else CurrencyFormatter.formatToNaira(balance)
-    binding!!.userCommissionBalance.setText(
-    CurrencyFormatter.formatToNairaShort(
-    commissionBalance
-    )
-    )
-    })
-    }
-     */
 
     private fun observeRecentTransactions() {
         viewLifecycleOwner.lifecycleScope.launch {
@@ -361,7 +389,9 @@ class HomeDashboardFragment : Fragment() {
     }
 
     private fun stopAutoScroll() {
-        autoScrollHandler.removeCallbacks(autoScrollRunnable!!)
+        autoScrollRunnable?.let {
+            autoScrollHandler.removeCallbacks(it)
+        }
     }
 
     private fun showUnauthenticatedState() {
@@ -467,7 +497,7 @@ class HomeDashboardFragment : Fragment() {
                     StringFormatter.showNotImplementedToast(requireContext())
                     return@onItemClickedListener
                 } else if (serviceDestination.isActivity) {
-                    navigateToActivity(serviceDestination.activity)
+                    startActivity(serviceDestination.activity)
                 } else {
                     navigateToFragment(serviceDestination.navDestinationId)
                 }
@@ -477,7 +507,7 @@ class HomeDashboardFragment : Fragment() {
         binding!!.serviceRecyclerView.setAdapter(adapter)
     }
 
-    private fun navigateToActivity(activityClass: Class<out Activity?>?) {
+    private fun startActivity(activityClass: Class<out Activity?>?) {
         startActivity(Intent(requireContext(), activityClass))
     }
 

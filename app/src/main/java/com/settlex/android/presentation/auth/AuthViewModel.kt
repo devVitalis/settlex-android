@@ -12,8 +12,6 @@ import com.settlex.android.util.network.NetworkMonitor
 import dagger.hilt.android.lifecycle.HiltViewModel
 import jakarta.inject.Inject
 import kotlinx.coroutines.channels.Channel
-import kotlinx.coroutines.flow.MutableSharedFlow
-import kotlinx.coroutines.flow.asSharedFlow
 import kotlinx.coroutines.flow.receiveAsFlow
 import kotlinx.coroutines.launch
 
@@ -29,6 +27,11 @@ import kotlinx.coroutines.launch
 class AuthViewModel @Inject constructor(
     private val authUseCases: AuthUseCases
 ) : ViewModel() {
+
+    val isUserLoggedIn
+        get(): Boolean {
+            return authUseCases.getCurrentUser() != null
+        }
 
     private val _registrationEvent = Channel<UiState<Unit>>(capacity = Channel.BUFFERED)
     val registrationEvent = _registrationEvent.receiveAsFlow()

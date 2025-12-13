@@ -6,12 +6,13 @@ import com.settlex.android.R
 import com.settlex.android.data.enums.TransactionOperation
 import com.settlex.android.data.enums.TransactionStatus
 import com.settlex.android.data.exception.AppException
+import com.settlex.android.data.mapper.toHomeUiModel
 import com.settlex.android.data.remote.dto.TransactionDto
 import com.settlex.android.data.repository.TransactionRepositoryImpl
 import com.settlex.android.data.session.UserSessionManager
-import com.settlex.android.data.mapper.toHomeUiModel
-import com.settlex.android.presentation.dashboard.UserState
+import com.settlex.android.data.session.UserSessionState
 import com.settlex.android.presentation.common.state.UiState
+import com.settlex.android.presentation.dashboard.home.model.HomeUiModel
 import com.settlex.android.presentation.transactions.model.TransactionItemUiModel
 import com.settlex.android.util.string.CurrencyFormatter
 import com.settlex.android.util.string.DateFormatter
@@ -19,32 +20,44 @@ import dagger.hilt.android.lifecycle.HiltViewModel
 import jakarta.inject.Inject
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.SharingStarted
+import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
-import kotlinx.coroutines.flow.combine
+import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.launch
 
 @HiltViewModel
 class HomeViewModel @Inject constructor(
     private val transactionRepoImpl: TransactionRepositoryImpl,
-    userSession: UserSessionManager
+    private val userSessionManager: UserSessionManager
 ) : ViewModel() {
 
-    val userState = userSession.authState
-        .combine(userSession.userState) { auth, dto ->
-            UiState.Success(
-                UserState(
-                    authUid = auth?.uid,
-                    user = dto?.toHomeUiModel()
-                )
+    val userState: StateFlow<UiState<HomeUiModel?>> =
+        userSessionManager.userSessionState
+            .map { state ->
+                when (state) {
+                    is UserSessionState.Loading -> UiState.Loading
+                    is UserSessionState.LoggedIn -> UiState.Success(state.user.toHomeUiModel())
+                    is UserSessionState.LoggedOut -> UiState.Success(null)
+                    is UserSessionState.Error -> UiState.Failure(state.exception)
+                }
+            }
+            .stateIn(
+                scope = viewModelScope,
+                started = SharingStarted.WhileSubscribed(5_000),
+                initialValue = UiState.Loading
             )
-        }.stateIn(
-            scope = viewModelScope,
-            started = SharingStarted.Companion.WhileSubscribed(5000),
-            initialValue = UiState.Loading
-        )
 
-    private val _recentTransactions = MutableStateFlow<UiState<List<TransactionItemUiModel>>>(UiState.Loading)
+    private val _isBalanceHidden = MutableStateFlow(false)
+    val isBalanceHidden = _isBalanceHidden.asStateFlow()
+
+    fun initUserBalanceVisibility() {
+        _isBalanceHidden.value =
+            userSessionManager.userLocalDataSource.isBalanceHidden
+    }
+
+    private val _recentTransactions =
+        MutableStateFlow<UiState<List<TransactionItemUiModel>>>(UiState.Loading)
     val recentTransactions = _recentTransactions.asStateFlow()
 
     fun loadRecentTransactions(uid: String) {

@@ -75,22 +75,22 @@ class RewardsDashboardFragment : Fragment() {
     private fun observeUserState() {
         viewLifecycleOwner.lifecycleScope.launch {
             viewLifecycleOwner.repeatOnLifecycle(Lifecycle.State.STARTED) {
-                viewModel.userState.collect {
-                    when (it) {
-                        is UiState.Success -> {
-                            if (it.data.authUid == null) {
-                                showLoggedOutView()
-                                return@collect
-                            }
-                            binding!!.loggedOutState.visibility = View.GONE
-                            binding!!.loggedInState.visibility = View.VISIBLE
-
-                            displayRewardsData(it.data.user as RewardsUiModel)
-                        }
-
-                        else -> Unit
-                    }
-                }
+//                viewModel.userSessionState.collect {
+//                    when (it) {
+//                        is UiState.Success -> {
+//                            if (it.data.authUid == null) {
+//                                showLoggedOutView()
+//                                return@collect
+//                            }
+//                            binding!!.loggedOutState.visibility = View.GONE
+//                            binding!!.loggedInState.visibility = View.VISIBLE
+//
+//                            displayRewardsData(it.data.user as RewardsUiModel)
+//                        }
+//
+//                        else -> Unit
+//                    }
+//                }
             }
         }
     }

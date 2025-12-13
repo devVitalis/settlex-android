@@ -4,92 +4,92 @@ import android.util.Log
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.auth.FirebaseUser
 import com.google.firebase.firestore.FirebaseFirestore
-import com.google.firebase.firestore.ListenerRegistration
-import com.settlex.android.SettleXApp
+import com.google.firebase.firestore.dataObjects
 import com.settlex.android.data.datasource.UserLocalDataSource
+import com.settlex.android.data.exception.ApiException
+import com.settlex.android.data.exception.AppException
+import com.settlex.android.data.local.UserLocalDataSourceFactory
 import com.settlex.android.data.remote.dto.UserDto
 import jakarta.inject.Inject
-import kotlinx.coroutines.flow.MutableStateFlow
-import kotlinx.coroutines.flow.asStateFlow
-import javax.inject.Singleton
+import jakarta.inject.Singleton
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.ExperimentalCoroutinesApi
+import kotlinx.coroutines.channels.awaitClose
+import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.SharingStarted
+import kotlinx.coroutines.flow.StateFlow
+import kotlinx.coroutines.flow.callbackFlow
+import kotlinx.coroutines.flow.catch
+import kotlinx.coroutines.flow.flatMapLatest
+import kotlinx.coroutines.flow.flowOf
+import kotlinx.coroutines.flow.map
+import kotlinx.coroutines.flow.stateIn
 
 @Singleton
 class UserSessionManager @Inject constructor(
     private val auth: FirebaseAuth,
     private val firestore: FirebaseFirestore,
+    private val dataSourceFactory: UserLocalDataSourceFactory,
+    private val apiException: ApiException,
+    applicationScope: CoroutineScope
 ) {
-
     private var _userLocalDataSource: UserLocalDataSource? = null
+
     val userLocalDataSource: UserLocalDataSource
         get() = _userLocalDataSource
-            ?: throw IllegalStateException("UserLocalDataSource requested before login")
+            ?: throw IllegalStateException("User data source not initialized")
 
-    companion object {
-        private const val TAG = "UserSessionManager"
+    private val authState: Flow<FirebaseUser?> = callbackFlow {
+        Log.d(TAG, "Initializing auth state listener")
+        val listener = FirebaseAuth.AuthStateListener { auth -> trySend(auth.currentUser) }
+        auth.addAuthStateListener(listener)
+
+         awaitClose { auth.removeAuthStateListener(listener) }
     }
 
-    private val _authState = MutableStateFlow<FirebaseUser?>(null)
-    val authState = _authState.asStateFlow()
-
-    private val _userState = MutableStateFlow<UserDto?>(null)
-    val userState = _userState.asStateFlow()
-
-    private var userListener: ListenerRegistration? = null
-    private var authListener: FirebaseAuth.AuthStateListener? = null
-
-    init {
-        initAuthStateListener()
-    }
-
-    private fun initAuthStateListener() {
-        Log.d(TAG, "Initializing AuthStateListener.")
-
-        if (authListener != null) return
-
-        authListener = FirebaseAuth.AuthStateListener { fbAuth ->
-            val user = fbAuth.currentUser
-            _authState.value = user
-
-            if (user != null) {
-                attachUserListener(user.uid)
-
-                _userLocalDataSource = UserLocalDataSource(
-                    SettleXApp.appContext,
-                    user.uid
-                )
-
-            } else {
-                detachUserListener()
-                _userState.value = null
-                _userLocalDataSource = null
+    @OptIn(ExperimentalCoroutinesApi::class)
+    val userSessionState: StateFlow<UserSessionState> = authState
+        .flatMapLatest { user ->
+            when (user) {
+                null -> handleLoggedOut()
+                else -> handleLoggedIn(user.uid)
             }
         }
+        .stateIn(
+            scope = applicationScope,
+            started = SharingStarted.WhileSubscribed(5_000),
+            initialValue = UserSessionState.Loading
+        )
 
-        auth.addAuthStateListener(authListener!!)
+    private fun handleLoggedOut(): Flow<UserSessionState> {
+        Log.d(TAG, "Removing _userLocalDataSource on Logged out")
+        _userLocalDataSource = null
+        return flowOf(UserSessionState.LoggedOut)
     }
 
-    private fun attachUserListener(uid: String) {
-        Log.d(TAG, "Attaching a new user listener for user: $uid")
+    private fun handleLoggedIn(uid: String): Flow<UserSessionState> {
+        Log.d(TAG, "Attaching a new user listener for $uid")
 
-        userListener?.remove()
+        _userLocalDataSource = dataSourceFactory.create(uid)
 
-        userListener = firestore.collection("users")
+        return firestore.collection("users")
             .document(uid)
-            .addSnapshotListener { snapshot, error ->
-                if (error != null) {
-                    _userState.value = null
-                    Log.e(TAG, "User snapshot listener error: ${error.message}")
-                    return@addSnapshotListener
-                }
-
-                if (snapshot !== null && snapshot.exists()) {
-                    _userState.value = snapshot.toObject(UserDto::class.java)
-                }
+            .dataObjects<UserDto>()
+            .map { userDto ->
+                userDto?.let { UserSessionState.LoggedIn(it) }
+                    ?: UserSessionState.Error(
+                        AppException.DatabaseException(
+                            "User profile not found."
+                        )
+                    )
+            }
+            .catch { exception ->
+                Log.e(TAG, "Error fetching user profile", exception)
+                emit(UserSessionState.Error(apiException.map(exception as Exception)))
             }
     }
 
-    private fun detachUserListener() {
-        userListener?.remove()
-        userListener = null
+    companion object {
+        private val TAG = UserSessionManager::class.simpleName
     }
 }

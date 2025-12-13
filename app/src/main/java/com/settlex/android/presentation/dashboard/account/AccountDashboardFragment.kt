@@ -85,17 +85,17 @@ class AccountDashboardFragment : Fragment() {
     private fun observeUserState() {
         viewLifecycleOwner.lifecycleScope.launch {
             viewLifecycleOwner.repeatOnLifecycle(Lifecycle.State.STARTED) {
-                profileViewModel.userState.collect {
-                    when (it) {
-                        is UiState.Success -> {
-                            val user = it.data.user as ProfileUiModel
-                            ProfileService.loadProfilePic(user.photoUrl, binding!!.btnProfilePic)
-                            binding!!.tvFullName.text = user.fullName
-                        }
-
-                        else -> Unit
-                    }
-                }
+//                profileViewModel.userSessionState.collect {
+////                    when (it) {
+////                        is UiState.Success -> {
+////                            val user = it.data.user as ProfileUiModel
+////                            ProfileService.loadProfilePic(user.photoUrl, binding!!.btnProfilePic)
+////                            binding!!.tvFullName.text = user.fullName
+////                        }
+////
+////                        else -> Unit
+////                    }
+//                }
             }
         }
     }

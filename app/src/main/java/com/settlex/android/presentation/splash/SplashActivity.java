@@ -11,8 +11,9 @@ import androidx.core.splashscreen.SplashScreen;
 import androidx.lifecycle.ViewModelProvider;
 
 import com.settlex.android.data.local.AppPrefs;
-import com.settlex.android.presentation.auth.login.LoginActivity;
 import com.settlex.android.presentation.auth.AuthViewModel;
+import com.settlex.android.presentation.auth.login.LoginActivity;
+import com.settlex.android.presentation.dashboard.DashboardActivity;
 import com.settlex.android.presentation.onboarding.OnboardingActivity;
 import com.settlex.android.util.permission.NotificationPermission;
 
@@ -40,7 +41,6 @@ public class SplashActivity extends AppCompatActivity {
     }
 
     private void initPermissionLauncher() {
-        // do nothing
         notification.initNotificationLauncher(
                 this::routeToDestination,
                 () -> {
@@ -61,8 +61,8 @@ public class SplashActivity extends AppCompatActivity {
 
         Class<? extends Activity> destination =
                 (!prefs.isIntroViewed()) ? OnboardingActivity.class :
-                        LoginActivity.class;
-        // (authViewModel.isUserLoggedIn()) ? LoginActivity.class : DashboardActivity.class; // TODO: set !isUserLoggedIn = DashboardActivity
+                        (authViewModel.isUserLoggedIn()) ? LoginActivity.class
+                                : DashboardActivity.class;
 
         startActivity(new Intent(this, destination));
         finish();
