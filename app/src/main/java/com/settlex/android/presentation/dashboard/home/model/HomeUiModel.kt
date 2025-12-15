@@ -1,6 +1,7 @@
 package com.settlex.android.presentation.dashboard.home.model
 
 data class HomeUiModel(
+    val uid: String,
     val firstName: String,
     val lastName: String,
     val photoUrl: String?,

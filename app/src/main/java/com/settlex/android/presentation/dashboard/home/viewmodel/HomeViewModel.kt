@@ -1,5 +1,6 @@
 package com.settlex.android.presentation.dashboard.home.viewmodel
 
+import android.util.Log
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.settlex.android.R
@@ -32,20 +33,34 @@ class HomeViewModel @Inject constructor(
     private val userSessionManager: UserSessionManager
 ) : ViewModel() {
 
-    val userState: StateFlow<UiState<HomeUiModel?>> =
-        userSessionManager.userSessionState
-            .map { state ->
-                when (state) {
-                    is UserSessionState.Loading -> UiState.Loading
-                    is UserSessionState.LoggedIn -> UiState.Success(state.user.toHomeUiModel())
-                    is UserSessionState.LoggedOut -> UiState.Success(null)
-                    is UserSessionState.Error -> UiState.Failure(state.exception)
+    val userState: StateFlow<UserSessionState<HomeUiModel>> =
+        userSessionManager.userSession.map {
+            when (it) {
+                is UserSessionState.Loading -> {
+                    Log.d("HomeViewModel", "UserSessionState.Loading")
+                    UserSessionState.Loading
+                }
+
+                is UserSessionState.UnAuthenticated -> {
+                    Log.d("HomeViewModel", "UserSessionState.UnAuthenticated")
+                    UserSessionState.UnAuthenticated
+                }
+
+                is UserSessionState.Error -> {
+                    Log.d("HomeViewModel", "UserSessionState.Error")
+                    UserSessionState.Error(it.exception)
+                }
+
+                is UserSessionState.Authenticated -> {
+                    Log.d("HomeViewModel", "UserSessionState.Authenticated")
+                    UserSessionState.Authenticated(it.user.toHomeUiModel())
                 }
             }
+        }
             .stateIn(
                 scope = viewModelScope,
                 started = SharingStarted.WhileSubscribed(5_000),
-                initialValue = UiState.Loading
+                initialValue = UserSessionState.Loading
             )
 
     private val _isBalanceHidden = MutableStateFlow(false)
@@ -56,14 +71,11 @@ class HomeViewModel @Inject constructor(
             userSessionManager.userLocalDataSource.isBalanceHidden
     }
 
-    private val _recentTransactions =
-        MutableStateFlow<UiState<List<TransactionItemUiModel>>>(UiState.Loading)
+    private val _recentTransactions = MutableStateFlow<UiState<List<TransactionItemUiModel>>>(UiState.Loading)
     val recentTransactions = _recentTransactions.asStateFlow()
 
     fun loadRecentTransactions(uid: String) {
         viewModelScope.launch {
-            _recentTransactions.value = UiState.Loading
-
             transactionRepoImpl.getRecentTransactions(uid)
                 .collect { result ->
 

@@ -104,7 +104,7 @@ class TransferToFriendActivity : AppCompatActivity() {
     private fun observeUserState() {
         lifecycleScope.launch {
             repeatOnLifecycle(Lifecycle.State.STARTED) {
-//                viewModel.userSessionState.collect { state ->
+//                viewModel.userSession.collect { state ->
 //                    if (state is UiState.Success) {
 //                        if (state.data.user is TransferToFriendUiModel) {
 //                            applyCurrentUser(state.data.user)

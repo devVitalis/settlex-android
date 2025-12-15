@@ -5,7 +5,6 @@ import android.content.Intent
 import android.os.Bundle
 import android.os.Handler
 import android.os.Looper
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -23,6 +22,7 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import com.settlex.android.R
 import com.settlex.android.data.enums.TransactionServiceType
 import com.settlex.android.data.remote.profile.ProfileService
+import com.settlex.android.data.session.UserSessionState
 import com.settlex.android.databinding.FragmentDashboardHomeBinding
 import com.settlex.android.presentation.auth.login.LoginActivity
 import com.settlex.android.presentation.common.extensions.gone
@@ -56,14 +56,9 @@ import kotlinx.coroutines.launch
 
 @AndroidEntryPoint
 class HomeDashboardFragment : Fragment() {
-
-    companion object {
-        private const val MILLION_THRESHOLD_KOBO = 999999999L * 100
-    }
-
     private var backPressedTime: Long = 0
-    private val autoScrollHandler = Handler(Looper.getMainLooper())
     private var autoScrollRunnable: Runnable? = null
+    private val autoScrollHandler = Handler(Looper.getMainLooper())
 
     // dependencies
     private var _binding: FragmentDashboardHomeBinding? = null
@@ -88,7 +83,7 @@ class HomeDashboardFragment : Fragment() {
 
     override fun onDestroyView() {
         super.onDestroyView()
-        stopAutoScroll()
+        autoScrollRunnable?.let { autoScrollHandler.removeCallbacks(it) }
         _binding = null
     }
 
@@ -160,26 +155,14 @@ class HomeDashboardFragment : Fragment() {
             viewLifecycleOwner.repeatOnLifecycle(Lifecycle.State.STARTED) {
                 viewModel.userState.collect { state ->
                     when (state) {
-                        is UiState.Loading -> {
-                            Log.d("HOME", "User is loading")
-                            showUserLoadingState()
+                        is UserSessionState.Authenticated -> {
+                            viewModel.loadRecentTransactions(state.user.uid)
+                            onUserDataReceived(state.user)
                         }
 
-                        is UiState.Success -> {
-                            when (state.data) {
-                                null -> {
-                                    Log.d("HOME", "User is logged out")
-                                    showUnauthenticatedState()
-                                }
-
-                                else -> {
-                                    Log.d("HOME", "User is logged in")
-                                    onUserDataReceived(state.data)
-                                }
-                            }
-                        }
-
-                        is UiState.Failure -> handleUserErrorState()
+                        is UserSessionState.Loading -> showUserLoadingState()
+                        is UserSessionState.UnAuthenticated -> showUnauthenticatedState()
+                        is UserSessionState.Error -> handleUserErrorState()
                     }
                 }
             }
@@ -206,9 +189,7 @@ class HomeDashboardFragment : Fragment() {
 
     private fun onUserDataReceived(user: HomeUiModel) {
         with(binding) {
-            if (user.paymentId == null) {
-                startActivity(CreatePaymentIdActivity::class.java)
-            }
+            if (user.paymentId == null) startActivity(CreatePaymentIdActivity::class.java)
 
             // Dismiss shimmer
             userFullNameShimmer.stopShimmer()
@@ -285,40 +266,44 @@ class HomeDashboardFragment : Fragment() {
     }
 
     private fun onTransactionsLoading() {
-        binding!!.emptyTransactionsState.visibility = View.GONE
-        binding!!.txnRecyclerView.visibility = View.GONE
-        binding!!.txnShimmerEffect.visibility = View.VISIBLE
-        binding!!.txnShimmerEffect.startShimmer()
+        with(binding) {
+            emptyTransactionsState.gone()
+            txnRecyclerView.gone()
+            txnShimmerEffect.show()
+            txnShimmerEffect.startShimmer()
+        }
     }
 
 
     private fun showTransactions(transactions: List<TransactionItemUiModel>?) {
-        if (transactions?.isEmpty() == true) {
-            // zero transaction history
-            binding!!.txnShimmerEffect.stopShimmer()
-            binding!!.txnShimmerEffect.visibility = View.GONE
+        with(binding) {
+            if (transactions?.isEmpty() == true) {
+                // zero transaction history
+                txnShimmerEffect.stopShimmer()
+                txnShimmerEffect.visibility = View.GONE
 
-            // clear recyclerview
-            adapter!!.submitList(mutableListOf())
-            binding!!.txnRecyclerView.setAdapter(adapter)
+                // clear recyclerview
+                adapter!!.submitList(mutableListOf())
+                txnRecyclerView.setAdapter(adapter)
 
-            binding!!.btnViewAllTransaction.visibility = View.GONE
-            binding!!.emptyTransactionsState.visibility = View.VISIBLE
-            return
+                btnViewAllTransaction.visibility = View.GONE
+                emptyTransactionsState.visibility = View.VISIBLE
+                return
+            }
+
+            // Transaction exists
+            adapter!!.submitList(transactions)
+            txnRecyclerView.setAdapter(adapter)
+
+            txnShimmerEffect.stopShimmer()
+            txnShimmerEffect.gone()
+            emptyTransactionsState.gone()
+            txnRecyclerView.show()
         }
-
-        // Transaction exists
-        adapter!!.submitList(transactions)
-        binding!!.txnRecyclerView.setAdapter(adapter)
-
-        binding!!.txnShimmerEffect.stopShimmer()
-        binding!!.txnShimmerEffect.visibility = View.GONE
-        binding!!.emptyTransactionsState.visibility = View.GONE
-        binding!!.txnRecyclerView.visibility = View.VISIBLE
     }
 
-    private fun onTransactionsError() {
-        binding!!.emptyTransactionsState.visibility = View.VISIBLE
+    private fun onTransactionsError() = with(binding) {
+        emptyTransactionsState.show()
     }
 
     private fun onItemTransactionClick() {
@@ -346,40 +331,42 @@ class HomeDashboardFragment : Fragment() {
         }
     }
 
-    private fun onPromoBannerLoading() {
-        binding!!.promoProgressBar.visibility = View.VISIBLE
-        binding!!.promoProgressBar.show()
+    private fun onPromoBannerLoading() = with(binding) {
+        promoProgressBar.visibility = View.VISIBLE
+        promoProgressBar.show()
     }
 
     private fun onPromoBannersSuccess(banner: MutableList<PromoBannerUiModel>?) {
-        binding!!.promoProgressBar.hide()
-        binding!!.promoProgressBar.visibility = View.GONE
+        with(binding) {
+            promoProgressBar.hide()
+            promoProgressBar.visibility = View.GONE
 
-        if (banner?.isEmpty() ?: return) {
-            binding!!.promoBannerContainer.visibility = View.GONE
-            return
+            if (banner?.isEmpty() ?: return) {
+                promoBannerContainer.visibility = View.GONE
+                return
+            }
+
+            val adapter = PromotionalBannerAdapter(banner)
+            bannerViewPager.setAdapter(adapter)
+            promoBannerContainer.visibility = View.VISIBLE
+
+            // Attach dots
+            dotsIndicator.attachTo(bannerViewPager)
+            setAutoScrollForPromoBanner(banner.size)
         }
-
-        val adapter = PromotionalBannerAdapter(banner)
-        binding!!.bannerViewPager.setAdapter(adapter)
-        binding!!.promoBannerContainer.visibility = View.VISIBLE
-
-        // Attach dots
-        binding!!.dotsIndicator.attachTo(binding!!.bannerViewPager)
-        setAutoScrollForPromoBanner(banner.size)
     }
 
-    private fun setAutoScrollForPromoBanner(size: Int) {
-        if (size <= 1) return
+    private fun setAutoScrollForPromoBanner(size: Int) = with(binding) {
+        if (size <= 1) return@with
 
         autoScrollRunnable = object : Runnable {
             var currentPosition: Int = 0
 
             override fun run() {
-                if (binding!!.bannerViewPager.adapter == null) return
+                if (bannerViewPager.adapter == null) return
 
                 currentPosition = (currentPosition + 1) % size // loop back to 0
-                binding!!.bannerViewPager.setCurrentItem(currentPosition, true)
+                bannerViewPager.setCurrentItem(currentPosition, true)
 
                 // schedule next slide
                 autoScrollHandler.postDelayed(this, 4000)
@@ -388,31 +375,25 @@ class HomeDashboardFragment : Fragment() {
         autoScrollHandler.postDelayed(autoScrollRunnable!!, 4000)
     }
 
-    private fun stopAutoScroll() {
-        autoScrollRunnable?.let {
-            autoScrollHandler.removeCallbacks(it)
-        }
-    }
-
-    private fun showUnauthenticatedState() {
+    private fun showUnauthenticatedState() = with(binding) {
         // Hide all logged-in UI elements
-        binding!!.btnProfilePic.visibility = View.GONE
-        binding!!.marqueeContainer.visibility = View.GONE
-        binding!!.btnBalanceToggle.visibility = View.GONE
-        binding!!.greetingContainer.visibility = View.GONE
-        binding!!.actionButtons.visibility = View.GONE
-        binding!!.txnContainer.visibility = View.GONE
-        binding!!.userBalance.text = StringFormatter.setAsterisks()
-        binding!!.userCommissionBalance.text = StringFormatter.setAsterisks()
+        btnProfilePic.gone()
+        marqueeContainer.gone()
+        btnBalanceToggle.gone()
+        greetingContainer.gone()
+        actionButtons.gone()
+        txnContainer.gone()
+        userBalance.text = StringFormatter.setAsterisks()
+        userCommissionBalance.text = StringFormatter.setAsterisks()
 
         // Show the logged-out UI elements
-        binding!!.btnLogin.visibility = View.VISIBLE
+        btnLogin.show()
     }
 
     private fun initTransactionRecyclerView() {
         val layoutManager = LinearLayoutManager(context)
         layoutManager.setOrientation(LinearLayoutManager.VERTICAL)
-        binding!!.txnRecyclerView.setLayoutManager(layoutManager)
+        binding.txnRecyclerView.setLayoutManager(layoutManager)
 
         adapter = TransactionListAdapter()
         onItemTransactionClick()
@@ -420,7 +401,7 @@ class HomeDashboardFragment : Fragment() {
 
     private fun initAppServices() {
         val layoutManager = GridLayoutManager(requireContext(), 4)
-        binding!!.serviceRecyclerView.setLayoutManager(layoutManager)
+        binding.serviceRecyclerView.setLayoutManager(layoutManager)
 
         val services = listOf(
             ServiceUiModel(
@@ -504,7 +485,7 @@ class HomeDashboardFragment : Fragment() {
             })
 
         // Set adapter
-        binding!!.serviceRecyclerView.setAdapter(adapter)
+        binding.serviceRecyclerView.setAdapter(adapter)
     }
 
     private fun startActivity(activityClass: Class<out Activity?>?) {
@@ -531,5 +512,9 @@ class HomeDashboardFragment : Fragment() {
                     backPressedTime = System.currentTimeMillis()
                 }
             })
+    }
+
+    companion object {
+        private const val MILLION_THRESHOLD_KOBO = 999999999L * 100
     }
 }

@@ -75,7 +75,7 @@ class RewardsDashboardFragment : Fragment() {
     private fun observeUserState() {
         viewLifecycleOwner.lifecycleScope.launch {
             viewLifecycleOwner.repeatOnLifecycle(Lifecycle.State.STARTED) {
-//                viewModel.userSessionState.collect {
+//                viewModel.userSession.collect {
 //                    when (it) {
 //                        is UiState.Success -> {
 //                            if (it.data.authUid == null) {

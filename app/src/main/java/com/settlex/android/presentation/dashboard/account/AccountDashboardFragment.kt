@@ -85,7 +85,7 @@ class AccountDashboardFragment : Fragment() {
     private fun observeUserState() {
         viewLifecycleOwner.lifecycleScope.launch {
             viewLifecycleOwner.repeatOnLifecycle(Lifecycle.State.STARTED) {
-//                profileViewModel.userSessionState.collect {
+//                profileViewModel.userSession.collect {
 ////                    when (it) {
 ////                        is UiState.Success -> {
 ////                            val user = it.data.user as ProfileUiModel

@@ -83,7 +83,7 @@ class ProfileActivity : AppCompatActivity() {
     private fun observeUserState() {
         lifecycleScope.launch {
             repeatOnLifecycle(Lifecycle.State.STARTED) {
-//                viewModel.userSessionState.collect {
+//                viewModel.userSession.collect {
 //                    when (it) {
 //                        is UiState.Success -> onUserDataStatusSuccess(it.data?.user as ProfileUiModel)
 //                        else -> Unit

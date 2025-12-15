@@ -24,7 +24,7 @@ class TransactionViewModel @Inject constructor(
     userSession: UserSessionManager
 ) :
     ViewModel() {
-//    val userSessionState = userSession.authState
+//    val userSession = userSession.authState
 //        .combine(userSession.userState) { auth, dto ->
 //            UiState.Success(
 //                UserSessionState(

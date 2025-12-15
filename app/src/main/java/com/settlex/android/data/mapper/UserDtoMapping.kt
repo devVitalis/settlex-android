@@ -20,6 +20,7 @@ fun UserDto.toProfileUiModel(): ProfileUiModel {
 
 fun UserDto.toHomeUiModel(): HomeUiModel {
     return HomeUiModel(
+        uid = uid,
         firstName = firstName,
         lastName = lastName,
         photoUrl = photoUrl,
