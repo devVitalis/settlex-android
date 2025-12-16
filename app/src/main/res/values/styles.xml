@@ -135,6 +135,12 @@
         <item name="itemHeight">48dp</item>
     </style>
 
+    <!-- Shimmer FrameLayout -->
+    <style name="Widget.SettleX.ShimmerFrameLayout" parent="">
+        <item name="shimmer_auto_start">true</item>
+        <item name="shimmer_duration">1500</item>
+    </style>
+
     <!-- Bottom navigation -->
     <style name="Widget.SettleX.BottomNavigation" parent="Widget.Material3.BottomNavigationView">
         <item name="android:minHeight">72dp</item>

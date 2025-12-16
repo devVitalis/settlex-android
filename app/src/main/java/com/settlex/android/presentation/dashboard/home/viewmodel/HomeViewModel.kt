@@ -1,6 +1,5 @@
 package com.settlex.android.presentation.dashboard.home.viewmodel
 
-import android.util.Log
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.settlex.android.R
@@ -17,12 +16,14 @@ import com.settlex.android.presentation.dashboard.home.model.HomeUiModel
 import com.settlex.android.presentation.transactions.model.TransactionItemUiModel
 import com.settlex.android.util.string.CurrencyFormatter
 import com.settlex.android.util.string.DateFormatter
+import com.settlex.android.util.string.StringFormatter
 import dagger.hilt.android.lifecycle.HiltViewModel
 import jakarta.inject.Inject
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
+import kotlinx.coroutines.flow.combine
 import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.launch
@@ -33,45 +34,71 @@ class HomeViewModel @Inject constructor(
     private val userSessionManager: UserSessionManager
 ) : ViewModel() {
 
-    val userState: StateFlow<UserSessionState<HomeUiModel>> =
-        userSessionManager.userSession.map {
-            when (it) {
-                is UserSessionState.Loading -> {
-                    Log.d("HomeViewModel", "UserSessionState.Loading")
-                    UserSessionState.Loading
-                }
-
-                is UserSessionState.UnAuthenticated -> {
-                    Log.d("HomeViewModel", "UserSessionState.UnAuthenticated")
-                    UserSessionState.UnAuthenticated
-                }
-
-                is UserSessionState.Error -> {
-                    Log.d("HomeViewModel", "UserSessionState.Error")
-                    UserSessionState.Error(it.exception)
-                }
-
+    val userSessionState: StateFlow<UserSessionState<HomeUiModel>> =
+        userSessionManager.userSession.map { userSessionState ->
+            when (userSessionState) {
+                is UserSessionState.Loading -> UserSessionState.Loading
+                is UserSessionState.UnAuthenticated -> UserSessionState.UnAuthenticated
+                is UserSessionState.Error -> UserSessionState.Error(userSessionState.exception)
                 is UserSessionState.Authenticated -> {
-                    Log.d("HomeViewModel", "UserSessionState.Authenticated")
-                    UserSessionState.Authenticated(it.user.toHomeUiModel())
+                    userSessionState.user.let {
+                        _rawBalance.value = it.balance to it.commissionBalance
+                    }
+                    UserSessionState.Authenticated(userSessionState.user.toHomeUiModel())
                 }
             }
-        }
-            .stateIn(
-                scope = viewModelScope,
-                started = SharingStarted.WhileSubscribed(5_000),
-                initialValue = UserSessionState.Loading
-            )
+        }.stateIn(
+            scope = viewModelScope,
+            started = SharingStarted.WhileSubscribed(5_000),
+            initialValue = UserSessionState.Loading
+        )
+
+    private val _rawBalance = MutableStateFlow<Pair<Long, Long>?>(null)
 
     private val _isBalanceHidden = MutableStateFlow(false)
-    val isBalanceHidden = _isBalanceHidden.asStateFlow()
+    val isBalanceHidden: StateFlow<Boolean> = _isBalanceHidden.asStateFlow()
 
-    fun initUserBalanceVisibility() {
-        _isBalanceHidden.value =
-            userSessionManager.userLocalDataSource.isBalanceHidden
+    /**
+     * A [StateFlow] that emits the user's formatted wallet balance and commission balance as a [Pair] of strings.
+     * The format of the balances depends on the visibility state controlled by [_isBalanceHidden].
+     *
+     * - When the balance is visible:
+     *   - The main balance is formatted to a short version (e.g., "₦1.2M") if it's over a certain threshold, otherwise it's fully formatted (e.g., "₦1,234.56").
+     *   - The commission balance is always formatted to a short version.
+     * - When the balance is hidden, both values in the pair are replaced with asterisks ("****").
+     *
+     * This flow combines the raw balance from [_rawBalance] and the visibility state from [_isBalanceHidden]
+     * to produce the final display strings. It emits `null` initially until the raw balance is available.
+     */
+    val userBalance: StateFlow<Pair<String, String>?> = combine(
+        _rawBalance, _isBalanceHidden
+    ) { rawBalance, isHidden ->
+        if (rawBalance == null) return@combine null
+
+        val (balance, commissionBalance) = rawBalance
+        when {
+            isHidden -> StringFormatter.setAsterisks() to StringFormatter.setAsterisks()
+            else -> {
+                val formattedBalance = when {
+                    balance > MILLION_THRESHOLD_KOBO -> CurrencyFormatter.formatToNairaShort(balance)
+                    else -> CurrencyFormatter.formatToNaira(balance)
+                }
+
+                val formattedCommission = CurrencyFormatter.formatToNairaShort(commissionBalance)
+                formattedBalance to formattedCommission
+            }
+        }
+    }.stateIn(
+        scope = viewModelScope,
+        started = SharingStarted.WhileSubscribed(5_000),
+        initialValue = null
+    )
+
+    fun toggleBalanceVisibility() {
     }
 
-    private val _recentTransactions = MutableStateFlow<UiState<List<TransactionItemUiModel>>>(UiState.Loading)
+    private val _recentTransactions =
+        MutableStateFlow<UiState<List<TransactionItemUiModel>>>(UiState.Loading)
     val recentTransactions = _recentTransactions.asStateFlow()
 
     fun loadRecentTransactions(uid: String) {
@@ -126,5 +153,9 @@ class HomeViewModel @Inject constructor(
             statusColor = dto.status.colorRes,
             statusBackgroundColor = dto.status.bgColorRes
         )
+    }
+
+    companion object {
+        private const val MILLION_THRESHOLD_KOBO = 999999999L * 100
     }
 }

@@ -22,7 +22,7 @@
         app:layout_constraintTop_toTopOf="parent">
 
         <com.google.android.material.imageview.ShapeableImageView
-            android:id="@+id/btn_profile_pic"
+            android:id="@+id/iv_profile_photo"
             android:layout_width="50dp"
             android:layout_height="50dp"
             android:contentDescription="@null"
@@ -32,14 +32,14 @@
             app:shapeAppearance="@style/ShapeAppearance.SettleX.Circular" />
 
         <LinearLayout
-            android:id="@+id/greeting_container"
+            android:id="@+id/view_greeting_container"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginStart="10dp"
             android:orientation="vertical"
-            app:layout_constraintBottom_toBottomOf="@id/btn_profile_pic"
-            app:layout_constraintStart_toEndOf="@id/btn_profile_pic"
-            app:layout_constraintTop_toTopOf="@id/btn_profile_pic">
+            app:layout_constraintBottom_toBottomOf="@id/iv_profile_photo"
+            app:layout_constraintStart_toEndOf="@id/iv_profile_photo"
+            app:layout_constraintTop_toTopOf="@id/iv_profile_photo">
 
             <LinearLayout
                 android:layout_width="wrap_content"
@@ -76,9 +76,9 @@
             android:layout_height="25dp"
             android:contentDescription="Settings"
             android:src="@drawable/ic_settings"
-            app:layout_constraintBottom_toBottomOf="@id/greeting_container"
+            app:layout_constraintBottom_toBottomOf="@id/view_greeting_container"
             app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintTop_toTopOf="@id/greeting_container"
+            app:layout_constraintTop_toTopOf="@id/view_greeting_container"
             app:tint="@color/black" />
     </androidx.constraintlayout.widget.ConstraintLayout>
 

@@ -50,7 +50,7 @@ class AccountDashboardFragment : Fragment() {
     private fun initViews() {
         StatusBar.setColor(requireActivity(), R.color.blue_200)
 
-        binding!!.btnProfilePic.setOnClickListener {
+        binding!!.ivProfilePhoto.setOnClickListener {
             startActivity(
                 ProfileActivity::class.java
             )

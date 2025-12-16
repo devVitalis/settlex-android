@@ -30,7 +30,12 @@ class UserSessionManager @Inject constructor(
     private var profileJob: Job? = null
     private var _userLocalDataSource: UserLocalDataSource? = null
 
-    // Access to UserLocalDataSource
+    /**
+     * Provides access to the local data source for the currently logged-in user.
+     * This property is lazily initialized upon successful user authentication and becomes null on logout.
+     *
+     * @throws IllegalStateException if accessed before a user is logged in (Initialized).
+     */
     val userLocalDataSource: UserLocalDataSource
         get() = _userLocalDataSource
             ?: throw IllegalStateException("User data source not initialized")

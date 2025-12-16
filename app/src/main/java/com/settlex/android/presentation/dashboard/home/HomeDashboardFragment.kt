@@ -5,6 +5,7 @@ import android.content.Intent
 import android.os.Bundle
 import android.os.Handler
 import android.os.Looper
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -48,7 +49,6 @@ import com.settlex.android.presentation.transactions.adapter.TransactionListAdap
 import com.settlex.android.presentation.transactions.model.TransactionItemUiModel
 import com.settlex.android.presentation.wallet.CommissionWithdrawalActivity
 import com.settlex.android.presentation.wallet.ReceiveActivity
-import com.settlex.android.util.string.CurrencyFormatter
 import com.settlex.android.util.string.StringFormatter
 import com.settlex.android.util.ui.StatusBar
 import dagger.hilt.android.AndroidEntryPoint
@@ -63,7 +63,7 @@ class HomeDashboardFragment : Fragment() {
     // dependencies
     private var _binding: FragmentDashboardHomeBinding? = null
     private val binding get() = _binding!!
-    private var adapter: TransactionListAdapter? = null
+    private lateinit var adapter: TransactionListAdapter
 
     private val viewModel: HomeViewModel by activityViewModels()
     private val bannerViewModel: PromoBannerViewModel by activityViewModels()
@@ -88,74 +88,74 @@ class HomeDashboardFragment : Fragment() {
     }
 
     private fun initObservers() {
-        observeUserState()
-        observeRecentTransactions()
+        observeUserSessionState()
+        observeUserBalance()
+        observeUserBalanceHiddenState()
+        observeUserRecentTransactions()
         observePromotionalBanners()
     }
 
     private fun initViews() {
         StatusBar.setColor(requireActivity(), R.color.gray_light)
-        setupListeners()
-        setupDoubleBackPressToExit()
+        initListeners()
         initTransactionRecyclerView()
+        setupDoubleBackPressToExit()
     }
 
     private fun comingSoon() {
+        // TODO: remove
         StringFormatter.showNotImplementedToast(
             requireContext()
         )
     }
 
     private fun toggleBrandAwareness() {
-        val isVisible = binding.marqueeContainer.isVisible
-        binding.marqueeContainer.visibility = if (isVisible) View.GONE else View.VISIBLE
+        // TODO: remove once brand awareness is implemented
+        val isVisible = binding.viewMarqueeContainer.isVisible
+        binding.viewMarqueeContainer.visibility = if (isVisible) View.GONE else View.VISIBLE
         binding.marqueeTxt.isSelected = !isVisible
     }
 
-    private fun setupListeners() = with(binding) {
-        btnProfilePic.setOnClickListener {
-            startActivity(
-                ProfileActivity::class.java
-            )
-        }
-
-        btnLogin.setOnClickListener {
-            startActivity(
-                LoginActivity::class.java
-            )
-        }
-
-        btnUserCommissionBalanceLayout.setOnClickListener {
-            startActivity(
-                CommissionWithdrawalActivity::class.java
-            )
-        }
-
-        btnReceive.setOnClickListener {
-            startActivity(
-                ReceiveActivity::class.java
-            )
-        }
-
-        btnTransfer.setOnClickListener { v: View? ->
-            startActivity(
-                TransferToFriendActivity::class.java
-            )
-        }
-
+    private fun initListeners() = with(binding) {
+        btnReceive.setOnClickListener { startActivity(ReceiveActivity::class.java) }
+        ivProfilePhoto.setOnClickListener { startActivity(ProfileActivity::class.java) }
+        btnLogin.setOnClickListener { startActivity(LoginActivity::class.java) }
+        btnTransfer.setOnClickListener { startActivity(TransferToFriendActivity::class.java) }
         btnNotification.setOnClickListener { comingSoon() }
         btnSupport.setOnClickListener { comingSoon() }
         btnViewAllTransaction.setOnClickListener { comingSoon() }
         btnDeposit.setOnClickListener { toggleBrandAwareness() }
-        btnBalanceToggle.setOnClickListener { /** userViewModel.toggleBalanceVisibility() */ }
+        ivBalanceToggle.setOnClickListener { /** userViewModel.toggleBalanceVisibility() */ }
+
+        viewUserCommissionBalance.setOnClickListener {
+            startActivity(CommissionWithdrawalActivity::class.java)
+        }
     }
 
-    private fun observeUserState() {
+    private fun initTransactionRecyclerView() = with(binding) {
+        val layoutManager = LinearLayoutManager(context)
+        layoutManager.setOrientation(LinearLayoutManager.VERTICAL)
+        rvTransactions.setLayoutManager(layoutManager)
+
+        adapter = TransactionListAdapter()
+        setUpTransactionClickListener()
+    }
+
+    private fun setUpTransactionClickListener() {
+        adapter.setOnTransactionClickListener { transaction: TransactionItemUiModel ->
+            val intent = Intent(context, TransactionActivity::class.java)
+            intent.putExtra("transaction", transaction)
+            startActivity(intent)
+        }
+    }
+
+    private fun observeUserSessionState() {
         viewLifecycleOwner.lifecycleScope.launch {
             viewLifecycleOwner.repeatOnLifecycle(Lifecycle.State.STARTED) {
-                viewModel.userState.collect { state ->
+                viewModel.userSessionState.collect { state ->
                     when (state) {
                         is UserSessionState.Authenticated -> {
+                            // Fetch recent transactions
                             viewModel.loadRecentTransactions(state.user.uid)
                             onUserDataReceived(state.user)
                         }
@@ -169,95 +169,84 @@ class HomeDashboardFragment : Fragment() {
         }
     }
 
-    private fun showUserLoadingState() {
-        with(binding) {
-            // Hide details
-            fullName.gone()
-            userBalance.gone()
-            btnUserCommissionBalanceLayout.gone()
+    private fun showUserLoadingState() = with(binding) {
+        listOf(
+            tvUserFullName,
+            tvUserBalance,
+            viewUserCommissionBalance
+        ).forEach { it.gone() }
 
-            // Start shimmer
-            userFullNameShimmer.startShimmer()
-            userBalanceShimmer.startShimmer()
-            userCommissionBalanceShimmer.startShimmer()
+        listOf(
+            shimmerUserFullName,
+            shimmerUserBalance,
+            shimmerUserCommissionBalance
+        ).forEach { it.show() }
+    }
 
-            userFullNameShimmer.show()
-            userBalanceShimmer.show()
-            userCommissionBalanceShimmer.show()
+    private fun onUserDataReceived(user: HomeUiModel) = with(binding) {
+        if (user.paymentId == null) {
+            startActivity(CreatePaymentIdActivity::class.java)
+            return
+        }
+
+        // Dismiss loading shimmer
+        listOf(
+            shimmerUserFullName,
+            shimmerUserBalance,
+            shimmerUserCommissionBalance
+        ).forEach { it.gone() }
+
+        // Show ui views
+        listOf(
+            tvUserFullName,
+            tvUserBalance,
+            viewUserCommissionBalance
+        ).forEach { it.show() }
+
+        ProfileService.loadProfilePic(user.photoUrl, ivProfilePhoto)
+        tvUserFullName.text = user.fullName
+    }
+
+    private fun handleUserErrorState() = with(binding) {
+
+    }
+
+    private fun observeUserBalance() = with(binding) {
+        viewLifecycleOwner.lifecycleScope.launch {
+            viewLifecycleOwner.repeatOnLifecycle(Lifecycle.State.STARTED) {
+                viewModel.userBalance.collect { balance ->
+                    val (userBalance, commissionBalance) = balance ?: return@collect
+
+                    tvUserBalance.text = userBalance
+                    tvUserCommissionBalance.text = commissionBalance
+                }
+            }
         }
     }
 
-    private fun onUserDataReceived(user: HomeUiModel) {
-        with(binding) {
-            if (user.paymentId == null) startActivity(CreatePaymentIdActivity::class.java)
+    private fun observeUserBalanceHiddenState() = with(binding) {
+        val balanceHiddenDrawable = R.drawable.ic_visibility_off
+        val balanceVisibleDrawable = R.drawable.ic_visibility_on
 
-            // Dismiss shimmer
-            userFullNameShimmer.stopShimmer()
-            userBalanceShimmer.stopShimmer()
-            userCommissionBalanceShimmer.stopShimmer()
-
-            userFullNameShimmer.visibility = View.GONE
-            userBalanceShimmer.visibility = View.GONE
-            userCommissionBalanceShimmer.visibility = View.GONE
-
-            // Show details
-            fullName.visibility = View.VISIBLE
-            userBalance.visibility = View.VISIBLE
-            btnUserCommissionBalanceLayout.visibility = View.VISIBLE
-
-            ProfileService.loadProfilePic(user.photoUrl, btnProfilePic)
-            fullName.text = user.fullName
-            observeAndLoadUserPrefs(user.balance, user.commissionBalance)
-        }
-    }
-
-    private fun handleUserErrorState() {
-        // Dismiss shimmer
-        with(binding) {
-            userFullNameShimmer.stopShimmer()
-            userBalanceShimmer.stopShimmer()
-            userCommissionBalanceShimmer.stopShimmer()
-
-            userFullNameShimmer.visibility = View.GONE
-            userBalanceShimmer.visibility = View.GONE
-            userCommissionBalanceShimmer.visibility = View.GONE
-        }
-    }
-
-    private fun observeAndLoadUserPrefs(balance: Long, commissionBalance: Long) {
-        with(binding) {
-            viewLifecycleOwner.lifecycleScope.launch {
-                viewLifecycleOwner.repeatOnLifecycle(Lifecycle.State.STARTED) {
-                    viewModel.isBalanceHidden.collect { isHidden ->
-                        if (isHidden) {
-                            // balance hidden set asterisk
-                            btnBalanceToggle.setImageResource(R.drawable.ic_visibility_off)
-                            userBalance.text = StringFormatter.setAsterisks()
-                            userCommissionBalance.text = StringFormatter.setAsterisks()
-                            return@collect
-                        }
-                        // show balance
-                        btnBalanceToggle.setImageResource(R.drawable.ic_visibility_on)
-                        userBalance.text =
-                            if (balance > MILLION_THRESHOLD_KOBO) CurrencyFormatter.formatToNairaShort(
-                                balance
-                            ) else CurrencyFormatter.formatToNaira(balance)
-                        userCommissionBalance.text = CurrencyFormatter.formatToNairaShort(
-                            commissionBalance
-                        )
+        viewLifecycleOwner.lifecycleScope.launch {
+            viewLifecycleOwner.repeatOnLifecycle(Lifecycle.State.STARTED) {
+                viewModel.isBalanceHidden.collect { isBalanceHidden ->
+                    when {
+                        isBalanceHidden -> ivBalanceToggle.setImageResource(balanceHiddenDrawable)
+                        else -> ivBalanceToggle.setImageResource(balanceVisibleDrawable)
                     }
                 }
             }
         }
     }
 
-    private fun observeRecentTransactions() {
+    private fun observeUserRecentTransactions() {
         viewLifecycleOwner.lifecycleScope.launch {
             viewLifecycleOwner.repeatOnLifecycle(Lifecycle.State.STARTED) {
                 viewModel.recentTransactions.collect { transactions ->
                     when (transactions) {
                         is UiState.Loading -> onTransactionsLoading()
-                        is UiState.Success -> showTransactions(transactions.data)
+                        is UiState.Success -> setTransactionsData(transactions.data)
                         is UiState.Failure -> onTransactionsError()
                     }
                 }
@@ -265,95 +254,71 @@ class HomeDashboardFragment : Fragment() {
         }
     }
 
-    private fun onTransactionsLoading() {
-        with(binding) {
-            emptyTransactionsState.gone()
-            txnRecyclerView.gone()
-            txnShimmerEffect.show()
-            txnShimmerEffect.startShimmer()
-        }
+    private fun onTransactionsLoading() = with(binding) {
+        listOf(
+            viewNoTransactionsUi,
+            rvTransactions
+        ).forEach { it.gone() }
+
+        shimmerTransactions.show()
     }
 
+    private fun setTransactionsData(transactions: List<TransactionItemUiModel>?) = with(binding) {
+        shimmerTransactions.gone()
+        when (transactions?.isEmpty()) {
+            true -> {
+                // Clear recyclerview
+                adapter.submitList(emptyList())
+                rvTransactions.setAdapter(adapter)
 
-    private fun showTransactions(transactions: List<TransactionItemUiModel>?) {
-        with(binding) {
-            if (transactions?.isEmpty() == true) {
-                // zero transaction history
-                txnShimmerEffect.stopShimmer()
-                txnShimmerEffect.visibility = View.GONE
-
-                // clear recyclerview
-                adapter!!.submitList(mutableListOf())
-                txnRecyclerView.setAdapter(adapter)
-
-                btnViewAllTransaction.visibility = View.GONE
-                emptyTransactionsState.visibility = View.VISIBLE
-                return
+                btnViewAllTransaction.gone()
+                viewNoTransactionsUi.show()
             }
 
-            // Transaction exists
-            adapter!!.submitList(transactions)
-            txnRecyclerView.setAdapter(adapter)
+            else -> {
+                // Show transactions
+                adapter.submitList(transactions)
+                rvTransactions.setAdapter(adapter)
 
-            txnShimmerEffect.stopShimmer()
-            txnShimmerEffect.gone()
-            emptyTransactionsState.gone()
-            txnRecyclerView.show()
+                viewNoTransactionsUi.gone()
+                rvTransactions.show()
+            }
         }
     }
 
     private fun onTransactionsError() = with(binding) {
-        emptyTransactionsState.show()
+        viewNoTransactionsUi.show()
     }
 
-    private fun onItemTransactionClick() {
-        adapter!!.setOnTransactionClickListener { transaction: TransactionItemUiModel? ->
-            val intent = Intent(requireContext(), TransactionActivity::class.java)
-            intent.putExtra("transaction", transaction)
-            startActivity(intent)
-        }
-    }
-
-    private fun observePromotionalBanners() {
+    private fun observePromotionalBanners() = with(binding) {
         viewLifecycleOwner.lifecycleScope.launch {
             viewLifecycleOwner.repeatOnLifecycle(Lifecycle.State.STARTED) {
                 bannerViewModel.banners.collect { banner ->
                     when (banner) {
-                        is UiState.Loading -> onPromoBannerLoading()
+                        is UiState.Loading -> shimmerPromoBanner.show()
                         is UiState.Success -> onPromoBannersSuccess(banner.data)
-                        is UiState.Failure -> {
-                            binding!!.promoProgressBar.visibility = View.VISIBLE
-                            binding!!.promoProgressBar.show()
-                        }
+                        is UiState.Failure -> shimmerPromoBanner.gone()
                     }
                 }
             }
         }
     }
 
-    private fun onPromoBannerLoading() = with(binding) {
-        promoProgressBar.visibility = View.VISIBLE
-        promoProgressBar.show()
-    }
+    private fun onPromoBannersSuccess(banner: List<PromoBannerUiModel>) = with(binding) {
+        shimmerPromoBanner.gone()
 
-    private fun onPromoBannersSuccess(banner: MutableList<PromoBannerUiModel>?) {
-        with(binding) {
-            promoProgressBar.hide()
-            promoProgressBar.visibility = View.GONE
-
-            if (banner?.isEmpty() ?: return) {
-                promoBannerContainer.visibility = View.GONE
-                return
-            }
-
-            val adapter = PromotionalBannerAdapter(banner)
-            bannerViewPager.setAdapter(adapter)
-            promoBannerContainer.visibility = View.VISIBLE
-
-            // Attach dots
-            dotsIndicator.attachTo(bannerViewPager)
-            setAutoScrollForPromoBanner(banner.size)
+        if (banner.isEmpty()) {
+            viewPromoBannerContainer.gone()
+            return@with
         }
+
+        val adapter = PromotionalBannerAdapter(banner)
+        bannerViewPager.setAdapter(adapter)
+        viewPromoBannerContainer.show()
+
+        // Attach dots
+        dotsIndicator.attachTo(bannerViewPager)
+        setAutoScrollForPromoBanner(banner.size)
     }
 
     private fun setAutoScrollForPromoBanner(size: Int) = with(binding) {
@@ -366,9 +331,11 @@ class HomeDashboardFragment : Fragment() {
                 if (bannerViewPager.adapter == null) return
 
                 currentPosition = (currentPosition + 1) % size // loop back to 0
+                Log.d("Home", " Item size $size")
+                Log.d("Home", " Current position $currentPosition")
                 bannerViewPager.setCurrentItem(currentPosition, true)
 
-                // schedule next slide
+                // Schedule next slide
                 autoScrollHandler.postDelayed(this, 4000)
             }
         }
@@ -376,32 +343,23 @@ class HomeDashboardFragment : Fragment() {
     }
 
     private fun showUnauthenticatedState() = with(binding) {
-        // Hide all logged-in UI elements
-        btnProfilePic.gone()
-        marqueeContainer.gone()
-        btnBalanceToggle.gone()
-        greetingContainer.gone()
-        actionButtons.gone()
-        txnContainer.gone()
-        userBalance.text = StringFormatter.setAsterisks()
-        userCommissionBalance.text = StringFormatter.setAsterisks()
+        // Hide all authenticated UI elements
+        listOf(
+            ivProfilePhoto, viewMarqueeContainer,
+            ivBalanceToggle, viewGreetingContainer,
+            viewPaymentButtons, viewTransactionContainer
+        ).forEach { it.gone() }
 
-        // Show the logged-out UI elements
+        tvUserBalance.text = StringFormatter.setAsterisks()
+        tvUserCommissionBalance.text = StringFormatter.setAsterisks()
+
+        // Show the unauthenticated UI elements
         btnLogin.show()
     }
 
-    private fun initTransactionRecyclerView() {
-        val layoutManager = LinearLayoutManager(context)
-        layoutManager.setOrientation(LinearLayoutManager.VERTICAL)
-        binding.txnRecyclerView.setLayoutManager(layoutManager)
-
-        adapter = TransactionListAdapter()
-        onItemTransactionClick()
-    }
-
-    private fun initAppServices() {
-        val layoutManager = GridLayoutManager(requireContext(), 4)
-        binding.serviceRecyclerView.setLayoutManager(layoutManager)
+    private fun initAppServices() = with(binding) {
+        val layoutManager = GridLayoutManager(context, 4)
+        rvServices.setLayoutManager(layoutManager)
 
         val services = listOf(
             ServiceUiModel(
@@ -484,11 +442,10 @@ class HomeDashboardFragment : Fragment() {
                 }
             })
 
-        // Set adapter
-        binding.serviceRecyclerView.setAdapter(adapter)
+        rvServices.setAdapter(adapter)
     }
 
-    private fun startActivity(activityClass: Class<out Activity?>?) {
+    private fun startActivity(activityClass: Class<out Activity>) {
         startActivity(Intent(requireContext(), activityClass))
     }
 
@@ -512,9 +469,5 @@ class HomeDashboardFragment : Fragment() {
                     backPressedTime = System.currentTimeMillis()
                 }
             })
-    }
-
-    companion object {
-        private const val MILLION_THRESHOLD_KOBO = 999999999L * 100
     }
 }
