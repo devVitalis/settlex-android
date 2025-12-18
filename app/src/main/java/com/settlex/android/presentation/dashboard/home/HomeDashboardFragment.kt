@@ -21,26 +21,22 @@ import androidx.navigation.fragment.NavHostFragment
 import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.settlex.android.R
-import com.settlex.android.data.enums.TransactionServiceType
+import com.settlex.android.data.enums.ServiceType
 import com.settlex.android.data.remote.profile.ProfileService
 import com.settlex.android.data.session.UserSessionState
 import com.settlex.android.databinding.FragmentDashboardHomeBinding
 import com.settlex.android.presentation.auth.login.LoginActivity
 import com.settlex.android.presentation.common.extensions.gone
+import com.settlex.android.presentation.common.extensions.setAsterisks
 import com.settlex.android.presentation.common.extensions.show
 import com.settlex.android.presentation.common.state.UiState
 import com.settlex.android.presentation.dashboard.account.ProfileActivity
+import com.settlex.android.presentation.dashboard.home.adapter.PromotionalBannerAdapter
 import com.settlex.android.presentation.dashboard.home.model.HomeUiModel
 import com.settlex.android.presentation.dashboard.home.model.PromoBannerUiModel
 import com.settlex.android.presentation.dashboard.home.viewmodel.HomeViewModel
 import com.settlex.android.presentation.dashboard.home.viewmodel.PromoBannerViewModel
-import com.settlex.android.presentation.dashboard.services.AirtimePurchaseActivity
-import com.settlex.android.presentation.dashboard.services.BettingTopUpActivity
-import com.settlex.android.presentation.dashboard.services.CableTvSubscriptionActivity
-import com.settlex.android.presentation.dashboard.services.DataPurchaseActivity
 import com.settlex.android.presentation.dashboard.services.adapter.ServicesAdapter
-import com.settlex.android.presentation.dashboard.services.adapter.ServicesAdapter.onItemClickedListener
-import com.settlex.android.presentation.dashboard.services.model.ServiceDestination
 import com.settlex.android.presentation.dashboard.services.model.ServiceUiModel
 import com.settlex.android.presentation.settings.CreatePaymentIdActivity
 import com.settlex.android.presentation.transactions.TransactionActivity
@@ -123,9 +119,9 @@ class HomeDashboardFragment : Fragment() {
         btnTransfer.setOnClickListener { startActivity(TransferToFriendActivity::class.java) }
         btnNotification.setOnClickListener { comingSoon() }
         btnSupport.setOnClickListener { comingSoon() }
-        btnViewAllTransaction.setOnClickListener { comingSoon() }
+        tvViewAllTransaction.setOnClickListener { comingSoon() }
         btnDeposit.setOnClickListener { toggleBrandAwareness() }
-        ivBalanceToggle.setOnClickListener { /** userViewModel.toggleBalanceVisibility() */ }
+        ivBalanceToggle.setOnClickListener { viewModel.toggleBalanceVisibility() }
 
         viewUserCommissionBalance.setOnClickListener {
             startActivity(CommissionWithdrawalActivity::class.java)
@@ -211,6 +207,38 @@ class HomeDashboardFragment : Fragment() {
 
     }
 
+    private fun showUnauthenticatedState() = with(binding) {
+        // Set unauthenticated UI
+        listOf(
+            shimmerUserFullName, shimmerUserBalance, shimmerUserCommissionBalance,
+            ivProfilePhoto, viewMarqueeContainer,
+            ivBalanceToggle, viewGreetingContainer,
+            viewPaymentButtons, viewTransactionContainer,
+            viewRecentTransactionsLabel,
+        ).forEach { it.gone() }
+
+        // Hide balance
+        listOf(
+            tvUserBalance,
+            tvUserCommissionBalance,
+        ).forEach { it.setAsterisks() }
+
+        listOf(
+            tvUserBalance,
+            viewUserCommissionBalance,
+        ).forEach { it.show() }
+
+        // Redirect action to auth
+        listOf(
+            btnReceive, ivProfilePhoto, btnLogin,
+            btnTransfer, btnNotification, btnSupport,
+            btnDeposit, ivBalanceToggle,
+            viewUserCommissionBalance,
+        ).forEach { it.setOnClickListener { startActivity(LoginActivity::class.java) } }
+
+        btnLogin.show()
+    }
+
     private fun observeUserBalance() = with(binding) {
         viewLifecycleOwner.lifecycleScope.launch {
             viewLifecycleOwner.repeatOnLifecycle(Lifecycle.State.STARTED) {
@@ -225,6 +253,7 @@ class HomeDashboardFragment : Fragment() {
     }
 
     private fun observeUserBalanceHiddenState() = with(binding) {
+        // Cache drawable (init once)
         val balanceHiddenDrawable = R.drawable.ic_visibility_off
         val balanceVisibleDrawable = R.drawable.ic_visibility_on
 
@@ -271,7 +300,6 @@ class HomeDashboardFragment : Fragment() {
                 adapter.submitList(emptyList())
                 rvTransactions.setAdapter(adapter)
 
-                btnViewAllTransaction.gone()
                 viewNoTransactionsUi.show()
             }
 
@@ -295,9 +323,9 @@ class HomeDashboardFragment : Fragment() {
             viewLifecycleOwner.repeatOnLifecycle(Lifecycle.State.STARTED) {
                 bannerViewModel.banners.collect { banner ->
                     when (banner) {
-                        is UiState.Loading -> shimmerPromoBanner.show()
+                        is UiState.Loading -> promoBannerProgressBar.show()
                         is UiState.Success -> onPromoBannersSuccess(banner.data)
-                        is UiState.Failure -> shimmerPromoBanner.gone()
+                        is UiState.Failure -> promoBannerProgressBar.gone()
                     }
                 }
             }
@@ -305,7 +333,7 @@ class HomeDashboardFragment : Fragment() {
     }
 
     private fun onPromoBannersSuccess(banner: List<PromoBannerUiModel>) = with(binding) {
-        shimmerPromoBanner.gone()
+        promoBannerProgressBar.gone()
 
         if (banner.isEmpty()) {
             viewPromoBannerContainer.gone()
@@ -332,7 +360,7 @@ class HomeDashboardFragment : Fragment() {
 
                 currentPosition = (currentPosition + 1) % size // loop back to 0
                 Log.d("Home", " Item size $size")
-                Log.d("Home", " Current position $currentPosition")
+                Log.d("Home", " Current position ${(currentPosition + 1) % size}")
                 bannerViewPager.setCurrentItem(currentPosition, true)
 
                 // Schedule next slide
@@ -342,106 +370,45 @@ class HomeDashboardFragment : Fragment() {
         autoScrollHandler.postDelayed(autoScrollRunnable!!, 4000)
     }
 
-    private fun showUnauthenticatedState() = with(binding) {
-        // Hide all authenticated UI elements
-        listOf(
-            ivProfilePhoto, viewMarqueeContainer,
-            ivBalanceToggle, viewGreetingContainer,
-            viewPaymentButtons, viewTransactionContainer
-        ).forEach { it.gone() }
-
-        tvUserBalance.text = StringFormatter.setAsterisks()
-        tvUserCommissionBalance.text = StringFormatter.setAsterisks()
-
-        // Show the unauthenticated UI elements
-        btnLogin.show()
-    }
-
     private fun initAppServices() = with(binding) {
         val layoutManager = GridLayoutManager(context, 4)
         rvServices.setLayoutManager(layoutManager)
 
-        val services = listOf(
-            ServiceUiModel(
-                "Airtime",
-                R.drawable.ic_service_airtime,
-                2,
-                TransactionServiceType.AIRTIME_RECHARGE
-            ),
-            ServiceUiModel(
-                "Data",
-                R.drawable.ic_service_data,
-                6,
-                TransactionServiceType.DATA_RECHARGE
-            ),
-            ServiceUiModel(
-                "Betting",
-                R.drawable.ic_service_betting,
-                "Hot",
-                TransactionServiceType.BETTING_TOPUP
-            ),
-            ServiceUiModel(
-                "TV",
-                R.drawable.ic_service_cable_tv,
-                TransactionServiceType.CABLE_TV_SUBSCRIPTION
-            ),
-            ServiceUiModel(
-                "Electricity",
-                R.drawable.ic_service_electricity,
-                TransactionServiceType.ELECTRICITY_BILL
-            ),
-            ServiceUiModel(
-                "Internet",
-                R.drawable.ic_service_internet,
-                TransactionServiceType.INTERNET
-            ),
-            ServiceUiModel(
-                "Gift Card",
-                R.drawable.ic_service_gift_card,
-                TransactionServiceType.GIFT_CARD
-            ),
-            ServiceUiModel("More", R.drawable.ic_service_more, TransactionServiceType.MORE)
-        )
+        val serviceList = ServiceType.entries
+            .take(8)
+            .map { serviceType ->
+                ServiceUiModel(
+                    serviceType.displayName,
+                    serviceType.iconRes,
+                    serviceType.cashbackPercentage,
+                    serviceType.label,
+                    serviceType.transactionServiceType,
+                    serviceType.destination
+                )
+            }
+        val adapter = ServicesAdapter(false, serviceList) { serviceUiModel ->
+            val destination = serviceUiModel.destination
+            when (destination) {
+                null -> StringFormatter.showNotImplementedToast(requireContext())
+                else -> {
+                    when {
+                        destination.isActivity -> startActivity(
+                            Intent(
+                                context,
+                                destination.activity
+                            )
+                        )
 
-        // Map services to destinations
-        val serviceMap: MutableMap<TransactionServiceType, ServiceDestination?> = HashMap()
-        serviceMap.put(
-            TransactionServiceType.AIRTIME_RECHARGE,
-            ServiceDestination(AirtimePurchaseActivity::class.java)
-        )
-        serviceMap.put(
-            TransactionServiceType.DATA_RECHARGE,
-            ServiceDestination(DataPurchaseActivity::class.java)
-        )
-        serviceMap.put(
-            TransactionServiceType.BETTING_TOPUP,
-            ServiceDestination(BettingTopUpActivity::class.java)
-        )
-        serviceMap.put(
-            TransactionServiceType.CABLE_TV_SUBSCRIPTION,
-            ServiceDestination(CableTvSubscriptionActivity::class.java)
-        )
-        serviceMap.put(TransactionServiceType.ELECTRICITY_BILL, null)
-        serviceMap.put(TransactionServiceType.INTERNET, null)
-        serviceMap.put(TransactionServiceType.GIFT_CARD, null)
-        serviceMap.put(TransactionServiceType.MORE, ServiceDestination(R.id.services_fragment))
-
-        val adapter = ServicesAdapter(
-            false,
-            services,
-            onItemClickedListener { serviceUiModel: ServiceUiModel? ->
-                val serviceDestination = serviceMap[serviceUiModel!!.type]
-
-                if (serviceDestination == null) {
-                    StringFormatter.showNotImplementedToast(requireContext())
-                    return@onItemClickedListener
-                } else if (serviceDestination.isActivity) {
-                    startActivity(serviceDestination.activity)
-                } else {
-                    navigateToFragment(serviceDestination.navDestinationId)
+                        destination.isFragment -> {
+                            val navController = NavHostFragment.findNavController(
+                                this@HomeDashboardFragment
+                            )
+                            navController.navigate(destination.navDestinationId!!)
+                        }
+                    }
                 }
-            })
-
+            }
+        }
         rvServices.setAdapter(adapter)
     }
 
@@ -449,25 +416,19 @@ class HomeDashboardFragment : Fragment() {
         startActivity(Intent(requireContext(), activityClass))
     }
 
-    private fun navigateToFragment(navigationId: Int) {
-        val navController = NavHostFragment.findNavController(this)
-        navController.navigate(navigationId)
-    }
-
     private fun setupDoubleBackPressToExit() {
         requireActivity().onBackPressedDispatcher.addCallback(
-            getViewLifecycleOwner(),
-            object : OnBackPressedCallback(true) {
+            getViewLifecycleOwner(), object : OnBackPressedCallback(true) {
                 override fun handleOnBackPressed() {
                     if (backPressedTime + 2000 > System.currentTimeMillis()) {
                         requireActivity().finish()
                         return
                     } else {
-                        Toast.makeText(requireActivity(), "Click again to exit", Toast.LENGTH_SHORT)
-                            .show()
+                        Toast.makeText(context, "Click again to exit", Toast.LENGTH_SHORT).show()
                     }
                     backPressedTime = System.currentTimeMillis()
                 }
-            })
+            }
+        )
     }
 }

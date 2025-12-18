@@ -13,7 +13,7 @@ import jakarta.inject.Singleton
 
 @Qualifier
 @Retention(AnnotationRetention.RUNTIME)
-annotation class PromoBannerPrefs
+annotation class AppPrefs
 
 @Module
 @InstallIn(SingletonComponent::class)
@@ -25,9 +25,9 @@ object AppModule {
     }
 
     @Singleton
-    @PromoBannerPrefs
+    @AppPrefs
     @Provides
-    fun providePromoBannerPrefs(@ApplicationContext context: Context): SharedPreferences {
-        return context.getSharedPreferences("promo_banner_prefs", Context.MODE_PRIVATE)
+    fun provideAppPrefs(@ApplicationContext context: Context): SharedPreferences {
+        return context.getSharedPreferences("app_prefs", Context.MODE_PRIVATE)
     }
 }

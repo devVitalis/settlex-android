@@ -3,5 +3,4 @@
     style="@style/Widget.SettleX.ShimmerFrameLayout"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@drawable/bg_16dp_gray_whitish">
-</View>
+    android:background="@drawable/bg_16dp_gray_whitish"/>

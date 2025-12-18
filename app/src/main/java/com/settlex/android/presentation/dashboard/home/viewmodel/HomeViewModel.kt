@@ -1,5 +1,6 @@
 package com.settlex.android.presentation.dashboard.home.viewmodel
 
+import android.util.Log
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.settlex.android.R
@@ -31,11 +32,11 @@ import kotlinx.coroutines.launch
 @HiltViewModel
 class HomeViewModel @Inject constructor(
     private val transactionRepoImpl: TransactionRepositoryImpl,
-    private val userSessionManager: UserSessionManager
+    private val sessionManager: UserSessionManager
 ) : ViewModel() {
 
     val userSessionState: StateFlow<UserSessionState<HomeUiModel>> =
-        userSessionManager.userSession.map { userSessionState ->
+        sessionManager.userSession.map { userSessionState ->
             when (userSessionState) {
                 is UserSessionState.Loading -> UserSessionState.Loading
                 is UserSessionState.UnAuthenticated -> UserSessionState.UnAuthenticated
@@ -44,6 +45,7 @@ class HomeViewModel @Inject constructor(
                     userSessionState.user.let {
                         _rawBalance.value = it.balance to it.commissionBalance
                     }
+                    _isBalanceHidden.value = sessionManager.userLocalDataSource.isBalanceHidden
                     UserSessionState.Authenticated(userSessionState.user.toHomeUiModel())
                 }
             }
@@ -53,23 +55,16 @@ class HomeViewModel @Inject constructor(
             initialValue = UserSessionState.Loading
         )
 
-    private val _rawBalance = MutableStateFlow<Pair<Long, Long>?>(null)
-
     private val _isBalanceHidden = MutableStateFlow(false)
     val isBalanceHidden: StateFlow<Boolean> = _isBalanceHidden.asStateFlow()
 
-    /**
-     * A [StateFlow] that emits the user's formatted wallet balance and commission balance as a [Pair] of strings.
-     * The format of the balances depends on the visibility state controlled by [_isBalanceHidden].
-     *
-     * - When the balance is visible:
-     *   - The main balance is formatted to a short version (e.g., "₦1.2M") if it's over a certain threshold, otherwise it's fully formatted (e.g., "₦1,234.56").
-     *   - The commission balance is always formatted to a short version.
-     * - When the balance is hidden, both values in the pair are replaced with asterisks ("****").
-     *
-     * This flow combines the raw balance from [_rawBalance] and the visibility state from [_isBalanceHidden]
-     * to produce the final display strings. It emits `null` initially until the raw balance is available.
-     */
+    fun toggleBalanceVisibility() {
+        _isBalanceHidden.value = !_isBalanceHidden.value
+        sessionManager.userLocalDataSource.isBalanceHidden = _isBalanceHidden.value
+    }
+
+    private val _rawBalance = MutableStateFlow<Pair<Long, Long>?>(null)
+
     val userBalance: StateFlow<Pair<String, String>?> = combine(
         _rawBalance, _isBalanceHidden
     ) { rawBalance, isHidden ->
@@ -94,11 +89,7 @@ class HomeViewModel @Inject constructor(
         initialValue = null
     )
 
-    fun toggleBalanceVisibility() {
-    }
-
-    private val _recentTransactions =
-        MutableStateFlow<UiState<List<TransactionItemUiModel>>>(UiState.Loading)
+    private val _recentTransactions = MutableStateFlow<UiState<List<TransactionItemUiModel>>>(UiState.Loading)
     val recentTransactions = _recentTransactions.asStateFlow()
 
     fun loadRecentTransactions(uid: String) {

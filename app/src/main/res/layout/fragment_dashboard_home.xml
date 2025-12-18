@@ -230,18 +230,18 @@
                         android:layout_marginTop="15dp">
 
                         <LinearLayout
-                            android:id="@+id/protection_container"
+                            android:id="@+id/view_protection_container"
                             android:layout_width="0dp"
                             android:layout_height="wrap_content"
                             android:gravity="start|center"
                             android:orientation="horizontal"
-                            app:layout_constraintEnd_toStartOf="@id/commission_container"
+                            app:layout_constraintEnd_toStartOf="@id/view_commission_container"
                             app:layout_constraintHorizontal_weight="1"
                             app:layout_constraintStart_toStartOf="parent"
                             app:layout_constraintTop_toTopOf="parent">
 
                             <ImageView
-                                android:id="@+id/protection"
+                                android:id="@+id/iv_protection"
                                 android:layout_width="15dp"
                                 android:layout_height="15dp"
                                 android:contentDescription="@null"
@@ -272,12 +272,12 @@
                         </LinearLayout>
 
                         <FrameLayout
-                            android:id="@+id/balance_value_container"
+                            android:id="@+id/view_balance_container"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:layout_marginTop="10dp"
                             app:layout_constraintStart_toStartOf="parent"
-                            app:layout_constraintTop_toBottomOf="@id/protection_container">
+                            app:layout_constraintTop_toBottomOf="@id/view_protection_container">
 
                             <TextView
                                 android:id="@+id/tv_user_balance"
@@ -306,15 +306,15 @@
                         </FrameLayout>
 
                         <LinearLayout
-                            android:id="@+id/commission_container"
+                            android:id="@+id/view_commission_container"
                             android:layout_width="0dp"
                             android:layout_height="wrap_content"
                             android:orientation="vertical"
-                            app:layout_constraintBottom_toBottomOf="@id/balance_value_container"
+                            app:layout_constraintBottom_toBottomOf="@id/view_balance_container"
                             app:layout_constraintEnd_toEndOf="parent"
                             app:layout_constraintHorizontal_weight="1"
-                            app:layout_constraintStart_toEndOf="@id/protection_container"
-                            app:layout_constraintTop_toTopOf="@id/protection_container">
+                            app:layout_constraintStart_toEndOf="@id/view_protection_container"
+                            app:layout_constraintTop_toTopOf="@id/view_protection_container">
 
                             <TextView
                                 android:id="@+id/commission_balance"
@@ -397,6 +397,7 @@
                             <ImageView
                                 android:layout_width="20dp"
                                 android:layout_height="20dp"
+                                android:contentDescription="@null"
                                 android:src="@drawable/ic_add" />
 
                             <TextView
@@ -427,6 +428,7 @@
                             <ImageView
                                 android:layout_width="20dp"
                                 android:layout_height="20dp"
+                                android:contentDescription="@null"
                                 android:src="@drawable/ic_receive" />
 
                             <TextView
@@ -434,7 +436,7 @@
                                 android:layout_height="wrap_content"
                                 android:fontFamily="@font/inter_regular"
                                 android:includeFontPadding="false"
-                                android:text="Recieve"
+                                android:text="Receive"
                                 android:textColor="@color/white"
                                 android:textSize="11sp" />
                         </LinearLayout>
@@ -455,6 +457,7 @@
                             <ImageView
                                 android:layout_width="20dp"
                                 android:layout_height="20dp"
+                                android:contentDescription="@null"
                                 android:src="@drawable/ic_send" />
 
                             <TextView
@@ -471,7 +474,7 @@
 
                 <!-- No internet connection -->
                 <LinearLayout
-                    android:id="@+id/connection_lost"
+                    android:id="@+id/view_no_internet"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_marginTop="15dp"
@@ -512,59 +515,49 @@
                     android:nestedScrollingEnabled="false"
                     android:padding="8dp" />
 
+                <!-- Transaction label -->
+                <LinearLayout
+                    android:id="@+id/view_recent_transactions_label"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="15dp"
+                    android:layout_marginBottom="5dp"
+                    android:gravity="center_vertical"
+                    android:orientation="horizontal">
+
+                    <TextView
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="start"
+                        android:layout_weight="1"
+                        android:fontFamily="@font/inter_regular"
+                        android:includeFontPadding="false"
+                        android:text="Recent Transactions"
+                        android:textColor="@color/gray"
+                        android:textSize="12sp" />
+
+                    <TextView
+                        android:id="@+id/tv_view_all_transaction"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginEnd="4dp"
+                        android:background="?attr/selectableItemBackground"
+                        android:fontFamily="@font/inter_regular"
+                        android:includeFontPadding="false"
+                        android:text="View ALL"
+                        android:textColor="@color/gray"
+                        android:textSize="12sp"
+                        android:textStyle="bold" />
+                </LinearLayout>
+
                 <LinearLayout
                     android:id="@+id/view_transaction_container"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_marginTop="15dp"
                     android:background="@drawable/bg_16dp_white"
                     android:orientation="vertical"
                     android:paddingHorizontal="8dp"
                     android:paddingVertical="10dp">
-
-                    <LinearLayout
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:gravity="center_vertical"
-                        android:orientation="horizontal">
-
-                        <TextView
-                            android:layout_width="0dp"
-                            android:layout_height="wrap_content"
-                            android:layout_gravity="start"
-                            android:layout_weight="1"
-                            android:fontFamily="@font/inter_regular"
-                            android:includeFontPadding="false"
-                            android:text="Recent Transactions"
-                            android:textColor="@color/gray"
-                            android:textSize="12sp" />
-
-                        <LinearLayout
-                            android:id="@+id/btn_view_all_transaction"
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:background="?attr/selectableItemBackground"
-                            android:gravity="center_vertical"
-                            android:orientation="horizontal">
-
-                            <TextView
-                                android:layout_width="wrap_content"
-                                android:layout_height="wrap_content"
-                                android:layout_marginEnd="4dp"
-                                android:fontFamily="@font/inter_regular"
-                                android:includeFontPadding="false"
-                                android:text="View ALL"
-                                android:textColor="@color/gray"
-                                android:textSize="12sp" />
-
-                            <ImageView
-                                android:layout_width="12dp"
-                                android:layout_height="12dp"
-                                android:contentDescription="@null"
-                                android:src="@drawable/ic_arrow_forward"
-                                app:tint="@color/gray" />
-                        </LinearLayout>
-                    </LinearLayout>
 
                     <FrameLayout
                         android:layout_width="match_parent"
@@ -598,8 +591,7 @@
                             android:layout_height="wrap_content"
                             android:gravity="center"
                             android:orientation="vertical"
-                            android:paddingVertical="8dp"
-                            android:visibility="gone">
+                            android:paddingVertical="8dp">
 
                             <TextView
                                 android:layout_width="wrap_content"
@@ -608,7 +600,7 @@
                                 android:includeFontPadding="false"
                                 android:text="No transactions yet"
                                 android:textColor="@color/black"
-                                android:textSize="16sp"
+                                android:textSize="15sp"
                                 android:textStyle="bold" />
 
                             <TextView
@@ -617,9 +609,9 @@
                                 android:layout_marginTop="5dp"
                                 android:fontFamily="@font/inter_regular"
                                 android:includeFontPadding="false"
-                                android:text="You activity will show up here"
+                                android:text="Your recent transactions will appear here"
                                 android:textColor="@color/gray"
-                                android:textSize="11sp" />
+                                android:textSize="12sp" />
 
                             <ImageView
                                 android:layout_width="50dp"
@@ -644,18 +636,12 @@
                         android:layout_width="match_parent"
                         android:layout_height="match_parent" />
 
-                    <com.facebook.shimmer.ShimmerFrameLayout
-                        android:id="@+id/shimmer_promo_banner"
-                        style="@style/Widget.SettleX.ShimmerFrameLayout"
-                        android:layout_width="match_parent"
-                        android:layout_height="match_parent"
-                        android:visibility="gone">
-
-                        <include
-                            layout="@layout/item_promotional_banner_shimmer"
-                            android:layout_width="match_parent"
-                            android:layout_height="match_parent" />
-                    </com.facebook.shimmer.ShimmerFrameLayout>
+                    <ProgressBar
+                        android:id="@+id/promo_banner_progress_bar"
+                        style="@style/Widget.SettleX.AppCompat.CircularProgressBar."
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="center" />
 
                     <com.tbuonomo.viewpagerdotsindicator.DotsIndicator
                         android:id="@+id/dots_indicator"

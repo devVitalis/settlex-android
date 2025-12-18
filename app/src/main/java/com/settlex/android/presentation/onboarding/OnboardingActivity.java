@@ -16,22 +16,25 @@ import com.settlex.android.presentation.auth.register.RegisterActivity;
 import com.settlex.android.presentation.onboarding.adapter.OnboardingAdapter;
 import com.settlex.android.util.ui.StatusBar;
 
+import dagger.hilt.android.AndroidEntryPoint;
+import jakarta.inject.Inject;
+
 /**
  * Handles onboarding flow:
  * - Displays intro screens via ViewPager2
  * - Tracks onboarding completion in preferences
  */
+@AndroidEntryPoint
 public class OnboardingActivity extends AppCompatActivity {
+    @Inject
+    AppPrefs prefs;
     private ActivityOnboardingBinding binding;
-    private AppPrefs prefs;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         binding = ActivityOnboardingBinding.inflate(getLayoutInflater());
         setContentView(binding.getRoot());
-
-        prefs = new AppPrefs(this);
 
         StatusBar.setColor(this, R.color.white);
         setupViewPager();

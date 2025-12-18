@@ -26,6 +26,9 @@ public class SplashActivity extends AppCompatActivity {
 
     @Inject
     NotificationPermission notification;
+    @Inject
+    AppPrefs prefs;
+
     private AuthViewModel authViewModel;
 
     @Override
@@ -57,12 +60,10 @@ public class SplashActivity extends AppCompatActivity {
     }
 
     private void routeToDestination() {
-        AppPrefs prefs = new AppPrefs(this);
-
         Class<? extends Activity> destination =
                 (!prefs.isIntroViewed()) ? OnboardingActivity.class :
-                        (authViewModel.isUserLoggedIn()) ? LoginActivity.class
-                                : DashboardActivity.class;
+                        (authViewModel.isUserLoggedIn()) ? DashboardActivity.class
+                                : LoginActivity.class;
 
         startActivity(new Intent(this, destination));
         finish();

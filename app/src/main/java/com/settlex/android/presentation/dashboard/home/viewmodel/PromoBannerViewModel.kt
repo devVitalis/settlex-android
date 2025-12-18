@@ -29,10 +29,7 @@ class PromoBannerViewModel @Inject constructor(
         viewModelScope.launch {
             try {
                 val cachedBanners = bannerRepository.getPromotionalBanners()
-                when (cachedBanners.isNotEmpty()) {
-                    true -> _banners.value = UiState.Success(cachedBanners)
-                    false -> _banners.value = UiState.Loading
-                }
+                _banners.value = UiState.Success(cachedBanners)
             } catch (e: Exception) {
                 _banners.value = UiState.Failure(apiException.map(e))
             }
