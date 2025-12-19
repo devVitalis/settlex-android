@@ -20,7 +20,11 @@ import androidx.lifecycle.repeatOnLifecycle
 import com.google.firebase.Timestamp
 import com.settlex.android.R
 import com.settlex.android.data.remote.profile.ProfileService
+import com.settlex.android.data.session.UserSessionState
 import com.settlex.android.databinding.ActivityProfileBinding
+import com.settlex.android.presentation.common.extensions.addAtPrefix
+import com.settlex.android.presentation.common.extensions.maskEmail
+import com.settlex.android.presentation.common.extensions.maskPhoneNumber
 import com.settlex.android.presentation.common.state.UiState
 import com.settlex.android.presentation.common.util.DialogHelper
 import com.settlex.android.presentation.dashboard.account.model.ProfileUiModel
@@ -31,24 +35,23 @@ import com.settlex.android.util.ui.ProgressDialogManager
 import com.settlex.android.util.ui.StatusBar
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.launch
-import java.util.Locale
 
 @AndroidEntryPoint
 class ProfileActivity : AppCompatActivity() {
-    private val binding by lazy { ActivityProfileBinding.inflate(layoutInflater) }
+    private lateinit var binding: ActivityProfileBinding
     private val viewModel: ProfileViewModel by viewModels()
-    private val progressLoader: ProgressDialogManager by lazy { ProgressDialogManager(this) }
+    private val progressLoader by lazy { ProgressDialogManager(this) }
     private lateinit var requestPermissionLauncher: ActivityResultLauncher<String>
     private lateinit var pickImageLauncher: ActivityResultLauncher<PickVisualMediaRequest>
     private var joinedDate: Timestamp? = null
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+        binding = ActivityProfileBinding.inflate(layoutInflater)
         setContentView(binding.root)
 
         initViews()
-        observeUserState()
-        observeProfilePicUploadResult()
+        initObservers()
     }
 
     private fun initViews() {
@@ -69,6 +72,11 @@ class ProfileActivity : AppCompatActivity() {
         }
     }
 
+    private fun initObservers() {
+        observeUserSession()
+        observeProfilePicUploadResult()
+    }
+
     private fun showJoinedDateDialog() {
         joinedDate?.let {
             val title = "Member since"
@@ -80,27 +88,27 @@ class ProfileActivity : AppCompatActivity() {
         }
     }
 
-    private fun observeUserState() {
+    private fun observeUserSession() {
         lifecycleScope.launch {
             repeatOnLifecycle(Lifecycle.State.STARTED) {
-//                viewModel.userSession.collect {
-//                    when (it) {
-//                        is UiState.Success -> onUserDataStatusSuccess(it.data?.user as ProfileUiModel)
-//                        else -> Unit
-//                    }
-//                }
+                viewModel.userSessionState.collect { sessionState ->
+                    when (sessionState) {
+                        is UserSessionState.Authenticated -> onUserAuthenticated(sessionState.user)
+                        else -> Unit
+                    }
+                }
             }
         }
     }
 
-    private fun onUserDataStatusSuccess(user: ProfileUiModel) {
-        ProfileService.loadProfilePic(user.photoUrl, binding.profilePic)
-        binding.tvPaymentId.text = StringFormatter.addAtToPaymentId(user.paymentId) ?: "Setup Payment ID"
-        binding.tvFullName.text = user.fullName.uppercase(Locale.getDefault())
-        binding.tvEmail.text = StringFormatter.maskEmail(user.email)
-        binding.tvPhoneNumber.text = StringFormatter.maskPhone(user.phone)
-        binding.tvJoinedDate.text = DateFormatter.formatTimestampToRelative(user.createdAt)
-        this.joinedDate = user.createdAt
+    private fun onUserAuthenticated(user: ProfileUiModel) = with(binding) {
+        ProfileService.loadProfilePic(user.photoUrl, ivProfilePhoto)
+        tvPaymentId.text = user.paymentId?.addAtPrefix() ?: "Setup Payment ID"
+        tvFullName.text = user.fullName.uppercase()
+        tvEmail.text = user.email.maskEmail()
+        tvPhoneNumber.text = user.phone.maskPhoneNumber()
+        tvJoinedDate.text = DateFormatter.formatTimestampToRelative(user.createdAt)
+        joinedDate = user.createdAt
     }
 
     private fun observeProfilePicUploadResult() {

@@ -1,6 +1,5 @@
 package com.settlex.android.presentation.dashboard.home.viewmodel
 
-import android.util.Log
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.settlex.android.R
@@ -89,7 +88,8 @@ class HomeViewModel @Inject constructor(
         initialValue = null
     )
 
-    private val _recentTransactions = MutableStateFlow<UiState<List<TransactionItemUiModel>>>(UiState.Loading)
+    private val _recentTransactions =
+        MutableStateFlow<UiState<List<TransactionItemUiModel>>>(UiState.Loading)
     val recentTransactions = _recentTransactions.asStateFlow()
 
     fun loadRecentTransactions(uid: String) {

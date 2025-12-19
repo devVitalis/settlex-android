@@ -19,9 +19,7 @@ object DateFormatter {
             .format(timestamp.toDate())
     }
 
-    fun formatTimestampToRelative(timestamp: Timestamp?): String {
-        if (timestamp == null) return ""
-
+    fun formatTimestampToRelative(timestamp: Timestamp): String {
         val second: Long = 1000
         val minute = 60 * second
         val hour = 60 * minute

@@ -359,8 +359,6 @@ class HomeDashboardFragment : Fragment() {
                 if (bannerViewPager.adapter == null) return
 
                 currentPosition = (currentPosition + 1) % size // loop back to 0
-                Log.d("Home", " Item size $size")
-                Log.d("Home", " Current position ${(currentPosition + 1) % size}")
                 bannerViewPager.setCurrentItem(currentPosition, true)
 
                 // Schedule next slide

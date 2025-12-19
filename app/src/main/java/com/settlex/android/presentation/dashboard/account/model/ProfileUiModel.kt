@@ -6,7 +6,7 @@ data class ProfileUiModel(
     val email: String,
     val firstName: String,
     val lastName: String,
-    val createdAt: Timestamp?,
+    val createdAt: Timestamp,
     val phone: String,
     val paymentId: String?,
     val photoUrl: String?

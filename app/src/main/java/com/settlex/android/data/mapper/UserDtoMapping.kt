@@ -5,13 +5,14 @@ import com.settlex.android.presentation.dashboard.account.model.ProfileUiModel
 import com.settlex.android.presentation.dashboard.home.model.HomeUiModel
 import com.settlex.android.presentation.dashboard.rewards.RewardsUiModel
 import com.settlex.android.presentation.transactions.model.TransferToFriendUiModel
+import com.settlex.android.presentation.wallet.model.WalletUiModel
 
 fun UserDto.toProfileUiModel(): ProfileUiModel {
     return ProfileUiModel(
         email = email,
         firstName = firstName,
         lastName = lastName,
-        createdAt = createdAt,
+        createdAt = createdAt!!,
         phone = phone,
         paymentId = paymentId,
         photoUrl = photoUrl,
@@ -50,5 +51,11 @@ fun UserDto.toTransferToFriendUiModel(): TransferToFriendUiModel {
         balance = balance,
         commissionBalance = commissionBalance,
         totalBalance = balance + commissionBalance
+    )
+}
+
+fun UserDto.toWalletUiModel(): WalletUiModel {
+    return WalletUiModel(
+        paymentId = paymentId
     )
 }

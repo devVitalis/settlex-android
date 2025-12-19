@@ -4,11 +4,18 @@ import android.os.Bundle
 import android.widget.Toast
 import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
+import androidx.lifecycle.Lifecycle
+import androidx.lifecycle.lifecycleScope
+import androidx.lifecycle.repeatOnLifecycle
 import com.settlex.android.R
+import com.settlex.android.data.session.UserSessionState
 import com.settlex.android.databinding.ActivityReceiveBinding
+import com.settlex.android.presentation.common.extensions.addAtPrefix
+import com.settlex.android.presentation.wallet.viewmodel.WalletViewModel
 import com.settlex.android.util.string.StringFormatter
 import com.settlex.android.util.ui.StatusBar
 import dagger.hilt.android.AndroidEntryPoint
+import kotlinx.coroutines.launch
 
 @AndroidEntryPoint
 class ReceiveActivity : AppCompatActivity() {
@@ -21,24 +28,42 @@ class ReceiveActivity : AppCompatActivity() {
         setContentView(binding.root)
 
         initViews()
+        observeUserSessionAndGetData()
     }
 
-    private fun initViews() {
-        StatusBar.setColor(this, R.color.white)
+    private fun observeUserSessionAndGetData() = with(binding) {
+        lifecycleScope.launch {
+            repeatOnLifecycle(Lifecycle.State.STARTED) {
+                viewModel.userSessionState.collect { sessionState ->
+                    when (sessionState) {
+                        is UserSessionState.Authenticated -> {
+                            val paymentId = sessionState.user.paymentId
+                            tvPaymentId.text = paymentId?.addAtPrefix()
+                        }
 
-        binding.btnCopy.setOnClickListener {
+                        else -> Unit
+                    }
+                }
+            }
+        }
+    }
+
+    private fun initViews() = with(binding) {
+        StatusBar.setColor(this@ReceiveActivity, R.color.white)
+
+        btnCopy.setOnClickListener {
             StringFormatter.copyToClipboard(
-                this,
+                this@ReceiveActivity,
                 "Payment ID",
-                binding.paymentId.text.toString(),
+                tvPaymentId.text.toString(),
                 true
             )
         }
 
-        binding.btnBackBefore.setOnClickListener { finish() }
-        binding.btnShareDetails.setOnClickListener {
+        btnBackBefore.setOnClickListener { finish() }
+        btnShareDetails.setOnClickListener {
             Toast.makeText(
-                this,
+                this@ReceiveActivity,
                 "This feature is not yet implemented",
                 Toast.LENGTH_SHORT
             ).show()

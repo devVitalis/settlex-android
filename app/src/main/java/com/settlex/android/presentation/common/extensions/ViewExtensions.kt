@@ -3,23 +3,16 @@ package com.settlex.android.presentation.common.extensions
 import android.view.View
 import android.widget.TextView
 
-/**
- * Sets the visibility of the View to VISIBLE.
- */
+
+// Visibility
 fun View.show() {
     visibility = View.VISIBLE
 }
 
-/**
- * Sets the visibility of the View to GONE.
- */
 fun View.gone() {
     visibility = View.GONE
 }
 
-/**
- * Sets the visibility of the View to INVISIBLE.
- */
 fun View.invisible() {
     visibility = View.INVISIBLE
 }
@@ -29,4 +22,48 @@ fun View.invisible() {
  */
 fun TextView.setAsterisks() {
     text = "****"
+}
+
+/**
+ * Returns a new string by prepending an "@" symbol.
+ * eg., "PaymentID" becomes "@PaymentID".
+ */
+fun String.addAtPrefix(): String {
+    return "@$this"
+}
+
+/**
+ * Masks an email address string.
+ * @return The masked email address as a String. Returns the original string if it
+ * does not contain an "@" symbol or if the prefix or domain part is empty.
+ */
+fun String.maskEmail(): String {
+    this.also { email ->
+        val emailParts = email.split("@")
+        val localPart = emailParts[0]
+        val domainPart = emailParts[1]
+
+        val maskedLocalPart = "${localPart[0]}****${localPart.substring(localPart.length - 1)}"
+        return "$maskedLocalPart@$domainPart"
+    }
+}
+
+fun String.maskPhoneNumber(): String {
+    this.also { phoneNumber ->
+        val visiblePrefixLength = 7
+        val visibleSuffixLength = 3
+
+        // Extract visible parts
+        val prefix = phoneNumber.substring(0, visiblePrefixLength)
+        val suffix = phoneNumber.substring(phoneNumber.length - visibleSuffixLength)
+
+        // Build masked section with asterisks
+        val maskedPartLength = phoneNumber.length - (visiblePrefixLength + visibleSuffixLength)
+        val mask = StringBuilder()
+        for (index in 0..<maskedPartLength) {
+            mask.append("*")
+        }
+
+        return prefix + mask + suffix
+    }
 }
