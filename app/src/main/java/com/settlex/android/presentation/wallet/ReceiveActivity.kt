@@ -1,7 +1,7 @@
 package com.settlex.android.presentation.wallet
 
+import android.content.Intent
 import android.os.Bundle
-import android.widget.Toast
 import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
 import androidx.lifecycle.Lifecycle
@@ -21,6 +21,7 @@ import kotlinx.coroutines.launch
 class ReceiveActivity : AppCompatActivity() {
     private lateinit var binding: ActivityReceiveBinding
     private val viewModel: WalletViewModel by viewModels()
+    private var userPaymentId: String? = null
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -34,12 +35,13 @@ class ReceiveActivity : AppCompatActivity() {
     private fun observeUserSessionAndGetData() = with(binding) {
         lifecycleScope.launch {
             repeatOnLifecycle(Lifecycle.State.STARTED) {
-                viewModel.userSessionState.collect { sessionState ->
-                    when (sessionState) {
-                        is UserSessionState.Authenticated -> {
-                            val paymentId = sessionState.user.paymentId
-                            tvPaymentId.text = paymentId?.addAtPrefix()
-                        }
+                viewModel.userSessionState.collect { state ->
+                    when (state) {
+                        is UserSessionState.Authenticated -> state.user.paymentId?.addAtPrefix()
+                            .also {
+                                userPaymentId = it
+                                tvPaymentId.text = userPaymentId
+                            }
 
                         else -> Unit
                     }
@@ -61,12 +63,16 @@ class ReceiveActivity : AppCompatActivity() {
         }
 
         btnBackBefore.setOnClickListener { finish() }
-        btnShareDetails.setOnClickListener {
-            Toast.makeText(
-                this@ReceiveActivity,
-                "This feature is not yet implemented",
-                Toast.LENGTH_SHORT
-            ).show()
+        btnShareDetails.setOnClickListener { sharePaymentId() }
+    }
+
+    private fun sharePaymentId() {
+        val shareIntent = Intent().apply {
+            val message = "You can send me money on SettleX using my Payment ID: $userPaymentId"
+            action = Intent.ACTION_SEND
+            putExtra(Intent.EXTRA_TEXT, message)
+            type = "text/plain"
         }
+        startActivity(Intent.createChooser(shareIntent, "Share via"))
     }
 }

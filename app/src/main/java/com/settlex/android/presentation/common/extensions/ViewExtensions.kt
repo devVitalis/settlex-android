@@ -26,17 +26,12 @@ fun TextView.setAsterisks() {
 
 /**
  * Returns a new string by prepending an "@" symbol.
- * eg., "PaymentID" becomes "@PaymentID".
+ * eg., "PaymentId" becomes "@PaymentId".
  */
 fun String.addAtPrefix(): String {
     return "@$this"
 }
 
-/**
- * Masks an email address string.
- * @return The masked email address as a String. Returns the original string if it
- * does not contain an "@" symbol or if the prefix or domain part is empty.
- */
 fun String.maskEmail(): String {
     this.also { email ->
         val emailParts = email.split("@")
@@ -58,12 +53,12 @@ fun String.maskPhoneNumber(): String {
         val suffix = phoneNumber.substring(phoneNumber.length - visibleSuffixLength)
 
         // Build masked section with asterisks
-        val maskedPartLength = phoneNumber.length - (visiblePrefixLength + visibleSuffixLength)
-        val mask = StringBuilder()
-        for (index in 0..<maskedPartLength) {
-            mask.append("*")
-        }
+//        val maskedPartLength = phoneNumber.length - (visiblePrefixLength + visibleSuffixLength)
+//        val mask = StringBuilder()
+//        for (index in 0..<maskedPartLength) {
+//            mask.append("*")
+//        }
 
-        return prefix + mask + suffix
+        return "$prefix****$suffix"
     }
 }
