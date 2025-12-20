@@ -7,19 +7,17 @@ import java.util.Locale
 object DateFormatter {
 
     /**
-     * Formats a Timestamp to eg., "12 Oct 2025, 09:45 AM"
+     * Formats a Timestamp to a date string (e.g., "12, October 2025").
+     *
+     * @param timestamp The Firebase Timestamp to format.
+     * @return A formatted date string in the format "dd, MMMM yyyy".
      */
-    fun formatTimeStampToDateAndTime(timestamp: Timestamp): String {
+    fun toFormattedDateString(timestamp: Timestamp): String {
         return SimpleDateFormat("dd MMM yyyy, hh:mm a", Locale.US)
             .format(timestamp.toDate())
     }
 
-    fun formatTimeStampToDate(timestamp: Timestamp): String {
-        return SimpleDateFormat("dd, MMMM yyyy", Locale.US)
-            .format(timestamp.toDate())
-    }
-
-    fun formatTimestampToRelative(timestamp: Timestamp): String {
+    fun getTimeAgo(timestamp: Timestamp): String {
         val second: Long = 1000
         val minute = 60 * second
         val hour = 60 * minute

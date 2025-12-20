@@ -139,7 +139,7 @@ class HomeViewModel @Inject constructor(
             operationSymbol = operation.symbol,
             operationColor = operation.colorRes,
             amount = CurrencyFormatter.formatToNaira(dto.amount),
-            timestamp = DateFormatter.formatTimeStampToDateAndTime(dto.createdAt),
+            timestamp = DateFormatter.toFormattedDateString(dto.createdAt),
             status = dto.status.displayName,
             statusColor = dto.status.colorRes,
             statusBackgroundColor = dto.status.bgColorRes

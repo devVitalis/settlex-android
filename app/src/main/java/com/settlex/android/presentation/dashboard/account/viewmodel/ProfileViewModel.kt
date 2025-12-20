@@ -25,7 +25,7 @@ import kotlinx.coroutines.launch
 @HiltViewModel
 class ProfileViewModel @Inject constructor(
     private val setPaymentPinUseCase: SetPaymentPinUseCase,
-    private val setProfilePictureUseCase: SetProfilePictureUseCase,
+    private val setProfilePhotoUseCase: SetProfilePictureUseCase,
     sessionManager: UserSessionManager
 ) : ViewModel() {
     val userSessionState: StateFlow<UserSessionState<ProfileUiModel>> =
@@ -45,11 +45,11 @@ class ProfileViewModel @Inject constructor(
     private val _setProfilePictureEvent = Channel<UiState<String>>(Channel.BUFFERED)
     val setProfilePictureEvent = _setProfilePictureEvent.receiveAsFlow()
 
-    fun setProfilePicture(context: Context, uri: Uri) {
+    fun setProfilePhoto(context: Context, uri: Uri) {
         viewModelScope.launch {
             _setProfilePictureEvent.send(UiState.Loading)
 
-            setProfilePictureUseCase(context, uri).fold(
+            setProfilePhotoUseCase(context, uri).fold(
                 onSuccess = { _setProfilePictureEvent.send(UiState.Success(it.data)) },
                 onFailure = { _setProfilePictureEvent.send(UiState.Failure(it as AppException)) }
             )

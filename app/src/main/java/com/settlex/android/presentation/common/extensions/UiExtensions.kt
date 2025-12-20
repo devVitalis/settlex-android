@@ -2,9 +2,12 @@ package com.settlex.android.presentation.common.extensions
 
 import android.view.View
 import android.widget.TextView
+import com.google.firebase.Timestamp
+import java.text.SimpleDateFormat
+import java.util.Locale
 
 
-// Visibility
+// View
 fun View.show() {
     visibility = View.VISIBLE
 }
@@ -17,6 +20,7 @@ fun View.invisible() {
     visibility = View.INVISIBLE
 }
 
+// TextView
 /**
  * Sets the text of a TextView to a string of four asterisks ("****").
  */
@@ -24,6 +28,7 @@ fun TextView.setAsterisks() {
     text = "****"
 }
 
+// String
 /**
  * Returns a new string by prepending an "@" symbol.
  * eg., "PaymentId" becomes "@PaymentId".
@@ -61,4 +66,16 @@ fun String.maskPhoneNumber(): String {
 
         return "$prefix****$suffix"
     }
+}
+
+// Timestamp
+fun Timestamp.toDateTimeString(): String {
+    return SimpleDateFormat("dd MMM yyyy, hh:mm a", Locale.US)
+        .format(this.toDate())
+
+}
+
+fun Timestamp.toDateString(): String {
+    return SimpleDateFormat("dd, MMMM yyyy", Locale.US)
+        .format(this.toDate())
 }

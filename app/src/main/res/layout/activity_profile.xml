@@ -154,6 +154,7 @@
                     android:orientation="horizontal">
 
                     <TextView
+                        android:textStyle="bold"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:fontFamily="@font/inter_regular"
@@ -187,6 +188,7 @@
 
                     <TextView
                         android:layout_width="wrap_content"
+                        android:textStyle="bold"
                         android:layout_height="wrap_content"
                         android:fontFamily="@font/inter_regular"
                         android:includeFontPadding="false"
@@ -220,6 +222,7 @@
                     <TextView
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
+                        android:textStyle="bold"
                         android:fontFamily="@font/inter_regular"
                         android:includeFontPadding="false"
                         android:text="Email Address"
@@ -256,6 +259,7 @@
                         android:includeFontPadding="false"
                         android:text="Member Since"
                         android:textColor="@color/black"
+                        android:textStyle="bold"
                         android:textSize="14sp" />
 
                     <TextView
@@ -274,7 +278,7 @@
                         tools:text="2 years ago" />
 
                     <ImageView
-                        android:id="@+id/btn_show_full_date"
+                        android:id="@+id/iv_member_since_info"
                         android:layout_width="17dp"
                         android:layout_height="17dp"
                         android:layout_marginStart="5dp"

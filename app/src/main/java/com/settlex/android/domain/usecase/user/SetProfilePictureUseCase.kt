@@ -8,6 +8,6 @@ import jakarta.inject.Inject
 
 class SetProfilePictureUseCase @Inject constructor(private val userRepoImpl: UserRepositoryImpl) {
     suspend operator fun invoke(context: Context, uri: Uri): Result<ApiResponse<String>> {
-        return userRepoImpl.setProfilePicture(context, uri)
+        return userRepoImpl.setProfilePhoto(context, uri)
     }
 }

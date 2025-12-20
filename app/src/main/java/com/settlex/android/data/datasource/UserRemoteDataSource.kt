@@ -96,7 +96,7 @@ class UserRemoteDataSource @Inject constructor(
         user.updatePassword(newPwd).await()
     }
 
-    suspend fun setProfilePicture(context: Context, uri: Uri): ApiResponse<String> {
+    suspend fun setProfilePhoto(context: Context, uri: Uri): ApiResponse<String> {
         val base64 = ImageConverter.toBase64(context, uri)
 
         return cloudFunctions.call(

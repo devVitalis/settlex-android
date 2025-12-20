@@ -12,7 +12,7 @@ fun UserDto.toProfileUiModel(): ProfileUiModel {
         email = email,
         firstName = firstName,
         lastName = lastName,
-        createdAt = createdAt!!,
+        joinedDate = createdAt!!,
         phone = phone,
         paymentId = paymentId,
         photoUrl = photoUrl,

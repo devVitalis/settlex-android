@@ -79,11 +79,11 @@ class UserRepositoryImpl @Inject constructor(
         )
     }
 
-    override suspend fun setProfilePicture(
+    override suspend fun setProfilePhoto(
         context: Context,
         uri: Uri
     ): Result<ApiResponse<String>> {
-        return runCatching { remote.setProfilePicture(context, uri) }
+        return runCatching { remote.setProfilePhoto(context, uri) }
             .fold(
                 onSuccess = { Result.success(it) },
                 onFailure = { Result.failure(exception.map(it as Exception)) }

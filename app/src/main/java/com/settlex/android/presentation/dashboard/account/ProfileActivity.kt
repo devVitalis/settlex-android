@@ -25,6 +25,8 @@ import com.settlex.android.databinding.ActivityProfileBinding
 import com.settlex.android.presentation.common.extensions.addAtPrefix
 import com.settlex.android.presentation.common.extensions.maskEmail
 import com.settlex.android.presentation.common.extensions.maskPhoneNumber
+import com.settlex.android.presentation.common.extensions.show
+import com.settlex.android.presentation.common.extensions.toDateString
 import com.settlex.android.presentation.common.state.UiState
 import com.settlex.android.presentation.common.util.DialogHelper
 import com.settlex.android.presentation.dashboard.account.model.ProfileUiModel
@@ -43,7 +45,9 @@ class ProfileActivity : AppCompatActivity() {
     private val progressLoader by lazy { ProgressDialogManager(this) }
     private lateinit var requestPermissionLauncher: ActivityResultLauncher<String>
     private lateinit var pickImageLauncher: ActivityResultLauncher<PickVisualMediaRequest>
-    private var joinedDate: Timestamp? = null
+
+    // Instance variables
+    private var UserJoinedDate: Timestamp? = null
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -54,19 +58,19 @@ class ProfileActivity : AppCompatActivity() {
         initObservers()
     }
 
-    private fun initViews() {
-        StatusBar.setColor(this, R.color.white)
+    private fun initViews() = with(binding) {
+        StatusBar.setColor(this@ProfileActivity, R.color.white)
         initGalleryPermissionLauncher()
         initProfilePicPicker()
 
-        binding.btnBackBefore.setOnClickListener { finish() }
-        binding.btnChangeProfilePic.setOnClickListener { checkPermissionsAndOpenGallery() }
-        binding.btnShowFullDate.setOnClickListener { showJoinedDateDialog() }
-        binding.btnCopyPaymentId.setOnClickListener {
+        btnBackBefore.setOnClickListener { finish() }
+        btnChangeProfilePic.setOnClickListener { checkPermissionsAndOpenGallery() }
+        ivMemberSinceInfo.setOnClickListener { showJoinedDateDialog() }
+        btnCopyPaymentId.setOnClickListener {
             StringFormatter.copyToClipboard(
-                this,
+                this@ProfileActivity,
                 "Payment ID",
-                binding.tvPaymentId.text.toString(),
+                tvPaymentId.text.toString(),
                 true
             )
         }
@@ -78,12 +82,11 @@ class ProfileActivity : AppCompatActivity() {
     }
 
     private fun showJoinedDateDialog() {
-        joinedDate?.let {
+        UserJoinedDate?.also {
             val title = "Member since"
-            val message = DateFormatter.formatTimeStampToDate(it)
 
             DialogHelper.showSimpleAlertDialog(
-                this, title, message
+                this, title, it.toDateString()
             )
         }
     }
@@ -91,9 +94,9 @@ class ProfileActivity : AppCompatActivity() {
     private fun observeUserSession() {
         lifecycleScope.launch {
             repeatOnLifecycle(Lifecycle.State.STARTED) {
-                viewModel.userSessionState.collect { sessionState ->
-                    when (sessionState) {
-                        is UserSessionState.Authenticated -> onUserAuthenticated(sessionState.user)
+                viewModel.userSessionState.collect { state ->
+                    when (state) {
+                        is UserSessionState.Authenticated -> onUserAuthenticated(state.user)
                         else -> Unit
                     }
                 }
@@ -107,8 +110,8 @@ class ProfileActivity : AppCompatActivity() {
         tvFullName.text = user.fullName.uppercase()
         tvEmail.text = user.email.maskEmail()
         tvPhoneNumber.text = user.phone.maskPhoneNumber()
-        tvJoinedDate.text = DateFormatter.formatTimestampToRelative(user.createdAt)
-        joinedDate = user.createdAt
+        tvJoinedDate.text = DateFormatter.getTimeAgo(user.joinedDate)
+        UserJoinedDate = user.joinedDate
     }
 
     private fun observeProfilePicUploadResult() {
@@ -118,16 +121,17 @@ class ProfileActivity : AppCompatActivity() {
                     when (it) {
                         is UiState.Loading -> progressLoader.show()
                         is UiState.Success -> progressLoader.hide()
-                        is UiState.Failure -> onProfilePicUploadStatusError(it.exception.message)
+                        is UiState.Failure -> onProfilePhotoUploadFailure(it.exception.message)
                     }
                 }
             }
         }
     }
 
-    private fun onProfilePicUploadStatusError(error: String?) {
+    private fun onProfilePhotoUploadFailure(error: String?) = with(binding) {
         progressLoader.hide()
-        binding.tvError.text = error
+        tvError.text = error
+        tvError.show()
     }
 
     private fun initGalleryPermissionLauncher() {
@@ -147,7 +151,7 @@ class ProfileActivity : AppCompatActivity() {
             PickVisualMedia()
         ) { uri: Uri? ->
             if (uri != null) {
-                viewModel.setProfilePicture(this, uri)
+                viewModel.setProfilePhoto(this, uri)
             } else Toast.makeText(this, "No media selected", Toast.LENGTH_SHORT).show()
         }
     }
