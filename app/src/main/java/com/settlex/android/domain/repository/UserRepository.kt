@@ -14,7 +14,7 @@ interface UserRepository {
     suspend fun setPaymentPin(pin: String): Result<ApiResponse<String>>
     suspend fun authPaymentPin(pin: String): Result<ApiResponse<Boolean>>
     suspend fun resetPaymentPin(oldPin: String, newPin: String): Result<ApiResponse<String>>
-    suspend fun setProfilePhoto(context: Context, uri: Uri): Result<ApiResponse<String>>
+    suspend fun setProfilePhoto(context: Context, imageUri: Uri): Result<ApiResponse<String>>
     suspend fun refreshUser()
     suspend fun getRecipientByPaymentId(paymentId: String): Result<ApiResponse<List<RecipientDto>>>
 }

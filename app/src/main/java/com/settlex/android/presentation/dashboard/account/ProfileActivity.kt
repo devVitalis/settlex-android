@@ -1,6 +1,7 @@
 package com.settlex.android.presentation.dashboard.account
 
 import android.Manifest
+import android.content.Intent
 import android.content.pm.PackageManager
 import android.net.Uri
 import android.os.Build
@@ -11,6 +12,7 @@ import androidx.activity.result.PickVisualMediaRequest
 import androidx.activity.result.contract.ActivityResultContracts.PickVisualMedia
 import androidx.activity.result.contract.ActivityResultContracts.PickVisualMedia.ImageOnly
 import androidx.activity.result.contract.ActivityResultContracts.RequestPermission
+import androidx.activity.result.contract.ActivityResultContracts.StartActivityForResult
 import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.content.ContextCompat
@@ -19,6 +21,7 @@ import androidx.lifecycle.lifecycleScope
 import androidx.lifecycle.repeatOnLifecycle
 import com.google.firebase.Timestamp
 import com.settlex.android.R
+import com.settlex.android.data.exception.AppException
 import com.settlex.android.data.remote.profile.ProfileService
 import com.settlex.android.data.session.UserSessionState
 import com.settlex.android.databinding.ActivityProfileBinding
@@ -35,8 +38,10 @@ import com.settlex.android.util.string.DateFormatter
 import com.settlex.android.util.string.StringFormatter
 import com.settlex.android.util.ui.ProgressDialogManager
 import com.settlex.android.util.ui.StatusBar
+import com.yalantis.ucrop.UCrop
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.launch
+import java.io.File
 
 @AndroidEntryPoint
 class ProfileActivity : AppCompatActivity() {
@@ -45,9 +50,9 @@ class ProfileActivity : AppCompatActivity() {
     private val progressLoader by lazy { ProgressDialogManager(this) }
     private lateinit var requestPermissionLauncher: ActivityResultLauncher<String>
     private lateinit var pickImageLauncher: ActivityResultLauncher<PickVisualMediaRequest>
+    private lateinit var cropImageLauncher: ActivityResultLauncher<Intent>
 
-    // Instance variables
-    private var UserJoinedDate: Timestamp? = null
+    private var userJoinedDate: Timestamp? = null
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -61,15 +66,15 @@ class ProfileActivity : AppCompatActivity() {
     private fun initViews() = with(binding) {
         StatusBar.setColor(this@ProfileActivity, R.color.white)
         initGalleryPermissionLauncher()
-        initProfilePicPicker()
+        initProfilePhotoPicker()
+        initCropImageLauncher()
 
         btnBackBefore.setOnClickListener { finish() }
         btnChangeProfilePic.setOnClickListener { checkPermissionsAndOpenGallery() }
         ivMemberSinceInfo.setOnClickListener { showJoinedDateDialog() }
         btnCopyPaymentId.setOnClickListener {
             StringFormatter.copyToClipboard(
-                this@ProfileActivity,
-                "Payment ID",
+                this@ProfileActivity, "Payment ID",
                 tvPaymentId.text.toString(),
                 true
             )
@@ -78,15 +83,13 @@ class ProfileActivity : AppCompatActivity() {
 
     private fun initObservers() {
         observeUserSession()
-        observeProfilePicUploadResult()
+        observeSetProfilePictureEvent()
     }
 
     private fun showJoinedDateDialog() {
-        UserJoinedDate?.also {
-            val title = "Member since"
-
+        userJoinedDate?.also {
             DialogHelper.showSimpleAlertDialog(
-                this, title, it.toDateString()
+                this, "Member since", it.toDateString()
             )
         }
     }
@@ -111,33 +114,31 @@ class ProfileActivity : AppCompatActivity() {
         tvEmail.text = user.email.maskEmail()
         tvPhoneNumber.text = user.phone.maskPhoneNumber()
         tvJoinedDate.text = DateFormatter.getTimeAgo(user.joinedDate)
-        UserJoinedDate = user.joinedDate
+        userJoinedDate = user.joinedDate
     }
 
-    private fun observeProfilePicUploadResult() {
+    private fun observeSetProfilePictureEvent() {
         lifecycleScope.launch {
             repeatOnLifecycle(Lifecycle.State.STARTED) {
-                viewModel.setProfilePictureEvent.collect {
-                    when (it) {
+                viewModel.setProfilePictureEvent.collect { state ->
+                    when (state) {
                         is UiState.Loading -> progressLoader.show()
                         is UiState.Success -> progressLoader.hide()
-                        is UiState.Failure -> onProfilePhotoUploadFailure(it.exception.message)
+                        is UiState.Failure -> onProfilePhotoUploadFailure(state.exception)
                     }
                 }
             }
         }
     }
 
-    private fun onProfilePhotoUploadFailure(error: String?) = with(binding) {
+    private fun onProfilePhotoUploadFailure(error: AppException) = with(binding) {
         progressLoader.hide()
-        tvError.text = error
+        tvError.text = error.message
         tvError.show()
     }
 
     private fun initGalleryPermissionLauncher() {
-        requestPermissionLauncher = registerForActivityResult(
-            RequestPermission()
-        ) { isGranted: Boolean ->
+        requestPermissionLauncher = registerForActivityResult(RequestPermission()) { isGranted ->
             if (isGranted) {
                 openGalleryPicker()
                 return@registerForActivityResult
@@ -146,14 +147,42 @@ class ProfileActivity : AppCompatActivity() {
         }
     }
 
-    private fun initProfilePicPicker() {
-        pickImageLauncher = registerForActivityResult(
-            PickVisualMedia()
-        ) { uri: Uri? ->
+    private fun initProfilePhotoPicker() {
+        pickImageLauncher = registerForActivityResult(PickVisualMedia()) { uri: Uri? ->
             if (uri != null) {
-                viewModel.setProfilePhoto(this, uri)
+                launchCropActivity(uri)
             } else Toast.makeText(this, "No media selected", Toast.LENGTH_SHORT).show()
         }
+    }
+
+    private fun initCropImageLauncher() {
+        cropImageLauncher = registerForActivityResult(StartActivityForResult()) { result ->
+            when (result.resultCode) {
+                RESULT_OK -> {
+                    val croppedUri = UCrop.getOutput(result.data!!)
+                    viewModel.setProfilePhoto(this, croppedUri!!)
+                }
+
+                UCrop.RESULT_ERROR -> {
+                    val cropError = UCrop.getError(result.data!!)
+                    Toast.makeText(this, "Crop failed: ${cropError?.message}", Toast.LENGTH_SHORT)
+                        .show()
+                }
+            }
+        }
+    }
+
+    private fun launchCropActivity(sourceUri: Uri) {
+        val destinationUri = Uri.fromFile(
+            File(cacheDir, "cropped_${System.currentTimeMillis()}.jpg")
+        )
+
+        val cropIntent = UCrop.of(sourceUri, destinationUri)
+            .withAspectRatio(1f, 1f)
+            .withMaxResultSize(512, 512)
+            .getIntent(this)
+
+        cropImageLauncher.launch(cropIntent)
     }
 
     private fun openGalleryPicker() {

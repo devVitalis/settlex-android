@@ -97,7 +97,7 @@ dependencies {
     implementation(libs.lifecycle.viewmodel)
     implementation(libs.lifecycle.livedata)
 
-    // Shimmer Loading
+    // Shimmer Effect
     implementation(libs.shimmer)
 
     // Navigation Component
@@ -115,9 +115,6 @@ dependencies {
     implementation(libs.jackson.module.kotlin)
     implementation(libs.jackson.databind)
 
-    // MPAndroid Chart
-    implementation(libs.mpandroidchart)
-
     // Currency EditText
     implementation(libs.currencyedittext)
 
@@ -126,6 +123,9 @@ dependencies {
 
     // Biometric
     implementation(libs.biometric)
+
+    // UCrop
+    implementation(libs.ucrop)
 }
 
 tasks.withType<JavaCompile>().configureEach {

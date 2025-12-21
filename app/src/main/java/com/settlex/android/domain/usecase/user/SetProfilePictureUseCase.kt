@@ -7,7 +7,7 @@ import com.settlex.android.data.repository.UserRepositoryImpl
 import jakarta.inject.Inject
 
 class SetProfilePictureUseCase @Inject constructor(private val userRepoImpl: UserRepositoryImpl) {
-    suspend operator fun invoke(context: Context, uri: Uri): Result<ApiResponse<String>> {
-        return userRepoImpl.setProfilePhoto(context, uri)
+    suspend operator fun invoke(context: Context, imageUri: Uri): Result<ApiResponse<String>> {
+        return userRepoImpl.setProfilePhoto(context, imageUri)
     }
 }
