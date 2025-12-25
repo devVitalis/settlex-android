@@ -13,9 +13,11 @@ import androidx.activity.result.contract.ActivityResultContracts.PickVisualMedia
 import androidx.activity.result.contract.ActivityResultContracts.PickVisualMedia.ImageOnly
 import androidx.activity.result.contract.ActivityResultContracts.RequestPermission
 import androidx.activity.result.contract.ActivityResultContracts.StartActivityForResult
+import androidx.activity.result.contract.ActivityResultContracts.TakePicture
 import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.content.ContextCompat
+import androidx.core.content.FileProvider
 import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.lifecycleScope
 import androidx.lifecycle.repeatOnLifecycle
@@ -50,9 +52,12 @@ class ProfileActivity : AppCompatActivity() {
     private val progressLoader by lazy { ProgressDialogManager(this) }
     private lateinit var requestPermissionLauncher: ActivityResultLauncher<String>
     private lateinit var pickImageLauncher: ActivityResultLauncher<PickVisualMediaRequest>
+    private lateinit var takePictureLauncher: ActivityResultLauncher<Uri>
     private lateinit var cropImageLauncher: ActivityResultLauncher<Intent>
 
     private var userJoinedDate: Timestamp? = null
+    private var userPhotoUrl: String? = null
+    private var cameraImageUri: Uri? = null
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -66,11 +71,12 @@ class ProfileActivity : AppCompatActivity() {
     private fun initViews() = with(binding) {
         StatusBar.setColor(this@ProfileActivity, R.color.white)
         initGalleryPermissionLauncher()
-        initProfilePhotoPicker()
+        initProfilePicPicker()
+        initCameraLauncher()
         initCropImageLauncher()
 
         btnBackBefore.setOnClickListener { finish() }
-        btnChangeProfilePic.setOnClickListener { checkPermissionsAndOpenGallery() }
+        btnChangeProfilePic.setOnClickListener { showImageSourceBottomSheet() }
         ivMemberSinceInfo.setOnClickListener { showJoinedDateDialog() }
         btnCopyPaymentId.setOnClickListener {
             StringFormatter.copyToClipboard(
@@ -83,7 +89,7 @@ class ProfileActivity : AppCompatActivity() {
 
     private fun initObservers() {
         observeUserSession()
-        observeSetProfilePictureEvent()
+        observeProfilePicUploadResult()
     }
 
     private fun showJoinedDateDialog() {
@@ -115,9 +121,10 @@ class ProfileActivity : AppCompatActivity() {
         tvPhoneNumber.text = user.phone.maskPhoneNumber()
         tvJoinedDate.text = DateFormatter.getTimeAgo(user.joinedDate)
         userJoinedDate = user.joinedDate
+        userPhotoUrl = user.photoUrl
     }
 
-    private fun observeSetProfilePictureEvent() {
+    private fun observeProfilePicUploadResult() {
         lifecycleScope.launch {
             repeatOnLifecycle(Lifecycle.State.STARTED) {
                 viewModel.setProfilePictureEvent.collect { state ->
@@ -147,11 +154,21 @@ class ProfileActivity : AppCompatActivity() {
         }
     }
 
-    private fun initProfilePhotoPicker() {
+    private fun initProfilePicPicker() {
         pickImageLauncher = registerForActivityResult(PickVisualMedia()) { uri: Uri? ->
             if (uri != null) {
                 launchCropActivity(uri)
             } else Toast.makeText(this, "No media selected", Toast.LENGTH_SHORT).show()
+        }
+    }
+
+    private fun initCameraLauncher() {
+        takePictureLauncher = registerForActivityResult(TakePicture()) { success ->
+            if (success) {
+                launchCropActivity(cameraImageUri!!)
+            } else {
+                Toast.makeText(this, "Failed to capture image", Toast.LENGTH_SHORT).show()
+            }
         }
     }
 
@@ -172,28 +189,24 @@ class ProfileActivity : AppCompatActivity() {
         }
     }
 
-    private fun launchCropActivity(sourceUri: Uri) {
-        val destinationUri = Uri.fromFile(
-            File(cacheDir, "cropped_${System.currentTimeMillis()}.jpg")
-        )
+    private fun showImageSourceBottomSheet() {
+        DialogHelper.showBottomSheetImageSource(this) { dialog, binding ->
+            with(binding) {
+                ProfileService.loadProfilePic(userPhotoUrl, ivProfilePhoto)
+                tvGallery.setOnClickListener {
+                    checkGalleryPermissionAndOpen()
+                    dialog.dismiss()
+                }
 
-        val cropIntent = UCrop.of(sourceUri, destinationUri)
-            .withAspectRatio(1f, 1f)
-            .withMaxResultSize(512, 512)
-            .getIntent(this)
-
-        cropImageLauncher.launch(cropIntent)
+                tvCamera.setOnClickListener {
+                    checkCameraPermissionAndOpen()
+                    dialog.dismiss()
+                }
+            }
+        }
     }
 
-    private fun openGalleryPicker() {
-        pickImageLauncher.launch(
-            PickVisualMediaRequest.Builder()
-                .setMediaType(ImageOnly)
-                .build()
-        )
-    }
-
-    private fun checkPermissionsAndOpenGallery() {
+    private fun checkGalleryPermissionAndOpen() {
         val isAndroidTiramisuOrNewer = Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU
         val permission = Manifest.permission.READ_EXTERNAL_STORAGE
 
@@ -212,5 +225,49 @@ class ProfileActivity : AppCompatActivity() {
         }
 
         requestPermissionLauncher.launch(permission)
+    }
+
+    private fun checkCameraPermissionAndOpen() {
+        if (ContextCompat.checkSelfPermission(
+                this,
+                Manifest.permission.CAMERA
+            ) == PackageManager.PERMISSION_GRANTED
+        ) {
+            openCamera()
+            return
+        }
+
+        requestPermissionLauncher.launch(Manifest.permission.CAMERA)
+    }
+
+    private fun openGalleryPicker() {
+        pickImageLauncher.launch(
+            PickVisualMediaRequest.Builder()
+                .setMediaType(ImageOnly)
+                .build()
+        )
+    }
+
+    private fun openCamera() {
+        val photoFile = File(cacheDir, "camera_${System.currentTimeMillis()}.jpg")
+        cameraImageUri = FileProvider.getUriForFile(
+            this,
+            "${packageName}.fileprovider",
+            photoFile
+        )
+        takePictureLauncher.launch(cameraImageUri!!)
+    }
+
+    private fun launchCropActivity(sourceUri: Uri) {
+        val destinationUri = Uri.fromFile(
+            File(cacheDir, "cropped_${System.currentTimeMillis()}.jpg")
+        )
+
+        val cropIntent = UCrop.of(sourceUri, destinationUri)
+            .withAspectRatio(1f, 1f)
+            .withMaxResultSize(512, 512)
+            .getIntent(this)
+
+        cropImageLauncher.launch(cropIntent)
     }
 }

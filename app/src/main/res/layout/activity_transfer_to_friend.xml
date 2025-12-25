@@ -147,7 +147,7 @@
                         android:layout_marginEnd="10dp"
                         android:contentDescription="@null"
                         app:shapeAppearanceOverlay="@style/ShapeAppearance.SettleX.Circular"
-                        app:srcCompat="@drawable/ic_no_profile_pic" />
+                        app:srcCompat="@drawable/ic_no_profile_photo" />
 
                     <LinearLayout
                         android:layout_width="0dp"

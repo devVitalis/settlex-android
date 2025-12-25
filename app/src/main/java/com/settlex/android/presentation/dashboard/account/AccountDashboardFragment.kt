@@ -14,10 +14,7 @@ import androidx.lifecycle.lifecycleScope
 import androidx.lifecycle.repeatOnLifecycle
 import androidx.navigation.fragment.NavHostFragment
 import com.settlex.android.R
-import com.settlex.android.data.remote.profile.ProfileService
 import com.settlex.android.databinding.FragmentDashboardAccountBinding
-import com.settlex.android.presentation.common.state.UiState
-import com.settlex.android.presentation.dashboard.account.model.ProfileUiModel
 import com.settlex.android.presentation.dashboard.account.viewmodel.ProfileViewModel
 import com.settlex.android.presentation.settings.SettingsActivity
 import com.settlex.android.util.string.StringFormatter

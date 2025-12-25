@@ -312,12 +312,12 @@ class TransferToFriendActivity : AppCompatActivity() {
                 return@showPayConfirmation
             }
 
-            DialogHelper.showBottomSheetPaymentPinConfirmation(this) { binding, runnable ->
-                runnable[0] = {
-                    // call viewModel to authenticate pin (keeps existing flow)
-                    viewModel.authPaymentPin(binding.pinView.text.toString())
-                }
-            }
+//            DialogHelper.showBottomSheetPaymentPinConfirmation(this) { binding, runnable ->
+//                runnable[0] = {
+//                    // call viewModel to authenticate pin (keeps existing flow)
+//                    viewModel.authPaymentPin(binding.pinView.text.toString())
+//                }
+//            }
         }
     }
 

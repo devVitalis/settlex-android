@@ -73,7 +73,7 @@
                         android:layout_width="60dp"
                         android:layout_height="60dp"
                         app:shapeAppearanceOverlay="@style/ShapeAppearance.SettleX.Circular"
-                        app:srcCompat="@drawable/ic_no_profile_pic" />
+                        app:srcCompat="@drawable/ic_no_profile_photo" />
 
                     <ImageView
                         android:id="@+id/btn_change_profile_pic"

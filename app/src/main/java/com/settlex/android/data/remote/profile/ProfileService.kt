@@ -22,7 +22,7 @@ object ProfileService {
         Glide.with(SettleXApp.appContext)
             .load(profilePicUrl)
             .centerCrop()
-            .error(R.drawable.ic_no_profile_pic)
+            .error(R.drawable.ic_no_profile_photo)
             .apply(RequestOptions())
             .diskCacheStrategy(DiskCacheStrategy.ALL)
             .transition(DrawableTransitionOptions.withCrossFade(100))
