@@ -3,17 +3,24 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
+    android:gravity="center"
     android:orientation="vertical"
     android:padding="16dp">
 
+    <View
+        android:layout_width="70dp"
+        android:layout_height="5dp"
+        android:background="@drawable/bg_8dp_gray" />
+
     <TextView
-        style="@style/Widget.SettleX.AppCompat.TextView"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginTop="10dp"
+        android:layout_marginTop="15dp"
         android:fontFamily="@font/inter_bold"
         android:gravity="center"
+        android:includeFontPadding="false"
         android:text="Change Profile Photo"
+        android:textColor="@color/black"
         android:textSize="25sp"
         android:textStyle="bold" />
 
@@ -21,31 +28,30 @@
         android:id="@+id/iv_profile_photo"
         android:layout_width="100dp"
         android:layout_height="100dp"
-        android:layout_gravity="center"
-        android:layout_marginTop="20dp"
+        android:layout_marginTop="15dp"
         android:src="@drawable/ic_no_profile_photo"
         app:shapeAppearanceOverlay="@style/ShapeAppearance.SettleX.Circular" />
 
     <TextView
         android:id="@+id/tvGallery"
-        style="@style/Widget.SettleX.AppCompat.TextView"
         android:layout_width="match_parent"
         android:layout_height="50dp"
         android:layout_marginTop="10dp"
-        android:background="@drawable/bg_8dp_outline_blue"
+        android:background="@drawable/bg_24dp_outlined_blue"
         android:gravity="center"
+        android:includeFontPadding="false"
         android:text="Select from Gallery"
         android:textColor="@color/blue"
         android:textSize="16sp" />
 
     <TextView
         android:id="@+id/tvCamera"
-        style="@style/Widget.SettleX.AppCompat.TextView"
         android:layout_width="match_parent"
         android:layout_height="50dp"
         android:layout_marginTop="10dp"
-        android:background="@drawable/bg_8dp_outline_blue"
+        android:background="@drawable/bg_24dp_outlined_blue"
         android:gravity="center"
+        android:includeFontPadding="false"
         android:text="Take a Photo"
         android:textColor="@color/blue"
         android:textSize="16sp" />
