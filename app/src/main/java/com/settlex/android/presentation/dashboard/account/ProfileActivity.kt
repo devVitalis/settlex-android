@@ -50,7 +50,8 @@ class ProfileActivity : AppCompatActivity() {
     private lateinit var binding: ActivityProfileBinding
     private val viewModel: ProfileViewModel by viewModels()
     private val progressLoader by lazy { ProgressDialogManager(this) }
-    private lateinit var requestPermissionLauncher: ActivityResultLauncher<String>
+    private lateinit var galleryPermissionLauncher: ActivityResultLauncher<String>
+    private lateinit var cameraPermissionLauncher: ActivityResultLauncher<String>
     private lateinit var pickImageLauncher: ActivityResultLauncher<PickVisualMediaRequest>
     private lateinit var takePictureLauncher: ActivityResultLauncher<Uri>
     private lateinit var cropImageLauncher: ActivityResultLauncher<Intent>
@@ -71,8 +72,9 @@ class ProfileActivity : AppCompatActivity() {
     private fun initViews() = with(binding) {
         StatusBar.setColor(this@ProfileActivity, R.color.white)
         initGalleryPermissionLauncher()
-        initProfilePicPicker()
-        initCameraLauncher()
+        initCameraPermissionLauncher()
+        initProfilePhotoPicker()
+        initTakePictureLauncher()
         initCropImageLauncher()
 
         btnBackBefore.setOnClickListener { finish() }
@@ -89,7 +91,7 @@ class ProfileActivity : AppCompatActivity() {
 
     private fun initObservers() {
         observeUserSession()
-        observeProfilePicUploadResult()
+        observeSetProfilePictureEvent()
     }
 
     private fun showJoinedDateDialog() {
@@ -124,7 +126,7 @@ class ProfileActivity : AppCompatActivity() {
         userPhotoUrl = user.photoUrl
     }
 
-    private fun observeProfilePicUploadResult() {
+    private fun observeSetProfilePictureEvent() {
         lifecycleScope.launch {
             repeatOnLifecycle(Lifecycle.State.STARTED) {
                 viewModel.setProfilePictureEvent.collect { state ->
@@ -145,24 +147,34 @@ class ProfileActivity : AppCompatActivity() {
     }
 
     private fun initGalleryPermissionLauncher() {
-        requestPermissionLauncher = registerForActivityResult(RequestPermission()) { isGranted ->
+        galleryPermissionLauncher = registerForActivityResult(RequestPermission()) { isGranted ->
             if (isGranted) {
                 openGalleryPicker()
                 return@registerForActivityResult
             }
-            Toast.makeText(this, "Permission denied", Toast.LENGTH_SHORT).show()
+            Toast.makeText(this, "Gallery permission denied", Toast.LENGTH_SHORT).show()
         }
     }
 
-    private fun initProfilePicPicker() {
+    private fun initCameraPermissionLauncher() {
+        cameraPermissionLauncher = registerForActivityResult(RequestPermission()) { isGranted ->
+            if (isGranted) {
+                openCamera()
+                return@registerForActivityResult
+            }
+            Toast.makeText(this, "Camera permission denied", Toast.LENGTH_SHORT).show()
+        }
+    }
+
+    private fun initProfilePhotoPicker() {
         pickImageLauncher = registerForActivityResult(PickVisualMedia()) { uri: Uri? ->
-            if (uri != null) {
-                launchCropActivity(uri)
-            } else Toast.makeText(this, "No media selected", Toast.LENGTH_SHORT).show()
+            uri?.let {
+                launchCropActivity(it)
+            } ?: Toast.makeText(this, "No media selected", Toast.LENGTH_SHORT).show()
         }
     }
 
-    private fun initCameraLauncher() {
+    private fun initTakePictureLauncher() {
         takePictureLauncher = registerForActivityResult(TakePicture()) { success ->
             if (success) {
                 launchCropActivity(cameraImageUri!!)
@@ -208,7 +220,6 @@ class ProfileActivity : AppCompatActivity() {
 
     private fun checkGalleryPermissionAndOpen() {
         val isAndroidTiramisuOrNewer = Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU
-        val permission = Manifest.permission.READ_EXTERNAL_STORAGE
 
         if (isAndroidTiramisuOrNewer) {
             openGalleryPicker()
@@ -217,14 +228,14 @@ class ProfileActivity : AppCompatActivity() {
 
         if (ContextCompat.checkSelfPermission(
                 this,
-                permission
+                Manifest.permission.READ_EXTERNAL_STORAGE
             ) == PackageManager.PERMISSION_GRANTED
         ) {
             openGalleryPicker()
             return
         }
 
-        requestPermissionLauncher.launch(permission)
+        galleryPermissionLauncher.launch(Manifest.permission.READ_EXTERNAL_STORAGE)
     }
 
     private fun checkCameraPermissionAndOpen() {
@@ -237,7 +248,7 @@ class ProfileActivity : AppCompatActivity() {
             return
         }
 
-        requestPermissionLauncher.launch(Manifest.permission.CAMERA)
+        cameraPermissionLauncher.launch(Manifest.permission.CAMERA)
     }
 
     private fun openGalleryPicker() {
