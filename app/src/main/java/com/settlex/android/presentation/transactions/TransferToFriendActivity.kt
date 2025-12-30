@@ -19,11 +19,12 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import com.google.android.material.bottomsheet.BottomSheetDialog
 import com.settlex.android.R
 import com.settlex.android.data.enums.TransactionStatus
-import com.settlex.android.data.remote.profile.ProfileService.loadProfilePic
+import com.settlex.android.data.remote.profile.ProfileService.loadProfilePhoto
 import com.settlex.android.databinding.ActivityTransferToFriendBinding
 import com.settlex.android.domain.TransactionIdGenerator
 import com.settlex.android.presentation.common.extensions.gone
 import com.settlex.android.presentation.common.extensions.show
+import com.settlex.android.presentation.common.extensions.toNairaString
 import com.settlex.android.presentation.common.state.UiState
 import com.settlex.android.presentation.common.util.DialogHelper
 import com.settlex.android.presentation.settings.CreatePaymentPinActivity
@@ -117,7 +118,7 @@ class TransferToFriendActivity : AppCompatActivity() {
 
     private fun applyCurrentUser(user: TransferToFriendUiModel) = with(binding) {
         currentUser = user
-        availableBalance.text = CurrencyFormatter.formatToNaira(user.totalBalance)
+        availableBalance.text = user.totalBalance.toNairaString()
     }
 
     private fun observeTransferToFriend() {
@@ -200,7 +201,7 @@ class TransferToFriendActivity : AppCompatActivity() {
 
             // show selected recipient
             recipientPhotoUrl = recipient.photoUrl
-            loadProfilePic(recipientPhotoUrl, binding.selectedRecipientProfilePic)
+            loadProfilePhoto(recipientPhotoUrl, binding.selectedRecipientProfilePic)
             binding.selectedRecipientName.text = recipient.fullName
             binding.selectedRecipientPaymentId.text = recipient.paymentId
             binding.selectedRecipient.show()
@@ -297,7 +298,7 @@ class TransferToFriendActivity : AppCompatActivity() {
             StringFormatter.removeAtInPaymentId(binding.selectedRecipientPaymentId.text.toString())
         val recipientName = binding.selectedRecipientName.text.toString()
 
-        bottomSheetDialog = DialogHelper.showPayConfirmation(
+        bottomSheetDialog = DialogHelper.showBottomSheetConfirmPayment(
             this,
             recipientPaymentIdRaw,
             recipientName,
@@ -309,7 +310,7 @@ class TransferToFriendActivity : AppCompatActivity() {
             // on confirm callback (keeps original behavior)
             if (currentUser?.hasPin != true) {
                 promptTransactionPinCreation()
-                return@showPayConfirmation
+                return@showBottomSheetConfirmPayment
             }
 
 //            DialogHelper.showBottomSheetPaymentPinConfirmation(this) { binding, runnable ->
@@ -467,7 +468,7 @@ class TransferToFriendActivity : AppCompatActivity() {
 
     private fun goToStatus(transactionStatus: TransactionStatus, feedback: String?) {
         bottomSheetDialog?.dismiss()
-        val formattedAmount = CurrencyFormatter.formatToNaira(amountToSend)
+        val formattedAmount = amountToSend.toNairaString()
         val intent = Intent(this, TransactionStatusActivity::class.java).apply {
             putExtra("amount", formattedAmount)
             putExtra("status", transactionStatus.name)

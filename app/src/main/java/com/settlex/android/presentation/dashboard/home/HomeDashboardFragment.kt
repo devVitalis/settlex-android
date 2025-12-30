@@ -198,7 +198,7 @@ class HomeDashboardFragment : Fragment() {
             viewUserCommissionBalance
         ).forEach { it.show() }
 
-        ProfileService.loadProfilePic(user.photoUrl, ivProfilePhoto)
+        ProfileService.loadProfilePhoto(user.photoUrl, ivProfilePhoto)
         tvUserFullName.text = user.fullName
     }
 

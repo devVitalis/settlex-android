@@ -8,15 +8,12 @@
     android:padding="20dp">
 
     <TextView
+        style="@style/Widget.SettleX.TitleBold"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_gravity="center"
         android:fontFamily="@font/inter_bold"
-        android:includeFontPadding="false"
-        android:text="Payment Confirmation"
-        android:textColor="@color/black"
-        android:textSize="18sp"
-        android:textStyle="bold" />
+        android:text="Payment Confirmation" />
 
     <com.google.android.material.imageview.ShapeableImageView
         android:id="@+id/btn_close"
@@ -28,14 +25,12 @@
         app:tint="@color/gray" />
 
     <TextView
-        android:id="@+id/amount_to_send_header"
+        android:id="@+id/tv_amount_header"
+        style="@style/Widget.SettleX.TitleBold"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_gravity="center"
         android:includeFontPadding="false"
-        android:textColor="@color/black"
-        android:textSize="25sp"
-        android:textStyle="bold"
         tools:text="₦100,000" />
 
     <LinearLayout
@@ -46,26 +41,22 @@
         android:orientation="horizontal">
 
         <TextView
+            style="@style/Widget.SettleX.TextRegular"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_marginEnd="15dp"
             android:layout_weight="1"
-            android:fontFamily="@font/inter_regular"
             android:includeFontPadding="false"
             android:text="Recipient"
-            android:textColor="@color/gray"
-            android:textSize="14sp" />
+            android:textColor="@color/gray" />
 
         <TextView
-            android:id="@+id/recipient_username"
+            android:id="@+id/tv_recipient_username"
+            style="@style/Widget.SettleX.TextRegular"
             android:layout_width="wrap_content"
             android:layout_height="20dp"
             android:ellipsize="end"
-            android:fontFamily="@font/inter_regular"
-            android:includeFontPadding="false"
             android:maxLines="1"
-            android:textColor="@color/black"
-            android:textSize="14sp"
             tools:text="\@vitalis" />
     </LinearLayout>
 
@@ -77,18 +68,16 @@
         android:orientation="horizontal">
 
         <TextView
+            style="@style/Widget.SettleX.TextRegular"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_marginEnd="10dp"
             android:layout_weight="1"
-            android:fontFamily="@font/inter_regular"
-            android:includeFontPadding="false"
             android:text="Recipient Name"
-            android:textColor="@color/gray"
-            android:textSize="14sp" />
+            android:textColor="@color/gray" />
 
         <com.google.android.material.imageview.ShapeableImageView
-            android:id="@+id/recipient_profile_pic"
+            android:id="@+id/iv_recipient_profile_photo"
             android:layout_width="17dp"
             android:layout_height="17dp"
             android:layout_marginEnd="3dp"
@@ -96,15 +85,12 @@
             app:srcCompat="@drawable/ic_no_profile_photo" />
 
         <TextView
-            android:id="@+id/recipient_name"
+            android:id="@+id/tv_recipient_name"
+            style="@style/Widget.SettleX.TextRegular"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:ellipsize="end"
-            android:fontFamily="@font/inter_regular"
-            android:includeFontPadding="false"
             android:maxLines="1"
-            android:textColor="@color/black"
-            android:textSize="14sp"
             tools:text="BENJAMIN CHISOM NNAEMEKA" />
     </LinearLayout>
 
@@ -116,26 +102,21 @@
         android:orientation="horizontal">
 
         <TextView
+            style="@style/Widget.SettleX.TextRegular"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_marginEnd="10dp"
             android:layout_weight="1"
-            android:fontFamily="@font/inter_regular"
-            android:includeFontPadding="false"
             android:text="Amount"
-            android:textColor="@color/gray"
-            android:textSize="14sp" />
+            android:textColor="@color/gray" />
 
         <TextView
-            android:id="@+id/amount_to_send"
+            android:id="@+id/tv_amount_to_send"
+            style="@style/Widget.SettleX.TextRegular"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:ellipsize="end"
-            android:fontFamily="@font/inter_regular"
-            android:includeFontPadding="false"
             android:maxLines="1"
-            android:textColor="@color/black"
-            android:textSize="14sp"
             tools:text="₦100,000.00" />
     </LinearLayout>
 
@@ -153,22 +134,17 @@
         android:orientation="horizontal">
 
         <TextView
+            style="@style/Widget.SettleX.TextRegular"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_weight="1"
-            android:fontFamily="@font/inter_regular"
-            android:includeFontPadding="false"
-            android:text="Payment Method"
-            android:textColor="@color/black"
-            android:textSize="14sp" />
+            android:text="Payment Method" />
 
         <TextView
-            android:id="@+id/payment_method"
+            android:id="@+id/tv_payment_method"
+            style="@style/Widget.SettleX.TextRegular"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:fontFamily="@font/inter_regular"
-            android:includeFontPadding="false"
-            android:textColor="@color/gray"
             android:textSize="12sp"
             tools:text="ALL" />
     </LinearLayout>
@@ -190,26 +166,20 @@
             android:orientation="horizontal">
 
             <TextView
+                style="@style/Widget.SettleX.TextRegular"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginEnd="5dp"
-                android:fontFamily="@font/inter_regular"
-                android:includeFontPadding="false"
-                android:text="Available Balance"
-                android:textColor="@color/black"
-                android:textSize="14sp" />
+                android:text="Available Balance" />
 
             <TextView
-                android:id="@+id/sender_total_balance"
+                android:id="@+id/tv_sender_total_balance"
+                style="@style/Widget.SettleX.TextRegular"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
                 android:ellipsize="end"
-                android:fontFamily="@font/inter_regular"
-                android:includeFontPadding="false"
                 android:maxLines="1"
-                android:textColor="@color/black"
-                android:textSize="14sp"
                 tools:text="(₦198,535.57)" />
 
             <ImageView
@@ -233,33 +203,29 @@
             android:orientation="horizontal">
 
             <TextView
+                style="@style/Widget.SettleX.TextRegular"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginEnd="5dp"
-                android:fontFamily="@font/inter_regular"
-                android:includeFontPadding="false"
                 android:text="Wallet Balance"
                 android:textColor="@color/gray"
                 android:textSize="12sp" />
 
             <TextView
-                android:id="@+id/sender_wallet_balance"
+                android:id="@+id/tv_sender_wallet_balance"
+                style="@style/Widget.SettleX.TextRegular"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
-                android:fontFamily="@font/inter_regular"
-                android:includeFontPadding="false"
                 android:textColor="@color/gray"
                 android:textSize="12sp"
                 tools:text="(₦198,000.32)" />
 
             <TextView
-                android:id="@+id/debit_from_sender_wallet_balance"
+                android:id="@+id/tv_debit_from_sender_wallet_balance"
+                style="@style/Widget.SettleX.TextRegular"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:fontFamily="@font/inter_regular"
-                android:includeFontPadding="false"
-                android:textColor="@color/black"
                 android:textSize="12sp"
                 tools:text="-₦5,230.00" />
         </LinearLayout>
@@ -272,45 +238,40 @@
             android:orientation="horizontal">
 
             <TextView
+                style="@style/Widget.SettleX.TextRegular"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginEnd="5dp"
-                android:fontFamily="@font/inter_regular"
-                android:includeFontPadding="false"
                 android:text="Commission Balance"
                 android:textColor="@color/gray"
                 android:textSize="12sp" />
 
             <TextView
-                android:id="@+id/sender_commission_balance"
+                android:id="@+id/tv_sender_commission_balance"
+                style="@style/Widget.SettleX.TextRegular"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
-                android:fontFamily="@font/inter_regular"
-                android:includeFontPadding="false"
                 android:textColor="@color/gray"
                 android:textSize="12sp"
                 tools:text="(₦535.25)" />
 
             <TextView
-                android:id="@+id/debit_from_sender_commission_balance"
+                android:id="@+id/tv_debit_from_sender_commission_balance"
+                style="@style/Widget.SettleX.TextRegular"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:fontFamily="@font/inter_regular"
-                android:includeFontPadding="false"
-                android:textColor="@color/black"
                 android:textSize="12sp"
                 tools:text="-₦10,230.00" />
         </LinearLayout>
     </LinearLayout>
 
     <TextView
-        android:id="@+id/txt_feedback"
+        android:id="@+id/tv_feedback"
+        style="@style/Widget.SettleX.TextRegular"
         android:layout_width="wrap_content"
-        android:fontFamily="@font/inter_regular"
         android:layout_height="wrap_content"
         android:layout_gravity="center"
-        android:includeFontPadding="false"
         android:text="Insufficient Balance"
         android:textColor="@color/red"
         android:textSize="12sp"

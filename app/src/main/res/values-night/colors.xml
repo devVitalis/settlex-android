@@ -1,5 +1,7 @@
 <resources>
-
+    <!-- Semantic -->
+    <color name="titleColor">@color/white</color>
+    <color name="dialogColor">@color/black</color>
 
     <!-- Literal Colors -->
     <color name="black">#FF000000</color>

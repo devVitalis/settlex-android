@@ -13,20 +13,6 @@ public class CurrencyFormatter {
     }
 
     /**
-     * Converts Kobo (long) to a formatted Naira currency string, e.g. 123450 → ₦1,234.50
-     */
-    public static java.lang.String formatToNaira(long amountInKobo) {
-        BigDecimal kobo = BigDecimal.valueOf(amountInKobo);
-        BigDecimal naira = kobo.divide(BigDecimal.valueOf(100), 2, RoundingMode.UNNECESSARY);
-
-        NumberFormat formatter = NumberFormat.getCurrencyInstance(new Locale("en", "NG"));
-        formatter.setMinimumFractionDigits(2);
-        formatter.setMaximumFractionDigits(2);
-
-        return formatter.format(naira);
-    }
-
-    /**
      * Converts large amounts to readable short forms, e.g. ₦2.5K / ₦3.2M / ₦1.1B
      */
     public static java.lang.String formatToNairaShort(long amountInKobo) {

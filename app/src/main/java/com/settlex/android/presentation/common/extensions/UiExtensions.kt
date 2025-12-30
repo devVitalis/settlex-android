@@ -3,6 +3,9 @@ package com.settlex.android.presentation.common.extensions
 import android.view.View
 import android.widget.TextView
 import com.google.firebase.Timestamp
+import java.math.BigDecimal
+import java.math.RoundingMode
+import java.text.NumberFormat
 import java.text.SimpleDateFormat
 import java.util.Locale
 
@@ -74,8 +77,39 @@ fun Timestamp.toDateTimeString(): String {
         .format(this.toDate())
 
 }
+//
+//fun Timestamp.toDateString(): String {
+//    return SimpleDateFormat("dddd, MMMM yyyy", Locale.US)
+//        .format(this.toDate())
+//}
 
 fun Timestamp.toDateString(): String {
-    return SimpleDateFormat("dd, MMMM yyyy", Locale.US)
+    val dateString = SimpleDateFormat("dd, MMMM yyyy", Locale.US)
         .format(this.toDate())
+
+    val day = SimpleDateFormat("dd", Locale.US)
+        .format(this.toDate()).toInt()
+
+    val suffix = when {
+        day in 11..13 -> "th"
+        day % 10 == 1 -> "st"
+        day % 10 == 2 -> "nd"
+        day % 10 == 3 -> "rd"
+        else -> "th"
+    }
+
+    return dateString.replace(day.toString().padStart(2, '0'), "$day$suffix")
+}
+
+fun Long.toNairaString(): String {
+    return this.let { amountInKobo ->
+        val kobo: BigDecimal = BigDecimal.valueOf(amountInKobo)
+        val naira = kobo.divide(BigDecimal.valueOf(100), 2, RoundingMode.UNNECESSARY)
+
+        val formatter = NumberFormat.getCurrencyInstance(Locale.forLanguageTag("en-NG"))
+        formatter.minimumFractionDigits = 2
+        formatter.maximumFractionDigits = 2
+
+        formatter.format(naira)
+    }
 }

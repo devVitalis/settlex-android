@@ -116,7 +116,7 @@ class ProfileActivity : AppCompatActivity() {
     }
 
     private fun onUserAuthenticated(user: ProfileUiModel) = with(binding) {
-        ProfileService.loadProfilePic(user.photoUrl, ivProfilePhoto)
+        ProfileService.loadProfilePhoto(user.photoUrl, ivProfilePhoto)
         tvPaymentId.text = user.paymentId?.addAtPrefix() ?: "Setup Payment ID"
         tvFullName.text = user.fullName.uppercase()
         tvEmail.text = user.email.maskEmail()
@@ -204,7 +204,7 @@ class ProfileActivity : AppCompatActivity() {
     private fun showImageSourceBottomSheet() {
         DialogHelper.showBottomSheetImageSource(this) { dialog, binding ->
             with(binding) {
-                ProfileService.loadProfilePic(userPhotoUrl, ivProfilePhoto)
+                ProfileService.loadProfilePhoto(userPhotoUrl, ivProfilePhoto)
                 tvGallery.setOnClickListener {
                     checkGalleryPermissionAndOpen()
                     dialog.dismiss()

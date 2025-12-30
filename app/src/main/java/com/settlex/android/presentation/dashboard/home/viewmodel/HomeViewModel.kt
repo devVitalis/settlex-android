@@ -11,6 +11,7 @@ import com.settlex.android.data.remote.dto.TransactionDto
 import com.settlex.android.data.repository.TransactionRepositoryImpl
 import com.settlex.android.data.session.UserSessionManager
 import com.settlex.android.data.session.UserSessionState
+import com.settlex.android.presentation.common.extensions.toNairaString
 import com.settlex.android.presentation.common.state.UiState
 import com.settlex.android.presentation.dashboard.home.model.HomeUiModel
 import com.settlex.android.presentation.transactions.model.TransactionItemUiModel
@@ -75,7 +76,7 @@ class HomeViewModel @Inject constructor(
             else -> {
                 val formattedBalance = when {
                     balance > MILLION_THRESHOLD_KOBO -> CurrencyFormatter.formatToNairaShort(balance)
-                    else -> CurrencyFormatter.formatToNaira(balance)
+                    else -> balance.toNairaString()
                 }
 
                 val formattedCommission = CurrencyFormatter.formatToNairaShort(commissionBalance)
@@ -138,7 +139,7 @@ class HomeViewModel @Inject constructor(
             serviceTypeIcon = if (isSender) dto.serviceType.iconRes else R.drawable.ic_service_payment_received,
             operationSymbol = operation.symbol,
             operationColor = operation.colorRes,
-            amount = CurrencyFormatter.formatToNaira(dto.amount),
+            amount = dto.amount.toNairaString(),
             timestamp = DateFormatter.toFormattedDateString(dto.createdAt),
             status = dto.status.displayName,
             statusColor = dto.status.colorRes,

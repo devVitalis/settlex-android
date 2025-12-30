@@ -13,7 +13,7 @@ import androidx.appcompat.app.AlertDialog
 import com.google.android.material.bottomsheet.BottomSheetDialog
 import com.google.android.material.dialog.MaterialAlertDialogBuilder
 import com.settlex.android.R
-import com.settlex.android.data.remote.profile.ProfileService.loadProfilePic
+import com.settlex.android.data.remote.profile.ProfileService.loadProfilePhoto
 import com.settlex.android.databinding.AlertDialogMessageBinding
 import com.settlex.android.databinding.AlertDialogWithIconBinding
 import com.settlex.android.databinding.BottomSheetConfirmPaymentBinding
@@ -21,9 +21,10 @@ import com.settlex.android.databinding.BottomSheetImageSourceBinding
 import com.settlex.android.databinding.BottomSheetPaymentPinConfirmBinding
 import com.settlex.android.databinding.BottomSheetSuccessDialogBinding
 import com.settlex.android.presentation.common.custom.NumericKeypad.OnKeypadInputListener
-import com.settlex.android.util.string.CurrencyFormatter
-import com.settlex.android.util.string.StringFormatter
-import java.util.Locale
+import com.settlex.android.presentation.common.extensions.addAtPrefix
+import com.settlex.android.presentation.common.extensions.gone
+import com.settlex.android.presentation.common.extensions.show
+import com.settlex.android.presentation.common.extensions.toNairaString
 import java.util.function.BiConsumer
 
 /**
@@ -31,24 +32,33 @@ import java.util.function.BiConsumer
  * Provides reusable methods for displaying consistent UI components throughout the application.
  */
 object DialogHelper {
-    fun showSuccessBottomSheetDialog(
+
+    // Alert dialogs
+    fun showAlertDialogWithIcon(
         context: Context,
-        config: BiConsumer<BottomSheetDialog, BottomSheetSuccessDialogBinding>
+        config: BiConsumer<AlertDialog, AlertDialogWithIconBinding>
     ) {
-        val binding = BottomSheetSuccessDialogBinding.inflate(LayoutInflater.from(context))
-        val dialog = BottomSheetDialog(context, R.style.Theme_SettleX_Dialog_BottomSheet)
-        dialog.setContentView(binding.root)
+        val binding = AlertDialogWithIconBinding.inflate(LayoutInflater.from(context))
+        val dialog =
+            MaterialAlertDialogBuilder(context, R.style.Theme_SettleX_Dialog_Alert_Rounded16dp)
+                .setView(binding.getRoot())
+                .setCancelable(false)
+                .create()
 
-        dialog.setCancelable(false)
-        dialog.setCanceledOnTouchOutside(false)
+        config.accept(dialog, binding)
+        dialog.show()
+    }
 
-        // Blur background on Android 12+
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.S) {
-            val rootView = (context as Activity).window.decorView
-            rootView.setRenderEffect(RenderEffect.createBlurEffect(5f, 5f, Shader.TileMode.CLAMP))
-        }
-
-        binding.anim.playAnimation()
+    fun showAlertDialogMessage(
+        context: Context,
+        config: BiConsumer<AlertDialog, AlertDialogMessageBinding>
+    ) {
+        val binding = AlertDialogMessageBinding.inflate(LayoutInflater.from(context))
+        val dialog =
+            MaterialAlertDialogBuilder(context, R.style.Theme_SettleX_Dialog_Alert_Rounded16dp)
+                .setView(binding.root)
+                .setCancelable(false)
+                .create()
 
         config.accept(dialog, binding)
         dialog.show()
@@ -77,118 +87,207 @@ object DialogHelper {
     }
 
 
-    fun showPayConfirmation(
+    // Bottom sheet dialogs
+    fun showSuccessBottomSheetDialog(
+        context: Context,
+        config: BiConsumer<BottomSheetDialog, BottomSheetSuccessDialogBinding>
+    ) {
+        val binding = BottomSheetSuccessDialogBinding.inflate(LayoutInflater.from(context))
+        val dialog = BottomSheetDialog(context, R.style.Theme_SettleX_Dialog_BottomSheet)
+        dialog.setContentView(binding.root)
+        dialog.setCancelable(false)
+        dialog.setCanceledOnTouchOutside(false)
+
+        // Blur background on Android 12+
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.S) {
+            val rootView = (context as Activity).window.decorView
+            rootView.setRenderEffect(RenderEffect.createBlurEffect(5f, 5f, Shader.TileMode.CLAMP))
+        }
+
+        binding.anim.playAnimation()
+        config.accept(dialog, binding)
+        dialog.show()
+    }
+
+    fun showBottomSheetImageSource(
+        context: Context,
+        config: BiConsumer<BottomSheetDialog, BottomSheetImageSourceBinding>
+    ) {
+        val binding = BottomSheetImageSourceBinding.inflate(LayoutInflater.from(context))
+        val dialog = BottomSheetDialog(context, R.style.Theme_SettleX_Dialog_BottomSheet)
+        dialog.setContentView(binding.root)
+        dialog.setCancelable(true)
+        dialog.setCanceledOnTouchOutside(true)
+
+        config.accept(dialog, binding)
+        dialog.show()
+    }
+
+    fun showBottomSheetConfirmPayment(
         context: Context,
         recipientUsername: String?,
         recipientName: String,
         recipientProfileUrl: String?,
-        amountToSend: Long,
+        transferAmount: Long,
         senderWalletBalance: Long,
         senderCommissionBalance: Long,
         onPay: Runnable?
     ): BottomSheetDialog {
         val binding = BottomSheetConfirmPaymentBinding.inflate(LayoutInflater.from(context))
-        val dialog = BottomSheetDialog(context, R.style.Theme_SettleX_Dialog_BottomSheet)
-        dialog.setContentView(binding.getRoot())
+        with(binding) {
+            val dialog = BottomSheetDialog(context, R.style.Theme_SettleX_Dialog_BottomSheet)
+            dialog.setContentView(binding.root)
+            dialog.setCancelable(false)
+            dialog.setCanceledOnTouchOutside(false)
 
-        dialog.setCancelable(false)
-        dialog.setCanceledOnTouchOutside(false)
-
-        // Set blur background
-        val rootView: View?
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.S) {
-            rootView = (context as Activity).getWindow().getDecorView()
-            rootView.setRenderEffect(RenderEffect.createBlurEffect(5f, 5f, Shader.TileMode.CLAMP))
-        } else {
-            rootView = null
-        }
-
-        // Conditions
-        val SENDER_TOTAL_BALANCE = senderWalletBalance + senderCommissionBalance
-        val IS_SENDER_TOTAL_BALANCE_SUFFICIENT = SENDER_TOTAL_BALANCE < amountToSend
-        val IS_SENDER_WALLET_BALANCE_SUFFICIENT = senderWalletBalance >= amountToSend
-
-        val PAYMENT_METHOD = if (IS_SENDER_WALLET_BALANCE_SUFFICIENT) "Wallet" else "ALL"
-
-        if (IS_SENDER_TOTAL_BALANCE_SUFFICIENT) {
-            // Not enough money at all
-            val ERROR_INSUFFICIENT_BALANCE = "Insufficient"
-
-            binding.txtFeedback.setVisibility(View.VISIBLE)
-            binding.paymentMethod.setText(ERROR_INSUFFICIENT_BALANCE)
-
-            // Hide debit breakdowns
-            binding.debitFromSenderWalletBalance.setVisibility(View.GONE)
-            binding.debitFromSenderCommissionBalance.setVisibility(View.GONE)
-        } else if (IS_SENDER_WALLET_BALANCE_SUFFICIENT) {
-            // Wallet balance alone is enough
-            val DEBIT_FROM_SENDER_WALLET_BALANCE =
-                "-" + CurrencyFormatter.formatToNaira(amountToSend)
-
-            binding.paymentMethod.setText(PAYMENT_METHOD)
-            binding.debitFromSenderWalletBalance.setVisibility(View.VISIBLE)
-            binding.debitFromSenderWalletBalance.setText(DEBIT_FROM_SENDER_WALLET_BALANCE)
-
-            binding.btnPay.setEnabled(true)
-
-            // Hide commission since not used
-            binding.debitFromSenderCommissionBalance.setVisibility(View.GONE)
-        } else {
-            // Wallet not enough, but wallet + commission is sufficient
-            val fromWallet: Long
-            fromWallet = senderWalletBalance
-            val fromCommission = amountToSend - senderWalletBalance
-
-            val DEBIT_FROM_SENDER_WALLET_BALANCE = "-" + CurrencyFormatter.formatToNaira(fromWallet)
-            val DEBIT_FROM_SENDER_COMM_BALANCE =
-                "-" + CurrencyFormatter.formatToNaira(fromCommission)
-
-            binding.paymentMethod.setText(PAYMENT_METHOD)
-
-            if (senderWalletBalance != 0L) {
-                binding.debitFromSenderWalletBalance.setVisibility(View.VISIBLE)
-                binding.debitFromSenderWalletBalance.setText(DEBIT_FROM_SENDER_WALLET_BALANCE)
+            // Apply blur if Android 12+
+            var rootView: View? = null
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.S) {
+                rootView = (context as Activity).window.decorView
+                rootView.setRenderEffect(
+                    RenderEffect.createBlurEffect(
+                        5f,
+                        5f,
+                        Shader.TileMode.CLAMP
+                    )
+                )
             }
 
-            binding.debitFromSenderCommissionBalance.setVisibility(View.VISIBLE)
-            binding.debitFromSenderCommissionBalance.setText(DEBIT_FROM_SENDER_COMM_BALANCE)
+            // Calculate payment breakdown
+            val paymentBreakdown = calculatePaymentBreakdown(
+                senderWalletBalance,
+                senderCommissionBalance,
+                transferAmount
+            )
 
-            // Enable pay button
-            binding.btnPay.setEnabled(true)
+            // Update UI based on breakdown
+            updatePaymentUI(binding, paymentBreakdown)
 
-            // Hide feedback since covered
-            binding.txtFeedback.setVisibility(View.GONE)
-        }
+            // Set recipient and sender details
+            updateRecipientDetails(binding, recipientUsername, recipientName, recipientProfileUrl)
+            updateSenderDetails(binding, senderWalletBalance, senderCommissionBalance)
 
-        // Recipient details
-        binding.amountToSendHeader.setText(CurrencyFormatter.formatToNaira(amountToSend))
-        binding.amountToSend.setText(CurrencyFormatter.formatToNaira(amountToSend))
-        binding.recipientUsername.setText(StringFormatter.addAtToPaymentId(recipientUsername))
-        binding.recipientName.setText(recipientName.uppercase(Locale.getDefault()))
-        loadProfilePic(recipientProfileUrl, binding.recipientProfilePic)
-
-        // Sender details
-        val SENDER_WALLET_BALANCE = "(" + CurrencyFormatter.formatToNaira(senderWalletBalance) + ")"
-        val SENDER_COMM_BALANCE =
-            "(" + CurrencyFormatter.formatToNaira(senderCommissionBalance) + ")"
-
-        binding.senderTotalBalance.setText(CurrencyFormatter.formatToNaira(SENDER_TOTAL_BALANCE))
-        binding.senderWalletBalance.setText(SENDER_WALLET_BALANCE)
-        binding.senderCommissionBalance.setText(SENDER_COMM_BALANCE)
-
-        // Handle buttons
-        binding.btnClose.setOnClickListener(View.OnClickListener { v: View? ->
-            dialog.dismiss()
-            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.S) rootView!!.setRenderEffect(null)
-        })
-        binding.btnPay.setOnClickListener(View.OnClickListener { v: View? ->
-            if (onPay != null) {
-                onPay.run()
+            // Set click listeners
+            btnPay.setOnClickListener { onPay?.run() }
+            btnClose.setOnClickListener {
+                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.S) rootView?.setRenderEffect(null)
+                dialog.dismiss()
             }
-        })
-        dialog.show()
-        return dialog
+
+            dialog.show()
+            return dialog
+        }
     }
+
+    fun updateRecipientDetails(
+        binding: BottomSheetConfirmPaymentBinding,
+        username: String?,
+        name: String,
+        profileUrl: String?
+    ) {
+        with(binding) {
+            tvRecipientUsername.text = username?.addAtPrefix()
+            tvRecipientName.text = name.uppercase()
+            loadProfilePhoto(profileUrl, ivRecipientProfilePhoto)
+        }
+    }
+
+    fun updateSenderDetails(
+        binding: BottomSheetConfirmPaymentBinding,
+        walletBalance: Long,
+        commissionBalance: Long
+    ) {
+        with(binding) {
+            val totalBalance = walletBalance + commissionBalance
+            tvSenderTotalBalance.text = totalBalance.toNairaString()
+            "(${walletBalance.toNairaString()})".also { tvSenderWalletBalance.text = it }
+            "(${commissionBalance.toNairaString()})".also { tvSenderCommissionBalance.text = it }
+        }
+    }
+
+    fun updatePaymentUI(binding: BottomSheetConfirmPaymentBinding, breakdown: PaymentBreakdown) {
+        with(binding) {
+            btnPay.isEnabled = breakdown.canProceed
+            tvPaymentMethod.text = breakdown.debitSource
+
+            if (breakdown.feedbackMessage != null) {
+                tvFeedback.show()
+                tvFeedback.text = breakdown.feedbackMessage
+            } else {
+                tvFeedback.gone()
+            }
+
+            // Update debit amounts
+            if (breakdown.walletDebit > 0) {
+                tvDebitFromSenderWalletBalance.show()
+                "-${breakdown.walletDebit.toNairaString()}".also {
+                    tvDebitFromSenderWalletBalance.text = it
+                }
+            } else {
+                tvDebitFromSenderWalletBalance.gone()
+            }
+
+            if (breakdown.commissionDebit > 0) {
+                tvDebitFromSenderCommissionBalance.show()
+                "-${breakdown.commissionDebit.toNairaString()}".also {
+                    tvDebitFromSenderCommissionBalance.text = it
+                }
+            } else {
+                tvDebitFromSenderCommissionBalance.gone()
+            }
+        }
+    }
+
+    fun calculatePaymentBreakdown(
+        walletBalance: Long,
+        commissionBalance: Long,
+        transferAmount: Long
+    ): PaymentBreakdown {
+        val totalAvailable = walletBalance + commissionBalance
+
+        return when {
+            totalAvailable < transferAmount -> {
+                // Can't afford it at all
+                PaymentBreakdown(
+                    canProceed = false,
+                    debitSource = "INSUFFICIENT",
+                    walletDebit = 0,
+                    commissionDebit = 0,
+                    feedbackMessage = "Insufficient balance"
+                )
+            }
+
+            walletBalance >= transferAmount -> {
+                // Wallet covers everything
+                PaymentBreakdown(
+                    canProceed = true,
+                    debitSource = "WALLET",
+                    walletDebit = transferAmount,
+                    commissionDebit = 0,
+                    feedbackMessage = null
+                )
+            }
+
+            else -> {
+                // Need both wallet and commission
+                PaymentBreakdown(
+                    canProceed = true,
+                    debitSource = "WALLET_AND_COMMISSION",
+                    walletDebit = walletBalance,
+                    commissionDebit = transferAmount - walletBalance,
+                    feedbackMessage = null
+                )
+            }
+        }
+    }
+
+    data class PaymentBreakdown(
+        val canProceed: Boolean,
+        val debitSource: String,
+        val walletDebit: Long,
+        val commissionDebit: Long,
+        val feedbackMessage: String?
+    )
 
     fun showBottomSheetPaymentPinConfirmation(
         context: Context,
@@ -202,28 +301,28 @@ object DialogHelper {
         dialog.setCanceledOnTouchOutside(false)
 
         // setup click listener
-        binding.btnClose.setOnClickListener(View.OnClickListener { view: View? -> dialog.dismiss() })
-        binding.btnForgotPaymentPin.setOnClickListener(View.OnClickListener { view: View? -> })
+        binding.btnClose.setOnClickListener { dialog.dismiss() }
+        binding.btnForgotPaymentPin.setOnClickListener { }
 
         // disable the system keyboard
         val imm = context.getSystemService(Context.INPUT_METHOD_SERVICE) as InputMethodManager
-        if (dialog.getCurrentFocus() != null) imm.hideSoftInputFromWindow(
-            dialog.getCurrentFocus()!!.getWindowToken(), 0
+        if (dialog.currentFocus != null) imm.hideSoftInputFromWindow(
+            dialog.currentFocus!!.windowToken, 0
         )
-        binding.pinView.setShowSoftInputOnFocus(false)
+        binding.pinView.showSoftInputOnFocus = false
 
         val onPinVerified = arrayOfNulls<Runnable>(1)
 
         // handle keypad input
         binding.numericKeypad.setOnKeypadInputListener(object : OnKeypadInputListener {
             override fun onNumberPressed(number: String?) {
-                if (binding.pinView.length() < binding.pinView.getItemCount()) {
+                if (binding.pinView.length() < binding.pinView.itemCount) {
                     binding.pinView.append(number)
                 }
 
                 val pin = binding.pinView.getText().toString()
 
-                if (pin.length == binding.pinView.getItemCount()) {
+                if (pin.length == binding.pinView.itemCount) {
                     if (onPinVerified[0] != null) {
                         onPinVerified[0]!!.run()
                         dialog.dismiss()
@@ -239,55 +338,7 @@ object DialogHelper {
                 }
             }
         })
-        if (config != null) config.accept(binding, onPinVerified)
-        dialog.show()
-    }
-
-    fun showAlertDialogWithIcon(
-        context: Context,
-        config: BiConsumer<AlertDialog, AlertDialogWithIconBinding>
-    ) {
-        val binding = AlertDialogWithIconBinding.inflate(LayoutInflater.from(context))
-
-        val builder =
-            MaterialAlertDialogBuilder(context, R.style.Theme_SettleX_Dialog_Alert_Rounded16dp)
-                .setView(binding.getRoot())
-                .setCancelable(false)
-
-        val alertDialog = builder.create()
-
-        config.accept(alertDialog, binding)
-        alertDialog.show()
-    }
-
-    fun showAlertDialogMessage(
-        context: Context,
-        config: BiConsumer<AlertDialog, AlertDialogMessageBinding>
-    ) {
-        val binding = AlertDialogMessageBinding.inflate(LayoutInflater.from(context))
-
-        val builder =
-            MaterialAlertDialogBuilder(context, R.style.Theme_SettleX_Dialog_Alert_Rounded16dp)
-                .setView(binding.root)
-                .setCancelable(false)
-
-        val alertDialog = builder.create()
-
-        config.accept(alertDialog, binding)
-        alertDialog.show()
-    }
-
-    fun showBottomSheetImageSource(
-        context: Context,
-        config: BiConsumer<BottomSheetDialog, BottomSheetImageSourceBinding>
-    ) {
-        val binding = BottomSheetImageSourceBinding.inflate(LayoutInflater.from(context))
-        val dialog = BottomSheetDialog(context, R.style.Theme_SettleX_Dialog_BottomSheet)
-        dialog.setContentView(binding.root)
-        dialog.setCancelable(true)
-        dialog.setCanceledOnTouchOutside(true)
-
-        config.accept(dialog, binding)
+        config?.accept(binding, onPinVerified)
         dialog.show()
     }
 }

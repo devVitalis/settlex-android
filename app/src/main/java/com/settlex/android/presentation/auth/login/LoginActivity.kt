@@ -124,7 +124,7 @@ class LoginActivity : AppCompatActivity() {
             val formattedDisplayName = "Hi, ${user.displayName.uppercase()}"
             val formattedEmail = "(${StringFormatter.maskEmail(user.email)})"
 
-            ProfileService.loadProfilePic(user.photoUrl, ivUserProfilePhoto)
+            ProfileService.loadProfilePhoto(user.photoUrl, ivUserProfilePhoto)
             tvUserDisplayName.text = formattedDisplayName
             tvUserEmail.text = formattedEmail
             etEmail.setText(user.email)

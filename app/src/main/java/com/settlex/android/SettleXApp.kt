@@ -2,7 +2,6 @@ package com.settlex.android
 
 import android.app.Application
 import android.content.Context
-import androidx.appcompat.app.AppCompatDelegate
 import com.google.firebase.FirebaseApp
 import com.settlex.android.util.network.NetworkMonitor.startNetworkCallback
 import dagger.hilt.android.HiltAndroidApp
@@ -28,7 +27,7 @@ class SettleXApp : Application() {
     }
 
     private fun initialize() {
-        AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_NO)
+        // AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_NO)
         // starts essential background services
         FirebaseApp.initializeApp(this)
         startNetworkCallback()

@@ -1,26 +1,10 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <!-- Semantic Colors  -->
-    <color name="colorPrimary">@color/blue</color>
-    <color name="colorOnPrimary">@color/white</color>
-    <color name="colorPrimaryContainer">@color/blue_very_light</color>
-    <color name="colorOnPrimaryContainer">@color/blue_navy</color>
-    <color name="colorSurface">@color/white</color>
-    <color name="colorOnSurface">@color/material_dark</color>
-    <color name="colorOutline">@color/gray_whitish</color>
-    <color name="colorOutlineVariant">@color/gray_light</color>
+    <color name="titleColor">@color/black</color>
+    <color name="dialogColor">@color/white</color>
 
-    <color name="colorError">@color/red</color>
-    <color name="colorOnError">@color/white</color>
-    <color name="colorErrorContainer">@color/red_light</color>
-
-    <color name="colorSuccess">@color/green</color>
-    <color name="colorSuccessContainer">@color/green_light</color>
-
-    <color name="colorWarning">@color/orange</color>
-    <color name="colorWarningContainer">@color/orange_light</color>
-
-    <!--Black && White-->
+    <!--Literal colors-->
     <color name="black">#FF000000</color>
     <color name="white">#FFFFFFFF</color>
     <color name="material_dark">#121212</color>
@@ -39,7 +23,8 @@
     <color name="blue_400">#42A5F5</color>
     <color name="blue_light">#94A4DBFF</color>
     <color name="blue_very_light">#EDF2FE</color>
-    <color name="blue_navy">#0A1E33</color> // Splash screen
+    <color name="blue_navy">#0A1E33</color>
+    // Splash screen
 
     <!--Red-->
     <color name="red">#FF0A0A</color>

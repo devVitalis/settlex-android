@@ -4,7 +4,6 @@ import android.widget.ImageView
 import com.bumptech.glide.Glide
 import com.bumptech.glide.load.engine.DiskCacheStrategy
 import com.bumptech.glide.load.resource.drawable.DrawableTransitionOptions
-import com.bumptech.glide.request.RequestOptions
 import com.settlex.android.R
 import com.settlex.android.SettleXApp
 
@@ -16,14 +15,12 @@ import com.settlex.android.SettleXApp
 object ProfileService {
 
     @JvmStatic
-    fun loadProfilePic(profilePicUrl: String?, target: ImageView) {
-        if (profilePicUrl == null) return
-
+    fun loadProfilePhoto(profilePhotoUrl: String?, target: ImageView) {
+        if (profilePhotoUrl == null) return
         Glide.with(SettleXApp.appContext)
-            .load(profilePicUrl)
+            .load(profilePhotoUrl)
             .centerCrop()
             .error(R.drawable.ic_no_profile_photo)
-            .apply(RequestOptions())
             .diskCacheStrategy(DiskCacheStrategy.ALL)
             .transition(DrawableTransitionOptions.withCrossFade(100))
             .into(target)

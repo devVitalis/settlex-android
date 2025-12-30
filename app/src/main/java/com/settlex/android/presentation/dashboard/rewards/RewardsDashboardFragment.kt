@@ -14,6 +14,7 @@ import androidx.lifecycle.lifecycleScope
 import androidx.lifecycle.repeatOnLifecycle
 import com.settlex.android.R
 import com.settlex.android.databinding.FragmentDashboardRewardsBinding
+import com.settlex.android.presentation.common.extensions.toNairaString
 import com.settlex.android.presentation.common.state.UiState
 import com.settlex.android.presentation.wallet.CommissionWithdrawalActivity
 import com.settlex.android.util.string.CurrencyFormatter
@@ -96,9 +97,9 @@ class RewardsDashboardFragment : Fragment() {
     }
 
     private fun displayRewardsData(user: RewardsUiModel) {
-        binding!!.commissionBalance.text = CurrencyFormatter.formatToNaira(user.commissionBalance)
+        binding!!.commissionBalance.text = user.commissionBalance.toNairaString()
         binding!!.referralCode.text = user.paymentId ?: "Get Referral Code"
-        binding!!.totalReferralEarning.text = CurrencyFormatter.formatToNaira(user.referralBalance)
+        binding!!.totalReferralEarning.text = user.referralBalance.toNairaString()
     }
 
     private fun showLoggedOutView() {
