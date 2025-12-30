@@ -6,7 +6,6 @@ import android.content.DialogInterface
 import android.graphics.RenderEffect
 import android.graphics.Shader
 import android.os.Build
-import android.text.Editable
 import android.view.LayoutInflater
 import android.view.View
 import android.view.inputmethod.InputMethodManager
@@ -25,7 +24,6 @@ import com.settlex.android.presentation.common.custom.NumericKeypad.OnKeypadInpu
 import com.settlex.android.util.string.CurrencyFormatter
 import com.settlex.android.util.string.StringFormatter
 import java.util.Locale
-import java.util.Objects
 import java.util.function.BiConsumer
 
 /**
@@ -223,7 +221,7 @@ object DialogHelper {
                     binding.pinView.append(number)
                 }
 
-                val pin =binding.pinView.getText().toString()
+                val pin = binding.pinView.getText().toString()
 
                 if (pin.length == binding.pinView.getItemCount()) {
                     if (onPinVerified[0] != null) {
@@ -234,7 +232,7 @@ object DialogHelper {
             }
 
             override fun onDeletePressed() {
-                val current =binding.pinView.getText().toString()
+                val current = binding.pinView.getText().toString()
 
                 if (!current.isEmpty()) {
                     binding.pinView.setText(current.subSequence(0, current.length - 1))

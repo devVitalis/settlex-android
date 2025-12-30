@@ -23,9 +23,9 @@
 
     <!-- REGISTER EMAIL VERIFICATION FRAGMENT -->
     <string name="title_email_verification">Email Verification</string>
-    <string name="subtitle_we_sent_you_a_verification_code">We sent you a verification code</string>
-    <string name="body_enter_the_verification_code_sent_to_your_email">Enter the verification code sent to your email</string>
+    <string name="subtitle_check_your_email_inbox">Check your email inbox</string>
     <string name="tv_step_2_of_4">2/4</string>
+    <string name="label_enter_6_digit_code">Enter 6-digit code</string>
     <string name="tv_didnt_receive_the_code">Didn\'t receive the code?</string>
     <string name="tv_resend_code">Resend code</string>
 

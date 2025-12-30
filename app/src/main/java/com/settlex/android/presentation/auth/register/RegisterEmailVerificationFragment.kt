@@ -77,9 +77,17 @@ class RegisterEmailVerificationFragment : Fragment() {
         StatusBar.setColor(requireActivity(), R.color.white)
         setupInputWatcher()
 
-        "($email)".also { tvUserEmail.text = it }
+        email.also { email ->
+            tvUserEmail.text = SpannableTextFormatter(
+                text = "We sent a code to $email. This code will expire after 10 minutes",
+                target = email,
+                color = "#000000",
+                setBold = true,
+                setUnderline = true
+            )
+        }
 
-        tvSpamInfo.text = SpannableTextFormatter.format(
+        tvSpamInfo.text = SpannableTextFormatter(
             "Didn’t get the email? Make sure to also check your spam/junk folder if you can't find the email in your inbox",
             "check your spam/junk folder",
             "#FFA500"
@@ -190,7 +198,7 @@ class RegisterEmailVerificationFragment : Fragment() {
                     ) {
                     override fun onTick(millisUntilFinished: Long) {
                         val countDownTimer = (millisUntilFinished / 1000).toInt()
-                        val countDownText = "Resend in $countDownTimer seconds"
+                        val countDownText = "Resend in $countDownTimer sec(s)"
 
                         if (countDownTimer > 0) tvResendCode.text = countDownText
                     }
@@ -215,16 +223,14 @@ class RegisterEmailVerificationFragment : Fragment() {
         private const val COUNTDOWN_INTERVAL_MS = 1000L
     }
 
-    private fun isOtpInputComplete(): Boolean =
-        binding.otpView.length() == binding.otpView.itemCount
-
-    private fun getEnteredOtp(): String = binding.otpView.text.toString()
+    private fun isOtpComplete(): Boolean = binding.etOtpCode.length() == 6
+    private fun getEnteredOtp(): String = binding.etOtpCode.text.toString()
 
     private fun setupInputWatcher() {
         with(binding) {
-            otpView.doOnTextChanged { otp, _, _, _ ->
+            etOtpCode.doOnTextChanged { otp, _, _, _ ->
                 tvError.gone()
-                btnContinue.isEnabled = isOtpInputComplete()
+                btnContinue.isEnabled = isOtpComplete()
             }
         }
     }

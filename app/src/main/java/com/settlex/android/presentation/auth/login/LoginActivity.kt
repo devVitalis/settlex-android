@@ -54,23 +54,21 @@ class LoginActivity : AppCompatActivity() {
         initListeners()
     }
 
-    private fun initViews() {
-        StatusBar.setColor(this, R.color.white)
+    private fun initViews() = with(binding) {
+        StatusBar.setColor(this@LoginActivity, R.color.white)
         setupInputValidation()
         setupFocusBackgroundChanger()
-        keyboardHelper.attachDoneAction(editText = binding.etPassword)
+        keyboardHelper.attachDoneAction(editText = etPassword)
 
-        with(binding) {
-            tvSwitchAccount.text = SpannableTextFormatter.format(
-                "Not you?\nSwitch Account",
-                "Switch Account"
-            )
+        tvSwitchAccount.text = SpannableTextFormatter(
+            "Not you?\nSwitch Account",
+            "Switch Account"
+        )
 
-            tvSignUp.text = SpannableTextFormatter.format(
-                "Don't have an account yet?\nClick here to register",
-                "Click here to register"
-            )
-        }
+        tvSignUp.text = SpannableTextFormatter(
+            "Don't have an account yet?\nClick here to register",
+            "Click here to register"
+        )
     }
 
     private fun initObservers() {
@@ -90,8 +88,8 @@ class LoginActivity : AppCompatActivity() {
 
             btnTogglePassword.setOnClickListener {
                 PasswordToggleController(
-                    binding.etPassword,
-                    binding.btnTogglePassword
+                    etPassword,
+                    btnTogglePassword
                 )
             }
 

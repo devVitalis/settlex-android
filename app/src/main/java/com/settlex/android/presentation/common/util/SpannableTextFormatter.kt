@@ -1,8 +1,11 @@
 package com.settlex.android.presentation.common.util
 
+import android.graphics.Typeface
 import android.text.SpannableString
 import android.text.Spanned
 import android.text.style.ForegroundColorSpan
+import android.text.style.StyleSpan
+import android.text.style.UnderlineSpan
 import androidx.core.graphics.toColorInt
 
 object SpannableTextFormatter {
@@ -13,7 +16,13 @@ object SpannableTextFormatter {
      * @param target The substring to color.
      * @param color Hex color string, default color is "#0044CC".
      */
-    fun format(text: String, target: String, color: String = "#0044CC"): SpannableString {
+    operator fun invoke(
+        text: String,
+        target: String,
+        color: String = "#0044CC",
+        setBold: Boolean = false,
+        setUnderline: Boolean = false
+    ): SpannableString {
         val spannable = SpannableString(text)
         val colorInt: Int = color.toColorInt()
 
@@ -27,6 +36,23 @@ object SpannableTextFormatter {
             Spanned.SPAN_EXCLUSIVE_EXCLUSIVE
         )
 
+        if (setBold) {
+            spannable.setSpan(
+                StyleSpan(Typeface.BOLD),
+                startIndex,
+                endIndex,
+                Spanned.SPAN_EXCLUSIVE_EXCLUSIVE
+            )
+        }
+
+        if (setUnderline) {
+            spannable.setSpan(
+                UnderlineSpan(),
+                startIndex,
+                endIndex,
+                Spanned.SPAN_EXCLUSIVE_EXCLUSIVE
+            )
+        }
         return spannable
     }
 }

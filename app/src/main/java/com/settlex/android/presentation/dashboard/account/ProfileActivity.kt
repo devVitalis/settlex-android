@@ -73,7 +73,7 @@ class ProfileActivity : AppCompatActivity() {
         StatusBar.setColor(this@ProfileActivity, R.color.white)
         initGalleryPermissionLauncher()
         initCameraPermissionLauncher()
-        initProfilePhotoPicker()
+        initImagePickerLauncher()
         initTakePictureLauncher()
         initCropImageLauncher()
 
@@ -166,7 +166,7 @@ class ProfileActivity : AppCompatActivity() {
         }
     }
 
-    private fun initProfilePhotoPicker() {
+    private fun initImagePickerLauncher() {
         pickImageLauncher = registerForActivityResult(PickVisualMedia()) { uri: Uri? ->
             uri?.let {
                 launchCropActivity(it)
@@ -263,14 +263,16 @@ class ProfileActivity : AppCompatActivity() {
         val photoFile = File(cacheDir, "camera_${System.currentTimeMillis()}.jpg")
         cameraImageUri = FileProvider.getUriForFile(
             this,
-            "${packageName}.fileprovider",
+            "${packageName}.fileProvider",
             photoFile
         )
         takePictureLauncher.launch(cameraImageUri!!)
     }
 
     private fun launchCropActivity(sourceUri: Uri) {
-        val destinationUri = Uri.fromFile(
+        val destinationUri = FileProvider.getUriForFile(
+            this,
+            "${packageName}.fileProvider",
             File(cacheDir, "cropped_${System.currentTimeMillis()}.jpg")
         )
 

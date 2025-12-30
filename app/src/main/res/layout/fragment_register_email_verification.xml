@@ -128,9 +128,9 @@
                 android:layout_gravity="start"
                 android:fontFamily="@font/inter_regular"
                 android:includeFontPadding="false"
-                android:text="@string/subtitle_we_sent_you_a_verification_code"
+                android:text="@string/subtitle_check_your_email_inbox"
                 android:textColor="@color/black"
-                android:textSize="14sp" />
+                android:textSize="16sp" />
 
             <ImageView
                 android:layout_width="match_parent"
@@ -141,50 +141,42 @@
                 android:src="@drawable/img_email_sent" />
 
             <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="10dp"
-                android:fontFamily="@font/inter_regular"
-                android:includeFontPadding="false"
-                android:text="@string/body_enter_the_verification_code_sent_to_your_email"
-                android:textColor="@color/black"
-                android:textSize="16sp"
-                android:textStyle="bold" />
-
-            <TextView
                 android:id="@+id/tv_user_email"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:fontFamily="@font/poppins_regular"
-                android:gravity="center"
+                android:layout_gravity="start"
+                android:layout_marginTop="15dp"
+                android:fontFamily="@font/inter_medium"
                 android:includeFontPadding="false"
-                android:textAlignment="center"
-                android:textColor="@color/blue"
-                android:textSize="15sp"
-                android:textStyle="bold"
-                tools:text="(*****@gmail.com)" />
+                android:textColor="@color/black"
+                android:textSize="16sp"
+                tools:text="We sent a code to example@gmail.com. This code will expire after 10 minutes" />
 
             <TextView
                 android:layout_width="wrap_content"
-                android:layout_height="15dp"
-                android:fontFamily="@font/inter_regular"
-                android:includeFontPadding="false"
-                android:text="Enter the OTP Code"
-                android:textColor="@color/black"
-                android:textSize="13sp"
-                android:visibility="gone" />
-
-            <com.chaos.view.PinView
-                android:id="@+id/otp_view"
-                style="@style/Widget.SettleX.PinView"
-                android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_gravity="center_vertical"
-                android:layout_marginTop="20dp"
+                android:layout_gravity="start"
+                android:layout_marginTop="10dp"
+                android:fontFamily="@font/inter_medium"
+                android:gravity="center_vertical"
+                android:includeFontPadding="false"
+                android:text="@string/label_enter_6_digit_code"
+                android:textColor="@color/black"
+                android:textSize="14sp"
+                android:textStyle="bold" />
+
+            <com.google.android.material.textfield.TextInputEditText
+                android:id="@+id/et_otp_code"
+                style="@style/Widget.SettleX.TextInputEditText.Outlined"
+                android:layout_width="match_parent"
+                android:layout_height="55dp"
+                android:layout_marginTop="5dp"
+                android:background="@drawable/bg_edit_txt_custom_white_not_focused"
+                android:hint="Verification code"
+                android:imeOptions="actionDone"
                 android:inputType="number"
-                app:itemCount="6"
-                app:itemHeight="50dp"
-                app:itemWidth="50dp" />
+                android:maxLength="6"
+                android:paddingHorizontal="15dp" />
 
             <TextView
                 android:id="@+id/tv_error"
@@ -218,11 +210,9 @@
                 <TextView
                     android:id="@+id/tv_resend_code"
                     android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_gravity="center"
+                    android:layout_height="match_parent"
                     android:layout_marginStart="5dp"
-                    android:paddingHorizontal="0dp"
-                    android:paddingVertical="0dp"
+                    android:includeFontPadding="false"
                     android:text="@string/tv_resend_code"
                     android:textColor="@color/blue"
                     android:textSize="14sp" />
