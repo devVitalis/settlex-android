@@ -1,45 +1,78 @@
+<?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <!-- Semantic -->
-    <color name="titleColor">@color/white</color>
-    <color name="dialogColor">@color/black</color>
+    <!-- Primary Color Pair -->
+    <color name="colorPrimary">@color/blue_200</color>
+    <color name="colorOnPrimary">@color/black</color>
 
-    <!-- Literal Colors -->
-    <color name="black">#FF000000</color>
-    <color name="white">#FFFFFFFF</color>
-    <color name="material_dark">#181A1F</color>
+    <!-- Secondary Color Pair -->
+    <color name="colorSecondary">@color/blue_400</color>
+    <color name="colorOnSecondary">@color/black</color>
 
-    <!-- Gray -->
-    <color name="gray">#9E9E9E</color>
-    <color name="gray_dark">#4A4A4A</color>
-    <color name="gray_light">#F5F5F5</color>
-    <color name="gray_whitish">#E0E0E0</color>
-    <color name="gray_blue_tone">#F8FAFF</color>
+    <!-- Tertiary Color Pair -->
+    <color name="colorTertiary">@color/blue_light</color>
+    <color name="colorOnTertiary">@color/white</color>
 
-    <!-- Blue -->
-    <color name="blue">#0044CC</color>
-    <color name="blue_deep">#004A91</color>
-    <color name="blue_200">#90CAF9</color>
-    <color name="blue_400">#42A5F5</color>
-    <color name="blue_light">#94A4DBFF</color>
-    <color name="blue_very_light">#EDF2FE</color>
-    <color name="blue_navy">#0A1E33</color>
+    <!-- Background & Surface -->
+    <color name="colorBackground">@color/material_dark</color> //
+    <color name="colorOnBackground">@color/white</color> //
 
-    <!-- Red -->
-    <color name="red">#FF0A0A</color>
-    <color name="red_light">#FDE2E1</color>
+    <color name="colorSurface">@color/material_dark</color>
+    <color name="colorOnSurface">@color/white</color>
 
-    <!-- Orange -->
-    <color name="orange">#FFA500</color>
-    <color name="orange_light">#FFF4E0</color>
+    <color name="colorSurfaceVariant">@color/gray_dark</color>
+    <color name="colorOnSurfaceVariant">@color/gray</color>
 
-    <!-- Green -->
-    <color name="green">#00C48C</color>
-    <color name="green_light">#E0FAF3</color>
+    <!-- Error Color Pair -->
+    <color name="colorError">@color/red</color>
+    <color name="colorOnError">@color/white</color>
+
+    <!-- Success Color Pair -->
+    <color name="colorSuccess">@color/green</color>
+    <color name="colorOnSuccess">@color/white</color>
+
+    <!-- Warning Color Pair -->
+    <color name="colorWarning">@color/orange</color>
+    <color name="colorOnWarning">@color/white</color>
+
+    <!-- Outline & Borders -->
+    <color name="colorOutline">@color/gray_whitish</color>
+    <color name="colorOutlineVariant">@color/gray_dark</color>
 
     <!-- Overlay Colors -->
+    <color name="colorOverlayLight">@color/semi_transparent_white</color>
+    <color name="colorOverlayDark">@color/semi_transparent_black50</color>
+    <color name="colorOverlaySubtle">@color/semi_transparent_black10</color>
+
+    <!-- Literal colors -->
+    <color name="black">#FF000000</color>
+    <color name="white">#FFFFFFFF</color>
+    <color name="material_dark">#121212</color>
+
+    <color name="gray">#B0B0B0</color>
+    <color name="gray_dark">#2A2A2A</color>
+    <color name="gray_light">#2D2D2D</color>
+    <color name="gray_whitish">#424242</color>
+    <color name="gray_blue_tone">#1A2332</color>
+
+    <color name="blue">#64B5F6</color>
+    <color name="blue_deep">#42A5F5</color>
+    <color name="blue_200">#42A5F5</color>
+    <color name="blue_400">#2196F3</color>
+    <color name="blue_light">#1E3A5F</color>
+    <color name="blue_very_light">#0D1B2A</color>
+    <color name="blue_navy">#1A3A52</color>
+
+    <color name="red">#EF5350</color>
+    <color name="red_light">#5F2C2C</color>
+
+    <color name="orange">#FFB74D</color>
+    <color name="orange_light">#5F3D1F</color>
+
+    <color name="green">#4DB8A8</color>
+    <color name="green_light">#1B4D42</color>
+
+    <!--Overlay Colors-->
     <color name="semi_transparent_white">#80FFFFFF</color>
     <color name="semi_transparent_black50">#80000000</color>
     <color name="semi_transparent_black10">#1A000000</color>
-
-    <color name="cyan">#00E5FF</color>
 </resources>

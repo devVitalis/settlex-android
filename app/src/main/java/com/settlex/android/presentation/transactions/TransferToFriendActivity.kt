@@ -20,6 +20,7 @@ import com.google.android.material.bottomsheet.BottomSheetDialog
 import com.settlex.android.R
 import com.settlex.android.data.enums.TransactionStatus
 import com.settlex.android.data.remote.profile.ProfileService.loadProfilePhoto
+import com.settlex.android.data.session.UserSessionState
 import com.settlex.android.databinding.ActivityTransferToFriendBinding
 import com.settlex.android.domain.TransactionIdGenerator
 import com.settlex.android.presentation.common.extensions.gone
@@ -27,6 +28,7 @@ import com.settlex.android.presentation.common.extensions.show
 import com.settlex.android.presentation.common.extensions.toNairaString
 import com.settlex.android.presentation.common.state.UiState
 import com.settlex.android.presentation.common.util.DialogHelper
+import com.settlex.android.presentation.common.util.PaymentBottomSheetHelper
 import com.settlex.android.presentation.settings.CreatePaymentPinActivity
 import com.settlex.android.presentation.transactions.adapter.RecipientAdapter
 import com.settlex.android.presentation.transactions.model.RecipientUiModel
@@ -42,27 +44,17 @@ import java.math.BigDecimal
 
 @AndroidEntryPoint
 class TransferToFriendActivity : AppCompatActivity() {
-
     private lateinit var binding: ActivityTransferToFriendBinding
-
-    // --- UI state ---
-    private var recipientPhotoUrl: String? = null
-    private var recipientPaymentId: String? = null
-    private var amountToSend: Long = 0L
-
-    // --- dependencies / helpers ---
     private val progressLoader by lazy { ProgressDialogManager(this) }
     private val recipientAdapter by lazy { RecipientAdapter() }
     private val viewModel: TransactionViewModel by viewModels()
 
     private var bottomSheetDialog: BottomSheetDialog? = null
+    private var recipientPhotoUrl: String? = null
+    private var recipientPaymentId: String? = null
+    private var transferAmount: Long = 0L
     private var currentUser: TransferToFriendUiModel? = null
 
-    companion object {
-        private const val ERROR_INVALID_AMOUNT = "Amount must be in range of ₦100 - ₦1,000,000.00"
-        private const val ERROR_CANNOT_SEND_TO_SELF = "You cannot send a payment to your own account. Please choose a different recipient"
-        private val PAYMENT_ID_REGEX = "^@?[A-Za-z][A-Za-z0-9]{4,19}$".toRegex()
-    }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -80,7 +72,7 @@ class TransferToFriendActivity : AppCompatActivity() {
         bottomSheetDialog = null
     }
 
-    // Init: views and observers
+
     private fun initViews() = with(binding) {
         StatusBar.setColor(this@TransferToFriendActivity, R.color.white)
 
@@ -96,47 +88,40 @@ class TransferToFriendActivity : AppCompatActivity() {
 
     private fun initObservers() {
         observeUserState()
-        observeTransferToFriend()
+        observeTransferToFriendEvent()
         observeGetRecipient()
         observePaymentPinAuth()
     }
 
-    // Observers (Flows/State)
     private fun observeUserState() {
         lifecycleScope.launch {
             repeatOnLifecycle(Lifecycle.State.STARTED) {
-//                viewModel.userSession.collect { state ->
-//                    if (state is UiState.Success) {
-//                        if (state.data.user is TransferToFriendUiModel) {
-//                            applyCurrentUser(state.data.user)
-//                        }
-//                    }
-//                }
+                viewModel.userSessionState.collect { state ->
+                    when (state) {
+                        is UserSessionState.Authenticated -> displayUserInfo(state.user)
+                        else -> Unit
+                    }
+                }
             }
         }
     }
 
-    private fun applyCurrentUser(user: TransferToFriendUiModel) = with(binding) {
+    private fun displayUserInfo(user: TransferToFriendUiModel) = with(binding) {
         currentUser = user
         availableBalance.text = user.totalBalance.toNairaString()
     }
 
-    private fun observeTransferToFriend() {
+    private fun observeTransferToFriendEvent() {
         lifecycleScope.launch {
             repeatOnLifecycle(Lifecycle.State.STARTED) {
                 viewModel.transferToFriendEvent.collect { state ->
                     when (state) {
                         is UiState.Loading -> progressLoader.show()
-
-                        is UiState.Success -> {
-                            progressLoader.hide()
-                            goToStatus(TransactionStatus.SUCCESS, null)
-                        }
-
-                        is UiState.Failure -> {
-                            progressLoader.hide()
-                            goToStatus(TransactionStatus.FAILED, state.exception.message)
-                        }
+                        is UiState.Success -> goToStatus(TransactionStatus.SUCCESS, null)
+                        is UiState.Failure -> goToStatus(
+                            TransactionStatus.FAILED,
+                            state.exception.message
+                        )
                     }
                 }
             }
@@ -163,51 +148,41 @@ class TransferToFriendActivity : AppCompatActivity() {
                 viewModel.authPaymentPinEvent.collect { state ->
                     when (state) {
                         is UiState.Loading -> progressLoader.show()
-
-                        is UiState.Success -> {
-                            progressLoader.hide()
-                            onPinVerificationSuccess(state.data)
-                        }
-
-                        is UiState.Failure -> {
-                            progressLoader.hide()
-                            onPinVerificationError(state.exception.message)
-                        }
+                        is UiState.Success -> onPinVerificationSuccess(state.data)
+                        is UiState.Failure -> onPinVerificationError(state.exception.message)
                     }
                 }
             }
         }
     }
 
-    // -------------------------
     // Recipient UI handling
-    // -------------------------
     private fun setupRecipientRecyclerView() = with(binding) {
         recipientRecyclerView.layoutManager = LinearLayoutManager(this@TransferToFriendActivity)
         recipientRecyclerView.adapter = recipientAdapter
         setupRecipientAdapterClick()
     }
 
-    private fun setupRecipientAdapterClick() {
-        recipientAdapter.setOnItemClickListener(RecipientAdapter.OnItemClickListener { recipient ->
-            recipient ?: return@OnItemClickListener
-            binding.editTxtPaymentId.setText(recipient.paymentId)
-            binding.editTxtPaymentId.setSelection(binding.editTxtPaymentId.text.length)
-            binding.btnVerify.isVisible = false
+    private fun setupRecipientAdapterClick() =with(binding) {
+        recipientAdapter.setOnItemClickListener { recipient ->
+            recipient ?: return@setOnItemClickListener
+            editTxtPaymentId.setText(recipient.paymentId)
+            editTxtPaymentId.setSelection(binding.editTxtPaymentId.text.length)
+            btnVerify.isVisible = false
 
             // clear search results
             recipientAdapter.submitList(emptyList())
-            binding.recipientRecyclerView.gone()
+            recipientRecyclerView.gone()
 
             // show selected recipient
             recipientPhotoUrl = recipient.photoUrl
             loadProfilePhoto(recipientPhotoUrl, binding.selectedRecipientProfilePic)
-            binding.selectedRecipientName.text = recipient.fullName
-            binding.selectedRecipientPaymentId.text = recipient.paymentId
-            binding.selectedRecipient.show()
+            selectedRecipientName.text = recipient.fullName
+            selectedRecipientPaymentId.text = recipient.paymentId
+            selectedRecipient.show()
 
             updateNextButtonState()
-        })
+        }
     }
 
     private fun showRecipientLoading() = with(binding) {
@@ -260,17 +235,21 @@ class TransferToFriendActivity : AppCompatActivity() {
         startPayFriendTransaction(
             fromUid,
             recipientPaymentId ?: return,
-            amountToSend,
+            transferAmount,
             binding.editTxtDescription.text.toString().trim()
         )
+
+        progressLoader.hide()
     }
 
     private fun onPinVerificationError(message: String?) {
         showSimpleAlertDialog(message)
+        progressLoader.hide()
     }
 
     private fun showIncorrectPinDialog() {
-        val message = "Incorrect PIN. Please try again, or click on the Forgot PIN to reset your PIN"
+        val message =
+            "Incorrect PIN. Please try again, or click on the Forgot PIN to reset your PIN"
         val priButton = "Forgot Pin"
         val secButton = "Retry"
 
@@ -298,12 +277,12 @@ class TransferToFriendActivity : AppCompatActivity() {
             StringFormatter.removeAtInPaymentId(binding.selectedRecipientPaymentId.text.toString())
         val recipientName = binding.selectedRecipientName.text.toString()
 
-        bottomSheetDialog = DialogHelper.showBottomSheetConfirmPayment(
+        bottomSheetDialog = PaymentBottomSheetHelper.showBottomSheetConfirmPayment(
             this,
             recipientPaymentIdRaw,
             recipientName,
             recipientPhotoUrl,
-            amountToSend,
+            transferAmount,
             currentUser?.balance ?: 0L,
             currentUser?.commissionBalance ?: 0L
         ) {
@@ -365,12 +344,12 @@ class TransferToFriendActivity : AppCompatActivity() {
         if (paymentId.isBlank()) return
 
         // Prevent sending to self
-        val stripped = StringFormatter.removeAtInPaymentId(paymentId)
-        if (stripped == currentUser?.paymentId) {
-            binding.txtError.text = ERROR_CANNOT_SEND_TO_SELF
-            binding.txtError.show()
-            return
-        }
+//        val stripped = StringFormatter.removeAtInPaymentId(paymentId)
+//        if (stripped == currentUser?.paymentId) {
+//            binding.txtError.text = ERROR_CANNOT_SEND_TO_SELF
+//            binding.txtError.show()
+//            return
+//        }
 
         viewModel.getRecipientByPaymentId(paymentId)
     }
@@ -393,10 +372,10 @@ class TransferToFriendActivity : AppCompatActivity() {
 
         editTxtAmount.doOnTextChanged { raw, _, _, _ ->
             val rawStr = raw?.toString().orEmpty().replace(",", "")
-            amountToSend =
+            transferAmount =
                 if (rawStr.isBlank()) 0L else CurrencyFormatter.convertNairaStringToKobo(rawStr)
             val isAmountEmpty = rawStr.isBlank()
-            val shouldShowError = !isAmountInRange(amountToSend) && !isAmountEmpty
+            val shouldShowError = !isAmountInRange(transferAmount) && !isAmountEmpty
 
             txtAmountFeedback.text = if (shouldShowError) ERROR_INVALID_AMOUNT else ""
             txtAmountFeedback.isVisible = shouldShowError
@@ -454,7 +433,7 @@ class TransferToFriendActivity : AppCompatActivity() {
     private fun updateNextButtonState() {
         val recipientSelected = binding.selectedRecipient.isVisible
         binding.btnNext.isEnabled =
-            isPaymentIdValid(recipientPaymentId) && isAmountInRange(amountToSend) && recipientSelected
+            isPaymentIdValid(recipientPaymentId) && isAmountInRange(transferAmount) && recipientSelected
     }
 
     private fun isPaymentIdValid(paymentId: String?): Boolean {
@@ -468,7 +447,7 @@ class TransferToFriendActivity : AppCompatActivity() {
 
     private fun goToStatus(transactionStatus: TransactionStatus, feedback: String?) {
         bottomSheetDialog?.dismiss()
-        val formattedAmount = amountToSend.toNairaString()
+        val formattedAmount = transferAmount.toNairaString()
         val intent = Intent(this, TransactionStatusActivity::class.java).apply {
             putExtra("amount", formattedAmount)
             putExtra("status", transactionStatus.name)
@@ -476,6 +455,8 @@ class TransferToFriendActivity : AppCompatActivity() {
         }
         startActivity(intent)
         finish()
+
+        progressLoader.hide()
     }
 
 
@@ -507,5 +488,12 @@ class TransferToFriendActivity : AppCompatActivity() {
         } catch (_: Throwable) {
             BigDecimal.ZERO
         }
+    }
+
+    companion object {
+        private const val ERROR_INVALID_AMOUNT = "Amount must be in range of ₦100 - ₦1,000,000.00"
+        private const val ERROR_CANNOT_SEND_TO_SELF =
+            "You cannot send a payment to your own account. Please choose a different recipient"
+        private val PAYMENT_ID_REGEX = "^@?[A-Za-z][A-Za-z0-9]{4,19}$".toRegex()
     }
 }

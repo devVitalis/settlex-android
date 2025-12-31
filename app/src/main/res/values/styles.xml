@@ -125,14 +125,14 @@
     <style name="Widget.SettleX.TitleBold" parent="Widget.AppCompat.TextView">
         <item name="fontFamily">@font/inter_bold</item>
         <item name="android:textStyle">bold</item>
-        <item name="android:textColor">@color/titleColor</item>
+        <item name="android:textColor">@color/colorOnBackground</item>
         <item name="android:textSize">25sp</item>
         <item name="android:includeFontPadding">false</item>
     </style>
 
     <style name="Widget.SettleX.TextRegular" parent="Widget.AppCompat.TextView">
         <item name="fontFamily">@font/inter_regular</item>
-        <item name="android:textColor">@color/titleColor</item>
+        <item name="android:textColor">@color/colorOnBackground</item>
         <item name="android:textSize">14sp</item>
         <item name="android:includeFontPadding">false</item>
     </style>
@@ -194,11 +194,11 @@
 
     <!-- Dialog -->
     <style name="Theme_SettleX_Dialog_BottomSheet" parent="ThemeOverlay.Material3.BottomSheetDialog">
-        <item name="android:backgroundTint">@color/dialogColor</item>
+        <item name="android:backgroundTint">@color/colorBackground</item>
     </style>
 
     <style name="Theme_SettleX_Dialog_Alert" parent="MaterialAlertDialog.Material3">
-        <item name="android:backgroundTint">@color/dialogColor</item>
+        <item name="android:backgroundTint">@color/colorBackground</item>
     </style>
 
     <style name="Theme_SettleX_Dialog_Alert_Rounded16dp" parent="MaterialAlertDialog.Material3">
