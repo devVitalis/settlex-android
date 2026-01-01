@@ -9,12 +9,13 @@ import android.util.Patterns
 import android.view.MotionEvent
 import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
+import androidx.core.content.ContextCompat
 import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.lifecycleScope
 import androidx.lifecycle.repeatOnLifecycle
 import com.settlex.android.R
 import com.settlex.android.data.exception.AppException
-import com.settlex.android.data.remote.profile.ProfileService
+import com.settlex.android.data.remote.profile.ProfileService.loadProfilePhoto
 import com.settlex.android.databinding.ActivityLoginBinding
 import com.settlex.android.presentation.auth.forgot_password.ForgotPasswordActivity
 import com.settlex.android.presentation.auth.register.RegisterActivity
@@ -61,13 +62,17 @@ class LoginActivity : AppCompatActivity() {
         keyboardHelper.attachDoneAction(editText = etPassword)
 
         tvSwitchAccount.text = SpannableTextFormatter(
+            this@LoginActivity,
             "Not you?\nSwitch Account",
-            "Switch Account"
+            "Switch Account",
+            ContextCompat.getColor(this@LoginActivity, R.color.text_accent)
         )
 
         tvSignUp.text = SpannableTextFormatter(
+            this@LoginActivity,
             "Don't have an account yet?\nClick here to register",
-            "Click here to register"
+            "Click here to register",
+            ContextCompat.getColor(this@LoginActivity, R.color.text_accent)
         )
     }
 
@@ -75,31 +80,30 @@ class LoginActivity : AppCompatActivity() {
         observeLoginEvent()
     }
 
-    private fun initListeners() {
-        with(binding) {
-            btnForgotPassword.setOnClickListener {
-                toActivity(
-                    ForgotPasswordActivity::class.java
-                )
-            }
-            btnBackBefore.setOnClickListener { onBackPressedDispatcher.onBackPressed() }
-            tvSwitchAccount.setOnClickListener { showUnauthenticatedUi() }
-            ivFingerprint.setOnClickListener { authenticateWithBiometrics() }
-
-            btnTogglePassword.setOnClickListener {
-                PasswordToggleController(
-                    etPassword,
-                    btnTogglePassword
-                )
-            }
-
-            btnSignIn.setOnClickListener { attemptLogin() }
-            tvSignUp.setOnClickListener {
-                toActivity(
-                    RegisterActivity::class.java
-                )
-            }
+    private fun initListeners() = with(binding) {
+        tvForgotPassword.setOnClickListener {
+            toActivity(
+                ForgotPasswordActivity::class.java
+            )
         }
+        btnBackBefore.setOnClickListener { onBackPressedDispatcher.onBackPressed() }
+        tvSwitchAccount.setOnClickListener { showUnauthenticatedUi() }
+        ivFingerprint.setOnClickListener { authenticateWithBiometrics() }
+
+        btnTogglePassword.setOnClickListener {
+            PasswordToggleController(
+                etPassword,
+                btnTogglePassword
+            )
+        }
+
+        btnSignIn.setOnClickListener { attemptLogin() }
+        tvSignUp.setOnClickListener {
+            toActivity(
+                RegisterActivity::class.java
+            )
+        }
+
     }
 
     private fun syncUserStateWithUI() {
@@ -112,8 +116,14 @@ class LoginActivity : AppCompatActivity() {
                 with(binding) {
                     // Enable/disable fingerprint auth
                     val isFingerPrintEnabled = viewModel.isLoginBiometricsEnabled.value
-                    if (isFingerPrintEnabled) ivFingerprint.show() else ivFingerprint.gone()
-                    if (isFingerPrintEnabled) authenticateWithBiometrics()
+                    when (isFingerPrintEnabled) {
+                        true -> {
+                            ivFingerprint.show()
+                            authenticateWithBiometrics()
+                        }
+
+                        false -> ivFingerprint.gone()
+                    }
                 }
             }
         }
@@ -124,7 +134,7 @@ class LoginActivity : AppCompatActivity() {
             val formattedDisplayName = "Hi, ${user.displayName.uppercase()}"
             val formattedEmail = "(${StringFormatter.maskEmail(user.email)})"
 
-            ProfileService.loadProfilePhoto(user.photoUrl, ivUserProfilePhoto)
+            loadProfilePhoto(user.photoUrl, ivUserProfilePhoto)
             tvUserDisplayName.text = formattedDisplayName
             tvUserEmail.text = formattedEmail
             etEmail.setText(user.email)
@@ -139,6 +149,8 @@ class LoginActivity : AppCompatActivity() {
     }
 
     private fun showUnauthenticatedUi() {
+        viewModel.logout()
+
         with(binding) {
             viewLoggedInUi.gone()
             ivFingerprint.gone()

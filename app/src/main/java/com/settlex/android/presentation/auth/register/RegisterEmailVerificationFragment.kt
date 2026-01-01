@@ -79,18 +79,20 @@ class RegisterEmailVerificationFragment : Fragment() {
 
         email.also { email ->
             tvUserEmail.text = SpannableTextFormatter(
+                requireContext(),
                 text = "We sent a code to $email. This code will expire after 10 minutes",
                 target = email,
-                color = "#000000",
+                color =  ContextCompat.getColor(requireContext(), R.color.text_primary),
                 setBold = true,
                 setUnderline = true
             )
         }
 
         tvSpamInfo.text = SpannableTextFormatter(
+            requireContext(),
             "Didn’t get the email? Make sure to also check your spam/junk folder if you can't find the email in your inbox",
             "check your spam/junk folder",
-            "#FFA500"
+            ContextCompat.getColor(requireContext(), R.color.text_warning)
         )
 
         btnBackBefore.setOnClickListener {

@@ -1,12 +1,15 @@
 package com.settlex.android.presentation.common.util
 
+import android.content.Context
 import android.graphics.Typeface
 import android.text.SpannableString
 import android.text.Spanned
 import android.text.style.ForegroundColorSpan
 import android.text.style.StyleSpan
 import android.text.style.UnderlineSpan
-import androidx.core.graphics.toColorInt
+import androidx.annotation.ColorInt
+import androidx.core.content.ContextCompat
+import com.settlex.android.R
 
 object SpannableTextFormatter {
 
@@ -17,20 +20,20 @@ object SpannableTextFormatter {
      * @param color Hex color string, default color is "#0044CC".
      */
     operator fun invoke(
+        context: Context,
         text: String,
         target: String,
-        color: String = "#0044CC",
+        @ColorInt color: Int = ContextCompat.getColor(context, R.color.text_accent),
         setBold: Boolean = false,
         setUnderline: Boolean = false
     ): SpannableString {
         val spannable = SpannableString(text)
-        val colorInt: Int = color.toColorInt()
 
         val startIndex = text.indexOf(target)
         val endIndex = text.indexOf(target) + target.length
 
         spannable.setSpan(
-            ForegroundColorSpan(colorInt),
+            ForegroundColorSpan(color),
             startIndex,
             endIndex,
             Spanned.SPAN_EXCLUSIVE_EXCLUSIVE

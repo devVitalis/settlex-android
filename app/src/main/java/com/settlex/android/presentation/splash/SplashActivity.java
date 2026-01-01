@@ -62,8 +62,8 @@ public class SplashActivity extends AppCompatActivity {
     private void routeToDestination() {
         Class<? extends Activity> destination =
                 (!prefs.isIntroViewed()) ? OnboardingActivity.class :
-                        (authViewModel.isUserLoggedIn()) ? DashboardActivity.class
-                                : LoginActivity.class;
+                        (authViewModel.isUserLoggedIn()) ? LoginActivity.class
+                                : DashboardActivity.class;
 
         startActivity(new Intent(this, destination));
         finish();

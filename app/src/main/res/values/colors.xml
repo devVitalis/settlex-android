@@ -1,52 +1,31 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <!-- Primary Color Pair -->
-    <color name="colorPrimary">@color/blue</color>
-    <color name="colorOnPrimary">@color/white</color>
+    <!-- Text Colors -->
+    <color name="text_primary">@color/black</color>
+    <color name="text_secondary">@color/gray</color>
+    <color name="text_accent">@color/blue</color>
+    <color name="text_error">@color/red</color>
+    <color name="text_hint">@color/gray</color>
+    <color name="text_warning">@color/orange</color>
 
-    <!-- Secondary Color Pair -->
-    <color name="colorSecondary">@color/blue_200</color>
-    <color name="colorOnSecondary">@color/black</color>
+    <!-- Background Colors -->
+    <color name="background_primary">@color/white</color>
+    <color name="background_secondary">@color/gray_light</color>
+    <color name="outline_primary">@color/gray</color>
+    <color name="outline_secondary">@color/blue</color>
 
-    <!-- Tertiary Color Pair -->
-    <color name="colorTertiary">@color/blue_very_light</color>
-    <color name="colorOnTertiary">@color/blue_deep</color>
+    <!-- Icons -->
+    <color name="icon_secondary">@color/gray</color>
+    <color name="icon_primary">@color/blue</color>
 
-    <!-- Background & Surface -->
-    <color name="colorBackground">@color/white</color>
-    <color name="colorOnBackground">@color/black</color>
+    <!-- Buttons -->
+    <color name="button_primary">@color/blue</color>
+    <color name="button_disabled">@color/blue_light</color>
 
-    <color name="colorSurface">@color/white</color>
-    <color name="colorOnSurface">@color/black</color>
 
-    <color name="colorSurfaceVariant">@color/gray_light</color>
-    <color name="colorOnSurfaceVariant">@color/gray_dark</color>
-
-    <!-- Error Color Pair -->
-    <color name="colorError">@color/red</color>
-    <color name="colorOnError">@color/white</color>
-
-    <!-- Success Color Pair -->
-    <color name="colorSuccess">@color/green</color>
-    <color name="colorOnSuccess">@color/white</color>
-
-    <!-- Warning Color Pair -->
-    <color name="colorWarning">@color/orange</color>
-    <color name="colorOnWarning">@color/white</color>
-
-    <!-- Outline & Borders -->
-    <color name="colorOutline">@color/gray_whitish</color>
-    <color name="colorOutlineVariant">@color/gray_light</color>
-
-    <!-- Overlay Colors -->
-    <color name="colorOverlayLight">@color/semi_transparent_white</color>
-    <color name="colorOverlayDark">@color/semi_transparent_black50</color>
-    <color name="colorOverlaySubtle">@color/semi_transparent_black10</color>
-
-    <!-- Literal colors -->
+    <!-- ///////////////////////////// -->
     <color name="black">#FF000000</color>
     <color name="white">#FFFFFFFF</color>
-    <color name="material_dark">#121212</color>
 
     <color name="gray">#9E9E9E</color>
     <color name="gray_dark">#4A4A4A</color>

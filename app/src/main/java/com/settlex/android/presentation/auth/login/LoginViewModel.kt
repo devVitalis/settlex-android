@@ -2,6 +2,7 @@ package com.settlex.android.presentation.auth.login
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.google.firebase.auth.FirebaseAuth
 import com.settlex.android.SettleXApp
 import com.settlex.android.data.datasource.UserLocalDataSource
 import com.settlex.android.data.exception.ApiException
@@ -99,5 +100,12 @@ class LoginViewModel @Inject constructor(
 
     fun isNetworkConnected(): Boolean {
         return NetworkMonitor.networkStatus.value
+    }
+
+    fun logout() {
+        // TODO: For testing, delete Later
+        viewModelScope.launch {
+            FirebaseAuth.getInstance().signOut()
+        }
     }
 }

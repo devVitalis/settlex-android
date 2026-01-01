@@ -8,7 +8,7 @@
     android:padding="20dp">
 
     <TextView
-        style="@style/Widget.SettleX.TitleBold"
+        style="@style/Widget.SettleX.TextBold"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_gravity="center"
@@ -26,7 +26,7 @@
 
     <TextView
         android:id="@+id/tv_amount_header"
-        style="@style/Widget.SettleX.TitleBold"
+        style="@style/Widget.SettleX.TextBold"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_gravity="center"
