@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <!-- Text Colors -->
+    <!-- Text -->
     <color name="text_primary">@color/black</color>
     <color name="text_secondary">@color/gray</color>
     <color name="text_accent">@color/blue</color>
@@ -8,22 +8,23 @@
     <color name="text_hint">@color/gray</color>
     <color name="text_warning">@color/orange</color>
 
-    <!-- Background Colors -->
+    <!-- Background -->
     <color name="background_primary">@color/white</color>
     <color name="background_secondary">@color/gray_light</color>
     <color name="outline_primary">@color/gray</color>
     <color name="outline_secondary">@color/blue</color>
 
     <!-- Icons -->
-    <color name="icon_secondary">@color/gray</color>
+    <color name="icon_secondary">@color/black</color>
     <color name="icon_primary">@color/blue</color>
+    <color name="icon_tint">@color/gray</color>
 
     <!-- Buttons -->
     <color name="button_primary">@color/blue</color>
-    <color name="button_disabled">@color/blue_light</color>
+    <color name="button_disabled">@color/blue_200</color>
+    <color name="button_pressed">@color/blue_deep</color>
 
-
-    <!-- ///////////////////////////// -->
+    <!-- Literal -->
     <color name="black">#FF000000</color>
     <color name="white">#FFFFFFFF</color>
 
@@ -37,7 +38,6 @@
     <color name="blue_deep">#004A91</color>
     <color name="blue_200">#90CAF9</color>
     <color name="blue_400">#42A5F5</color>
-    <color name="blue_light">#94A4DBFF</color>
     <color name="blue_very_light">#EDF2FE</color>
     <color name="blue_navy">#0A1E33</color>
 
@@ -51,7 +51,7 @@
     <color name="green_light">#E0FAF3</color>
 
     <!--Overlay Colors-->
-    <color name="semi_transparent_white">#80FFFFFF</color>
-    <color name="semi_transparent_black50">#80000000</color>
-    <color name="semi_transparent_black10">#1A000000</color>
+    <color name="overlay_light">#80FFFFFF</color>
+    <color name="overlay_dim">#1A000000</color>
+    <color name="overlay_dark">#80000000</color>
 </resources>

@@ -5,7 +5,7 @@
     android:id="@+id/main"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@color/white"
+    android:background="@color/background_primary"
     android:fitsSystemWindows="true"
     android:orientation="vertical"
     tools:context=".presentation.auth.forgot_password.OtpVerificationActivity">
@@ -16,7 +16,7 @@
         android:layout_height="wrap_content"
         android:paddingVertical="15dp">
 
-        <ImageView
+        <com.google.android.material.imageview.ShapeableImageView
             android:id="@+id/btn_back_before"
             android:layout_width="20dp"
             android:layout_height="20dp"
@@ -25,19 +25,18 @@
             android:contentDescription="@string/cd_back_before"
             android:scaleType="centerCrop"
             android:src="@drawable/ic_arrow_back"
+            android:tint="@color/icon_secondary"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent" />
 
         <TextView
+            style="@style/Widget.SettleX.TextBold"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:fontFamily="@font/inter_bold"
             android:includeFontPadding="false"
             android:text="@string/title_otp_verification"
-            android:textColor="@color/black"
             android:textSize="15sp"
-            android:textStyle="bold"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
@@ -78,7 +77,7 @@
         android:layout_width="match_parent"
         android:layout_height="0dp"
         android:layout_weight="1"
-        android:background="@color/gray_light"
+        android:background="@color/background_secondary"
         android:fillViewport="true"
         android:scrollbars="none">
 
@@ -92,17 +91,15 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="20dp"
-                android:background="@drawable/bg_8dp_white_ripple_yes"
+                android:background="@drawable/bg_8dp_white"
                 android:orientation="vertical"
                 android:padding="10dp">
 
                 <TextView
+                    style="@style/Widget.SettleX.TextRegular"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:fontFamily="@font/inter_regular"
-                    android:includeFontPadding="false"
                     android:text="@string/subtitle_we_ve_sent_a_6_digit_code"
-                    android:textColor="@color/black"
                     android:textSize="16sp"
                     android:textStyle="bold" />
 
@@ -113,32 +110,28 @@
 
                     <TextView
                         android:id="@+id/tv_info"
+                        style="@style/Widget.SettleX.TextRegular"
                         android:layout_width="0dp"
                         android:layout_height="wrap_content"
                         android:layout_marginEnd="50dp"
-                        android:fontFamily="@font/inter_regular"
-                        android:includeFontPadding="false"
                         android:text="@string/body_please_check_the_otp_that_has_been_sent_to_your_email_and_fill_the_box"
-                        android:textColor="@color/black"
-                        android:textSize="14sp"
                         app:layout_constraintEnd_toStartOf="@id/cloud_lock"
                         app:layout_constraintStart_toStartOf="parent"
                         app:layout_constraintTop_toTopOf="parent" />
 
                     <TextView
                         android:id="@+id/tv_user_email"
+                        style="@style/Widget.SettleX.TextRegular"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:fontFamily="@font/poppins_regular"
-                        android:includeFontPadding="false"
-                        android:textColor="@color/blue"
+                        android:textColor="@color/text_accent"
                         android:textSize="15sp"
                         android:textStyle="bold"
                         app:layout_constraintStart_toStartOf="parent"
                         app:layout_constraintTop_toBottomOf="@id/tv_info"
                         tools:text="be****k@gmail.com" />
 
-                    <ImageView
+                    <com.google.android.material.imageview.ShapeableImageView
                         android:id="@+id/cloud_lock"
                         android:layout_width="45dp"
                         android:layout_height="45dp"
@@ -146,7 +139,7 @@
                         app:layout_constraintBottom_toBottomOf="parent"
                         app:layout_constraintEnd_toEndOf="parent"
                         app:layout_constraintTop_toTopOf="parent"
-                        app:tint="@color/blue" />
+                        app:tint="@color/icon_primary" />
                 </androidx.constraintlayout.widget.ConstraintLayout>
 
                 <com.chaos.view.PinView
@@ -154,7 +147,6 @@
                     style="@style/Widget.SettleX.PinView"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_gravity="center"
                     android:layout_marginTop="15dp"
                     android:inputType="number"
                     app:itemCount="6"
@@ -163,15 +155,11 @@
 
                 <TextView
                     android:id="@+id/tv_otp_feedback"
+                    style="@style/Widget.SettleX.TextError"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_gravity="start"
                     android:layout_marginTop="5dp"
-                    android:fontFamily="@font/inter_regular"
-                    android:gravity="center_vertical"
-                    android:includeFontPadding="false"
-                    android:textColor="@color/red"
-                    android:textSize="13sp"
                     android:visibility="gone"
                     tools:text="message" />
             </LinearLayout>
@@ -180,20 +168,17 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="10dp"
-                android:background="@drawable/bg_8dp_white_ripple_yes"
+                android:background="@drawable/bg_8dp_white"
                 android:gravity="center_vertical"
                 android:orientation="horizontal"
                 android:paddingHorizontal="10dp"
                 android:paddingVertical="5dp">
 
                 <TextView
+                    style="@style/Widget.SettleX.TextRegular"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:fontFamily="@font/inter_regular"
-                    android:includeFontPadding="false"
-                    android:text="@string/tv_didnt_receive_the_code"
-                    android:textColor="@color/black"
-                    android:textSize="13sp" />
+                    android:text="@string/tv_didnt_receive_the_code" />
 
                 <com.google.android.material.button.MaterialButton
                     android:id="@+id/btn_resend_otp"
@@ -205,25 +190,8 @@
                     android:paddingHorizontal="0dp"
                     android:paddingVertical="0dp"
                     android:text="@string/btn_resend"
-                    android:textSize="13sp" />
+                    android:textSize="14sp" />
             </LinearLayout>
-
-            <TextView
-                android:id="@+id/tv_otp_info"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="10dp"
-                android:background="@drawable/bg_8dp_blue_light"
-                android:drawablePadding="2dp"
-                android:fontFamily="@font/inter_regular"
-                android:gravity="center_vertical"
-                android:includeFontPadding="false"
-                android:padding="10dp"
-                android:text="@string/tv_never_share_this_code_with_anyone_including_settlex_staff"
-                android:textColor="@color/black"
-                android:textSize="11sp"
-                app:drawableStartCompat="@drawable/ic_privacy_tip"
-                app:drawableTint="@color/blue" />
 
             <com.google.android.material.button.MaterialButton
                 android:id="@+id/btn_confirm"

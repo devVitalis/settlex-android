@@ -56,7 +56,7 @@ class LoginActivity : AppCompatActivity() {
     }
 
     private fun initViews() = with(binding) {
-        StatusBar.setColor(this@LoginActivity, R.color.white)
+        StatusBar.setColor(this@LoginActivity, R.color.background_primary)
         setupInputValidation()
         setupFocusBackgroundChanger()
         keyboardHelper.attachDoneAction(editText = etPassword)

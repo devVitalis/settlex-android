@@ -83,9 +83,9 @@
 
                 <TextView
                     android:id="@+id/tv_user_email"
+                    style="@style/Widget.SettleX.TextRegular"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    style="@style/Widget.SettleX.TextRegular"
                     android:textSize="15sp"
                     android:textStyle="bold"
                     tools:text="(b***k@gmail.com)" />
@@ -127,29 +127,25 @@
                     android:inputType="textPassword"
                     android:paddingHorizontal="15dp" />
 
-                <ImageView
+                <com.google.android.material.imageview.ShapeableImageView
                     android:id="@+id/btn_toggle_password"
                     android:layout_width="25dp"
                     android:layout_height="25dp"
                     android:layout_gravity="end|center_vertical"
                     android:layout_marginEnd="12dp"
                     android:background="?attr/selectableItemBackgroundBorderless"
-                    android:contentDescription="@null"
                     android:src="@drawable/ic_visibility_off_filled"
                     android:visibility="gone"
-                    app:tint="@color/gray" />
+                    app:tint="@color/icon_tint" />
             </FrameLayout>
 
             <TextView
                 android:id="@+id/tv_login_error"
+                style="@style/Widget.SettleX.TextRegular"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="5dp"
-                android:fontFamily="@font/inter_regular"
-                android:gravity="center_vertical"
-                android:includeFontPadding="false"
                 android:textColor="@color/red"
-                android:textSize="13sp"
                 android:visibility="gone"
                 tools:text="error occurred" />
 
@@ -160,7 +156,6 @@
                 android:layout_height="wrap_content"
                 android:layout_gravity="end"
                 android:layout_marginTop="10dp"
-                android:background="?attr/selectableItemBackground"
                 android:text="@string/tv_forgot_password"
                 android:textColor="@color/text_accent" />
 
@@ -181,15 +176,15 @@
                     android:text="@string/btn_sign_in"
                     android:textSize="14sp" />
 
-                <ImageView
+                <com.google.android.material.imageview.ShapeableImageView
                     android:id="@+id/iv_fingerprint"
                     android:layout_width="55dp"
                     android:layout_height="55dp"
                     android:layout_marginStart="10dp"
-                    android:background="@drawable/bg_oval_semi_transparent_black10"
-                    android:contentDescription="@null"
-                    android:padding="5dp"
+                    android:background="@color/overlay_dim"
                     android:src="@drawable/ic_fingerprint"
+                    app:contentPadding="10dp"
+                    app:shapeAppearanceOverlay="@style/ShapeAppearance.SettleX.Circular"
                     app:tint="@color/icon_primary" />
             </LinearLayout>
 
@@ -212,7 +207,6 @@
                     style="@style/Widget.SettleX.TextRegular"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:background="?attr/selectableItemBackground"
                     android:gravity="center"
                     android:text="@string/tv_don_t_have_an_account_yet_nclick_here_to_register" />
 
@@ -221,7 +215,6 @@
                     style="@style/Widget.SettleX.TextRegular"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:background="?attr/selectableItemBackground"
                     android:gravity="center"
                     android:text="@string/tv_not_you_switch_account"
                     android:visibility="gone" />

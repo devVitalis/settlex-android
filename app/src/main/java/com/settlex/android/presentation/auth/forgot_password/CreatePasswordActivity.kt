@@ -10,6 +10,7 @@ import androidx.core.widget.doOnTextChanged
 import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.lifecycleScope
 import androidx.lifecycle.repeatOnLifecycle
+import com.settlex.android.R
 import com.settlex.android.data.exception.AppException
 import com.settlex.android.databinding.ActivityCreatePasswordBinding
 import com.settlex.android.presentation.auth.AuthViewModel
@@ -23,6 +24,7 @@ import com.settlex.android.presentation.common.util.DialogHelper
 import com.settlex.android.presentation.common.util.KeyboardHelper
 import com.settlex.android.presentation.common.util.PasswordValidator
 import com.settlex.android.util.ui.ProgressDialogManager
+import com.settlex.android.util.ui.StatusBar
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.launch
 
@@ -55,18 +57,16 @@ class CreatePasswordActivity : AppCompatActivity() {
     }
 
     private fun initViews() {
+        StatusBar.setColor(this, R.color.background_primary)
         updateUiFromIntent()
         setupListeners()
         setupInputValidation()
         hidePasswordToggles()
     }
 
-    private fun setupListeners() {
-        with(binding) {
-
-            btnChangePassword.setOnClickListener { onChangePasswordClicked() }
-            btnBackBefore.setOnClickListener { finish() }
-        }
+    private fun setupListeners() = with(binding) {
+        btnChangePassword.setOnClickListener { onChangePasswordClicked() }
+        btnBackBefore.setOnClickListener { finish() }
     }
 
     private fun updateUiFromIntent() {
@@ -192,7 +192,7 @@ class CreatePasswordActivity : AppCompatActivity() {
                     }
                 }
 
-                else -> tvConfirmPasswordError.gone()
+                false -> tvConfirmPasswordError.gone()
             }
         }
     }
@@ -208,7 +208,6 @@ class CreatePasswordActivity : AppCompatActivity() {
 
     private fun isCurrentPasswordValid(): Boolean {
         val currentPassword = binding.etCurrentPassword.text.toString().trim()
-
         return PasswordValidator.validate(currentPassword)
     }
 

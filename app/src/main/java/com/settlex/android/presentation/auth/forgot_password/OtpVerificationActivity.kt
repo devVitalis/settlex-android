@@ -19,6 +19,7 @@ import com.settlex.android.presentation.auth.AuthViewModel
 import com.settlex.android.presentation.auth.util.PasswordFlow
 import com.settlex.android.presentation.auth.util.PasswordFlowParser
 import com.settlex.android.presentation.common.extensions.gone
+import com.settlex.android.presentation.common.extensions.maskEmail
 import com.settlex.android.presentation.common.extensions.show
 import com.settlex.android.presentation.common.state.UiState
 import com.settlex.android.presentation.common.util.KeyboardHelper
@@ -32,11 +33,12 @@ import kotlinx.coroutines.launch
 class OtpVerificationActivity : AppCompatActivity() {
 
     private lateinit var binding: ActivityOtpVerificationBinding
-    private lateinit var passwordFlow: PasswordFlow
-    private lateinit var userEmail: String
     private val authViewModel: AuthViewModel by viewModels()
     private val progressLoader by lazy { ProgressDialogManager(this) }
     private val keyboardHelper by lazy { KeyboardHelper(this) }
+
+    private lateinit var passwordFlow: PasswordFlow
+    private lateinit var userEmail: String
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -56,25 +58,22 @@ class OtpVerificationActivity : AppCompatActivity() {
     }
 
     private fun initViews() {
-        StatusBar.setColor(this, R.color.white)
+        StatusBar.setColor(this, R.color.background_primary)
         updateUiFromIntent()
         setupListeners()
         setupInputWatcher()
         startOtpResendCooldownTimer()
-        maskAndDisplayUserEmail()
     }
 
-    private fun setupListeners() {
-        with(binding) {
-            btnBackBefore.setOnClickListener { finish() }
-            btnResendOtp.setOnClickListener { resendVerificationCode() }
-            btnConfirm.setOnClickListener { onConfirmButtonClicked() }
+    private fun setupListeners() = with(binding) {
+        btnBackBefore.setOnClickListener { finish() }
+        btnResendOtp.setOnClickListener { resendVerificationCode() }
+        btnConfirm.setOnClickListener { onConfirmButtonClicked() }
 
-            btnHelp.setOnClickListener {
-                StringFormatter.showNotImplementedToast(
-                    this@OtpVerificationActivity
-                )
-            }
+        btnHelp.setOnClickListener {
+            StringFormatter.showNotImplementedToast(
+                this@OtpVerificationActivity
+            )
         }
     }
 
@@ -84,11 +83,7 @@ class OtpVerificationActivity : AppCompatActivity() {
             is PasswordFlow.Change -> View.GONE
             is PasswordFlow.AuthenticatedReset -> View.GONE
         }
-    }
-
-    private fun maskAndDisplayUserEmail() {
-        val maskedEmail = StringFormatter.maskEmail(userEmail)
-        binding.tvUserEmail.text = maskedEmail
+        tvUserEmail.text = userEmail.maskEmail()
     }
 
     // Observers

@@ -46,24 +46,23 @@ class ForgotPasswordActivity : AppCompatActivity() {
 
     private fun initViews() {
         with(binding) {
-            StatusBar.setColor(this@ForgotPasswordActivity, R.color.white)
+            StatusBar.setColor(this@ForgotPasswordActivity, R.color.background_primary)
             setupInputValidation()
 
             keyboardHelper.attachDoneAction(etEmail)
 
-            /**
-             * For Testing
+            /** For Testing
             btnBackBefore.setOnClickListener {
-                startActivity(
-                    Intent(this@ForgotPasswordActivity, CreatePasswordActivity::class.java)
-                        .putExtra(
-                            "email",
-                            binding.etEmail.text.toString().lowercase()
-                        )
-                        .putExtra("password_flow", "forgot")
-                )
+            startActivity(
+            Intent(this@ForgotPasswordActivity, CreatePasswordActivity::class.java)
+            .putExtra(
+            "email",
+            binding.etEmail.text.toString().lowercase()
+            )
+            .putExtra("password_flow", "forgot")
+            )
             }
-            */
+             **/
             btnBackBefore.setOnClickListener { finish() }
             btnContinue.setOnClickListener {
                 tvError.gone()
@@ -86,25 +85,24 @@ class ForgotPasswordActivity : AppCompatActivity() {
         }
     }
 
-    private fun onOtpRequestSuccess() {
+    private fun onOtpRequestSuccess() = with(binding) {
         startActivity(
-            Intent(this, OtpVerificationActivity::class.java)
+            Intent(this@ForgotPasswordActivity, OtpVerificationActivity::class.java)
                 .putExtra(
                     "email",
-                    binding.etEmail.text.toString().lowercase()
+                    etEmail.text.toString().lowercase()
                 )
                 .putExtra("password_flow", "forgot")
         )
         progressLoader.hide()
     }
 
-    private fun onOtpRequestFailure(error: AppException) {
-        with(binding) {
-            tvError.text = error.message
-            tvError.show()
+    private fun onOtpRequestFailure(error: AppException) = with(binding) {
+        tvError.text = error.message
+        tvError.show()
 
-            progressLoader.hide()
-        }
+        progressLoader.hide()
+
     }
 
     private fun sendVerificationCode() = with(binding) {
@@ -112,12 +110,10 @@ class ForgotPasswordActivity : AppCompatActivity() {
         authViewModel.sendVerificationCode(email, OtpType.PASSWORD_RESET)
     }
 
-    private fun setupInputValidation() {
-        with(binding) {
-            etEmail.doOnTextChanged { _, _, _, _ ->
-                tvError.gone()
-                btnContinue.isEnabled = isEmailValid()
-            }
+    private fun setupInputValidation() = with(binding) {
+        etEmail.doOnTextChanged { _, _, _, _ ->
+            tvError.gone()
+            btnContinue.isEnabled = isEmailValid()
         }
     }
 

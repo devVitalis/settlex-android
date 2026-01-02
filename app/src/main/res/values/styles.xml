@@ -125,6 +125,7 @@
     <style name="Widget.SettleX.TextBold" parent="Widget.AppCompat.TextView">
         <item name="fontFamily">@font/inter_bold</item>
         <item name="android:textStyle">bold</item>
+        <item name="background">?attr/selectableItemBackground</item>
         <item name="android:textColor">@color/text_primary</item>
         <item name="android:textSize">25sp</item>
         <item name="android:includeFontPadding">false</item>
@@ -134,6 +135,15 @@
         <item name="fontFamily">@font/inter_regular</item>
         <item name="android:textColor">@color/text_primary</item>
         <item name="android:textSize">14sp</item>
+        <item name="background">?attr/selectableItemBackground</item>
+        <item name="android:includeFontPadding">false</item>
+    </style>
+
+    <style name="Widget.SettleX.TextError" parent="Widget.AppCompat.TextView">
+        <item name="fontFamily">@font/inter_regular</item>
+        <item name="android:textColor">@color/text_error</item>
+        <item name="android:textSize">14sp</item>
+        <item name="background">?attr/selectableItemBackground</item>
         <item name="android:includeFontPadding">false</item>
     </style>
 
@@ -143,10 +153,11 @@
         <item name="itemSpacing">10dp</item>
         <item name="viewType">rectangle</item>
         <item name="itemRadius">8dp</item>
-        <item name="android:cursorVisible">false</item>
+        <item name="android:cursorVisible">true</item>
+        <item name="cursorColor">@color/gray_light</item>
         <item name="lineColor">@color/pin_box_line_color_selector</item>
-        <item name="lineWidth">1.5dp</item>
-        <item name="android:itemBackground">@drawable/pin_box_bg_color_selector</item>
+        <item name="lineWidth">1dp</item>
+        <item name="android:itemBackground">@drawable/pin_box_bg</item>
         <item name="itemWidth">48dp</item>
         <item name="itemHeight">48dp</item>
     </style>
@@ -164,7 +175,7 @@
     </style>
 
     <style name="Widget.SettleX.BottomNavigation.ActiveIndicator" parent="Widget.Material3.BottomNavigationView.ActiveIndicator">
-        <item name="android:color">@color/blue_light</item>
+        <item name="android:color">@color/blue_200</item>
     </style>
 
     <!-- Progress indicator -->
