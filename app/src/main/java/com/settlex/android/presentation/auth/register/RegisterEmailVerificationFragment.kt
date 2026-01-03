@@ -28,7 +28,6 @@ import com.settlex.android.util.ui.StatusBar
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.launch
 
-
 @AndroidEntryPoint
 class RegisterEmailVerificationFragment : Fragment() {
     private var _binding: FragmentRegisterEmailVerificationBinding? = null
@@ -73,7 +72,7 @@ class RegisterEmailVerificationFragment : Fragment() {
     }
 
     private fun initViews() = with(binding) {
-        StatusBar.setColor(requireActivity(), R.color.background_primary)
+        StatusBar.setColor(requireActivity(), R.color.colorBackground)
         setupInputWatcher()
 
         email.also { email ->
@@ -81,17 +80,18 @@ class RegisterEmailVerificationFragment : Fragment() {
                 requireContext(),
                 text = "We sent a code to $email. This code will expire after 10 minutes",
                 target = email,
-                color = ContextCompat.getColor(requireContext(), R.color.text_primary),
+                color = ContextCompat.getColor(requireContext(), R.color.colorOnBackground),
                 setBold = true,
             )
         }
 
+        /**
         tvSpamInfo.text = SpannableTextFormatter(
-            requireContext(),
-            "Didn’t get the email? Make sure to also check your spam/junk folder if you can't find the email in your inbox",
-            "check your spam/junk folder",
-            ContextCompat.getColor(requireContext(), R.color.text_warning)
-        )
+        requireContext(),
+        "Didn’t get the email? Make sure to also check your spam/junk folder if you can't find the email in your inbox",
+        "check your spam/junk folder",
+        ContextCompat.getColor(requireContext(), R.color.colorWarning)
+        )*/
 
         btnBackBefore.setOnClickListener {
             NavHostFragment.findNavController(
@@ -108,11 +108,10 @@ class RegisterEmailVerificationFragment : Fragment() {
         }
 
         btnContinue.setOnClickListener {
-//            authViewModel.verifyEmail(
-//                email,
-//                getEnteredOtp()
-//            )
-            onEmailVerificationSuccess()
+            authViewModel.verifyEmail(
+                email,
+                getEnteredOtp()
+            )
         }
     }
 
@@ -179,7 +178,12 @@ class RegisterEmailVerificationFragment : Fragment() {
 
     private fun startOtpResendCooldownTimer() = with(binding) {
         tvResendCode.isEnabled = false
-        tvResendCode.setTextColor(ContextCompat.getColor(requireContext(), R.color.text_secondary))
+        tvResendCode.setTextColor(
+            ContextCompat.getColor(
+                requireContext(),
+                R.color.colorOnSurfaceVariant
+            )
+        )
 
         tvResendCode.text.also { originalText ->
             otpResendCountdownTimer = object :

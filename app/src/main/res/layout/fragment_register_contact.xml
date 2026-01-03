@@ -5,7 +5,7 @@
     android:id="@+id/main"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@color/background_primary"
+    android:background="@color/colorBackground"
     android:fitsSystemWindows="true"
     tools:context=".presentation.auth.register.RegisterContactFragment">
 
@@ -17,7 +17,6 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent">
 
-
         <com.google.android.material.imageview.ShapeableImageView
             android:id="@+id/btn_back_before"
             android:layout_width="20dp"
@@ -28,7 +27,7 @@
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent"
-            app:tint="@color/icon_primary" />
+            app:tint="@color/colorOnBackground" />
 
         <TextView
             android:id="@+id/btn_sign_in"
@@ -40,7 +39,7 @@
             android:fontFamily="@font/inter_medium"
             android:includeFontPadding="false"
             android:text="@string/tv_sign_in"
-            android:textColor="@color/text_accent"
+            android:textColor="@color/colorPrimary"
             android:textSize="15sp"
             android:textStyle="bold"
             app:layout_constraintBottom_toBottomOf="parent"
@@ -108,24 +107,17 @@
                 android:layout_height="wrap_content"
                 android:text="@string/sub_title_enter_your_email_and_phone_number_we_ll_send_a_one_time_verification_code_otp_to_your_email_to_confirm_your_account" />
 
-            <FrameLayout
-                android:id="@+id/et_email_background"
+            <com.google.android.material.textfield.TextInputEditText
+                android:id="@+id/et_email"
+                style="@style/Widget.SettleX.TextInputEditText.Outlined"
                 android:layout_width="match_parent"
                 android:layout_height="55dp"
                 android:layout_marginTop="15dp"
-                android:background="@drawable/bg_edit_txt_custom_white_not_focused">
-
-                <com.google.android.material.textfield.TextInputEditText
-                    android:id="@+id/et_email"
-                    style="@style/Widget.SettleX.TextInputEditText.Outlined"
-                    android:layout_width="match_parent"
-                    android:layout_height="match_parent"
-                    android:background="@android:color/transparent"
-                    android:hint="@string/hint_enter_your_email_address"
-                    android:imeOptions="actionNext"
-                    android:inputType="textEmailAddress"
-                    android:paddingHorizontal="15dp" />
-            </FrameLayout>
+                android:background="@drawable/bg_input_field_outlined"
+                android:hint="@string/hint_enter_your_email_address"
+                android:imeOptions="actionNext"
+                android:inputType="textEmailAddress"
+                android:paddingHorizontal="15dp" />
 
             <TextView
                 android:id="@+id/tv_error"
@@ -144,14 +136,13 @@
                 android:layout_width="match_parent"
                 android:layout_height="55dp"
                 android:layout_marginTop="10dp"
-                android:background="@drawable/bg_edit_txt_custom_white_not_focused">
+                android:background="@drawable/bg_input_field_outlined">
 
-                <ImageView
+                <com.google.android.material.imageview.ShapeableImageView
                     android:id="@+id/flag_icon"
                     android:layout_width="24dp"
                     android:layout_height="16dp"
                     android:layout_marginStart="15dp"
-                    android:contentDescription="@null"
                     android:src="@drawable/ic_nigeria_flag"
                     app:layout_constraintBottom_toBottomOf="parent"
                     app:layout_constraintStart_toStartOf="parent"
@@ -185,7 +176,6 @@
                     android:layout_height="0dp"
                     android:layout_marginStart="10dp"
                     android:background="@android:color/transparent"
-                    android:fontFamily="@font/inter_regular"
                     android:hint="@string/hint_enter_your_phone_number"
                     android:imeOptions="actionDone"
                     android:inputType="phone"
@@ -239,7 +229,6 @@
             android:layout_gravity="center"
             android:layout_marginTop="10dp"
             android:enabled="false"
-            android:text="@string/btn_continue"
-            android:textSize="14sp" />
+            android:text="@string/btn_continue" />
     </LinearLayout>
 </androidx.constraintlayout.widget.ConstraintLayout>

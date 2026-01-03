@@ -5,7 +5,7 @@
     android:id="@+id/main"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@color/background_primary"
+    android:background="@color/colorBackground"
     android:fitsSystemWindows="true"
     tools:context=".presentation.auth.register.RegisterEmailVerificationFragment">
 
@@ -29,9 +29,8 @@
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent"
-            app:tint="@color/icon_primary" />
+            app:tint="@color/colorOnBackground" />
     </androidx.constraintlayout.widget.ConstraintLayout>
-
 
     <ScrollView
         android:layout_width="match_parent"
@@ -128,7 +127,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="55dp"
                 android:layout_marginTop="5dp"
-                android:background="@drawable/bg_edit_txt_custom_white_not_focused"
+                android:background="@drawable/bg_input_field_outlined"
                 android:hint="@string/tv_verification_code"
                 android:imeOptions="actionDone"
                 android:inputType="number"
@@ -168,20 +167,8 @@
                     android:layout_height="match_parent"
                     android:layout_marginStart="5dp"
                     android:text="@string/tv_resend_code"
-                    android:textColor="@color/text_accent" />
+                    android:textColor="@color/colorPrimary" />
             </LinearLayout>
-
-            <TextView
-                android:id="@+id/tv_spam_info"
-                style="@style/Widget.SettleX.TextRegular"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="10dp"
-                android:background="@drawable/bg_8dp_orange_light"
-                android:padding="10dp"
-                android:textColor="@color/text_primary"
-                android:textSize="12sp"
-                tools:text="Didn’t get the email? Make sure to also check your spam/junk folder if you can't find the email in your inbox." />
         </LinearLayout>
     </ScrollView>
 

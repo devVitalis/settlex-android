@@ -16,10 +16,10 @@ import com.settlex.android.util.string.StringFormatter
 import com.settlex.android.util.ui.StatusBar
 import dagger.hilt.android.AndroidEntryPoint
 
-
 @AndroidEntryPoint
 class RegisterNameFragment : Fragment() {
-    private var binding: FragmentRegisterNameBinding? = null
+    private var _binding: FragmentRegisterNameBinding? = null
+    private val binding get() = _binding!!
     private val registerViewModel: RegisterViewModel by activityViewModels()
     private val keyboardHelper by lazy { KeyboardHelper(requireActivity()) }
 
@@ -32,41 +32,34 @@ class RegisterNameFragment : Fragment() {
         container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
-        binding = FragmentRegisterNameBinding.inflate(inflater, container, false)
+        _binding = FragmentRegisterNameBinding.inflate(inflater, container, false)
 
         initViews()
         setupClickListeners()
-        return binding!!.getRoot()
+        return binding.getRoot()
     }
 
     override fun onDestroyView() {
         super.onDestroyView()
-        binding = null
+        _binding = null
     }
 
-    private fun initViews() = with(binding!!) {
-        StatusBar.setColor(requireActivity(), R.color.white)
+    private fun initViews() = with(binding) {
+        StatusBar.setColor(requireActivity(), R.color.colorBackground)
         setupInputValidation()
         keyboardHelper.attachDoneAction(etLastname)
     }
 
-    private fun setupClickListeners() = with(binding!!) {
+    private fun setupClickListeners() = with(binding) {
         btnBackBefore.setOnClickListener {
             NavHostFragment.findNavController(
                 this@RegisterNameFragment
             ).popBackStack()
         }
-
-        btnHelp.setOnClickListener {
-            StringFormatter.showNotImplementedToast(
-                requireContext()
-            )
-        }
-
         btnContinue.setOnClickListener { updateNameAndContinue() }
     }
 
-    private fun setupInputValidation() = with(binding!!) {
+    private fun setupInputValidation() = with(binding) {
         val validationWatcher: TextWatcher = object : TextWatcher {
             override fun beforeTextChanged(s: CharSequence?, start: Int, count: Int, after: Int) {
             }
@@ -82,7 +75,7 @@ class RegisterNameFragment : Fragment() {
         etLastname.addTextChangedListener(validationWatcher)
     }
 
-    private fun updateNameAndContinue() = with(binding!!) {
+    private fun updateNameAndContinue() = with(binding) {
         val firstName = etFirstname.getText().toString().trim()
         val lastName = etLastname.getText().toString().trim()
 
@@ -95,20 +88,20 @@ class RegisterNameFragment : Fragment() {
         navController.navigate(R.id.register_password_fragment)
     }
 
-    private fun updateContinueButtonState() = with(binding!!) {
+    private fun updateContinueButtonState() = with(binding) {
         val isValidFirstName = isFirstNameValid()
         val isValidLastName = isLastNameValid()
 
         btnContinue.isEnabled = isValidFirstName && isValidLastName
     }
 
-    private fun isFirstNameValid(): Boolean {
-        val firstName = binding!!.etFirstname.text.toString().trim()
+    private fun isFirstNameValid(): Boolean = with(binding) {
+        val firstName = etFirstname.text.toString().trim()
         return firstName.isNotEmpty() && firstName.matches(NAME_VALIDATION_REGEX.toRegex())
     }
 
-    private fun isLastNameValid(): Boolean {
-        val lastName = binding!!.etLastname.text.toString().trim()
+    private fun isLastNameValid(): Boolean = with(binding) {
+        val lastName = etLastname.text.toString().trim()
         return lastName.isNotEmpty() && lastName.matches(NAME_VALIDATION_REGEX.toRegex())
     }
 }

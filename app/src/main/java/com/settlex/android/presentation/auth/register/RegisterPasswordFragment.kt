@@ -67,7 +67,7 @@ class RegisterPasswordFragment : Fragment() {
     }
 
     private fun initViews() {
-        StatusBar.setColor(requireActivity(), R.color.white)
+        StatusBar.setColor(requireActivity(), R.color.colorBackground)
         setupInputValidation()
         togglePasswordVisibilityIcons(false)
         keyboardHelper.attachDoneAction(binding!!.etInvitationCode)
@@ -79,10 +79,6 @@ class RegisterPasswordFragment : Fragment() {
 
         btnBackBefore.setOnClickListener {
             NavHostFragment.findNavController(this@RegisterPasswordFragment).popBackStack()
-        }
-
-        btnHelp.setOnClickListener {
-            StringFormatter.showNotImplementedToast(requireContext())
         }
     }
 

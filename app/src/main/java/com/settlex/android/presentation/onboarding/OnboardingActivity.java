@@ -48,8 +48,8 @@ public class OnboardingActivity extends AppCompatActivity {
     }
 
     private void setupIndicatorView(ViewPager2 viewPager2) {
-        binding.roundRectIndicator.setSliderWidth(getResources().getDimension(R.dimen.dp_87));
-        binding.roundRectIndicator.setSliderHeight(getResources().getDimension(R.dimen.dp_5));
+        binding.roundRectIndicator.setSliderWidth(getResources().getDimension(R.dimen.page_indicator_width));
+        binding.roundRectIndicator.setSliderHeight(getResources().getDimension(R.dimen.page_indicator_height));
         binding.roundRectIndicator.setupWithViewPager(viewPager2);
     }
 

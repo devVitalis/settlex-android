@@ -421,7 +421,7 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_gravity="center"
-                    android:background="@drawable/bg_8dp_gray_light"
+                    android:background="@drawable/bg_surface_rounded8"
                     android:gravity="center"
                     android:minWidth="150dp"
                     android:orientation="horizontal"

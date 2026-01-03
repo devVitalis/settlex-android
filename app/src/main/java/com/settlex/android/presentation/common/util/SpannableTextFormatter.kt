@@ -23,7 +23,7 @@ object SpannableTextFormatter {
         context: Context,
         text: String,
         target: String,
-        @ColorInt color: Int = ContextCompat.getColor(context, R.color.text_accent),
+        @ColorInt color: Int = ContextCompat.getColor(context, R.color.colorPrimary),
         setBold: Boolean = false,
         setUnderline: Boolean = false
     ): SpannableString {

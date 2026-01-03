@@ -57,7 +57,7 @@ class CreatePasswordActivity : AppCompatActivity() {
     }
 
     private fun initViews() {
-        StatusBar.setColor(this, R.color.background_primary)
+        StatusBar.setColor(this, R.color.colorBackground)
         updateUiFromIntent()
         setupListeners()
         setupInputValidation()

@@ -177,7 +177,7 @@ class CreatePaymentIdActivity : AppCompatActivity() {
     }
 
     private fun setupInputFocusHandler() = with(binding) {
-        val defaultRes = R.drawable.bg_edit_txt_custom_white_not_focused
+        val defaultRes = R.drawable.bg_input_field_outlined
         val focusedRes = R.drawable.bg_edit_txt_custom_white_focused
 
         EditTextFocusBackgroundChanger(
@@ -227,7 +227,7 @@ class CreatePaymentIdActivity : AppCompatActivity() {
     private fun validatePaymentIdRuleSet(paymentId: String) {
         // Cache drawables and colors
         val validBg = ContextCompat.getDrawable(this, R.drawable.bg_8dp_green_light)
-        val invalidBg = ContextCompat.getDrawable(this, R.drawable.bg_8dp_gray_light)
+        val invalidBg = ContextCompat.getDrawable(this, R.drawable.bg_surface_rounded8)
 
         val validIcon = ColorStateList.valueOf(ContextCompat.getColor(this, R.color.green_500))
         val invalidIcon = ColorStateList.valueOf(ContextCompat.getColor(this, R.color.gray_500))

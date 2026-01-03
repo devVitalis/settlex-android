@@ -81,7 +81,7 @@
                     android:layout_width="match_parent"
                     android:layout_height="55dp"
                     android:layout_marginTop="5dp"
-                    android:background="@drawable/bg_edit_txt_custom_gray_not_focused"
+                    android:background="@drawable/bg_input_field_filled"
                     android:orientation="horizontal">
 
                     <EditText
@@ -256,7 +256,7 @@
                     android:layout_width="match_parent"
                     android:layout_height="55dp"
                     android:layout_marginTop="5dp"
-                    android:background="@drawable/bg_edit_txt_custom_gray_not_focused">
+                    android:background="@drawable/bg_input_field_filled">
 
                     <TextView
                         android:id="@+id/naira"
@@ -335,7 +335,7 @@
                     android:layout_width="match_parent"
                     android:layout_height="55dp"
                     android:layout_marginTop="5dp"
-                    android:background="@drawable/bg_edit_txt_custom_gray_not_focused">
+                    android:background="@drawable/bg_input_field_filled">
 
                     <EditText
                         android:id="@+id/edit_txt_description"

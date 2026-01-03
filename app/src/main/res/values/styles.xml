@@ -19,7 +19,7 @@
 
     <!-- Buttons -->
     <style name="Widget.SettleX.Button.Filled" parent="Widget.Material3.Button">
-        <item name="backgroundTint">@color/btn_filled_color_selector_blue</item>
+        <item name="backgroundTint">@color/btn_bg_primary_selector</item>
         <item name="android:textColor">@color/white</item>
         <item name="android:fontFamily">sans-serif</item>
         <item name="android:includeFontPadding">false</item>
@@ -36,10 +36,11 @@
     </style>
 
     <style name="Widget.SettleX.Button.Filled.Rounded8" parent="Widget.Material3.Button">
-        <item name="backgroundTint">@color/btn_filled_color_selector_blue</item>
-        <item name="android:textColor">@color/white</item>
+        <item name="backgroundTint">@color/btn_bg_primary_selector</item>
+        <item name="android:textColor">@color/colorOnPrimary</item>
         <item name="android:fontFamily">sans-serif</item>
         <item name="android:includeFontPadding">false</item>
+        <item name="android:textSize">14sp</item>
         <item name="android:textAllCaps">false</item>
         <item name="shapeAppearance">@style/ShapeAppearance.SettleX.Rounded.8dp</item>
     </style>
@@ -66,6 +67,7 @@
         <item name="strokeColor">@color/btn_outlined_color_selector</item>
         <item name="android:fontFamily">sans-serif</item>
         <item name="android:includeFontPadding">false</item>
+        <item name="android:textSize">14sp</item>
         <item name="android:textAllCaps">false</item>
     </style>
 
@@ -83,33 +85,31 @@
 
     <!-- Check box -->
     <style name="Widget.SettleX.CheckBox" parent="Widget.Material3.CompoundButton.CheckBox">
-        <item name="buttonTint">@color/checkbox_color_selector_blue</item>
-        <item name="android:textColor">@color/text_primary</item>
-        <item name="android:textSize">12sp</item>
+        <item name="buttonTint">@color/checkbox_color_selector</item>
+        <item name="android:textColor">@color/colorOnBackground</item>
     </style>
 
     <!-- TextInputLayout  -->
     <style name="Widget.SettleX.TextInputLayout.Outlined" parent="Widget.Material3.TextInputLayout.OutlinedBox">
-        <item name="boxBackgroundColor">@color/background_primary</item>
-        <item name="boxStrokeColor">@color/text_input_layout_stroke_color_selector</item>
+        <item name="boxBackgroundColor">@color/colorBackground</item>
+        <item name="boxStrokeColor">@color/til_outline_color_selector</item>
         <item name="strokeWidth">0.5dp</item>
         <item name="shapeAppearance">@style/ShapeAppearance.SettleX.Rounded.8dp</item>
         <item name="fontFamily">@font/inter_regular</item>
-        <item name="boxStrokeErrorColor">@color/red_500</item>
-        <item name="endIconTint">@color/icon_primary</item>
-        <item name="android:textColor">@color/black</item>
-        <item name="height">55dp</item>
-        <item name="android:textColorHint">@color/text_secondary</item>
-        <item name="hintTextColor">@color/text_input_layout_hint_color_selector</item>
+        <item name="boxStrokeErrorColor">@color/colorError</item>
+        <item name="endIconTint">@color/colorOnSurfaceVariant</item>
+        <item name="android:textColor">@color/colorOnBackground</item>
+        <item name="android:textColorHint">@color/colorOnSurfaceVariant</item>
+        <item name="hintTextColor">@color/til_hint_color_selector</item>
         <item name="android:includeFontPadding">false</item>
     </style>
 
     <!-- EditText  -->
     <style name="Widget.SettleX.TextInputEditText.Outlined" parent="ThemeOverlay.Material3.TextInputEditText.OutlinedBox">
         <item name="fontFamily">@font/inter_regular</item>
-        <item name="android:textColor">@color/text_primary</item>
+        <item name="android:textColor">@color/colorOnBackground</item>
         <item name="android:includeFontPadding">false</item>
-        <item name="hintTextColor">@color/text_secondary</item>
+        <item name="hintTextColor">@color/colorOnSurfaceVariant</item>
         <item name="android:textSize">16sp</item>
     </style>
 
@@ -117,7 +117,7 @@
         <item name="fontFamily">@font/inter_regular</item>
         <item name="android:textColor">@color/black</item>
         <item name="android:includeFontPadding">false</item>
-        <item name="hintTextColor">@color/text_secondary</item>
+        <item name="hintTextColor">@color/colorOnSurfaceVariant</item>
         <item name="android:textSize">16sp</item>
     </style>
 
@@ -126,14 +126,14 @@
         <item name="fontFamily">@font/inter_bold</item>
         <item name="android:textStyle">bold</item>
         <item name="background">?attr/selectableItemBackground</item>
-        <item name="android:textColor">@color/text_primary</item>
+        <item name="android:textColor">@color/colorOnBackground</item>
         <item name="android:textSize">25sp</item>
         <item name="android:includeFontPadding">false</item>
     </style>
 
     <style name="Widget.SettleX.TextRegular" parent="Widget.AppCompat.TextView">
         <item name="fontFamily">@font/inter_regular</item>
-        <item name="android:textColor">@color/text_primary</item>
+        <item name="android:textColor">@color/colorOnBackground</item>
         <item name="android:textSize">14sp</item>
         <item name="background">?attr/selectableItemBackground</item>
         <item name="android:includeFontPadding">false</item>
@@ -141,7 +141,7 @@
 
     <style name="Widget.SettleX.TextError" parent="Widget.AppCompat.TextView">
         <item name="fontFamily">@font/inter_regular</item>
-        <item name="android:textColor">@color/text_error</item>
+        <item name="android:textColor">@color/colorError</item>
         <item name="android:textSize">14sp</item>
         <item name="background">?attr/selectableItemBackground</item>
         <item name="android:includeFontPadding">false</item>
@@ -155,9 +155,9 @@
         <item name="itemRadius">8dp</item>
         <item name="android:cursorVisible">true</item>
         <item name="cursorColor">@color/gray_200</item>
-        <item name="lineColor">@color/pin_box_line_color_selector</item>
+        <item name="lineColor">@color/pinview_outline_selector</item>
         <item name="lineWidth">1dp</item>
-        <item name="android:itemBackground">@drawable/pin_box_bg</item>
+        <item name="android:itemBackground">@drawable/bg_pinview</item>
         <item name="itemWidth">48dp</item>
         <item name="itemHeight">48dp</item>
     </style>
@@ -205,11 +205,11 @@
 
     <!-- Dialog -->
     <style name="Theme_SettleX_Dialog_BottomSheet" parent="ThemeOverlay.Material3.BottomSheetDialog">
-        <item name="android:backgroundTint">@color/background_primary</item>
+        <item name="android:backgroundTint">@color/colorBackground</item>
     </style>
 
     <style name="Theme_SettleX_Dialog_Alert" parent="MaterialAlertDialog.Material3">
-        <item name="android:backgroundTint">@color/background_primary</item>
+        <item name="android:backgroundTint">@color/colorBackground</item>
     </style>
 
     <style name="Theme_SettleX_Dialog_Alert_Rounded16dp" parent="MaterialAlertDialog.Material3">

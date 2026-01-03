@@ -4,7 +4,6 @@ import android.content.Intent
 import android.os.Bundle
 import android.os.CountDownTimer
 import android.view.MotionEvent
-import android.view.View
 import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.widget.doOnTextChanged
@@ -19,11 +18,9 @@ import com.settlex.android.presentation.auth.AuthViewModel
 import com.settlex.android.presentation.auth.util.PasswordFlow
 import com.settlex.android.presentation.auth.util.PasswordFlowParser
 import com.settlex.android.presentation.common.extensions.gone
-import com.settlex.android.presentation.common.extensions.maskEmail
 import com.settlex.android.presentation.common.extensions.show
 import com.settlex.android.presentation.common.state.UiState
 import com.settlex.android.presentation.common.util.KeyboardHelper
-import com.settlex.android.util.string.StringFormatter
 import com.settlex.android.util.ui.ProgressDialogManager
 import com.settlex.android.util.ui.StatusBar
 import dagger.hilt.android.AndroidEntryPoint
@@ -58,8 +55,7 @@ class OtpVerificationActivity : AppCompatActivity() {
     }
 
     private fun initViews() {
-        StatusBar.setColor(this, R.color.background_primary)
-        updateUiFromIntent()
+        StatusBar.setColor(this, R.color.colorBackground)
         setupListeners()
         setupInputWatcher()
         startOtpResendCooldownTimer()
@@ -69,21 +65,6 @@ class OtpVerificationActivity : AppCompatActivity() {
         btnBackBefore.setOnClickListener { finish() }
         btnResendOtp.setOnClickListener { resendVerificationCode() }
         btnConfirm.setOnClickListener { onConfirmButtonClicked() }
-
-        btnHelp.setOnClickListener {
-            StringFormatter.showNotImplementedToast(
-                this@OtpVerificationActivity
-            )
-        }
-    }
-
-    private fun updateUiFromIntent() = with(binding) {
-        btnHelp.visibility = when (passwordFlow) {
-            is PasswordFlow.Forgot -> View.VISIBLE
-            is PasswordFlow.Change -> View.GONE
-            is PasswordFlow.AuthenticatedReset -> View.GONE
-        }
-        tvUserEmail.text = userEmail.maskEmail()
     }
 
     // Observers

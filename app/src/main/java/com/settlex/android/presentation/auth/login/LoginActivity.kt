@@ -25,9 +25,7 @@ import com.settlex.android.presentation.common.extensions.gone
 import com.settlex.android.presentation.common.extensions.show
 import com.settlex.android.presentation.common.state.UiState
 import com.settlex.android.presentation.common.util.DialogHelper
-import com.settlex.android.presentation.common.util.EditTextFocusBackgroundChanger
 import com.settlex.android.presentation.common.util.KeyboardHelper
-import com.settlex.android.presentation.common.util.PasswordToggleController
 import com.settlex.android.presentation.common.util.SpannableTextFormatter
 import com.settlex.android.presentation.dashboard.DashboardActivity
 import com.settlex.android.util.string.StringFormatter
@@ -56,23 +54,22 @@ class LoginActivity : AppCompatActivity() {
     }
 
     private fun initViews() = with(binding) {
-        StatusBar.setColor(this@LoginActivity, R.color.background_primary)
+        StatusBar.setColor(this@LoginActivity, R.color.colorBackground)
         setupInputValidation()
-        setupFocusBackgroundChanger()
         keyboardHelper.attachDoneAction(editText = etPassword)
 
         tvSwitchAccount.text = SpannableTextFormatter(
             this@LoginActivity,
             "Not you?\nSwitch Account",
             "Switch Account",
-            ContextCompat.getColor(this@LoginActivity, R.color.text_accent)
+            ContextCompat.getColor(this@LoginActivity, R.color.colorPrimary)
         )
 
         tvSignUp.text = SpannableTextFormatter(
             this@LoginActivity,
             "Don't have an account yet?\nClick here to register",
             "Click here to register",
-            ContextCompat.getColor(this@LoginActivity, R.color.text_accent)
+            ContextCompat.getColor(this@LoginActivity, R.color.colorPrimary)
         )
     }
 
@@ -82,34 +79,21 @@ class LoginActivity : AppCompatActivity() {
 
     private fun initListeners() = with(binding) {
         tvForgotPassword.setOnClickListener {
-            toActivity(
+            launchActivity(
                 ForgotPasswordActivity::class.java
             )
         }
         btnBackBefore.setOnClickListener { onBackPressedDispatcher.onBackPressed() }
-        tvSwitchAccount.setOnClickListener { showUnauthenticatedUi() }
+        tvSwitchAccount.setOnClickListener { showLoggedOutView() }
         ivFingerprint.setOnClickListener { authenticateWithBiometrics() }
-
-        btnTogglePassword.setOnClickListener {
-            PasswordToggleController(
-                etPassword,
-                btnTogglePassword
-            )
-        }
-
-        btnSignIn.setOnClickListener { attemptLogin() }
-        tvSignUp.setOnClickListener {
-            toActivity(
-                RegisterActivity::class.java
-            )
-        }
-
+        tvSignUp.setOnClickListener { launchActivity(RegisterActivity::class.java) }
+        btnSignIn.setOnClickListener { tryLogin() }
     }
 
     private fun syncUserStateWithUI() {
         val state = viewModel.userState.value
         when (state) {
-            is LoginState.LoggedOut -> showUnauthenticatedUi()
+            is LoginState.LoggedOut -> showLoggedOutView()
             is LoginState.LoggedInUser -> {
                 showLoggedUser(state)
 
@@ -139,27 +123,27 @@ class LoginActivity : AppCompatActivity() {
             tvUserEmail.text = formattedEmail
             etEmail.setText(user.email)
 
-            viewLoggedInUi.show()
+            viewAuthenticatedUi.show()
             tvSwitchAccount.show()
 
-            ivLogo.gone()
-            tilEmail.gone()
-            tvSignUp.gone()
+            listOf(ivLogo, tilEmail, tvSignUp).forEach { it.gone() }
         }
     }
 
-    private fun showUnauthenticatedUi() {
+    private fun showLoggedOutView() = with(binding) {
         viewModel.logout()
 
-        with(binding) {
-            viewLoggedInUi.gone()
-            ivFingerprint.gone()
-            tvSwitchAccount.gone()
+        listOf(
+            viewAuthenticatedUi,
+            ivFingerprint,
+            tvSwitchAccount
+        ).forEach { it.gone() }
 
-            tilEmail.show()
-            tvSignUp.show()
-            ivLogo.show()
-        }
+        listOf(
+            tilEmail,
+            tvSignUp,
+            ivLogo
+        ).forEach { it.show() }
     }
 
     // Observers
@@ -189,12 +173,12 @@ class LoginActivity : AppCompatActivity() {
         progressLoader.hide()
     }
 
-    private fun onLoginFailure(error: AppException) {
+    private fun onLoginFailure(error: AppException) = with(binding) {
         when (error) {
             is AppException.NetworkException -> showNetworkErrorDialog(error)
             else -> {
-                binding.tvLoginError.text = error.message
-                binding.tvLoginError.show()
+                tvLoginError.text = error.message
+                tvLoginError.show()
             }
         }
 
@@ -216,7 +200,7 @@ class LoginActivity : AppCompatActivity() {
         }
     }
 
-    private fun attemptLogin() = with(binding) {
+    private fun tryLogin() = with(binding) {
         val email = etEmail.text.toString().trim()
         val password = etPassword.text.toString().trim()
 
@@ -228,7 +212,7 @@ class LoginActivity : AppCompatActivity() {
             val biometric = BiometricAuthManager(
                 this, this, object : BiometricAuthCallback {
                     override fun onAuthenticated() {
-                        toActivity(DashboardActivity::class.java)
+                        launchActivity(DashboardActivity::class.java)
                     }
 
                     override fun onError(message: String?) {}
@@ -238,18 +222,8 @@ class LoginActivity : AppCompatActivity() {
         }
     }
 
-    private fun toActivity(activityClass: Class<out Activity>) {
+    private fun launchActivity(activityClass: Class<out Activity>) {
         startActivity(Intent(this, activityClass))
-    }
-
-    private fun setupFocusBackgroundChanger() {
-        with(binding) {
-            EditTextFocusBackgroundChanger(
-                defaultBackgroundResource = R.drawable.bg_edit_txt_custom_gray_not_focused,
-                focusedBackgroundResource = R.drawable.bg_edit_txt_custom_white_focused,
-                etPassword to etPasswordBackground
-            )
-        }
     }
 
     private fun updateSignInButtonState() = with(binding) {
@@ -274,9 +248,6 @@ class LoginActivity : AppCompatActivity() {
             }
 
             override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int) {
-                val password = etPassword.text.toString().trim()
-                if (password.isNotEmpty()) btnTogglePassword.show() else btnTogglePassword.gone()
-
                 tvLoginError.gone()
                 updateSignInButtonState()
             }

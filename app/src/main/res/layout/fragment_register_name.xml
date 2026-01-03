@@ -5,61 +5,29 @@
     android:id="@+id/main"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@color/white"
+    android:background="@color/colorBackground"
     android:fitsSystemWindows="true"
     tools:context=".presentation.auth.register.RegisterNameFragment">
 
-    <androidx.constraintlayout.widget.ConstraintLayout
+    <LinearLayout
         android:id="@+id/header"
         android:layout_width="0dp"
         android:layout_height="35dp"
+        android:gravity="center_vertical"
+        android:orientation="horizontal"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent">
 
-        <ImageView
+        <com.google.android.material.imageview.ShapeableImageView
             android:id="@+id/btn_back_before"
             android:layout_width="20dp"
             android:layout_height="20dp"
             android:layout_marginStart="15dp"
             android:background="?attr/selectableItemBackgroundBorderless"
-            android:contentDescription="@string/cd_back_before"
-            android:scaleType="centerCrop"
             android:src="@drawable/ic_arrow_back"
-            app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent" />
-
-        <LinearLayout
-            android:id="@+id/btn_help"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginEnd="15dp"
-            android:background="@drawable/bg_24dp_blue"
-            android:gravity="center"
-            android:orientation="horizontal"
-            android:paddingHorizontal="5dp"
-            android:paddingVertical="2dp"
-            app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintTop_toTopOf="parent">
-
-            <ImageView
-                android:layout_width="15dp"
-                android:layout_height="15dp"
-                android:contentDescription="@null"
-                android:src="@drawable/ic_help" />
-
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:fontFamily="@font/inter_regular"
-                android:includeFontPadding="false"
-                android:text="@string/tv_help"
-                android:textColor="@color/white"
-                android:textSize="12sp" />
-        </LinearLayout>
-    </androidx.constraintlayout.widget.ConstraintLayout>
+            app:tint="@color/colorOnBackground" />
+    </LinearLayout>
 
     <ScrollView
         android:layout_width="0dp"
@@ -78,7 +46,6 @@
             android:paddingStart="15dp"
             android:paddingEnd="15dp">
 
-
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
@@ -87,15 +54,11 @@
                 android:orientation="horizontal">
 
                 <TextView
+                    style="@style/Widget.SettleX.TextBold"
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
                     android:layout_weight="1"
-                    android:fontFamily="@font/inter_bold"
-                    android:includeFontPadding="false"
-                    android:text="@string/title_let_s_get_to_know_you"
-                    android:textColor="@color/black"
-                    android:textSize="25sp"
-                    android:textStyle="bold" />
+                    android:text="@string/title_let_s_get_to_know_you" />
 
                 <!-- Step progress -->
                 <FrameLayout
@@ -112,26 +75,20 @@
 
                     <TextView
                         android:id="@+id/progress_text"
+                        style="@style/Widget.SettleX.TextRegular"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_gravity="center"
-                        android:fontFamily="@font/inter_regular"
-                        android:includeFontPadding="false"
-                        android:text="@string/tv_step_3_of_4"
-                        android:textColor="@android:color/black"
-                        android:textSize="13sp" />
+                        android:text="@string/tv_step_3_of_4" />
                 </FrameLayout>
             </LinearLayout>
 
             <TextView
+                style="@style/Widget.SettleX.TextRegular"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_gravity="start"
-                android:fontFamily="@font/inter_regular"
-                android:includeFontPadding="false"
-                android:text="@string/subtitle_what_should_we_call_you"
-                android:textColor="@color/black"
-                android:textSize="15sp" />
+                android:text="@string/subtitle_what_should_we_call_you" />
 
             <!-- Firstname field -->
             <com.google.android.material.textfield.TextInputLayout
@@ -196,7 +153,6 @@
             android:layout_height="55dp"
             android:layout_gravity="center"
             android:enabled="false"
-            android:text="@string/btn_continue"
-            android:textSize="14sp" />
+            android:text="@string/btn_continue" />
     </LinearLayout>
 </androidx.constraintlayout.widget.ConstraintLayout>

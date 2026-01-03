@@ -77,7 +77,7 @@ class RegisterContactFragment : Fragment() {
     }
 
     private fun initViews() {
-        StatusBar.setColor(requireActivity(), R.color.background_primary)
+        StatusBar.setColor(requireActivity(), R.color.colorBackground)
         setupListeners()
         setupLegalLinks()
         setupInputValidation()
@@ -120,13 +120,11 @@ class RegisterContactFragment : Fragment() {
         progressLoader.hide()
     }
 
-    private fun onOtpSendFailure(error: AppException) {
-        with(binding) {
-            tvError.text = error.message
-            tvError.show()
+    private fun onOtpSendFailure(error: AppException) = with(binding) {
+        tvError.text = error.message
+        tvError.show()
 
-            progressLoader.hide()
-        }
+        progressLoader.hide()
     }
 
     private fun onContinueClicked() = with(binding) {
@@ -136,26 +134,21 @@ class RegisterContactFragment : Fragment() {
         val phone = etPhone.text.toString().trim()
 
         registerViewModel.updateContact(email, phone.toNigerianPhoneNumber())
-//        sendVerificationCode(email)
-        onOtpSent()
+        sendVerificationCode(email)
     }
 
     private fun sendVerificationCode(email: String) {
         authViewModel.sendVerificationCode(email, OtpType.EMAIL_VERIFICATION)
     }
 
-    private fun setupFocusHandlers() {
-        with(binding) {
-            val focusBgRes = R.drawable.bg_edit_txt_custom_white_focused
-            val defaultBgRes = R.drawable.bg_edit_txt_custom_white_not_focused
-
-            EditTextFocusBackgroundChanger(
-                defaultBackgroundResource = defaultBgRes,
-                focusedBackgroundResource = focusBgRes,
-                etEmail to etEmailBackground,
-                etPhone to etPhoneBackground,
-            )
-        }
+    private fun setupFocusHandlers() = with(binding) {
+        val focusBgRes = R.drawable.bg_edit_txt_custom_white_focused
+        val defaultBgRes = R.drawable.bg_input_field_outlined
+        EditTextFocusBackgroundChanger(
+            defaultBackgroundResource = defaultBgRes,
+            focusedBackgroundResource = focusBgRes,
+            etPhone to etPhoneBackground,
+        )
     }
 
     private fun setupInputValidation() = with(binding) {
@@ -226,7 +219,7 @@ class RegisterContactFragment : Fragment() {
             }
 
             override fun updateDrawState(textPaint: TextPaint) {
-                textPaint.color = ContextCompat.getColor(requireContext(), R.color.text_accent)
+                textPaint.color = ContextCompat.getColor(requireContext(), R.color.colorPrimary)
                 textPaint.isUnderlineText = true
             }
         }

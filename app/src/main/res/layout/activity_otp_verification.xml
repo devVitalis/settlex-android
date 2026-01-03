@@ -5,7 +5,7 @@
     android:id="@+id/main"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@color/background_primary"
+    android:background="@color/colorBackground"
     android:fitsSystemWindows="true"
     android:orientation="vertical"
     tools:context=".presentation.auth.forgot_password.OtpVerificationActivity">
@@ -25,7 +25,7 @@
             android:contentDescription="@string/cd_back_before"
             android:scaleType="centerCrop"
             android:src="@drawable/ic_arrow_back"
-            android:tint="@color/icon_primary"
+            android:tint="@color/colorOnBackground"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent" />
@@ -42,42 +42,13 @@
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent" />
 
-        <LinearLayout
-            android:id="@+id/btn_help"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginEnd="15dp"
-            android:background="@drawable/bg_24dp_blue"
-            android:gravity="center"
-            android:orientation="horizontal"
-            android:paddingHorizontal="5dp"
-            android:paddingVertical="2dp"
-            app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintTop_toTopOf="parent">
-
-            <ImageView
-                android:layout_width="15dp"
-                android:layout_height="15dp"
-                android:contentDescription="@null"
-                android:src="@drawable/ic_help" />
-
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:fontFamily="@font/inter_regular"
-                android:includeFontPadding="false"
-                android:text="@string/tv_help"
-                android:textColor="@color/white"
-                android:textSize="12sp" />
-        </LinearLayout>
     </androidx.constraintlayout.widget.ConstraintLayout>
 
     <ScrollView
         android:layout_width="match_parent"
         android:layout_height="0dp"
         android:layout_weight="1"
-        android:background="@color/background_secondary"
+        android:background="@color/colorSurface"
         android:fillViewport="true"
         android:scrollbars="none">
 
@@ -91,7 +62,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="20dp"
-                android:background="@drawable/bg_8dp_white"
+                android:background="@drawable/bg_rounded8"
                 android:orientation="vertical"
                 android:padding="10dp">
 
@@ -124,7 +95,7 @@
                         style="@style/Widget.SettleX.TextRegular"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:textColor="@color/text_accent"
+                        android:textColor="@color/colorPrimary"
                         android:textSize="15sp"
                         android:textStyle="bold"
                         app:layout_constraintStart_toStartOf="parent"
@@ -139,7 +110,7 @@
                         app:layout_constraintBottom_toBottomOf="parent"
                         app:layout_constraintEnd_toEndOf="parent"
                         app:layout_constraintTop_toTopOf="parent"
-                        app:tint="@color/icon_secondary" />
+                        app:tint="@color/colorPrimary" />
                 </androidx.constraintlayout.widget.ConstraintLayout>
 
                 <com.chaos.view.PinView
@@ -168,7 +139,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="10dp"
-                android:background="@drawable/bg_8dp_white"
+                android:background="@drawable/bg_rounded8"
                 android:gravity="center_vertical"
                 android:orientation="horizontal"
                 android:paddingHorizontal="10dp"
@@ -187,10 +158,8 @@
                     android:layout_height="40dp"
                     android:layout_gravity="center"
                     android:layout_marginStart="5dp"
-                    android:paddingHorizontal="0dp"
-                    android:paddingVertical="0dp"
-                    android:text="@string/btn_resend"
-                    android:textSize="14sp" />
+                    android:padding="0dp"
+                    android:text="@string/btn_resend" />
             </LinearLayout>
 
             <com.google.android.material.button.MaterialButton

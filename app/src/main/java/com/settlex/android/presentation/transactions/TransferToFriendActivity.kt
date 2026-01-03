@@ -385,39 +385,39 @@ class TransferToFriendActivity : AppCompatActivity() {
     }
 
     private fun setupFocusHandlers() = with(binding) {
-        editTxtPaymentId.setOnFocusChangeListener { _, hasFocus ->
-            editTxtPaymentIdBackground.setBackgroundResource(
-                if (hasFocus) R.drawable.bg_edit_txt_custom_white_focused else R.drawable.bg_edit_txt_custom_gray_not_focused
-            )
-        }
-
-        editTxtDescription.setOnFocusChangeListener { _, hasFocus ->
-            editTxtDescriptionBackground.setBackgroundResource(
-                if (hasFocus) R.drawable.bg_edit_txt_custom_white_focused else R.drawable.bg_edit_txt_custom_gray_not_focused
-            )
-        }
-
-        editTxtAmount.setOnFocusChangeListener { _, hasFocus ->
-            editTxtAmountBackground.setBackgroundResource(
-                if (hasFocus) R.drawable.bg_edit_txt_custom_white_focused else R.drawable.bg_edit_txt_custom_gray_not_focused
-            )
+//        editTxtPaymentId.setOnFocusChangeListener { _, hasFocus ->
+//            editTxtPaymentIdBackground.setBackgroundResource(
+//                if (hasFocus) R.drawable.bg_edit_txt_custom_white_focused else R.drawable.`bg_input_field_filled.xml`
+//            )
+//        }
+//
+//        editTxtDescription.setOnFocusChangeListener { _, hasFocus ->
+//            editTxtDescriptionBackground.setBackgroundResource(
+//                if (hasFocus) R.drawable.bg_edit_txt_custom_white_focused else R.drawable.`bg_input_field_filled.xml`
+//            )
+//        }
+//
+//        editTxtAmount.setOnFocusChangeListener { _, hasFocus ->
+//            editTxtAmountBackground.setBackgroundResource(
+//                if (hasFocus) R.drawable.bg_edit_txt_custom_white_focused else R.drawable.`bg_input_field_filled.xml`
+//            )
 
             val rawInput = editTxtAmount.text.toString().trim()
-            if (rawInput.isEmpty()) return@setOnFocusChangeListener
+            if (rawInput.isEmpty()) return
 
             val numericValue = editTxtAmount.toBigDecimalSafe()
 
-            if (hasFocus) {
-                val cleanNumber = numericValue.toPlainString()
-                editTxtAmount.setText(cleanNumber)
-                editTxtAmount.setSelection(cleanNumber.length)
-                return@setOnFocusChangeListener
-            }
+//            if (hasFocus) {
+//                val cleanNumber = numericValue.toPlainString()
+//                editTxtAmount.setText(cleanNumber)
+//                editTxtAmount.setSelection(cleanNumber.length)
+//                return@setOnFocusChangeListener
+//            }
 
             val currencyFormat = CurrencyFormatter.formatToCurrency(numericValue)
             editTxtAmount.setText(currencyFormat)
             editTxtAmount.setSelection(currencyFormat.length)
-        }
+//        }
     }
 
     private fun setupDescriptionDoneAction() {

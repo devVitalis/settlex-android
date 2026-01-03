@@ -5,7 +5,7 @@
     android:id="@+id/main"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@color/background_primary"
+    android:background="@color/colorBackground"
     android:fitsSystemWindows="true"
     tools:context=".presentation.auth.login.LoginActivity">
 
@@ -27,7 +27,7 @@
             android:background="?attr/selectableItemBackgroundBorderless"
             android:contentDescription="@string/cd_back_before"
             android:src="@drawable/ic_arrow_back"
-            app:tint="@color/icon_primary" />
+            app:tint="@color/colorOnBackground" />
     </LinearLayout>
 
     <ScrollView
@@ -56,7 +56,7 @@
                 android:src="@mipmap/ic_launcher" />
 
             <LinearLayout
-                android:id="@+id/view_logged_in_ui"
+                android:id="@+id/view_authenticated_ui"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginVertical="20dp"
@@ -109,35 +109,25 @@
                     android:inputType="textEmailAddress" />
             </com.google.android.material.textfield.TextInputLayout>
 
-            <FrameLayout
-                android:id="@+id/et_password_background"
+            <com.google.android.material.textfield.TextInputLayout
+                style="@style/Widget.SettleX.TextInputLayout.Outlined"
                 android:layout_width="match_parent"
-                android:layout_height="55dp"
+                android:layout_height="wrap_content"
                 android:layout_marginTop="10dp"
-                android:background="@drawable/bg_edit_txt_custom_gray_not_focused">
+                app:endIconMode="password_toggle"
+                app:hintEnabled="false">
 
                 <com.google.android.material.textfield.TextInputEditText
                     android:id="@+id/et_password"
                     style="@style/Widget.SettleX.TextInputEditText.Outlined"
                     android:layout_width="match_parent"
-                    android:layout_height="match_parent"
-                    android:background="@android:color/transparent"
+                    android:layout_height="55dp"
+                    android:background="@drawable/bg_input_field_filled"
                     android:hint="@string/hint_enter_your_password"
                     android:imeOptions="actionDone"
                     android:inputType="textPassword"
                     android:paddingHorizontal="15dp" />
-
-                <com.google.android.material.imageview.ShapeableImageView
-                    android:id="@+id/btn_toggle_password"
-                    android:layout_width="25dp"
-                    android:layout_height="25dp"
-                    android:layout_gravity="end|center_vertical"
-                    android:layout_marginEnd="12dp"
-                    android:background="?attr/selectableItemBackgroundBorderless"
-                    android:src="@drawable/ic_visibility_off_filled"
-                    android:visibility="gone"
-                    app:tint="@color/icon_tint" />
-            </FrameLayout>
+            </com.google.android.material.textfield.TextInputLayout>
 
             <TextView
                 android:id="@+id/tv_login_error"
@@ -157,7 +147,7 @@
                 android:layout_gravity="end"
                 android:layout_marginTop="10dp"
                 android:text="@string/tv_forgot_password"
-                android:textColor="@color/text_accent" />
+                android:textColor="@color/colorPrimary" />
 
             <LinearLayout
                 android:layout_width="match_parent"
@@ -185,7 +175,7 @@
                     android:src="@drawable/ic_fingerprint"
                     app:contentPadding="10dp"
                     app:shapeAppearanceOverlay="@style/ShapeAppearance.SettleX.Circular"
-                    app:tint="@color/icon_secondary" />
+                    app:tint="@color/colorPrimary" />
             </LinearLayout>
 
             <Space

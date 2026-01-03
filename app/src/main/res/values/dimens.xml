@@ -1,5 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <dimen name="dp_87">87dp</dimen>
-    <dimen name="dp_5">5dp</dimen>
+    <dimen name="page_indicator_width">87dp</dimen>
+    <dimen name="page_indicator_height">5dp</dimen>
+    <dimen name="corner_radius_small">4dp</dimen>
+    <dimen name="corner_radius_medium">8dp</dimen>
+    <dimen name="corner_radius_large">16dp</dimen>
 </resources>
