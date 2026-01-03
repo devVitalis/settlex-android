@@ -43,7 +43,7 @@
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="0dp"
-        android:background="@color/gray_light"
+        android:background="@color/gray_200"
         android:orientation="vertical"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
@@ -127,7 +127,7 @@
                             android:includeFontPadding="false"
                             android:paddingHorizontal="8dp"
                             android:paddingVertical="2dp"
-                            android:textColor="@color/green"
+                            android:textColor="@color/green_500"
                             android:textSize="13sp"
                             tools:background="@drawable/bg_3dp_green_light"
                             tools:text="Success" />
@@ -177,7 +177,7 @@
                             android:fontFamily="@font/inter_regular"
                             android:includeFontPadding="false"
                             android:text="Date/Time"
-                            android:textColor="@color/gray"
+                            android:textColor="@color/gray_500"
                             android:textSize="14sp" />
 
                         <TextView
@@ -209,7 +209,7 @@
                             android:fontFamily="@font/inter_regular"
                             android:includeFontPadding="false"
                             android:text="Sender"
-                            android:textColor="@color/gray"
+                            android:textColor="@color/gray_500"
                             android:textSize="14sp" />
 
                         <TextView
@@ -241,7 +241,7 @@
                             android:fontFamily="@font/inter_regular"
                             android:includeFontPadding="false"
                             android:text="Recipient"
-                            android:textColor="@color/gray"
+                            android:textColor="@color/gray_500"
                             android:textSize="14sp" />
 
                         <TextView
@@ -273,7 +273,7 @@
                             android:fontFamily="@font/inter_regular"
                             android:includeFontPadding="false"
                             android:text="Recipient Name"
-                            android:textColor="@color/gray"
+                            android:textColor="@color/gray_500"
                             android:textSize="14sp" />
 
                         <TextView
@@ -306,7 +306,7 @@
                             android:layout_marginEnd="10dp"
                             android:includeFontPadding="false"
                             android:text="Description"
-                            android:textColor="@color/gray"
+                            android:textColor="@color/gray_500"
                             android:textSize="14sp" />
 
                         <TextView
@@ -327,7 +327,7 @@
                         android:layout_width="match_parent"
                         android:layout_height="1dp"
                         android:layout_marginTop="15dp"
-                        app:dividerColor="@color/gray_light" />
+                        app:dividerColor="@color/gray_200" />
 
                     <LinearLayout
                         android:layout_width="match_parent"
@@ -343,7 +343,7 @@
                             android:fontFamily="@font/inter_regular"
                             android:includeFontPadding="false"
                             android:text="Transaction ID"
-                            android:textColor="@color/gray"
+                            android:textColor="@color/gray_500"
                             android:textSize="14sp" />
 
                         <TextView

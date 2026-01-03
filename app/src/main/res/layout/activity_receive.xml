@@ -43,7 +43,7 @@
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="0dp"
-        android:background="@color/gray_light"
+        android:background="@color/gray_200"
         android:orientation="vertical"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
@@ -65,7 +65,7 @@
                 android:fontFamily="@font/inter_regular"
                 android:includeFontPadding="false"
                 android:text="SettleX Payment ID"
-                android:textColor="@color/gray"
+                android:textColor="@color/gray_500"
                 android:textSize="12sp" />
 
             <TextView

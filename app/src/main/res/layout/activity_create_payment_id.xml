@@ -39,7 +39,7 @@
                 android:layout_marginTop="10dp"
                 android:includeFontPadding="false"
                 android:text="This ID lets others send you money securely on SettleX. Once created, it can’t be changed"
-                android:textColor="@color/gray"
+                android:textColor="@color/gray_500"
                 android:textSize="14sp" />
 
             <FrameLayout
@@ -60,7 +60,7 @@
                     android:inputType="textPersonName"
                     android:paddingHorizontal="15dp"
                     android:textColor="@color/black"
-                    android:textColorHint="@color/gray"
+                    android:textColorHint="@color/gray_500"
                     android:textSize="14sp" />
 
                 <LinearLayout
@@ -76,7 +76,7 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:includeFontPadding="false"
-                        android:textColor="@color/green"
+                        android:textColor="@color/green_500"
                         android:textSize="13sp"
                         android:visibility="gone"
                         tools:text="Available" />
@@ -89,7 +89,7 @@
                         android:layout_marginStart="3dp"
                         android:contentDescription="@null"
                         android:src="@drawable/ic_check_circle"
-                        app:tint="@color/green" />
+                        app:tint="@color/green_500" />
 
                     <com.google.android.material.progressindicator.CircularProgressIndicator
                         android:id="@+id/payment_id_progress_bar"
@@ -125,7 +125,7 @@
                         android:layout_height="20dp"
                         android:contentDescription="@null"
                         android:src="@drawable/ic_check"
-                        app:tint="@color/gray" />
+                        app:tint="@color/gray_500" />
 
                     <TextView
                         android:id="@+id/txt_rule_start_with"
@@ -135,7 +135,7 @@
                         android:gravity="center_vertical"
                         android:includeFontPadding="false"
                         android:text="Starts with a letter"
-                        android:textColor="@color/gray"
+                        android:textColor="@color/gray_500"
                         android:textSize="13sp" />
                 </LinearLayout>
 
@@ -159,7 +159,7 @@
                         android:layout_height="20dp"
                         android:contentDescription="@null"
                         android:src="@drawable/ic_check"
-                        app:tint="@color/gray" />
+                        app:tint="@color/gray_500" />
 
                     <TextView
                         android:id="@+id/txt_rule_length"
@@ -169,7 +169,7 @@
                         android:gravity="center_vertical"
                         android:includeFontPadding="false"
                         android:text="Min &amp; Max 5-20 Characters"
-                        android:textColor="@color/gray"
+                        android:textColor="@color/gray_500"
                         android:textSize="13sp" />
                 </LinearLayout>
 
@@ -192,7 +192,7 @@
                         android:layout_height="20dp"
                         android:contentDescription="@null"
                         android:src="@drawable/ic_check"
-                        app:tint="@color/gray" />
+                        app:tint="@color/gray_500" />
 
                     <TextView
                         android:id="@+id/txt_rule_contains"
@@ -202,7 +202,7 @@
                         android:gravity="center_vertical"
                         android:includeFontPadding="false"
                         android:text="Only lowercase letters numbers and no space"
-                        android:textColor="@color/gray"
+                        android:textColor="@color/gray_500"
                         android:textSize="13sp" />
                 </LinearLayout>
             </androidx.constraintlayout.widget.ConstraintLayout>
@@ -224,7 +224,7 @@
                 android:gravity="center"
                 android:includeFontPadding="false"
                 android:textAlignment="center"
-                android:textColor="@color/red"
+                android:textColor="@color/red_500"
                 android:textSize="14sp"
                 android:visibility="gone"
                 tools:text="@string/error_no_internet" />

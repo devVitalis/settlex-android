@@ -34,7 +34,7 @@
     <ScrollView
         android:layout_width="match_parent"
         android:layout_height="0dp"
-        android:background="@color/gray_light"
+        android:background="@color/gray_200"
         android:fillViewport="true"
         android:scrollbars="none"
         app:layout_constraintBottom_toBottomOf="parent"
@@ -60,7 +60,7 @@
                     android:fontFamily="@font/inter_regular"
                     android:includeFontPadding="false"
                     android:text="Telecom &amp; Digital"
-                    android:textColor="@color/gray"
+                    android:textColor="@color/gray_500"
                     android:textSize="12sp" />
 
                 <androidx.recyclerview.widget.RecyclerView
@@ -87,7 +87,7 @@
                     android:fontFamily="@font/inter_regular"
                     android:includeFontPadding="false"
                     android:text="Entertainment"
-                    android:textColor="@color/gray"
+                    android:textColor="@color/gray_500"
                     android:textSize="12sp" />
 
                 <androidx.recyclerview.widget.RecyclerView
@@ -114,7 +114,7 @@
                     android:fontFamily="@font/inter_regular"
                     android:includeFontPadding="false"
                     android:text="Utilities &amp; Bills"
-                    android:textColor="@color/gray"
+                    android:textColor="@color/gray_500"
                     android:textSize="12sp" />
 
                 <androidx.recyclerview.widget.RecyclerView
@@ -141,7 +141,7 @@
                     android:fontFamily="@font/inter_regular"
                     android:includeFontPadding="false"
                     android:text="Travel &amp; Lifestyle"
-                    android:textColor="@color/gray"
+                    android:textColor="@color/gray_500"
                     android:textSize="12sp" />
 
                 <androidx.recyclerview.widget.RecyclerView

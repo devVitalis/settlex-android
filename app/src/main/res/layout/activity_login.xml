@@ -27,7 +27,7 @@
             android:background="?attr/selectableItemBackgroundBorderless"
             android:contentDescription="@string/cd_back_before"
             android:src="@drawable/ic_arrow_back"
-            app:tint="@color/icon_secondary" />
+            app:tint="@color/icon_primary" />
     </LinearLayout>
 
     <ScrollView
@@ -145,7 +145,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="5dp"
-                android:textColor="@color/red"
+                android:textColor="@color/red_500"
                 android:visibility="gone"
                 tools:text="error occurred" />
 
@@ -185,7 +185,7 @@
                     android:src="@drawable/ic_fingerprint"
                     app:contentPadding="10dp"
                     app:shapeAppearanceOverlay="@style/ShapeAppearance.SettleX.Circular"
-                    app:tint="@color/icon_primary" />
+                    app:tint="@color/icon_secondary" />
             </LinearLayout>
 
             <Space

@@ -65,7 +65,7 @@
                 android:fontFamily="@font/inter_regular"
                 android:includeFontPadding="false"
                 android:text="Last updated: October 2025"
-                android:textColor="@color/gray"
+                android:textColor="@color/gray_500"
                 android:textSize="14sp" />
 
             <TextView

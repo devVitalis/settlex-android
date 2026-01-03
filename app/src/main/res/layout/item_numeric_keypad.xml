@@ -3,7 +3,7 @@
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:layout_gravity="bottom"
-    android:background="@color/gray_light"
+    android:background="@color/gray_200"
     android:gravity="center"
     android:orientation="vertical"
     android:paddingTop="10dp">
@@ -28,7 +28,7 @@
             android:fontFamily="@font/inter_regular"
             android:includeFontPadding="false"
             android:text="SettleX Secure Numeric Keypad"
-            android:textColor="@color/gray"
+            android:textColor="@color/gray_500"
             android:textSize="11sp" />
     </LinearLayout>
 

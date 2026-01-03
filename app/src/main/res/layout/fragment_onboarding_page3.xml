@@ -60,7 +60,7 @@
         android:fontFamily="@font/inter_regular"
         android:text="Stay connected to your favorite TV and streaming services. Renew your subscriptions on time and keep the entertainment going."
         android:textAlignment="viewStart"
-        android:textColor="@color/gray"
+        android:textColor="@color/gray_500"
         android:textSize="14sp"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"

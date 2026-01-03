@@ -41,7 +41,7 @@
             android:layout_height="wrap_content"
             android:fontFamily="@font/poppins_regular"
             android:includeFontPadding="false"
-            android:textColor="@color/gray"
+            android:textColor="@color/gray_500"
             android:textSize="14sp"
             tools:text="\@vitalisdft" />
     </LinearLayout>

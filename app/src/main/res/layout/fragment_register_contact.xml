@@ -5,7 +5,7 @@
     android:id="@+id/main"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@color/white"
+    android:background="@color/background_primary"
     android:fitsSystemWindows="true"
     tools:context=".presentation.auth.register.RegisterContactFragment">
 
@@ -17,8 +17,22 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent">
 
+
+        <com.google.android.material.imageview.ShapeableImageView
+            android:id="@+id/btn_back_before"
+            android:layout_width="20dp"
+            android:layout_height="20dp"
+            android:layout_marginStart="15dp"
+            android:background="?attr/selectableItemBackgroundBorderless"
+            android:src="@drawable/ic_arrow_back"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            app:tint="@color/icon_primary" />
+
         <TextView
             android:id="@+id/btn_sign_in"
+            style="@style/Widget.SettleX.TextRegular"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginEnd="20dp"
@@ -26,64 +40,12 @@
             android:fontFamily="@font/inter_medium"
             android:includeFontPadding="false"
             android:text="@string/tv_sign_in"
-            android:textColor="@color/blue"
+            android:textColor="@color/text_accent"
             android:textSize="15sp"
             android:textStyle="bold"
             app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintEnd_toStartOf="@id/divider"
-            app:layout_constraintTop_toTopOf="parent" />
-
-        <View
-            android:id="@+id/divider"
-            android:layout_width="1.5dp"
-            android:layout_height="15dp"
-            android:layout_marginEnd="20dp"
-            android:background="@color/gray"
-            app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintEnd_toStartOf="@id/btn_help"
-            app:layout_constraintTop_toTopOf="parent" />
-
-        <ImageView
-            android:id="@+id/btn_back_before"
-            android:layout_width="20dp"
-            android:layout_height="20dp"
-            android:layout_marginStart="15dp"
-            android:background="?attr/selectableItemBackgroundBorderless"
-            android:contentDescription="@string/cd_back_before"
-            android:src="@drawable/ic_arrow_back"
-            app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent" />
-
-        <LinearLayout
-            android:id="@+id/btn_help"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginEnd="15dp"
-            android:background="@drawable/bg_24dp_blue"
-            android:gravity="center"
-            android:orientation="horizontal"
-            android:paddingHorizontal="5dp"
-            android:paddingVertical="2dp"
-            app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintTop_toTopOf="parent">
-
-            <ImageView
-                android:layout_width="15dp"
-                android:layout_height="15dp"
-                android:contentDescription="@null"
-                android:src="@drawable/ic_help" />
-
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:fontFamily="@font/inter_regular"
-                android:includeFontPadding="false"
-                android:text="@string/tv_help"
-                android:textColor="@color/white"
-                android:textSize="12sp" />
-        </LinearLayout>
+            app:layout_constraintTop_toTopOf="parent" />
     </androidx.constraintlayout.widget.ConstraintLayout>
 
     <ScrollView
@@ -111,15 +73,11 @@
                 android:orientation="horizontal">
 
                 <TextView
+                    style="@style/Widget.SettleX.TextBold"
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
                     android:layout_weight="1"
-                    android:fontFamily="@font/inter_bold"
-                    android:includeFontPadding="false"
-                    android:text="@string/title_create_your_account"
-                    android:textColor="@color/black"
-                    android:textSize="25sp"
-                    android:textStyle="bold" />
+                    android:text="@string/title_create_your_account" />
 
                 <!-- Step progress -->
                 <FrameLayout
@@ -136,25 +94,19 @@
 
                     <TextView
                         android:id="@+id/progress_text"
+                        style="@style/Widget.SettleX.TextRegular"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_gravity="center"
-                        android:fontFamily="@font/inter_regular"
-                        android:includeFontPadding="false"
-                        android:text="@string/tv_step_1_of_4"
-                        android:textColor="@android:color/black"
-                        android:textSize="13sp" />
+                        android:text="@string/tv_step_1_of_4" />
                 </FrameLayout>
             </LinearLayout>
 
             <TextView
+                style="@style/Widget.SettleX.TextRegular"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:fontFamily="@font/inter_regular"
-                android:includeFontPadding="false"
-                android:text="@string/sub_title_enter_your_email_and_phone_number_we_ll_send_a_one_time_verification_code_otp_to_your_email_to_confirm_your_account"
-                android:textColor="@color/black"
-                android:textSize="14sp" />
+                android:text="@string/sub_title_enter_your_email_and_phone_number_we_ll_send_a_one_time_verification_code_otp_to_your_email_to_confirm_your_account" />
 
             <FrameLayout
                 android:id="@+id/et_email_background"
@@ -182,7 +134,7 @@
                 android:layout_marginTop="5dp"
                 android:gravity="center_vertical"
                 android:includeFontPadding="false"
-                android:textColor="@color/red"
+                android:textColor="@color/red_500"
                 android:textSize="13sp"
                 android:visibility="gone"
                 tools:text="error message" />
@@ -207,14 +159,11 @@
 
                 <TextView
                     android:id="@+id/tv_country_code"
+                    style="@style/Widget.SettleX.TextRegular"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_marginStart="8dp"
-                    android:fontFamily="@font/inter_regular"
-                    android:includeFontPadding="false"
                     android:text="@string/tv_country_code"
-                    android:textColor="@color/black"
-                    android:textSize="14sp"
                     app:layout_constraintBottom_toBottomOf="parent"
                     app:layout_constraintStart_toEndOf="@+id/flag_icon"
                     app:layout_constraintTop_toTopOf="parent" />
@@ -224,7 +173,7 @@
                     android:layout_width="1dp"
                     android:layout_height="20dp"
                     android:layout_marginStart="8dp"
-                    app:dividerColor="@color/gray"
+                    app:dividerColor="@color/gray_500"
                     app:layout_constraintBottom_toBottomOf="parent"
                     app:layout_constraintStart_toEndOf="@id/tv_country_code"
                     app:layout_constraintTop_toTopOf="parent" />
@@ -276,12 +225,9 @@
 
             <TextView
                 android:id="@+id/tv_terms_privacy"
+                style="@style/Widget.SettleX.TextRegular"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:fontFamily="@font/inter_regular"
-                android:includeFontPadding="false"
-                android:textColor="@color/black"
-                android:textSize="13sp"
                 tools:text="I have read, understood and agreed to the Terms &amp; Conditions and Privacy Policy." />
         </LinearLayout>
 

@@ -25,7 +25,7 @@
             android:contentDescription="@string/cd_back_before"
             android:scaleType="centerCrop"
             android:src="@drawable/ic_arrow_back"
-            android:tint="@color/icon_secondary"
+            android:tint="@color/icon_primary"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent" />
@@ -139,7 +139,7 @@
                         app:layout_constraintBottom_toBottomOf="parent"
                         app:layout_constraintEnd_toEndOf="parent"
                         app:layout_constraintTop_toTopOf="parent"
-                        app:tint="@color/icon_primary" />
+                        app:tint="@color/icon_secondary" />
                 </androidx.constraintlayout.widget.ConstraintLayout>
 
                 <com.chaos.view.PinView

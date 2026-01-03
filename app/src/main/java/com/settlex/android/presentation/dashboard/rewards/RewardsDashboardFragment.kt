@@ -15,9 +15,7 @@ import androidx.lifecycle.repeatOnLifecycle
 import com.settlex.android.R
 import com.settlex.android.databinding.FragmentDashboardRewardsBinding
 import com.settlex.android.presentation.common.extensions.toNairaString
-import com.settlex.android.presentation.common.state.UiState
 import com.settlex.android.presentation.wallet.CommissionWithdrawalActivity
-import com.settlex.android.util.string.CurrencyFormatter
 import com.settlex.android.util.string.StringFormatter
 import com.settlex.android.util.ui.StatusBar
 import dagger.hilt.android.AndroidEntryPoint
@@ -46,7 +44,7 @@ class RewardsDashboardFragment : Fragment() {
     }
 
     private fun setupUi() {
-        StatusBar.setColor(requireActivity(), R.color.blue_400)
+        StatusBar.setColor(requireActivity(), R.color.blue_300)
         applyReferralInfoStyle()
 
         binding!!.btnCopy.setOnClickListener {

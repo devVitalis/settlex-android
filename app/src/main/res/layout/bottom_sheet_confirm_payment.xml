@@ -22,7 +22,7 @@
         android:layout_gravity="end"
         android:contentDescription="Close"
         android:src="@drawable/ic_close"
-        app:tint="@color/gray" />
+        app:tint="@color/gray_500" />
 
     <TextView
         android:id="@+id/tv_amount_header"
@@ -48,7 +48,7 @@
             android:layout_weight="1"
             android:includeFontPadding="false"
             android:text="Recipient"
-            android:textColor="@color/gray" />
+            android:textColor="@color/gray_500" />
 
         <TextView
             android:id="@+id/tv_recipient_username"
@@ -74,7 +74,7 @@
             android:layout_marginEnd="10dp"
             android:layout_weight="1"
             android:text="Recipient Name"
-            android:textColor="@color/gray" />
+            android:textColor="@color/gray_500" />
 
         <com.google.android.material.imageview.ShapeableImageView
             android:id="@+id/iv_recipient_profile_photo"
@@ -108,7 +108,7 @@
             android:layout_marginEnd="10dp"
             android:layout_weight="1"
             android:text="Amount"
-            android:textColor="@color/gray" />
+            android:textColor="@color/gray_500" />
 
         <TextView
             android:id="@+id/tv_amount_to_send"
@@ -124,7 +124,7 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginVertical="7.5dp"
-        app:dividerColor="@color/gray_light"
+        app:dividerColor="@color/gray_200"
         app:dividerThickness="1dp" />
 
     <LinearLayout
@@ -193,7 +193,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginVertical="7.5dp"
-            app:dividerColor="@color/gray_whitish"
+            app:dividerColor="@color/gray_300"
             app:dividerThickness="1dp" />
 
         <LinearLayout
@@ -208,7 +208,7 @@
                 android:layout_height="wrap_content"
                 android:layout_marginEnd="5dp"
                 android:text="Wallet Balance"
-                android:textColor="@color/gray"
+                android:textColor="@color/gray_500"
                 android:textSize="12sp" />
 
             <TextView
@@ -217,7 +217,7 @@
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
-                android:textColor="@color/gray"
+                android:textColor="@color/gray_500"
                 android:textSize="12sp"
                 tools:text="(₦198,000.32)" />
 
@@ -243,7 +243,7 @@
                 android:layout_height="wrap_content"
                 android:layout_marginEnd="5dp"
                 android:text="Commission Balance"
-                android:textColor="@color/gray"
+                android:textColor="@color/gray_500"
                 android:textSize="12sp" />
 
             <TextView
@@ -252,7 +252,7 @@
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
-                android:textColor="@color/gray"
+                android:textColor="@color/gray_500"
                 android:textSize="12sp"
                 tools:text="(₦535.25)" />
 
@@ -273,7 +273,7 @@
         android:layout_height="wrap_content"
         android:layout_gravity="center"
         android:text="Insufficient Balance"
-        android:textColor="@color/red"
+        android:textColor="@color/red_500"
         android:textSize="12sp"
         android:visibility="gone" />
 

@@ -45,7 +45,7 @@
     <ScrollView
         android:layout_width="match_parent"
         android:layout_height="0dp"
-        android:background="@color/gray_light"
+        android:background="@color/gray_200"
         android:fillViewport="true"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
@@ -73,7 +73,7 @@
                     android:fontFamily="@font/inter_regular"
                     android:includeFontPadding="false"
                     android:text="Recipient"
-                    android:textColor="@color/gray_dark"
+                    android:textColor="@color/gray_600"
                     android:textSize="12sp" />
 
                 <LinearLayout
@@ -97,7 +97,7 @@
                         android:inputType="text"
                         android:paddingHorizontal="15dp"
                         android:textColor="@color/black"
-                        android:textColorHint="@color/gray"
+                        android:textColorHint="@color/gray_500"
                         android:textSize="14sp" />
 
                     <com.google.android.material.button.MaterialButton
@@ -123,7 +123,7 @@
                     android:gravity="center_vertical"
                     android:includeFontPadding="false"
                     android:padding="5dp"
-                    android:textColor="@color/red"
+                    android:textColor="@color/red_500"
                     android:textSize="12sp"
                     android:visibility="gone"
                     app:drawableStartCompat="@drawable/ic_info_outline"
@@ -172,7 +172,7 @@
                             android:layout_height="wrap_content"
                             android:fontFamily="@font/poppins_regular"
                             android:includeFontPadding="false"
-                            android:textColor="@color/gray"
+                            android:textColor="@color/gray_500"
                             android:textSize="14sp"
                             tools:text="\@vitalisdft" />
                     </LinearLayout>
@@ -227,7 +227,7 @@
                         android:fontFamily="@font/inter_regular"
                         android:includeFontPadding="false"
                         android:text="Amount"
-                        android:textColor="@color/gray_dark"
+                        android:textColor="@color/gray_600"
                         android:textSize="12sp" />
 
                     <TextView
@@ -236,7 +236,7 @@
                         android:fontFamily="@font/inter_regular"
                         android:includeFontPadding="false"
                         android:text="Available Balance:"
-                        android:textColor="@color/gray_dark"
+                        android:textColor="@color/gray_600"
                         android:textSize="12sp" />
 
                     <TextView
@@ -246,7 +246,7 @@
                         android:layout_marginStart="5dp"
                         android:fontFamily="@font/inter_regular"
                         android:includeFontPadding="false"
-                        android:textColor="@color/gray_dark"
+                        android:textColor="@color/gray_600"
                         android:textSize="12sp"
                         tools:text="₦100,000" />
                 </LinearLayout>
@@ -277,7 +277,7 @@
                         android:layout_width="1dp"
                         android:layout_height="15dp"
                         android:layout_marginStart="15dp"
-                        app:dividerColor="@color/gray"
+                        app:dividerColor="@color/gray_500"
                         app:layout_constraintBottom_toBottomOf="@id/naira"
                         app:layout_constraintStart_toEndOf="@id/naira"
                         app:layout_constraintTop_toTopOf="@id/naira" />
@@ -296,7 +296,7 @@
                         android:inputType="numberDecimal"
                         android:nextFocusDown="@id/edit_txt_description"
                         android:textColor="@color/black"
-                        android:textColorHint="@color/gray"
+                        android:textColorHint="@color/gray_500"
                         android:textSize="14sp"
                         app:layout_constraintBottom_toBottomOf="parent"
                         app:layout_constraintEnd_toEndOf="parent"
@@ -314,7 +314,7 @@
                     android:fontFamily="@font/inter_regular"
                     android:gravity="center_vertical"
                     android:includeFontPadding="false"
-                    android:textColor="@color/red"
+                    android:textColor="@color/red_500"
                     android:textSize="12sp"
                     android:visibility="gone"
                     tools:text="Amount must be in range of ₦100 - ₦500,000.00" />
@@ -327,7 +327,7 @@
                     android:fontFamily="@font/inter_regular"
                     android:includeFontPadding="false"
                     android:text="Remark (Optional)"
-                    android:textColor="@color/gray_dark"
+                    android:textColor="@color/gray_600"
                     android:textSize="12sp" />
 
                 <FrameLayout
@@ -349,7 +349,7 @@
                         android:inputType="text"
                         android:paddingHorizontal="15dp"
                         android:textColor="@color/black"
-                        android:textColorHint="@color/gray"
+                        android:textColorHint="@color/gray_500"
                         android:textSize="14sp" />
                 </FrameLayout>
 

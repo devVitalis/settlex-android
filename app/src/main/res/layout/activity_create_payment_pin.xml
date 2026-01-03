@@ -67,7 +67,7 @@
                 android:includeFontPadding="false"
                 android:text="You will need this PIN to authorize payments."
                 android:textAlignment="center"
-                android:textColor="@color/gray"
+                android:textColor="@color/gray_500"
                 android:textSize="14sp" />
 
             <LinearLayout
@@ -85,7 +85,7 @@
                     android:fontFamily="@font/inter_regular"
                     android:includeFontPadding="false"
                     android:text="Enter Current Payment PIN"
-                    android:textColor="@color/gray"
+                    android:textColor="@color/gray_500"
                     android:textSize="12sp" />
 
                 <com.chaos.view.PinView
@@ -105,7 +105,7 @@
                 android:fontFamily="@font/inter_regular"
                 android:includeFontPadding="false"
                 android:text="Enter Payment PIN"
-                android:textColor="@color/gray"
+                android:textColor="@color/gray_500"
                 android:textSize="12sp" />
 
             <com.chaos.view.PinView
@@ -124,7 +124,7 @@
                 android:layout_marginTop="5dp"
                 android:fontFamily="@font/inter_regular"
                 android:includeFontPadding="false"
-                android:textColor="@color/red"
+                android:textColor="@color/red_500"
                 android:textSize="12sp"
                 android:visibility="gone"
                 tools:text="Error occurred" />
@@ -136,7 +136,7 @@
                 android:fontFamily="@font/inter_regular"
                 android:includeFontPadding="false"
                 android:text="Confirm Payment PIN"
-                android:textColor="@color/gray"
+                android:textColor="@color/gray_500"
                 android:textSize="12sp" />
 
             <com.chaos.view.PinView
@@ -155,7 +155,7 @@
                 android:layout_marginTop="5dp"
                 android:fontFamily="@font/inter_regular"
                 android:includeFontPadding="false"
-                android:textColor="@color/red"
+                android:textColor="@color/red_500"
                 android:textSize="12sp"
                 android:visibility="gone"
                 tools:text="Error occurred" />

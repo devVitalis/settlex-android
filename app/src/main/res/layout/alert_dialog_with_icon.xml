@@ -19,7 +19,7 @@
         android:contentDescription="@null"
         android:padding="10dp"
         android:src="@drawable/ic_lock_filled"
-        app:tint="@color/blue" />
+        app:tint="@color/blue_500" />
 
     <TextView
         android:id="@+id/title"

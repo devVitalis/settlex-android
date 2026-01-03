@@ -91,7 +91,7 @@ class HomeDashboardFragment : Fragment() {
     }
 
     private fun initViews() {
-        StatusBar.setColor(requireActivity(), R.color.gray_light)
+        StatusBar.setColor(requireActivity(), R.color.gray_200)
         initListeners()
         initTransactionRecyclerView()
         setupDoubleBackPressToExit()

@@ -6,10 +6,10 @@ import com.settlex.android.R;
  * Enum representing transaction status states with display names and color coding
  */
 public enum TransactionStatus {
-    PENDING("Pending", R.color.orange, R.drawable.bg_3dp_orange_light),
-    REVERSED("Reversed", R.color.blue, R.drawable.bg_3dp_blue_light),
-    SUCCESS("Successful", R.color.green, R.drawable.bg_3dp_green_light),
-    FAILED("Failed", R.color.red, R.drawable.bg_3dp_red_light);
+    PENDING("Pending", R.color.orange_500, R.drawable.bg_3dp_orange_light),
+    REVERSED("Reversed", R.color.blue_500, R.drawable.bg_3dp_blue_light),
+    SUCCESS("Successful", R.color.green_500, R.drawable.bg_3dp_green_light),
+    FAILED("Failed", R.color.red_500, R.drawable.bg_3dp_red_light);
 
     private final String displayName;
     private final int textColorRes;

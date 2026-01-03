@@ -29,12 +29,12 @@ import com.settlex.android.presentation.auth.AuthViewModel
 import com.settlex.android.presentation.auth.login.LoginActivity
 import com.settlex.android.presentation.common.extensions.gone
 import com.settlex.android.presentation.common.extensions.show
+import com.settlex.android.presentation.common.extensions.toNigerianPhoneNumber
 import com.settlex.android.presentation.common.state.UiState
 import com.settlex.android.presentation.common.util.EditTextFocusBackgroundChanger
 import com.settlex.android.presentation.common.util.KeyboardHelper
 import com.settlex.android.presentation.legal.PrivacyPolicyActivity
 import com.settlex.android.presentation.legal.TermsAndConditionsActivity
-import com.settlex.android.util.string.StringFormatter
 import com.settlex.android.util.ui.ProgressDialogManager
 import com.settlex.android.util.ui.StatusBar
 import dagger.hilt.android.AndroidEntryPoint
@@ -49,10 +49,6 @@ class RegisterContactFragment : Fragment() {
     private val keyboardHelper by lazy { KeyboardHelper(requireActivity()) }
     private var _binding: FragmentRegisterContactBinding? = null
     private val binding get() = _binding!!
-
-    companion object {
-        private const val PHONE_NUMBER_REGEX = "^(0)?[7-9][0-1]\\d{8}$"
-    }
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -81,7 +77,7 @@ class RegisterContactFragment : Fragment() {
     }
 
     private fun initViews() {
-        StatusBar.setColor(requireActivity(), R.color.white)
+        StatusBar.setColor(requireActivity(), R.color.background_primary)
         setupListeners()
         setupLegalLinks()
         setupInputValidation()
@@ -98,12 +94,6 @@ class RegisterContactFragment : Fragment() {
         btnBackBefore.setOnClickListener {
             requireActivity().onBackPressedDispatcher.onBackPressed()
             requireActivity().finish()
-        }
-
-        btnHelp.setOnClickListener {
-            StringFormatter.showNotImplementedToast(
-                requireContext()
-            )
         }
 
         btnContinue.setOnClickListener { onContinueClicked() }
@@ -144,10 +134,10 @@ class RegisterContactFragment : Fragment() {
 
         val email = etEmail.text.toString().trim().lowercase()
         val phone = etPhone.text.toString().trim()
-        val formattedPhone = StringFormatter.formatPhoneWithCode(phone)
 
-        registerViewModel.updateContact(email, formattedPhone)
-        sendVerificationCode(email)
+        registerViewModel.updateContact(email, phone.toNigerianPhoneNumber())
+//        sendVerificationCode(email)
+        onOtpSent()
     }
 
     private fun sendVerificationCode(email: String) {
@@ -214,53 +204,56 @@ class RegisterContactFragment : Fragment() {
         binding.btnContinue.isEnabled = allValid
     }
 
-    private fun setupLegalLinks() {
-        with(binding) {
-            val span =
-                SpannableStringBuilder("I have read, understood and agreed to the Terms & Conditions and Privacy Policy.")
+    private fun setupLegalLinks() = with(binding) {
 
-            val termsSpan: ClickableSpan = object : ClickableSpan() {
-                override fun onClick(widget: View) {
-                    toActivity(TermsAndConditionsActivity::class.java)
-                }
+        val span =
+            SpannableStringBuilder("I have read, understood and agreed to the Terms & Conditions and Privacy Policy.")
 
-                override fun updateDrawState(textPaint: TextPaint) {
-                    textPaint.color = ContextCompat.getColor(requireContext(), R.color.blue)
-                    textPaint.isUnderlineText = true
-                }
+        val termsSpan: ClickableSpan = object : ClickableSpan() {
+            override fun onClick(widget: View) {
+                startActivity(TermsAndConditionsActivity::class.java)
             }
 
-            val privacySpan: ClickableSpan = object : ClickableSpan() {
-                override fun onClick(widget: View) {
-                    toActivity(PrivacyPolicyActivity::class.java)
-                }
-
-                override fun updateDrawState(textPaint: TextPaint) {
-                    textPaint.color = ContextCompat.getColor(requireContext(), R.color.blue)
-                    textPaint.isUnderlineText = true
-                }
+            override fun updateDrawState(textPaint: TextPaint) {
+                textPaint.color = ContextCompat.getColor(requireContext(), R.color.blue_500)
+                textPaint.isUnderlineText = true
             }
-
-            span.setSpan(
-                termsSpan,
-                span.indexOf("Terms"),
-                span.indexOf("Conditions") + "Conditions".length,
-                Spanned.SPAN_EXCLUSIVE_EXCLUSIVE
-            )
-
-            span.setSpan(
-                privacySpan,
-                span.indexOf("Privacy"),
-                span.indexOf("Policy") + "Policy".length,
-                Spanned.SPAN_EXCLUSIVE_EXCLUSIVE
-            )
-
-            tvTermsPrivacy.text = span
-            tvTermsPrivacy.movementMethod = LinkMovementMethod.getInstance()
         }
+
+        val privacySpan: ClickableSpan = object : ClickableSpan() {
+            override fun onClick(widget: View) {
+                startActivity(PrivacyPolicyActivity::class.java)
+            }
+
+            override fun updateDrawState(textPaint: TextPaint) {
+                textPaint.color = ContextCompat.getColor(requireContext(), R.color.text_accent)
+                textPaint.isUnderlineText = true
+            }
+        }
+
+        span.setSpan(
+            termsSpan,
+            span.indexOf("Terms"),
+            span.indexOf("Conditions") + "Conditions".length,
+            Spanned.SPAN_EXCLUSIVE_EXCLUSIVE
+        )
+
+        span.setSpan(
+            privacySpan,
+            span.indexOf("Privacy"),
+            span.indexOf("Policy") + "Policy".length,
+            Spanned.SPAN_EXCLUSIVE_EXCLUSIVE
+        )
+
+        tvTermsPrivacy.text = span
+        tvTermsPrivacy.movementMethod = LinkMovementMethod.getInstance()
     }
 
-    private fun toActivity(activityClass: Class<out Activity>) {
+    private fun startActivity(activityClass: Class<out Activity>) {
         startActivity(Intent(requireContext(), activityClass))
+    }
+
+    companion object {
+        private const val PHONE_NUMBER_REGEX = "^(0)?[7-9][0-1]\\d{8}$"
     }
 }

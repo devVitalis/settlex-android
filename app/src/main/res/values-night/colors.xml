@@ -2,53 +2,58 @@
 <resources>
     <!-- Text -->
     <color name="text_primary">@color/white</color>
-    <color name="text_secondary">@color/gray</color>
-    <color name="text_accent">@color/blue</color>
-    <color name="text_error">@color/red</color>
-    <color name="text_hint">@color/white</color>
-    <color name="text_warning">@color/orange</color>
+    <color name="text_secondary">@color/gray_500</color>
+    <color name="text_accent">@color/blue_500</color>
+    <color name="text_error">@color/red_500</color>
+    <color name="text_warning">@color/orange_500</color>
 
     <!-- Background -->
     <color name="background_primary">@color/black</color>
-    <color name="background_secondary">@color/gray_dark</color>
+    <color name="background_secondary">@color/gray_600</color>
+    <color name="background_warning">@color/orange_100</color>
     <color name="outline_primary">@color/white</color>
-    <color name="outline_secondary">@color/blue</color>
+    <color name="outline_secondary">@color/blue_500</color>
 
     <!-- Icons -->
-    <color name="icon_secondary">@color/white</color>
-    <color name="icon_primary">@color/blue</color>
+    <color name="icon_primary">@color/white</color>
+    <color name="icon_secondary">@color/blue_500</color>
     <color name="icon_tint">@color/white</color>
 
     <!-- Buttons -->
-    <color name="button_primary">@color/blue</color>
+    <color name="button_primary">@color/blue_500</color>
     <color name="button_disabled">@color/blue_200</color>
-    <color name="button_pressed">@color/blue_deep</color>
+    <color name="button_pressed">@color/blue_600</color>
 
-    <!-- Literal -->
+    <!-- Base Color -->
     <color name="black">#242424</color>
     <color name="white">#FFFFFF</color>
 
-    <color name="gray">#9E9E9E</color>
-    <color name="gray_dark">#4A4A4A</color>
-    <color name="gray_light">#F5F5F5</color>
-    <color name="gray_whitish">#E0E0E0</color>
-    <color name="gray_blue_tone">#F8FAFF</color>
+    <!-- Gray -->
+    <color name="gray_100">#F8FAFF</color>
+    <color name="gray_200">#F5F5F5</color>
+    <color name="gray_300">#E0E0E0</color>
+    <color name="gray_500">#9E9E9E</color>
+    <color name="gray_600">#4A4A4A</color>
 
-    <color name="blue">#0866FF</color>
-    <color name="blue_deep">#004A91</color>
+    <!-- Blue -->
+    <color name="blue_100">#EDF2FE</color>
     <color name="blue_200">#90CAF9</color>
-    <color name="blue_400">#42A5F5</color>
-    <color name="blue_very_light">#EDF2FE</color>
-    <color name="blue_navy">#0A1E33</color>
+    <color name="blue_300">#42A5F5</color>
+    <color name="blue_500">#0866FF</color>
+    <color name="blue_600">#004A91</color>
+    <color name="blue_700">#0A1E33</color>
 
-    <color name="red">#FF4444</color>
-    <color name="red_light">#FDE2E1</color>
+    <!-- Red -->
+    <color name="red_100">#FDE2E1</color>
+    <color name="red_500">#FF4444</color>
 
-    <color name="orange">#FFA500</color>
-    <color name="orange_light">#FFF4E0</color>
+    <!-- Orange -->
+    <color name="orange_100">#D9883D</color>
+    <color name="orange_500">#FFA500</color>
 
-    <color name="green">#00C48C</color>
-    <color name="green_light">#E0FAF3</color>
+    <!-- Green -->
+    <color name="green_100">#E0FAF3</color>
+    <color name="green_500">#00C48C</color>
 
     <!--Overlay Colors-->
     <color name="overlay_light">#80FFFFFF</color>

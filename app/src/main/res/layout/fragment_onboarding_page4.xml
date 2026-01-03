@@ -60,7 +60,7 @@
         android:fontFamily="@font/inter_regular"
         android:text="We protect your information with the same high-level encryption trusted by major banks, keeping your personal details secure and private."
         android:textAlignment="viewStart"
-        android:textColor="@color/gray"
+        android:textColor="@color/gray_500"
         android:textSize="14sp"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"

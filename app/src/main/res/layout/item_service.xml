@@ -39,7 +39,7 @@
                 android:layout_height="24dp"
                 android:layout_gravity="center"
                 android:contentDescription="@null"
-                app:tint="@color/blue"
+                app:tint="@color/blue_500"
                 tools:src="@drawable/ic_service_airtime" />
         </FrameLayout>
 

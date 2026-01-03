@@ -87,7 +87,7 @@
         android:layout_width="match_parent"
         android:layout_height="0dp"
         android:layout_gravity="bottom"
-        android:background="@color/gray_light"
+        android:background="@color/gray_200"
         android:fillViewport="true"
         android:overScrollMode="never"
         android:scrollbars="none"
@@ -109,7 +109,7 @@
                 android:fontFamily="@font/inter_regular"
                 android:includeFontPadding="false"
                 android:text="Account Settings"
-                android:textColor="@color/gray"
+                android:textColor="@color/gray_500"
                 android:textSize="11sp" />
 
             <LinearLayout
@@ -136,7 +136,7 @@
                         android:layout_height="25dp"
                         android:contentDescription="@null"
                         android:src="@drawable/ic_receipt"
-                        app:tint="@color/blue" />
+                        app:tint="@color/blue_500" />
 
                     <TextView
                         android:layout_width="0dp"
@@ -154,7 +154,7 @@
                         android:layout_height="15dp"
                         android:contentDescription="@null"
                         android:src="@drawable/ic_arrow_forward"
-                        app:tint="@color/gray" />
+                        app:tint="@color/gray_500" />
                 </LinearLayout>
 
                 <!-- btn_settings -->
@@ -173,7 +173,7 @@
                         android:layout_height="25dp"
                         android:contentDescription="@null"
                         android:src="@drawable/ic_settings"
-                        app:tint="@color/blue" />
+                        app:tint="@color/blue_500" />
 
                     <TextView
                         android:layout_width="0dp"
@@ -191,7 +191,7 @@
                         android:layout_height="15dp"
                         android:contentDescription="@null"
                         android:src="@drawable/ic_arrow_forward"
-                        app:tint="@color/gray" />
+                        app:tint="@color/gray_500" />
                 </LinearLayout>
             </LinearLayout>
 
@@ -202,7 +202,7 @@
                 android:fontFamily="@font/inter_regular"
                 android:includeFontPadding="false"
                 android:text="Engagement and Rewards"
-                android:textColor="@color/gray"
+                android:textColor="@color/gray_500"
                 android:textSize="11sp"
                 android:visibility="gone" />
 
@@ -230,7 +230,7 @@
                         android:layout_height="25dp"
                         android:contentDescription="@null"
                         android:src="@drawable/ic_megaphone"
-                        app:tint="@color/blue" />
+                        app:tint="@color/blue_500" />
 
                     <LinearLayout
                         android:layout_width="0dp"
@@ -255,7 +255,7 @@
                             android:fontFamily="@font/inter_regular"
                             android:includeFontPadding="false"
                             android:text="Invite friends and earn forever"
-                            android:textColor="@color/gray"
+                            android:textColor="@color/gray_500"
                             android:textSize="12sp" />
                     </LinearLayout>
 
@@ -264,7 +264,7 @@
                         android:layout_height="15dp"
                         android:contentDescription="@null"
                         android:src="@drawable/ic_arrow_forward"
-                        app:tint="@color/gray" />
+                        app:tint="@color/gray_500" />
                 </LinearLayout>
 
                 <LinearLayout
@@ -282,7 +282,7 @@
                         android:layout_height="25dp"
                         android:contentDescription="@null"
                         android:src="@drawable/ic_review"
-                        app:tint="@color/blue" />
+                        app:tint="@color/blue_500" />
 
                     <LinearLayout
                         android:layout_width="0dp"
@@ -307,7 +307,7 @@
                             android:fontFamily="@font/inter_regular"
                             android:includeFontPadding="false"
                             android:text="Your review helps others find us"
-                            android:textColor="@color/gray"
+                            android:textColor="@color/gray_500"
                             android:textSize="12sp" />
                     </LinearLayout>
 
@@ -316,7 +316,7 @@
                         android:layout_height="15dp"
                         android:contentDescription="@null"
                         android:src="@drawable/ic_arrow_forward"
-                        app:tint="@color/gray" />
+                        app:tint="@color/gray_500" />
                 </LinearLayout>
 
                 <LinearLayout
@@ -334,7 +334,7 @@
                         android:layout_height="25dp"
                         android:contentDescription="@null"
                         android:src="@drawable/ic_message"
-                        app:tint="@color/blue" />
+                        app:tint="@color/blue_500" />
 
                     <LinearLayout
                         android:layout_width="0dp"
@@ -359,7 +359,7 @@
                             android:fontFamily="@font/inter_regular"
                             android:includeFontPadding="false"
                             android:text="Help us improve by sharing your thoughts"
-                            android:textColor="@color/gray"
+                            android:textColor="@color/gray_500"
                             android:textSize="12sp" />
                     </LinearLayout>
 
@@ -368,7 +368,7 @@
                         android:layout_height="15dp"
                         android:contentDescription="@null"
                         android:src="@drawable/ic_arrow_forward"
-                        app:tint="@color/gray" />
+                        app:tint="@color/gray_500" />
                 </LinearLayout>
             </LinearLayout>
 
@@ -380,7 +380,7 @@
                 android:fontFamily="@font/inter_regular"
                 android:includeFontPadding="false"
                 android:text="About us"
-                android:textColor="@color/gray"
+                android:textColor="@color/gray_500"
                 android:textSize="11sp" />
 
             <LinearLayout
@@ -399,7 +399,7 @@
                     android:layout_marginStart="5dp"
                     android:contentDescription="@null"
                     android:src="@drawable/ic_info_outline"
-                    app:tint="@color/blue" />
+                    app:tint="@color/blue_500" />
 
                 <TextView
                     android:layout_width="0dp"
@@ -417,7 +417,7 @@
                     android:layout_height="15dp"
                     android:contentDescription="@null"
                     android:src="@drawable/ic_arrow_forward"
-                    app:tint="@color/gray" />
+                    app:tint="@color/gray_500" />
             </LinearLayout>
 
             <LinearLayout
@@ -435,7 +435,7 @@
                     android:layout_height="25dp"
                     android:contentDescription="@null"
                     android:src="@drawable/ic_log_out"
-                    app:tint="@color/red" />
+                    app:tint="@color/red_500" />
 
                 <TextView
                     android:layout_width="wrap_content"

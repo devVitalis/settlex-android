@@ -28,7 +28,7 @@
             android:paddingHorizontal="15dp"
             android:paddingVertical="10dp"
             android:text="Skip"
-            android:textColor="@color/gray"
+            android:textColor="@color/gray_500"
             android:textSize="15sp" />
 
         <LinearLayout
@@ -46,7 +46,7 @@
                 android:layout_height="wrap_content"
                 app:vpi_orientation="horizontal"
                 app:vpi_slide_mode="smooth"
-                app:vpi_slider_checked_color="@color/blue"
+                app:vpi_slider_checked_color="@color/blue_500"
                 app:vpi_slider_normal_color="@color/blue_200"
                 app:vpi_style="round_rect" />
         </LinearLayout>

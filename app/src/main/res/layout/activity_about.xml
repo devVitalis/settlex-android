@@ -50,7 +50,7 @@
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:background="@color/gray_light"
+            android:background="@color/gray_200"
             android:orientation="vertical"
             android:padding="15dp">
 
@@ -68,7 +68,7 @@
                     android:fontFamily="@font/inter_regular"
                     android:includeFontPadding="false"
                     android:text="SettleX "
-                    android:textColor="@color/gray"
+                    android:textColor="@color/gray_500"
                     android:textSize="14sp" />
 
                 <TextView
@@ -106,7 +106,7 @@
                         android:layout_height="25dp"
                         android:contentDescription="@null"
                         android:src="@drawable/ic_file_text"
-                        app:tint="@color/blue" />
+                        app:tint="@color/blue_500" />
 
                     <TextView
                         android:layout_width="0dp"
@@ -124,7 +124,7 @@
                         android:layout_height="15dp"
                         android:contentDescription="@null"
                         android:src="@drawable/ic_arrow_forward"
-                        app:tint="@color/gray" />
+                        app:tint="@color/gray_500" />
                 </LinearLayout>
 
                 <LinearLayout
@@ -142,7 +142,7 @@
                         android:layout_height="25dp"
                         android:contentDescription="@null"
                         android:src="@drawable/ic_file_text"
-                        app:tint="@color/blue" />
+                        app:tint="@color/blue_500" />
 
                     <TextView
                         android:layout_width="0dp"
@@ -160,7 +160,7 @@
                         android:layout_height="15dp"
                         android:contentDescription="@null"
                         android:src="@drawable/ic_arrow_forward"
-                        app:tint="@color/gray" />
+                        app:tint="@color/gray_500" />
                 </LinearLayout>
             </LinearLayout>
 

@@ -71,6 +71,13 @@ fun String.maskPhoneNumber(): String {
     }
 }
 
+fun String.toNigerianPhoneNumber(): String {
+    val formatedPhone = this.also { phoneNumber ->
+        if (phoneNumber.startsWith("0")) phoneNumber.substring(1) else phoneNumber
+    }
+    return "+234$formatedPhone"
+}
+
 // Timestamp
 fun Timestamp.toDateTimeString(): String {
     return SimpleDateFormat("dd MMM yyyy, hh:mm a", Locale.US)

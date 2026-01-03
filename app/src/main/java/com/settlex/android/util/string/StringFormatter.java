@@ -6,6 +6,9 @@ import android.content.Context;
 import android.os.Build;
 import android.widget.Toast;
 
+import kotlin.jvm.JvmName;
+import kotlin.jvm.JvmStatic;
+
 
 public final class StringFormatter {
     private StringFormatter() {    }
@@ -47,12 +50,6 @@ public final class StringFormatter {
         }
 
         return prefix + mask + suffix;
-    }
-
-    public static String formatPhoneWithCode(String phone) {
-        if (phone == null || phone.isEmpty()) return phone;
-        if (phone.startsWith("0")) phone = phone.substring(1);
-        return "+234" + phone;
     }
 
     public static String capitalizeEachWord(String input) {

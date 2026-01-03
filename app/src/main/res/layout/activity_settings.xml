@@ -50,7 +50,7 @@
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:background="@color/gray_light"
+            android:background="@color/gray_200"
             android:orientation="vertical"
             android:padding="15dp">
 
@@ -62,7 +62,7 @@
                 android:fontFamily="@font/inter_regular"
                 android:includeFontPadding="false"
                 android:text="Payment"
-                android:textColor="@color/gray"
+                android:textColor="@color/gray_500"
                 android:textSize="12sp" />
 
             <LinearLayout
@@ -100,7 +100,7 @@
                         android:fontFamily="@font/inter_regular"
                         android:includeFontPadding="false"
                         android:text="Setup"
-                        android:textColor="@color/blue"
+                        android:textColor="@color/blue_500"
                         android:textSize="12sp" />
 
                     <ImageView
@@ -108,7 +108,7 @@
                         android:layout_height="15dp"
                         android:contentDescription="@null"
                         android:src="@drawable/ic_arrow_forward"
-                        app:tint="@color/gray" />
+                        app:tint="@color/gray_500" />
                 </LinearLayout>
 
                 <!-- btn_change_payment_pin -->
@@ -136,7 +136,7 @@
                         android:layout_height="15dp"
                         android:contentDescription="@null"
                         android:src="@drawable/ic_arrow_forward"
-                        app:tint="@color/gray" />
+                        app:tint="@color/gray_500" />
                 </LinearLayout>
 
                 <!-- btn_forgot_payment_pin -->
@@ -164,7 +164,7 @@
                         android:layout_height="15dp"
                         android:contentDescription="@null"
                         android:src="@drawable/ic_arrow_forward"
-                        app:tint="@color/gray" />
+                        app:tint="@color/gray_500" />
                 </LinearLayout>
 
                 <!-- btn_switch_pay_with_biometrics -->
@@ -199,7 +199,7 @@
                             android:layout_marginTop="2dp"
                             android:fontFamily="@font/inter_regular"
                             android:includeFontPadding="false"
-                            android:textColor="@color/red"
+                            android:textColor="@color/red_500"
                             android:textSize="11sp"
                             tools:text="Biometric not available on this device" />
                     </LinearLayout>
@@ -222,7 +222,7 @@
                 android:fontFamily="@font/inter_regular"
                 android:includeFontPadding="false"
                 android:text="Login"
-                android:textColor="@color/gray"
+                android:textColor="@color/gray_500"
                 android:textSize="12sp" />
 
             <LinearLayout
@@ -258,7 +258,7 @@
                         android:layout_height="15dp"
                         android:contentDescription="@null"
                         android:src="@drawable/ic_arrow_forward"
-                        app:tint="@color/gray" />
+                        app:tint="@color/gray_500" />
                 </LinearLayout>
 
                 <!-- btn_forgot_password -->
@@ -286,7 +286,7 @@
                         android:layout_height="15dp"
                         android:contentDescription="@null"
                         android:src="@drawable/ic_arrow_forward"
-                        app:tint="@color/gray" />
+                        app:tint="@color/gray_500" />
                 </LinearLayout>
 
                 <!-- btn_switch_login_with_biometrics -->
@@ -321,7 +321,7 @@
                             android:layout_marginTop="2dp"
                             android:fontFamily="@font/inter_regular"
                             android:includeFontPadding="false"
-                            android:textColor="@color/red"
+                            android:textColor="@color/red_500"
                             android:textSize="11sp"
                             tools:text="Biometric not available on this device" />
                     </LinearLayout>

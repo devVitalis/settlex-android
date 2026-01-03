@@ -151,9 +151,9 @@ class CreatePaymentIdActivity : AppCompatActivity() {
 
         val feedback = if (!exists) "Available" else "Not Available"
         val feedbackColor =
-            if (!exists) ContextCompat.getColor(this, R.color.green) else ContextCompat.getColor(
+            if (!exists) ContextCompat.getColor(this, R.color.green_500) else ContextCompat.getColor(
                 this,
-                R.color.red
+                R.color.red_500
             )
 
         binding.paymentIdAvailabilityFeedback.setTextColor(feedbackColor)
@@ -229,11 +229,11 @@ class CreatePaymentIdActivity : AppCompatActivity() {
         val validBg = ContextCompat.getDrawable(this, R.drawable.bg_8dp_green_light)
         val invalidBg = ContextCompat.getDrawable(this, R.drawable.bg_8dp_gray_light)
 
-        val validIcon = ColorStateList.valueOf(ContextCompat.getColor(this, R.color.green))
-        val invalidIcon = ColorStateList.valueOf(ContextCompat.getColor(this, R.color.gray))
+        val validIcon = ColorStateList.valueOf(ContextCompat.getColor(this, R.color.green_500))
+        val invalidIcon = ColorStateList.valueOf(ContextCompat.getColor(this, R.color.gray_500))
 
-        val validText = ContextCompat.getColor(this, R.color.green)
-        val invalidText = ContextCompat.getColor(this, R.color.gray)
+        val validText = ContextCompat.getColor(this, R.color.green_500)
+        val invalidText = ContextCompat.getColor(this, R.color.gray_500)
 
         // Evaluate rules once
         val startsWith = startsWithLetter(paymentId)

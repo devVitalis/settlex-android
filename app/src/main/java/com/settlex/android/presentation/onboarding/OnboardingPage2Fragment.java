@@ -45,7 +45,7 @@ public class OnboardingPage2Fragment extends Fragment {
 
         SpannableString header = new SpannableString(fullText);
         header.setSpan(
-                new ForegroundColorSpan(ContextCompat.getColor(requireContext(), R.color.blue)),
+                new ForegroundColorSpan(ContextCompat.getColor(requireContext(), R.color.blue_500)),
                 startIndex,
                 endIndex,
                 Spanned.SPAN_EXCLUSIVE_EXCLUSIVE
