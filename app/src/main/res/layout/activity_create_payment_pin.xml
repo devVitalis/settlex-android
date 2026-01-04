@@ -162,7 +162,7 @@
 
             <com.google.android.material.button.MaterialButton
                 android:id="@+id/btn_confirm"
-                style="@style/Widget.SettleX.Button.Filled.Rounded8"
+                style="@style/Widget.SettleX.Button.Primary.Rounded8"
                 android:layout_width="match_parent"
                 android:layout_height="55dp"
                 android:layout_marginTop="40dp"
@@ -181,7 +181,7 @@
         app:layout_constraintStart_toStartOf="parent">
 
         <com.google.android.material.button.MaterialButton
-            style="@style/Widget.SettleX.Button.Filled.Rounded8"
+            style="@style/Widget.SettleX.Button.Primary.Rounded8"
             android:layout_width="match_parent"
             android:layout_height="65dp"
             android:enabled="false"

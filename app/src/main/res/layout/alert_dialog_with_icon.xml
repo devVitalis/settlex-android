@@ -15,7 +15,7 @@
         android:layout_width="45dp"
         android:layout_height="45dp"
         android:layout_gravity="center_horizontal|top"
-        android:background="@drawable/bg_oval_blue_light"
+        android:background="@drawable/bg_primary_container_oval"
         android:contentDescription="@null"
         android:padding="10dp"
         android:src="@drawable/ic_lock_filled"
@@ -65,7 +65,7 @@
 
         <com.google.android.material.button.MaterialButton
             android:id="@+id/btn_primary"
-            style="@style/Widget.SettleX.Button.Filled.Rounded8"
+            style="@style/Widget.SettleX.Button.Primary.Rounded8"
             android:layout_width="0dp"
             android:layout_height="55dp"
             android:layout_weight="1"

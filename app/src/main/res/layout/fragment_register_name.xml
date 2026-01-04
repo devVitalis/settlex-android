@@ -148,7 +148,7 @@
 
         <com.google.android.material.button.MaterialButton
             android:id="@+id/btn_continue"
-            style="@style/Widget.SettleX.Button.Filled.Rounded8"
+            style="@style/Widget.SettleX.Button.Primary.Rounded8"
             android:layout_width="match_parent"
             android:layout_height="55dp"
             android:layout_gravity="center"

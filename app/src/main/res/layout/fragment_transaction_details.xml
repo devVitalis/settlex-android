@@ -148,7 +148,7 @@
                             android:layout_width="match_parent"
                             android:layout_height="match_parent"
                             android:layout_gravity="center"
-                            android:background="@drawable/bg_oval_blue_light"
+                            android:background="@drawable/bg_primary_container_oval"
                             android:contentDescription="@null"
                             android:padding="7dp"
                             tools:src="@drawable/ic_service_payment_sent" />
@@ -383,7 +383,7 @@
 
             <com.google.android.material.button.MaterialButton
                 android:id="@+id/btn_send_receipt"
-                style="@style/Widget.SettleX.Button.Filled"
+                style="@style/Widget.SettleX.Button.Primary"
                 android:layout_width="match_parent"
                 android:layout_height="55dp"
                 android:text="Send Receipt" />

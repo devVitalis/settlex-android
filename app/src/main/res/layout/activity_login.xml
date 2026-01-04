@@ -158,7 +158,7 @@
 
                 <com.google.android.material.button.MaterialButton
                     android:id="@+id/btn_sign_in"
-                    style="@style/Widget.SettleX.Button.Filled.Rounded8"
+                    style="@style/Widget.SettleX.Button.Primary.Rounded8"
                     android:layout_width="0dp"
                     android:layout_height="60dp"
                     android:layout_weight="1"

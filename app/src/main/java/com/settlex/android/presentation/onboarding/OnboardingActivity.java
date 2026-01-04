@@ -19,11 +19,6 @@ import com.settlex.android.util.ui.StatusBar;
 import dagger.hilt.android.AndroidEntryPoint;
 import jakarta.inject.Inject;
 
-/**
- * Handles onboarding flow:
- * - Displays intro screens via ViewPager2
- * - Tracks onboarding completion in preferences
- */
 @AndroidEntryPoint
 public class OnboardingActivity extends AppCompatActivity {
     @Inject
@@ -36,7 +31,7 @@ public class OnboardingActivity extends AppCompatActivity {
         binding = ActivityOnboardingBinding.inflate(getLayoutInflater());
         setContentView(binding.getRoot());
 
-        StatusBar.setColor(this, R.color.white);
+        StatusBar.setColor(this, R.color.colorBackground);
         setupViewPager();
         setupUiActions();
     }
@@ -63,7 +58,7 @@ public class OnboardingActivity extends AppCompatActivity {
         button.setOnClickListener(v -> {
             prefs.setIntroViewed(true);
             startActivity(new Intent(this, targetActivity));
-            finish();
+            finishAffinity();
         });
     }
 }

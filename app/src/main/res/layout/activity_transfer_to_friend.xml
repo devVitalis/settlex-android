@@ -102,7 +102,7 @@
 
                     <com.google.android.material.button.MaterialButton
                         android:id="@+id/btn_verify"
-                        style="@style/Widget.SettleX.Button.Filled"
+                        style="@style/Widget.SettleX.Button.Primary"
                         android:layout_width="60dp"
                         android:layout_height="35dp"
                         android:layout_marginEnd="10dp"
@@ -355,7 +355,7 @@
 
                 <com.google.android.material.button.MaterialButton
                     android:id="@+id/btn_next"
-                    style="@style/Widget.SettleX.Button.Filled"
+                    style="@style/Widget.SettleX.Button.Primary"
                     android:layout_width="match_parent"
                     android:layout_height="55dp"
                     android:layout_marginTop="25dp"

@@ -19,6 +19,7 @@ object SpannableTextFormatter {
      * @param target The substring to color.
      * @param color Hex color string, default color is "#0044CC".
      */
+    @JvmName("format")
     operator fun invoke(
         context: Context,
         text: String,

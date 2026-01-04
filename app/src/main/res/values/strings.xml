@@ -75,5 +75,8 @@
     <string name="hint_confirm_your_new_password">Confirm your new password</string>
     <string name="tv_password_requirements_info"><![CDATA[Your password must be at least 8 characters long and contain an uppercase letter, a lowercase letter, and a special character(eg., !@#$%^&*()_+-=[]{};:,.?)]]></string>
     <string name="btn_change_password">Change Password</string>
+    <string name="btn_login">Login</string>
+    <string name="btn_get_started">Get Started</string>
+    <string name="tv_skip">Skip</string>
 
 </resources>

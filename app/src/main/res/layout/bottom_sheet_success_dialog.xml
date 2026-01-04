@@ -36,7 +36,7 @@
 
     <com.google.android.material.button.MaterialButton
         android:id="@+id/btn_action"
-        style="@style/Widget.SettleX.Button.Filled"
+        style="@style/Widget.SettleX.Button.Primary"
         android:layout_width="match_parent"
         android:layout_height="55dp"
         android:layout_marginHorizontal="30dp"

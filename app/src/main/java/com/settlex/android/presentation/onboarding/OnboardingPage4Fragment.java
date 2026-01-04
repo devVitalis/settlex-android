@@ -16,26 +16,15 @@ import com.bumptech.glide.Glide;
 import com.settlex.android.R;
 import com.settlex.android.databinding.FragmentOnboardingPage4Binding;
 
-
 public class OnboardingPage4Fragment extends Fragment {
     private FragmentOnboardingPage4Binding binding;
-
-    public OnboardingPage4Fragment() {
-        // Required empty public constructor
-    }
-
-    @Override
-    public void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-
-    }
 
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         binding = FragmentOnboardingPage4Binding.inflate(inflater, container, false);
 
         highlightWordInHeader();
-        loadOptimizedImage();
+        setImage();
 
         return binding.getRoot();
     }
@@ -62,10 +51,10 @@ public class OnboardingPage4Fragment extends Fragment {
         binding.header.setText(header);
     }
 
-    private void loadOptimizedImage() {
+    private void setImage() {
         Glide.with(requireContext())
                 .load(R.drawable.img_intro_slide_4)
                 .centerCrop()
-                .into(binding.imgIntroSlide4);
+                .into(binding.ivIntroSlide4);
     }
 }

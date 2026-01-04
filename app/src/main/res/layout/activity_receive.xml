@@ -102,7 +102,7 @@
 
                 <com.google.android.material.button.MaterialButton
                     android:id="@+id/btn_copy"
-                    style="@style/Widget.SettleX.Button.Tonal"
+                    style="@style/Widget.SettleX.Button.Secondary"
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
                     android:layout_marginEnd="20dp"
@@ -111,7 +111,7 @@
 
                 <com.google.android.material.button.MaterialButton
                     android:id="@+id/btn_share_details"
-                    style="@style/Widget.SettleX.Button.Filled"
+                    style="@style/Widget.SettleX.Button.Primary"
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
                     android:layout_weight="1"

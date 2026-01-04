@@ -5,7 +5,6 @@
     android:id="@+id/main"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@color/white"
     android:paddingHorizontal="20dp"
     tools:context=".presentation.onboarding.OnboardingPage2Fragment">
 
@@ -14,7 +13,7 @@
         android:layout_width="0dp"
         android:layout_height="0dp"
         android:layout_marginBottom="50dp"
-        android:background="@drawable/bg_oval_blue_light"
+        android:background="@drawable/bg_primary_container_oval"
         android:clipToPadding="false"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintDimensionRatio="1:1"
@@ -24,7 +23,7 @@
         app:layout_constraintWidth_percent="0.8">
 
         <com.google.android.material.imageview.ShapeableImageView
-            android:id="@+id/img_intro_slide2"
+            android:id="@+id/iv_intro_slide2"
             android:layout_width="0dp"
             android:layout_height="0dp"
             android:layout_margin="20dp"
@@ -39,29 +38,24 @@
 
     <TextView
         android:id="@+id/header"
+        style="@style/Widget.SettleX.TextBold"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:layout_marginTop="10dp"
-        android:fontFamily="@font/inter_bold"
-        android:includeFontPadding="false"
         android:textAlignment="viewStart"
-        android:textColor="@color/black"
-        android:textSize="24sp"
-        android:textStyle="bold"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@id/image_container"
         tools:text="Pay Bills\nWithout Stress." />
 
     <TextView
+        style="@style/Widget.SettleX.TextRegular"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:layout_marginTop="10dp"
-        android:fontFamily="@font/inter_regular"
         android:text="Get the cheapest data bundles and easily manage your electricity, airtime, and betting payments. One app for all your needs."
         android:textAlignment="viewStart"
-        android:textColor="@color/gray_500"
-        android:textSize="14sp"
+        android:textColor="@color/colorOnSurfaceVariant"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@id/header" />

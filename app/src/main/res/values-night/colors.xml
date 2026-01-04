@@ -2,10 +2,10 @@
 <resources>
     <color name="colorPrimary">@color/blue_500</color>
     <color name="colorOnPrimary">@color/white</color>
-    <color name="colorPrimaryContainer">@color/blue_200</color>
+    <color name="colorPrimaryContainer">@color/blue_300</color>
     <color name="colorOnPrimaryContainer">@color/blue_500</color>
 
-    <color name="colorSecondary">@color/blue_300</color>
+    <color name="colorSecondary">@color/blue_200</color>
     <color name="colorOnSecondary">@color/white</color>
 
     <color name="colorBackground">@color/black</color>

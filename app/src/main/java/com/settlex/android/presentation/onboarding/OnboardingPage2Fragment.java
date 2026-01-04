@@ -26,7 +26,7 @@ public class OnboardingPage2Fragment extends Fragment {
         binding = FragmentOnboardingPage2Binding.inflate(inflater, container, false);
 
         highlightWordInHeader();
-        loadOptimizedImage();
+        setImage();
 
         return binding.getRoot();
     }
@@ -45,7 +45,7 @@ public class OnboardingPage2Fragment extends Fragment {
 
         SpannableString header = new SpannableString(fullText);
         header.setSpan(
-                new ForegroundColorSpan(ContextCompat.getColor(requireContext(), R.color.blue_500)),
+                new ForegroundColorSpan(ContextCompat.getColor(requireContext(), R.color.colorPrimary)),
                 startIndex,
                 endIndex,
                 Spanned.SPAN_EXCLUSIVE_EXCLUSIVE
@@ -53,10 +53,10 @@ public class OnboardingPage2Fragment extends Fragment {
         binding.header.setText(header);
     }
 
-    private void loadOptimizedImage() {
+    private void setImage() {
         Glide.with(this)
                 .load(R.drawable.img_intro_slide_2)
                 .centerCrop()
-                .into(binding.imgIntroSlide2);
+                .into(binding.ivIntroSlide2);
     }
 }

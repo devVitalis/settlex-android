@@ -23,13 +23,12 @@ import jakarta.inject.Inject;
 @SuppressLint("CustomSplashScreen")
 @AndroidEntryPoint
 public class SplashActivity extends AppCompatActivity {
+    private AuthViewModel authViewModel;
 
     @Inject
     NotificationPermission notification;
     @Inject
     AppPrefs prefs;
-
-    private AuthViewModel authViewModel;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {

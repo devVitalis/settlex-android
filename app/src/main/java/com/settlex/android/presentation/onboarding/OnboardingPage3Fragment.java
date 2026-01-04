@@ -26,7 +26,7 @@ public class OnboardingPage3Fragment extends Fragment {
         binding = FragmentOnboardingPage3Binding.inflate(inflater, container, false);
 
         highlightWordInHeader();
-        loadOptimizedImage();
+        setImage();
 
         return binding.getRoot();
     }
@@ -53,10 +53,10 @@ public class OnboardingPage3Fragment extends Fragment {
         binding.header.setText(header);
     }
 
-    private void loadOptimizedImage() {
+    private void setImage() {
         Glide.with(this)
                 .load(R.drawable.img_intro_slide_3)
                 .centerCrop()
-                .into(binding.imgIntroSlide3);
+                .into(binding.ivIntroSlide3);
     }
 }
