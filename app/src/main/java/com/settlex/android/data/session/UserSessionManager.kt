@@ -5,7 +5,7 @@ import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.firestore.FirebaseFirestore
 import com.google.firebase.firestore.dataObjects
 import com.settlex.android.data.datasource.UserLocalDataSource
-import com.settlex.android.data.exception.ApiException
+import com.settlex.android.data.exception.ExceptionMapper
 import com.settlex.android.data.exception.AppException
 import com.settlex.android.data.local.UserLocalDataSourceFactory
 import com.settlex.android.data.remote.dto.UserDto
@@ -24,7 +24,7 @@ class UserSessionManager @Inject constructor(
     private val auth: FirebaseAuth,
     private val firestore: FirebaseFirestore,
     private val dataSourceFactory: UserLocalDataSourceFactory,
-    private val apiException: ApiException,
+    private val exceptionMapper: ExceptionMapper,
     private val applicationScope: CoroutineScope
 ) {
     private var profileJob: Job? = null
@@ -85,7 +85,7 @@ class UserSessionManager @Inject constructor(
             .catch { throwable ->
                 when (throwable) {
                     is Exception -> _userSession.value = UserSessionState.Error(
-                        apiException.map(throwable)
+                        exceptionMapper.map(throwable)
                     )
                     else -> throw throwable
                 }

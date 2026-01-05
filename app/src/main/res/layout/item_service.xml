@@ -13,8 +13,7 @@
 
     <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:clipChildren="false">
+        android:layout_height="wrap_content">
 
         <androidx.constraintlayout.widget.Guideline
             android:id="@+id/center_guide_line"
@@ -38,19 +37,18 @@
                 android:layout_width="24dp"
                 android:layout_height="24dp"
                 android:layout_gravity="center"
-                android:contentDescription="@null"
                 app:tint="@color/colorPrimary"
                 tools:src="@drawable/ic_service_airtime" />
         </FrameLayout>
 
         <TextView
             android:id="@+id/badge"
+            style="@style/Widget.SettleX.TextRegular"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginTop="-2dp"
             android:background="@drawable/bg_service_badge"
             android:gravity="center"
-            android:includeFontPadding="false"
             android:maxLines="1"
             android:minWidth="30dp"
             android:paddingHorizontal="5dp"

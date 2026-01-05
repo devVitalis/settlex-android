@@ -10,10 +10,10 @@ import com.google.firebase.functions.FirebaseFunctionsException
 import java.io.IOException
 import javax.inject.Inject
 
-class ApiException @Inject constructor() {
+class ExceptionMapper @Inject constructor() {
 
     companion object {
-        private const val TAG = "ApiException"
+        private val TAG = ExceptionMapper::class.simpleName
         const val ERROR_NO_NETWORK = "Connection lost. Please check your Wi-Fi or cellular data and try again."
 
         // Firebase Auth

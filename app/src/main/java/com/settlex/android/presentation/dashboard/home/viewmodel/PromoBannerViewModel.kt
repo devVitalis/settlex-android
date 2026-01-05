@@ -2,7 +2,7 @@ package com.settlex.android.presentation.dashboard.home.viewmodel
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.settlex.android.data.exception.ApiException
+import com.settlex.android.data.exception.ExceptionMapper
 import com.settlex.android.domain.repository.PromoBannerRepository
 import com.settlex.android.presentation.common.state.UiState
 import com.settlex.android.presentation.dashboard.home.model.PromoBannerUiModel
@@ -15,7 +15,7 @@ import kotlinx.coroutines.launch
 @HiltViewModel
 class PromoBannerViewModel @Inject constructor(
     private val bannerRepository: PromoBannerRepository,
-    private val apiException: ApiException
+    private val exceptionMapper: ExceptionMapper
 ) : ViewModel() {
 
     private val _banners = MutableStateFlow<UiState<List<PromoBannerUiModel>>>(UiState.Loading)
@@ -31,7 +31,7 @@ class PromoBannerViewModel @Inject constructor(
                 val cachedBanners = bannerRepository.getPromotionalBanners()
                 _banners.value = UiState.Success(cachedBanners)
             } catch (e: Exception) {
-                _banners.value = UiState.Failure(apiException.map(e))
+                _banners.value = UiState.Failure(exceptionMapper.map(e))
             }
         }
     }

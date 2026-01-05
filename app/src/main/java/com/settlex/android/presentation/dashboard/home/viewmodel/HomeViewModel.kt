@@ -6,6 +6,7 @@ import com.settlex.android.R
 import com.settlex.android.data.enums.TransactionOperation
 import com.settlex.android.data.enums.TransactionStatus
 import com.settlex.android.data.exception.AppException
+import com.settlex.android.data.exception.ExceptionMapper
 import com.settlex.android.data.mapper.toHomeUiModel
 import com.settlex.android.data.remote.dto.TransactionDto
 import com.settlex.android.data.repository.TransactionRepositoryImpl
@@ -15,6 +16,7 @@ import com.settlex.android.presentation.common.extensions.toNairaString
 import com.settlex.android.presentation.common.state.UiState
 import com.settlex.android.presentation.dashboard.home.model.HomeUiModel
 import com.settlex.android.presentation.transactions.model.TransactionItemUiModel
+import com.settlex.android.util.network.NetworkMonitor
 import com.settlex.android.util.string.CurrencyFormatter
 import com.settlex.android.util.string.DateFormatter
 import com.settlex.android.util.string.StringFormatter
@@ -95,26 +97,29 @@ class HomeViewModel @Inject constructor(
 
     fun loadRecentTransactions(uid: String) {
         viewModelScope.launch {
-            transactionRepoImpl.getRecentTransactions(uid)
-                .collect { result ->
-
-                    result.fold(
-                        onSuccess = { dtoList ->
-                            if (dtoList.isEmpty()) {
-                                _recentTransactions.value = UiState.Success(emptyList())
-                                return@fold
-                            }
-
-                            val mapped = dtoList.map { dto -> toUiModel(uid, dto) }
-                            _recentTransactions.value = UiState.Success(mapped)
-                        },
-
-                        onFailure = {
-                            _recentTransactions.value =
-                                UiState.Failure(it as AppException)
+            if (!isNetworkConnected()) {
+                _recentTransactions.value = UiState.Failure(
+                    AppException.NetworkException(ExceptionMapper.ERROR_NO_NETWORK)
+                )
+                return@launch
+            }
+            transactionRepoImpl.getRecentTransactions(uid).collect { result ->
+                result.fold(
+                    onSuccess = { dtoList ->
+                        if (dtoList.isEmpty()) {
+                            _recentTransactions.value = UiState.Success(emptyList())
+                            return@fold
                         }
-                    )
-                }
+
+                        val mapped = dtoList.map { dto -> toUiModel(uid, dto) }
+                        _recentTransactions.value = UiState.Success(mapped)
+                    },
+
+                    onFailure = {
+                        _recentTransactions.value = UiState.Failure(it as AppException)
+                    }
+                )
+            }
         }
     }
 
@@ -145,6 +150,10 @@ class HomeViewModel @Inject constructor(
             statusColor = dto.status.colorRes,
             statusBackgroundColor = dto.status.bgColorRes
         )
+    }
+
+    private fun isNetworkConnected(): Boolean {
+        return NetworkMonitor.networkStatus.value
     }
 
     companion object {

@@ -16,8 +16,7 @@ object NetworkMonitor {
 
     fun startNetworkCallback() {
         val context = SettleXApp.appContext
-        val cm = context.getSystemService(Context.CONNECTIVITY_SERVICE) as ConnectivityManager?
-        if (cm == null) return
+        val cm = context.getSystemService(Context.CONNECTIVITY_SERVICE) as ConnectivityManager
 
         val callback: NetworkCallback = object : NetworkCallback() {
             override fun onAvailable(network: Network) {

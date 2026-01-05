@@ -1,7 +1,7 @@
 package com.settlex.android.data.repository
 
 import com.settlex.android.data.datasource.UserRemoteDataSource
-import com.settlex.android.data.exception.ApiException
+import com.settlex.android.data.exception.ExceptionMapper
 import com.settlex.android.data.remote.dto.ApiResponse
 import com.settlex.android.data.remote.dto.TransactionDto
 import com.settlex.android.domain.repository.TransactionsRepository
@@ -11,7 +11,7 @@ import kotlinx.coroutines.flow.catch
 
 class TransactionRepositoryImpl @Inject constructor(
     private val remote: UserRemoteDataSource,
-    private val exception: ApiException
+    private val exception: ExceptionMapper
 ) : TransactionsRepository {
 
     override suspend fun getRecentTransactions(uid: String): Flow<Result<List<TransactionDto>>> {

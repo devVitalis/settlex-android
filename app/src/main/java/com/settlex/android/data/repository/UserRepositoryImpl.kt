@@ -4,7 +4,7 @@ import android.content.Context
 import android.net.Uri
 import com.google.firebase.auth.FirebaseUser
 import com.settlex.android.data.datasource.UserRemoteDataSource
-import com.settlex.android.data.exception.ApiException
+import com.settlex.android.data.exception.ExceptionMapper
 import com.settlex.android.data.remote.dto.ApiResponse
 import com.settlex.android.data.remote.dto.RecipientDto
 import com.settlex.android.domain.repository.UserRepository
@@ -12,7 +12,7 @@ import jakarta.inject.Inject
 
 class UserRepositoryImpl @Inject constructor(
     private val remote: UserRemoteDataSource,
-    private val exception: ApiException
+    private val exception: ExceptionMapper
 ) : UserRepository {
 
     override fun getCurrentUser(): FirebaseUser? {

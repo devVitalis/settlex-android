@@ -3,7 +3,7 @@ package com.settlex.android.presentation.auth
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.settlex.android.data.enums.OtpType
-import com.settlex.android.data.exception.ApiException
+import com.settlex.android.data.exception.ExceptionMapper
 import com.settlex.android.data.exception.AppException
 import com.settlex.android.domain.model.UserModel
 import com.settlex.android.domain.usecase.auth.AuthUseCases
@@ -42,7 +42,7 @@ class AuthViewModel @Inject constructor(
                 _registrationEvent.send(
                     UiState.Failure(
                         AppException.NetworkException(
-                            ApiException.ERROR_NO_NETWORK
+                            ExceptionMapper.ERROR_NO_NETWORK
                         )
                     )
                 )
@@ -65,7 +65,7 @@ class AuthViewModel @Inject constructor(
                 _otpEvent.send(
                     UiState.Failure(
                         AppException.NetworkException(
-                            ApiException.ERROR_NO_NETWORK
+                            ExceptionMapper.ERROR_NO_NETWORK
                         )
                     )
                 )
@@ -88,7 +88,7 @@ class AuthViewModel @Inject constructor(
                 _verifyEmailEvent.send(
                     UiState.Failure(
                         AppException.NetworkException(
-                            ApiException.ERROR_NO_NETWORK
+                            ExceptionMapper.ERROR_NO_NETWORK
                         )
                     )
                 )
@@ -111,7 +111,7 @@ class AuthViewModel @Inject constructor(
                 _verifyPasswordResetEvent.send(
                     UiState.Failure(
                         AppException.NetworkException(
-                            ApiException.ERROR_NO_NETWORK
+                            ExceptionMapper.ERROR_NO_NETWORK
                         )
                     )
                 )
@@ -134,7 +134,7 @@ class AuthViewModel @Inject constructor(
                 _setNewPasswordEvent.send(
                     UiState.Failure(
                         AppException.NetworkException(
-                            ApiException.ERROR_NO_NETWORK
+                            ExceptionMapper.ERROR_NO_NETWORK
                         )
                     )
                 )

@@ -5,7 +5,7 @@ import androidx.lifecycle.viewModelScope
 import com.google.firebase.auth.FirebaseAuth
 import com.settlex.android.SettleXApp
 import com.settlex.android.data.datasource.UserLocalDataSource
-import com.settlex.android.data.exception.ApiException
+import com.settlex.android.data.exception.ExceptionMapper
 import com.settlex.android.data.exception.AppException
 import com.settlex.android.domain.usecase.auth.GetCurrentUserUseCase
 import com.settlex.android.domain.usecase.auth.LoginUseCase
@@ -83,7 +83,7 @@ class LoginViewModel @Inject constructor(
                 _loginEvent.emit(
                     UiState.Failure(
                         AppException.NetworkException(
-                            ApiException.ERROR_NO_NETWORK
+                            ExceptionMapper.ERROR_NO_NETWORK
                         )
                     )
                 )

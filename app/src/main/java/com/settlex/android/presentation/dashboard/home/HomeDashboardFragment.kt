@@ -20,6 +20,7 @@ import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.settlex.android.R
 import com.settlex.android.data.enums.ServiceType
+import com.settlex.android.data.exception.AppException
 import com.settlex.android.data.remote.profile.ProfileService
 import com.settlex.android.data.session.UserSessionState
 import com.settlex.android.databinding.FragmentDashboardHomeBinding
@@ -55,7 +56,7 @@ class HomeDashboardFragment : Fragment() {
     private var autoScrollRunnable: Runnable? = null
     private val autoScrollHandler = Handler(Looper.getMainLooper())
 
-    // dependencies
+    // Dependencies
     private var _binding: FragmentDashboardHomeBinding? = null
     private val binding get() = _binding!!
     private lateinit var adapter: TransactionListAdapter
@@ -114,6 +115,7 @@ class HomeDashboardFragment : Fragment() {
         tvViewAllTransaction.setOnClickListener { comingSoon() }
         btnDeposit.setOnClickListener { comingSoon() }
         ivBalanceToggle.setOnClickListener { viewModel.toggleBalanceVisibility() }
+        btnRefreshTransactions.setOnClickListener { viewModel.loadRecentTransactions("Testing") }
 
         viewUserCommissionBalance.setOnClickListener {
             startActivity(CommissionWithdrawalActivity::class.java)
@@ -236,7 +238,6 @@ class HomeDashboardFragment : Fragment() {
             viewLifecycleOwner.repeatOnLifecycle(Lifecycle.State.STARTED) {
                 viewModel.userBalance.collect { balance ->
                     val (userBalance, commissionBalance) = balance ?: return@collect
-
                     tvUserBalance.text = userBalance
                     tvUserCommissionBalance.text = commissionBalance
                 }
@@ -268,7 +269,7 @@ class HomeDashboardFragment : Fragment() {
                     when (transactions) {
                         is UiState.Loading -> onTransactionsLoading()
                         is UiState.Success -> setTransactionsData(transactions.data)
-                        is UiState.Failure -> onTransactionsError()
+                        is UiState.Failure -> onTransactionsError(transactions.exception)
                     }
                 }
             }
@@ -306,8 +307,17 @@ class HomeDashboardFragment : Fragment() {
         }
     }
 
-    private fun onTransactionsError() = with(binding) {
-        viewNoTransactionsUi.show()
+    private fun onTransactionsError(error: AppException) = with(binding) {
+        listOf(shimmerTransactions, viewNoTransactionsUi, rvTransactions).forEach { it.gone() }
+
+        when (error) {
+            is AppException.NetworkException -> {
+                viewNoInternet.show()
+                return
+            }
+
+            else -> Unit
+        }
     }
 
     private fun observePromotionalBanners() = with(binding) {

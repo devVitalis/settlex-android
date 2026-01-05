@@ -3,7 +3,7 @@ package com.settlex.android.data.repository
 import com.google.firebase.auth.FirebaseUser
 import com.settlex.android.data.datasource.AuthRemoteDataSource
 import com.settlex.android.data.enums.OtpType
-import com.settlex.android.data.exception.ApiException
+import com.settlex.android.data.exception.ExceptionMapper
 import com.settlex.android.data.remote.dto.ApiResponse
 import com.settlex.android.domain.model.UserModel
 import com.settlex.android.domain.repository.AuthRepository
@@ -11,7 +11,7 @@ import jakarta.inject.Inject
 
 class AuthRepositoryImpl @Inject constructor(
     private val authApi: AuthRemoteDataSource,
-    private val exception: ApiException
+    private val exception: ExceptionMapper
 ) : AuthRepository {
 
     override fun signOut() = authApi.signOut()

@@ -140,7 +140,7 @@ class UserRemoteDataSource @Inject constructor(
         return callbackFlow {
 
             val ref = firestore.collection("users")
-                .document(uid)
+                .document(getCurrentUser()!!.uid)
                 .collection("transactions")
                 .orderBy("createdAt", Query.Direction.DESCENDING)
                 .limit(2)
@@ -158,7 +158,7 @@ class UserRemoteDataSource @Inject constructor(
                     return@addSnapshotListener
                 }
 
-                // Convert snapshot → DTOs
+                // Convert snapshot DTOs
                 val transactions = snapshot.documents.mapNotNull { doc ->
                     doc.toObject(TransactionDto::class.java)
                 }
