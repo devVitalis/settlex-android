@@ -253,7 +253,7 @@ class TransferToFriendActivity : AppCompatActivity() {
         val priButton = "Forgot Pin"
         val secButton = "Retry"
 
-        DialogHelper.showAlertDialogMessage(
+        DialogHelper.showCustomAlertDialog(
             this
         ) { dialog, dialogBinding ->
             dialogBinding.tvMessage.text = message
@@ -322,7 +322,7 @@ class TransferToFriendActivity : AppCompatActivity() {
         val btnPriText = "Create PIN"
         val btnSecText = "Cancel"
 
-        DialogHelper.showAlertDialogWithIcon(
+        DialogHelper.showCustomAlertDialogWithIcon(
             this,
             { dialog, dialogBinding ->
                 dialogBinding.title.text = title

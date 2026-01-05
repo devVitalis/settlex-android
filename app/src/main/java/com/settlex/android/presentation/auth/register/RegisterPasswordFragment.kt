@@ -30,7 +30,6 @@ import com.settlex.android.presentation.common.util.DialogHelper
 import com.settlex.android.presentation.common.util.KeyboardHelper
 import com.settlex.android.presentation.common.util.PasswordValidator
 import com.settlex.android.presentation.dashboard.DashboardActivity
-import com.settlex.android.util.string.StringFormatter
 import com.settlex.android.util.ui.ProgressDialogManager
 import com.settlex.android.util.ui.StatusBar
 import kotlinx.coroutines.launch
@@ -122,7 +121,7 @@ class RegisterPasswordFragment : Fragment() {
     }
 
     private fun showLoginRedirectDialog(message: String) {
-        DialogHelper.showAlertDialogMessage(
+        DialogHelper.showCustomAlertDialog(
             requireContext()
         ) { dialog, binding ->
             with(binding) {

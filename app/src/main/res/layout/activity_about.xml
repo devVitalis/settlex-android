@@ -96,7 +96,7 @@
                     android:id="@+id/btn_terms_and_condition"
                     android:layout_width="match_parent"
                     android:layout_height="45dp"
-                    android:background="@drawable/bg_8dp_white_ripple_yes"
+                    android:background="@drawable/bg_surface_variant_ripple_rounded8"
                     android:gravity="center_vertical"
                     android:orientation="horizontal"
                     android:padding="5dp">
@@ -132,7 +132,7 @@
                     android:layout_width="match_parent"
                     android:layout_height="45dp"
                     android:layout_marginTop="5dp"
-                    android:background="@drawable/bg_8dp_white_ripple_yes"
+                    android:background="@drawable/bg_surface_variant_ripple_rounded8"
                     android:gravity="center_vertical"
                     android:orientation="horizontal"
                     android:padding="5dp">

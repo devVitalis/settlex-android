@@ -186,7 +186,7 @@ class LoginActivity : AppCompatActivity() {
     }
 
     private fun showNetworkErrorDialog(error: AppException) {
-        DialogHelper.showAlertDialogMessage(
+        DialogHelper.showCustomAlertDialog(
             this
         ) { dialog, binding ->
 

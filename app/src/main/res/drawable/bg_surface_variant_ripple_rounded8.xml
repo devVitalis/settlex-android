@@ -1,10 +1,10 @@
 <?xml version="1.0" encoding="utf-8"?>
 <ripple xmlns:android="http://schemas.android.com/apk/res/android"
-    android:color="@color/overlay_dim">
+    android:color="@color/scrim_black_10">
 
     <item android:id="@+id/mask">
         <shape android:shape="rectangle">
-            <solid android:color="@color/overlay_light" />
+            <solid android:color="@color/colorSurfaceVariant" />
             <corners android:radius="8dp" />
         </shape>
     </item>

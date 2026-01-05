@@ -1,475 +1,518 @@
 <?xml version="1.0" encoding="utf-8"?>
-<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@color/gray_200"
+    android:background="@color/colorBackgroundSecondary"
     android:fitsSystemWindows="true"
     android:orientation="vertical"
     tools:context=".presentation.dashboard.home.HomeDashboardFragment">
 
-    <LinearLayout
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:id="@+id/header"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:orientation="vertical">
+        android:layout_height="wrap_content"
+        android:paddingHorizontal="15dp"
+        android:paddingVertical="5dp">
 
-        <androidx.constraintlayout.widget.ConstraintLayout
-            android:id="@+id/header"
-            android:layout_width="match_parent"
+        <com.google.android.material.imageview.ShapeableImageView
+            android:id="@+id/iv_profile_photo"
+            android:layout_width="40dp"
+            android:layout_height="40dp"
+            android:contentDescription="@null"
+            android:src="@drawable/ic_avatar_default"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            app:shapeAppearance="@style/ShapeAppearance.SettleX.Circular" />
+
+        <!-- View user name -->
+        <LinearLayout
+            android:id="@+id/view_greeting_container"
+            android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:paddingHorizontal="15dp"
-            android:paddingVertical="5dp">
+            android:layout_marginStart="10dp"
+            android:orientation="vertical"
+            app:layout_constraintBottom_toBottomOf="@id/iv_profile_photo"
+            app:layout_constraintStart_toEndOf="@id/iv_profile_photo"
+            app:layout_constraintTop_toTopOf="@id/iv_profile_photo">
 
-            <com.google.android.material.imageview.ShapeableImageView
-                android:id="@+id/iv_profile_photo"
-                android:layout_width="40dp"
-                android:layout_height="40dp"
-                android:contentDescription="@null"
-                android:src="@drawable/ic_avatar_default"
-                app:layout_constraintBottom_toBottomOf="parent"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toTopOf="parent"
-                app:shapeAppearance="@style/ShapeAppearance.SettleX.Circular" />
-
-            <LinearLayout
-                android:id="@+id/view_greeting_container"
+            <TextView
+                android:id="@+id/greeting"
+                style="@style/Widget.SettleX.TextName"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginStart="10dp"
-                android:orientation="vertical"
-                app:layout_constraintBottom_toBottomOf="@id/iv_profile_photo"
-                app:layout_constraintStart_toEndOf="@id/iv_profile_photo"
-                app:layout_constraintTop_toTopOf="@id/iv_profile_photo">
-
-                <TextView
-                    android:id="@+id/greeting"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:fontFamily="@font/poppins_regular"
-                    android:includeFontPadding="false"
-                    android:text="Hello 👋"
-                    android:textColor="@color/black"
-                    android:textSize="14sp" />
-
-                <FrameLayout
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content">
-
-                    <TextView
-                        android:id="@+id/tv_user_full_name"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_gravity="center"
-                        android:fontFamily="@font/poppins_regular"
-                        android:includeFontPadding="false"
-                        android:textColor="@color/black"
-                        android:textSize="14sp"
-                        android:textStyle="bold"
-                        tools:text="Benjamin Nnaemeka" />
-
-                    <com.facebook.shimmer.ShimmerFrameLayout
-                        android:id="@+id/shimmer_user_full_name"
-                        style="@style/Widget.SettleX.ShimmerFrameLayout"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_gravity="center"
-                        android:layout_marginTop="4dp"
-                        android:visibility="gone">
-
-                        <View
-                            android:layout_width="150dp"
-                            android:layout_height="14sp"
-                            android:background="@drawable/bg_8dp_gray_whitish" />
-                    </com.facebook.shimmer.ShimmerFrameLayout>
-                </FrameLayout>
-            </LinearLayout>
-
-            <com.google.android.material.button.MaterialButton
-                android:id="@+id/btn_login"
-                style="@style/Widget.SettleX.Button.Outlined"
-                android:layout_width="80dp"
-                android:layout_height="40dp"
-                android:layout_marginStart="5dp"
-                android:paddingHorizontal="0dp"
-                android:text="Login"
-                android:visibility="gone"
-                app:layout_constraintBottom_toBottomOf="@id/iv_profile_photo"
-                app:layout_constraintStart_toEndOf="@id/iv_profile_photo"
-                app:layout_constraintTop_toTopOf="@id/iv_profile_photo" />
+                android:text="@string/tv_hello" />
 
             <FrameLayout
-                android:id="@+id/btn_support"
-                android:layout_width="40dp"
-                android:layout_height="40dp"
-                android:layout_marginEnd="10dp"
-                android:background="@drawable/bg_oval_semi_transparent_black10"
-                android:padding="5dp"
-                app:layout_constraintBottom_toBottomOf="@+id/btn_notification"
-                app:layout_constraintEnd_toStartOf="@+id/btn_notification"
-                app:layout_constraintTop_toTopOf="@id/btn_notification">
-
-                <ImageView
-                    android:layout_width="25dp"
-                    android:layout_height="25dp"
-                    android:layout_gravity="center"
-                    android:contentDescription="Support Agent"
-                    android:src="@drawable/ic_support_agent" />
-            </FrameLayout>
-
-            <androidx.constraintlayout.widget.ConstraintLayout
-                android:id="@+id/btn_notification"
-                android:layout_width="40dp"
-                android:layout_height="40dp"
-                android:background="@drawable/bg_oval_semi_transparent_black10"
-                android:padding="5dp"
-                app:layout_constraintBottom_toBottomOf="parent"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintTop_toTopOf="parent">
-
-                <ImageView
-                    android:id="@+id/notification"
-                    android:layout_width="25dp"
-                    android:layout_height="25dp"
-                    android:contentDescription="Notification"
-                    android:src="@drawable/ic_notifications"
-                    app:layout_constraintBottom_toBottomOf="parent"
-                    app:layout_constraintEnd_toEndOf="parent"
-                    app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintTop_toTopOf="parent" />
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content">
 
                 <TextView
-                    android:id="@+id/unread_notification_badge"
+                    android:id="@+id/tv_user_full_name"
+                    style="@style/Widget.SettleX.TextName"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:background="@drawable/bg_oval_red"
-                    android:gravity="center"
-                    android:includeFontPadding="false"
-                    android:minWidth="12dp"
-                    android:minHeight="12dp"
-                    android:text="2"
-                    android:textColor="@color/white"
-                    android:textSize="9sp"
-                    app:layout_constraintEnd_toEndOf="@id/notification"
-                    app:layout_constraintTop_toTopOf="@id/notification" />
-            </androidx.constraintlayout.widget.ConstraintLayout>
+                    android:layout_gravity="center"
+                    android:textStyle="bold"
+                    tools:text="Benjamin Nnaemeka" />
+
+                <com.facebook.shimmer.ShimmerFrameLayout
+                    android:id="@+id/shimmer_user_full_name"
+                    style="@style/Widget.SettleX.ShimmerFrameLayout"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center"
+                    android:layout_marginTop="4dp"
+                    android:visibility="gone">
+
+                    <View
+                        android:layout_width="150dp"
+                        android:layout_height="14sp"
+                        android:background="@drawable/bg_shimmer_effect" />
+                </com.facebook.shimmer.ShimmerFrameLayout>
+            </FrameLayout>
+        </LinearLayout>
+
+        <com.google.android.material.button.MaterialButton
+            android:id="@+id/btn_login"
+            style="@style/Widget.SettleX.Button.Outlined"
+            android:layout_width="80dp"
+            android:layout_height="40dp"
+            android:layout_marginStart="5dp"
+            android:paddingHorizontal="0dp"
+            android:text="@string/btn_login"
+            android:visibility="gone"
+            app:layout_constraintBottom_toBottomOf="@id/iv_profile_photo"
+            app:layout_constraintStart_toEndOf="@id/iv_profile_photo"
+            app:layout_constraintTop_toTopOf="@id/iv_profile_photo" />
+
+        <com.google.android.material.imageview.ShapeableImageView
+            android:id="@+id/btn_support"
+            android:layout_width="40dp"
+            android:layout_height="40dp"
+            android:layout_marginEnd="10dp"
+            android:background="@drawable/bg_scrim_oval"
+            android:src="@drawable/ic_support_agent"
+            app:contentPadding="8dp"
+            app:layout_constraintBottom_toBottomOf="@+id/btn_notification"
+            app:layout_constraintEnd_toStartOf="@+id/btn_notification"
+            app:layout_constraintTop_toTopOf="@id/btn_notification"
+            app:tint="@color/colorOnBackground" />
+
+        <androidx.constraintlayout.widget.ConstraintLayout
+            android:id="@+id/btn_notification"
+            android:layout_width="40dp"
+            android:layout_height="40dp"
+            android:background="@drawable/bg_scrim_oval"
+            android:padding="5dp"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toTopOf="parent">
+
+            <com.google.android.material.imageview.ShapeableImageView
+                android:id="@+id/notification"
+                android:layout_width="25dp"
+                android:layout_height="25dp"
+                android:src="@drawable/ic_notifications"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent"
+                app:tint="@color/colorOnBackground" />
+
+            <com.google.android.material.textview.MaterialTextView
+                android:id="@+id/tv_unread_notification_badge"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:background="@drawable/bg_oval_red"
+                android:gravity="center"
+                android:includeFontPadding="false"
+                android:minWidth="12dp"
+                android:minHeight="12dp"
+                android:textColor="@color/colorOnError"
+                android:textSize="9sp"
+                app:layout_constraintEnd_toEndOf="@id/notification"
+                app:layout_constraintTop_toTopOf="@id/notification"
+                tools:ignore="SmallSp"
+                tools:text="2" />
         </androidx.constraintlayout.widget.ConstraintLayout>
+    </androidx.constraintlayout.widget.ConstraintLayout>
 
-        <ScrollView
+    <!-- Scroll content -->
+    <ScrollView
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:fadingEdge="none"
+        android:fillViewport="true"
+        android:overScrollMode="never"
+        android:scrollbars="none">
+
+        <LinearLayout
             android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:fadingEdge="none"
-            android:fillViewport="true"
-            android:overScrollMode="never"
-            android:scrollbars="none">
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:paddingHorizontal="15dp"
+            android:paddingVertical="10dp">
 
+            <!-- Balance overview -->
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
+                android:layout_marginTop="5dp"
+                android:background="@drawable/bg_gradient_rounded16"
                 android:orientation="vertical"
-                android:paddingHorizontal="15dp"
-                android:paddingVertical="10dp">
+                android:padding="15dp">
 
-                <LinearLayout
-                    android:id="@+id/view_marquee_container"
+                <TextView
+                    style="@style/Widget.SettleX.TextRegular"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="@string/tv_wallet"
+                    android:textColor="@color/colorOnPrimary"
+                    android:textSize="12sp"
+                    app:layout_constraintBottom_toBottomOf="parent"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toTopOf="parent" />
+
+                <androidx.constraintlayout.widget.ConstraintLayout
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_marginBottom="5dp"
-                    android:background="@drawable/bg_warning_rounded8"
-                    android:gravity="center_vertical"
-                    android:orientation="horizontal"
-                    android:paddingHorizontal="10dp"
-                    android:paddingVertical="2dp"
-                    android:visibility="gone">
+                    android:layout_marginTop="15dp">
 
-                    <ImageView
-                        android:layout_width="wrap_content"
+                    <LinearLayout
+                        android:id="@+id/view_protection_container"
+                        android:layout_width="0dp"
                         android:layout_height="wrap_content"
-                        android:contentDescription="@null"
-                        android:src="@drawable/ic_brand_awareness"
-                        app:tint="@color/orange_500" />
-
-                    <TextView
-                        android:id="@+id/marquee_txt"
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:ellipsize="marquee"
-                        android:fontFamily="@font/inter_regular"
-                        android:includeFontPadding="false"
-                        android:marqueeRepeatLimit="marquee_forever"
-                        android:scrollHorizontally="true"
-                        android:singleLine="true"
-                        android:text="Network Issue Alert: Airtime purchases are currently unavailable due to a service outage. We're working urgently to fix this."
-                        android:textColor="@color/orange_500"
-                        android:textSize="12sp" />
-                </LinearLayout>
-
-                <LinearLayout
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_marginTop="5dp"
-                    android:background="@drawable/bg_16dp_gradient"
-                    android:gravity="center_vertical"
-                    android:orientation="vertical"
-                    android:padding="15dp">
-
-                    <TextView
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:includeFontPadding="false"
-                        android:text="Wallet"
-                        android:textColor="@color/gray_300"
-                        android:textSize="12sp"
-                        app:layout_constraintBottom_toBottomOf="parent"
+                        android:gravity="start|center"
+                        android:orientation="horizontal"
+                        app:layout_constraintEnd_toStartOf="@id/view_commission_container"
+                        app:layout_constraintHorizontal_weight="1"
                         app:layout_constraintStart_toStartOf="parent"
-                        app:layout_constraintTop_toTopOf="parent" />
+                        app:layout_constraintTop_toTopOf="parent">
 
-                    <androidx.constraintlayout.widget.ConstraintLayout
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:layout_marginTop="15dp">
+                        <ImageView
+                            android:id="@+id/iv_protection"
+                            android:layout_width="15dp"
+                            android:layout_height="15dp"
+                            android:contentDescription="@null"
+                            android:src="@drawable/ic_shield_protection"
+                            app:tint="@color/white" />
 
-                        <LinearLayout
-                            android:id="@+id/view_protection_container"
-                            android:layout_width="0dp"
-                            android:layout_height="wrap_content"
-                            android:gravity="start|center"
-                            android:orientation="horizontal"
-                            app:layout_constraintEnd_toStartOf="@id/view_commission_container"
-                            app:layout_constraintHorizontal_weight="1"
-                            app:layout_constraintStart_toStartOf="parent"
-                            app:layout_constraintTop_toTopOf="parent">
-
-                            <ImageView
-                                android:id="@+id/iv_protection"
-                                android:layout_width="15dp"
-                                android:layout_height="15dp"
-                                android:contentDescription="@null"
-                                android:src="@drawable/ic_shield_protection"
-                                app:tint="@color/white" />
-
-                            <TextView
-                                android:id="@+id/balanceTitle"
-                                android:layout_width="wrap_content"
-                                android:layout_height="wrap_content"
-                                android:layout_marginStart="2dp"
-                                android:includeFontPadding="false"
-                                android:text="Balance"
-                                android:textColor="@color/white"
-                                android:textSize="14sp" />
-
-                            <ImageView
-                                android:id="@+id/iv_balance_toggle"
-                                android:layout_width="18dp"
-                                android:layout_height="18dp"
-                                android:layout_marginStart="5dp"
-                                android:background="?attr/selectableItemBackgroundBorderless"
-                                android:clickable="true"
-                                android:contentDescription="Hide Balance"
-                                android:focusable="true"
-                                android:src="@drawable/ic_visibility_on"
-                                app:tint="@color/white" />
-                        </LinearLayout>
-
-                        <FrameLayout
-                            android:id="@+id/view_balance_container"
+                        <TextView
+                            android:id="@+id/balanceTitle"
+                            style="@style/Widget.SettleX.TextRegular"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
-                            android:layout_marginTop="10dp"
-                            app:layout_constraintStart_toStartOf="parent"
-                            app:layout_constraintTop_toBottomOf="@id/view_protection_container">
+                            android:layout_marginStart="2dp"
+                            android:text="@string/tv_balance"
+                            android:textColor="@color/colorOnPrimary" />
 
-                            <TextView
-                                android:id="@+id/tv_user_balance"
+                        <com.google.android.material.imageview.ShapeableImageView
+                            android:id="@+id/iv_balance_toggle"
+                            android:layout_width="18dp"
+                            android:layout_height="18dp"
+                            android:layout_marginStart="5dp"
+                            android:background="?attr/selectableItemBackgroundBorderless"
+                            android:src="@drawable/ic_visibility_on"
+                            app:tint="@color/colorOnPrimary" />
+                    </LinearLayout>
+
+                    <FrameLayout
+                        android:id="@+id/view_balance_container"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="10dp"
+                        app:layout_constraintStart_toStartOf="parent"
+                        app:layout_constraintTop_toBottomOf="@id/view_protection_container">
+
+                        <TextView
+                            android:id="@+id/tv_user_balance"
+                            style="@style/Widget.SettleX.TextBalance"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            tools:text="₦2,500.00" />
+
+                        <com.facebook.shimmer.ShimmerFrameLayout
+                            android:id="@+id/shimmer_user_balance"
+                            style="@style/Widget.SettleX.ShimmerFrameLayout"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_gravity="center"
+                            android:visibility="gone">
+
+                            <View
+                                android:layout_width="100dp"
+                                android:layout_height="15dp"
+                                android:background="@drawable/bg_shimmer_effect" />
+                        </com.facebook.shimmer.ShimmerFrameLayout>
+                    </FrameLayout>
+
+                    <LinearLayout
+                        android:id="@+id/view_commission_container"
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:orientation="vertical"
+                        app:layout_constraintBottom_toBottomOf="@id/view_balance_container"
+                        app:layout_constraintEnd_toEndOf="parent"
+                        app:layout_constraintHorizontal_weight="1"
+                        app:layout_constraintStart_toEndOf="@id/view_protection_container"
+                        app:layout_constraintTop_toTopOf="@id/view_protection_container">
+
+                        <TextView
+                            android:id="@+id/commission_balance"
+                            style="@style/Widget.SettleX.TextRegular"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="@string/tv_commission"
+                            android:textColor="@color/colorOnPrimary" />
+
+                        <FrameLayout
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_marginTop="10dp">
+
+                            <LinearLayout
+                                android:id="@+id/view_user_commission_balance"
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
                                 android:layout_gravity="center"
-                                android:includeFontPadding="false"
-                                android:textColor="@color/white"
-                                android:textSize="20sp"
-                                android:textStyle="bold"
-                                tools:text="₦2,500.00" />
+                                android:background="?attr/selectableItemBackgroundBorderless"
+                                android:gravity="center_vertical"
+                                android:orientation="horizontal">
+
+                                <TextView
+                                    android:id="@+id/tv_user_commission_balance"
+                                    style="@style/Widget.SettleX.TextBalance"
+                                    android:layout_width="wrap_content"
+                                    android:layout_height="wrap_content"
+                                    tools:text="₦534.18" />
+
+                                <com.google.android.material.imageview.ShapeableImageView
+                                    android:layout_width="15dp"
+                                    android:layout_height="15dp"
+                                    android:layout_marginStart="2dp"
+                                    android:src="@drawable/ic_arrow_forward"
+                                    app:tint="@color/colorOnPrimary" />
+                            </LinearLayout>
 
                             <com.facebook.shimmer.ShimmerFrameLayout
-                                android:id="@+id/shimmer_user_balance"
+                                android:id="@+id/shimmer_user_commission_balance"
                                 style="@style/Widget.SettleX.ShimmerFrameLayout"
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
                                 android:layout_gravity="center"
                                 android:visibility="gone">
 
-                                <TextView
-                                    android:layout_width="100dp"
+                                <View
+                                    android:layout_width="70dp"
                                     android:layout_height="15dp"
-                                    android:background="@drawable/bg_8dp_gray_whitish" />
+                                    android:background="@drawable/bg_shimmer_effect" />
                             </com.facebook.shimmer.ShimmerFrameLayout>
                         </FrameLayout>
+                    </LinearLayout>
+                </androidx.constraintlayout.widget.ConstraintLayout>
 
-                        <LinearLayout
-                            android:id="@+id/view_commission_container"
-                            android:layout_width="0dp"
-                            android:layout_height="wrap_content"
-                            android:orientation="vertical"
-                            app:layout_constraintBottom_toBottomOf="@id/view_balance_container"
-                            app:layout_constraintEnd_toEndOf="parent"
-                            app:layout_constraintHorizontal_weight="1"
-                            app:layout_constraintStart_toEndOf="@id/view_protection_container"
-                            app:layout_constraintTop_toTopOf="@id/view_protection_container">
+                <androidx.constraintlayout.widget.ConstraintLayout
+                    android:id="@+id/view_payment_buttons"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="15dp">
 
-                            <TextView
-                                android:id="@+id/commission_balance"
-                                android:layout_width="wrap_content"
-                                android:layout_height="wrap_content"
-                                android:includeFontPadding="false"
-                                android:text="Commission"
-                                android:textColor="@color/white"
-                                android:textSize="14sp" />
-
-                            <FrameLayout
-                                android:layout_width="wrap_content"
-                                android:layout_height="wrap_content"
-                                android:layout_marginTop="10dp">
-
-                                <LinearLayout
-                                    android:id="@+id/view_user_commission_balance"
-                                    android:layout_width="wrap_content"
-                                    android:layout_height="wrap_content"
-                                    android:layout_gravity="center"
-                                    android:background="?attr/selectableItemBackgroundBorderless"
-                                    android:gravity="center_vertical"
-                                    android:orientation="horizontal">
-
-                                    <TextView
-                                        android:id="@+id/tv_user_commission_balance"
-                                        android:layout_width="wrap_content"
-                                        android:layout_height="wrap_content"
-                                        android:includeFontPadding="false"
-                                        android:textColor="@color/white"
-                                        android:textSize="20sp"
-                                        android:textStyle="bold"
-                                        tools:text="₦534.18" />
-
-                                    <ImageView
-                                        android:layout_width="15dp"
-                                        android:layout_height="15dp"
-                                        android:layout_marginStart="2dp"
-                                        android:contentDescription="@null"
-                                        android:src="@drawable/ic_arrow_forward"
-                                        app:tint="@color/white" />
-                                </LinearLayout>
-
-                                <com.facebook.shimmer.ShimmerFrameLayout
-                                    android:id="@+id/shimmer_user_commission_balance"
-                                    style="@style/Widget.SettleX.ShimmerFrameLayout"
-                                    android:layout_width="wrap_content"
-                                    android:layout_height="wrap_content"
-                                    android:layout_gravity="center"
-                                    android:visibility="gone">
-
-                                    <TextView
-                                        android:layout_width="70dp"
-                                        android:layout_height="15dp"
-                                        android:background="@drawable/bg_8dp_gray_whitish" />
-                                </com.facebook.shimmer.ShimmerFrameLayout>
-                            </FrameLayout>
-                        </LinearLayout>
-                    </androidx.constraintlayout.widget.ConstraintLayout>
-
-                    <androidx.constraintlayout.widget.ConstraintLayout
-                        android:id="@+id/view_payment_buttons"
-                        android:layout_width="match_parent"
+                    <LinearLayout
+                        android:id="@+id/btn_deposit"
+                        android:layout_width="0dp"
                         android:layout_height="wrap_content"
-                        android:layout_marginTop="15dp">
+                        android:background="@drawable/bg_overlay_light_rounded8"
+                        android:gravity="center"
+                        android:orientation="vertical"
+                        android:paddingVertical="5dp"
+                        app:layout_constraintEnd_toStartOf="@id/btn_receive"
+                        app:layout_constraintHorizontal_weight="1"
+                        app:layout_constraintStart_toStartOf="parent"
+                        app:layout_constraintTop_toTopOf="parent">
 
-                        <LinearLayout
-                            android:id="@+id/btn_deposit"
-                            android:layout_width="0dp"
+                        <com.google.android.material.imageview.ShapeableImageView
+                            android:layout_width="20dp"
+                            android:layout_height="20dp"
+                            android:src="@drawable/ic_add"
+                            app:tint="@color/colorOnPrimary" />
+
+                        <TextView
+                            style="@style/Widget.SettleX.TextRegular"
+                            android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
-                            android:background="@drawable/bg_8dp_transparent_white"
-                            android:gravity="center"
-                            android:orientation="vertical"
-                            android:paddingVertical="5dp"
-                            app:layout_constraintEnd_toStartOf="@id/btn_receive"
-                            app:layout_constraintHorizontal_weight="1"
-                            app:layout_constraintStart_toStartOf="parent"
-                            app:layout_constraintTop_toTopOf="parent">
+                            android:text="@string/tv_deposit"
+                            android:textColor="@color/colorOnPrimary"
+                            android:textSize="11sp" />
+                    </LinearLayout>
 
-                            <ImageView
-                                android:layout_width="20dp"
-                                android:layout_height="20dp"
-                                android:contentDescription="@null"
-                                android:src="@drawable/ic_add" />
+                    <LinearLayout
+                        android:id="@+id/btn_receive"
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_marginStart="20dp"
+                        android:layout_marginEnd="20dp"
+                        android:background="@drawable/bg_overlay_light_rounded8"
+                        android:gravity="center"
+                        android:orientation="vertical"
+                        android:paddingVertical="5dp"
+                        app:layout_constraintEnd_toStartOf="@+id/btn_transfer"
+                        app:layout_constraintHorizontal_weight="1"
+                        app:layout_constraintStart_toEndOf="@+id/btn_deposit"
+                        app:layout_constraintTop_toTopOf="parent">
 
-                            <TextView
-                                android:layout_width="wrap_content"
-                                android:layout_height="wrap_content"
-                                android:fontFamily="@font/inter_regular"
-                                android:includeFontPadding="false"
-                                android:text="Deposit"
-                                android:textColor="@color/white"
-                                android:textSize="11sp" />
-                        </LinearLayout>
+                        <com.google.android.material.imageview.ShapeableImageView
+                            android:layout_width="20dp"
+                            android:layout_height="20dp"
+                            android:src="@drawable/ic_receive"
+                            app:tint="@color/colorOnPrimary" />
 
-                        <LinearLayout
-                            android:id="@+id/btn_receive"
-                            android:layout_width="0dp"
+                        <TextView
+                            style="@style/Widget.SettleX.TextRegular"
+                            android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
-                            android:layout_marginStart="20dp"
-                            android:layout_marginEnd="20dp"
-                            android:background="@drawable/bg_8dp_transparent_white"
-                            android:gravity="center"
-                            android:orientation="vertical"
-                            android:paddingVertical="5dp"
-                            app:layout_constraintEnd_toStartOf="@+id/btn_transfer"
-                            app:layout_constraintHorizontal_weight="1"
-                            app:layout_constraintStart_toEndOf="@+id/btn_deposit"
-                            app:layout_constraintTop_toTopOf="parent">
+                            android:text="@string/tv_receive"
+                            android:textColor="@color/colorOnPrimary"
+                            android:textSize="11sp" />
+                    </LinearLayout>
 
-                            <ImageView
-                                android:layout_width="20dp"
-                                android:layout_height="20dp"
-                                android:contentDescription="@null"
-                                android:src="@drawable/ic_receive" />
+                    <LinearLayout
+                        android:id="@+id/btn_transfer"
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:background="@drawable/bg_overlay_light_rounded8"
+                        android:gravity="center"
+                        android:orientation="vertical"
+                        android:paddingVertical="5dp"
+                        app:layout_constraintEnd_toEndOf="parent"
+                        app:layout_constraintHorizontal_weight="1"
+                        app:layout_constraintStart_toEndOf="@id/btn_receive"
+                        app:layout_constraintTop_toTopOf="parent">
 
-                            <TextView
-                                android:layout_width="wrap_content"
-                                android:layout_height="wrap_content"
-                                android:fontFamily="@font/inter_regular"
-                                android:includeFontPadding="false"
-                                android:text="Receive"
-                                android:textColor="@color/white"
-                                android:textSize="11sp" />
-                        </LinearLayout>
+                        <com.google.android.material.imageview.ShapeableImageView
+                            android:layout_width="20dp"
+                            android:layout_height="20dp"
+                            android:src="@drawable/ic_send"
+                            app:tint="@color/colorOnPrimary" />
 
-                        <LinearLayout
-                            android:id="@+id/btn_transfer"
-                            android:layout_width="0dp"
+                        <TextView
+                            style="@style/Widget.SettleX.TextRegular"
+                            android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
-                            android:background="@drawable/bg_8dp_transparent_white"
-                            android:gravity="center"
-                            android:orientation="vertical"
-                            android:paddingVertical="5dp"
-                            app:layout_constraintEnd_toEndOf="parent"
-                            app:layout_constraintHorizontal_weight="1"
-                            app:layout_constraintStart_toEndOf="@id/btn_receive"
-                            app:layout_constraintTop_toTopOf="parent">
+                            android:text="@string/tv_transfer"
+                            android:textColor="@color/colorOnPrimary"
+                            android:textSize="11sp" />
+                    </LinearLayout>
+                </androidx.constraintlayout.widget.ConstraintLayout>
+            </LinearLayout>
 
-                            <ImageView
-                                android:layout_width="20dp"
-                                android:layout_height="20dp"
-                                android:contentDescription="@null"
-                                android:src="@drawable/ic_send" />
+            <!-- View services -->
+            <androidx.recyclerview.widget.RecyclerView
+                android:id="@+id/rv_services"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="15dp"
+                android:background="@drawable/bg_surface_variant_rounded16"
+                android:clipToPadding="false"
+                android:nestedScrollingEnabled="false"
+                android:padding="8dp" />
 
-                            <TextView
-                                android:layout_width="wrap_content"
-                                android:layout_height="wrap_content"
-                                android:fontFamily="@font/inter_regular"
-                                android:includeFontPadding="false"
-                                android:text="Transfer"
-                                android:textColor="@color/white"
-                                android:textSize="11sp" />
-                        </LinearLayout>
-                    </androidx.constraintlayout.widget.ConstraintLayout>
+            <!-- Transaction label -->
+            <LinearLayout
+                android:id="@+id/view_recent_transactions_label"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="15dp"
+                android:layout_marginBottom="5dp"
+                android:gravity="center_vertical"
+                android:orientation="horizontal">
+
+                <TextView
+                    style="@style/Widget.SettleX.TextRegular"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="start"
+                    android:layout_weight="1"
+                    android:text="@string/tv_recent_transactions"
+                    android:textColor="@color/colorOnSurfaceVariant"
+                    android:textSize="12sp" />
+
+                <TextView
+                    android:id="@+id/tv_view_all_transaction"
+                    style="@style/Widget.SettleX.TextRegular"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginEnd="4dp"
+                    android:background="?attr/selectableItemBackground"
+                    android:text="@string/tv_view_all"
+                    android:textColor="@color/colorOnSurfaceVariant"
+                    android:textSize="12sp"
+                    android:textStyle="bold" />
+            </LinearLayout>
+
+            <!-- View recent transactions -->
+            <FrameLayout
+                android:id="@+id/view_transaction_container"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:background="@drawable/bg_surface_variant_rounded16"
+                android:paddingHorizontal="8dp"
+                android:paddingVertical="10dp">
+
+                <androidx.recyclerview.widget.RecyclerView
+                    android:id="@+id/rv_transactions"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:clipToPadding="false"
+                    android:nestedScrollingEnabled="false"
+                    android:visibility="gone" />
+
+                <com.facebook.shimmer.ShimmerFrameLayout
+                    android:id="@+id/shimmer_transactions"
+                    style="@style/Widget.SettleX.ShimmerFrameLayout"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:visibility="gone">
+
+                    <include
+                        layout="@layout/item_transaction_shimmer"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content" />
+                </com.facebook.shimmer.ShimmerFrameLayout>
+
+                <LinearLayout
+                    android:id="@+id/view_no_transactions_ui"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:gravity="center"
+                    android:orientation="vertical"
+                    android:paddingVertical="8dp">
+
+                    <TextView
+                        style="@style/Widget.SettleX.TextBold"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="@string/tv_no_transactions_yet"
+                        android:textColor="@color/colorOnSurface"
+                        android:textSize="15sp" />
+
+                    <TextView
+                        style="@style/Widget.SettleX.TextRegular"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="5dp"
+                        android:text="@string/tv_your_recent_transactions_will_appear_here"
+                        android:textColor="@color/colorOnSurfaceVariant"
+                        android:textSize="12sp" />
+
+                    <ImageView
+                        android:layout_width="50dp"
+                        android:layout_height="50dp"
+                        android:layout_marginTop="5dp"
+                        android:contentDescription="@null"
+                        android:src="@drawable/ic_no_transactions" />
                 </LinearLayout>
 
                 <!-- No internet connection -->
@@ -478,185 +521,66 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_marginTop="15dp"
-                    android:background="@drawable/bg_8dp_white_ripple_yes"
+                    android:background="@drawable/bg_surface_variant_ripple_rounded8"
                     android:gravity="center_vertical"
                     android:orientation="horizontal"
                     android:padding="8dp"
                     android:visibility="gone">
 
                     <TextView
+                        style="@style/Widget.SettleX.TextRegular"
                         android:layout_width="0dp"
                         android:layout_height="wrap_content"
                         android:layout_weight="1"
-                        android:fontFamily="@font/inter_regular"
-                        android:includeFontPadding="false"
                         android:text="@string/error_no_internet"
-                        android:textColor="@color/gray_600"
+                        android:textColor="@color/colorOnSurface"
                         android:textSize="12sp" />
 
                     <com.google.android.material.button.MaterialButton
-                        android:id="@+id/btn_okay"
+                        android:id="@+id/btn_refresh_transactions"
                         style="@style/Widget.SettleX.Button.Outlined"
                         android:layout_width="70dp"
                         android:layout_height="40dp"
                         android:layout_marginStart="5dp"
                         android:paddingHorizontal="0dp"
-                        android:text="Okay"
+                        android:text="@string/btn_refresh"
                         android:textSize="12sp" />
                 </LinearLayout>
+            </FrameLayout>
 
-                <androidx.recyclerview.widget.RecyclerView
-                    android:id="@+id/rv_services"
+            <FrameLayout
+                android:id="@+id/view_promo_banner_container"
+                android:layout_width="match_parent"
+                android:layout_height="120dp"
+                android:layout_marginTop="15dp"
+                android:background="@drawable/bg_surface_variant_rounded16"
+                android:visibility="visible">
+
+                <androidx.viewpager2.widget.ViewPager2
+                    android:id="@+id/banner_view_pager"
                     android:layout_width="match_parent"
+                    android:layout_height="match_parent" />
+
+                <ProgressBar
+                    android:id="@+id/promo_banner_progress_bar"
+                    style="@style/Widget.SettleX.AppCompat.CircularProgressBar."
+                    android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_marginTop="15dp"
-                    android:background="@drawable/bg_16dp_white"
-                    android:clipToPadding="false"
-                    android:nestedScrollingEnabled="false"
-                    android:padding="8dp" />
+                    android:layout_gravity="center" />
 
-                <!-- Transaction label -->
-                <LinearLayout
-                    android:id="@+id/view_recent_transactions_label"
-                    android:layout_width="match_parent"
+                <com.tbuonomo.viewpagerdotsindicator.DotsIndicator
+                    android:id="@+id/dots_indicator"
+                    android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_marginTop="15dp"
-                    android:layout_marginBottom="5dp"
-                    android:gravity="center_vertical"
-                    android:orientation="horizontal">
-
-                    <TextView
-                        android:layout_width="0dp"
-                        android:layout_height="wrap_content"
-                        android:layout_gravity="start"
-                        android:layout_weight="1"
-                        android:fontFamily="@font/inter_regular"
-                        android:includeFontPadding="false"
-                        android:text="Recent Transactions"
-                        android:textColor="@color/gray_500"
-                        android:textSize="12sp" />
-
-                    <TextView
-                        android:id="@+id/tv_view_all_transaction"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_marginEnd="4dp"
-                        android:background="?attr/selectableItemBackground"
-                        android:fontFamily="@font/inter_regular"
-                        android:includeFontPadding="false"
-                        android:text="View ALL"
-                        android:textColor="@color/gray_500"
-                        android:textSize="12sp"
-                        android:textStyle="bold" />
-                </LinearLayout>
-
-                <LinearLayout
-                    android:id="@+id/view_transaction_container"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:background="@drawable/bg_16dp_white"
-                    android:orientation="vertical"
-                    android:paddingHorizontal="8dp"
-                    android:paddingVertical="10dp">
-
-                    <FrameLayout
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:layout_marginTop="5dp">
-
-                        <androidx.recyclerview.widget.RecyclerView
-                            android:id="@+id/rv_transactions"
-                            android:layout_width="match_parent"
-                            android:layout_height="wrap_content"
-                            android:clipToPadding="false"
-                            android:nestedScrollingEnabled="false"
-                            android:visibility="gone" />
-
-                        <com.facebook.shimmer.ShimmerFrameLayout
-                            android:id="@+id/shimmer_transactions"
-                            style="@style/Widget.SettleX.ShimmerFrameLayout"
-                            android:layout_width="match_parent"
-                            android:layout_height="wrap_content"
-                            android:visibility="gone">
-
-                            <include
-                                layout="@layout/item_transaction_shimmer"
-                                android:layout_width="match_parent"
-                                android:layout_height="wrap_content" />
-                        </com.facebook.shimmer.ShimmerFrameLayout>
-
-                        <LinearLayout
-                            android:id="@+id/view_no_transactions_ui"
-                            android:layout_width="match_parent"
-                            android:layout_height="wrap_content"
-                            android:gravity="center"
-                            android:orientation="vertical"
-                            android:paddingVertical="8dp">
-
-                            <TextView
-                                android:layout_width="wrap_content"
-                                android:layout_height="wrap_content"
-                                android:fontFamily="@font/inter_medium"
-                                android:includeFontPadding="false"
-                                android:text="No transactions yet"
-                                android:textColor="@color/black"
-                                android:textSize="15sp"
-                                android:textStyle="bold" />
-
-                            <TextView
-                                android:layout_width="wrap_content"
-                                android:layout_height="wrap_content"
-                                android:layout_marginTop="5dp"
-                                android:fontFamily="@font/inter_regular"
-                                android:includeFontPadding="false"
-                                android:text="Your recent transactions will appear here"
-                                android:textColor="@color/gray_500"
-                                android:textSize="12sp" />
-
-                            <ImageView
-                                android:layout_width="50dp"
-                                android:layout_height="50dp"
-                                android:layout_marginTop="5dp"
-                                android:contentDescription="@null"
-                                android:src="@drawable/ic_no_transactions" />
-                        </LinearLayout>
-                    </FrameLayout>
-                </LinearLayout>
-
-                <FrameLayout
-                    android:id="@+id/view_promo_banner_container"
-                    android:layout_width="match_parent"
-                    android:layout_height="120dp"
-                    android:layout_marginTop="15dp"
-                    android:background="@drawable/bg_16dp_white"
-                    android:visibility="visible">
-
-                    <androidx.viewpager2.widget.ViewPager2
-                        android:id="@+id/banner_view_pager"
-                        android:layout_width="match_parent"
-                        android:layout_height="match_parent" />
-
-                    <ProgressBar
-                        android:id="@+id/promo_banner_progress_bar"
-                        style="@style/Widget.SettleX.AppCompat.CircularProgressBar."
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_gravity="center" />
-
-                    <com.tbuonomo.viewpagerdotsindicator.DotsIndicator
-                        android:id="@+id/dots_indicator"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_gravity="bottom|center_horizontal"
-                        android:layout_marginBottom="10dp"
-                        app:dotsColor="@color/gray_500"
-                        app:dotsSize="6dp"
-                        app:dotsSpacing="2dp"
-                        app:dotsWidthFactor="2.5"
-                        app:progressMode="false"
-                        app:selectedDotColor="@color/white" />
-                </FrameLayout>
-            </LinearLayout>
-        </ScrollView>
-    </LinearLayout>
-</FrameLayout>
+                    android:layout_gravity="bottom|center_horizontal"
+                    android:layout_marginBottom="10dp"
+                    app:dotsColor="@color/colorOnSurfaceVariant"
+                    app:dotsSize="6dp"
+                    app:dotsSpacing="2dp"
+                    app:dotsWidthFactor="2.5"
+                    app:progressMode="false"
+                    app:selectedDotColor="@color/colorPrimary" />
+            </FrameLayout>
+        </LinearLayout>
+    </ScrollView>
+</LinearLayout>

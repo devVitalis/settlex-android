@@ -71,7 +71,7 @@
                         android:id="@+id/card"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:background="@drawable/bg_8dp_white_ripple_yes"
+                        android:background="@drawable/bg_surface_variant_ripple_rounded8"
                         android:gravity="center"
                         android:orientation="vertical"
                         android:paddingHorizontal="10dp"
@@ -148,7 +148,7 @@
                             android:layout_width="match_parent"
                             android:layout_height="match_parent"
                             android:layout_gravity="center"
-                            android:background="@drawable/bg_primary_container_oval"
+                            android:background="@drawable/bg_secondary_oval"
                             android:contentDescription="@null"
                             android:padding="7dp"
                             tools:src="@drawable/ic_service_payment_sent" />
@@ -159,7 +159,7 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_marginTop="15dp"
-                    android:background="@drawable/bg_8dp_white_ripple_yes"
+                    android:background="@drawable/bg_surface_variant_ripple_rounded8"
                     android:orientation="vertical"
                     android:paddingHorizontal="15dp"
                     android:paddingVertical="15sp">

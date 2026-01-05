@@ -78,7 +78,7 @@
                     android:id="@+id/btn_create_payment_pin"
                     android:layout_width="match_parent"
                     android:layout_height="45dp"
-                    android:background="@drawable/bg_8dp_white_ripple_yes"
+                    android:background="@drawable/bg_surface_variant_ripple_rounded8"
                     android:gravity="center_vertical"
                     android:orientation="horizontal"
                     android:padding="5dp">
@@ -116,7 +116,7 @@
                     android:id="@+id/btn_change_payment_pin"
                     android:layout_width="match_parent"
                     android:layout_height="45dp"
-                    android:background="@drawable/bg_8dp_white_ripple_yes"
+                    android:background="@drawable/bg_surface_variant_ripple_rounded8"
                     android:gravity="center_vertical"
                     android:orientation="horizontal"
                     android:padding="5dp">
@@ -144,7 +144,7 @@
                     android:id="@+id/btn_forgot_payment_pin"
                     android:layout_width="match_parent"
                     android:layout_height="45dp"
-                    android:background="@drawable/bg_8dp_white_ripple_yes"
+                    android:background="@drawable/bg_surface_variant_ripple_rounded8"
                     android:gravity="center_vertical"
                     android:orientation="horizontal"
                     android:padding="5dp">
@@ -171,7 +171,7 @@
                 <LinearLayout
                     android:layout_width="match_parent"
                     android:layout_height="45dp"
-                    android:background="@drawable/bg_8dp_white_ripple_yes"
+                    android:background="@drawable/bg_surface_variant_ripple_rounded8"
                     android:gravity="center_vertical"
                     android:orientation="horizontal"
                     android:padding="5dp">
@@ -238,7 +238,7 @@
                     android:id="@+id/btn_change_password"
                     android:layout_width="match_parent"
                     android:layout_height="45dp"
-                    android:background="@drawable/bg_8dp_white_ripple_yes"
+                    android:background="@drawable/bg_surface_variant_ripple_rounded8"
                     android:gravity="center_vertical"
                     android:orientation="horizontal"
                     android:padding="5dp">
@@ -266,7 +266,7 @@
                     android:id="@+id/btn_forgot_password"
                     android:layout_width="match_parent"
                     android:layout_height="45dp"
-                    android:background="@drawable/bg_8dp_white_ripple_yes"
+                    android:background="@drawable/bg_surface_variant_ripple_rounded8"
                     android:gravity="center_vertical"
                     android:orientation="horizontal"
                     android:padding="5dp">
@@ -293,7 +293,7 @@
                 <LinearLayout
                     android:layout_width="match_parent"
                     android:layout_height="45dp"
-                    android:background="@drawable/bg_8dp_white_ripple_yes"
+                    android:background="@drawable/bg_surface_variant_ripple_rounded8"
                     android:gravity="center_vertical"
                     android:orientation="horizontal"
                     android:padding="5dp">

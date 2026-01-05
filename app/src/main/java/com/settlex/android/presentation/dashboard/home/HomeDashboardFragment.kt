@@ -10,7 +10,6 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.Toast
 import androidx.activity.OnBackPressedCallback
-import androidx.core.view.isVisible
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
 import androidx.lifecycle.Lifecycle
@@ -45,6 +44,7 @@ import com.settlex.android.presentation.transactions.model.TransactionItemUiMode
 import com.settlex.android.presentation.wallet.CommissionWithdrawalActivity
 import com.settlex.android.presentation.wallet.ReceiveActivity
 import com.settlex.android.util.string.StringFormatter
+import com.settlex.android.util.string.StringFormatter.showNotImplementedToast
 import com.settlex.android.util.ui.StatusBar
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.launch
@@ -91,7 +91,7 @@ class HomeDashboardFragment : Fragment() {
     }
 
     private fun initViews() {
-        StatusBar.setColor(requireActivity(), R.color.gray_200)
+        StatusBar.setColor(requireActivity(), R.color.colorBackgroundSecondary)
         initListeners()
         initTransactionRecyclerView()
         setupDoubleBackPressToExit()
@@ -99,16 +99,9 @@ class HomeDashboardFragment : Fragment() {
 
     private fun comingSoon() {
         // TODO: remove
-        StringFormatter.showNotImplementedToast(
+        showNotImplementedToast(
             requireContext()
         )
-    }
-
-    private fun toggleBrandAwareness() {
-        // TODO: remove once brand awareness is implemented
-        val isVisible = binding.viewMarqueeContainer.isVisible
-        binding.viewMarqueeContainer.visibility = if (isVisible) View.GONE else View.VISIBLE
-        binding.marqueeTxt.isSelected = !isVisible
     }
 
     private fun initListeners() = with(binding) {
@@ -119,7 +112,7 @@ class HomeDashboardFragment : Fragment() {
         btnNotification.setOnClickListener { comingSoon() }
         btnSupport.setOnClickListener { comingSoon() }
         tvViewAllTransaction.setOnClickListener { comingSoon() }
-        btnDeposit.setOnClickListener { toggleBrandAwareness() }
+        btnDeposit.setOnClickListener { comingSoon() }
         ivBalanceToggle.setOnClickListener { viewModel.toggleBalanceVisibility() }
 
         viewUserCommissionBalance.setOnClickListener {
@@ -209,8 +202,8 @@ class HomeDashboardFragment : Fragment() {
     private fun showUnauthenticatedState() = with(binding) {
         // Set unauthenticated UI
         listOf(
-            shimmerUserFullName, shimmerUserBalance, shimmerUserCommissionBalance,
-            ivProfilePhoto, viewMarqueeContainer,
+            shimmerUserFullName, shimmerUserBalance,
+            shimmerUserCommissionBalance, ivProfilePhoto,
             ivBalanceToggle, viewGreetingContainer,
             viewPaymentButtons, viewTransactionContainer,
             viewRecentTransactionsLabel,

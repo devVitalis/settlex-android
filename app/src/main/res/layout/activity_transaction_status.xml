@@ -47,7 +47,7 @@
             android:id="@+id/card_container"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
-            android:background="@drawable/bg_8dp_white_ripple_yes"
+            android:background="@drawable/bg_surface_variant_ripple_rounded8"
             android:gravity="center"
             android:orientation="vertical"
             android:paddingTop="10dp"

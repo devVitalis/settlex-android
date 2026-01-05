@@ -147,6 +147,23 @@
         <item name="android:includeFontPadding">false</item>
     </style>
 
+    <style name="Widget.SettleX.TextName" parent="Widget.AppCompat.TextView">
+        <item name="fontFamily">@font/poppins_regular</item>
+        <item name="android:textColor">@color/colorOnBackground</item>
+        <item name="android:textSize">14sp</item>
+        <item name="background">?attr/selectableItemBackground</item>
+        <item name="android:includeFontPadding">false</item>
+    </style>
+
+    <style name="Widget.SettleX.TextBalance" parent="Widget.AppCompat.TextView">
+        <item name="fontFamily">sans-serif</item>
+        <item name="android:textColor">@color/colorOnPrimary</item>
+        <item name="android:textSize">20sp</item>
+        <item name="android:textStyle">bold</item>
+        <item name="background">?attr/selectableItemBackground</item>
+        <item name="android:includeFontPadding">false</item>
+    </style>
+
     <!-- Pin box (for OTP/PIN) -->
     <style name="Widget.SettleX.PinView" parent="PinWidget.PinView">
         <item name="itemCount">4</item>
@@ -175,7 +192,7 @@
     </style>
 
     <style name="Widget.SettleX.BottomNavigation.ActiveIndicator" parent="Widget.Material3.BottomNavigationView.ActiveIndicator">
-        <item name="android:color">@color/blue_200</item>
+        <item name="android:color">@color/colorSecondary</item>
     </style>
 
     <!-- Progress indicator -->
@@ -220,6 +237,6 @@
     <style name="Widget.SettleX.CardView.Circular.Elevated" parent="Widget.Material3.CardView.Elevated">
         <item name="cardElevation">5dp</item>
         <item name="shapeAppearance">@style/ShapeAppearance.SettleX.Circular</item>
-        <item name="cardBackgroundColor">@color/white</item>
+        <item name="cardBackgroundColor">@color/colorBackground</item>
     </style>
 </resources>

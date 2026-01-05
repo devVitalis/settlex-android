@@ -55,7 +55,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginTop="15dp"
-            android:background="@drawable/bg_16dp_gradient"
+            android:background="@drawable/bg_gradient_rounded16"
             android:orientation="vertical"
             android:padding="20dp">
 

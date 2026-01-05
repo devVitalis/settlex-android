@@ -15,7 +15,7 @@
         android:layout_width="45dp"
         android:layout_height="45dp"
         android:layout_gravity="center_horizontal|top"
-        android:background="@drawable/bg_primary_container_oval"
+        android:background="@drawable/bg_secondary_oval"
         android:contentDescription="@null"
         android:padding="10dp"
         android:src="@drawable/ic_lock_filled"

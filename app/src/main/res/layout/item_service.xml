@@ -4,7 +4,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:background="@drawable/bg_8dp_white_ripple_yes"
+    android:background="@drawable/bg_surface_variant_ripple_rounded8"
     android:clipChildren="false"
     android:clipToPadding="false"
     android:gravity="center"
@@ -27,19 +27,19 @@
             android:id="@+id/icon_frame"
             android:layout_width="50dp"
             android:layout_height="50dp"
-            android:background="@drawable/bg_primary_container_oval"
+            android:background="@drawable/bg_secondary_oval"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent">
 
-            <ImageView
+            <com.google.android.material.imageview.ShapeableImageView
                 android:id="@+id/icon"
                 android:layout_width="24dp"
                 android:layout_height="24dp"
                 android:layout_gravity="center"
                 android:contentDescription="@null"
-                app:tint="@color/blue_500"
+                app:tint="@color/colorPrimary"
                 tools:src="@drawable/ic_service_airtime" />
         </FrameLayout>
 
@@ -55,7 +55,7 @@
             android:minWidth="30dp"
             android:paddingHorizontal="5dp"
             android:paddingVertical="2dp"
-            android:textColor="@color/white"
+            android:textColor="@color/colorOnBadge"
             android:textSize="8sp"
             app:layout_constraintStart_toStartOf="@+id/center_guide_line"
             app:layout_constraintTop_toTopOf="@+id/icon_frame"
@@ -70,7 +70,7 @@
         android:layout_marginTop="4dp"
         android:gravity="center"
         android:textAlignment="center"
-        android:textColor="@android:color/black"
+        android:textColor="@color/colorOnBackground"
         android:textSize="12sp"
         tools:text="Service" />
 </LinearLayout>

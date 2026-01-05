@@ -15,7 +15,7 @@
     <string name="tv_help">Help</string>
     <string name="title_create_your_account">Create Your Account</string>
     <string name="sub_title_enter_your_email_and_phone_number_we_ll_send_a_one_time_verification_code_otp_to_your_email_to_confirm_your_account">Enter your email and phone number. We\'ll send a one-time verification code (OTP) to your email to confirm your account.</string>
-    <string name="tv_step_1_of_4">1/2</string>
+    <string name="tv_step_1_of_4">1/4</string>
     <string name="hint_enter_your_email_address">Enter your email address</string>
     <string name="tv_country_code">+234</string>
     <string name="hint_enter_your_phone_number">Enter your phone number</string>
@@ -75,8 +75,24 @@
     <string name="hint_confirm_your_new_password">Confirm your new password</string>
     <string name="tv_password_requirements_info"><![CDATA[Your password must be at least 8 characters long and contain an uppercase letter, a lowercase letter, and a special character(eg., !@#$%^&*()_+-=[]{};:,.?)]]></string>
     <string name="btn_change_password">Change Password</string>
+
+    <!-- ONBOARDING ACTIVITY -->
     <string name="btn_login">Login</string>
     <string name="btn_get_started">Get Started</string>
     <string name="tv_skip">Skip</string>
+
+    <!-- HOME DASHBOARD FRAGMENT -->
+    <string name="tv_hello">Hello 👋</string>
+    <string name="tv_wallet">Wallet</string>
+    <string name="tv_no_transactions_yet">No transactions yet</string>
+    <string name="tv_your_recent_transactions_will_appear_here">Your recent transactions will appear here</string>
+    <string name="tv_recent_transactions">Recent Transactions</string>
+    <string name="tv_view_all">View ALL</string>
+    <string name="tv_commission">Commission</string>
+    <string name="tv_balance">Balance</string>
+    <string name="tv_deposit">Deposit</string>
+    <string name="tv_receive">Receive</string>
+    <string name="tv_transfer">Transfer</string>
+    <string name="btn_refresh">Refresh</string>
 
 </resources>

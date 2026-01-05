@@ -44,7 +44,7 @@ class RewardsDashboardFragment : Fragment() {
     }
 
     private fun setupUi() {
-        StatusBar.setColor(requireActivity(), R.color.blue_300)
+        StatusBar.setColor(requireActivity(), R.color.blue_400)
         applyReferralInfoStyle()
 
         binding!!.btnCopy.setOnClickListener {

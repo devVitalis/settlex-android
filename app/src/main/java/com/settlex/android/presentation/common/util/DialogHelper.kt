@@ -27,7 +27,7 @@ import java.util.function.BiConsumer
 object DialogHelper {
 
     // Alert dialogs
-    fun showAlertDialogWithIcon(
+    fun showCustomAlertDialogWithIcon(
         context: Context,
         config: BiConsumer<AlertDialog, AlertDialogWithIconBinding>
     ) {
@@ -42,7 +42,7 @@ object DialogHelper {
         dialog.show()
     }
 
-    fun showAlertDialogMessage(
+    fun showCustomAlertDialog(
         context: Context,
         config: BiConsumer<AlertDialog, AlertDialogMessageBinding>
     ) {

@@ -171,7 +171,7 @@
                     android:layout_width="55dp"
                     android:layout_height="55dp"
                     android:layout_marginStart="10dp"
-                    android:background="@color/overlay_dim"
+                    android:background="@color/scrim_black_10"
                     android:src="@drawable/ic_fingerprint"
                     app:contentPadding="10dp"
                     app:shapeAppearanceOverlay="@style/ShapeAppearance.SettleX.Circular"

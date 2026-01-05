@@ -3,7 +3,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:background="@color/white"
+    android:background="@color/colorBackground"
     android:gravity="center"
     android:orientation="vertical"
     android:paddingHorizontal="10dp"
@@ -11,14 +11,12 @@
 
     <TextView
         android:id="@+id/tv_message"
+        style="@style/Widget.SettleX.TextRegular"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginTop="10dp"
-        android:fontFamily="@font/inter_regular"
         android:gravity="center"
         android:textAlignment="center"
-        android:textColor="@color/black"
-        android:textSize="14sp"
         tools:text="Dialog message" />
 
     <LinearLayout
@@ -37,7 +35,7 @@
             android:layout_marginEnd="15dp"
             android:layout_weight="1"
             android:textSize="14sp"
-            tools:text="Secondary Btn" />
+            tools:text="Secondary" />
 
         <com.google.android.material.button.MaterialButton
             android:id="@+id/btn_primary"
@@ -46,6 +44,6 @@
             android:layout_height="55dp"
             android:layout_weight="1"
             android:textSize="14sp"
-            tools:text="Primary Btn" />
+            tools:text="Primary" />
     </LinearLayout>
 </LinearLayout>
