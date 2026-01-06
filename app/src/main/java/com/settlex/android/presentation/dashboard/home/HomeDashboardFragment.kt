@@ -383,10 +383,10 @@ class HomeDashboardFragment : Fragment() {
                     serviceType.destination
                 )
             }
-        val adapter = ServicesAdapter(false, serviceList) { serviceUiModel ->
+        val adapter = ServicesAdapter(true, serviceList) { serviceUiModel ->
             val destination = serviceUiModel.destination
             when (destination) {
-                null -> Toast.makeText(context, "Feature not yet implemented", Toast.LENGTH_SHORT)
+                null -> Toast.makeText(context, "Feature not yet implemented", Toast.LENGTH_SHORT).show()
                 else -> {
                     when {
                         destination.isActivity -> startActivity(

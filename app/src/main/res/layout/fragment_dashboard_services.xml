@@ -4,7 +4,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@color/white"
+    android:background="@color/colorSurfaceVariant"
     android:fitsSystemWindows="true"
     tools:context=".presentation.dashboard.services.ServicesDashboardFragment">
 
@@ -20,21 +20,18 @@
         app:layout_constraintTop_toTopOf="parent">
 
         <TextView
+            style="@style/Widget.SettleX.TextBold"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:fontFamily="@font/inter_bold"
             android:gravity="center"
-            android:includeFontPadding="false"
-            android:text="All Services"
-            android:textColor="@color/black"
-            android:textSize="15sp"
-            android:textStyle="bold" />
+            android:text="@string/tv_all_services"
+            android:textSize="15sp" />
     </LinearLayout>
 
     <ScrollView
         android:layout_width="match_parent"
         android:layout_height="0dp"
-        android:background="@color/gray_200"
+        android:background="@color/colorBackgroundSecondary"
         android:fillViewport="true"
         android:scrollbars="none"
         app:layout_constraintBottom_toBottomOf="parent"
@@ -54,13 +51,12 @@
                 android:padding="8dp">
 
                 <TextView
+                    style="@style/Widget.SettleX.TextRegular"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_marginTop="5dp"
-                    android:fontFamily="@font/inter_regular"
-                    android:includeFontPadding="false"
-                    android:text="Telecom &amp; Digital"
-                    android:textColor="@color/gray_500"
+                    android:text="@string/tv_telecom_amp_digital"
+                    android:textColor="@color/colorOnSurfaceVariant"
                     android:textSize="12sp" />
 
                 <androidx.recyclerview.widget.RecyclerView
@@ -81,13 +77,12 @@
                 android:padding="8dp">
 
                 <TextView
+                    style="@style/Widget.SettleX.TextRegular"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_marginTop="5dp"
-                    android:fontFamily="@font/inter_regular"
-                    android:includeFontPadding="false"
-                    android:text="Entertainment"
-                    android:textColor="@color/gray_500"
+                    android:text="@string/tv_entertainment"
+                    android:textColor="@color/colorOnSurfaceVariant"
                     android:textSize="12sp" />
 
                 <androidx.recyclerview.widget.RecyclerView
@@ -108,13 +103,12 @@
                 android:padding="8dp">
 
                 <TextView
+                    style="@style/Widget.SettleX.TextRegular"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_marginTop="5dp"
-                    android:fontFamily="@font/inter_regular"
-                    android:includeFontPadding="false"
-                    android:text="Utilities &amp; Bills"
-                    android:textColor="@color/gray_500"
+                    android:text="@string/tv_utilities_amp_bills"
+                    android:textColor="@color/colorOnSurfaceVariant"
                     android:textSize="12sp" />
 
                 <androidx.recyclerview.widget.RecyclerView
@@ -135,13 +129,12 @@
                 android:padding="8dp">
 
                 <TextView
+                    style="@style/Widget.SettleX.TextRegular"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_marginTop="5dp"
-                    android:fontFamily="@font/inter_regular"
-                    android:includeFontPadding="false"
-                    android:text="Travel &amp; Lifestyle"
-                    android:textColor="@color/gray_500"
+                    android:text="@string/tv_travel_amp_lifestyle"
+                    android:textColor="@color/colorOnSurfaceVariant"
                     android:textSize="12sp" />
 
                 <androidx.recyclerview.widget.RecyclerView

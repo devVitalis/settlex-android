@@ -13,7 +13,8 @@
 
     <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="wrap_content"
-        android:layout_height="wrap_content">
+        android:layout_height="wrap_content"
+        android:clipChildren="false">
 
         <androidx.constraintlayout.widget.Guideline
             android:id="@+id/center_guide_line"
@@ -26,43 +27,43 @@
             android:id="@+id/icon_frame"
             android:layout_width="50dp"
             android:layout_height="50dp"
-            android:background="@drawable/bg_secondary_oval"
+            android:background="@drawable/bg_oval_gray_light"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent">
 
-            <com.google.android.material.imageview.ShapeableImageView
-                android:id="@+id/icon"
+            <ImageView
+                android:id="@+id/iv_service_icon"
                 android:layout_width="24dp"
                 android:layout_height="24dp"
                 android:layout_gravity="center"
-                app:tint="@color/colorPrimary"
+                android:contentDescription="@null"
                 tools:src="@drawable/ic_service_airtime" />
         </FrameLayout>
 
         <TextView
-            android:id="@+id/badge"
-            style="@style/Widget.SettleX.TextRegular"
+            android:id="@+id/tv_service_badge"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginTop="-2dp"
             android:background="@drawable/bg_service_badge"
             android:gravity="center"
+            android:includeFontPadding="false"
             android:maxLines="1"
             android:minWidth="30dp"
             android:paddingHorizontal="5dp"
             android:paddingVertical="2dp"
             android:textColor="@color/colorOnBadge"
             android:textSize="8sp"
-            app:layout_constraintStart_toStartOf="@+id/center_guide_line"
+            app:layout_constraintStart_toStartOf="@id/center_guide_line"
             app:layout_constraintTop_toTopOf="@+id/icon_frame"
             tools:ignore="SmallSp"
-            tools:text="up to 10%" />
+            tools:text="Hot" />
     </androidx.constraintlayout.widget.ConstraintLayout>
 
     <TextView
-        android:id="@+id/name"
+        android:id="@+id/tv_service_name"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginTop="4dp"

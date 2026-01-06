@@ -105,9 +105,18 @@
     <string name="tv_change_profile_photo">Change Profile Photo</string>
     <string name="tv_select_from_gallery">Select from Gallery</string>
     <string name="tv_take_a_photo">Take a Photo</string>
+
+    <!-- RECEIVE ACTIVITY -->
     <string name="tv_settlex_payment_id">SettleX Payment ID</string>
     <string name="share_ytv_our_id_to_get_paid_instantly_from_other_settlex_users">Share your ID to get paid instantly from other SettleX users.</string>
     <string name="btn_share_details">Share Details</string>
     <string name="btn_copy_id">Copy ID</string>
+
+    <!-- SERVICES DASHBOARD FRAGMENT -->
+    <string name="tv_all_services">All Services</string>
+    <string name="tv_telecom_amp_digital"><![CDATA[Telecom & Digital]]></string>
+    <string name="tv_entertainment">Entertainment</string>
+    <string name="tv_utilities_amp_bills"><![CDATA[Utilities & Bills]]></string>
+    <string name="tv_travel_amp_lifestyle"><![CDATA[Travel & Lifestyle]]></string>
 
 </resources>

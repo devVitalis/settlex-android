@@ -16,7 +16,7 @@ import com.settlex.android.presentation.dashboard.services.model.ServiceUiModel
  * RecyclerView adapter for displaying services in a grid/list format
  */
 class ServicesAdapter(
-    private val isAllServices: Boolean,
+    private val isHomeDashboard: Boolean,
     private val service: List<ServiceUiModel>,
     private val listener: OnServiceClickedListener
 ) : RecyclerView.Adapter<ServiceViewHolder>() {
@@ -26,9 +26,12 @@ class ServicesAdapter(
     }
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ServiceViewHolder {
-        val layoutId = if (!isAllServices) R.layout.item_service else R.layout.item_service_all
-        val view = LayoutInflater.from(parent.context).inflate(layoutId, parent, false)
+        val layoutId = when {
+            isHomeDashboard -> R.layout.item_service_home
+            else -> R.layout.item_service_full
+        }
 
+        val view = LayoutInflater.from(parent.context).inflate(layoutId, parent, false)
         return ServiceViewHolder(view)
     }
 
@@ -36,21 +39,21 @@ class ServicesAdapter(
         val service = service[position]
 
         // Bind service data to views
-        name.text = service.name
-        icon.setImageResource(service.iconResId)
+        tvServiceName.text = service.name
+        ivServiceIcon.setImageResource(service.iconResId)
 
         when {
             service.cashbackPercentage > 0 -> {
-                "up to ${service.cashbackPercentage} %".also { holder.badge.text = it }
-                badge.show()
+                "up to ${service.cashbackPercentage} %".also { holder.tvServiceBadge.text = it }
+                tvServiceBadge.show()
             }
 
-            !service.label.isNullOrEmpty() -> badge.text = service.label
+            !service.label.isNullOrEmpty() -> tvServiceBadge.text = service.label
 
-            else -> badge.gone()
+            else -> tvServiceBadge.gone()
         }
 
-        itemView.setOnClickListener { listener.onServiceClick(this@ServicesAdapter.service[position]) }
+        itemView.setOnClickListener { listener.onServiceClick(service) }
     }
 
     override fun getItemCount(): Int {
@@ -59,8 +62,8 @@ class ServicesAdapter(
 
     class ServiceViewHolder internal constructor(itemView: View) :
         RecyclerView.ViewHolder(itemView) {
-        var icon: ImageView = itemView.findViewById(R.id.icon)
-        var name: TextView = itemView.findViewById(R.id.name)
-        var badge: TextView = itemView.findViewById(R.id.badge)
+        var ivServiceIcon: ImageView = itemView.findViewById(R.id.iv_service_icon)
+        var tvServiceName: TextView = itemView.findViewById(R.id.tv_service_name)
+        var tvServiceBadge: TextView = itemView.findViewById(R.id.tv_service_badge)
     }
 }

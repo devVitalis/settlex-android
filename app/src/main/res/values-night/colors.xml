@@ -60,8 +60,8 @@
     <color name="gray_600">#4A4A4A</color>
 
     <!-- Blue -->
-    <!--    <color name="blue_100">#EDF2FE</color>-->
-    <color name="blue_200">#3FAFEB</color>
+    <color name="blue_200">#0A4BB5</color>
+    <color name="blue_300">#99B3E6</color>
     <color name="blue_400">#42A5F5</color>
     <color name="blue_500">#0866FF</color>
     <color name="blue_600">#004A91</color>
