@@ -28,6 +28,7 @@ import com.settlex.android.presentation.auth.login.LoginActivity
 import com.settlex.android.presentation.common.extensions.gone
 import com.settlex.android.presentation.common.extensions.setAsterisks
 import com.settlex.android.presentation.common.extensions.show
+import com.settlex.android.presentation.common.extensions.toastNotImplemented
 import com.settlex.android.presentation.common.state.UiState
 import com.settlex.android.presentation.dashboard.account.ProfileActivity
 import com.settlex.android.presentation.dashboard.home.adapter.PromotionalBannerAdapter
@@ -44,8 +45,6 @@ import com.settlex.android.presentation.transactions.adapter.TransactionListAdap
 import com.settlex.android.presentation.transactions.model.TransactionItemUiModel
 import com.settlex.android.presentation.wallet.CommissionWithdrawalActivity
 import com.settlex.android.presentation.wallet.ReceiveActivity
-import com.settlex.android.util.string.StringFormatter
-import com.settlex.android.util.string.StringFormatter.showNotImplementedToast
 import com.settlex.android.util.ui.StatusBar
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.launch
@@ -98,22 +97,15 @@ class HomeDashboardFragment : Fragment() {
         setupDoubleBackPressToExit()
     }
 
-    private fun comingSoon() {
-        // TODO: remove
-        showNotImplementedToast(
-            requireContext()
-        )
-    }
-
     private fun initListeners() = with(binding) {
         btnReceive.setOnClickListener { startActivity(ReceiveActivity::class.java) }
         ivProfilePhoto.setOnClickListener { startActivity(ProfileActivity::class.java) }
         btnLogin.setOnClickListener { startActivity(LoginActivity::class.java) }
         btnTransfer.setOnClickListener { startActivity(TransferToFriendActivity::class.java) }
-        btnNotification.setOnClickListener { comingSoon() }
-        btnSupport.setOnClickListener { comingSoon() }
-        tvViewAllTransaction.setOnClickListener { comingSoon() }
-        btnDeposit.setOnClickListener { comingSoon() }
+        btnNotification.setOnClickListener { it.toastNotImplemented() }
+        btnSupport.setOnClickListener { it.toastNotImplemented() }
+        tvViewAllTransaction.setOnClickListener { it.toastNotImplemented() }
+        btnDeposit.setOnClickListener { it.toastNotImplemented() }
         ivBalanceToggle.setOnClickListener { viewModel.toggleBalanceVisibility() }
         btnRefreshTransactions.setOnClickListener { viewModel.loadRecentTransactions("Testing") }
 
@@ -279,14 +271,19 @@ class HomeDashboardFragment : Fragment() {
     private fun onTransactionsLoading() = with(binding) {
         listOf(
             viewNoTransactionsUi,
-            rvTransactions
+            viewNoInternet,
+            rvTransactions,
         ).forEach { it.gone() }
 
         shimmerTransactions.show()
     }
 
     private fun setTransactionsData(transactions: List<TransactionItemUiModel>?) = with(binding) {
-        shimmerTransactions.gone()
+        listOf(
+            shimmerTransactions,
+            viewNoInternet
+        ).forEach { it.gone() }
+
         when (transactions?.isEmpty()) {
             true -> {
                 // Clear recyclerview
@@ -389,7 +386,7 @@ class HomeDashboardFragment : Fragment() {
         val adapter = ServicesAdapter(false, serviceList) { serviceUiModel ->
             val destination = serviceUiModel.destination
             when (destination) {
-                null -> StringFormatter.showNotImplementedToast(requireContext())
+                null -> Toast.makeText(context, "Feature not yet implemented", Toast.LENGTH_SHORT)
                 else -> {
                     when {
                         destination.isActivity -> startActivity(

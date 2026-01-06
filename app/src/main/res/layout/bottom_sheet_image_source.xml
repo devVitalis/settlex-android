@@ -10,19 +10,15 @@
     <View
         android:layout_width="70dp"
         android:layout_height="5dp"
-        android:background="@drawable/bg_8dp_gray" />
+        android:background="@drawable/bg_surface_variant_rounded8" />
 
     <TextView
+        style="@style/Widget.SettleX.TextBold"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginTop="15dp"
-        android:fontFamily="@font/inter_bold"
         android:gravity="center"
-        android:includeFontPadding="false"
-        android:text="Change Profile Photo"
-        android:textColor="@color/black"
-        android:textSize="25sp"
-        android:textStyle="bold" />
+        android:text="@string/tv_change_profile_photo" />
 
     <com.google.android.material.imageview.ShapeableImageView
         android:id="@+id/iv_profile_photo"
@@ -32,27 +28,21 @@
         android:src="@drawable/ic_no_profile_photo"
         app:shapeAppearanceOverlay="@style/ShapeAppearance.SettleX.Circular" />
 
-    <TextView
+    <com.google.android.material.button.MaterialButton
         android:id="@+id/tvGallery"
+        style="@style/Widget.SettleX.Button.Outlined"
         android:layout_width="match_parent"
-        android:layout_height="50dp"
+        android:layout_height="55dp"
         android:layout_marginTop="10dp"
-        android:background="@drawable/bg_24dp_outlined_blue"
-        android:gravity="center"
-        android:includeFontPadding="false"
-        android:text="Select from Gallery"
-        android:textColor="@color/blue_500"
+        android:text="@string/tv_select_from_gallery"
         android:textSize="16sp" />
 
-    <TextView
+    <com.google.android.material.button.MaterialButton
         android:id="@+id/tvCamera"
+        style="@style/Widget.SettleX.Button.Outlined"
         android:layout_width="match_parent"
-        android:layout_height="50dp"
+        android:layout_height="55dp"
         android:layout_marginTop="10dp"
-        android:background="@drawable/bg_24dp_outlined_blue"
-        android:gravity="center"
-        android:includeFontPadding="false"
-        android:text="Take a Photo"
-        android:textColor="@color/blue_500"
+        android:text="@string/tv_take_a_photo"
         android:textSize="16sp" />
 </LinearLayout>

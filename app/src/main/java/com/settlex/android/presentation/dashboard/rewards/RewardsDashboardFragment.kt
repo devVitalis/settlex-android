@@ -14,9 +14,10 @@ import androidx.lifecycle.lifecycleScope
 import androidx.lifecycle.repeatOnLifecycle
 import com.settlex.android.R
 import com.settlex.android.databinding.FragmentDashboardRewardsBinding
+import com.settlex.android.presentation.common.extensions.copyToClipboard
 import com.settlex.android.presentation.common.extensions.toNairaString
+import com.settlex.android.presentation.common.extensions.toastNotImplemented
 import com.settlex.android.presentation.wallet.CommissionWithdrawalActivity
-import com.settlex.android.util.string.StringFormatter
 import com.settlex.android.util.ui.StatusBar
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.launch
@@ -47,19 +48,8 @@ class RewardsDashboardFragment : Fragment() {
         StatusBar.setColor(requireActivity(), R.color.blue_400)
         applyReferralInfoStyle()
 
-        binding!!.btnCopy.setOnClickListener {
-            StringFormatter.copyToClipboard(
-                requireContext(),
-                "Referral Code",
-                binding!!.referralCode.text.toString(),
-                true
-            )
-        }
-        binding!!.btnShareInvitationLink.setOnClickListener {
-            StringFormatter.showNotImplementedToast(
-                requireContext()
-            )
-        }
+        binding!!.btnCopy.setOnClickListener { binding!!.referralCode.copyToClipboard("Referral Code") }
+        binding!!.btnShareInvitationLink.setOnClickListener { it.toastNotImplemented() }
 
         binding!!.btnViewCommissionBalance.setOnClickListener {
             startActivity(

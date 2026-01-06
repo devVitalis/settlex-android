@@ -19,6 +19,7 @@
 
     <color name="colorOutline">@color/gray_500</color>
     <color name="colorScrim">@color/scrim_black_10</color>
+    <color name="colorOnScrim">@color/white</color>
 
     <!-- Error -->
     <color name="colorError">@color/red_500</color>

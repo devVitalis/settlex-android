@@ -9,8 +9,8 @@ import androidx.core.content.ContextCompat
 import androidx.fragment.app.Fragment
 import com.settlex.android.R
 import com.settlex.android.databinding.FragmentTransactionDetailsBinding
+import com.settlex.android.presentation.common.extensions.copyToClipboard
 import com.settlex.android.presentation.transactions.model.TransactionItemUiModel
-import com.settlex.android.util.string.StringFormatter
 import com.settlex.android.util.ui.StatusBar
 import dagger.hilt.android.AndroidEntryPoint
 
@@ -33,7 +33,7 @@ class TransactionDetailsFragment : Fragment() {
 
         StatusBar.setColor(requireActivity(), R.color.white)
         onBackButtonPressed()
-        binding.btnBackBefore.setOnClickListener {requireActivity().finish() }
+        binding.btnBackBefore.setOnClickListener { requireActivity().finish() }
 
         return binding.root
     }
@@ -41,7 +41,8 @@ class TransactionDetailsFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        val transaction = requireActivity().intent.getParcelableExtra<TransactionItemUiModel?>("transaction")
+        val transaction =
+            requireActivity().intent.getParcelableExtra<TransactionItemUiModel?>("transaction")
         if (transaction != null) {
             bindTransaction(transaction)
         }
@@ -89,18 +90,11 @@ class TransactionDetailsFragment : Fragment() {
         sender.text = transaction.senderId
 
         // show description if there any
-            descriptionContainer.visibility = View.VISIBLE
-            description.text = transaction.description
+        descriptionContainer.visibility = View.VISIBLE
+        description.text = transaction.description
 
         transactionId.text = transaction.transactionId
-        copyTransactionId.setOnClickListener {
-            StringFormatter.copyToClipboard(
-                requireContext(),
-                "Transaction ID",
-                transactionId.text.toString(),
-                true
-            )
-        }
+        copyTransactionId.setOnClickListener { transactionId.copyToClipboard("Transaction ID") }
     }
 
     private fun onBackButtonPressed() {

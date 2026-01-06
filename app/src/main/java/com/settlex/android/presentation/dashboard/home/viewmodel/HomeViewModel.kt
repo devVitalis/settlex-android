@@ -12,13 +12,13 @@ import com.settlex.android.data.remote.dto.TransactionDto
 import com.settlex.android.data.repository.TransactionRepositoryImpl
 import com.settlex.android.data.session.UserSessionManager
 import com.settlex.android.data.session.UserSessionState
+import com.settlex.android.presentation.common.extensions.toDateTimeString
 import com.settlex.android.presentation.common.extensions.toNairaString
 import com.settlex.android.presentation.common.state.UiState
 import com.settlex.android.presentation.dashboard.home.model.HomeUiModel
 import com.settlex.android.presentation.transactions.model.TransactionItemUiModel
 import com.settlex.android.util.network.NetworkMonitor
 import com.settlex.android.util.string.CurrencyFormatter
-import com.settlex.android.util.string.DateFormatter
 import com.settlex.android.util.string.StringFormatter
 import dagger.hilt.android.lifecycle.HiltViewModel
 import jakarta.inject.Inject
@@ -74,7 +74,7 @@ class HomeViewModel @Inject constructor(
 
         val (balance, commissionBalance) = rawBalance
         when {
-            isHidden -> StringFormatter.setAsterisks() to StringFormatter.setAsterisks()
+            isHidden -> "****" to "****"
             else -> {
                 val formattedBalance = when {
                     balance > MILLION_THRESHOLD_KOBO -> CurrencyFormatter.formatToNairaShort(balance)
@@ -145,7 +145,7 @@ class HomeViewModel @Inject constructor(
             operationSymbol = operation.symbol,
             operationColor = operation.colorRes,
             amount = dto.amount.toNairaString(),
-            timestamp = DateFormatter.toFormattedDateString(dto.createdAt),
+            timestamp = dto.createdAt.toDateTimeString(),
             status = dto.status.displayName,
             statusColor = dto.status.colorRes,
             statusBackgroundColor = dto.status.bgColorRes

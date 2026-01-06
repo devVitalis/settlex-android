@@ -6,8 +6,8 @@ import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
 import com.settlex.android.R
 import com.settlex.android.databinding.ActivityCommissionWithdrawalBinding
+import com.settlex.android.presentation.common.extensions.toastNotImplemented
 import com.settlex.android.presentation.wallet.viewmodel.WalletViewModel
-import com.settlex.android.util.string.StringFormatter
 import com.settlex.android.util.ui.StatusBar
 import dagger.hilt.android.AndroidEntryPoint
 
@@ -27,11 +27,7 @@ class CommissionWithdrawalActivity : AppCompatActivity() {
     private fun setupUiActions() {
         StatusBar.setColor(this, R.color.white)
 
-        binding.btnWithdraw.setOnClickListener {
-            StringFormatter.showNotImplementedToast(
-                this
-            )
-        }
+        binding.btnWithdraw.setOnClickListener { it.toastNotImplemented() }
         binding.btnBackBefore.setOnClickListener { v: View? -> finish() }
     }
 }

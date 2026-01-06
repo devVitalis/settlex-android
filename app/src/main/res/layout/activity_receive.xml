@@ -4,7 +4,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@color/white"
+    android:background="@color/colorSurfaceVariant"
     android:fitsSystemWindows="true"
     tools:context=".presentation.wallet.ReceiveActivity">
 
@@ -18,32 +18,27 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent">
 
-        <ImageView
+        <com.google.android.material.imageview.ShapeableImageView
             android:id="@+id/btn_back_before"
             android:layout_width="20dp"
             android:layout_height="20dp"
             android:layout_marginStart="15dp"
-            android:contentDescription="Back"
-            android:scaleType="centerCrop"
-            android:src="@drawable/ic_arrow_back" />
+            android:src="@drawable/ic_arrow_back"
+            app:tint="@color/colorOnBackground" />
 
         <TextView
+            style="@style/Widget.SettleX.TextBold"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginStart="10dp"
-            android:fontFamily="@font/inter_bold"
-            android:gravity="center"
-            android:includeFontPadding="false"
-            android:text="Receive"
-            android:textColor="@color/black"
-            android:textSize="15sp"
-            android:textStyle="bold" />
+            android:text="@string/tv_receive"
+            android:textSize="15sp" />
     </LinearLayout>
 
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="0dp"
-        android:background="@color/gray_200"
+        android:background="@color/colorBackgroundSecondary"
         android:orientation="vertical"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
@@ -59,39 +54,32 @@
             android:padding="20dp">
 
             <TextView
+                style="@style/Widget.SettleX.TextRegular"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_gravity="center"
-                android:fontFamily="@font/inter_regular"
-                android:includeFontPadding="false"
-                android:text="SettleX Payment ID"
-                android:textColor="@color/gray_500"
+                android:text="@string/tv_settlex_payment_id"
+                android:textColor="@color/colorOnSurfaceVariant"
                 android:textSize="12sp" />
 
             <TextView
                 android:id="@+id/tv_payment_id"
+                style="@style/Widget.SettleX.TextBold"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_gravity="center"
                 android:layout_marginVertical="15dp"
-                android:fontFamily="@font/inter_bold"
-                android:includeFontPadding="false"
-                android:textColor="@color/black"
                 android:textSize="30sp"
-                android:textStyle="bold"
                 tools:text="\@vitalis" />
 
             <TextView
+                style="@style/Widget.SettleX.TextRegular"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_gravity="center"
-                android:fontFamily="@font/inter_regular"
                 android:gravity="center"
-                android:includeFontPadding="false"
-                android:text="Share your ID to get paid instantly from other SettleX users."
-                android:textAlignment="center"
-                android:textColor="@color/black"
-                android:textSize="14sp" />
+                android:text="@string/share_ytv_our_id_to_get_paid_instantly_from_other_settlex_users"
+                android:textAlignment="center" />
 
             <LinearLayout
                 android:layout_width="match_parent"
@@ -107,7 +95,7 @@
                     android:layout_height="wrap_content"
                     android:layout_marginEnd="20dp"
                     android:layout_weight="1"
-                    android:text="Copy ID" />
+                    android:text="@string/btn_copy_id" />
 
                 <com.google.android.material.button.MaterialButton
                     android:id="@+id/btn_share_details"
@@ -115,7 +103,7 @@
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
                     android:layout_weight="1"
-                    android:text="Share Details" />
+                    android:text="@string/btn_share_details" />
             </LinearLayout>
         </LinearLayout>
     </LinearLayout>

@@ -1,7 +1,13 @@
 package com.settlex.android.presentation.common.extensions
 
+import android.content.ClipData
+import android.content.ClipboardManager
+import android.os.Build
+import android.util.Log
 import android.view.View
 import android.widget.TextView
+import android.widget.Toast
+import androidx.core.content.ContextCompat
 import com.google.firebase.Timestamp
 import java.math.BigDecimal
 import java.math.RoundingMode
@@ -78,17 +84,29 @@ fun String.toNigerianPhoneNumber(): String {
     return "+234$formatedPhone"
 }
 
+fun String.capitalizeEachWord(): String {
+    this.also { text ->
+        val words = text.lowercase().trim().split("\\s+".toRegex())
+        val result = StringBuilder()
+
+        for (word in words) {
+            if (word.isNotEmpty()) {
+                result.append(word[0].uppercaseChar())
+                    .append(word.substring(1))
+                    .append(" ")
+            }
+        }
+
+        return result.toString().trim()
+    }
+}
+
 // Timestamp
 fun Timestamp.toDateTimeString(): String {
     return SimpleDateFormat("dd MMM yyyy, hh:mm a", Locale.US)
         .format(this.toDate())
 
 }
-//
-//fun Timestamp.toDateString(): String {
-//    return SimpleDateFormat("dddd, MMMM yyyy", Locale.US)
-//        .format(this.toDate())
-//}
 
 fun Timestamp.toDateString(): String {
     val dateString = SimpleDateFormat("dd, MMMM yyyy", Locale.US)
@@ -96,6 +114,10 @@ fun Timestamp.toDateString(): String {
 
     val day = SimpleDateFormat("dd", Locale.US)
         .format(this.toDate()).toInt()
+
+    Log.d("UiExtensions", "day: $day")
+    Log.d("UiExtensions", "day suffix: ${day % 10}")
+    Log.d("UiExtensions", "day suffix: ${day.toString().padStart(2, '0')}")
 
     val suffix = when {
         day in 11..13 -> "th"
@@ -106,6 +128,53 @@ fun Timestamp.toDateString(): String {
     }
 
     return dateString.replace(day.toString().padStart(2, '0'), "$day$suffix")
+}
+
+fun Timestamp.getTimeAgo(): String {
+    this.also { timestamp ->
+        val second: Long = 1000
+        val minute = 60 * second
+        val hour = 60 * minute
+        val day = 24 * hour
+        val week = 7 * day
+        val month = 30 * day
+        val year = 365 * day
+
+        val time = timestamp.toDate().time
+        val now = System.currentTimeMillis()
+        val diff = now - time
+
+
+        if (diff < minute) return "Just now"
+
+        if (diff < hour) {
+            val mins = diff / minute
+            return (diff / minute).toString() + " min" + (if (mins > 1) "s" else "") + " ago"
+        }
+
+        if (diff < day) {
+            val hrs = diff / hour
+            return hrs.toString() + " hr" + (if (hrs > 1) "s" else "") + " ago"
+        }
+
+        if (diff < week) {
+            val days = diff / day
+            return days.toString() + " day" + (if (days > 1) "s" else "") + " ago"
+        }
+
+        if (diff < month) {
+            val weeks = diff / week
+            return weeks.toString() + " week" + (if (weeks > 1) "s" else "") + " ago"
+        }
+
+        if (diff < year) {
+            val months = diff / month
+            return months.toString() + " month" + (if (months > 1) "s" else "") + " ago"
+        }
+
+        val years = diff / year
+        return years.toString() + " yr" + (if (years > 1) "s" else "") + " ago"
+    }
 }
 
 fun Long.toNairaString(): String {
@@ -119,4 +188,20 @@ fun Long.toNairaString(): String {
 
         formatter.format(naira)
     }
+}
+
+fun TextView.copyToClipboard(clipLabel: String) {
+    this.text.also { text ->
+        val clipboardManager = ContextCompat.getSystemService(context, ClipboardManager::class.java)
+        val clipData = ClipData.newPlainText(clipLabel, text)
+        clipboardManager?.setPrimaryClip(clipData)
+
+        if (Build.VERSION.SDK_INT < Build.VERSION_CODES.TIRAMISU) {
+            Toast.makeText(context, "Copied", Toast.LENGTH_SHORT).show()
+        }
+    }
+}
+
+fun View.toastNotImplemented() {
+    Toast.makeText(context, "Feature not yet implemented", Toast.LENGTH_SHORT).show()
 }

@@ -11,8 +11,8 @@ import com.settlex.android.R
 import com.settlex.android.data.session.UserSessionState
 import com.settlex.android.databinding.ActivityReceiveBinding
 import com.settlex.android.presentation.common.extensions.addAtPrefix
+import com.settlex.android.presentation.common.extensions.copyToClipboard
 import com.settlex.android.presentation.wallet.viewmodel.WalletViewModel
-import com.settlex.android.util.string.StringFormatter
 import com.settlex.android.util.ui.StatusBar
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.launch
@@ -29,18 +29,18 @@ class ReceiveActivity : AppCompatActivity() {
         setContentView(binding.root)
 
         initViews()
-        observeUserSessionAndGetData()
+        observeUserSession()
     }
 
-    private fun observeUserSessionAndGetData() = with(binding) {
+    private fun observeUserSession() = with(binding) {
         lifecycleScope.launch {
             repeatOnLifecycle(Lifecycle.State.STARTED) {
                 viewModel.userSessionState.collect { state ->
                     when (state) {
-                        is UserSessionState.Authenticated -> state.user.paymentId?.addAtPrefix()
-                            .also {
+                        is UserSessionState.Authenticated ->
+                            state.user.paymentId?.addAtPrefix().also {
                                 userPaymentId = it
-                                tvPaymentId.text = userPaymentId
+                                tvPaymentId.text = it
                             }
 
                         else -> Unit
@@ -51,17 +51,9 @@ class ReceiveActivity : AppCompatActivity() {
     }
 
     private fun initViews() = with(binding) {
-        StatusBar.setColor(this@ReceiveActivity, R.color.white)
+        StatusBar.setColor(this@ReceiveActivity, R.color.colorSurfaceVariant)
 
-        btnCopy.setOnClickListener {
-            StringFormatter.copyToClipboard(
-                this@ReceiveActivity,
-                "Payment ID",
-                tvPaymentId.text.toString(),
-                true
-            )
-        }
-
+        btnCopy.setOnClickListener { tvPaymentId.copyToClipboard("Payment ID") }
         btnBackBefore.setOnClickListener { finish() }
         btnShareDetails.setOnClickListener { sharePaymentId() }
     }

@@ -11,8 +11,8 @@ import androidx.fragment.app.activityViewModels
 import androidx.navigation.fragment.NavHostFragment
 import com.settlex.android.R
 import com.settlex.android.databinding.FragmentRegisterNameBinding
+import com.settlex.android.presentation.common.extensions.capitalizeEachWord
 import com.settlex.android.presentation.common.util.KeyboardHelper
-import com.settlex.android.util.string.StringFormatter
 import com.settlex.android.util.ui.StatusBar
 import dagger.hilt.android.AndroidEntryPoint
 
@@ -80,8 +80,8 @@ class RegisterNameFragment : Fragment() {
         val lastName = etLastname.getText().toString().trim()
 
         registerViewModel.updateName(
-            StringFormatter.capitalizeEachWord(firstName),
-            StringFormatter.capitalizeEachWord(lastName)
+            firstName.capitalizeEachWord(),
+            lastName.capitalizeEachWord()
         )
 
         val navController = NavHostFragment.findNavController(this@RegisterNameFragment)

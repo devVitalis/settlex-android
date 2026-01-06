@@ -103,7 +103,7 @@ public class ServicesDashboardFragment extends Fragment {
 
     private void handleOnItemServiceClick(ServiceDestination destination) {
         if (destination == null) {
-            StringFormatter.showNotImplementedToast(requireContext());
+//            StringFormatter.showNotImplementedToast(requireContext());
             return;
         }
 

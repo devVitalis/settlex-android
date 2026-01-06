@@ -22,13 +22,13 @@ import com.settlex.android.presentation.auth.register.RegisterActivity
 import com.settlex.android.presentation.common.components.BiometricAuthManager
 import com.settlex.android.presentation.common.components.BiometricAuthManager.BiometricAuthCallback
 import com.settlex.android.presentation.common.extensions.gone
+import com.settlex.android.presentation.common.extensions.maskEmail
 import com.settlex.android.presentation.common.extensions.show
 import com.settlex.android.presentation.common.state.UiState
 import com.settlex.android.presentation.common.util.DialogHelper
 import com.settlex.android.presentation.common.util.KeyboardHelper
 import com.settlex.android.presentation.common.util.SpannableTextFormatter
 import com.settlex.android.presentation.dashboard.DashboardActivity
-import com.settlex.android.util.string.StringFormatter
 import com.settlex.android.util.ui.ProgressDialogManager
 import com.settlex.android.util.ui.StatusBar
 import dagger.hilt.android.AndroidEntryPoint
@@ -116,11 +116,10 @@ class LoginActivity : AppCompatActivity() {
     private fun showLoggedUser(user: LoginState.LoggedInUser) {
         with(binding) {
             val formattedDisplayName = "Hi, ${user.displayName.uppercase()}"
-            val formattedEmail = "(${StringFormatter.maskEmail(user.email)})"
 
             loadProfilePhoto(user.photoUrl, ivUserProfilePhoto)
             tvUserDisplayName.text = formattedDisplayName
-            tvUserEmail.text = formattedEmail
+            tvUserEmail.text = user.email.maskEmail()
             etEmail.setText(user.email)
 
             viewAuthenticatedUi.show()

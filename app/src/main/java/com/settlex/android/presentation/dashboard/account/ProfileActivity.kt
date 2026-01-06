@@ -28,6 +28,8 @@ import com.settlex.android.data.remote.profile.ProfileService
 import com.settlex.android.data.session.UserSessionState
 import com.settlex.android.databinding.ActivityProfileBinding
 import com.settlex.android.presentation.common.extensions.addAtPrefix
+import com.settlex.android.presentation.common.extensions.copyToClipboard
+import com.settlex.android.presentation.common.extensions.getTimeAgo
 import com.settlex.android.presentation.common.extensions.maskEmail
 import com.settlex.android.presentation.common.extensions.maskPhoneNumber
 import com.settlex.android.presentation.common.extensions.show
@@ -36,8 +38,6 @@ import com.settlex.android.presentation.common.state.UiState
 import com.settlex.android.presentation.common.util.DialogHelper
 import com.settlex.android.presentation.dashboard.account.model.ProfileUiModel
 import com.settlex.android.presentation.dashboard.account.viewmodel.ProfileViewModel
-import com.settlex.android.util.string.DateFormatter
-import com.settlex.android.util.string.StringFormatter
 import com.settlex.android.util.ui.ProgressDialogManager
 import com.settlex.android.util.ui.StatusBar
 import com.yalantis.ucrop.UCrop
@@ -70,7 +70,7 @@ class ProfileActivity : AppCompatActivity() {
     }
 
     private fun initViews() = with(binding) {
-        StatusBar.setColor(this@ProfileActivity, R.color.white)
+        StatusBar.setColor(this@ProfileActivity, R.color.colorSurfaceVariant)
         initGalleryPermissionLauncher()
         initCameraPermissionLauncher()
         initImagePickerLauncher()
@@ -80,13 +80,7 @@ class ProfileActivity : AppCompatActivity() {
         btnBackBefore.setOnClickListener { finish() }
         btnChangeProfilePic.setOnClickListener { showImageSourceBottomSheet() }
         ivMemberSinceInfo.setOnClickListener { showJoinedDateDialog() }
-        btnCopyPaymentId.setOnClickListener {
-            StringFormatter.copyToClipboard(
-                this@ProfileActivity, "Payment ID",
-                tvPaymentId.text.toString(),
-                true
-            )
-        }
+        btnCopyPaymentId.setOnClickListener { tvPaymentId.copyToClipboard("Payment ID") }
     }
 
     private fun initObservers() {
@@ -116,14 +110,18 @@ class ProfileActivity : AppCompatActivity() {
     }
 
     private fun onUserAuthenticated(user: ProfileUiModel) = with(binding) {
-        ProfileService.loadProfilePhoto(user.photoUrl, ivProfilePhoto)
         tvPaymentId.text = user.paymentId?.addAtPrefix() ?: "Setup Payment ID"
         tvFullName.text = user.fullName.uppercase()
         tvEmail.text = user.email.maskEmail()
         tvPhoneNumber.text = user.phone.maskPhoneNumber()
-        tvJoinedDate.text = DateFormatter.getTimeAgo(user.joinedDate)
-        userJoinedDate = user.joinedDate
-        userPhotoUrl = user.photoUrl
+        user.photoUrl.also { url ->
+            userPhotoUrl = url
+            ProfileService.loadProfilePhoto(url, ivProfilePhoto)
+        }
+        user.joinedDate.also { timestamp ->
+            userJoinedDate = timestamp
+            tvJoinedDate.text = timestamp.getTimeAgo()
+        }
     }
 
     private fun observeSetProfilePictureEvent() {

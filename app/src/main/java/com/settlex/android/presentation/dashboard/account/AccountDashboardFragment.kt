@@ -15,9 +15,9 @@ import androidx.lifecycle.repeatOnLifecycle
 import androidx.navigation.fragment.NavHostFragment
 import com.settlex.android.R
 import com.settlex.android.databinding.FragmentDashboardAccountBinding
+import com.settlex.android.presentation.common.extensions.toastNotImplemented
 import com.settlex.android.presentation.dashboard.account.viewmodel.ProfileViewModel
 import com.settlex.android.presentation.settings.SettingsActivity
-import com.settlex.android.util.string.StringFormatter
 import com.settlex.android.util.ui.StatusBar
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.launch
@@ -62,11 +62,7 @@ class AccountDashboardFragment : Fragment() {
                 SettingsActivity::class.java
             )
         }
-        binding!!.btnTransactions.setOnClickListener {
-            StringFormatter.showNotImplementedToast(
-                requireContext()
-            )
-        }
+        binding!!.btnTransactions.setOnClickListener { it.toastNotImplemented() }
         binding!!.btnAbout.setOnClickListener {
             startActivity(
                 AboutActivity::class.java
