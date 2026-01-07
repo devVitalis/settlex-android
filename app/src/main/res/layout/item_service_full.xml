@@ -13,8 +13,7 @@
 
     <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:clipChildren="false">
+        android:layout_height="wrap_content">
 
         <androidx.constraintlayout.widget.Guideline
             android:id="@+id/center_guide_line"
@@ -27,7 +26,7 @@
             android:id="@+id/icon_frame"
             android:layout_width="50dp"
             android:layout_height="50dp"
-            android:background="@drawable/bg_oval_gray_light"
+            android:background="@drawable/bg_background_secondary_oval"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"

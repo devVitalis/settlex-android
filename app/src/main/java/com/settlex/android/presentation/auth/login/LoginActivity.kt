@@ -90,43 +90,38 @@ class LoginActivity : AppCompatActivity() {
         btnSignIn.setOnClickListener { tryLogin() }
     }
 
-    private fun syncUserStateWithUI() {
+    private fun syncUserStateWithUI() = with(binding) {
         val state = viewModel.userState.value
         when (state) {
-            is LoginState.LoggedOut -> showLoggedOutView()
-            is LoginState.LoggedInUser -> {
-                showLoggedUser(state)
+            is LoginState.Unauthenticated -> showLoggedOutView()
+            is LoginState.Authenticated -> {
+                showLoggedUser(state.user)
 
-                with(binding) {
-                    // Enable/disable fingerprint auth
-                    val isFingerPrintEnabled = viewModel.isLoginBiometricsEnabled.value
-                    when (isFingerPrintEnabled) {
-                        true -> {
-                            ivFingerprint.show()
-                            authenticateWithBiometrics()
-                        }
-
-                        false -> ivFingerprint.gone()
+                // Enable/disable fingerprint auth
+                val isFingerPrintEnabled = viewModel.isLoginBiometricsEnabled.value
+                when (isFingerPrintEnabled) {
+                    true -> {
+                        ivFingerprint.show()
+                        authenticateWithBiometrics()
                     }
+
+                    false -> ivFingerprint.gone()
                 }
+
             }
         }
     }
 
-    private fun showLoggedUser(user: LoginState.LoggedInUser) {
-        with(binding) {
-            val formattedDisplayName = "Hi, ${user.displayName.uppercase()}"
+    private fun showLoggedUser(user: LoginUiModel) = with(binding) {
+        loadProfilePhoto(user.photoUrl, ivUserProfilePhoto)
+        "Hi, ${user.displayName.uppercase()}".also { tvUserDisplayName.text = it }
+        "(${user.email.maskEmail()})".also { tvUserEmail.text = it }
 
-            loadProfilePhoto(user.photoUrl, ivUserProfilePhoto)
-            tvUserDisplayName.text = formattedDisplayName
-            tvUserEmail.text = user.email.maskEmail()
-            etEmail.setText(user.email)
+        // Set the current user email to the input field
+        etEmail.setText(user.email)
 
-            viewAuthenticatedUi.show()
-            tvSwitchAccount.show()
-
-            listOf(ivLogo, tilEmail, tvSignUp).forEach { it.gone() }
-        }
+        listOf(viewAuthenticatedUi, tvSwitchAccount).forEach { it.show() }
+        listOf(ivLogo, tilEmail, tvSignUp).forEach { it.gone() }
     }
 
     private fun showLoggedOutView() = with(binding) {

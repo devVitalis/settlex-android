@@ -5,8 +5,8 @@ import androidx.lifecycle.viewModelScope
 import com.google.firebase.auth.FirebaseAuth
 import com.settlex.android.SettleXApp
 import com.settlex.android.data.datasource.UserLocalDataSource
-import com.settlex.android.data.exception.ExceptionMapper
 import com.settlex.android.data.exception.AppException
+import com.settlex.android.data.exception.ExceptionMapper
 import com.settlex.android.domain.usecase.auth.GetCurrentUserUseCase
 import com.settlex.android.domain.usecase.auth.LoginUseCase
 import com.settlex.android.presentation.common.state.UiState
@@ -34,7 +34,7 @@ class LoginViewModel @Inject constructor(
     private val _isLoginBiometricsEnabled = MutableStateFlow(false)
     val isLoginBiometricsEnabled = _isLoginBiometricsEnabled.asStateFlow()
 
-    private val _userState = MutableStateFlow<LoginState>(LoginState.LoggedOut)
+    private val _userState = MutableStateFlow<LoginState>(LoginState.Unauthenticated)
     val userState = _userState.asStateFlow()
 
     init {
@@ -45,17 +45,19 @@ class LoginViewModel @Inject constructor(
         viewModelScope.launch {
             val currentUser = getCurrentUserUseCase()
             if (currentUser == null) {
-                _userState.emit(LoginState.LoggedOut)
+                _userState.emit(LoginState.Unauthenticated)
                 _userLocalDataSource = null
                 return@launch
             }
 
             _userState.emit(
-                LoginState.LoggedInUser(
-                    currentUser.uid,
-                    currentUser.email ?: "",
-                    currentUser.displayName ?: "",
-                    currentUser.photoUrl?.toString()
+                LoginState.Authenticated(
+                    LoginUiModel(
+                        currentUser.uid,
+                        currentUser.email ?: "",
+                        currentUser.displayName ?: "",
+                        currentUser.photoUrl?.toString()
+                    )
                 )
             )
 
