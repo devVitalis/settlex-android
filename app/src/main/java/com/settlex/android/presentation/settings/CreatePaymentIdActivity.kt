@@ -5,25 +5,23 @@ import android.content.res.ColorStateList
 import android.os.Bundle
 import android.os.Handler
 import android.os.Looper
-import android.text.Editable
-import android.text.TextWatcher
 import android.view.MotionEvent
 import android.view.View
 import androidx.activity.OnBackPressedCallback
 import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.content.ContextCompat
+import androidx.core.widget.doAfterTextChanged
+import androidx.core.widget.doOnTextChanged
 import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.lifecycleScope
 import androidx.lifecycle.repeatOnLifecycle
-import com.google.android.material.bottomsheet.BottomSheetDialog
 import com.settlex.android.R
 import com.settlex.android.databinding.ActivityCreatePaymentIdBinding
-import com.settlex.android.databinding.BottomSheetSuccessDialogBinding
 import com.settlex.android.presentation.common.extensions.gone
+import com.settlex.android.presentation.common.extensions.show
 import com.settlex.android.presentation.common.state.UiState
 import com.settlex.android.presentation.common.util.DialogHelper
-import com.settlex.android.presentation.common.util.EditTextFocusBackgroundChanger
 import com.settlex.android.presentation.common.util.KeyboardHelper
 import com.settlex.android.presentation.dashboard.DashboardActivity
 import com.settlex.android.util.ui.ProgressDialogManager
@@ -34,9 +32,6 @@ import kotlinx.coroutines.launch
 @AndroidEntryPoint
 class CreatePaymentIdActivity : AppCompatActivity() {
     private var userPaymentId: String? = null
-
-    // Validation
-    private var isFormatValid = false
     private var exists = false
 
     // Dependencies
@@ -56,23 +51,20 @@ class CreatePaymentIdActivity : AppCompatActivity() {
         initObservers()
     }
 
-    private fun initViews() {
-        StatusBar.setColor(this, R.color.white)
-        setupPaymentIdInputWatcher()
-        setupInputFocusHandler()
+    private fun initViews() = with(binding) {
+        StatusBar.setColor(this@CreatePaymentIdActivity, R.color.colorBackground)
+        setupPaymentIdTextWatcher()
         disableBackButton()
 
-        binding.btnContinue.setOnClickListener {
-            viewModel.assignPaymentId(userPaymentId!!)
-        }
+        btnContinue.setOnClickListener { viewModel.assignPaymentId(userPaymentId!!) }
     }
 
     private fun initObservers() {
-        observePaymentIdAvailabilityStatus()
-        observePaymentIdStoreStatus()
+        observePaymentIdAvailability()
+        observeAssignPaymentIdEvent()
     }
 
-    private fun observePaymentIdStoreStatus() {
+    private fun observeAssignPaymentIdEvent() {
         lifecycleScope.launch {
             repeatOnLifecycle(Lifecycle.State.STARTED) {
                 viewModel.assignPaymentIdEvent.collect {
@@ -89,9 +81,7 @@ class CreatePaymentIdActivity : AppCompatActivity() {
     private fun showPaymentIdCreationSuccessDialog() {
         progressLoader.hide()
 
-        DialogHelper.showSuccessBottomSheetDialog(
-            this
-        ) { dialog: BottomSheetDialog, dialogBinding: BottomSheetSuccessDialogBinding ->
+        DialogHelper.showSuccessBottomSheetDialog(this) { dialog, dialogBinding ->
             with(dialogBinding) {
                 val title = "Success"
                 val message = "Your Payment ID was successfully created."
@@ -114,18 +104,18 @@ class CreatePaymentIdActivity : AppCompatActivity() {
         }
     }
 
-    private fun onStorePaymentIdFailure(error: String?) {
-        binding.paymentIdAvailabilityFeedback.text = error
+    private fun onStorePaymentIdFailure(error: String?) = with(binding) {
+        paymentIdAvailabilityFeedback.text = error
         progressLoader.hide()
     }
 
-    private fun observePaymentIdAvailabilityStatus() {
+    private fun observePaymentIdAvailability() {
         lifecycleScope.launch {
             repeatOnLifecycle(Lifecycle.State.STARTED) {
                 viewModel.isPaymentIdTakenEvent.collect {
                     when (it) {
                         is UiState.Loading -> onPaymentIdAvailabilityCheckLoading()
-                        is UiState.Success -> showPaymentIdAvailability(it.data)
+                        is UiState.Success -> setPaymentIdAvailabilityStatus(it.data)
                         is UiState.Failure -> onPaymentIdAvailabilityFailure(it.exception.message)
                     }
                 }
@@ -133,95 +123,73 @@ class CreatePaymentIdActivity : AppCompatActivity() {
         }
     }
 
-    private fun onPaymentIdAvailabilityCheckLoading() {
-        binding.paymentIdProgressBar.show()
-
-        binding.paymentIdAvailableCheck.visibility = View.GONE
-        binding.paymentIdProgressBar.visibility = View.VISIBLE
+    private fun onPaymentIdAvailabilityCheckLoading() = with(binding) {
+        paymentIdProgressBar.show()
+        ivPaymentIdAvailable.gone()
     }
 
-    private fun showPaymentIdAvailability(exists: Boolean) {
-        this.exists = exists
+    private fun setPaymentIdAvailabilityStatus(exists: Boolean) = with(binding) {
+        this@CreatePaymentIdActivity.exists = exists
 
         // Hide progress bar
-        binding.paymentIdProgressBar.hide()
-        binding.paymentIdProgressBar.visibility = View.GONE
+        paymentIdProgressBar.gone()
 
-        binding.paymentIdAvailableCheck.visibility = if (!exists) View.VISIBLE else View.GONE
+        ivPaymentIdAvailable.visibility = if (!exists) View.VISIBLE else View.GONE
 
         val feedback = if (!exists) "Available" else "Not Available"
         val feedbackColor =
-            if (!exists) ContextCompat.getColor(this, R.color.green_500) else ContextCompat.getColor(
-                this,
-                R.color.red_500
+            if (!exists) ContextCompat.getColor(
+                this@CreatePaymentIdActivity,
+                R.color.colorSuccess
+            ) else ContextCompat.getColor(
+                this@CreatePaymentIdActivity,
+                R.color.colorError
             )
 
-        binding.paymentIdAvailabilityFeedback.setTextColor(feedbackColor)
-        binding.paymentIdAvailabilityFeedback.visibility = View.VISIBLE
-        binding.paymentIdAvailabilityFeedback.text = feedback
+        paymentIdAvailabilityFeedback.setTextColor(feedbackColor)
+        paymentIdAvailabilityFeedback.show()
+        paymentIdAvailabilityFeedback.text = feedback
 
         // Validate button state
         updateContinueButtonState()
     }
 
-    private fun onPaymentIdAvailabilityFailure(error: String?) {
-        with(binding) {
-            txtError.text = error
-            txtError.gone()
+    private fun onPaymentIdAvailabilityFailure(error: String?) = with(binding) {
+        tvError.text = error
+        tvError.show()
 
-            paymentIdProgressBar.hide()
-            paymentIdProgressBar.gone()
-            paymentIdAvailableCheck.gone()
-            paymentIdAvailabilityFeedback.gone()
+        listOf(
+            paymentIdProgressBar,
+            ivPaymentIdAvailable,
+            paymentIdAvailabilityFeedback
+        ).forEach { it.gone() }
+    }
+
+    private fun setupPaymentIdTextWatcher() = with(binding) {
+        editTxtPaymentId.doOnTextChanged { paymentId, _, _, _ ->
+            // Disable continue button
+            setContinueButtonEnabled(false)
+
+            validatePaymentIdRuleSet(paymentId.toString())
+            userPaymentId = paymentId.toString()
+
+            // Hide feedbacks
+            listOf(
+                ivPaymentIdAvailable,
+                paymentIdAvailabilityFeedback,
+                tvError
+            ).forEach { it.gone() }
         }
-    }
 
-    private fun setupInputFocusHandler() = with(binding) {
-        val defaultRes = R.drawable.bg_input_field_outlined
-        val focusedRes = R.drawable.bg_edit_txt_custom_white_focused
+        editTxtPaymentId.doAfterTextChanged { paymentId ->
+            // Cancel any previous pending check
+            pendingCheckRunnable?.let { handler.removeCallbacks(it) }
 
-        EditTextFocusBackgroundChanger(
-            defaultRes,
-            focusedRes,
-            editTxtPaymentId to editTxtPaymentIdBackground
-        )
-    }
-
-    private fun setupPaymentIdInputWatcher() {
-        binding.editTxtPaymentId.addTextChangedListener(object : TextWatcher {
-            override fun beforeTextChanged(charSequence: CharSequence?, i: Int, i1: Int, i2: Int) {
+            if (isPaymentIdValid()) {
+                pendingCheckRunnable = Runnable { viewModel.isPaymentIdTaken(paymentId.toString()) }
+                pendingCheckRunnable?.let { handler.postDelayed(it, 1500) }
             }
-
-            override fun onTextChanged(s: CharSequence, i: Int, i1: Int, i2: Int) {
-                setContinueButtonEnabled(false) // disable continue btn
-
-                // don't trim
-                validatePaymentIdRuleSet(s.toString())
-                userPaymentId = s.toString()
-
-                // Hide feedbacks
-                binding.paymentIdAvailableCheck.visibility = View.GONE
-                binding.paymentIdAvailabilityFeedback.visibility = View.GONE
-                binding.txtError.visibility = View.GONE
-            }
-
-            override fun afterTextChanged(e: Editable) {
-                // don't trim
-
-                val eString = e.toString()
-                val shouldSearch = isFormatValid
-
-                // cancel any previous pending check
-                if (pendingCheckRunnable != null) {
-                    handler.removeCallbacks(pendingCheckRunnable!!)
-                }
-
-                if (shouldSearch) {
-                    pendingCheckRunnable = Runnable { viewModel.isPaymentIdTaken(eString) }
-                    handler.postDelayed(pendingCheckRunnable!!, 1500)
-                }
-            }
-        })
+        }
     }
 
     private fun validatePaymentIdRuleSet(paymentId: String) {
@@ -229,34 +197,40 @@ class CreatePaymentIdActivity : AppCompatActivity() {
         val validBg = ContextCompat.getDrawable(this, R.drawable.bg_8dp_green_light)
         val invalidBg = ContextCompat.getDrawable(this, R.drawable.bg_surface_rounded8)
 
-        val validIcon = ColorStateList.valueOf(ContextCompat.getColor(this, R.color.green_500))
-        val invalidIcon = ColorStateList.valueOf(ContextCompat.getColor(this, R.color.gray_500))
+        val validIcon = ColorStateList.valueOf(ContextCompat.getColor(this, R.color.colorSuccess))
+        val invalidIcon = ColorStateList.valueOf(ContextCompat.getColor(this, R.color.colorOnSurfaceVariant))
 
-        val validText = ContextCompat.getColor(this, R.color.green_500)
-        val invalidText = ContextCompat.getColor(this, R.color.gray_500)
+        val validText = ContextCompat.getColor(this, R.color.colorSuccess)
+        val invalidText = ContextCompat.getColor(this, R.color.colorOnSurfaceVariant)
 
         // Evaluate rules once
         val startsWith = startsWithLetter(paymentId)
         val hasMinimumLength = hasMinimumLength(paymentId)
         val isValidFormat = isAlphaNumericFormat(paymentId)
 
-        // Starts with letter
-        binding.layoutRuleStartWith.background = if (startsWith) validBg else invalidBg
-        binding.iconCheckRuleStartWith.imageTintList = if (startsWith) validIcon else invalidIcon
-        binding.txtRuleStartWith.setTextColor(if (startsWith) validText else invalidText)
+        with(binding) {
+            // Starts with letter
+            viewRuleStartWith.background = if (startsWith) validBg else invalidBg
+            ivCheckRuleStartWith.imageTintList = if (startsWith) validIcon else invalidIcon
+            tvRuleStartWith.setTextColor(if (startsWith) validText else invalidText)
 
-        // Minimum length
-        binding.layoutRuleLength.background = if (hasMinimumLength) validBg else invalidBg
-        binding.icCheckRuleLength.imageTintList = if (hasMinimumLength) validIcon else invalidIcon
-        binding.txtRuleLength.setTextColor(if (hasMinimumLength) validText else invalidText)
+            // Minimum length
+            viewRuleLength.background = if (hasMinimumLength) validBg else invalidBg
+            ivCheckRuleLength.imageTintList = if (hasMinimumLength) validIcon else invalidIcon
+            tvRuleLength.setTextColor(if (hasMinimumLength) validText else invalidText)
 
-        // Alphanumeric format
-        binding.layoutRuleContains.background = if (isValidFormat) validBg else invalidBg
-        binding.icCheckRuleContains.imageTintList = if (isValidFormat) validIcon else invalidIcon
-        binding.txtRuleContains.setTextColor(if (isValidFormat) validText else invalidText)
+            // Alphanumeric format
+            viewRuleContains.background = if (isValidFormat) validBg else invalidBg
+            ivCheckRuleContains.imageTintList = if (isValidFormat) validIcon else invalidIcon
+            tvRuleContains.setTextColor(if (isValidFormat) validText else invalidText)
+        }
+    }
 
-        // Only update the flag here
-        isFormatValid = startsWith && hasMinimumLength && isValidFormat
+    private fun isPaymentIdValid(): Boolean = with(binding) {
+        val paymentId = editTxtPaymentId.text.toString()
+        return startsWithLetter(paymentId) && hasMinimumLength(paymentId) && isAlphaNumericFormat(
+            paymentId
+        )
     }
 
     private fun startsWithLetter(paymentId: String): Boolean {
@@ -272,12 +246,11 @@ class CreatePaymentIdActivity : AppCompatActivity() {
     }
 
     private fun updateContinueButtonState() {
-        // Button only enabled when format is valid AND ID does not exist
-        setContinueButtonEnabled(isFormatValid && !exists)
+        setContinueButtonEnabled(isPaymentIdValid() && !exists)
     }
 
-    private fun setContinueButtonEnabled(enable: Boolean) {
-        binding.btnContinue.isEnabled = enable
+    private fun setContinueButtonEnabled(enable: Boolean) = with(binding) {
+        btnContinue.isEnabled = enable
     }
 
     override fun dispatchTouchEvent(event: MotionEvent): Boolean {
@@ -286,13 +259,10 @@ class CreatePaymentIdActivity : AppCompatActivity() {
     }
 
     private fun disableBackButton() {
-        onBackPressedDispatcher.addCallback(
-            this,
-            object : OnBackPressedCallback(true) {
-                override fun handleOnBackPressed() {
-                    // prevent the user from navigating back
-                }
+        onBackPressedDispatcher.addCallback(this, object : OnBackPressedCallback(true) {
+            override fun handleOnBackPressed() {
+                // Do nothing to disable back button
             }
-        )
+        })
     }
 }

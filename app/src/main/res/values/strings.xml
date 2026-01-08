@@ -119,4 +119,9 @@
     <string name="tv_utilities_amp_bills"><![CDATA[Utilities & Bills]]></string>
     <string name="tv_travel_amp_lifestyle"><![CDATA[Travel & Lifestyle]]></string>
 
+    <!-- CREATE PAYMENT ID ACTIVITY -->
+    <string name="tv_create_your_payment_id">Create Your Payment ID</string>
+    <string name="tv_this_id_lets_others_send_you_money_securely_on_settlex_once_created_it_can_t_be_changed">This ID lets others send you money securely on SettleX. Once created, it can’t be changed</string>
+    <string name="hint_choose_your_payment_id">Choose your Payment ID</string>
+
 </resources>

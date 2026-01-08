@@ -91,7 +91,7 @@ class HomeDashboardFragment : Fragment() {
     }
 
     private fun initViews() {
-        StatusBar.setColor(requireActivity(), R.color.colorBackgroundSecondary)
+        StatusBar.setColor(requireActivity(), R.color.colorBackgroundInverse)
         initListeners()
         initTransactionRecyclerView()
         setupDoubleBackPressToExit()
@@ -383,10 +383,12 @@ class HomeDashboardFragment : Fragment() {
                     serviceType.destination
                 )
             }
-        val adapter = ServicesAdapter(true, serviceList) { serviceUiModel ->
+        val adapter = ServicesAdapter(false, serviceList) { serviceUiModel ->
             val destination = serviceUiModel.destination
             when (destination) {
-                null -> Toast.makeText(context, "Feature not yet implemented", Toast.LENGTH_SHORT).show()
+                null -> Toast.makeText(context, "Feature not yet implemented", Toast.LENGTH_SHORT)
+                    .show()
+
                 else -> {
                     when {
                         destination.isActivity -> startActivity(

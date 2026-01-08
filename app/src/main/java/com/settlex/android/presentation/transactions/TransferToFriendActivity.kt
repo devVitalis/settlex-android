@@ -192,7 +192,7 @@ class TransferToFriendActivity : AppCompatActivity() {
 
         // hide selected recipient and errors
         selectedRecipient.gone()
-        txtError.gone()
+        tvError.gone()
         updateNextButtonState()
 
         shimmerEffect.show()
@@ -206,13 +206,13 @@ class TransferToFriendActivity : AppCompatActivity() {
         if (recipientList.isEmpty()) {
             recipientAdapter.submitList(emptyList())
             val paymentId = StringFormatter.addAtToPaymentId(recipientPaymentId)
-            txtError.text = "No user found with Payment ID $paymentId"
-            txtError.show()
+            tvError.text = "No user found with Payment ID $paymentId"
+            tvError.show()
             recipientRecyclerView.gone()
             return
         }
 
-        txtError.gone()
+        tvError.gone()
         recipientAdapter.submitList(recipientList.toMutableList())
         recipientRecyclerView.show()
     }
@@ -364,7 +364,7 @@ class TransferToFriendActivity : AppCompatActivity() {
                 null
             }
 
-            txtError.gone()
+            tvError.gone()
             selectedRecipient.gone()
             btnVerify.isVisible = raw.length >= 5
             updateNextButtonState()

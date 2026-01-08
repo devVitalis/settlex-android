@@ -6,11 +6,11 @@
     <color name="colorOnPrimaryVariant">@color/blue_500</color>
 
     <color name="colorSecondary">@color/blue_200</color>
-    <color name="colorOnSecondary">@color/white</color>
+    <color name="colorOnSecondary">@color/colorPrimary</color>
 
     <color name="colorBackground">@color/black</color>
     <color name="colorOnBackground">@color/white</color>
-    <color name="colorBackgroundSecondary">@color/black</color>
+    <color name="colorBackgroundInverse">@color/black</color>
 
     <color name="colorSurface">@color/gray_600</color>
     <color name="colorOnSurface">@color/white</color>
@@ -60,7 +60,7 @@
     <color name="gray_600">#4A4A4A</color>
 
     <!-- Blue -->
-    <color name="blue_200">#1A2B4D</color>
+    <color name="blue_200">#121B2E</color>
     <color name="blue_300">#CCE0FF</color>
     <color name="blue_400">#42A5F5</color>
     <color name="blue_500">#0866FF</color>
@@ -77,7 +77,7 @@
     <color name="orange_500">#FFA500</color>
 
     <!-- Green -->
-    <color name="green_100">#E0FAF3</color>
+    <color name="green_100">#0C2B24</color>
     <color name="green_500">#00C48C</color>
 
     <!--Overlay Colors-->

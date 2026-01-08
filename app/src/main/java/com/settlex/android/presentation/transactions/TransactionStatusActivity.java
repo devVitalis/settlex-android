@@ -59,8 +59,8 @@ public class TransactionStatusActivity extends AppCompatActivity {
         // Display amount
         binding.txnAmount.setText(txnAmount);
         if (txtMessage != null && txtMessage.isEmpty()) {
-            binding.txtError.setText(txtMessage);
-            binding.txtError.setVisibility(View.VISIBLE);
+            binding.tvError.setText(txtMessage);
+            binding.tvError.setVisibility(View.VISIBLE);
         }
 
         // Convert back to enum

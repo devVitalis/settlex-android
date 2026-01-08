@@ -10,7 +10,7 @@
 
     <color name="colorBackground">@color/white</color>
     <color name="colorOnBackground">@color/black</color>
-    <color name="colorBackgroundSecondary">@color/gray_200</color>
+    <color name="colorBackgroundInverse">@color/gray_200</color>
 
     <color name="colorSurface">@color/gray_200</color>
     <color name="colorOnSurface">@color/black</color>
@@ -47,7 +47,7 @@
 
     <!-- Specific component states -->
     <color name="button_disabled_background">@color/blue_300</color>
-    <color name="button_ripple_background">@color/blue_700</color>
+    <color name="button_ripple_background">@color/blue_400</color>
 
     <!-- Base Color -->
     <color name="black">#FF000000</color>
@@ -62,7 +62,7 @@
 
     <!-- Blue -->
     <color name="blue_200">#E6EEFF</color>
-    <color name="blue_300">#CCE0FF</color>
+    <color name="blue_300">#77a4ff</color>
     <color name="blue_400">#42A5F5</color>
     <color name="blue_500">#0044CC</color>
     <color name="blue_600">#004A91</color>

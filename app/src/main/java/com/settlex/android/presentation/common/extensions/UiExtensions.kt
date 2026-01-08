@@ -66,13 +66,8 @@ fun String.maskPhoneNumber(): String {
         val prefix = phoneNumber.substring(0, visiblePrefixLength)
         val suffix = phoneNumber.substring(phoneNumber.length - visibleSuffixLength)
 
-        // Build masked section with asterisks
-//        val maskedPartLength = phoneNumber.length - (visiblePrefixLength + visibleSuffixLength)
-//        val mask = StringBuilder()
-//        for (index in 0..<maskedPartLength) {
-//            mask.append("*")
-//        }
-
+        Log.d("UiExtension", "Prefix: $prefix")
+        Log.d("UiExtension", "Suffix: $suffix")
         return "$prefix****$suffix"
     }
 }

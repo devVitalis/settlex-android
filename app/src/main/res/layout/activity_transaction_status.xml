@@ -120,7 +120,7 @@
                 tools:text="₦1,000" />
 
             <TextView
-                android:id="@+id/txt_error"
+                android:id="@+id/tv_error"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_gravity="center"
