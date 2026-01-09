@@ -46,8 +46,8 @@
     <color name="colorOnBadgeSecondary">@color/red_500</color>
 
     <!-- Specific component states -->
-    <color name="button_disabled_background">@color/blue_300</color>
-    <color name="button_ripple_background">@color/blue_400</color>
+    <color name="button_disabled_background">#A5B4FC</color>
+    <color name="button_ripple_color">#42FFFFFF</color>
 
     <!-- Base Color -->
     <color name="black">#FF000000</color>
@@ -64,7 +64,7 @@
     <color name="blue_200">#E6EEFF</color>
     <color name="blue_300">#77a4ff</color>
     <color name="blue_400">#42A5F5</color>
-    <color name="blue_500">#0044CC</color>
+    <color name="blue_500">#1A56DB</color>
     <color name="blue_600">#004A91</color>
     <color name="blue_700">#0A1E33</color>
 

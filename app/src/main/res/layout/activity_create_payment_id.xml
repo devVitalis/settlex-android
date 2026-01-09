@@ -38,23 +38,28 @@
                 android:text="@string/tv_this_id_lets_others_send_you_money_securely_on_settlex_once_created_it_can_t_be_changed"
                 android:textColor="@color/colorOnSurfaceVariant" />
 
-            <com.google.android.material.textfield.TextInputEditText
-                android:id="@+id/et_payment_id"
-                style="@style/Widget.SettleX.TextInputEditText.Outlined"
+            <com.google.android.material.textfield.TextInputLayout
+                style="@style/Widget.SettleX.TextInputLayout.Outlined"
                 android:layout_width="match_parent"
-                android:layout_height="55dp"
-                android:layout_marginTop="15dp"
-                android:background="@drawable/bg_input_field_outlined"
-                android:hint="@string/hint_choose_your_payment_id"
-                android:imeOptions="actionDone"
-                android:inputType="textPersonName"
-                android:paddingHorizontal="15dp" />
+                android:layout_height="wrap_content"
+                android:layout_marginTop="15dp">
+
+                <com.google.android.material.textfield.TextInputEditText
+                    android:id="@+id/et_payment_id"
+                    style="@style/Widget.SettleX.TextInputEditText.Outlined"
+                    android:layout_width="match_parent"
+                    android:layout_height="55dp"
+                    android:hint="@string/hint_choose_your_payment_id"
+                    android:imeOptions="actionDone"
+                    android:inputType="textPersonName"
+                    android:paddingHorizontal="15dp" />
+            </com.google.android.material.textfield.TextInputLayout>
 
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="5dp"
-                android:gravity="end"
+                android:gravity="end|center_vertical"
                 android:orientation="horizontal">
 
                 <TextView
@@ -68,8 +73,8 @@
 
                 <com.google.android.material.imageview.ShapeableImageView
                     android:id="@+id/iv_payment_id_available"
-                    android:layout_width="15dp"
-                    android:layout_height="15dp"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
                     android:layout_marginStart="5dp"
                     android:src="@drawable/ic_check_circle"
                     android:visibility="gone"
@@ -83,56 +88,89 @@
                     android:visibility="gone" />
             </LinearLayout>
 
-            <com.google.android.material.textview.MaterialTextView
-                android:id="@+id/tv_rule_start_with"
-                style="@style/Widget.SettleX.TextRegular"
+            <!-- Rule start with -->
+            <LinearLayout
+                android:id="@+id/view_rule_start_with"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginStart="2dp"
                 android:layout_marginTop="10dp"
                 android:background="@drawable/bg_surface_rounded8"
-                android:drawablePadding="5dp"
                 android:gravity="center_vertical"
                 android:paddingHorizontal="10dp"
-                android:paddingVertical="5dp"
-                android:text="@string/tv_starts_with_a_letter"
-                android:textColor="@color/colorOnSurfaceVariant"
-                app:drawableStartCompat="@drawable/ic_check"
-                app:drawableTint="@color/colorOnSurfaceVariant" />
+                android:paddingVertical="5dp">
 
-            <com.google.android.material.textview.MaterialTextView
-                android:id="@+id/tv_rule_length"
-                style="@style/Widget.SettleX.TextRegular"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginStart="2dp"
-                android:layout_marginTop="10dp"
-                android:background="@drawable/bg_surface_rounded8"
-                android:drawablePadding="5dp"
-                android:gravity="center_vertical"
-                android:paddingHorizontal="10dp"
-                android:paddingVertical="5dp"
-                android:text="@string/tv_min_amp_max_5_20_characters"
-                android:textColor="@color/colorOnSurfaceVariant"
-                app:drawableStartCompat="@drawable/ic_check"
-                app:drawableTint="@color/colorOnSurfaceVariant" />
+                <com.google.android.material.imageview.ShapeableImageView
+                    android:id="@+id/iv_rule_start_with"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    app:srcCompat="@drawable/ic_check"
+                    app:tint="@color/colorOnSurfaceVariant" />
 
-            <com.google.android.material.textview.MaterialTextView
-                android:id="@+id/tv_rule_contains"
-                style="@style/Widget.SettleX.TextRegular"
+                <com.google.android.material.textview.MaterialTextView
+                    android:id="@+id/tv_rule_start_with"
+                    style="@style/Widget.SettleX.TextRegular"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="5dp"
+                    android:text="@string/tv_starts_with_a_letter"
+                    android:textColor="@color/colorOnSurfaceVariant" />
+            </LinearLayout>
+
+            <!-- Rule length -->
+            <LinearLayout
+                android:id="@+id/view_rule_length"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginStart="2dp"
                 android:layout_marginTop="10dp"
                 android:background="@drawable/bg_surface_rounded8"
-                android:drawablePadding="5dp"
                 android:gravity="center_vertical"
                 android:paddingHorizontal="10dp"
-                android:paddingVertical="5dp"
-                android:text="@string/tv_only_lowercase_letters_numbers_and_no_space"
-                android:textColor="@color/colorOnSurfaceVariant"
-                app:drawableStartCompat="@drawable/ic_check"
-                app:drawableTint="@color/colorOnSurfaceVariant" />
+                android:paddingVertical="5dp">
+
+                <com.google.android.material.imageview.ShapeableImageView
+                    android:id="@+id/iv_rule_length"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    app:srcCompat="@drawable/ic_check"
+                    app:tint="@color/colorOnSurfaceVariant" />
+
+                <com.google.android.material.textview.MaterialTextView
+                    android:id="@+id/tv_rule_length"
+                    style="@style/Widget.SettleX.TextRegular"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="5dp"
+                    android:text="@string/tv_min_amp_max_5_20_characters"
+                    android:textColor="@color/colorOnSurfaceVariant" />
+            </LinearLayout>
+
+            <!-- Rule contains -->
+            <LinearLayout
+                android:id="@+id/view_rule_contains"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="10dp"
+                android:background="@drawable/bg_surface_rounded8"
+                android:gravity="center_vertical"
+                android:paddingHorizontal="10dp"
+                android:paddingVertical="5dp">
+
+                <com.google.android.material.imageview.ShapeableImageView
+                    android:id="@+id/iv_rule_contains"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    app:srcCompat="@drawable/ic_check"
+                    app:tint="@color/colorOnSurfaceVariant" />
+
+                <com.google.android.material.textview.MaterialTextView
+                    android:id="@+id/tv_rule_contains"
+                    style="@style/Widget.SettleX.TextRegular"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="5dp"
+                    android:text="@string/tv_only_lowercase_letters_numbers_and_no_space"
+                    android:textColor="@color/colorOnSurfaceVariant" />
+            </LinearLayout>
 
             <com.google.android.material.button.MaterialButton
                 android:id="@+id/btn_continue"

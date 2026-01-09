@@ -8,8 +8,10 @@ import com.settlex.android.domain.usecase.user.IsPaymentIdTakenUseCase
 import com.settlex.android.presentation.common.state.UiState
 import dagger.hilt.android.lifecycle.HiltViewModel
 import jakarta.inject.Inject
+import kotlinx.coroutines.channels.Channel
 import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.flow.asSharedFlow
+import kotlinx.coroutines.flow.receiveAsFlow
 import kotlinx.coroutines.launch
 
 @HiltViewModel
@@ -32,14 +34,16 @@ class SettingsViewModel @Inject constructor(
         }
     }
 
-    private val _assignPaymentIdEven = MutableSharedFlow<UiState<Unit>>()
-    val assignPaymentIdEvent = _assignPaymentIdEven.asSharedFlow()
+    private val _assignPaymentIdEven = Channel<UiState<Unit>>(Channel.BUFFERED)
+    val assignPaymentIdEvent = _assignPaymentIdEven.receiveAsFlow()
 
     fun assignPaymentId(paymentId: String) {
         viewModelScope.launch {
+            _assignPaymentIdEven.send(UiState.Loading)
+
             assignPaymentIdUseCase(paymentId).fold(
-                onSuccess = { _assignPaymentIdEven.emit(UiState.Success(Unit)) },
-                onFailure = { _assignPaymentIdEven.emit(UiState.Failure(it as AppException)) }
+                onSuccess = { _assignPaymentIdEven.send(UiState.Success(Unit)) },
+                onFailure = { _assignPaymentIdEven.send(UiState.Failure(it as AppException)) }
             )
         }
     }

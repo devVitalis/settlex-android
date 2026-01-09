@@ -43,10 +43,8 @@ class CreatePaymentIdActivity : AppCompatActivity() {
             R.drawable.bg_surface_rounded8
         )
     }
-    private val checkIcon by lazy { ContextCompat.getDrawable(this, R.drawable.ic_check) }
-
-    private val successColor by lazy { ContextCompat.getColor(this, R.color.colorSuccess) }
-    private val errorColor by lazy { ContextCompat.getColor(this, R.color.colorOnSurfaceVariant) }
+    private val successStateColor by lazy { ContextCompat.getColor(this, R.color.colorSuccess) }
+    private val defaultStateColor by lazy { ContextCompat.getColor(this, R.color.colorOnSurfaceVariant) }
 
     // Dependencies
     private lateinit var binding: ActivityCreatePaymentIdBinding
@@ -81,11 +79,11 @@ class CreatePaymentIdActivity : AppCompatActivity() {
     private fun observeAssignPaymentIdEvent() {
         lifecycleScope.launch {
             repeatOnLifecycle(Lifecycle.State.STARTED) {
-                viewModel.assignPaymentIdEvent.collect {
-                    when (it) {
+                viewModel.assignPaymentIdEvent.collect { state ->
+                    when (state) {
                         is UiState.Loading -> progressLoader.show()
                         is UiState.Success -> showPaymentIdCreationSuccessDialog()
-                        is UiState.Failure -> onAssignPaymentIdError(it.exception.message)
+                        is UiState.Failure -> onAssignPaymentIdError(state.exception.message)
                     }
                 }
             }
@@ -200,28 +198,28 @@ class CreatePaymentIdActivity : AppCompatActivity() {
         listOf(
             Pair(
                 isPaymentIdAlphaPrefixed(paymentId),
-                tvRuleStartWith
+                Triple(viewRuleStartWith, ivRuleStartWith, tvRuleStartWith)
             ),
             Pair(
                 isPaymentIdLengthInRange(paymentId),
-                tvRuleLength
+                Triple(viewRuleLength, ivRuleLength, tvRuleLength)
             ),
             Pair(
                 isPaymentIdLowercaseAlphanumeric(paymentId),
-                tvRuleContains
+                Triple(viewRuleContains, ivRuleContains, tvRuleContains)
             )
-        ).forEach { (isRequirementMet, textView) ->
-            val statusColor = if (isRequirementMet) successColor else errorColor
+        ).forEach { (isRequirementMet, triple) ->
+            val (view, icon, textView) = triple
+
+            val statusColor = if (isRequirementMet) successStateColor else defaultStateColor
             val statusBackgroundDrawable = when {
                 isRequirementMet -> validStateBackground
                 else -> defaultStateBackground
             }
 
-            textView.background = statusBackgroundDrawable
+            view.background = statusBackgroundDrawable
+            icon.setColorFilter(statusColor)
             textView.setTextColor(statusColor)
-
-            checkIcon?.setTint(statusColor)
-            textView.setCompoundDrawablesWithIntrinsicBounds(checkIcon, null, null, null)
         }
     }
 

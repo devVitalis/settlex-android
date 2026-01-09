@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <color name="colorPrimary">@color/blue_500</color>
+    <color name="colorPrimary">#1A56DB</color>
     <color name="colorOnPrimary">@color/white</color>
     <color name="colorPrimaryVariant">@color/blue_400</color>
     <color name="colorOnPrimaryVariant">@color/blue_500</color>
@@ -46,7 +46,7 @@
     <color name="colorOnBadgeSecondary">@color/red_500</color>
 
     <!-- Specific component states -->
-    <color name="button_disabled_background">@color/blue_300</color>
+    <color name="button_disabled_background">#4B5563</color>
 
     <!-- Base Color -->
     <color name="black">#242424</color>
@@ -63,7 +63,7 @@
     <color name="blue_200">#121B2E</color>
     <color name="blue_300">#CCE0FF</color>
     <color name="blue_400">#42A5F5</color>
-    <color name="blue_500">#0866FF</color>
+    <color name="blue_500">#1A56DB</color>
     <color name="blue_600">#004A91</color>
     <color name="blue_700">#0A1E33</color>
 

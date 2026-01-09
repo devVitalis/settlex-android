@@ -13,10 +13,10 @@ import com.settlex.android.presentation.common.state.UiState
 import com.settlex.android.util.network.NetworkMonitor
 import dagger.hilt.android.lifecycle.HiltViewModel
 import jakarta.inject.Inject
-import kotlinx.coroutines.flow.MutableSharedFlow
+import kotlinx.coroutines.channels.Channel
 import kotlinx.coroutines.flow.MutableStateFlow
-import kotlinx.coroutines.flow.asSharedFlow
 import kotlinx.coroutines.flow.asStateFlow
+import kotlinx.coroutines.flow.receiveAsFlow
 import kotlinx.coroutines.launch
 
 @HiltViewModel
@@ -73,8 +73,8 @@ class LoginViewModel @Inject constructor(
         }
     }
 
-    private val _loginEvent = MutableSharedFlow<UiState<Unit>>()
-    val loginEvent = _loginEvent.asSharedFlow()
+    private val _loginEvent = Channel<UiState<Unit>>(Channel.BUFFERED)
+    val loginEvent = _loginEvent.receiveAsFlow()
 
     /**
      * Attempts to log in a user with the provided credentials.
@@ -82,7 +82,7 @@ class LoginViewModel @Inject constructor(
     fun login(email: String, password: String) {
         viewModelScope.launch {
             if (!isNetworkConnected()) {
-                _loginEvent.emit(
+                _loginEvent.send(
                     UiState.Failure(
                         AppException.NetworkException(
                             ExceptionMapper.ERROR_NO_NETWORK
@@ -92,11 +92,11 @@ class LoginViewModel @Inject constructor(
                 return@launch
             }
 
-            _loginEvent.emit(UiState.Loading)
+            _loginEvent.send(UiState.Loading)
 
             loginUseCase(email, password)
-                .onSuccess { _loginEvent.emit(UiState.Success(Unit)) }
-                .onFailure { _loginEvent.emit(UiState.Failure(it as AppException)) }
+                .onSuccess { _loginEvent.send(UiState.Success(Unit)) }
+                .onFailure { _loginEvent.send(UiState.Failure(it as AppException)) }
         }
     }
 
