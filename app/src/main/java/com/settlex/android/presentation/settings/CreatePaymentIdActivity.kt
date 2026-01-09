@@ -1,12 +1,10 @@
 package com.settlex.android.presentation.settings
 
 import android.content.Intent
-import android.content.res.ColorStateList
 import android.os.Bundle
 import android.os.Handler
 import android.os.Looper
 import android.view.MotionEvent
-import android.view.View
 import androidx.activity.OnBackPressedCallback
 import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
@@ -32,7 +30,23 @@ import kotlinx.coroutines.launch
 @AndroidEntryPoint
 class CreatePaymentIdActivity : AppCompatActivity() {
     private var userPaymentId: String? = null
-    private var exists = false
+
+    private val validStateBackground by lazy {
+        ContextCompat.getDrawable(
+            this,
+            R.drawable.bg_success_container_rounded8
+        )
+    }
+    private val defaultStateBackground by lazy {
+        ContextCompat.getDrawable(
+            this,
+            R.drawable.bg_surface_rounded8
+        )
+    }
+    private val checkIcon by lazy { ContextCompat.getDrawable(this, R.drawable.ic_check) }
+
+    private val successColor by lazy { ContextCompat.getColor(this, R.color.colorSuccess) }
+    private val errorColor by lazy { ContextCompat.getColor(this, R.color.colorOnSurfaceVariant) }
 
     // Dependencies
     private lateinit var binding: ActivityCreatePaymentIdBinding
@@ -71,7 +85,7 @@ class CreatePaymentIdActivity : AppCompatActivity() {
                     when (it) {
                         is UiState.Loading -> progressLoader.show()
                         is UiState.Success -> showPaymentIdCreationSuccessDialog()
-                        is UiState.Failure -> onStorePaymentIdFailure(it.exception.message)
+                        is UiState.Failure -> onAssignPaymentIdError(it.exception.message)
                     }
                 }
             }
@@ -83,11 +97,8 @@ class CreatePaymentIdActivity : AppCompatActivity() {
 
         DialogHelper.showSuccessBottomSheetDialog(this) { dialog, dialogBinding ->
             with(dialogBinding) {
-                val title = "Success"
-                val message = "Your Payment ID was successfully created."
-
-                tvTitle.text = title
-                tvMessage.text = message
+                "Success".also { tvTitle.text = it }
+                "Your Payment ID was successfully created".also { tvMessage.text = it }
                 "Okay".also { btnAction.text = it }
 
                 btnAction.setOnClickListener {
@@ -104,8 +115,8 @@ class CreatePaymentIdActivity : AppCompatActivity() {
         }
     }
 
-    private fun onStorePaymentIdFailure(error: String?) = with(binding) {
-        paymentIdAvailabilityFeedback.text = error
+    private fun onAssignPaymentIdError(error: String?) = with(binding) {
+        tvPaymentIdAvailabilityStatus.text = error
         progressLoader.hide()
     }
 
@@ -124,34 +135,27 @@ class CreatePaymentIdActivity : AppCompatActivity() {
     }
 
     private fun onPaymentIdAvailabilityCheckLoading() = with(binding) {
-        paymentIdProgressBar.show()
-        ivPaymentIdAvailable.gone()
+        pbPaymentIdCheck.show()
     }
 
-    private fun setPaymentIdAvailabilityStatus(exists: Boolean) = with(binding) {
-        this@CreatePaymentIdActivity.exists = exists
+    private fun setPaymentIdAvailabilityStatus(isPaymentIdTaken: Boolean) = with(binding) {
+        pbPaymentIdCheck.gone()
 
-        // Hide progress bar
-        paymentIdProgressBar.gone()
+        ivPaymentIdAvailable.also { if (isPaymentIdTaken) it.gone() else it.show() }
 
-        ivPaymentIdAvailable.visibility = if (!exists) View.VISIBLE else View.GONE
+        val statusText = if (isPaymentIdTaken) "Not Available" else "Available"
+        val statusColor = when (isPaymentIdTaken) {
+            true -> ContextCompat.getColor(this@CreatePaymentIdActivity, R.color.colorError)
+            false -> ContextCompat.getColor(this@CreatePaymentIdActivity, R.color.colorSuccess)
+        }
 
-        val feedback = if (!exists) "Available" else "Not Available"
-        val feedbackColor =
-            if (!exists) ContextCompat.getColor(
-                this@CreatePaymentIdActivity,
-                R.color.colorSuccess
-            ) else ContextCompat.getColor(
-                this@CreatePaymentIdActivity,
-                R.color.colorError
-            )
+        tvPaymentIdAvailabilityStatus.also {
+            it.text = statusText
+            it.setTextColor(statusColor)
+            it.show()
+        }
 
-        paymentIdAvailabilityFeedback.setTextColor(feedbackColor)
-        paymentIdAvailabilityFeedback.show()
-        paymentIdAvailabilityFeedback.text = feedback
-
-        // Validate button state
-        updateContinueButtonState()
+        updateContinueButtonState(isPaymentIdTaken)
     }
 
     private fun onPaymentIdAvailabilityFailure(error: String?) = with(binding) {
@@ -159,29 +163,29 @@ class CreatePaymentIdActivity : AppCompatActivity() {
         tvError.show()
 
         listOf(
-            paymentIdProgressBar,
+            pbPaymentIdCheck,
             ivPaymentIdAvailable,
-            paymentIdAvailabilityFeedback
+            tvPaymentIdAvailabilityStatus
         ).forEach { it.gone() }
     }
 
     private fun setupPaymentIdTextWatcher() = with(binding) {
-        editTxtPaymentId.doOnTextChanged { paymentId, _, _, _ ->
+        etPaymentId.doOnTextChanged { paymentId, _, _, _ ->
             // Disable continue button
             setContinueButtonEnabled(false)
 
-            validatePaymentIdRuleSet(paymentId.toString())
+            updatePaymentIdValidationUI(paymentId.toString())
             userPaymentId = paymentId.toString()
 
             // Hide feedbacks
             listOf(
                 ivPaymentIdAvailable,
-                paymentIdAvailabilityFeedback,
+                tvPaymentIdAvailabilityStatus,
                 tvError
             ).forEach { it.gone() }
         }
 
-        editTxtPaymentId.doAfterTextChanged { paymentId ->
+        etPaymentId.doAfterTextChanged { paymentId ->
             // Cancel any previous pending check
             pendingCheckRunnable?.let { handler.removeCallbacks(it) }
 
@@ -192,61 +196,56 @@ class CreatePaymentIdActivity : AppCompatActivity() {
         }
     }
 
-    private fun validatePaymentIdRuleSet(paymentId: String) {
-        // Cache drawables and colors
-        val validBg = ContextCompat.getDrawable(this, R.drawable.bg_8dp_green_light)
-        val invalidBg = ContextCompat.getDrawable(this, R.drawable.bg_surface_rounded8)
+    private fun updatePaymentIdValidationUI(paymentId: String) = with(binding) {
+        listOf(
+            Pair(
+                isPaymentIdAlphaPrefixed(paymentId),
+                tvRuleStartWith
+            ),
+            Pair(
+                isPaymentIdLengthInRange(paymentId),
+                tvRuleLength
+            ),
+            Pair(
+                isPaymentIdLowercaseAlphanumeric(paymentId),
+                tvRuleContains
+            )
+        ).forEach { (isRequirementMet, textView) ->
+            val statusColor = if (isRequirementMet) successColor else errorColor
+            val statusBackgroundDrawable = when {
+                isRequirementMet -> validStateBackground
+                else -> defaultStateBackground
+            }
 
-        val validIcon = ColorStateList.valueOf(ContextCompat.getColor(this, R.color.colorSuccess))
-        val invalidIcon = ColorStateList.valueOf(ContextCompat.getColor(this, R.color.colorOnSurfaceVariant))
+            textView.background = statusBackgroundDrawable
+            textView.setTextColor(statusColor)
 
-        val validText = ContextCompat.getColor(this, R.color.colorSuccess)
-        val invalidText = ContextCompat.getColor(this, R.color.colorOnSurfaceVariant)
-
-        // Evaluate rules once
-        val startsWith = startsWithLetter(paymentId)
-        val hasMinimumLength = hasMinimumLength(paymentId)
-        val isValidFormat = isAlphaNumericFormat(paymentId)
-
-        with(binding) {
-            // Starts with letter
-            viewRuleStartWith.background = if (startsWith) validBg else invalidBg
-            ivCheckRuleStartWith.imageTintList = if (startsWith) validIcon else invalidIcon
-            tvRuleStartWith.setTextColor(if (startsWith) validText else invalidText)
-
-            // Minimum length
-            viewRuleLength.background = if (hasMinimumLength) validBg else invalidBg
-            ivCheckRuleLength.imageTintList = if (hasMinimumLength) validIcon else invalidIcon
-            tvRuleLength.setTextColor(if (hasMinimumLength) validText else invalidText)
-
-            // Alphanumeric format
-            viewRuleContains.background = if (isValidFormat) validBg else invalidBg
-            ivCheckRuleContains.imageTintList = if (isValidFormat) validIcon else invalidIcon
-            tvRuleContains.setTextColor(if (isValidFormat) validText else invalidText)
+            checkIcon?.setTint(statusColor)
+            textView.setCompoundDrawablesWithIntrinsicBounds(checkIcon, null, null, null)
         }
     }
 
     private fun isPaymentIdValid(): Boolean = with(binding) {
-        val paymentId = editTxtPaymentId.text.toString()
-        return startsWithLetter(paymentId) && hasMinimumLength(paymentId) && isAlphaNumericFormat(
-            paymentId
-        )
+        val paymentId = etPaymentId.text.toString()
+        return isPaymentIdAlphaPrefixed(paymentId)
+                && isPaymentIdLengthInRange(paymentId)
+                && isPaymentIdLowercaseAlphanumeric(paymentId)
     }
 
-    private fun startsWithLetter(paymentId: String): Boolean {
+    private fun isPaymentIdAlphaPrefixed(paymentId: String): Boolean {
         return paymentId.matches("^[A-Za-z].*".toRegex())
     }
 
-    private fun hasMinimumLength(paymentId: String): Boolean {
+    private fun isPaymentIdLengthInRange(paymentId: String): Boolean {
         return paymentId.length >= 5 && paymentId.length <= 20
     }
 
-    private fun isAlphaNumericFormat(paymentId: String): Boolean {
+    private fun isPaymentIdLowercaseAlphanumeric(paymentId: String): Boolean {
         return paymentId.matches("^[a-z0-9]+$".toRegex())
     }
 
-    private fun updateContinueButtonState() {
-        setContinueButtonEnabled(isPaymentIdValid() && !exists)
+    private fun updateContinueButtonState(isPaymentIdTaken: Boolean) {
+        setContinueButtonEnabled(isPaymentIdValid() && !isPaymentIdTaken)
     }
 
     private fun setContinueButtonEnabled(enable: Boolean) = with(binding) {

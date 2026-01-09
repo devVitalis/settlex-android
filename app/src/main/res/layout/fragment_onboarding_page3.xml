@@ -49,11 +49,11 @@
         tools:text="Never Miss\nYour Shows" />
 
     <TextView
+        style="@style/Widget.SettleX.TextRegular"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:layout_marginTop="10dp"
-       style="@style/Widget.SettleX.TextRegular"
-        android:text="Stay connected to your favorite TV and streaming services. Renew your subscriptions on time and keep the entertainment going."
+        android:text="@string/tv_stay_connected_to_your_favorite_tv_and_streaming_services_renew_your_subscriptions_on_time_and_keep_the_entertainment_going"
         android:textAlignment="viewStart"
         android:textColor="@color/colorOnSurfaceVariant"
         app:layout_constraintEnd_toEndOf="parent"

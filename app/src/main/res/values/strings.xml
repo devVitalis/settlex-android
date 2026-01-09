@@ -123,5 +123,15 @@
     <string name="tv_create_your_payment_id">Create Your Payment ID</string>
     <string name="tv_this_id_lets_others_send_you_money_securely_on_settlex_once_created_it_can_t_be_changed">This ID lets others send you money securely on SettleX. Once created, it can’t be changed</string>
     <string name="hint_choose_your_payment_id">Choose your Payment ID</string>
+    <string name="tv_starts_with_a_letter">Starts with a letter</string>
+    <string name="tv_min_amp_max_5_20_characters"><![CDATA[Min & Max 5-20 Characters]]></string>
+    <string name="tv_only_lowercase_letters_numbers_and_no_space">Only lowercase letters numbers and no space</string>
+
+    <!-- ONBOARDING PAGE 1 - 4 FRAGMENT -->
+    <string name="tv_welcome_to_nsettlex">Welcome to\nSettleX</string>
+    <string name="tv_experience_seamless_payments_and_cheaper_bundles_built_for_you_settlex_makes_every_transaction_simple">Experience seamless payments and cheaper bundles built for you. SettleX makes every transaction simple.</string>
+    <string name="tv_get_the_cheapest_data_bundles_and_easily_manage_your_electricity_airtime_and_betting_payments_one_app_for_all_your_needs">Get the cheapest data bundles and easily manage your electricity, airtime, and betting payments. One app for all your needs.</string>
+    <string name="tv_stay_connected_to_your_favorite_tv_and_streaming_services_renew_your_subscriptions_on_time_and_keep_the_entertainment_going">Stay connected to your favorite TV and streaming services. Renew your subscriptions on time and keep the entertainment going.</string>
+    <string name="tv_we_protect_your_information_with_the_same_high_level_encryption_trusted_by_major_banks_keeping_your_personal_details_secure_and_private">We protect your information with the same high-level encryption trusted by major banks, keeping your personal details secure and private.</string>
 
 </resources>

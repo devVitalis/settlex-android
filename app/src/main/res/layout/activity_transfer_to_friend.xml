@@ -85,7 +85,7 @@
                     android:orientation="horizontal">
 
                     <EditText
-                        android:id="@+id/edit_txt_payment_id"
+                        android:id="@+id/et_payment_id"
                         android:layout_width="0dp"
                         android:layout_height="match_parent"
                         android:layout_weight="1"

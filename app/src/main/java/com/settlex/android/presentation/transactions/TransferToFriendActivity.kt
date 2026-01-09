@@ -166,8 +166,8 @@ class TransferToFriendActivity : AppCompatActivity() {
     private fun setupRecipientAdapterClick() =with(binding) {
         recipientAdapter.setOnItemClickListener { recipient ->
             recipient ?: return@setOnItemClickListener
-            editTxtPaymentId.setText(recipient.paymentId)
-            editTxtPaymentId.setSelection(binding.editTxtPaymentId.text.length)
+            etPaymentId.setText(recipient.paymentId)
+            etPaymentId.setSelection(binding.etPaymentId.text.length)
             btnVerify.isVisible = false
 
             // clear search results
@@ -356,7 +356,7 @@ class TransferToFriendActivity : AppCompatActivity() {
 
     // Text watchers + focus handlers
     private fun setupTextWatchers() = with(binding) {
-        editTxtPaymentId.doOnTextChanged { text, _, _, _ ->
+        etPaymentId.doOnTextChanged { text, _, _, _ ->
             val raw = text?.toString().orEmpty().trim()
             recipientPaymentId = if (raw.isNotEmpty()) {
                 StringFormatter.removeAtInPaymentId(raw.lowercase())

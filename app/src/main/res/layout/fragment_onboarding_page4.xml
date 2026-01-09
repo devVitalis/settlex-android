@@ -53,7 +53,7 @@
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:layout_marginTop="10dp"
-        android:text="We protect your information with the same high-level encryption trusted by major banks, keeping your personal details secure and private."
+        android:text="@string/tv_we_protect_your_information_with_the_same_high_level_encryption_trusted_by_major_banks_keeping_your_personal_details_secure_and_private"
         android:textAlignment="viewStart"
         android:textColor="@color/colorOnSurfaceVariant"
         app:layout_constraintEnd_toEndOf="parent"
