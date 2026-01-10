@@ -10,7 +10,7 @@
     <View
         android:layout_width="70dp"
         android:layout_height="5dp"
-        android:background="@drawable/bg_surface_variant_rounded8" />
+        android:background="@drawable/bg_on_surface_variant_rounded8" />
 
     <TextView
         style="@style/Widget.SettleX.TextBold"

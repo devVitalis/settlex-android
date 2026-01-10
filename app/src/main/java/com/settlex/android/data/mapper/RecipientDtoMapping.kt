@@ -6,7 +6,7 @@ import com.settlex.android.presentation.transactions.model.RecipientUiModel
 fun RecipientDto.toRecipientUiModel(): RecipientUiModel {
     return RecipientUiModel(
         paymentId = paymentId,
-        fullName = "$firstName + $lastName",
+        fullName = "$firstName $lastName",
         photoUrl = photoUrl
     )
 }

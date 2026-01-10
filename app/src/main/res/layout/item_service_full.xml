@@ -26,7 +26,7 @@
             android:id="@+id/icon_frame"
             android:layout_width="50dp"
             android:layout_height="50dp"
-            android:background="@drawable/bg_background_secondary_oval"
+            android:background="@drawable/bg_background_inverse_oval"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"

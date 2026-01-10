@@ -5,6 +5,7 @@ import android.os.Bundle
 import android.os.Handler
 import android.os.Looper
 import android.view.MotionEvent
+import android.widget.Toast
 import androidx.activity.OnBackPressedCallback
 import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
@@ -15,6 +16,7 @@ import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.lifecycleScope
 import androidx.lifecycle.repeatOnLifecycle
 import com.settlex.android.R
+import com.settlex.android.data.exception.AppException
 import com.settlex.android.databinding.ActivityCreatePaymentIdBinding
 import com.settlex.android.presentation.common.extensions.gone
 import com.settlex.android.presentation.common.extensions.show
@@ -29,8 +31,6 @@ import kotlinx.coroutines.launch
 
 @AndroidEntryPoint
 class CreatePaymentIdActivity : AppCompatActivity() {
-    private var userPaymentId: String? = null
-
     private val validStateBackground by lazy {
         ContextCompat.getDrawable(
             this,
@@ -44,7 +44,12 @@ class CreatePaymentIdActivity : AppCompatActivity() {
         )
     }
     private val successStateColor by lazy { ContextCompat.getColor(this, R.color.colorSuccess) }
-    private val defaultStateColor by lazy { ContextCompat.getColor(this, R.color.colorOnSurfaceVariant) }
+    private val defaultStateColor by lazy {
+        ContextCompat.getColor(
+            this,
+            R.color.colorOnSurfaceVariant
+        )
+    }
 
     // Dependencies
     private lateinit var binding: ActivityCreatePaymentIdBinding
@@ -68,7 +73,14 @@ class CreatePaymentIdActivity : AppCompatActivity() {
         setupPaymentIdTextWatcher()
         disableBackButton()
 
-        btnContinue.setOnClickListener { viewModel.assignPaymentId(userPaymentId!!) }
+        btnClose.setOnClickListener {
+            Toast.makeText(
+                this@CreatePaymentIdActivity,
+                "Payment ID creation is required to continue",
+                Toast.LENGTH_SHORT
+            ).show()
+        }
+        btnContinue.setOnClickListener { viewModel.assignPaymentId(getPaymentId()) }
     }
 
     private fun initObservers() {
@@ -83,7 +95,7 @@ class CreatePaymentIdActivity : AppCompatActivity() {
                     when (state) {
                         is UiState.Loading -> progressLoader.show()
                         is UiState.Success -> showPaymentIdCreationSuccessDialog()
-                        is UiState.Failure -> onAssignPaymentIdError(state.exception.message)
+                        is UiState.Failure -> onAssignPaymentIdError(state.exception)
                     }
                 }
             }
@@ -113,9 +125,30 @@ class CreatePaymentIdActivity : AppCompatActivity() {
         }
     }
 
-    private fun onAssignPaymentIdError(error: String?) = with(binding) {
-        tvPaymentIdAvailabilityStatus.text = error
+    private fun onAssignPaymentIdError(error: AppException) = with(binding) {
         progressLoader.hide()
+
+        when (error) {
+            is AppException.NetworkException -> showNoInternetDialog(error.message)
+            else -> tvError.text = error.message
+        }
+    }
+
+    private fun showNoInternetDialog(message: String) {
+        DialogHelper.showCustomAlertDialog(this) { dialog, dialogBinding ->
+            with(dialogBinding) {
+                tvMessage.text = message
+                "Cancel".also { btnSecondary.text = it }
+                "Retry".also { btnPrimary.text = it }
+
+                btnSecondary.setOnClickListener { dialog.dismiss() }
+
+                btnPrimary.setOnClickListener {
+                    viewModel.assignPaymentId(getPaymentId())
+                    dialog.dismiss()
+                }
+            }
+        }
     }
 
     private fun observePaymentIdAvailability() {
@@ -170,12 +203,10 @@ class CreatePaymentIdActivity : AppCompatActivity() {
     private fun setupPaymentIdTextWatcher() = with(binding) {
         etPaymentId.doOnTextChanged { paymentId, _, _, _ ->
             // Disable continue button
-            setContinueButtonEnabled(false)
+            btnContinue.isEnabled = false
 
-            updatePaymentIdValidationUI(paymentId.toString())
-            userPaymentId = paymentId.toString()
+            validatePaymentIdRulesUI(paymentId.toString())
 
-            // Hide feedbacks
             listOf(
                 ivPaymentIdAvailable,
                 tvPaymentIdAvailabilityStatus,
@@ -194,7 +225,7 @@ class CreatePaymentIdActivity : AppCompatActivity() {
         }
     }
 
-    private fun updatePaymentIdValidationUI(paymentId: String) = with(binding) {
+    private fun validatePaymentIdRulesUI(paymentId: String) = with(binding) {
         listOf(
             Pair(
                 isPaymentIdAlphaPrefixed(paymentId),
@@ -223,6 +254,10 @@ class CreatePaymentIdActivity : AppCompatActivity() {
         }
     }
 
+    private fun getPaymentId(): String = with(binding) {
+        return etPaymentId.text.toString()
+    }
+
     private fun isPaymentIdValid(): Boolean = with(binding) {
         val paymentId = etPaymentId.text.toString()
         return isPaymentIdAlphaPrefixed(paymentId)
@@ -242,12 +277,8 @@ class CreatePaymentIdActivity : AppCompatActivity() {
         return paymentId.matches("^[a-z0-9]+$".toRegex())
     }
 
-    private fun updateContinueButtonState(isPaymentIdTaken: Boolean) {
-        setContinueButtonEnabled(isPaymentIdValid() && !isPaymentIdTaken)
-    }
-
-    private fun setContinueButtonEnabled(enable: Boolean) = with(binding) {
-        btnContinue.isEnabled = enable
+    private fun updateContinueButtonState(isPaymentIdTaken: Boolean) = with(binding) {
+        btnContinue.isEnabled = isPaymentIdValid() && !isPaymentIdTaken
     }
 
     override fun dispatchTouchEvent(event: MotionEvent): Boolean {
@@ -257,9 +288,7 @@ class CreatePaymentIdActivity : AppCompatActivity() {
 
     private fun disableBackButton() {
         onBackPressedDispatcher.addCallback(this, object : OnBackPressedCallback(true) {
-            override fun handleOnBackPressed() {
-                // Do nothing to disable back button
-            }
+            override fun handleOnBackPressed() {}
         })
     }
 }

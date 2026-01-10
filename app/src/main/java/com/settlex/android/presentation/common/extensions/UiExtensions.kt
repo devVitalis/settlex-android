@@ -46,6 +46,10 @@ fun String.addAtPrefix(): String {
     return "@$this"
 }
 
+fun String.removeAtPrefix(): String {
+    return this.substring(1)
+}
+
 fun String.maskEmail(): String {
     this.also { email ->
         val emailParts = email.split("@")
@@ -182,6 +186,26 @@ fun Long.toNairaString(): String {
         formatter.maximumFractionDigits = 2
 
         formatter.format(naira)
+    }
+}
+
+fun String.fromNairaStringToKobo(): Long {
+    this.also { nairaString ->
+        val cleanedNumberString = nairaString.replace(",", "")
+
+        try {
+            val amount = BigDecimal(cleanedNumberString)
+            val amountInKobo = amount.multiply(BigDecimal("100"))
+
+            // Round to nearest whole Kobo
+            val roundedKobo = amountInKobo.setScale(0, RoundingMode.HALF_UP)
+
+            return roundedKobo.longValueExact()
+        } catch (_: ArithmeticException) {
+            return 0L
+        } catch (_: NumberFormatException) {
+            return 0L
+        }
     }
 }
 

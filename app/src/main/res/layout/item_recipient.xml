@@ -5,7 +5,7 @@
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:layout_marginBottom="5dp"
-    android:background="@drawable/bg_surface_rounded8"
+    android:background="@drawable/bg_background_inverse_rounded8"
     android:gravity="center_vertical"
     android:orientation="horizontal"
     android:padding="8dp">
@@ -15,7 +15,6 @@
         android:layout_width="50dp"
         android:layout_height="50dp"
         android:layout_marginEnd="10dp"
-        android:contentDescription="@null"
         app:shapeAppearance="@style/ShapeAppearance.SettleX.Circular"
         app:srcCompat="@drawable/ic_no_profile_photo" />
 
@@ -27,22 +26,17 @@
 
         <TextView
             android:id="@+id/tv_full_name"
+            style="@style/Widget.SettleX.TextName"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:fontFamily="@font/poppins_regular"
-            android:includeFontPadding="false"
-            android:textColor="@color/black"
-            android:textSize="14sp"
             tools:text="BENJAMIN NNAEMEKA" />
 
         <TextView
             android:id="@+id/tv_payment_id"
+            style="@style/Widget.SettleX.TextName"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:fontFamily="@font/poppins_regular"
-            android:includeFontPadding="false"
-            android:textColor="@color/gray_500"
-            android:textSize="14sp"
+            android:textColor="@color/colorOnSurfaceVariant"
             tools:text="\@vitalisdft" />
     </LinearLayout>
 </LinearLayout>

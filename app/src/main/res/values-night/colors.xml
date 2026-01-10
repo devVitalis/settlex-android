@@ -24,8 +24,8 @@
     <!-- Error -->
     <color name="colorError">@color/red_500</color>
     <color name="colorOnError">@color/white</color>
-    <color name="colorErrorSecondary">@color/red_100</color>
-    <color name="colorOnErrorSecondary">@color/red_500</color>
+    <color name="colorErrorContainer">@color/red_100</color>
+    <color name="colorOnErrorContainer">@color/red_500</color>
 
     <!-- Warning -->
     <color name="colorWarning">@color/orange_500</color>
@@ -68,7 +68,7 @@
     <color name="blue_700">#0A1E33</color>
 
     <!-- Red -->
-    <color name="red_100">#FDE2E1</color>
+    <color name="red_100">#2B1615</color>
     <color name="red_200">#FAA19F</color>
     <color name="red_500">#FF4444</color>
 

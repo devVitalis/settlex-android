@@ -37,12 +37,12 @@ public class CurrencyFormatter {
     /**
      * Formats a BigDecimal into local currency string without ₦ symbol
      */
-    public static java.lang.String formatToCurrency(BigDecimal number) {
+    public static String formatToCurrency(BigDecimal number) {
         Locale NIG_LOCAL = Locale.forLanguageTag("en-NG");
         NumberFormat numberFormatter = NumberFormat.getCurrencyInstance(NIG_LOCAL);
 
-        java.lang.String formattedAmount = numberFormatter.format(number);
-        java.lang.String symbol = Objects.requireNonNull(numberFormatter.getCurrency()).getSymbol(NIG_LOCAL);
+        String formattedAmount = numberFormatter.format(number);
+        String symbol = Objects.requireNonNull(numberFormatter.getCurrency()).getSymbol(NIG_LOCAL);
 
         return formattedAmount.replace(symbol, "").trim();
     }

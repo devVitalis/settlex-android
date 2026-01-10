@@ -18,7 +18,7 @@
         <View
             android:layout_width="30dp"
             android:layout_height="30dp"
-            android:background="@drawable/bg_oval_gray_whitish" />
+            android:background="@drawable/bg_shimmer_effect_oval" />
 
         <LinearLayout
             android:layout_width="match_parent"
@@ -61,7 +61,7 @@
                     android:layout_width="3dp"
                     android:layout_height="3dp"
                     android:layout_marginEnd="4dp"
-                    android:background="@drawable/bg_oval_gray_whitish" />
+                    android:background="@drawable/bg_shimmer_effect_oval" />
 
                 <View
                     android:layout_width="0dp"
@@ -96,7 +96,7 @@
         <View
             android:layout_width="30dp"
             android:layout_height="30dp"
-            android:background="@drawable/bg_oval_gray_whitish" />
+            android:background="@drawable/bg_shimmer_effect_oval" />
 
         <LinearLayout
             android:layout_width="match_parent"
@@ -139,7 +139,7 @@
                     android:layout_width="3dp"
                     android:layout_height="3dp"
                     android:layout_marginEnd="4dp"
-                    android:background="@drawable/bg_oval_gray_whitish" />
+                    android:background="@drawable/bg_shimmer_effect_oval" />
 
                 <View
                     android:layout_width="0dp"
