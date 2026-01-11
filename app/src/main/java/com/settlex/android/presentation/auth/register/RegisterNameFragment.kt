@@ -12,7 +12,7 @@ import androidx.navigation.fragment.NavHostFragment
 import com.settlex.android.R
 import com.settlex.android.databinding.FragmentRegisterNameBinding
 import com.settlex.android.presentation.common.extensions.capitalizeEachWord
-import com.settlex.android.presentation.common.util.KeyboardHelper
+import com.settlex.android.presentation.common.util.FocusManager
 import com.settlex.android.util.ui.StatusBar
 import dagger.hilt.android.AndroidEntryPoint
 
@@ -21,7 +21,7 @@ class RegisterNameFragment : Fragment() {
     private var _binding: FragmentRegisterNameBinding? = null
     private val binding get() = _binding!!
     private val registerViewModel: RegisterViewModel by activityViewModels()
-    private val keyboardHelper by lazy { KeyboardHelper(requireActivity()) }
+    private val focusManager by lazy { FocusManager(requireActivity()) }
 
     companion object {
         private const val NAME_VALIDATION_REGEX = "^[a-zA-Z]{2,}(?:\\s[a-zA-Z]{2,})*$"
@@ -47,7 +47,7 @@ class RegisterNameFragment : Fragment() {
     private fun initViews() = with(binding) {
         StatusBar.setColor(requireActivity(), R.color.colorBackground)
         setupInputValidation()
-        keyboardHelper.attachDoneAction(etLastname)
+        focusManager.attachDoneAction(etLastname)
     }
 
     private fun setupClickListeners() = with(binding) {

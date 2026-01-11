@@ -7,6 +7,7 @@ import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
 import com.settlex.android.data.remote.profile.ProfileService.loadProfilePhoto
 import com.settlex.android.databinding.ItemRecipientBinding
+import com.settlex.android.presentation.common.extensions.addAtPrefix
 import com.settlex.android.presentation.transactions.adapter.RecipientAdapter.SuggestionsViewHolder
 import com.settlex.android.presentation.transactions.model.RecipientUiModel
 
@@ -37,7 +38,7 @@ class RecipientAdapter : ListAdapter<RecipientUiModel, SuggestionsViewHolder>(DI
         fun bind(recipient: RecipientUiModel, listener: OnItemClickListener) = with(binding) {
             loadProfilePhoto(recipient.photoUrl, ivProfilePhoto)
             tvFullName.text = recipient.fullName
-            tvPaymentId.text = recipient.paymentId
+            tvPaymentId.text = recipient.paymentId.addAtPrefix()
             root.setOnClickListener { listener.onItemClick(recipient) }
         }
     }

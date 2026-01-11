@@ -32,7 +32,7 @@ import com.settlex.android.presentation.common.extensions.show
 import com.settlex.android.presentation.common.extensions.toNigerianPhoneNumber
 import com.settlex.android.presentation.common.state.UiState
 import com.settlex.android.presentation.common.util.EditTextFocusBackgroundChanger
-import com.settlex.android.presentation.common.util.KeyboardHelper
+import com.settlex.android.presentation.common.util.FocusManager
 import com.settlex.android.presentation.legal.PrivacyPolicyActivity
 import com.settlex.android.presentation.legal.TermsAndConditionsActivity
 import com.settlex.android.util.ui.ProgressDialogManager
@@ -46,7 +46,7 @@ class RegisterContactFragment : Fragment() {
     private val authViewModel: AuthViewModel by activityViewModels()
     private val registerViewModel: RegisterViewModel by activityViewModels()
     private val progressLoader by lazy { ProgressDialogManager(requireActivity()) }
-    private val keyboardHelper by lazy { KeyboardHelper(requireActivity()) }
+    private val focusManager by lazy { FocusManager(requireActivity()) }
     private var _binding: FragmentRegisterContactBinding? = null
     private val binding get() = _binding!!
 
@@ -82,7 +82,7 @@ class RegisterContactFragment : Fragment() {
         setupLegalLinks()
         setupInputValidation()
         setupFocusHandlers()
-        keyboardHelper.attachDoneAction(binding.etPhone)
+        focusManager.attachDoneAction(binding.etPhone)
     }
 
     private fun setupListeners() = with(binding) {

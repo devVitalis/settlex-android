@@ -18,7 +18,7 @@ import com.settlex.android.presentation.auth.AuthViewModel
 import com.settlex.android.presentation.common.extensions.gone
 import com.settlex.android.presentation.common.extensions.show
 import com.settlex.android.presentation.common.state.UiState
-import com.settlex.android.presentation.common.util.KeyboardHelper
+import com.settlex.android.presentation.common.util.FocusManager
 import com.settlex.android.util.ui.ProgressDialogManager
 import com.settlex.android.util.ui.StatusBar
 import dagger.hilt.android.AndroidEntryPoint
@@ -27,7 +27,7 @@ import kotlinx.coroutines.launch
 @AndroidEntryPoint
 class ForgotPasswordActivity : AppCompatActivity() {
     private lateinit var binding: ActivityForgotPasswordBinding
-    private val keyboardHelper by lazy { KeyboardHelper(this) }
+    private val focusManager by lazy { FocusManager(this) }
     private val progressLoader by lazy { ProgressDialogManager(this) }
     private val authViewModel: AuthViewModel by viewModels()
 
@@ -49,7 +49,7 @@ class ForgotPasswordActivity : AppCompatActivity() {
             StatusBar.setColor(this@ForgotPasswordActivity, R.color.colorBackground)
             setupInputValidation()
 
-            keyboardHelper.attachDoneAction(etEmail)
+            focusManager.attachDoneAction(etEmail)
 
             /** For Testing
             btnBackBefore.setOnClickListener {
@@ -124,7 +124,7 @@ class ForgotPasswordActivity : AppCompatActivity() {
 
 
     override fun dispatchTouchEvent(event: MotionEvent): Boolean {
-        if (keyboardHelper.handleOutsideTouch(event)) return true
+        if (focusManager.handleOutsideTouch(event)) return true
         return super.dispatchTouchEvent(event)
     }
 }

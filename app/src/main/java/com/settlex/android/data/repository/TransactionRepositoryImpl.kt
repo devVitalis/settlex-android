@@ -20,14 +20,18 @@ class TransactionRepositoryImpl @Inject constructor(
     }
 
     override suspend fun transferToFriend(
-        fromUid: String,
-        toPaymentId: String,
-        txnId: String,
-        amount: Long,
-        desc: String?
+        fromSenderUid: String,
+        toRecipientPaymentId: String,
+        transferAmount: Long,
+        description: String?
     ): Result<ApiResponse<String>> {
         runCatching {
-            remote.transferToFriend(fromUid, toPaymentId, txnId, amount, desc)
+            remote.transferToFriend(
+                fromSenderUid,
+                toRecipientPaymentId,
+                transferAmount,
+                description
+            )
         }.fold(
             onSuccess = { return Result.success(it) },
             onFailure = { return Result.failure(exception.map(it as Exception)) }

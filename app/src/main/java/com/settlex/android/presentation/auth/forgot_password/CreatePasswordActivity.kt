@@ -21,8 +21,8 @@ import com.settlex.android.presentation.common.extensions.gone
 import com.settlex.android.presentation.common.extensions.show
 import com.settlex.android.presentation.common.state.UiState
 import com.settlex.android.presentation.common.util.DialogHelper
-import com.settlex.android.presentation.common.util.KeyboardHelper
-import com.settlex.android.presentation.common.util.PasswordValidator
+import com.settlex.android.presentation.common.util.FocusManager
+import com.settlex.android.presentation.common.util.ValidationUtil
 import com.settlex.android.util.ui.ProgressDialogManager
 import com.settlex.android.util.ui.StatusBar
 import dagger.hilt.android.AndroidEntryPoint
@@ -32,7 +32,7 @@ import kotlinx.coroutines.launch
 class CreatePasswordActivity : AppCompatActivity() {
 
     private lateinit var binding: ActivityCreatePasswordBinding
-    private val keyboardHelper: KeyboardHelper by lazy { KeyboardHelper(this) }
+    private val focusManager: FocusManager by lazy { FocusManager(this) }
     private val progressLoader: ProgressDialogManager by lazy { ProgressDialogManager(this) }
     private val viewModel: AuthViewModel by viewModels()
 
@@ -182,12 +182,12 @@ class CreatePasswordActivity : AppCompatActivity() {
 
             when (password.isNotEmpty() && confirmPassword.isNotEmpty()) {
                 true -> {
-                    if (PasswordValidator.isMatch(
+                    if (ValidationUtil.isPasswordsMatch(
                             password = password,
-                            confirm = confirmPassword
+                            confirmationPassword = confirmPassword
                         )
                     ) tvConfirmPasswordError.gone() else {
-                        tvConfirmPasswordError.text = PasswordValidator.ERROR_PASSWORD_MISMATCH
+                        tvConfirmPasswordError.text = ValidationUtil.ERROR_PASSWORD_MISMATCH
                         tvConfirmPasswordError.show()
                     }
                 }
@@ -208,7 +208,7 @@ class CreatePasswordActivity : AppCompatActivity() {
 
     private fun isCurrentPasswordValid(): Boolean {
         val currentPassword = binding.etCurrentPassword.text.toString().trim()
-        return PasswordValidator.validate(currentPassword)
+        return ValidationUtil.isPasswordValid(currentPassword)
     }
 
     private fun isPasswordValidAndMatch(): Boolean {
@@ -216,7 +216,7 @@ class CreatePasswordActivity : AppCompatActivity() {
             val newPassword = etPassword.text.toString().trim()
             val confirmPassword = etConfirmPassword.text.toString().trim()
 
-            return PasswordValidator.validate(newPassword, confirmPassword)
+            return ValidationUtil.isPasswordAndConfirmationValid(newPassword, confirmPassword)
         }
     }
 
@@ -227,7 +227,7 @@ class CreatePasswordActivity : AppCompatActivity() {
     }
 
     override fun dispatchTouchEvent(event: MotionEvent): Boolean {
-        if (keyboardHelper.handleOutsideTouch(event)) return true
+        if (focusManager.handleOutsideTouch(event)) return true
         return super.dispatchTouchEvent(event)
     }
 }

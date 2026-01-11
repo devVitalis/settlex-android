@@ -47,7 +47,10 @@ fun String.addAtPrefix(): String {
 }
 
 fun String.removeAtPrefix(): String {
-    return this.substring(1)
+    return when (this.startsWith("@")) {
+        true -> this.substring(1)
+        false -> this
+    }
 }
 
 fun String.maskEmail(): String {
@@ -191,10 +194,10 @@ fun Long.toNairaString(): String {
 
 fun String.fromNairaStringToKobo(): Long {
     this.also { nairaString ->
-        val cleanedNumberString = nairaString.replace(",", "")
+        val cleanedNairaString = nairaString.replace("₦", "").replace(",", "")
 
         try {
-            val amount = BigDecimal(cleanedNumberString)
+            val amount = BigDecimal(cleanedNairaString)
             val amountInKobo = amount.multiply(BigDecimal("100"))
 
             // Round to nearest whole Kobo

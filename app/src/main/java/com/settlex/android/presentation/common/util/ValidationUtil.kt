@@ -1,28 +1,27 @@
 package com.settlex.android.presentation.common.util
 
 /**
- * An object that provides utility functions to validate password strings based on a set of rules.
+ * An object that provides utility functions for various validation tasks.
  *
- * The validation rules include checks for minimum length, presence of uppercase and lowercase letters,
- * and the inclusion of special characters. It also provides a method to check if a password
- * matches its confirmation string.
+ * This utility object offers methods to validate different types of input, such as passwords
+ * and payment IDs, based on a predefined set of rules.
  */
-object PasswordValidator {
+object ValidationUtil {
     private const val LENGTH = 8
     const val ALLOWED_SPECIAL_CHARS = "!@#$%^&*()_+-=[]{};:,.?"
     const val ERROR_PASSWORD_MISMATCH = "Passwords do not match!"
 
-    fun validate(password: String, confirm: String): Boolean {
+    fun isPasswordAndConfirmationValid(password: String, confirmationPassword: String): Boolean {
         val hasLength = password.length >= LENGTH
         val hasUpper = password.any { it.isUpperCase() }
         val hasLower = password.any { it.isLowerCase() }
         val hasSpecial = password.any { ALLOWED_SPECIAL_CHARS.contains(it) }
-        val matches = password == confirm
+        val passwordMatches = password == confirmationPassword
 
-        return hasLength && hasUpper && hasLower && hasSpecial && matches
+        return hasLength && hasUpper && hasLower && hasSpecial && passwordMatches
     }
 
-    fun validate(password: String): Boolean {
+    fun isPasswordValid(password: String): Boolean {
         val hasLength = password.length >= LENGTH
         val hasUpper = password.any { it.isUpperCase() }
         val hasLower = password.any { it.isLowerCase() }
@@ -31,7 +30,11 @@ object PasswordValidator {
         return hasLength && hasUpper && hasLower && hasSpecial
     }
 
-    fun isMatch(password: String, confirm: String): Boolean {
-        return password == confirm
+    fun isPasswordsMatch(password: String, confirmationPassword: String): Boolean {
+        return password == confirmationPassword
+    }
+
+    fun isPaymentIdValid(id: String): Boolean {
+        return id.matches("^[a-z][a-z0-9]{4,19}$".toRegex())
     }
 }

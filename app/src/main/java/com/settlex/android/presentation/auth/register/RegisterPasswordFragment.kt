@@ -27,8 +27,8 @@ import com.settlex.android.presentation.common.extensions.gone
 import com.settlex.android.presentation.common.extensions.show
 import com.settlex.android.presentation.common.state.UiState
 import com.settlex.android.presentation.common.util.DialogHelper
-import com.settlex.android.presentation.common.util.KeyboardHelper
-import com.settlex.android.presentation.common.util.PasswordValidator
+import com.settlex.android.presentation.common.util.FocusManager
+import com.settlex.android.presentation.common.util.ValidationUtil
 import com.settlex.android.presentation.dashboard.DashboardActivity
 import com.settlex.android.util.ui.ProgressDialogManager
 import com.settlex.android.util.ui.StatusBar
@@ -39,7 +39,7 @@ class RegisterPasswordFragment : Fragment() {
     private var binding: FragmentRegisterPasswordBinding? = null
     private val authViewModel: AuthViewModel by activityViewModels()
     private val registerViewModel: RegisterViewModel by activityViewModels()
-    private val keyboardHelper by lazy { KeyboardHelper(requireActivity()) }
+    private val focusManager by lazy { FocusManager(requireActivity()) }
     private val progressLoader by lazy { ProgressDialogManager(requireActivity()) }
 
     override fun onCreateView(
@@ -69,7 +69,7 @@ class RegisterPasswordFragment : Fragment() {
         StatusBar.setColor(requireActivity(), R.color.colorBackground)
         setupInputValidation()
         togglePasswordVisibilityIcons(false)
-        keyboardHelper.attachDoneAction(binding!!.etInvitationCode)
+        focusManager.attachDoneAction(binding!!.etInvitationCode)
     }
 
     private fun setupListeners() = with(binding!!) {
@@ -168,8 +168,8 @@ class RegisterPasswordFragment : Fragment() {
 
     companion object {
         private const val LENGTH = 8
-        private const val HAS_ALLOWED_SPECIAL_CHARS = PasswordValidator.ALLOWED_SPECIAL_CHARS
-        private const val ERROR_PASSWORD_MISMATCH = PasswordValidator.ERROR_PASSWORD_MISMATCH
+        private const val HAS_ALLOWED_SPECIAL_CHARS = ValidationUtil.ALLOWED_SPECIAL_CHARS
+        private const val ERROR_PASSWORD_MISMATCH = ValidationUtil.ERROR_PASSWORD_MISMATCH
     }
 
     private fun validatePasswordRequirements(password: String, confirm: String): Boolean {

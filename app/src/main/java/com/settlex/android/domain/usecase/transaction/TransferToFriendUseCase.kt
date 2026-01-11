@@ -8,12 +8,16 @@ class TransferToFriendUseCase @Inject constructor(
     private val transactionRepo: TransactionRepositoryImpl
 ) {
     suspend operator fun invoke(
-        fromUid: String,
-        toPaymentId: String,
-        txnId: String,
-        amount: Long,
-        desc: String?
+        fromSenderUid: String,
+        toRecipientPaymentId: String,
+        transferAmount: Long,
+        description: String?
     ): Result<ApiResponse<String>> {
-        return transactionRepo.transferToFriend(fromUid, toPaymentId, txnId, amount, desc)
+        return transactionRepo.transferToFriend(
+            fromSenderUid,
+            toRecipientPaymentId,
+            transferAmount,
+            description
+        )
     }
 }

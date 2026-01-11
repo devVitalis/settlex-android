@@ -26,7 +26,7 @@ import com.settlex.android.presentation.common.extensions.maskEmail
 import com.settlex.android.presentation.common.extensions.show
 import com.settlex.android.presentation.common.state.UiState
 import com.settlex.android.presentation.common.util.DialogHelper
-import com.settlex.android.presentation.common.util.KeyboardHelper
+import com.settlex.android.presentation.common.util.FocusManager
 import com.settlex.android.presentation.common.util.SpannableTextFormatter
 import com.settlex.android.presentation.dashboard.DashboardActivity
 import com.settlex.android.util.ui.ProgressDialogManager
@@ -38,7 +38,7 @@ import kotlinx.coroutines.launch
 class LoginActivity : AppCompatActivity() {
 
     private lateinit var binding: ActivityLoginBinding
-    private val keyboardHelper: KeyboardHelper by lazy { KeyboardHelper(this) }
+    private val focusManager: FocusManager by lazy { FocusManager(this) }
     private val progressLoader: ProgressDialogManager by lazy { ProgressDialogManager(this) }
     private val viewModel: LoginViewModel by viewModels()
 
@@ -56,7 +56,7 @@ class LoginActivity : AppCompatActivity() {
     private fun initViews() = with(binding) {
         StatusBar.setColor(this@LoginActivity, R.color.colorBackground)
         setupInputValidation()
-        keyboardHelper.attachDoneAction(editText = etPassword)
+        focusManager.attachDoneAction(editText = etPassword)
 
         tvSwitchAccount.text = SpannableTextFormatter(
             this@LoginActivity,
@@ -252,7 +252,7 @@ class LoginActivity : AppCompatActivity() {
     }
 
     override fun dispatchTouchEvent(event: MotionEvent): Boolean {
-        if (keyboardHelper.handleOutsideTouch(event)) return true
+        if (focusManager.handleOutsideTouch(event)) return true
         return super.dispatchTouchEvent(event)
     }
 }

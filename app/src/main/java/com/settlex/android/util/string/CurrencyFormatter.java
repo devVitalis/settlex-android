@@ -46,24 +46,4 @@ public class CurrencyFormatter {
 
         return formattedAmount.replace(symbol, "").trim();
     }
-
-    /**
-     * Converts a Naira string like "120.50" to its equivalent Kobo value (12050L)
-     */
-    public static long convertNairaStringToKobo(java.lang.String amountString) {
-        if (amountString == null || amountString.trim().isEmpty()) {
-            return 0L;
-        }
-        try {
-            BigDecimal amount = new BigDecimal(amountString.trim());
-            BigDecimal amountInKobo = amount.multiply(new BigDecimal("100"));
-
-            // Round to nearest whole Kobo
-            BigDecimal roundedKobo = amountInKobo.setScale(0, RoundingMode.HALF_UP);
-
-            return roundedKobo.longValueExact();
-        } catch (ArithmeticException | NumberFormatException e) {
-            return 0L;
-        }
-    }
 }

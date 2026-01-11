@@ -4,7 +4,7 @@ import android.os.Bundle
 import android.view.MotionEvent
 import androidx.appcompat.app.AppCompatActivity
 import com.settlex.android.R
-import com.settlex.android.presentation.common.util.KeyboardHelper
+import com.settlex.android.presentation.common.util.FocusManager
 import dagger.hilt.android.AndroidEntryPoint
 
 /**
@@ -13,7 +13,7 @@ import dagger.hilt.android.AndroidEntryPoint
 @AndroidEntryPoint
 class RegisterActivity : AppCompatActivity() {
 
-    private val keyboardHelper: KeyboardHelper by lazy { KeyboardHelper(this) }
+    private val focusManager: FocusManager by lazy { FocusManager(this) }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -21,7 +21,7 @@ class RegisterActivity : AppCompatActivity() {
     }
 
     override fun dispatchTouchEvent(event: MotionEvent): Boolean {
-        if (keyboardHelper.handleOutsideTouch(event)) return true
+        if (focusManager.handleOutsideTouch(event)) return true
         return super.dispatchTouchEvent(event)
     }
 }

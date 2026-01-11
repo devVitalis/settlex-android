@@ -9,10 +9,9 @@ interface TransactionsRepository {
     suspend fun getRecentTransactions(uid: String): Flow<Result<List<TransactionDto>>>
 
     suspend fun transferToFriend(
-        fromUid: String,
-        toPaymentId: String,
-        txnId: String,
-        amount: Long,
-        desc: String?
+        fromSenderUid: String,
+        toRecipientPaymentId: String,
+        transferAmount: Long,
+        description: String?
     ): Result<ApiResponse<String>>
 }

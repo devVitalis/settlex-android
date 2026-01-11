@@ -14,6 +14,7 @@ import com.settlex.android.data.enums.TransactionServiceType
 import com.settlex.android.data.remote.dto.ApiResponse
 import com.settlex.android.data.remote.dto.RecipientDto
 import com.settlex.android.data.remote.dto.TransactionDto
+import com.settlex.android.domain.TransactionIdGenerator
 import com.settlex.android.util.image.ImageConverter
 import jakarta.inject.Inject
 import jakarta.inject.Singleton
@@ -110,21 +111,20 @@ class UserRemoteDataSource @Inject constructor(
     }
 
     suspend fun transferToFriend(
-        fromUid: String,
-        toPaymentId: String,
-        txnId: String,
-        amount: Long,
-        desc: String?
+        fromSenderUid: String,
+        toRecipientPaymentId: String,
+        transferAmount: Long,
+        description: String?
     ): ApiResponse<String> {
         return cloudFunctions.call(
             name = "api-transferToFriend",
             data = mapOf(
-                "fromUid" to fromUid,
-                "toPaymentId" to toPaymentId,
-                "transactionId" to txnId,
-                "amount" to amount,
+                "fromUid" to fromSenderUid,
+                "toPaymentId" to toRecipientPaymentId,
+                "transactionId" to TransactionIdGenerator.generate(fromSenderUid),
+                "amount" to transferAmount,
                 "serviceType" to TransactionServiceType.PAY_A_FRIEND,
-                "description" to desc
+                "description" to description
             )
         )
     }

@@ -22,7 +22,7 @@ import com.settlex.android.presentation.common.extensions.gone
 import com.settlex.android.presentation.common.extensions.show
 import com.settlex.android.presentation.common.state.UiState
 import com.settlex.android.presentation.common.util.DialogHelper
-import com.settlex.android.presentation.common.util.KeyboardHelper
+import com.settlex.android.presentation.common.util.FocusManager
 import com.settlex.android.presentation.dashboard.DashboardActivity
 import com.settlex.android.util.ui.ProgressDialogManager
 import com.settlex.android.util.ui.StatusBar
@@ -55,7 +55,7 @@ class CreatePaymentIdActivity : AppCompatActivity() {
     private lateinit var binding: ActivityCreatePaymentIdBinding
     private val viewModel: SettingsViewModel by viewModels()
     private val progressLoader by lazy { ProgressDialogManager(this) }
-    private val keyboardHelper by lazy { KeyboardHelper(this) }
+    private val focusManager by lazy { FocusManager(this) }
     private val handler = Handler(Looper.getMainLooper())
     private var pendingCheckRunnable: Runnable? = null
 
@@ -282,7 +282,7 @@ class CreatePaymentIdActivity : AppCompatActivity() {
     }
 
     override fun dispatchTouchEvent(event: MotionEvent): Boolean {
-        if (keyboardHelper.handleOutsideTouch(event)) return true
+        if (focusManager.handleOutsideTouch(event)) return true
         return super.dispatchTouchEvent(event)
     }
 

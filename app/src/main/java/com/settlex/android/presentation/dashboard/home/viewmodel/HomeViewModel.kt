@@ -19,7 +19,6 @@ import com.settlex.android.presentation.dashboard.home.model.HomeUiModel
 import com.settlex.android.presentation.transactions.model.TransactionItemUiModel
 import com.settlex.android.util.network.NetworkMonitor
 import com.settlex.android.util.string.CurrencyFormatter
-import com.settlex.android.util.string.StringFormatter
 import dagger.hilt.android.lifecycle.HiltViewModel
 import jakarta.inject.Inject
 import kotlinx.coroutines.flow.MutableStateFlow

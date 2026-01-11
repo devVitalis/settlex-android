@@ -4,7 +4,6 @@ import android.content.Intent
 import android.os.Bundle
 import android.util.Log
 import android.view.MotionEvent
-import android.widget.EditText
 import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.isVisible
@@ -21,27 +20,26 @@ import com.settlex.android.data.exception.AppException
 import com.settlex.android.data.remote.profile.ProfileService.loadProfilePhoto
 import com.settlex.android.data.session.UserSessionState
 import com.settlex.android.databinding.ActivityTransferToFriendBinding
-import com.settlex.android.domain.TransactionIdGenerator
 import com.settlex.android.presentation.common.extensions.addAtPrefix
+import com.settlex.android.presentation.common.extensions.fromNairaStringToKobo
 import com.settlex.android.presentation.common.extensions.gone
 import com.settlex.android.presentation.common.extensions.removeAtPrefix
 import com.settlex.android.presentation.common.extensions.show
 import com.settlex.android.presentation.common.extensions.toNairaString
 import com.settlex.android.presentation.common.state.UiState
 import com.settlex.android.presentation.common.util.DialogHelper
-import com.settlex.android.presentation.common.util.KeyboardHelper
+import com.settlex.android.presentation.common.util.FocusManager
 import com.settlex.android.presentation.common.util.PaymentBottomSheetHelper
+import com.settlex.android.presentation.common.util.ValidationUtil
 import com.settlex.android.presentation.settings.CreatePaymentPinActivity
 import com.settlex.android.presentation.transactions.adapter.RecipientAdapter
 import com.settlex.android.presentation.transactions.model.RecipientUiModel
 import com.settlex.android.presentation.transactions.model.TransferToFriendUiModel
 import com.settlex.android.presentation.transactions.viewmodel.TransactionViewModel
-import com.settlex.android.util.string.CurrencyFormatter
 import com.settlex.android.util.ui.ProgressDialogManager
 import com.settlex.android.util.ui.StatusBar
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.launch
-import java.math.BigDecimal
 import java.util.Locale
 
 @AndroidEntryPoint
@@ -50,13 +48,12 @@ class TransferToFriendActivity : AppCompatActivity() {
     private val progressLoader by lazy { ProgressDialogManager(this) }
     private val recipientAdapter by lazy { RecipientAdapter() }
     private val viewModel: TransactionViewModel by viewModels()
-    private val keyboardHelper by lazy { KeyboardHelper(this) }
+    private val focusManager by lazy { FocusManager(this) }
 
     private var bottomSheetDialog: BottomSheetDialog? = null
     private var recipientPhotoUrl: String? = null
-    private var recipientPaymentId: String? = null
-    private var transferAmount: Long = 0L
-    private var currentUser: TransferToFriendUiModel? = null
+    private var _currentUser: TransferToFriendUiModel? = null
+    val currentUser get() = _currentUser
 
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -78,11 +75,11 @@ class TransferToFriendActivity : AppCompatActivity() {
         StatusBar.setColor(this@TransferToFriendActivity, R.color.colorSurfaceVariant)
 
         initRecipientRecyclerView()
-        setupTextWatchers()
-        keyboardHelper.attachDoneAction(etDescription)
+        initInputListeners()
+        focusManager.attachDoneAction(etDescription)
 
         btnBackBefore.setOnClickListener { onBackPressedDispatcher.onBackPressed() }
-        btnVerify.setOnClickListener { searchRecipient(recipientPaymentId.orEmpty()) }
+        btnVerify.setOnClickListener { getRecipient(getRecipientPaymentId()) }
         btnNext.setOnClickListener { startPaymentProcess() }
     }
 
@@ -108,7 +105,7 @@ class TransferToFriendActivity : AppCompatActivity() {
 
     private fun setUser(user: TransferToFriendUiModel) = with(binding) {
         tvAvailableBalance.text = user.totalBalance.toNairaString()
-        currentUser = user
+        _currentUser = user
     }
 
     private fun observeTransferToFriendEvent() {
@@ -129,16 +126,14 @@ class TransferToFriendActivity : AppCompatActivity() {
     }
 
     private fun showTransferStatus(transactionStatus: TransactionStatus, error: AppException?) {
-        val formattedAmount = transferAmount.toNairaString()
         val intent = Intent(this, TransactionStatusActivity::class.java).apply {
-            putExtra("amount", formattedAmount)
+            putExtra("amount", getAmountInKobo().toNairaString())
             putExtra("status", transactionStatus.name)
             putExtra("message", error?.message)
         }
         startActivity(intent)
         finish()
 
-        bottomSheetDialog?.dismiss()
         progressLoader.hide()
     }
 
@@ -174,7 +169,7 @@ class TransferToFriendActivity : AppCompatActivity() {
 
         if (recipientList.isEmpty()) {
             recipientAdapter.submitList(emptyList())
-            "No user found with Payment ID ${recipientPaymentId?.addAtPrefix()}".also {
+            "No user found with Payment ID ${getRecipientPaymentId().addAtPrefix()}".also {
                 tvError.text = it
                 tvError.show()
             }
@@ -215,11 +210,11 @@ class TransferToFriendActivity : AppCompatActivity() {
             return
         }
 
-        startPayFriendTransaction(
-            currentUser?.uid!!,
-            recipientPaymentId!!,
-            transferAmount,
-            etAmount.text.toString().trim()
+        viewModel.transferToFriend(
+            fromSenderUid = currentUser?.uid!!,
+            toRecipientPaymentId = getRecipientPaymentId(),
+            transferAmount = getAmountInKobo(),
+            description = etDescription.text.toString().trim()
         )
 
         progressLoader.hide()
@@ -291,7 +286,7 @@ class TransferToFriendActivity : AppCompatActivity() {
             recipientPaymentIdRaw,
             recipientName,
             recipientPhotoUrl,
-            transferAmount,
+            getAmountInKobo(),
             currentUser?.balance ?: 0L,
             currentUser?.commissionBalance ?: 0L
         ) {
@@ -311,21 +306,6 @@ class TransferToFriendActivity : AppCompatActivity() {
         }
     }
 
-    private fun startPayFriendTransaction(
-        fromSenderUid: String,
-        toRecipient: String,
-        amount: Long,
-        description: String?
-    ) {
-        viewModel.transferToFriend(
-            fromSenderUid,
-            toRecipient,
-            TransactionIdGenerator.generate(fromSenderUid),
-            amount,
-            description
-        )
-    }
-
     private fun promptTransactionPinCreation() {
         val title = "Payment PIN Required"
         val message = "Please set up your Payment PIN to complete this transaction securely"
@@ -333,109 +313,90 @@ class TransferToFriendActivity : AppCompatActivity() {
         val btnSecText = "Cancel"
 
         DialogHelper.showCustomAlertDialogWithIcon(
-            this,
-            { dialog, dialogBinding ->
-                dialogBinding.title.text = title
-                dialogBinding.message.text = message
-                dialogBinding.btnPrimary.text = btnPriText
-                dialogBinding.btnSecondary.text = btnSecText
-                dialogBinding.icon.setImageResource(R.drawable.ic_lock_filled)
+            this
+        ) { dialog, dialogBinding ->
+            dialogBinding.title.text = title
+            dialogBinding.message.text = message
+            dialogBinding.btnPrimary.text = btnPriText
+            dialogBinding.btnSecondary.text = btnSecText
+            dialogBinding.icon.setImageResource(R.drawable.ic_lock_filled)
 
-                dialogBinding.btnSecondary.setOnClickListener { dialog.dismiss() }
-                dialogBinding.btnPrimary.setOnClickListener {
-                    startActivity(Intent(this, CreatePaymentPinActivity::class.java))
-                    dialog.dismiss()
-                }
+            dialogBinding.btnSecondary.setOnClickListener { dialog.dismiss() }
+            dialogBinding.btnPrimary.setOnClickListener {
+                startActivity(Intent(this, CreatePaymentPinActivity::class.java))
+                dialog.dismiss()
             }
-        )
+        }
     }
 
-    private fun searchRecipient(paymentId: String) {
+    private fun getRecipient(paymentId: String) = with(binding) {
         if (paymentId.isBlank()) return
 
-        // Prevent sending to self
-//        val stripped = StringFormatter.removeAtInPaymentId(paymentId)
-//        if (stripped == currentUser?.paymentId) {
-//            binding.txtError.text = ERROR_CANNOT_SEND_TO_SELF
-//            binding.txtError.show()
-//            return
-//        }
+        if (paymentId.removeAtPrefix() == currentUser?.paymentId) {
+            tvError.text = ERROR_CANNOT_SEND_TO_SELF
+            tvError.show()
+            return
+        }
 
         viewModel.getRecipientByPaymentId(paymentId)
     }
 
-    // Text watchers + focus handlers
-    private fun setupTextWatchers() = with(binding) {
+    private fun initInputListeners() = with(binding) {
         etPaymentId.doOnTextChanged { text, _, _, _ ->
-            val raw = text.toString().trim()
-            recipientPaymentId = if (raw.isNotEmpty()) raw.lowercase().removeAtPrefix() else null
 
             tvError.gone()
             viewSelectedRecipient.gone()
-            btnVerify.isVisible = raw.length >= 5
+            btnVerify.isVisible = ValidationUtil.isPaymentIdValid(getRecipientPaymentId())
 
             updateNextButtonState()
         }
 
-        etAmount.addTextChangedListener(CurrencyInputWatcher(etAmount, "₦", Locale.getDefault(), 2))
-        etAmount.doOnTextChanged { amount, _, _, _ ->
-            Log.d("Transfer", "Raw Amount: ${amount.toString()}")
-            val rawStr = amount.toString().replace(",", "")
-            Log.d("Transfer", "Formatted Amount: $rawStr")
+        etAmount.addTextChangedListener(
+            CurrencyInputWatcher(
+                etAmount,
+                "₦",
+                Locale.forLanguageTag("en-NG"),
+                2
+            )
+        )
 
-            transferAmount =
-                if (rawStr.isBlank()) 0L else CurrencyFormatter.convertNairaStringToKobo(rawStr)
-            val isAmountEmpty = rawStr.isBlank()
-            val shouldShowError = !isAmountInRange(transferAmount) && !isAmountEmpty
+        etAmount.doOnTextChanged { text, _, _, _ ->
+            val amount = text.toString()
 
-            tvAmountFeedback.text = if (shouldShowError) ERROR_INVALID_AMOUNT else ""
-            tvAmountFeedback.isVisible = shouldShowError
+            val isAmountOutOfRange = amount.isNotEmpty() && !isAmountInRange(getAmountInKobo())
+            when (isAmountOutOfRange) {
+                true -> {
+                    tvAmountFeedback.text = ERROR_AMOUNT_OUT_OF_RANGE
+                    tvAmountFeedback.show()
+                }
 
-            updateNextButtonState()
-        }
-
-    }
-
-    private fun setupFocusHandlers() = with(binding) {
-        val rawInput = etAmount.text.toString().trim()
-        if (rawInput.isEmpty()) return
-
-        val numericValue = etAmount.toBigDecimalSafe()
-        Log.d("Transfer", "Numeric value: $numericValue")
-
-        etAmount.setOnFocusChangeListener { _, hasFocus ->
-            if (hasFocus) {
-                val amountString = numericValue.toPlainString()
-                etAmount.setText(amountString)
-                etAmount.setSelection(amountString.length)
-                return@setOnFocusChangeListener
+                else -> tvAmountFeedback.gone()
             }
-        }
 
-        val currencyFormat = CurrencyFormatter.formatToCurrency(numericValue)
-        Log.d("Transfer", "Currency format: $currencyFormat")
-        etAmount.setText(currencyFormat)
-        etAmount.setSelection(currencyFormat.length)
-    }
-
-    private fun EditText.toBigDecimalSafe(): BigDecimal {
-        val cleanedNumberString = this.text.toString().trim().replace(",", "")
-
-        return if (cleanedNumberString.isBlank()) BigDecimal.ZERO else try {
-            BigDecimal(cleanedNumberString)
-        } catch (_: NumberFormatException) {
-            BigDecimal.ZERO
+            updateNextButtonState()
+            Log.d("TransferToFriend", "Amount in Kobo: ${getAmountInKobo()}")
+            Log.d("TransferToFriend", "Raw Amount: ${etAmount.text.toString()}")
         }
     }
 
-    private fun updateNextButtonState() {
-        val recipientSelected = binding.viewSelectedRecipient.isVisible
-        binding.btnNext.isEnabled =
-            isPaymentIdValid(recipientPaymentId) && isAmountInRange(transferAmount) && recipientSelected
+    private fun updateNextButtonState() = with(binding) {
+        val isRecipientSelected = viewSelectedRecipient.isVisible
+        val isPaymentIdValid = isPaymentIdValid(getRecipientPaymentId())
+        val isAmountInRange = isAmountInRange(getAmountInKobo())
+
+        btnNext.isEnabled = isPaymentIdValid && isAmountInRange && isRecipientSelected
+    }
+
+    private fun getAmountInKobo(): Long = with(binding) {
+        return etAmount.toString().fromNairaStringToKobo()
+    }
+
+    private fun getRecipientPaymentId(): String = with(binding) {
+        return etPaymentId.text.toString().trim()
     }
 
     private fun isPaymentIdValid(paymentId: String?): Boolean {
-        return paymentId != null && PAYMENT_ID_REGEX.matches(paymentId)
+        return paymentId?.let { ValidationUtil.isPaymentIdValid(it) } ?: false
     }
 
     private fun isAmountInRange(amount: Long): Boolean {
@@ -443,14 +404,12 @@ class TransferToFriendActivity : AppCompatActivity() {
     }
 
     override fun dispatchTouchEvent(event: MotionEvent): Boolean {
-        if (keyboardHelper.handleOutsideTouch(event)) return true
+        if (focusManager.handleOutsideTouch(event)) return true
         return super.dispatchTouchEvent(event)
     }
 
     companion object {
-        private const val ERROR_INVALID_AMOUNT = "Amount must be in range of ₦100 - ₦1,000,000.00"
-        private const val ERROR_CANNOT_SEND_TO_SELF =
-            "You cannot send a payment to your own account. Please choose a different recipient"
-        private val PAYMENT_ID_REGEX = "^@?[A-Za-z][A-Za-z0-9]{4,19}$".toRegex()
+        private const val ERROR_AMOUNT_OUT_OF_RANGE = "Min ₦100, Max ₦1,000,000"
+        private const val ERROR_CANNOT_SEND_TO_SELF = "Self-payments are not allowed"
     }
 }
