@@ -11,7 +11,6 @@ import com.google.android.material.bottomsheet.BottomSheetDialog
 import com.settlex.android.R
 import com.settlex.android.data.remote.profile.ProfileService.loadProfilePhoto
 import com.settlex.android.databinding.BottomSheetConfirmPaymentBinding
-import com.settlex.android.presentation.common.extensions.addAtPrefix
 import com.settlex.android.presentation.common.extensions.gone
 import com.settlex.android.presentation.common.extensions.show
 import com.settlex.android.presentation.common.extensions.toNairaString
@@ -23,50 +22,50 @@ import com.settlex.android.presentation.common.extensions.toNairaString
 object PaymentBottomSheetHelper {
     fun showBottomSheetConfirmPayment(
         context: Context,
-        recipientUsername: String?,
+        recipientUsername: String,
         recipientName: String,
-        recipientProfileUrl: String?,
+        recipientPhotoUrl: String?,
         transferAmount: Long,
         senderWalletBalance: Long,
         senderCommissionBalance: Long,
-        onPay: Runnable?
+        onPay: Runnable
     ): BottomSheetDialog {
         val binding = BottomSheetConfirmPaymentBinding.inflate(LayoutInflater.from(context))
-        with(binding) {
-            val dialog = BottomSheetDialog(context, R.style.Theme_SettleX_Dialog_BottomSheet)
-            dialog.setContentView(binding.root)
-            dialog.setCancelable(false)
-            dialog.setCanceledOnTouchOutside(false)
+        val dialog = BottomSheetDialog(context, R.style.Theme_SettleX_Dialog_BottomSheet)
+        dialog.setContentView(binding.root)
+        dialog.setCancelable(false)
+        dialog.setCanceledOnTouchOutside(false)
 
-            // Apply blur if Android 12+
-            var rootView: View? = null
-            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.S) {
-                rootView = (context as Activity).window.decorView
-                rootView.setRenderEffect(
-                    RenderEffect.createBlurEffect(
-                        5f,
-                        5f,
-                        Shader.TileMode.CLAMP
-                    )
+        // Apply blur if Android 12+
+        var rootView: View? = null
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.S) {
+            rootView = (context as Activity).window.decorView
+            rootView.setRenderEffect(
+                RenderEffect.createBlurEffect(
+                    5f,
+                    5f,
+                    Shader.TileMode.CLAMP
                 )
-            }
-
-            // Calculate payment breakdown
-            val paymentBreakdown = calculatePaymentBreakdown(
-                senderWalletBalance,
-                senderCommissionBalance,
-                transferAmount
             )
+        }
 
-            // Update UI based on breakdown
-            updatePaymentUI(binding, paymentBreakdown)
+        // Calculate payment breakdown
+        val paymentBreakdown = calculatePaymentBreakdown(
+            senderWalletBalance,
+            senderCommissionBalance,
+            transferAmount
+        )
 
-            // Set recipient and sender details
-            updateRecipientDetails(binding, recipientUsername, recipientName, recipientProfileUrl)
-            updateSenderDetails(binding, senderWalletBalance, senderCommissionBalance)
+        // Update UI based on breakdown
+        updatePaymentUI(binding, paymentBreakdown)
 
-            // Set click listeners
-            btnPay.setOnClickListener { onPay?.run() }
+        // Set recipient and sender details
+        updateRecipientDetails(binding, recipientUsername, recipientName, recipientPhotoUrl)
+        updateSenderDetails(binding, senderWalletBalance, senderCommissionBalance)
+
+        // Set click listeners
+        with(binding) {
+            btnPay.setOnClickListener { onPay.run() }
             btnClose.setOnClickListener {
                 if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.S) rootView?.setRenderEffect(null)
                 dialog.dismiss()
@@ -84,7 +83,7 @@ object PaymentBottomSheetHelper {
         profileUrl: String?
     ) {
         with(binding) {
-            tvRecipientUsername.text = username?.addAtPrefix()
+            tvRecipientUsername.text = username
             tvRecipientName.text = name.uppercase()
             loadProfilePhoto(profileUrl, ivRecipientProfilePhoto)
         }
@@ -103,8 +102,12 @@ object PaymentBottomSheetHelper {
         }
     }
 
-    fun updatePaymentUI(binding: BottomSheetConfirmPaymentBinding, breakdown: PaymentBreakdown) {
+    fun updatePaymentUI(binding: BottomSheetConfirmPaymentBinding, breakdown: PaymentBreakdown) =
         with(binding) {
+            listOf(tvTransferAmountHeader, tvTransferAmount).forEach {
+                it.text = breakdown.transferAmount.toNairaString()
+            }
+
             btnPay.isEnabled = breakdown.canProceed
             tvPaymentMethod.text = breakdown.debitSource
 
@@ -134,7 +137,6 @@ object PaymentBottomSheetHelper {
                 tvDebitFromSenderCommissionBalance.gone()
             }
         }
-    }
 
     fun calculatePaymentBreakdown(
         senderWalletBalance: Long,
@@ -146,6 +148,7 @@ object PaymentBottomSheetHelper {
             senderTotalAvailableBalance < transferAmount -> {
                 // Balance and commission are insufficient
                 PaymentBreakdown(
+                    transferAmount = transferAmount,
                     canProceed = false,
                     debitSource = "INSUFFICIENT",
                     walletDebit = 0,
@@ -157,6 +160,7 @@ object PaymentBottomSheetHelper {
             senderWalletBalance >= transferAmount -> {
                 // Wallet covers everything
                 PaymentBreakdown(
+                    transferAmount = transferAmount,
                     canProceed = true,
                     debitSource = "WALLET",
                     walletDebit = transferAmount,
@@ -168,6 +172,7 @@ object PaymentBottomSheetHelper {
             else -> {
                 // Need both wallet and commission
                 PaymentBreakdown(
+                    transferAmount = transferAmount,
                     canProceed = true,
                     debitSource = "WALLET_AND_COMMISSION",
                     walletDebit = senderWalletBalance,
@@ -179,6 +184,7 @@ object PaymentBottomSheetHelper {
     }
 
     data class PaymentBreakdown(
+        val transferAmount: Long,
         val canProceed: Boolean,
         val debitSource: String,
         val walletDebit: Long,

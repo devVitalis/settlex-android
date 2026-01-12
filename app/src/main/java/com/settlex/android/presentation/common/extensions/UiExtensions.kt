@@ -11,6 +11,7 @@ import androidx.core.content.ContextCompat
 import com.google.firebase.Timestamp
 import java.math.BigDecimal
 import java.math.RoundingMode
+import java.text.DecimalFormat
 import java.text.NumberFormat
 import java.text.SimpleDateFormat
 import java.util.Locale
@@ -192,9 +193,40 @@ fun Long.toNairaString(): String {
     }
 }
 
+fun Long.toNairaStringShort(): String {
+    this.also { amountInKobo ->
+        val symbol = "₦"
+        val df = DecimalFormat("#.##")
+
+        val naira = BigDecimal.valueOf(amountInKobo)
+            .divide(BigDecimal.valueOf(100), 2, RoundingMode.HALF_UP)
+
+        when {
+            naira < BigDecimal.valueOf(1000) -> return symbol + naira.toPlainString()
+            naira < BigDecimal.valueOf(1000000) -> {
+                val thousands = naira.divide(BigDecimal.valueOf(1000), 1, RoundingMode.HALF_UP)
+                return symbol + df.format(thousands) + "K"
+            }
+
+            naira < BigDecimal.valueOf(1000000000) -> {
+                val millions = naira.divide(BigDecimal.valueOf(1000000), 1, RoundingMode.HALF_UP)
+                return symbol + df.format(millions) + "M"
+            }
+
+            else -> {
+                val billions = naira.divide(BigDecimal.valueOf(1000000000), 1, RoundingMode.HALF_UP)
+                return symbol + df.format(billions) + "B"
+            }
+        }
+    }
+}
+
 fun String.fromNairaStringToKobo(): Long {
     this.also { nairaString ->
+        if (nairaString.isBlank()) return 0L
         val cleanedNairaString = nairaString.replace("₦", "").replace(",", "")
+        Log.d("UiExtension", "Naira String: $this")
+        Log.d("UiExtension", "Cleaned Naira String: $cleanedNairaString")
 
         try {
             val amount = BigDecimal(cleanedNairaString)
@@ -204,9 +236,8 @@ fun String.fromNairaStringToKobo(): Long {
             val roundedKobo = amountInKobo.setScale(0, RoundingMode.HALF_UP)
 
             return roundedKobo.longValueExact()
-        } catch (_: ArithmeticException) {
-            return 0L
-        } catch (_: NumberFormatException) {
+        } catch (e: Exception) {
+            Log.e("UiExtension", "Error: ${e.message} ", e)
             return 0L
         }
     }

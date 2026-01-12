@@ -7,7 +7,7 @@ import com.settlex.android.R
  */
 enum class TransactionServiceType(val displayName: String, val iconRes: Int) {
     ADD_FUNDS("Funds Added", R.drawable.ic_service_payment_sent),  //TODO: update with icon
-    PAY_A_FRIEND("Payment Sent", R.drawable.ic_service_payment_sent),
+    TRANSFER_TO_FRIEND("Payment Sent", R.drawable.ic_service_payment_sent),
     AIRTIME_RECHARGE("Airtime Recharge", R.drawable.ic_service_airtime),
     DATA_RECHARGE("Data Recharge", R.drawable.ic_service_data),
     CABLE_TV_SUBSCRIPTION("Cable TV Subscription", R.drawable.ic_service_cable_tv),

@@ -50,10 +50,10 @@ class TransferToFriendActivity : AppCompatActivity() {
     private val viewModel: TransactionViewModel by viewModels()
     private val focusManager by lazy { FocusManager(this) }
 
-    private var bottomSheetDialog: BottomSheetDialog? = null
+    private var paymentConfirmationSheet: BottomSheetDialog? = null
     private var recipientPhotoUrl: String? = null
     private var _currentUser: TransferToFriendUiModel? = null
-    val currentUser get() = _currentUser
+    val currentUser get() = _currentUser!!
 
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -67,8 +67,8 @@ class TransferToFriendActivity : AppCompatActivity() {
 
     override fun onDestroy() {
         super.onDestroy()
-        bottomSheetDialog?.dismiss()
-        bottomSheetDialog = null
+        paymentConfirmationSheet?.dismiss()
+        paymentConfirmationSheet = null
     }
 
     private fun initViews() = with(binding) {
@@ -79,8 +79,8 @@ class TransferToFriendActivity : AppCompatActivity() {
         focusManager.attachDoneAction(etDescription)
 
         btnBackBefore.setOnClickListener { onBackPressedDispatcher.onBackPressed() }
-        btnVerify.setOnClickListener { getRecipient(getRecipientPaymentId()) }
-        btnNext.setOnClickListener { startPaymentProcess() }
+        btnVerify.setOnClickListener { fetchRecipientData(getRecipientPaymentId()) }
+        btnNext.setOnClickListener { showPaymentConfirmation() }
     }
 
     private fun initObservers() {
@@ -211,7 +211,6 @@ class TransferToFriendActivity : AppCompatActivity() {
         }
 
         viewModel.transferToFriend(
-            fromSenderUid = currentUser?.uid!!,
             toRecipientPaymentId = getRecipientPaymentId(),
             transferAmount = getAmountInKobo(),
             description = etDescription.text.toString().trim()
@@ -255,8 +254,6 @@ class TransferToFriendActivity : AppCompatActivity() {
     private fun onRecipientSelected() = with(binding) {
         recipientAdapter.setOnRecipientClickListener(object : RecipientAdapter.OnItemClickListener {
             override fun onItemClick(selectedRecipient: RecipientUiModel) {
-                etPaymentId.setText(selectedRecipient.paymentId)
-                etPaymentId.setSelection(etPaymentId.length())
                 btnVerify.gone()
 
                 // Clear search results
@@ -276,63 +273,69 @@ class TransferToFriendActivity : AppCompatActivity() {
     }
 
 
-    private fun startPaymentProcess() = with(binding) {
+    private fun showPaymentConfirmation() = with(binding) {
         // Validate current selections; selected recipient text contains formatted payment id
-        val recipientPaymentIdRaw = tvSelectedRecipientPaymentId.text.toString().removeAtPrefix()
+        val recipientPaymentIdRaw = tvSelectedRecipientPaymentId.text.toString()
         val recipientName = tvSelectedRecipientName.text.toString()
 
-        bottomSheetDialog = PaymentBottomSheetHelper.showBottomSheetConfirmPayment(
+        paymentConfirmationSheet = PaymentBottomSheetHelper.showBottomSheetConfirmPayment(
             this@TransferToFriendActivity,
             recipientPaymentIdRaw,
             recipientName,
             recipientPhotoUrl,
             getAmountInKobo(),
-            currentUser?.balance ?: 0L,
-            currentUser?.commissionBalance ?: 0L
+            currentUser.balance,
+            currentUser.commissionBalance
         ) {
-            // on confirm callback
-            currentUser?.hasPin?.let { hasPin ->
-                if (!hasPin) {
-                    promptTransactionPinCreation()
-                    return@showBottomSheetConfirmPayment
-                }
-            }
-
-            DialogHelper.showBottomSheetPaymentPinConfirmation(this@TransferToFriendActivity) { binding, runnable ->
-                runnable?.set(0) {
-                    viewModel.authPaymentPin(binding?.pinView?.text.toString())
-                }
-            }
+            viewModel.transferToFriend(
+                toRecipientPaymentId = getRecipientPaymentId(),
+                transferAmount = getAmountInKobo(),
+                description = etDescription.text.toString().trim()
+            )
+//            // on confirm callback
+//            if (!currentUser.hasPin) {
+//                showPaymentPinCreationDialog()
+//                return@showBottomSheetConfirmPayment
+//            }
+//
+//            DialogHelper.showBottomSheetPaymentPinConfirmation(this@TransferToFriendActivity) { binding, runnable ->
+//                runnable?.set(0) {
+//                    viewModel.authPaymentPin(binding?.pinView?.text.toString())
+//                }
+//            }
         }
     }
 
-    private fun promptTransactionPinCreation() {
-        val title = "Payment PIN Required"
-        val message = "Please set up your Payment PIN to complete this transaction securely"
+    private fun showPaymentPinCreationDialog() {
+        val titleText = "Payment PIN Required"
+        val messageText = "Please set up your Payment PIN to complete this transaction securely"
         val btnPriText = "Create PIN"
         val btnSecText = "Cancel"
 
-        DialogHelper.showCustomAlertDialogWithIcon(
-            this
-        ) { dialog, dialogBinding ->
-            dialogBinding.title.text = title
-            dialogBinding.message.text = message
-            dialogBinding.btnPrimary.text = btnPriText
-            dialogBinding.btnSecondary.text = btnSecText
-            dialogBinding.icon.setImageResource(R.drawable.ic_lock_filled)
+        DialogHelper.showCustomAlertDialogWithIcon(this) { dialog, dialogBinding ->
+            with(dialogBinding) {
+                title.text = titleText
+                message.text = messageText
+                btnPrimary.text = btnPriText
+                btnSecondary.text = btnSecText
+                icon.setImageResource(R.drawable.ic_lock_filled)
 
-            dialogBinding.btnSecondary.setOnClickListener { dialog.dismiss() }
-            dialogBinding.btnPrimary.setOnClickListener {
-                startActivity(Intent(this, CreatePaymentPinActivity::class.java))
-                dialog.dismiss()
+                btnSecondary.setOnClickListener { dialog.dismiss() }
+                btnPrimary.setOnClickListener {
+                    startActivity(
+                        Intent(
+                            this@TransferToFriendActivity,
+                            CreatePaymentPinActivity::class.java
+                        )
+                    )
+                    dialog.dismiss()
+                }
             }
         }
     }
 
-    private fun getRecipient(paymentId: String) = with(binding) {
-        if (paymentId.isBlank()) return
-
-        if (paymentId.removeAtPrefix() == currentUser?.paymentId) {
+    private fun fetchRecipientData(paymentId: String) = with(binding) {
+        if (paymentId == currentUser.paymentId) {
             tvError.text = ERROR_CANNOT_SEND_TO_SELF
             tvError.show()
             return
@@ -388,15 +391,15 @@ class TransferToFriendActivity : AppCompatActivity() {
     }
 
     private fun getAmountInKobo(): Long = with(binding) {
-        return etAmount.toString().fromNairaStringToKobo()
+        return etAmount.text.toString().fromNairaStringToKobo()
     }
 
     private fun getRecipientPaymentId(): String = with(binding) {
-        return etPaymentId.text.toString().trim()
+        return etPaymentId.text.toString().trim().removeAtPrefix()
     }
 
-    private fun isPaymentIdValid(paymentId: String?): Boolean {
-        return paymentId?.let { ValidationUtil.isPaymentIdValid(it) } ?: false
+    private fun isPaymentIdValid(paymentId: String): Boolean {
+        return ValidationUtil.isPaymentIdValid(paymentId)
     }
 
     private fun isAmountInRange(amount: Long): Boolean {

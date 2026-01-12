@@ -5,16 +5,14 @@ import com.settlex.android.data.repository.TransactionRepositoryImpl
 import jakarta.inject.Inject
 
 class TransferToFriendUseCase @Inject constructor(
-    private val transactionRepo: TransactionRepositoryImpl
+    private val transactionRepoImpl: TransactionRepositoryImpl
 ) {
     suspend operator fun invoke(
-        fromSenderUid: String,
         toRecipientPaymentId: String,
         transferAmount: Long,
         description: String?
     ): Result<ApiResponse<String>> {
-        return transactionRepo.transferToFriend(
-            fromSenderUid,
+        return transactionRepoImpl.transferToFriend(
             toRecipientPaymentId,
             transferAmount,
             description

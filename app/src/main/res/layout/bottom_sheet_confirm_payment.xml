@@ -12,25 +12,22 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_gravity="center"
-        android:fontFamily="@font/inter_bold"
-        android:text="Payment Confirmation" />
+        android:text="@string/tv_payment_confirmation" />
 
     <com.google.android.material.imageview.ShapeableImageView
         android:id="@+id/btn_close"
-        android:layout_width="20dp"
-        android:layout_height="20dp"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
         android:layout_gravity="end"
-        android:contentDescription="Close"
         android:src="@drawable/ic_close"
-        app:tint="@color/gray_500" />
+        app:tint="@color/colorOnSurfaceVariant" />
 
     <TextView
-        android:id="@+id/tv_amount_header"
+        android:id="@+id/tv_transfer_amount_header"
         style="@style/Widget.SettleX.TextBold"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_gravity="center"
-        android:includeFontPadding="false"
         tools:text="₦100,000" />
 
     <LinearLayout
@@ -46,9 +43,8 @@
             android:layout_height="wrap_content"
             android:layout_marginEnd="15dp"
             android:layout_weight="1"
-            android:includeFontPadding="false"
-            android:text="Recipient"
-            android:textColor="@color/gray_500" />
+            android:text="@string/tv_recipient"
+            android:textColor="@color/colorOnSurfaceVariant" />
 
         <TextView
             android:id="@+id/tv_recipient_username"
@@ -73,8 +69,8 @@
             android:layout_height="wrap_content"
             android:layout_marginEnd="10dp"
             android:layout_weight="1"
-            android:text="Recipient Name"
-            android:textColor="@color/gray_500" />
+            android:text="@string/tv_recipient_name"
+            android:textColor="@color/colorOnSurfaceVariant" />
 
         <com.google.android.material.imageview.ShapeableImageView
             android:id="@+id/iv_recipient_profile_photo"
@@ -107,11 +103,11 @@
             android:layout_height="wrap_content"
             android:layout_marginEnd="10dp"
             android:layout_weight="1"
-            android:text="Amount"
-            android:textColor="@color/gray_500" />
+            android:text="@string/tv_amount"
+            android:textColor="@color/colorOnSurfaceVariant" />
 
         <TextView
-            android:id="@+id/tv_amount_to_send"
+            android:id="@+id/tv_transfer_amount"
             style="@style/Widget.SettleX.TextRegular"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
@@ -138,7 +134,7 @@
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_weight="1"
-            android:text="Payment Method" />
+            android:text="@string/tv_payment_method" />
 
         <TextView
             android:id="@+id/tv_payment_method"
@@ -170,7 +166,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginEnd="5dp"
-                android:text="Available Balance" />
+                android:text="@string/tv_available_balance" />
 
             <TextView
                 android:id="@+id/tv_sender_total_balance"
@@ -182,11 +178,11 @@
                 android:maxLines="1"
                 tools:text="(₦198,535.57)" />
 
-            <ImageView
+            <com.google.android.material.imageview.ShapeableImageView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:contentDescription="@null"
-                android:src="@drawable/ic_check" />
+                android:src="@drawable/ic_check"
+                app:tint="@color/colorSuccess" />
         </LinearLayout>
 
         <com.google.android.material.divider.MaterialDivider
@@ -207,8 +203,8 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginEnd="5dp"
-                android:text="Wallet Balance"
-                android:textColor="@color/gray_500"
+                android:text="@string/tv_wallet_balance"
+                android:textColor="@color/colorOnSurfaceVariant"
                 android:textSize="12sp" />
 
             <TextView
@@ -217,7 +213,7 @@
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
-                android:textColor="@color/gray_500"
+                android:textColor="@color/colorOnSurfaceVariant"
                 android:textSize="12sp"
                 tools:text="(₦198,000.32)" />
 
@@ -242,8 +238,8 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginEnd="5dp"
-                android:text="Commission Balance"
-                android:textColor="@color/gray_500"
+                android:text="@string/tv_commission_balance"
+                android:textColor="@color/colorOnSurfaceVariant"
                 android:textSize="12sp" />
 
             <TextView
@@ -252,7 +248,7 @@
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
-                android:textColor="@color/gray_500"
+                android:textColor="@color/colorOnSurfaceVariant"
                 android:textSize="12sp"
                 tools:text="(₦535.25)" />
 
@@ -272,10 +268,10 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_gravity="center"
-        android:text="Insufficient Balance"
-        android:textColor="@color/red_500"
+        android:textColor="@color/colorError"
         android:textSize="12sp"
-        android:visibility="gone" />
+        android:visibility="gone"
+        tools:text="Insufficient Balance" />
 
     <com.google.android.material.button.MaterialButton
         android:id="@+id/btn_pay"

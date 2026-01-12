@@ -35,6 +35,7 @@ object ValidationUtil {
     }
 
     fun isPaymentIdValid(id: String): Boolean {
-        return id.matches("^[a-z][a-z0-9]{4,19}$".toRegex())
+        val paymentId = if (id.startsWith("@")) id.substring(1) else id
+        return paymentId.matches("^[a-z][a-z0-9]{4,19}$".toRegex())
     }
 }

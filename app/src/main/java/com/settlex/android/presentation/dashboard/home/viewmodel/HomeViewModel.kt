@@ -12,13 +12,14 @@ import com.settlex.android.data.remote.dto.TransactionDto
 import com.settlex.android.data.repository.TransactionRepositoryImpl
 import com.settlex.android.data.session.UserSessionManager
 import com.settlex.android.data.session.UserSessionState
+import com.settlex.android.presentation.common.extensions.addAtPrefix
 import com.settlex.android.presentation.common.extensions.toDateTimeString
 import com.settlex.android.presentation.common.extensions.toNairaString
+import com.settlex.android.presentation.common.extensions.toNairaStringShort
 import com.settlex.android.presentation.common.state.UiState
 import com.settlex.android.presentation.dashboard.home.model.HomeUiModel
 import com.settlex.android.presentation.transactions.model.TransactionItemUiModel
 import com.settlex.android.util.network.NetworkMonitor
-import com.settlex.android.util.string.CurrencyFormatter
 import dagger.hilt.android.lifecycle.HiltViewModel
 import jakarta.inject.Inject
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -76,11 +77,11 @@ class HomeViewModel @Inject constructor(
             isHidden -> "****" to "****"
             else -> {
                 val formattedBalance = when {
-                    balance > MILLION_THRESHOLD_KOBO -> CurrencyFormatter.formatToNairaShort(balance)
+                    balance > MILLION_THRESHOLD_KOBO -> balance.toNairaStringShort()
                     else -> balance.toNairaString()
                 }
 
-                val formattedCommission = CurrencyFormatter.formatToNairaShort(commissionBalance)
+                val formattedCommission = commissionBalance.toNairaStringShort()
                 formattedBalance to formattedCommission
             }
         }
@@ -94,7 +95,7 @@ class HomeViewModel @Inject constructor(
         MutableStateFlow<UiState<List<TransactionItemUiModel>>>(UiState.Loading)
     val recentTransactions = _recentTransactions.asStateFlow()
 
-    fun loadRecentTransactions(uid: String) {
+    fun fetchRecentTransactions(uid: String) {
         viewModelScope.launch {
             if (!isNetworkConnected()) {
                 _recentTransactions.value = UiState.Failure(
@@ -134,9 +135,9 @@ class HomeViewModel @Inject constructor(
         return TransactionItemUiModel(
             transactionId = dto.transactionId,
             description = dto.description,
-            senderId = dto.sender,
+            senderId = dto.sender.addAtPrefix(),
             senderName = dto.senderName.uppercase(),
-            recipientId = dto.recipient,
+            recipientId = dto.recipient.addAtPrefix(),
             recipientName = dto.recipientName.uppercase(),
             recipientOrSenderName = if (isSender) dto.recipientName.uppercase() else dto.senderName.uppercase(),
             serviceTypeName = if (isSender) dto.serviceType.displayName else "Payment Received",

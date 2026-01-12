@@ -107,7 +107,7 @@ class HomeDashboardFragment : Fragment() {
         tvViewAllTransaction.setOnClickListener { it.toastNotImplemented() }
         btnDeposit.setOnClickListener { it.toastNotImplemented() }
         ivBalanceToggle.setOnClickListener { viewModel.toggleBalanceVisibility() }
-        btnRefreshTransactions.setOnClickListener { viewModel.loadRecentTransactions("Testing") }
+        btnRefreshTransactions.setOnClickListener { viewModel.fetchRecentTransactions("Testing") }
 
         viewUserCommissionBalance.setOnClickListener {
             startActivity(CommissionWithdrawalActivity::class.java)
@@ -138,7 +138,7 @@ class HomeDashboardFragment : Fragment() {
                     when (state) {
                         is UserSessionState.Authenticated -> {
                             // Fetch recent transactions
-                            viewModel.loadRecentTransactions(state.user.uid)
+                            viewModel.fetchRecentTransactions(state.user.uid)
                             onUserDataReceived(state.user)
                         }
 

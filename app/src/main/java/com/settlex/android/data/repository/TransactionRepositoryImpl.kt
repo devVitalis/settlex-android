@@ -20,14 +20,12 @@ class TransactionRepositoryImpl @Inject constructor(
     }
 
     override suspend fun transferToFriend(
-        fromSenderUid: String,
         toRecipientPaymentId: String,
         transferAmount: Long,
         description: String?
     ): Result<ApiResponse<String>> {
         runCatching {
             remote.transferToFriend(
-                fromSenderUid,
                 toRecipientPaymentId,
                 transferAmount,
                 description

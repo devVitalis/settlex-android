@@ -2,6 +2,7 @@ package com.settlex.android.data.datasource
 
 import android.content.Context
 import android.net.Uri
+import android.util.Log
 import com.google.firebase.auth.EmailAuthProvider
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.auth.FirebaseUser
@@ -111,19 +112,19 @@ class UserRemoteDataSource @Inject constructor(
     }
 
     suspend fun transferToFriend(
-        fromSenderUid: String,
         toRecipientPaymentId: String,
         transferAmount: Long,
         description: String?
     ): ApiResponse<String> {
+        val sender = getCurrentUser()!!
         return cloudFunctions.call(
             name = "api-transferToFriend",
             data = mapOf(
-                "fromUid" to fromSenderUid,
-                "toPaymentId" to toRecipientPaymentId,
-                "transactionId" to TransactionIdGenerator.generate(fromSenderUid),
-                "amount" to transferAmount,
-                "serviceType" to TransactionServiceType.PAY_A_FRIEND,
+                "fromSenderUid" to sender.uid,
+                "toRecipientPaymentId" to toRecipientPaymentId,
+                "transactionId" to TransactionIdGenerator.generate(sender.uid),
+                "transferAmount" to transferAmount,
+                "serviceType" to TransactionServiceType.TRANSFER_TO_FRIEND.toString(),
                 "description" to description
             )
         )
@@ -138,6 +139,7 @@ class UserRemoteDataSource @Inject constructor(
 
     fun getRecentTransactions(uid: String): Flow<Result<List<TransactionDto>>> {
         return callbackFlow {
+            Log.d("UserRemoteDataSource", "Fetching recent transactions...")
 
             val ref = firestore.collection("users")
                 .document(getCurrentUser()!!.uid)

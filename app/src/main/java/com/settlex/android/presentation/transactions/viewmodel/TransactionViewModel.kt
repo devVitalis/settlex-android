@@ -49,14 +49,13 @@ class TransactionViewModel @Inject constructor(
     val transferToFriendEvent = _transferToFriendEvent.receiveAsFlow()
 
     fun transferToFriend(
-        fromSenderUid: String,
         toRecipientPaymentId: String,
         transferAmount: Long,
         description: String?
     ) {
         viewModelScope.launch {
             _transferToFriendEvent.send(UiState.Loading)
-            transferToFriendUseCase(fromSenderUid, toRecipientPaymentId, transferAmount, description)
+            transferToFriendUseCase(toRecipientPaymentId, transferAmount, description)
                 .fold(
                     onSuccess = { _transferToFriendEvent.send(UiState.Success(it.data)) },
                     onFailure = { _transferToFriendEvent.send(UiState.Failure(it as AppException)) }
