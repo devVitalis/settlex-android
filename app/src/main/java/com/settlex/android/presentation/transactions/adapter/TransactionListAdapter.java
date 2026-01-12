@@ -1,6 +1,7 @@
 package com.settlex.android.presentation.transactions.adapter;
 
 import android.view.LayoutInflater;
+import android.view.View;
 import android.view.ViewGroup;
 
 import androidx.annotation.NonNull;
@@ -16,14 +17,11 @@ import com.settlex.android.presentation.transactions.model.TransactionItemUiMode
  * Base adapter for displaying transaction items in RecyclerView
  */
 public class TransactionListAdapter extends ListAdapter<TransactionItemUiModel, TransactionListAdapter.TransactionViewHolder> {
-    private OnTransactionClickListener listener;
+    private final OnTransactionClickListener listener;
 
-    public void setOnTransactionClickListener(OnTransactionClickListener listener) {
-        this.listener = listener;
-    }
-
-    public TransactionListAdapter() {
+    public TransactionListAdapter(OnTransactionClickListener listener) {
         super(DIFF_CALLBACK);
+        this.listener = listener;
     }
 
     private static final DiffUtil.ItemCallback<TransactionItemUiModel> DIFF_CALLBACK = new DiffUtil.ItemCallback<>() {
@@ -38,7 +36,6 @@ public class TransactionListAdapter extends ListAdapter<TransactionItemUiModel, 
         }
     };
 
-
     @NonNull
     @Override
     public TransactionViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
@@ -48,6 +45,7 @@ public class TransactionListAdapter extends ListAdapter<TransactionItemUiModel, 
 
     @Override
     public void onBindViewHolder(@NonNull TransactionViewHolder holder, int position) {
+        if (position == getItemCount() - 1) holder.binding.divider.setVisibility(View.GONE);
         holder.Bind(getItem(position), listener);
     }
 
@@ -55,7 +53,7 @@ public class TransactionListAdapter extends ListAdapter<TransactionItemUiModel, 
      * ViewHolder for transaction items containing all transaction display elements
      */
     public static class TransactionViewHolder extends RecyclerView.ViewHolder {
-        private final ItemTransactionBinding binding;
+        final ItemTransactionBinding binding;
 
         public TransactionViewHolder(@NonNull ItemTransactionBinding binding) {
             super(binding.getRoot());
@@ -63,27 +61,23 @@ public class TransactionListAdapter extends ListAdapter<TransactionItemUiModel, 
         }
 
         public void Bind(TransactionItemUiModel transaction, OnTransactionClickListener listener) {
-            binding.icon.setImageResource(transaction.getServiceTypeIcon());
-            binding.name.setText(transaction.getServiceTypeName());
+            binding.ivTxnIcon.setImageResource(transaction.getServiceTypeIcon());
+            binding.tvServiceTypeName.setText(transaction.getServiceTypeName());
 
-            binding.operation.setText(transaction.getOperationSymbol());
-            binding.operation.setTextColor(ContextCompat.getColor(binding.getRoot().getContext(), transaction.getOperationColor()));
+            binding.tvTxnOperation.setText(transaction.getOperationSymbol());
+            binding.tvTxnOperation.setTextColor(ContextCompat.getColor(binding.getRoot().getContext(), transaction.getOperationColor()));
 
-            binding.amount.setText(transaction.getAmount());
-            binding.amount.setTextColor(ContextCompat.getColor(binding.getRoot().getContext(), transaction.getOperationColor()));
+            binding.tvTxnAmount.setText(transaction.getAmount());
+            binding.tvTxnAmount.setTextColor(ContextCompat.getColor(binding.getRoot().getContext(), transaction.getOperationColor()));
 
-            binding.dateTime.setText(transaction.getTimestamp());
+            binding.tvTxnDateTime.setText(transaction.getTimestamp());
             binding.recipientOrSender.setText(transaction.getRecipientOrSenderName());
 
-            binding.status.setText(transaction.getStatus());
-            binding.status.setTextColor(ContextCompat.getColor(binding.getRoot().getContext(), transaction.getStatusColor()));
-            binding.status.setBackgroundResource(transaction.getStatusBackgroundColor());
+            binding.tvTxnStatus.setText(transaction.getStatus());
+            binding.tvTxnStatus.setTextColor(ContextCompat.getColor(binding.getRoot().getContext(), transaction.getStatusColor()));
+            binding.tvTxnStatus.setBackgroundResource(transaction.getStatusBackgroundColor());
 
-            binding.getRoot().setOnClickListener(v -> {
-                if (listener != null) {
-                    listener.onClick(transaction);
-                }
-            });
+            binding.getRoot().setOnClickListener(v -> listener.onClick(transaction));
         }
     }
 

@@ -121,7 +121,7 @@
                     style="@style/Widget.SettleX.TextInputEditText.Outlined"
                     android:layout_width="match_parent"
                     android:layout_height="55dp"
-                    android:background="@drawable/bg_input_field_filled"
+                    android:background="@drawable/bg_input_field_filled_outlined"
                     android:hint="@string/hint_enter_your_password"
                     android:imeOptions="actionDone"
                     android:inputType="textPassword"

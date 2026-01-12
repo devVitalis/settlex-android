@@ -58,7 +58,7 @@ class HomeDashboardFragment : Fragment() {
     // Dependencies
     private var _binding: FragmentDashboardHomeBinding? = null
     private val binding get() = _binding!!
-    private lateinit var adapter: TransactionListAdapter
+    private lateinit var transactionsListAdapter: TransactionListAdapter
 
     private val viewModel: HomeViewModel by activityViewModels()
     private val bannerViewModel: PromoBannerViewModel by activityViewModels()
@@ -83,7 +83,7 @@ class HomeDashboardFragment : Fragment() {
     }
 
     private fun initObservers() {
-        observeUserSessionState()
+        observeUserSession()
         observeUserBalance()
         observeUserBalanceHiddenState()
         observeUserRecentTransactions()
@@ -119,19 +119,15 @@ class HomeDashboardFragment : Fragment() {
         layoutManager.setOrientation(LinearLayoutManager.VERTICAL)
         rvTransactions.setLayoutManager(layoutManager)
 
-        adapter = TransactionListAdapter()
-        setUpTransactionClickListener()
-    }
-
-    private fun setUpTransactionClickListener() {
-        adapter.setOnTransactionClickListener { transaction: TransactionItemUiModel ->
+        // Initialize adapter and set click listener
+        transactionsListAdapter = TransactionListAdapter { transaction ->
             val intent = Intent(context, TransactionActivity::class.java)
             intent.putExtra("transaction", transaction)
             startActivity(intent)
         }
     }
 
-    private fun observeUserSessionState() {
+    private fun observeUserSession() {
         viewLifecycleOwner.lifecycleScope.launch {
             viewLifecycleOwner.repeatOnLifecycle(Lifecycle.State.STARTED) {
                 viewModel.userSessionState.collect { state ->
@@ -287,16 +283,16 @@ class HomeDashboardFragment : Fragment() {
         when (transactions?.isEmpty()) {
             true -> {
                 // Clear recyclerview
-                adapter.submitList(emptyList())
-                rvTransactions.setAdapter(adapter)
+                transactionsListAdapter.submitList(emptyList())
+                rvTransactions.setAdapter(transactionsListAdapter)
 
                 viewNoTransactionsUi.show()
             }
 
             else -> {
                 // Show transactions
-                adapter.submitList(transactions)
-                rvTransactions.setAdapter(adapter)
+                transactionsListAdapter.submitList(transactions)
+                rvTransactions.setAdapter(transactionsListAdapter)
 
                 viewNoTransactionsUi.gone()
                 rvTransactions.show()

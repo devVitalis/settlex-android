@@ -106,9 +106,20 @@ fun String.capitalizeEachWord(): String {
 
 // Timestamp
 fun Timestamp.toDateTimeString(): String {
-    return SimpleDateFormat("dd MMM yyyy, hh:mm a", Locale.US)
-        .format(this.toDate())
+    val dateString = SimpleDateFormat("dd, MMM yyyy, hh:mm a", Locale.US).format(this.toDate())
 
+    val day = SimpleDateFormat("dd", Locale.US)
+        .format(this.toDate()).toInt()
+
+    val suffix = when {
+        day in 11..13 -> "th"
+        day % 10 == 1 -> "st"
+        day % 10 == 2 -> "nd"
+        day % 10 == 3 -> "rd"
+        else -> "th"
+    }
+
+    return dateString.replace(day.toString().padStart(2, '0'), "$day$suffix")
 }
 
 fun Timestamp.toDateString(): String {

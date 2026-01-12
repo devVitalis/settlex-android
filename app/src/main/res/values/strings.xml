@@ -133,6 +133,8 @@
     <string name="tv_get_the_cheapest_data_bundles_and_easily_manage_your_electricity_airtime_and_betting_payments_one_app_for_all_your_needs">Get the cheapest data bundles and easily manage your electricity, airtime, and betting payments. One app for all your needs.</string>
     <string name="tv_stay_connected_to_your_favorite_tv_and_streaming_services_renew_your_subscriptions_on_time_and_keep_the_entertainment_going">Stay connected to your favorite TV and streaming services. Renew your subscriptions on time and keep the entertainment going.</string>
     <string name="tv_we_protect_your_information_with_the_same_high_level_encryption_trusted_by_major_banks_keeping_your_personal_details_secure_and_private">We protect your information with the same high-level encryption trusted by major banks, keeping your personal details secure and private.</string>
+
+    <!-- PAYMENT BOTTOM SHEET -->
     <string name="tv_payment_confirmation">Payment Confirmation</string>
     <string name="tv_recipient">Recipient</string>
     <string name="tv_recipient_name">Recipient Name</string>
@@ -141,6 +143,7 @@
     <string name="tv_available_balance">Available Balance</string>
     <string name="tv_wallet_balance">Wallet Balance</string>
     <string name="tv_commission_balance">Commission Balance</string>
-    <!-- PAYMENT BOTTOM SHEET -->
+
+    <!-- ITEM TRANSACTIONS -->
 
 </resources>

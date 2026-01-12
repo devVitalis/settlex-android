@@ -458,8 +458,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:background="@drawable/bg_surface_variant_rounded16"
-                android:paddingHorizontal="8dp"
-                android:paddingVertical="10dp">
+                android:paddingVertical="5dp">
 
                 <androidx.recyclerview.widget.RecyclerView
                     android:id="@+id/rv_transactions"
@@ -488,7 +487,7 @@
                     android:layout_height="wrap_content"
                     android:gravity="center"
                     android:orientation="vertical"
-                    android:paddingVertical="8dp">
+                    android:paddingVertical="5dp">
 
                     <TextView
                         style="@style/Widget.SettleX.TextBold"

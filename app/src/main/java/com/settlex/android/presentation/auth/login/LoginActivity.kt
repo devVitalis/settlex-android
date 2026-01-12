@@ -60,7 +60,7 @@ class LoginActivity : AppCompatActivity() {
 
         tvSwitchAccount.text = SpannableTextFormatter(
             this@LoginActivity,
-            "Not you?\nSwitch Account",
+            "Not you? Switch Account",
             "Switch Account",
             ContextCompat.getColor(this@LoginActivity, R.color.colorPrimary)
         )

@@ -129,7 +129,7 @@
                             android:paddingVertical="2dp"
                             android:textColor="@color/green_500"
                             android:textSize="13sp"
-                            tools:background="@drawable/bg_3dp_green_light"
+                            tools:background="@drawable/bg_success_container_rounded3"
                             tools:text="Success" />
                     </LinearLayout>
 

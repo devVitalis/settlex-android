@@ -120,8 +120,8 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginVertical="7.5dp"
-        app:dividerColor="@color/gray_200"
-        app:dividerThickness="1dp" />
+        app:dividerColor="@color/divider_color"
+        app:dividerThickness="0.5dp" />
 
     <LinearLayout
         android:layout_width="match_parent"
@@ -188,9 +188,9 @@
         <com.google.android.material.divider.MaterialDivider
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginVertical="7.5dp"
-            app:dividerColor="@color/gray_300"
-            app:dividerThickness="1dp" />
+            android:layout_marginVertical="5dp"
+            app:dividerColor="@color/divider_color_inverse"
+            app:dividerThickness="0.5dp" />
 
         <LinearLayout
             android:layout_width="match_parent"

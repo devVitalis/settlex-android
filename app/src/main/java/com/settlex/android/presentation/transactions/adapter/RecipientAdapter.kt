@@ -23,8 +23,7 @@ class RecipientAdapter : ListAdapter<RecipientUiModel, SuggestionsViewHolder>(DI
     }
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): SuggestionsViewHolder {
-        val binding =
-            ItemRecipientBinding.inflate(LayoutInflater.from(parent.context), parent, false)
+        val binding = ItemRecipientBinding.inflate(LayoutInflater.from(parent.context), parent, false)
         return SuggestionsViewHolder(binding)
     }
 

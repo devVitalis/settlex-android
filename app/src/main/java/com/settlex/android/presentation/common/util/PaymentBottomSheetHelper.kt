@@ -7,10 +7,13 @@ import android.graphics.Shader
 import android.os.Build
 import android.view.LayoutInflater
 import android.view.View
+import android.view.inputmethod.InputMethodManager
 import com.google.android.material.bottomsheet.BottomSheetDialog
 import com.settlex.android.R
 import com.settlex.android.data.remote.profile.ProfileService.loadProfilePhoto
 import com.settlex.android.databinding.BottomSheetConfirmPaymentBinding
+import com.settlex.android.databinding.BottomSheetPaymentPinConfirmBinding
+import com.settlex.android.presentation.common.custom.NumericKeypad.OnKeypadInputListener
 import com.settlex.android.presentation.common.extensions.gone
 import com.settlex.android.presentation.common.extensions.show
 import com.settlex.android.presentation.common.extensions.toNairaString
@@ -20,7 +23,7 @@ import com.settlex.android.presentation.common.extensions.toNairaString
  * Handles payment confirmation UI, balance calculations, and payment breakdowns.
  */
 object PaymentBottomSheetHelper {
-    fun showBottomSheetConfirmPayment(
+    fun showConfirmPaymentBottomSheet(
         context: Context,
         recipientUsername: String,
         recipientName: String,
@@ -191,4 +194,49 @@ object PaymentBottomSheetHelper {
         val commissionDebit: Long,
         val feedbackMessage: String?
     )
+
+    fun showPaymentPinAuthenticationBottomSheet(
+        context: Context,
+        onPinEntered: (pin: String) -> Unit
+    ) {
+        val binding = BottomSheetPaymentPinConfirmBinding.inflate(LayoutInflater.from(context))
+        val dialog = BottomSheetDialog(context, R.style.Theme_SettleX_Dialog_BottomSheet).apply {
+            setContentView(binding.root)
+            setCancelable(false)
+            setCanceledOnTouchOutside(false)
+        }
+
+        binding.btnClose.setOnClickListener { dialog.dismiss() }
+        binding.btnForgotPaymentPin.setOnClickListener { }
+
+        // Disable system keyboard
+        (context.getSystemService(Context.INPUT_METHOD_SERVICE) as InputMethodManager).apply {
+            dialog.currentFocus?.let { hideSoftInputFromWindow(it.windowToken, 0) }
+        }
+        binding.pinView.showSoftInputOnFocus = false
+
+        val maxPinLength = binding.pinView.itemCount
+
+        binding.numericKeypad.setOnKeypadInputListener(object : OnKeypadInputListener {
+            override fun onNumberPressed(number: String) {
+                if (binding.pinView.length() < maxPinLength) {
+                    binding.pinView.append(number)
+                }
+
+                if (binding.pinView.length() == maxPinLength) {
+                    onPinEntered(binding.pinView.text.toString())
+                    dialog.dismiss()
+                }
+            }
+
+            override fun onDeletePressed() {
+                val current = binding.pinView.text.toString()
+                if (current.isNotEmpty()) {
+                    binding.pinView.setText(current.dropLast(1))
+                }
+            }
+        })
+
+        dialog.show()
+    }
 }

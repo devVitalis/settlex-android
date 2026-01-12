@@ -220,7 +220,7 @@ class TransferToFriendActivity : AppCompatActivity() {
     }
 
     private fun onPinVerificationError(error: AppException) {
-        showSimpleAlertDialog(error.message)
+        showSimpleAlertDialog(error)
         progressLoader.hide()
     }
 
@@ -240,8 +240,8 @@ class TransferToFriendActivity : AppCompatActivity() {
         }
     }
 
-    private fun showSimpleAlertDialog(message: String?) {
-        DialogHelper.showSimpleAlertDialog(this, "Error", message)
+    private fun showSimpleAlertDialog(error: AppException) {
+//        DialogHelper.showCustomAlertDialog()
     }
 
     private fun initRecipientRecyclerView() = with(binding) {
@@ -278,7 +278,7 @@ class TransferToFriendActivity : AppCompatActivity() {
         val recipientPaymentIdRaw = tvSelectedRecipientPaymentId.text.toString()
         val recipientName = tvSelectedRecipientName.text.toString()
 
-        paymentConfirmationSheet = PaymentBottomSheetHelper.showBottomSheetConfirmPayment(
+        paymentConfirmationSheet = PaymentBottomSheetHelper.showConfirmPaymentBottomSheet(
             this@TransferToFriendActivity,
             recipientPaymentIdRaw,
             recipientName,
@@ -287,22 +287,23 @@ class TransferToFriendActivity : AppCompatActivity() {
             currentUser.balance,
             currentUser.commissionBalance
         ) {
-            viewModel.transferToFriend(
-                toRecipientPaymentId = getRecipientPaymentId(),
-                transferAmount = getAmountInKobo(),
-                description = etDescription.text.toString().trim()
-            )
+//            viewModel.transferToFriend(
+//                toRecipientPaymentId = getRecipientPaymentId(),
+//                transferAmount = getAmountInKobo(),
+//                description = etDescription.text.toString().trim()
+//            )
 //            // on confirm callback
 //            if (!currentUser.hasPin) {
 //                showPaymentPinCreationDialog()
 //                return@showBottomSheetConfirmPayment
 //            }
 //
-//            DialogHelper.showBottomSheetPaymentPinConfirmation(this@TransferToFriendActivity) { binding, runnable ->
-//                runnable?.set(0) {
-//                    viewModel.authPaymentPin(binding?.pinView?.text.toString())
-//                }
-//            }
+
+            PaymentBottomSheetHelper.showPaymentPinAuthenticationBottomSheet(
+                this@TransferToFriendActivity
+            ) { pin ->
+                viewModel.authPaymentPin(pin)
+            }
         }
     }
 

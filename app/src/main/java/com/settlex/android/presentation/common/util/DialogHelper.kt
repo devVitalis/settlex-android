@@ -7,7 +7,6 @@ import android.graphics.RenderEffect
 import android.graphics.Shader
 import android.os.Build
 import android.view.LayoutInflater
-import android.view.inputmethod.InputMethodManager
 import androidx.appcompat.app.AlertDialog
 import com.google.android.material.bottomsheet.BottomSheetDialog
 import com.google.android.material.dialog.MaterialAlertDialogBuilder
@@ -15,9 +14,7 @@ import com.settlex.android.R
 import com.settlex.android.databinding.AlertDialogMessageBinding
 import com.settlex.android.databinding.AlertDialogWithIconBinding
 import com.settlex.android.databinding.BottomSheetImageSourceBinding
-import com.settlex.android.databinding.BottomSheetPaymentPinConfirmBinding
 import com.settlex.android.databinding.BottomSheetSuccessDialogBinding
-import com.settlex.android.presentation.common.custom.NumericKeypad.OnKeypadInputListener
 import java.util.function.BiConsumer
 
 /**
@@ -107,65 +104,13 @@ object DialogHelper {
         config: BiConsumer<BottomSheetDialog, BottomSheetImageSourceBinding>
     ) {
         val binding = BottomSheetImageSourceBinding.inflate(LayoutInflater.from(context))
-        val dialog = BottomSheetDialog(context, R.style.Theme_SettleX_Dialog_BottomSheet)
-        dialog.setContentView(binding.root)
-        dialog.setCancelable(true)
-        dialog.setCanceledOnTouchOutside(true)
+        val dialog = BottomSheetDialog(context, R.style.Theme_SettleX_Dialog_BottomSheet).apply {
+            setContentView(binding.root)
+            setCancelable(true)
+            setCanceledOnTouchOutside(true)
+        }
 
         config.accept(dialog, binding)
-        dialog.show()
-    }
-
-    fun showBottomSheetPaymentPinConfirmation(
-        context: Context,
-        config: BiConsumer<BottomSheetPaymentPinConfirmBinding?, Array<Runnable?>?>?
-    ) {
-        val binding = BottomSheetPaymentPinConfirmBinding.inflate(LayoutInflater.from(context))
-        val dialog = BottomSheetDialog(context, R.style.Theme_SettleX_Dialog_BottomSheet)
-        dialog.setContentView(binding.getRoot())
-
-        dialog.setCancelable(false)
-        dialog.setCanceledOnTouchOutside(false)
-
-        // setup click listener
-        binding.btnClose.setOnClickListener { dialog.dismiss() }
-        binding.btnForgotPaymentPin.setOnClickListener { }
-
-        // disable the system keyboard
-        val imm = context.getSystemService(Context.INPUT_METHOD_SERVICE) as InputMethodManager
-        if (dialog.currentFocus != null) imm.hideSoftInputFromWindow(
-            dialog.currentFocus!!.windowToken, 0
-        )
-        binding.pinView.showSoftInputOnFocus = false
-
-        val onPinVerified = arrayOfNulls<Runnable>(1)
-
-        // handle keypad input
-        binding.numericKeypad.setOnKeypadInputListener(object : OnKeypadInputListener {
-            override fun onNumberPressed(number: String?) {
-                if (binding.pinView.length() < binding.pinView.itemCount) {
-                    binding.pinView.append(number)
-                }
-
-                val pin = binding.pinView.getText().toString()
-
-                if (pin.length == binding.pinView.itemCount) {
-                    if (onPinVerified[0] != null) {
-                        onPinVerified[0]!!.run()
-                        dialog.dismiss()
-                    }
-                }
-            }
-
-            override fun onDeletePressed() {
-                val current = binding.pinView.getText().toString()
-
-                if (!current.isEmpty()) {
-                    binding.pinView.setText(current.subSequence(0, current.length - 1))
-                }
-            }
-        })
-        config?.accept(binding, onPinVerified)
         dialog.show()
     }
 }
