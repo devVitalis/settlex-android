@@ -2,7 +2,6 @@ package com.settlex.android.presentation.transactions
 
 import android.content.Intent
 import android.os.Bundle
-import android.util.Log
 import android.view.MotionEvent
 import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
@@ -45,10 +44,10 @@ import java.util.Locale
 @AndroidEntryPoint
 class TransferToFriendActivity : AppCompatActivity() {
     private lateinit var binding: ActivityTransferToFriendBinding
-    private val progressLoader by lazy { ProgressDialogManager(this) }
-    private val recipientAdapter by lazy { RecipientAdapter() }
     private val viewModel: TransactionViewModel by viewModels()
+    private val progressLoader by lazy { ProgressDialogManager(this) }
     private val focusManager by lazy { FocusManager(this) }
+    private lateinit var recipientAdapter: RecipientAdapter
 
     private var paymentConfirmationSheet: BottomSheetDialog? = null
     private var recipientPhotoUrl: String? = null
@@ -206,7 +205,7 @@ class TransferToFriendActivity : AppCompatActivity() {
 
     private fun onPinVerificationSuccess(isVerified: Boolean) = with(binding) {
         if (!isVerified) {
-            showPinErrorDialog()
+            showPinAuthFailureDialog(true)
             return
         }
 
@@ -220,40 +219,40 @@ class TransferToFriendActivity : AppCompatActivity() {
     }
 
     private fun onPinVerificationError(error: AppException) {
-        showSimpleAlertDialog(error)
+        showPinAuthFailureDialog(false, error)
         progressLoader.hide()
     }
 
-    private fun showPinErrorDialog() {
+    private fun showPinAuthFailureDialog(isPinIncorrect: Boolean, error: AppException? = null) {
         DialogHelper.showCustomAlertDialog(this) { dialog, dialogBinding ->
             with(dialogBinding) {
-                "Incorrect PIN. Try again or reset your PIN".also { tvMessage.text = it }
-                "Forgot PIN".also { btnSecondary.text = it }
-                "Retry".also { btnPrimary.text = it }
+                when (isPinIncorrect) {
+                    true -> {
+                        "Incorrect PIN".also { tvMessage.text = it }
+                        "Forgot PIN".also { btnSecondary.text = it }
+                        "Retry".also { btnPrimary.text = it }
 
-                btnPrimary.setOnClickListener { dialog.dismiss() }
-                btnSecondary.setOnClickListener {
-                    // TODO pin Reset
-                    dialog.dismiss()
+                        btnPrimary.setOnClickListener { dialog.dismiss() }
+                        btnSecondary.setOnClickListener { dialog.dismiss() }
+                    }
+
+                    else -> {
+                        btnSecondary.gone()
+                        tvMessage.text = error?.message
+                        "Okay".also { btnPrimary.text = it }
+                        btnPrimary.setOnClickListener { dialog.dismiss() }
+                    }
                 }
             }
         }
-    }
-
-    private fun showSimpleAlertDialog(error: AppException) {
-//        DialogHelper.showCustomAlertDialog()
     }
 
     private fun initRecipientRecyclerView() = with(binding) {
         rvRecipient.layoutManager = LinearLayoutManager(this@TransferToFriendActivity)
         rvRecipient.adapter = recipientAdapter
 
-        onRecipientSelected()
-    }
-
-    private fun onRecipientSelected() = with(binding) {
-        recipientAdapter.setOnRecipientClickListener(object : RecipientAdapter.OnItemClickListener {
-            override fun onItemClick(selectedRecipient: RecipientUiModel) {
+        recipientAdapter = RecipientAdapter(object : RecipientAdapter.OnItemClickListener {
+            override fun onClick(selectedRecipient: RecipientUiModel) {
                 btnVerify.gone()
 
                 // Clear search results
@@ -272,7 +271,6 @@ class TransferToFriendActivity : AppCompatActivity() {
         })
     }
 
-
     private fun showPaymentConfirmation() = with(binding) {
         // Validate current selections; selected recipient text contains formatted payment id
         val recipientPaymentIdRaw = tvSelectedRecipientPaymentId.text.toString()
@@ -287,17 +285,11 @@ class TransferToFriendActivity : AppCompatActivity() {
             currentUser.balance,
             currentUser.commissionBalance
         ) {
-//            viewModel.transferToFriend(
-//                toRecipientPaymentId = getRecipientPaymentId(),
-//                transferAmount = getAmountInKobo(),
-//                description = etDescription.text.toString().trim()
-//            )
-//            // on confirm callback
-//            if (!currentUser.hasPin) {
-//                showPaymentPinCreationDialog()
-//                return@showBottomSheetConfirmPayment
-//            }
-//
+            // on confirm callback
+            if (!currentUser.hasPin) {
+                showPaymentPinCreationDialog()
+                return@showConfirmPaymentBottomSheet
+            }
 
             PaymentBottomSheetHelper.showPaymentPinAuthenticationBottomSheet(
                 this@TransferToFriendActivity
@@ -309,7 +301,7 @@ class TransferToFriendActivity : AppCompatActivity() {
 
     private fun showPaymentPinCreationDialog() {
         val titleText = "Payment PIN Required"
-        val messageText = "Please set up your Payment PIN to complete this transaction securely"
+        val messageText = "Set up your Payment PIN to complete this transaction securely"
         val btnPriText = "Create PIN"
         val btnSecText = "Cancel"
 
@@ -378,8 +370,6 @@ class TransferToFriendActivity : AppCompatActivity() {
             }
 
             updateNextButtonState()
-            Log.d("TransferToFriend", "Amount in Kobo: ${getAmountInKobo()}")
-            Log.d("TransferToFriend", "Raw Amount: ${etAmount.text.toString()}")
         }
     }
 
@@ -404,7 +394,8 @@ class TransferToFriendActivity : AppCompatActivity() {
     }
 
     private fun isAmountInRange(amount: Long): Boolean {
-        return amount >= 10_000L && amount <= 100_000_000L
+        // return amount >= 10_000L && amount <= 100_000_000L
+        return amount >= 10_000L && amount <= 100_000_000_000_000L
     }
 
     override fun dispatchTouchEvent(event: MotionEvent): Boolean {

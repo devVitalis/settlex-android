@@ -12,32 +12,32 @@ import com.google.android.material.bottomsheet.BottomSheetDialog
 import com.settlex.android.R
 import com.settlex.android.data.remote.profile.ProfileService.loadProfilePhoto
 import com.settlex.android.databinding.BottomSheetConfirmPaymentBinding
-import com.settlex.android.databinding.BottomSheetPaymentPinConfirmBinding
+import com.settlex.android.databinding.BottomSheetPaymentPinAuthBinding
 import com.settlex.android.presentation.common.custom.NumericKeypad.OnKeypadInputListener
 import com.settlex.android.presentation.common.extensions.gone
 import com.settlex.android.presentation.common.extensions.show
 import com.settlex.android.presentation.common.extensions.toNairaString
 
 /**
- * Utility class for payment-related bottom sheet dialogs and operations.
- * Handles payment confirmation UI, balance calculations, and payment breakdowns.
+ * A helper object for managing payment-related bottom sheet dialogs.
  */
 object PaymentBottomSheetHelper {
     fun showConfirmPaymentBottomSheet(
         context: Context,
-        recipientUsername: String,
+        recipientPaymentId: String,
         recipientName: String,
         recipientPhotoUrl: String?,
         transferAmount: Long,
         senderWalletBalance: Long,
         senderCommissionBalance: Long,
-        onPay: Runnable
+        onConfirmTransfer: () -> Unit
     ): BottomSheetDialog {
         val binding = BottomSheetConfirmPaymentBinding.inflate(LayoutInflater.from(context))
-        val dialog = BottomSheetDialog(context, R.style.Theme_SettleX_Dialog_BottomSheet)
-        dialog.setContentView(binding.root)
-        dialog.setCancelable(false)
-        dialog.setCanceledOnTouchOutside(false)
+        val dialog = BottomSheetDialog(context, R.style.Theme_SettleX_Dialog_BottomSheet).apply {
+            setContentView(binding.root)
+            setCancelable(false)
+            setCanceledOnTouchOutside(false)
+        }
 
         // Apply blur if Android 12+
         var rootView: View? = null
@@ -52,23 +52,23 @@ object PaymentBottomSheetHelper {
             )
         }
 
-        // Calculate payment breakdown
-        val paymentBreakdown = calculatePaymentBreakdown(
+        // Calculate transaction summary
+        val transactionSummary = generateTransactionSummary(
             senderWalletBalance,
             senderCommissionBalance,
             transferAmount
         )
 
-        // Update UI based on breakdown
-        updatePaymentUI(binding, paymentBreakdown)
+        // Update UI based on transaction summary
+        showTransactionSummary(binding, transactionSummary)
 
         // Set recipient and sender details
-        updateRecipientDetails(binding, recipientUsername, recipientName, recipientPhotoUrl)
+        updateRecipientDetails(binding, recipientPaymentId, recipientName, recipientPhotoUrl)
         updateSenderDetails(binding, senderWalletBalance, senderCommissionBalance)
 
         // Set click listeners
         with(binding) {
-            btnPay.setOnClickListener { onPay.run() }
+            btnConfirmTransfer.setOnClickListener { onConfirmTransfer() }
             btnClose.setOnClickListener {
                 if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.S) rootView?.setRenderEffect(null)
                 dialog.dismiss()
@@ -81,14 +81,14 @@ object PaymentBottomSheetHelper {
 
     fun updateRecipientDetails(
         binding: BottomSheetConfirmPaymentBinding,
-        username: String?,
+        paymentId: String,
         name: String,
-        profileUrl: String?
+        photoUrl: String?
     ) {
         with(binding) {
-            tvRecipientUsername.text = username
+            tvRecipientPaymentId.text = paymentId
             tvRecipientName.text = name.uppercase()
-            loadProfilePhoto(profileUrl, ivRecipientProfilePhoto)
+            loadProfilePhoto(photoUrl, ivRecipientProfilePhoto)
         }
     }
 
@@ -105,138 +105,144 @@ object PaymentBottomSheetHelper {
         }
     }
 
-    fun updatePaymentUI(binding: BottomSheetConfirmPaymentBinding, breakdown: PaymentBreakdown) =
+    fun showTransactionSummary(
+        binding: BottomSheetConfirmPaymentBinding,
+        summary: TransactionSummary
+    ) =
         with(binding) {
-            listOf(tvTransferAmountHeader, tvTransferAmount).forEach {
-                it.text = breakdown.transferAmount.toNairaString()
+            listOf(
+                tvTransferAmountHeader,
+                tvTransferAmount
+            ).forEach {
+                it.text = summary.transferAmount.toNairaString()
             }
 
-            btnPay.isEnabled = breakdown.canProceed
-            tvPaymentMethod.text = breakdown.debitSource
+            // Update button state
+            btnConfirmTransfer.isEnabled = summary.canProceed
+            tvPaymentMethod.text = summary.debitSource
 
-            if (breakdown.feedbackMessage != null) {
+            summary.statusMessage?.let {
+                tvFeedback.text = summary.statusMessage
                 tvFeedback.show()
-                tvFeedback.text = breakdown.feedbackMessage
-            } else {
-                tvFeedback.gone()
             }
 
-            // Update debit amounts
-            if (breakdown.walletDebit > 0) {
-                tvDebitFromSenderWalletBalance.show()
-                "-${breakdown.walletDebit.toNairaString()}".also {
-                    tvDebitFromSenderWalletBalance.text = it
+            // Show debit summary
+            when (summary.walletDebit > 0) {
+                true -> {
+                    tvDebitFromSenderWalletBalance.show()
+                    "-${summary.walletDebit.toNairaString()}".also {
+                        tvDebitFromSenderWalletBalance.text = it
+                    }
                 }
-            } else {
-                tvDebitFromSenderWalletBalance.gone()
+
+                else -> tvDebitFromSenderWalletBalance.gone()
             }
 
-            if (breakdown.commissionDebit > 0) {
-                tvDebitFromSenderCommissionBalance.show()
-                "-${breakdown.commissionDebit.toNairaString()}".also {
-                    tvDebitFromSenderCommissionBalance.text = it
+            when (summary.commissionDebit > 0) {
+                true -> {
+                    tvDebitFromSenderCommissionBalance.show()
+                    "-${summary.commissionDebit.toNairaString()}".also {
+                        tvDebitFromSenderCommissionBalance.text = it
+                    }
                 }
-            } else {
-                tvDebitFromSenderCommissionBalance.gone()
+
+                else -> tvDebitFromSenderCommissionBalance.gone()
             }
         }
 
-    fun calculatePaymentBreakdown(
+    fun generateTransactionSummary(
         senderWalletBalance: Long,
         senderCommissionBalance: Long,
         transferAmount: Long
-    ): PaymentBreakdown {
+    ): TransactionSummary {
         val senderTotalAvailableBalance = senderWalletBalance + senderCommissionBalance
         return when {
             senderTotalAvailableBalance < transferAmount -> {
                 // Balance and commission are insufficient
-                PaymentBreakdown(
+                TransactionSummary(
                     transferAmount = transferAmount,
                     canProceed = false,
                     debitSource = "INSUFFICIENT",
                     walletDebit = 0,
                     commissionDebit = 0,
-                    feedbackMessage = "Insufficient balance"
+                    statusMessage = "Insufficient balance"
                 )
             }
 
             senderWalletBalance >= transferAmount -> {
-                // Wallet covers everything
-                PaymentBreakdown(
+                // Wallet alone is sufficient
+                TransactionSummary(
                     transferAmount = transferAmount,
                     canProceed = true,
                     debitSource = "WALLET",
                     walletDebit = transferAmount,
                     commissionDebit = 0,
-                    feedbackMessage = null
+                    statusMessage = null
                 )
             }
 
             else -> {
-                // Need both wallet and commission
-                PaymentBreakdown(
+                // Needs both wallet and commission
+                TransactionSummary(
                     transferAmount = transferAmount,
                     canProceed = true,
                     debitSource = "WALLET_AND_COMMISSION",
                     walletDebit = senderWalletBalance,
                     commissionDebit = transferAmount - senderWalletBalance,
-                    feedbackMessage = null
+                    statusMessage = null
                 )
             }
         }
     }
 
-    data class PaymentBreakdown(
+    data class TransactionSummary(
         val transferAmount: Long,
         val canProceed: Boolean,
         val debitSource: String,
         val walletDebit: Long,
         val commissionDebit: Long,
-        val feedbackMessage: String?
+        val statusMessage: String?
     )
 
     fun showPaymentPinAuthenticationBottomSheet(
         context: Context,
         onPinEntered: (pin: String) -> Unit
     ) {
-        val binding = BottomSheetPaymentPinConfirmBinding.inflate(LayoutInflater.from(context))
+        val binding = BottomSheetPaymentPinAuthBinding.inflate(LayoutInflater.from(context))
         val dialog = BottomSheetDialog(context, R.style.Theme_SettleX_Dialog_BottomSheet).apply {
             setContentView(binding.root)
             setCancelable(false)
             setCanceledOnTouchOutside(false)
         }
 
-        binding.btnClose.setOnClickListener { dialog.dismiss() }
-        binding.btnForgotPaymentPin.setOnClickListener { }
+        with(binding) {
+            btnClose.setOnClickListener { dialog.dismiss() }
+            btnForgotPaymentPin.setOnClickListener { }
 
-        // Disable system keyboard
-        (context.getSystemService(Context.INPUT_METHOD_SERVICE) as InputMethodManager).apply {
-            dialog.currentFocus?.let { hideSoftInputFromWindow(it.windowToken, 0) }
+            // Disable system keyboard
+            (context.getSystemService(Context.INPUT_METHOD_SERVICE) as InputMethodManager).apply {
+                dialog.currentFocus?.let { hideSoftInputFromWindow(it.windowToken, 0) }
+            }
+            pinView.showSoftInputOnFocus = false
+
+            val maxPinLength = pinView.itemCount
+
+            btnNumericKeypad.setOnKeypadInputListener(object : OnKeypadInputListener {
+                override fun onNumberPressed(number: String) {
+                    if (pinView.length() < maxPinLength) pinView.append(number)
+
+                    if (pinView.length() == maxPinLength) {
+                        onPinEntered(pinView.text.toString())
+                        dialog.dismiss()
+                    }
+                }
+
+                override fun onDeletePressed() {
+                    val current = binding.pinView.text.toString()
+                    if (current.isNotEmpty()) pinView.setText(current.dropLast(1))
+                }
+            })
+            dialog.show()
         }
-        binding.pinView.showSoftInputOnFocus = false
-
-        val maxPinLength = binding.pinView.itemCount
-
-        binding.numericKeypad.setOnKeypadInputListener(object : OnKeypadInputListener {
-            override fun onNumberPressed(number: String) {
-                if (binding.pinView.length() < maxPinLength) {
-                    binding.pinView.append(number)
-                }
-
-                if (binding.pinView.length() == maxPinLength) {
-                    onPinEntered(binding.pinView.text.toString())
-                    dialog.dismiss()
-                }
-            }
-
-            override fun onDeletePressed() {
-                val current = binding.pinView.text.toString()
-                if (current.isNotEmpty()) {
-                    binding.pinView.setText(current.dropLast(1))
-                }
-            }
-        })
-
-        dialog.show()
     }
 }

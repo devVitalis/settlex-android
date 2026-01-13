@@ -11,24 +11,21 @@ import com.settlex.android.presentation.common.extensions.addAtPrefix
 import com.settlex.android.presentation.transactions.adapter.RecipientAdapter.SuggestionsViewHolder
 import com.settlex.android.presentation.transactions.model.RecipientUiModel
 
-class RecipientAdapter : ListAdapter<RecipientUiModel, SuggestionsViewHolder>(DIFF_CALLBACK) {
-    private lateinit var onItemClickListener: OnItemClickListener
+class RecipientAdapter(private val onItemClickListener: OnItemClickListener) :
+    ListAdapter<RecipientUiModel, SuggestionsViewHolder>(DIFF_CALLBACK) {
 
     interface OnItemClickListener {
-        fun onItemClick(selectedRecipient: RecipientUiModel)
-    }
-
-    fun setOnRecipientClickListener(listener: OnItemClickListener) {
-        this.onItemClickListener = listener
+        fun onClick(selectedRecipient: RecipientUiModel)
     }
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): SuggestionsViewHolder {
-        val binding = ItemRecipientBinding.inflate(LayoutInflater.from(parent.context), parent, false)
+        val binding =
+            ItemRecipientBinding.inflate(LayoutInflater.from(parent.context), parent, false)
         return SuggestionsViewHolder(binding)
     }
 
     override fun onBindViewHolder(holder: SuggestionsViewHolder, position: Int) {
-        holder.bind(getItem(position)!!, onItemClickListener)
+        holder.bind(getItem(position), onItemClickListener)
     }
 
     class SuggestionsViewHolder(private val binding: ItemRecipientBinding) :
@@ -38,7 +35,7 @@ class RecipientAdapter : ListAdapter<RecipientUiModel, SuggestionsViewHolder>(DI
             loadProfilePhoto(recipient.photoUrl, ivProfilePhoto)
             tvFullName.text = recipient.fullName
             tvPaymentId.text = recipient.paymentId.addAtPrefix()
-            root.setOnClickListener { listener.onItemClick(recipient) }
+            root.setOnClickListener { listener.onClick(recipient) }
         }
     }
 

@@ -144,6 +144,22 @@
     <string name="tv_wallet_balance">Wallet Balance</string>
     <string name="tv_commission_balance">Commission Balance</string>
 
-    <!-- ITEM TRANSACTIONS -->
+    <!-- BOTTOM SHEET PIN AUTH PAYMENT -->
+    <string name="tv_enter_payment_pin">Enter Payment Pin</string>
+    <string name="btn_forgot_payment_pin">Forgot Payment Pin?</string>
+    <string name="btn_confirm_transfer">Confirm Transfer</string>
+
+    <!-- ITEM NUMERIC KEYPAD -->
+    <string name="tv_settlex_secure_numeric_keypad">SettleX Secure Numeric Keypad</string>
+    <string name="num_1">1</string>
+    <string name="num_2">2</string>
+    <string name="num_3">3</string>
+    <string name="num_4">4</string>
+    <string name="num_5">5</string>
+    <string name="num_6">6</string>
+    <string name="num_7">7</string>
+    <string name="num_8">8</string>
+    <string name="num_9">9</string>
+    <string name="num_0">0</string>
 
 </resources>

@@ -28,8 +28,8 @@ public class NumericKeypad extends LinearLayout {
 
     private void setupNumericKeypad() {
         // Loop through all the child button in the grid
-        for (int i = 0; i < binding.keyboardGrid.getChildCount(); i++) {
-            View key = binding.keyboardGrid.getChildAt(i);
+        for (int i = 0; i < binding.viewKeyboardGrid.getChildCount(); i++) {
+            View key = binding.viewKeyboardGrid.getChildAt(i);
             if (key instanceof MaterialButton btn) {
                 String text = btn.getText().toString();
 

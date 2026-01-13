@@ -3,6 +3,7 @@ package com.settlex.android.presentation.transactions.viewmodel
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.settlex.android.data.exception.AppException
+import com.settlex.android.data.exception.ExceptionMapper
 import com.settlex.android.data.mapper.toRecipientUiModel
 import com.settlex.android.data.mapper.toTransferToFriendUiModel
 import com.settlex.android.data.session.UserSessionManager
@@ -13,6 +14,7 @@ import com.settlex.android.domain.usecase.user.GetReceipientUseCase
 import com.settlex.android.presentation.common.state.UiState
 import com.settlex.android.presentation.transactions.model.RecipientUiModel
 import com.settlex.android.presentation.transactions.model.TransferToFriendUiModel
+import com.settlex.android.util.network.NetworkMonitor
 import dagger.hilt.android.lifecycle.HiltViewModel
 import jakarta.inject.Inject
 import kotlinx.coroutines.channels.Channel
@@ -54,6 +56,7 @@ class TransactionViewModel @Inject constructor(
         description: String?
     ) {
         viewModelScope.launch {
+            requireNetworkConnection()
             _transferToFriendEvent.send(UiState.Loading)
             transferToFriendUseCase(toRecipientPaymentId, transferAmount, description)
                 .fold(
@@ -68,8 +71,8 @@ class TransactionViewModel @Inject constructor(
 
     fun getRecipientByPaymentId(paymentId: String) {
         viewModelScope.launch {
+            requireNetworkConnection()
             _getRecipientEvent.send(UiState.Loading)
-
             getRecipientUseCase(paymentId).fold(
                 onSuccess = {
                     val recipientList = mutableListOf<RecipientUiModel>()
@@ -88,11 +91,21 @@ class TransactionViewModel @Inject constructor(
 
     fun authPaymentPin(pin: String) {
         viewModelScope.launch {
+            requireNetworkConnection()
             _authPaymentPinEvent.send(UiState.Loading)
-
             authPaymentPinUseCase(pin).fold(
                 onSuccess = { _authPaymentPinEvent.send(UiState.Success(it.data)) },
                 onFailure = { _authPaymentPinEvent.send(UiState.Failure(it as AppException)) }
+            )
+        }
+    }
+
+    private fun requireNetworkConnection() {
+        if (!NetworkMonitor.networkStatus.value) {
+            UiState.Failure(
+                AppException.NetworkException(
+                    ExceptionMapper.ERROR_NO_NETWORK
+                )
             )
         }
     }

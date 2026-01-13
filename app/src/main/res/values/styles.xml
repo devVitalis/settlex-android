@@ -89,8 +89,9 @@
         <item name="android:layout_margin">3dp</item>
         <item name="android:layout_columnWeight">1</item>
         <item name="android:textSize">18sp</item>
-        <item name="android:textColor">@color/black</item>
+        <item name="android:textColor">@color/colorOnBackground</item>
         <item name="backgroundTint">@null</item>
+        <item name="rippleColor">@color/button_ripple_color</item>
         <item name="android:includeFontPadding">false</item>
         <item name="android:background">@drawable/bg_numeric_keypad</item>
     </style>
@@ -194,8 +195,8 @@
         <item name="android:cursorVisible">true</item>
         <item name="cursorColor">@color/gray_200</item>
         <item name="lineColor">@color/pinview_outline_selector</item>
-        <item name="lineWidth">1dp</item>
-        <item name="android:itemBackground">@drawable/bg_pinview</item>
+        <item name="lineWidth">1.5dp</item>
+        <item name="android:itemBackground">@drawable/pinview_bg</item>
         <item name="itemWidth">48dp</item>
         <item name="itemHeight">48dp</item>
     </style>
