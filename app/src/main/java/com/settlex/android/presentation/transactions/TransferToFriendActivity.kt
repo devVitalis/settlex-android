@@ -180,6 +180,7 @@ class TransferToFriendActivity : AppCompatActivity() {
         tvError.gone()
         rvRecipient.show()
         recipientAdapter.submitList(recipientList)
+        rvRecipient.adapter = recipientAdapter
     }
 
     private fun onGetRecipientError(error: AppException) = with(binding) {
@@ -248,9 +249,11 @@ class TransferToFriendActivity : AppCompatActivity() {
     }
 
     private fun initRecipientRecyclerView() = with(binding) {
-        rvRecipient.layoutManager = LinearLayoutManager(this@TransferToFriendActivity)
-        rvRecipient.adapter = recipientAdapter
+        val layoutManager = LinearLayoutManager(this@TransferToFriendActivity)
+        layoutManager.orientation = LinearLayoutManager.VERTICAL
+        rvRecipient.layoutManager = layoutManager
 
+        // Initialize adapter and set click listener
         recipientAdapter = RecipientAdapter(object : RecipientAdapter.OnItemClickListener {
             override fun onClick(selectedRecipient: RecipientUiModel) {
                 btnVerify.gone()

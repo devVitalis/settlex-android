@@ -152,14 +152,14 @@
         android:layout_marginBottom="20dp"
         android:background="@drawable/bg_surface_rounded8"
         android:orientation="vertical"
-        android:paddingHorizontal="10dp"
         android:paddingVertical="15dp">
 
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:gravity="center_vertical"
-            android:orientation="horizontal">
+            android:orientation="horizontal"
+            android:paddingHorizontal="10dp">
 
             <TextView
                 style="@style/Widget.SettleX.TextRegular"
@@ -189,14 +189,15 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginVertical="5dp"
-            app:dividerColor="@color/divider_color_inverse"
-            app:dividerThickness="0.5dp" />
+            app:dividerColor="@color/divider_color"
+            app:dividerThickness="1.5dp" />
 
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:gravity="center_vertical"
-            android:orientation="horizontal">
+            android:orientation="horizontal"
+            android:paddingHorizontal="10dp">
 
             <TextView
                 style="@style/Widget.SettleX.TextRegular"
@@ -231,7 +232,8 @@
             android:layout_height="wrap_content"
             android:layout_marginTop="5dp"
             android:gravity="center_vertical"
-            android:orientation="horizontal">
+            android:orientation="horizontal"
+            android:paddingHorizontal="10dp">
 
             <TextView
                 style="@style/Widget.SettleX.TextRegular"

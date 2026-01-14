@@ -110,8 +110,8 @@ class CreatePasswordActivity : AppCompatActivity() {
     }
 
     private fun showSuccessDialog() {
-        DialogHelper.showSuccessBottomSheetDialog(this) { dialog, binding ->
-            with(binding) {
+        DialogHelper.showSuccessBottomSheetDialog(this) { dialog, dialogBinding ->
+            with(dialogBinding) {
                 "Success".also { tvTitle.text = it }
                 "Your password has been changed successfully".also { tvMessage.text = it }
                 "Continue".also { btnAction.text = it }

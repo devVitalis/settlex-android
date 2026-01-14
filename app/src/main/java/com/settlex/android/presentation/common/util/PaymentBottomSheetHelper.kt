@@ -238,7 +238,7 @@ object PaymentBottomSheetHelper {
                 }
 
                 override fun onDeletePressed() {
-                    val current = binding.pinView.text.toString()
+                    val current = pinView.text.toString()
                     if (current.isNotEmpty()) pinView.setText(current.dropLast(1))
                 }
             })
