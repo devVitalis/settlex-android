@@ -33,6 +33,7 @@ import com.settlex.android.presentation.common.util.ValidationUtil
 import com.settlex.android.presentation.settings.CreatePaymentPinActivity
 import com.settlex.android.presentation.transactions.adapter.RecipientAdapter
 import com.settlex.android.presentation.transactions.model.RecipientUiModel
+import com.settlex.android.presentation.transactions.model.TransactionResult
 import com.settlex.android.presentation.transactions.model.TransferToFriendUiModel
 import com.settlex.android.presentation.transactions.viewmodel.TransactionViewModel
 import com.settlex.android.util.ui.ProgressDialogManager
@@ -113,9 +114,15 @@ class TransferToFriendActivity : AppCompatActivity() {
                 viewModel.transferToFriendEvent.collect { state ->
                     when (state) {
                         is UiState.Loading -> progressLoader.show()
-                        is UiState.Success -> showTransferStatus(TransactionStatus.SUCCESS, null)
+                        is UiState.Success -> showTransferStatus(
+                            TransactionStatus.SUCCESS,
+                            state.data,
+                            null
+                        )
+
                         is UiState.Failure -> showTransferStatus(
                             TransactionStatus.FAILED,
+                            null,
                             state.exception
                         )
                     }
@@ -124,15 +131,25 @@ class TransferToFriendActivity : AppCompatActivity() {
         }
     }
 
-    private fun showTransferStatus(transactionStatus: TransactionStatus, error: AppException?) {
+
+    private fun showTransferStatus(
+        transactionStatus: TransactionStatus,
+        message: String?,
+        error: AppException?
+    ) {
+        val result = TransactionResult(
+            status = transactionStatus,
+            amount = getAmountInKobo(),
+            message = message ?: "Transaction processing",
+            errorMessage = error?.message
+        )
+
         val intent = Intent(this, TransactionStatusActivity::class.java).apply {
-            putExtra("amount", getAmountInKobo().toNairaString())
-            putExtra("status", transactionStatus.name)
-            putExtra("message", error?.message)
+            putExtra("transaction_result", result)
         }
+
         startActivity(intent)
         finish()
-
         progressLoader.hide()
     }
 
@@ -210,13 +227,16 @@ class TransferToFriendActivity : AppCompatActivity() {
             return
         }
 
+        sendPayment()
+        progressLoader.hide()
+    }
+
+    private fun sendPayment() = with(binding) {
         viewModel.transferToFriend(
             toRecipientPaymentId = getRecipientPaymentId(),
             transferAmount = getAmountInKobo(),
             description = etDescription.text.toString().trim()
         )
-
-        progressLoader.hide()
     }
 
     private fun onPinVerificationError(error: AppException) {
@@ -303,20 +323,20 @@ class TransferToFriendActivity : AppCompatActivity() {
     }
 
     private fun showPaymentPinCreationDialog() {
-        val titleText = "Payment PIN Required"
-        val messageText = "Set up your Payment PIN to complete this transaction securely"
-        val btnPriText = "Create PIN"
-        val btnSecText = "Cancel"
+        val message = "Set up your Payment PIN to complete this transaction securely"
 
         DialogHelper.showCustomAlertDialogWithIcon(this) { dialog, dialogBinding ->
             with(dialogBinding) {
-                title.text = titleText
-                message.text = messageText
-                btnPrimary.text = btnPriText
-                btnSecondary.text = btnSecText
-                icon.setImageResource(R.drawable.ic_lock_filled)
+                "Payment PIN Required".also { tvTitle.text = it }
+                "Cancel".also { btnSecondary.text = it }
+                "Create PIN".also { btnPrimary.text = it }
+                tvMessage.text = message
+                ivIcon.setImageResource(R.drawable.ic_lock_filled)
 
-                btnSecondary.setOnClickListener { dialog.dismiss() }
+                btnSecondary.setOnClickListener {
+                    sendPayment()
+                    dialog.dismiss()
+                }
                 btnPrimary.setOnClickListener {
                     startActivity(
                         Intent(

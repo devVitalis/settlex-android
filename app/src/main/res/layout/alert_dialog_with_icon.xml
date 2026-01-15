@@ -4,72 +4,62 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:background="@color/white"
+    android:background="@color/colorBackground"
     android:gravity="center"
     android:orientation="vertical"
-    android:paddingHorizontal="10dp"
-    android:paddingVertical="15dp">
+    android:padding="15dp">
 
-    <ImageView
-        android:id="@+id/icon"
-        android:layout_width="45dp"
-        android:layout_height="45dp"
-        android:layout_gravity="center_horizontal|top"
+    <com.google.android.material.imageview.ShapeableImageView
+        android:id="@+id/iv_icon"
+        android:layout_width="50dp"
+        android:layout_height="50dp"
         android:background="@drawable/bg_secondary_oval"
-        android:contentDescription="@null"
-        android:padding="10dp"
         android:src="@drawable/ic_lock_filled"
-        app:tint="@color/blue_500" />
+        app:contentPadding="10dp"
+        app:tint="@color/colorPrimary" />
 
     <TextView
-        android:id="@+id/title"
+        android:id="@+id/tv_title"
+        style="@style/Widget.SettleX.TextBold"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginTop="5dp"
-        android:fontFamily="@font/inter_bold"
         android:gravity="center"
         android:textAlignment="center"
-        android:textColor="@color/black"
-        android:textSize="20sp"
         tools:text="Dialog Title" />
 
     <TextView
-        android:id="@+id/message"
+        android:id="@+id/tv_message"
+        style="@style/Widget.SettleX.TextRegular"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginTop="5dp"
-        android:fontFamily="@font/inter_regular"
         android:gravity="center"
         android:textAlignment="center"
-        android:textColor="@color/black"
-        android:textSize="14sp"
         tools:text="Dialog Message" />
 
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginHorizontal="15dp"
-        android:layout_marginTop="10dp"
+        android:layout_marginTop="5dp"
         android:gravity="center"
         android:orientation="horizontal">
 
         <com.google.android.material.button.MaterialButton
             android:id="@+id/btn_secondary"
-            style="@style/Widget.SettleX.Button.Tonal.Rounded8"
+            style="@style/Widget.SettleX.Button.Secondary"
             android:layout_width="0dp"
             android:layout_height="55dp"
             android:layout_marginEnd="15dp"
             android:layout_weight="1"
-            android:textSize="14sp"
-            tools:text="Secondary Btn" />
+            tools:text="Secondary" />
 
         <com.google.android.material.button.MaterialButton
             android:id="@+id/btn_primary"
-            style="@style/Widget.SettleX.Button.Primary.Rounded8"
+            style="@style/Widget.SettleX.Button.Primary"
             android:layout_width="0dp"
             android:layout_height="55dp"
             android:layout_weight="1"
-            android:textSize="14sp"
-            tools:text="Primary Btn" />
+            tools:text="Primary" />
     </LinearLayout>
 </LinearLayout>

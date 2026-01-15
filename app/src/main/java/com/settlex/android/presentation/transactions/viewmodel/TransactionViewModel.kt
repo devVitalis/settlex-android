@@ -56,7 +56,8 @@ class TransactionViewModel @Inject constructor(
         description: String?
     ) {
         viewModelScope.launch {
-            requireNetworkConnection()
+            requireInternetConnection()
+
             _transferToFriendEvent.send(UiState.Loading)
             transferToFriendUseCase(toRecipientPaymentId, transferAmount, description)
                 .fold(
@@ -71,7 +72,8 @@ class TransactionViewModel @Inject constructor(
 
     fun getRecipientByPaymentId(paymentId: String) {
         viewModelScope.launch {
-            requireNetworkConnection()
+            requireInternetConnection()
+
             _getRecipientEvent.send(UiState.Loading)
             getRecipientUseCase(paymentId).fold(
                 onSuccess = {
@@ -91,7 +93,8 @@ class TransactionViewModel @Inject constructor(
 
     fun authPaymentPin(pin: String) {
         viewModelScope.launch {
-            requireNetworkConnection()
+            requireInternetConnection()
+
             _authPaymentPinEvent.send(UiState.Loading)
             authPaymentPinUseCase(pin).fold(
                 onSuccess = { _authPaymentPinEvent.send(UiState.Success(it.data)) },
@@ -100,7 +103,7 @@ class TransactionViewModel @Inject constructor(
         }
     }
 
-    private fun requireNetworkConnection() {
+    private fun requireInternetConnection() {
         if (!NetworkMonitor.networkStatus.value) {
             UiState.Failure(
                 AppException.NetworkException(

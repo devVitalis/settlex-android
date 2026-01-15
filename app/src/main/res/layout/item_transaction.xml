@@ -127,6 +127,6 @@
         android:id="@+id/divider"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        app:dividerColor="@color/divider_color_inverse"
+        app:dividerColor="@color/divider_on_color_surface"
         app:dividerThickness="0.5dp" />
 </LinearLayout>

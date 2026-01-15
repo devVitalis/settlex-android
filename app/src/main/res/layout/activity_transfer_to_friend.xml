@@ -54,7 +54,6 @@
             android:paddingHorizontal="10dp"
             android:paddingVertical="20dp">
 
-            <!-- Recipient ID -->
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
@@ -62,6 +61,7 @@
                 android:orientation="vertical"
                 android:padding="10dp">
 
+                <!-- Recipient ID -->
                 <TextView
                     style="@style/Widget.SettleX.TextMedium"
                     android:layout_width="wrap_content"
@@ -74,7 +74,6 @@
                     android:layout_width="match_parent"
                     android:layout_height="55dp"
                     android:layout_marginTop="5dp"
-                    android:background="@drawable/bg_input_field_background_inverse_filled"
                     android:orientation="horizontal">
 
                     <com.google.android.material.textfield.TextInputEditText
@@ -83,7 +82,7 @@
                         android:layout_width="0dp"
                         android:layout_height="match_parent"
                         android:layout_weight="1"
-                        android:background="@android:color/transparent"
+                        android:background="@drawable/bg_input_field_background_inverse_filled"
                         android:hint="Enter recipient Payment ID"
                         android:imeOptions="actionNext"
                         android:inputType="text" />

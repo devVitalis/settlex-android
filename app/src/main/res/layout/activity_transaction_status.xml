@@ -5,38 +5,37 @@
     android:id="@+id/main"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@color/white"
+    android:background="@color/colorSurfaceVariant"
     android:fitsSystemWindows="true"
     tools:context=".presentation.transactions.TransactionStatusActivity">
 
     <LinearLayout
         android:id="@+id/header"
         android:layout_width="0dp"
-        android:layout_height="40dp"
-        android:background="@color/white"
+        android:layout_height="45dp"
         android:gravity="center_vertical|end"
         android:orientation="horizontal"
+        android:paddingHorizontal="15dp"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent">
 
         <TextView
-            android:id="@+id/btn_done"
+            android:id="@+id/tv_done"
+            style="@style/Widget.SettleX.TextBold"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginEnd="15dp"
-            android:includeFontPadding="false"
             android:text="Done"
-            android:textColor="@color/blue_500"
-            android:textSize="15sp"
-            android:textStyle="bold" />
+            android:textColor="@color/colorPrimary"
+            android:textSize="15sp" />
     </LinearLayout>
 
-    <androidx.constraintlayout.widget.ConstraintLayout
-        android:id="@+id/content_container"
+    <LinearLayout
+        android:id="@+id/view_content_container"
         android:layout_width="0dp"
         android:layout_height="0dp"
-        android:background="@color/gray_200"
+        android:background="@color/colorBackgroundInverse"
+        android:orientation="vertical"
         android:padding="15dp"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
@@ -44,93 +43,84 @@
         app:layout_constraintTop_toBottomOf="@id/header">
 
         <LinearLayout
-            android:id="@+id/card_container"
-            android:layout_width="0dp"
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:background="@drawable/bg_surface_variant_ripple_rounded8"
+            android:background="@drawable/bg_surface_variant_rounded8"
             android:gravity="center"
             android:orientation="vertical"
             android:paddingTop="10dp"
-            android:paddingBottom="20dp"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent">
+            android:paddingBottom="20dp">
 
             <FrameLayout
-                android:id="@+id/anim_container"
+                android:id="@+id/view_anim_container"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_gravity="center">
 
                 <com.airbnb.lottie.LottieAnimationView
-                    android:id="@+id/txn_pending_anim"
+                    android:id="@+id/anim_txn_pending"
                     android:layout_width="70dp"
+                    style="@style/Widget.SettleX.TextMedium"
                     android:layout_height="70dp"
                     android:layout_gravity="center"
                     android:visibility="gone"
-                    app:lottie_autoPlay="false"
+                    app:lottie_autoPlay="true"
                     app:lottie_fileName="txn_pending_anim.json"
                     app:lottie_loop="false" />
 
                 <com.airbnb.lottie.LottieAnimationView
-                    android:id="@+id/txn_success_anim"
+                    android:id="@+id/anim_txn_success"
                     android:layout_width="80dp"
                     android:layout_height="80dp"
                     android:layout_gravity="center"
                     android:visibility="gone"
-                    app:lottie_autoPlay="false"
+                    app:lottie_autoPlay="true"
                     app:lottie_fileName="txn_success_anim.json"
                     app:lottie_loop="false" />
 
                 <com.airbnb.lottie.LottieAnimationView
-                    android:id="@+id/txn_failed_anim"
+                    android:id="@+id/anim_txn_failed"
                     android:layout_width="40dp"
                     android:layout_height="40dp"
                     android:layout_gravity="center"
                     android:layout_marginVertical="10dp"
                     android:visibility="gone"
-                    app:lottie_autoPlay="false"
+                    app:lottie_autoPlay="true"
                     app:lottie_fileName="txn_failed_anim.json"
                     app:lottie_loop="false" />
             </FrameLayout>
 
             <TextView
-                android:id="@+id/txn_status"
+                android:id="@+id/tv_txn_status"
+                style="@style/Widget.SettleX.TextMedium"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_gravity="center"
                 android:layout_marginTop="10dp"
-                android:fontFamily="@font/inter_regular"
-                android:includeFontPadding="false"
-                android:textColor="@color/black"
                 android:textSize="16sp"
-                android:textStyle="bold"
                 tools:text="Transaction Successful" />
 
             <TextView
-                android:id="@+id/txn_amount"
+                android:id="@+id/tv_txn_amount"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_gravity="center"
                 android:layout_marginTop="5dp"
                 android:includeFontPadding="false"
-                android:textColor="@color/black"
+                android:textColor="@color/colorOnBackground"
                 android:textSize="25sp"
                 android:textStyle="bold"
                 tools:text="₦1,000" />
 
             <TextView
                 android:id="@+id/tv_error"
+                style="@style/Widget.SettleX.TextError"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_gravity="center"
                 android:layout_marginTop="20dp"
-                android:fontFamily="@font/inter_regular"
-                android:includeFontPadding="false"
-                android:textColor="@color/red_500"
-                android:textSize="14sp"
                 android:visibility="gone"
                 tools:text="Failure reason" />
         </LinearLayout>
-    </androidx.constraintlayout.widget.ConstraintLayout>
+    </LinearLayout>
 </androidx.constraintlayout.widget.ConstraintLayout>
