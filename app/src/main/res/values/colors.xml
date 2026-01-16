@@ -46,11 +46,11 @@
     <color name="colorOnBadgeSecondary">@color/red_500</color>
 
     <!-- Specific component states -->
-    <color name="button_disabled_background">#A5B4FC</color>
+    <color name="button_disabled_background">#c1c4fb</color>
     <color name="button_ripple_color">#42FFFFFF</color>
     <color name="shimmer_effect_color">@color/gray_300</color>
     <color name="divider_on_color_surface">@color/white</color>
-    <color name="divider_color">@color/gray_500</color>
+    <color name="divider_color">@color/gray_200</color>
 
     <!-- Base Color -->
     <color name="black">#FF000000</color>

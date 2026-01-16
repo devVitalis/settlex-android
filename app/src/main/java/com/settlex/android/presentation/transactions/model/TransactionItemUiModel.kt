@@ -10,7 +10,7 @@ import kotlinx.parcelize.Parcelize
 @Parcelize
 data class TransactionItemUiModel(
     val transactionId: String,
-    val description: String,
+    val description: String?,
     val senderId: String,
     val senderName: String,
     val recipientId: String,

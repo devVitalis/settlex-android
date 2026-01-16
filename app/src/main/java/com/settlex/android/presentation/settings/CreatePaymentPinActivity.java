@@ -55,7 +55,7 @@ public class CreatePaymentPinActivity extends AppCompatActivity {
 //    }
 
     private void setupUiActions() {
-        StatusBar.setColor(this, R.color.white);
+        StatusBar.setColor(this, R.color.colorBackground);
         setupPinInputWatcher();
         setupUiState();
 
@@ -65,8 +65,8 @@ public class CreatePaymentPinActivity extends AppCompatActivity {
     private void setupUiState() {
         boolean isPinChange = intentPurpose != null && intentPurpose.equals("change_payment_pin");
 
-        binding.title.setText(isPinChange ? "Reset Payment PIN" : "Create Payment PIN");
-        binding.currentPinViewContainer.setVisibility(isPinChange ? View.VISIBLE : View.GONE);
+        binding.tvTitle.setText(isPinChange ? "Reset Payment PIN" : "Create Payment PIN");
+        binding.viewCurrentPinContainer.setVisibility(isPinChange ? View.VISIBLE : View.GONE);
 
 //        binding.btnConfirm.setOnClickListener(view -> {
 //            if (isPinChange) {
@@ -218,9 +218,9 @@ public class CreatePaymentPinActivity extends AppCompatActivity {
         boolean isPinFilled = isPinViewFilled(pin, binding.pinView);
         boolean isPinMatch = isPinMatch(pin, confirmPin);
 
-        binding.btnConfirm.setEnabled((isPinChange)
-                ? !isCurrentPinSameAsNew && isCurrentPinFilled && isPinFilled && !hasRepeatedNumbers && isPinMatch
-                : isPinFilled && !hasRepeatedNumbers && isPinMatch);
+//        binding.btnConfirm.setEnabled((isPinChange)
+//                ? !isCurrentPinSameAsNew && isCurrentPinFilled && isPinFilled && !hasRepeatedNumbers && isPinMatch
+//                : isPinFilled && !hasRepeatedNumbers && isPinMatch);
     }
 
     private boolean hasRepeatedNumbers(String pin) {

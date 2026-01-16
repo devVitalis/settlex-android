@@ -5,7 +5,7 @@
     android:id="@+id/main"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@color/white"
+    android:background="@color/colorBackground"
     android:fitsSystemWindows="true"
     tools:context=".presentation.settings.CreatePaymentPinActivity">
 
@@ -15,27 +15,27 @@
         android:layout_height="45dp"
         android:gravity="center_vertical"
         android:orientation="horizontal"
+        android:paddingHorizontal="15dp"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent">
 
-        <ImageView
+        <com.google.android.material.imageview.ShapeableImageView
             android:id="@+id/btn_back_before"
-            android:layout_width="20dp"
-            android:layout_height="20dp"
-            android:layout_marginStart="15dp"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
             android:background="?attr/selectableItemBackgroundBorderless"
-            android:contentDescription="Back"
-            android:scaleType="centerCrop"
-            android:src="@drawable/ic_arrow_back" />
+            android:src="@drawable/ic_arrow_back"
+            app:tint="@color/colorOnBackground" />
     </LinearLayout>
 
+    <!-- Scroll content -->
     <ScrollView
         android:layout_width="match_parent"
         android:layout_height="0dp"
         android:fillViewport="true"
         android:scrollbars="none"
-        app:layout_constraintBottom_toBottomOf="@+id/footer"
+        app:layout_constraintBottom_toTopOf="@+id/btn_keypad"
         app:layout_constraintTop_toBottomOf="@id/header">
 
         <LinearLayout
@@ -47,32 +47,36 @@
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent">
 
-            <TextView
-                android:id="@+id/title"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:fontFamily="@font/inter_bold"
-                android:includeFontPadding="false"
-                tools:text="Create a Payment PIN"
-                android:textColor="@color/black"
-                android:textSize="25sp"
-                android:textStyle="bold" />
+            <com.google.android.material.imageview.ShapeableImageView
+                android:layout_width="70dp"
+                android:layout_height="70dp"
+                android:layout_marginTop="10dp"
+                android:background="@drawable/bg_secondary_filled_primary_outlined_oval"
+                android:src="@drawable/ic_lock_filled"
+                app:contentPadding="10dp"
+                app:tint="@color/colorOnSecondary" />
 
             <TextView
+                android:id="@+id/tv_title"
+                style="@style/Widget.SettleX.TextBold"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="10dp"
-                android:fontFamily="@font/inter_regular"
+                android:layout_marginTop="15dp"
+                tools:text="Set Payment PIN" />
+
+            <TextView
+                style="@style/Widget.SettleX.TextRegular"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="5dp"
                 android:gravity="center"
-                android:includeFontPadding="false"
-                android:text="You will need this PIN to authorize payments."
+                android:text="Create a 4-digit PIN to secure your transaction."
                 android:textAlignment="center"
-                android:textColor="@color/gray_500"
-                android:textSize="14sp" />
+                android:textColor="@color/colorOnSurfaceVariant" />
 
             <LinearLayout
-                android:id="@+id/current_pin_view_container"
-                android:layout_width="match_parent"
+                android:id="@+id/view_current_pin_container"
+                android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="20dp"
                 android:gravity="center"
@@ -80,12 +84,11 @@
                 android:visibility="gone">
 
                 <TextView
+                    style="@style/Widget.SettleX.TextRegular"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:fontFamily="@font/inter_regular"
-                    android:includeFontPadding="false"
                     android:text="Enter Current Payment PIN"
-                    android:textColor="@color/gray_500"
+                    android:textColor="@color/colorOnSurfaceVariant"
                     android:textSize="12sp" />
 
                 <com.chaos.view.PinView
@@ -98,104 +101,84 @@
                     android:inputType="number" />
             </LinearLayout>
 
-            <TextView
+            <!-- View new PIN -->
+            <LinearLayout
+                android:id="@+id/view_new_pin_container"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="20dp"
-                android:fontFamily="@font/inter_regular"
-                android:includeFontPadding="false"
-                android:text="Enter Payment PIN"
-                android:textColor="@color/gray_500"
-                android:textSize="12sp" />
+                android:gravity="center"
+                android:orientation="vertical">
 
-            <com.chaos.view.PinView
-                android:id="@+id/pin_view"
-                style="@style/Widget.SettleX.PinView"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="5dp"
-                android:imeOptions="actionNext"
-                android:inputType="number" />
+                <TextView
+                    style="@style/Widget.SettleX.TextRegular"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Enter PIN"
+                    android:textColor="@color/colorOnSurfaceVariant" />
 
-            <TextView
-                android:id="@+id/pin_view_error"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="5dp"
-                android:fontFamily="@font/inter_regular"
-                android:includeFontPadding="false"
-                android:textColor="@color/red_500"
-                android:textSize="12sp"
-                android:visibility="gone"
-                tools:text="Error occurred" />
+                <com.chaos.view.PinView
+                    android:id="@+id/pin_view"
+                    style="@style/Widget.SettleX.PinView"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="5dp"
+                    android:imeOptions="actionNext"
+                    android:inputType="number" />
 
-            <TextView
+                <TextView
+                    android:id="@+id/pin_view_error"
+                    style="@style/Widget.SettleX.TextError"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="5dp"
+                    android:visibility="gone"
+                    tools:text="Error occurred" />
+            </LinearLayout>
+
+            <!-- View confirm PIN -->
+            <LinearLayout
+                android:id="@+id/view_confirm_pin_container"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="20dp"
-                android:fontFamily="@font/inter_regular"
-                android:includeFontPadding="false"
-                android:text="Confirm Payment PIN"
-                android:textColor="@color/gray_500"
-                android:textSize="12sp" />
+                android:gravity="center"
+                android:orientation="vertical"
+                android:visibility="gone">
 
-            <com.chaos.view.PinView
-                android:id="@+id/confirm_pin_view"
-                style="@style/Widget.SettleX.PinView"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="5dp"
-                android:imeOptions="actionDone"
-                android:inputType="number" />
+                <TextView
+                    style="@style/Widget.SettleX.TextRegular"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Confirm PIN"
+                    android:textColor="@color/colorOnSurfaceVariant" />
 
-            <TextView
-                android:id="@+id/confirm_pin_view_error"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="5dp"
-                android:fontFamily="@font/inter_regular"
-                android:includeFontPadding="false"
-                android:textColor="@color/red_500"
-                android:textSize="12sp"
-                android:visibility="gone"
-                tools:text="Error occurred" />
+                <com.chaos.view.PinView
+                    android:id="@+id/confirm_pin_view"
+                    style="@style/Widget.SettleX.PinView"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="5dp"
+                    android:imeOptions="actionDone"
+                    android:inputType="number" />
 
-            <com.google.android.material.button.MaterialButton
-                android:id="@+id/btn_confirm"
-                style="@style/Widget.SettleX.Button.Primary.Rounded8"
-                android:layout_width="match_parent"
-                android:layout_height="55dp"
-                android:layout_marginTop="40dp"
-                android:enabled="false"
-                android:text="Confirm" />
+                <TextView
+                    android:id="@+id/confirm_pin_view_error"
+                    style="@style/Widget.SettleX.TextError"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="5dp"
+                    android:visibility="gone"
+                    tools:text="Error occurred" />
+            </LinearLayout>
         </LinearLayout>
     </ScrollView>
 
-    <androidx.constraintlayout.widget.ConstraintLayout
-        android:id="@+id/footer"
+    <com.settlex.android.presentation.common.custom.NumericKeypad
+        android:id="@+id/btn_keypad"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:visibility="gone"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent">
-
-        <com.google.android.material.button.MaterialButton
-            style="@style/Widget.SettleX.Button.Primary.Rounded8"
-            android:layout_width="match_parent"
-            android:layout_height="65dp"
-            android:enabled="false"
-            android:text="Confirm"
-            app:layout_constraintBottom_toTopOf="@+id/keypad"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent" />
-
-        <com.settlex.android.presentation.common.custom.NumericKeypad
-            android:id="@+id/keypad"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent" />
-    </androidx.constraintlayout.widget.ConstraintLayout>
+        app:layout_constraintStart_toStartOf="parent" />
 </androidx.constraintlayout.widget.ConstraintLayout>

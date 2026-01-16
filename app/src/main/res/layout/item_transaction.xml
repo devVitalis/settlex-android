@@ -45,7 +45,7 @@
                     android:layout_weight="1"
                     android:ellipsize="end"
                     android:maxLines="1"
-                    android:textSize="12.5sp"
+                    android:textSize="13sp"
                     tools:text="Payment Sent" />
 
                 <TextView
@@ -54,7 +54,7 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:textColor="@color/colorError"
-                    android:textSize="12.5sp"
+                    android:textSize="13sp"
                     tools:text="-" />
 
                 <TextView
@@ -65,7 +65,7 @@
                     android:layout_marginStart="2dp"
                     android:ellipsize="end"
                     android:maxLines="1"
-                    android:textSize="12.5sp"
+                    android:textSize="13sp"
                     android:textStyle="bold"
                     tools:text="₦500,000.00" />
             </LinearLayout>
@@ -116,7 +116,7 @@
                     android:maxLines="1"
                     android:paddingHorizontal="5dp"
                     android:textColor="@color/colorOnSuccessContainer"
-                    android:textSize="11sp"
+                    android:textSize="9sp"
                     tools:text="Successful" />
             </LinearLayout>
         </LinearLayout>
@@ -127,6 +127,6 @@
         android:id="@+id/divider"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        app:dividerColor="@color/divider_on_color_surface"
-        app:dividerThickness="0.5dp" />
+        app:dividerColor="@color/divider_color"
+        app:dividerThickness="1.5dp" />
 </LinearLayout>

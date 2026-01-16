@@ -6,7 +6,7 @@
     android:layout_gravity="bottom"
     android:background="@color/colorSurface"
     android:columnCount="3"
-    android:gravity="center"
+    android:gravity="fill"
     android:orientation="vertical"
     android:rowCount="4">
 

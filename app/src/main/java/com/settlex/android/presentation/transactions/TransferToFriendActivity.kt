@@ -308,7 +308,7 @@ class TransferToFriendActivity : AppCompatActivity() {
             currentUser.balance,
             currentUser.commissionBalance
         ) {
-            // on confirm callback
+            // On confirm callback
             if (!currentUser.hasPin) {
                 showPaymentPinCreationDialog()
                 return@showConfirmPaymentBottomSheet
@@ -327,7 +327,7 @@ class TransferToFriendActivity : AppCompatActivity() {
 
         DialogHelper.showCustomAlertDialogWithIcon(this) { dialog, dialogBinding ->
             with(dialogBinding) {
-                "Payment PIN Required".also { tvTitle.text = it }
+                tvTitle.gone()
                 "Cancel".also { btnSecondary.text = it }
                 "Create PIN".also { btnPrimary.text = it }
                 tvMessage.text = message
