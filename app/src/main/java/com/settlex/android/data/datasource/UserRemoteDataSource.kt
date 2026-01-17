@@ -71,21 +71,21 @@ class UserRemoteDataSource @Inject constructor(
 
     suspend fun setPaymentPin(pin: String): ApiResponse<String> {
         return cloudFunctions.call(
-            name = "api-setPaymentPin",
+            name = "api-setUserPaymentPin",
             data = mapOf("pin" to pin)
         )
     }
 
     suspend fun authPaymentPin(pin: String): ApiResponse<Boolean> {
         return cloudFunctions.call(
-            name = "api-authPaymentPin",
+            name = "api-authUserPaymentPin",
             data = mapOf("pin" to pin)
         )
     }
 
     suspend fun resetPaymentPin(oldPin: String, newPin: String): ApiResponse<String> {
         return cloudFunctions.call(
-            name = "api-resetPaymentPin",
+            name = "api-resetUserPaymentPin",
             data = mapOf("oldPin" to oldPin, "newPin" to newPin)
         )
     }

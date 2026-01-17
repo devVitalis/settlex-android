@@ -1,5 +1,5 @@
 [versions]
-agp = "8.11.2"
+agp = "8.13.2"
 biometric = "1.1.0"
 coreSplashscreen = "1.0.1"
 currencyedittext = "1.0.0"

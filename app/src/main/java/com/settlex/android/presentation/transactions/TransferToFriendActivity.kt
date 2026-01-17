@@ -31,6 +31,7 @@ import com.settlex.android.presentation.common.util.FocusManager
 import com.settlex.android.presentation.common.util.PaymentBottomSheetHelper
 import com.settlex.android.presentation.common.util.ValidationUtil
 import com.settlex.android.presentation.settings.CreatePaymentPinActivity
+import com.settlex.android.presentation.settings.PaymentPinFlow
 import com.settlex.android.presentation.transactions.adapter.RecipientAdapter
 import com.settlex.android.presentation.transactions.model.RecipientUiModel
 import com.settlex.android.presentation.transactions.model.TransactionResult
@@ -75,12 +76,12 @@ class TransferToFriendActivity : AppCompatActivity() {
         StatusBar.setColor(this@TransferToFriendActivity, R.color.colorSurfaceVariant)
 
         initRecipientRecyclerView()
-        initInputListeners()
+        setupInputListeners()
         focusManager.attachDoneAction(etDescription)
 
         btnBackBefore.setOnClickListener { onBackPressedDispatcher.onBackPressed() }
         btnVerify.setOnClickListener { fetchRecipientData(getRecipientPaymentId()) }
-        btnNext.setOnClickListener { showPaymentConfirmation() }
+        btnNext.setOnClickListener { showPaymentConfirmationBottomSheet() }
     }
 
     private fun initObservers() {
@@ -140,7 +141,7 @@ class TransferToFriendActivity : AppCompatActivity() {
         val result = TransactionResult(
             status = transactionStatus,
             amount = getAmountInKobo(),
-            message = message ?: "Transaction processing",
+            message = message ?: "Transaction Failed",
             errorMessage = error?.message
         )
 
@@ -221,17 +222,18 @@ class TransferToFriendActivity : AppCompatActivity() {
         }
     }
 
-    private fun onPinVerificationSuccess(isVerified: Boolean) = with(binding) {
+    private fun onPinVerificationSuccess(isVerified: Boolean) {
+        progressLoader.hide()
+
         if (!isVerified) {
             showPinAuthFailureDialog(true)
             return
         }
 
-        sendPayment()
-        progressLoader.hide()
+        transferToFriend()
     }
 
-    private fun sendPayment() = with(binding) {
+    private fun transferToFriend() = with(binding) {
         viewModel.transferToFriend(
             toRecipientPaymentId = getRecipientPaymentId(),
             transferAmount = getAmountInKobo(),
@@ -240,8 +242,8 @@ class TransferToFriendActivity : AppCompatActivity() {
     }
 
     private fun onPinVerificationError(error: AppException) {
-        showPinAuthFailureDialog(false, error)
         progressLoader.hide()
+        showPinAuthFailureDialog(false, error)
     }
 
     private fun showPinAuthFailureDialog(isPinIncorrect: Boolean, error: AppException? = null) {
@@ -294,7 +296,7 @@ class TransferToFriendActivity : AppCompatActivity() {
         })
     }
 
-    private fun showPaymentConfirmation() = with(binding) {
+    private fun showPaymentConfirmationBottomSheet() = with(binding) {
         // Validate current selections; selected recipient text contains formatted payment id
         val recipientPaymentIdRaw = tvSelectedRecipientPaymentId.text.toString()
         val recipientName = tvSelectedRecipientName.text.toString()
@@ -334,7 +336,7 @@ class TransferToFriendActivity : AppCompatActivity() {
                 ivIcon.setImageResource(R.drawable.ic_lock_filled)
 
                 btnSecondary.setOnClickListener {
-                    sendPayment()
+                    transferToFriend()
                     dialog.dismiss()
                 }
                 btnPrimary.setOnClickListener {
@@ -342,7 +344,7 @@ class TransferToFriendActivity : AppCompatActivity() {
                         Intent(
                             this@TransferToFriendActivity,
                             CreatePaymentPinActivity::class.java
-                        )
+                        ).putExtra("payment_pin_flow", PaymentPinFlow.CreatePin)
                     )
                     dialog.dismiss()
                 }
@@ -360,9 +362,8 @@ class TransferToFriendActivity : AppCompatActivity() {
         viewModel.getRecipientByPaymentId(paymentId)
     }
 
-    private fun initInputListeners() = with(binding) {
-        etPaymentId.doOnTextChanged { text, _, _, _ ->
-
+    private fun setupInputListeners() = with(binding) {
+        etPaymentId.doOnTextChanged { _, _, _, _ ->
             tvError.gone()
             viewSelectedRecipient.gone()
             btnVerify.isVisible = ValidationUtil.isPaymentIdValid(getRecipientPaymentId())
@@ -396,6 +397,10 @@ class TransferToFriendActivity : AppCompatActivity() {
         }
     }
 
+    private fun setReamrkSelected() {
+
+    }
+
     private fun updateNextButtonState() = with(binding) {
         val isRecipientSelected = viewSelectedRecipient.isVisible
         val isPaymentIdValid = isPaymentIdValid(getRecipientPaymentId())
@@ -418,7 +423,7 @@ class TransferToFriendActivity : AppCompatActivity() {
 
     private fun isAmountInRange(amount: Long): Boolean {
         // return amount >= 10_000L && amount <= 100_000_000L
-        return amount >= 10_000L && amount <= 100_000_000_000_000L
+        return amount in 10_000L..100_000_000_000_000L
     }
 
     override fun dispatchTouchEvent(event: MotionEvent): Boolean {

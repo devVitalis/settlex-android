@@ -86,10 +86,7 @@ class OtpVerificationActivity : AppCompatActivity() {
         startActivity(
             Intent(this, CreatePasswordActivity::class.java)
                 .putExtra("email", userEmail)
-                .putExtra(
-                    "password_flow",
-                    intent.getStringExtra("password_flow")
-                )
+                .putExtra("password_flow", intent.getStringExtra("password_flow"))
         )
         progressLoader.hide()
         finish()
@@ -134,7 +131,7 @@ class OtpVerificationActivity : AppCompatActivity() {
 
     private fun onConfirmButtonClicked() {
         when (passwordFlow) {
-            is PasswordFlow.Forgot -> verifyPasswordReset()
+            is PasswordFlow.ForgotPassword -> verifyPasswordReset()
 
             else -> Unit
         }

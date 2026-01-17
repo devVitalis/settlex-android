@@ -10,9 +10,9 @@ import android.content.Intent
 object PasswordFlowParser {
     fun fromIntent(intent: Intent): PasswordFlow {
         return when (intent.getStringExtra("password_flow")) {
-            "forgot" -> PasswordFlow.Forgot
-            "change" -> PasswordFlow.Change
-            "auth_reset" -> PasswordFlow.AuthenticatedReset
+            "forgot" -> PasswordFlow.ForgotPassword
+            "change" -> PasswordFlow.ChangePassword
+            "auth_reset" -> PasswordFlow.AuthenticatedPasswordReset
             else -> throw IllegalArgumentException("Invalid password flow type")
         }
     }

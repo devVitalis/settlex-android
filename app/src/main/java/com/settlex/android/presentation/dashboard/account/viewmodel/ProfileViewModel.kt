@@ -5,6 +5,7 @@ import android.net.Uri
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.settlex.android.data.exception.AppException
+import com.settlex.android.data.exception.ExceptionMapper
 import com.settlex.android.data.mapper.toProfileUiModel
 import com.settlex.android.data.session.UserSessionManager
 import com.settlex.android.data.session.UserSessionState
@@ -12,6 +13,7 @@ import com.settlex.android.domain.usecase.user.SetPaymentPinUseCase
 import com.settlex.android.domain.usecase.user.SetProfilePictureUseCase
 import com.settlex.android.presentation.common.state.UiState
 import com.settlex.android.presentation.dashboard.account.model.ProfileUiModel
+import com.settlex.android.util.network.NetworkMonitor
 import dagger.hilt.android.lifecycle.HiltViewModel
 import jakarta.inject.Inject
 import kotlinx.coroutines.channels.Channel
@@ -24,7 +26,6 @@ import kotlinx.coroutines.launch
 
 @HiltViewModel
 class ProfileViewModel @Inject constructor(
-    private val setPaymentPinUseCase: SetPaymentPinUseCase,
     private val setProfilePhotoUseCase: SetProfilePictureUseCase,
     sessionManager: UserSessionManager
 ) : ViewModel() {
@@ -47,8 +48,9 @@ class ProfileViewModel @Inject constructor(
 
     fun setProfilePhoto(context: Context, uri: Uri) {
         viewModelScope.launch {
-            _setProfilePictureEvent.send(UiState.Loading)
+            requireInternetConnection()
 
+            _setProfilePictureEvent.send(UiState.Loading)
             setProfilePhotoUseCase(context, uri).fold(
                 onSuccess = { _setProfilePictureEvent.send(UiState.Success(it.data)) },
                 onFailure = { _setProfilePictureEvent.send(UiState.Failure(it as AppException)) }
@@ -56,14 +58,12 @@ class ProfileViewModel @Inject constructor(
         }
     }
 
-    private val _setPaymentPinEvent = Channel<UiState<String>>(Channel.BUFFERED)
-    val setPaymentPinEvent = _setPaymentPinEvent.receiveAsFlow()
-
-    fun setPaymentPin(pin: String) {
-        viewModelScope.launch {
-            setPaymentPinUseCase(pin).fold(
-                onSuccess = { _setPaymentPinEvent.send(UiState.Success(it.data)) },
-                onFailure = { _setPaymentPinEvent.send(UiState.Failure(it as AppException)) }
+    private fun requireInternetConnection() {
+        if (!NetworkMonitor.networkStatus.value) {
+            UiState.Failure(
+                AppException.NetworkException(
+                    message = ExceptionMapper.ERROR_NO_NETWORK
+                )
             )
         }
     }

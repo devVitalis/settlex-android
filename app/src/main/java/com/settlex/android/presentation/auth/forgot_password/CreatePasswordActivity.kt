@@ -72,14 +72,14 @@ class CreatePasswordActivity : AppCompatActivity() {
     private fun updateUiFromIntent() {
         binding.viewCurrentPassword.visibility =
             when (passwordFlow) {
-                is PasswordFlow.Change -> View.VISIBLE
+                is PasswordFlow.ChangePassword -> View.VISIBLE
                 else -> View.GONE
             }
     }
 
     private fun onChangePasswordClicked() = with(binding) {
         when (passwordFlow) {
-            is PasswordFlow.Change -> {
+            is PasswordFlow.ChangePassword -> {
                 // TODO: call authenticated password reset API
             }
 
@@ -118,7 +118,7 @@ class CreatePasswordActivity : AppCompatActivity() {
 
                 btnAction.setOnClickListener {
                     when (passwordFlow) {
-                        is PasswordFlow.Forgot -> {
+                        is PasswordFlow.ForgotPassword -> {
                             startActivity(
                                 Intent(
                                     this@CreatePasswordActivity,
@@ -200,7 +200,7 @@ class CreatePasswordActivity : AppCompatActivity() {
     private fun updateChangePasswordButtonState() {
         with(binding) {
             btnChangePassword.isEnabled = when (passwordFlow) {
-                is PasswordFlow.Change -> isCurrentPasswordValid() && isPasswordValidAndMatch()
+                is PasswordFlow.ChangePassword -> isCurrentPasswordValid() && isPasswordValidAndMatch()
                 else -> isPasswordValidAndMatch()
             }
         }

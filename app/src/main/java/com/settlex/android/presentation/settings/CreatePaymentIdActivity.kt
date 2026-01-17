@@ -24,6 +24,7 @@ import com.settlex.android.presentation.common.state.UiState
 import com.settlex.android.presentation.common.util.DialogHelper
 import com.settlex.android.presentation.common.util.FocusManager
 import com.settlex.android.presentation.dashboard.DashboardActivity
+import com.settlex.android.presentation.settings.viewmodel.SettingsViewModel
 import com.settlex.android.util.ui.ProgressDialogManager
 import com.settlex.android.util.ui.StatusBar
 import dagger.hilt.android.AndroidEntryPoint

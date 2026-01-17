@@ -23,7 +23,7 @@ class TransactionStatusActivity : AppCompatActivity() {
         binding = ActivityTransactionStatusBinding.inflate(layoutInflater)
         setContentView(binding.root)
 
-        val result = intent.getParcelableExtra<TransactionResult>("transaction_result")
+        val result = intent.getParcelableExtra("transaction_result", TransactionResult::class.java)
         if (result == null) {
             finish()
             return

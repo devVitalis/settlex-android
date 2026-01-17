@@ -29,156 +29,149 @@
             app:tint="@color/colorOnBackground" />
     </LinearLayout>
 
-    <!-- Scroll content -->
-    <ScrollView
+    <!-- Content -->
+    <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="0dp"
-        android:fillViewport="true"
-        android:scrollbars="none"
-        app:layout_constraintBottom_toTopOf="@+id/btn_keypad"
+        android:gravity="center_horizontal"
+        android:orientation="vertical"
+        android:padding="20dp"
+        app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintTop_toBottomOf="@id/header">
 
-        <LinearLayout
-            android:layout_width="match_parent"
+        <com.google.android.material.imageview.ShapeableImageView
+            android:layout_width="60dp"
+            android:layout_height="60dp"
+            android:layout_marginTop="10dp"
+            android:background="@drawable/bg_secondary_filled_primary_outlined_oval"
+            android:src="@drawable/ic_lock_filled"
+            app:contentPadding="10dp"
+            app:tint="@color/colorOnSecondary" />
+
+        <TextView
+            android:id="@+id/tv_title"
+            style="@style/Widget.SettleX.TextBold"
+            android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:gravity="center_horizontal"
+            android:layout_marginTop="15dp"
+            tools:text="Set Payment PIN" />
+
+        <TextView
+            style="@style/Widget.SettleX.TextRegular"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="5dp"
+            android:gravity="center"
+            android:text="Create a 4-digit PIN to secure your transaction."
+            android:textAlignment="center"
+            android:textColor="@color/colorOnSurfaceVariant" />
+
+        <LinearLayout
+            android:id="@+id/view_current_pin_container"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="20dp"
+            android:gravity="center"
             android:orientation="vertical"
-            android:padding="20dp"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent">
-
-            <com.google.android.material.imageview.ShapeableImageView
-                android:layout_width="70dp"
-                android:layout_height="70dp"
-                android:layout_marginTop="10dp"
-                android:background="@drawable/bg_secondary_filled_primary_outlined_oval"
-                android:src="@drawable/ic_lock_filled"
-                app:contentPadding="10dp"
-                app:tint="@color/colorOnSecondary" />
-
-            <TextView
-                android:id="@+id/tv_title"
-                style="@style/Widget.SettleX.TextBold"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="15dp"
-                tools:text="Set Payment PIN" />
+            android:visibility="gone">
 
             <TextView
                 style="@style/Widget.SettleX.TextRegular"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
+                android:text="Enter Current Payment PIN"
+                android:textColor="@color/colorOnSurfaceVariant"
+                android:textSize="12sp" />
+
+            <com.chaos.view.PinView
+                android:id="@+id/current_pin_view"
+                style="@style/Widget.SettleX.PinView"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
                 android:layout_marginTop="5dp"
-                android:gravity="center"
-                android:text="Create a 4-digit PIN to secure your transaction."
-                android:textAlignment="center"
+                android:imeOptions="actionNext"
+                android:inputType="number" />
+        </LinearLayout>
+
+        <!-- View new PIN -->
+        <LinearLayout
+            android:id="@+id/view_new_pin_container"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="20dp"
+            android:gravity="center"
+            android:orientation="vertical">
+
+            <TextView
+                style="@style/Widget.SettleX.TextRegular"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Enter 4-digit PIN"
                 android:textColor="@color/colorOnSurfaceVariant" />
 
-            <LinearLayout
-                android:id="@+id/view_current_pin_container"
+            <com.chaos.view.PinView
+                android:id="@+id/new_pin_view"
+                style="@style/Widget.SettleX.PinView"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="20dp"
-                android:gravity="center"
-                android:orientation="vertical"
-                android:visibility="gone">
+                android:layout_marginTop="5dp"
+                android:imeOptions="actionNext"
+                android:inputType="number" />
 
-                <TextView
-                    style="@style/Widget.SettleX.TextRegular"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="Enter Current Payment PIN"
-                    android:textColor="@color/colorOnSurfaceVariant"
-                    android:textSize="12sp" />
-
-                <com.chaos.view.PinView
-                    android:id="@+id/current_pin_view"
-                    style="@style/Widget.SettleX.PinView"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_marginTop="5dp"
-                    android:imeOptions="actionNext"
-                    android:inputType="number" />
-            </LinearLayout>
-
-            <!-- View new PIN -->
-            <LinearLayout
-                android:id="@+id/view_new_pin_container"
+            <TextView
+                android:id="@+id/tv_new_pin_view_error"
+                style="@style/Widget.SettleX.TextError"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="20dp"
-                android:gravity="center"
-                android:orientation="vertical">
-
-                <TextView
-                    style="@style/Widget.SettleX.TextRegular"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="Enter PIN"
-                    android:textColor="@color/colorOnSurfaceVariant" />
-
-                <com.chaos.view.PinView
-                    android:id="@+id/pin_view"
-                    style="@style/Widget.SettleX.PinView"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_marginTop="5dp"
-                    android:imeOptions="actionNext"
-                    android:inputType="number" />
-
-                <TextView
-                    android:id="@+id/pin_view_error"
-                    style="@style/Widget.SettleX.TextError"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_marginTop="5dp"
-                    android:visibility="gone"
-                    tools:text="Error occurred" />
-            </LinearLayout>
-
-            <!-- View confirm PIN -->
-            <LinearLayout
-                android:id="@+id/view_confirm_pin_container"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="20dp"
-                android:gravity="center"
-                android:orientation="vertical"
-                android:visibility="gone">
-
-                <TextView
-                    style="@style/Widget.SettleX.TextRegular"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="Confirm PIN"
-                    android:textColor="@color/colorOnSurfaceVariant" />
-
-                <com.chaos.view.PinView
-                    android:id="@+id/confirm_pin_view"
-                    style="@style/Widget.SettleX.PinView"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_marginTop="5dp"
-                    android:imeOptions="actionDone"
-                    android:inputType="number" />
-
-                <TextView
-                    android:id="@+id/confirm_pin_view_error"
-                    style="@style/Widget.SettleX.TextError"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_marginTop="5dp"
-                    android:visibility="gone"
-                    tools:text="Error occurred" />
-            </LinearLayout>
+                android:layout_marginTop="5dp"
+                android:visibility="gone"
+                tools:text="Error occurred" />
         </LinearLayout>
-    </ScrollView>
 
-    <com.settlex.android.presentation.common.custom.NumericKeypad
-        android:id="@+id/btn_keypad"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent" />
+        <!-- View confirm PIN -->
+        <LinearLayout
+            android:id="@+id/view_confirm_pin_container"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="20dp"
+            android:gravity="center"
+            android:orientation="vertical"
+            android:visibility="gone">
+
+            <TextView
+                style="@style/Widget.SettleX.TextRegular"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Re-enter 4-digits PIN to confirm"
+                android:textColor="@color/colorOnSurfaceVariant" />
+
+            <com.chaos.view.PinView
+                android:id="@+id/confirm_pin_view"
+                style="@style/Widget.SettleX.PinView"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="5dp"
+                android:imeOptions="actionDone"
+                android:inputType="number" />
+
+            <TextView
+                android:id="@+id/confirm_pin_view_error"
+                style="@style/Widget.SettleX.TextError"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="5dp"
+                android:visibility="gone"
+                tools:text="Error occurred" />
+        </LinearLayout>
+
+        <com.google.android.material.button.MaterialButton
+            android:id="@+id/btn_set_pin"
+            style="@style/Widget.SettleX.Button.Primary"
+            android:layout_width="match_parent"
+            android:layout_height="55dp"
+            android:layout_marginHorizontal="30dp"
+            android:layout_marginTop="50dp"
+            android:enabled="false"
+            android:text="Set Pin" />
+    </LinearLayout>
 </androidx.constraintlayout.widget.ConstraintLayout>
