@@ -56,9 +56,13 @@ class TransactionViewModel @Inject constructor(
         description: String?
     ) {
         viewModelScope.launch {
-            requireInternetConnection()
+            if (!isInternetConnected()) {
+                _transferToFriendEvent.send(sendNetworkException())
+                return@launch
+            }
 
             _transferToFriendEvent.send(UiState.Loading)
+
             transferToFriendUseCase(toRecipientPaymentId, transferAmount, description)
                 .fold(
                     onSuccess = { _transferToFriendEvent.send(UiState.Success(it.data)) },
@@ -72,9 +76,13 @@ class TransactionViewModel @Inject constructor(
 
     fun getRecipientByPaymentId(paymentId: String) {
         viewModelScope.launch {
-            requireInternetConnection()
+            if (!isInternetConnected()) {
+                _getRecipientEvent.send(sendNetworkException())
+                return@launch
+            }
 
             _getRecipientEvent.send(UiState.Loading)
+
             getRecipientUseCase(paymentId).fold(
                 onSuccess = {
                     val recipientList = mutableListOf<RecipientUiModel>()
@@ -93,9 +101,13 @@ class TransactionViewModel @Inject constructor(
 
     fun authPaymentPin(pin: String) {
         viewModelScope.launch {
-            requireInternetConnection()
+            if (!isInternetConnected()) {
+                _authPaymentPinEvent.send(sendNetworkException())
+                return@launch
+            }
 
             _authPaymentPinEvent.send(UiState.Loading)
+
             authPaymentPinUseCase(pin).fold(
                 onSuccess = { _authPaymentPinEvent.send(UiState.Success(it.data)) },
                 onFailure = { _authPaymentPinEvent.send(UiState.Failure(it as AppException)) }
@@ -103,13 +115,15 @@ class TransactionViewModel @Inject constructor(
         }
     }
 
-    private fun requireInternetConnection() {
-        if (!NetworkMonitor.networkStatus.value) {
-            UiState.Failure(
-                AppException.NetworkException(
-                    ExceptionMapper.ERROR_NO_NETWORK
-                )
+    private fun <T> sendNetworkException(): UiState<T> {
+        return UiState.Failure(
+            AppException.NetworkException(
+                ExceptionMapper.ERROR_NO_NETWORK
             )
-        }
+        )
+    }
+
+    private fun isInternetConnected(): Boolean {
+        return NetworkMonitor.networkStatus.value
     }
 }

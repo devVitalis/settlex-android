@@ -2,12 +2,15 @@ package com.settlex.android.presentation.common.extensions
 
 import android.content.ClipData
 import android.content.ClipboardManager
+import android.content.Intent
 import android.os.Build
 import android.util.Log
 import android.view.View
 import android.widget.TextView
 import android.widget.Toast
+import androidx.annotation.IdRes
 import androidx.core.content.ContextCompat
+import androidx.core.content.IntentCompat.getParcelableExtra
 import com.google.firebase.Timestamp
 import java.math.BigDecimal
 import java.math.RoundingMode
@@ -36,6 +39,10 @@ fun View.invisible() {
  */
 fun TextView.setAsterisks() {
     text = "****"
+}
+
+fun TextView.setTextColorRes(@IdRes color: Int) {
+    setTextColor(ContextCompat.getColor(context, color))
 }
 
 // String
@@ -81,10 +88,9 @@ fun String.maskPhoneNumber(): String {
 }
 
 fun String.toNigerianPhoneNumber(): String {
-    val formatedPhone = this.also { phoneNumber ->
-        if (phoneNumber.startsWith("0")) phoneNumber.substring(1) else phoneNumber
+    return "+234" + this.let {
+        if (it.startsWith("0")) it.substring(1) else it
     }
-    return "+234$formatedPhone"
 }
 
 fun String.capitalizeEachWord(): String {
@@ -106,7 +112,24 @@ fun String.capitalizeEachWord(): String {
 
 // Timestamp
 fun Timestamp.toDateTimeString(): String {
-    val dateString = SimpleDateFormat("dd, MMM yyyy, hh:mm a", Locale.US).format(this.toDate())
+    val dateString = SimpleDateFormat("dd MMM, hh:mm a", Locale.US).format(this.toDate())
+
+    val day = SimpleDateFormat("dd", Locale.US)
+        .format(this.toDate()).toInt()
+
+    val suffix = when {
+        day in 11..13 -> "th"
+        day % 10 == 1 -> "st"
+        day % 10 == 2 -> "nd"
+        day % 10 == 3 -> "rd"
+        else -> "th"
+    }
+
+    return dateString.replace(day.toString().padStart(2, '0'), "$day$suffix")
+}
+
+fun Timestamp.toFullDateTimeString(): String {
+    val dateString = SimpleDateFormat("EEEE, dd MMMM, yyyy hh:mm a", Locale.US).format(this.toDate())
 
     val day = SimpleDateFormat("dd", Locale.US)
         .format(this.toDate()).toInt()
@@ -123,7 +146,7 @@ fun Timestamp.toDateTimeString(): String {
 }
 
 fun Timestamp.toDateString(): String {
-    val dateString = SimpleDateFormat("dd, MMMM yyyy", Locale.US)
+    val dateString = SimpleDateFormat("dd MMMM, yyyy", Locale.US)
         .format(this.toDate())
 
     val day = SimpleDateFormat("dd", Locale.US)
@@ -268,4 +291,8 @@ fun TextView.copyToClipboard(clipLabel: String) {
 
 fun View.toastNotImplemented() {
     Toast.makeText(context, "Feature not yet implemented", Toast.LENGTH_SHORT).show()
+}
+
+inline fun <reified T> Intent.getParcelableExtraCompat(key: String): T {
+    return getParcelableExtra(this, key, T::class.java)!!
 }

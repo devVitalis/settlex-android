@@ -27,9 +27,13 @@ class SettingsViewModel @Inject constructor(
 
     fun isPaymentIdTaken(paymentId: String) {
         viewModelScope.launch {
-            requireInternetConnection()
+            if (!isInternetConnected()) {
+                _isPaymentIdTakenEvent.send(sendNetworkException())
+                return@launch
+            }
 
             _isPaymentIdTakenEvent.send(UiState.Loading)
+
             isPaymentIdTakenUseCase(paymentId).fold(
                 onSuccess = { _isPaymentIdTakenEvent.send(UiState.Success(it)) },
                 onFailure = { _isPaymentIdTakenEvent.send(UiState.Failure(it as AppException)) }
@@ -42,9 +46,13 @@ class SettingsViewModel @Inject constructor(
 
     fun assignPaymentId(paymentId: String) {
         viewModelScope.launch {
-            requireInternetConnection()
+            if (!isInternetConnected()) {
+                _assignPaymentIdEvent.send(sendNetworkException())
+                return@launch
+            }
 
             _assignPaymentIdEvent.send(UiState.Loading)
+
             assignPaymentIdUseCase(paymentId).fold(
                 onSuccess = { _assignPaymentIdEvent.send(UiState.Success(Unit)) },
                 onFailure = { _assignPaymentIdEvent.send(UiState.Failure(it as AppException)) }
@@ -58,15 +66,12 @@ class SettingsViewModel @Inject constructor(
     fun setPaymentPin(pin: String) {
         viewModelScope.launch {
             if (!isInternetConnected()) {
-                UiState.Failure(
-                    AppException.NetworkException(
-                        message = ExceptionMapper.ERROR_NO_NETWORK
-                    )
-                )
+                _setPaymentPinEvent.send(sendNetworkException())
                 return@launch
             }
 
             _setPaymentPinEvent.send(UiState.Loading)
+
             setPaymentPinUseCase(pin).fold(
                 onSuccess = { _setPaymentPinEvent.send(UiState.Success(it.data)) },
                 onFailure = { _setPaymentPinEvent.send(UiState.Failure(it as AppException)) }
@@ -74,15 +79,12 @@ class SettingsViewModel @Inject constructor(
         }
     }
 
-    private fun requireInternetConnection() {
-        if (!NetworkMonitor.networkStatus.value) {
-            UiState.Failure(
-                AppException.NetworkException(
-                    message = ExceptionMapper.ERROR_NO_NETWORK
-                )
+    private fun <T> sendNetworkException(): UiState<T> {
+        return UiState.Failure(
+            AppException.NetworkException(
+                message = ExceptionMapper.ERROR_NO_NETWORK
             )
-            return
-        }
+        )
     }
 
     private fun isInternetConnected(): Boolean {

@@ -67,7 +67,7 @@ class HomeDashboardFragment : Fragment() {
         inflater: LayoutInflater,
         container: ViewGroup?,
         savedInstanceState: Bundle?
-    ): View? {
+    ): View {
         _binding = FragmentDashboardHomeBinding.inflate(inflater, container, false)
 
         initViews()
@@ -120,11 +120,13 @@ class HomeDashboardFragment : Fragment() {
         rvTransactions.setLayoutManager(layoutManager)
 
         // Initialize adapter and set click listener
-        transactionsListAdapter = TransactionListAdapter { transaction ->
-            val intent = Intent(context, TransactionActivity::class.java)
-            intent.putExtra("transaction", transaction)
-            startActivity(intent)
-        }
+        transactionsListAdapter = TransactionListAdapter(object : TransactionListAdapter.OnTransactionClickListener {
+                override fun onClick(transaction: TransactionItemUiModel) {
+                    val intent = Intent(context, TransactionActivity::class.java)
+                    intent.putExtra("transaction", transaction)
+                    startActivity(intent)
+                }
+            })
     }
 
     private fun observeUserSession() {

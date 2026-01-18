@@ -145,7 +145,7 @@ class HomeViewModel @Inject constructor(
             operationSymbol = operation.symbol,
             operationColor = operation.colorRes,
             amount = dto.amount.toNairaString(),
-            timestamp = dto.createdAt.toDateTimeString(),
+            timestamp = dto.createdAt,
             status = dto.status.displayName,
             statusColor = dto.status.colorRes,
             statusBackgroundColor = dto.status.bgColorRes

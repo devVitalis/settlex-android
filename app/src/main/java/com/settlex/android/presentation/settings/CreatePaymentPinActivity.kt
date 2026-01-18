@@ -1,6 +1,5 @@
 package com.settlex.android.presentation.settings
 
-import android.os.Build
 import android.os.Bundle
 import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
@@ -14,6 +13,7 @@ import com.chaos.view.PinView
 import com.settlex.android.R
 import com.settlex.android.data.exception.AppException
 import com.settlex.android.databinding.ActivityCreatePaymentPinBinding
+import com.settlex.android.presentation.common.extensions.getParcelableExtraCompat
 import com.settlex.android.presentation.common.extensions.gone
 import com.settlex.android.presentation.common.extensions.show
 import com.settlex.android.presentation.common.state.UiState
@@ -38,9 +38,7 @@ class CreatePaymentPinActivity : AppCompatActivity() {
         binding = ActivityCreatePaymentPinBinding.inflate(layoutInflater)
         setContentView(binding.root)
 
-        intentAction = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
-            intent.getParcelableExtra("payment_pin_flow", PaymentPinFlow::class.java)!!
-        } else intent.getParcelableExtra("payment_pin_flow")!!
+        intentAction = intent.getParcelableExtraCompat("payment_pin_flow")
 
         initObservers()
         initViews()

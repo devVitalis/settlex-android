@@ -7,6 +7,7 @@ import com.airbnb.lottie.RenderMode
 import com.settlex.android.R
 import com.settlex.android.data.enums.TransactionStatus
 import com.settlex.android.databinding.ActivityTransactionStatusBinding
+import com.settlex.android.presentation.common.extensions.getParcelableExtraCompat
 import com.settlex.android.presentation.common.extensions.show
 import com.settlex.android.presentation.common.extensions.toNairaString
 import com.settlex.android.presentation.dashboard.DashboardActivity
@@ -23,12 +24,7 @@ class TransactionStatusActivity : AppCompatActivity() {
         binding = ActivityTransactionStatusBinding.inflate(layoutInflater)
         setContentView(binding.root)
 
-        val result = intent.getParcelableExtra("transaction_result", TransactionResult::class.java)
-        if (result == null) {
-            finish()
-            return
-        }
-
+        val result = intent.getParcelableExtraCompat<TransactionResult>("transaction_result")
         initViews(result)
     }
 

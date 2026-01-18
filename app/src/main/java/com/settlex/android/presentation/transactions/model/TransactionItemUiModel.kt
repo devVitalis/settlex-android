@@ -1,6 +1,7 @@
 package com.settlex.android.presentation.transactions.model
 
 import android.os.Parcelable
+import com.google.firebase.Timestamp
 import kotlinx.parcelize.Parcelize
 
 /**
@@ -21,7 +22,7 @@ data class TransactionItemUiModel(
     val operationSymbol: String,
     val operationColor: Int,
     val amount: String,
-    val timestamp: String,
+    val timestamp: Timestamp,
     val status: String,
     val statusColor: Int,
     val statusBackgroundColor: Int

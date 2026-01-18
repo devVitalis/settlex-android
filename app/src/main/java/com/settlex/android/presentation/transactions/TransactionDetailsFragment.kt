@@ -5,47 +5,43 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.activity.OnBackPressedCallback
-import androidx.core.content.ContextCompat
 import androidx.fragment.app.Fragment
 import com.settlex.android.R
 import com.settlex.android.databinding.FragmentTransactionDetailsBinding
 import com.settlex.android.presentation.common.extensions.copyToClipboard
+import com.settlex.android.presentation.common.extensions.getParcelableExtraCompat
+import com.settlex.android.presentation.common.extensions.gone
+import com.settlex.android.presentation.common.extensions.setTextColorRes
+import com.settlex.android.presentation.common.extensions.show
+import com.settlex.android.presentation.common.extensions.toFullDateTimeString
 import com.settlex.android.presentation.transactions.model.TransactionItemUiModel
 import com.settlex.android.util.ui.StatusBar
 import dagger.hilt.android.AndroidEntryPoint
 
 @AndroidEntryPoint
 class TransactionDetailsFragment : Fragment() {
-    // This property is only valid between onCreateView and onDestroyView.
     private var _binding: FragmentTransactionDetailsBinding? = null
     private val binding get() = _binding!!
-
-    override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
-    }
 
     override fun onCreateView(
         inflater: LayoutInflater,
         container: ViewGroup?,
         savedInstanceState: Bundle?
-    ): View? {
+    ): View {
         _binding = FragmentTransactionDetailsBinding.inflate(inflater, container, false)
 
-        StatusBar.setColor(requireActivity(), R.color.white)
-        onBackButtonPressed()
-        binding.btnBackBefore.setOnClickListener { requireActivity().finish() }
-
+        initViews()
         return binding.root
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        val transaction =
-            requireActivity().intent.getParcelableExtra<TransactionItemUiModel?>("transaction")
-        if (transaction != null) {
-            bindTransaction(transaction)
-        }
+        bindTransactionDetails(
+            requireActivity().intent.getParcelableExtraCompat<TransactionItemUiModel>(
+                "transaction"
+            )
+        )
     }
 
     override fun onDestroyView() {
@@ -53,57 +49,60 @@ class TransactionDetailsFragment : Fragment() {
         _binding = null
     }
 
-    private fun bindTransaction(transaction: TransactionItemUiModel) = with(binding) {
-        icon.setImageResource(transaction.serviceTypeIcon)
-        name.text = transaction.serviceTypeName
+    private fun initViews() = with(binding) {
+        StatusBar.setColor(requireActivity(), R.color.colorSurfaceVariant)
+        onBackButtonPressed()
 
-        operation.text = transaction.operationSymbol
-        operation.setTextColor(
-            ContextCompat.getColor(
-                root.context,
-                transaction.operationColor
-            )
-        )
+        ivCopyTransactionId.setOnClickListener { tvTransactionId.copyToClipboard("Transaction ID") }
+        btnBackBefore.setOnClickListener { requireActivity().finish() }
+    }
 
-        amount.text = transaction.amount
-        amount.setTextColor(
-            ContextCompat.getColor(
-                root.context,
-                transaction.operationColor
-            )
-        )
+    private fun bindTransactionDetails(transaction: TransactionItemUiModel) = with(binding) {
+        ivTxnIcon.setImageResource(transaction.serviceTypeIcon)
+        tvTxnName.text = transaction.serviceTypeName
 
-        status.text = transaction.status
-        status.setTextColor(
-            ContextCompat.getColor(
-                root.context,
-                transaction.statusColor
-            )
-        )
-        status.setBackgroundResource(transaction.statusBackgroundColor)
+        tvTxnOperation.apply {
+            text = transaction.operationSymbol
+            setTextColorRes(transaction.operationColor)
+        }
 
-        dateTime.text = transaction.timestamp
+        tvTxnAmount.apply {
+            text = transaction.amount
+            setTextColorRes(transaction.operationColor)
+        }
 
-        recipient.text = transaction.recipientId
-        recipientName.text = transaction.recipientName
+        tvTxnStatus.apply {
+            text = transaction.status
+            setTextColorRes(transaction.statusColor)
+            setBackgroundResource(transaction.statusBackgroundColor)
+        }
 
-        sender.text = transaction.senderId
+        tvTxnDateTime.text = transaction.timestamp.toFullDateTimeString()
 
-        // show description if there any
-        descriptionContainer.visibility = View.VISIBLE
-        description.text = transaction.description
+        tvTxnRecipientId.text = transaction.recipientId
+        tvTxnRecipientName.text = transaction.recipientName
 
-        transactionId.text = transaction.transactionId
-        copyTransactionId.setOnClickListener { transactionId.copyToClipboard("Transaction ID") }
+        tvTxnSenderId.text = transaction.senderId
+
+        // Show description if there any
+        when (transaction.description) {
+            null -> viewDescriptionContainer.gone()
+            else -> {
+                tvTxnDescription.text = transaction.description
+                viewDescriptionContainer.show()
+            }
+        }
+
+        tvTransactionId.text = transaction.transactionId
     }
 
     private fun onBackButtonPressed() {
         requireActivity().onBackPressedDispatcher.addCallback(
-            getViewLifecycleOwner(),
-            object : OnBackPressedCallback(true) {
+            getViewLifecycleOwner(), object : OnBackPressedCallback(true) {
                 override fun handleOnBackPressed() {
                     requireActivity().finish()
                 }
-            })
+            }
+        )
     }
 }
