@@ -4,6 +4,9 @@ import android.animation.AnimatorSet;
 import android.animation.ObjectAnimator;
 import android.animation.ValueAnimator;
 import android.app.Dialog;
+import android.graphics.RenderEffect;
+import android.graphics.Shader;
+import android.os.Build;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -20,7 +23,6 @@ import com.settlex.android.databinding.ProgressbarOverlayBinding;
 
 public class ProgressDialogFragment extends DialogFragment {
     private AnimatorSet zoomAnimator;
-    private int overlayColor;
 
     @Override
     public void onStart() {
@@ -58,9 +60,15 @@ public class ProgressDialogFragment extends DialogFragment {
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         ProgressbarOverlayBinding binding = ProgressbarOverlayBinding.inflate(inflater, container, false);
-        binding.getRoot().setBackgroundColor(overlayColor);
 
-        ImageView logo = binding.getRoot().findViewById(R.id.logo);
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.S) {
+            if (getActivity() != null) {
+                View decorView = getActivity().getWindow().getDecorView();
+                decorView.setRenderEffect(RenderEffect.createBlurEffect(5f, 5f, Shader.TileMode.CLAMP));
+            }
+        }
+
+        ImageView logo = binding.getRoot().findViewById(R.id.iv_logo);
 
         // Animate logo
         ObjectAnimator scaleX = ObjectAnimator.ofFloat(logo, View.SCALE_X, 1f, 1.1f, 1f);
@@ -85,9 +93,5 @@ public class ProgressDialogFragment extends DialogFragment {
         if (zoomAnimator != null && zoomAnimator.isRunning()) {
             zoomAnimator.cancel();
         }
-    }
-
-    public void setColor(int color) {
-        this.overlayColor = color;
     }
 }

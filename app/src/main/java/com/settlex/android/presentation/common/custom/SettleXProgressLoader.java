@@ -37,7 +37,6 @@ public class SettleXProgressLoader extends View {
     }
 
     private void init() {
-
         // Setup base ring paint with gradient
         ringPaint = new Paint(Paint.ANTI_ALIAS_FLAG);
         ringPaint.setStyle(Paint.Style.STROKE);

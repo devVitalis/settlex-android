@@ -9,6 +9,8 @@ import androidx.core.view.WindowCompat
  * Utility class for managing the status bar appearance.
  */
 object StatusBar {
+
+    @JvmStatic
     fun setColor(activity: Activity, @ColorRes colorRes: Int) {
         val window = activity.window
         val color = ContextCompat.getColor(activity, colorRes)
