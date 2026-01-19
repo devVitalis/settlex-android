@@ -55,7 +55,7 @@
         android:layout_marginTop="10dp"
         android:text="@string/tv_get_the_cheapest_data_bundles_and_easily_manage_your_electricity_airtime_and_betting_payments_one_app_for_all_your_needs"
         android:textAlignment="viewStart"
-        android:textColor="@color/colorOnSurfaceVariant"
+        android:textColor="@color/on_surface_variant"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@id/header" />

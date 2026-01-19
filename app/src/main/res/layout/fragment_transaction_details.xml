@@ -4,7 +4,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@color/colorSurfaceVariant"
+    android:background="@color/surface"
     android:fitsSystemWindows="true"
     tools:context=".presentation.transactions.TransactionDetailsFragment">
 
@@ -25,7 +25,7 @@
             android:layout_height="20dp"
             android:scaleType="centerCrop"
             android:src="@drawable/ic_arrow_back"
-            app:tint="@color/colorOnBackground" />
+            app:tint="@color/on_surface" />
 
         <TextView
             style="@style/Widget.SettleX.TextBold"
@@ -40,7 +40,7 @@
     <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
         android:layout_height="0dp"
-        android:background="@color/colorBackgroundInverse"
+        android:background="@color/surface_container"
         android:orientation="vertical"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
@@ -90,7 +90,7 @@
                         android:id="@+id/tv_txn_operation"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:textColor="@color/colorOnBackground"
+                        android:textColor="@color/on_surface"
                         android:textSize="20sp"
                         tools:text="+" />
 
@@ -99,7 +99,7 @@
                         style="@style/Widget.SettleX.TextBalance"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:textColor="@color/colorOnBackground"
+                        android:textColor="@color/on_surface"
                         tools:text="₦100,000.00" />
                 </LinearLayout>
 
@@ -111,7 +111,7 @@
                     android:layout_marginTop="10dp"
                     android:paddingHorizontal="8dp"
                     android:paddingVertical="2dp"
-                    android:textColor="@color/colorOnSuccessContainer"
+                    android:textColor="@color/on_success_container"
                     tools:background="@drawable/bg_success_container_rounded3"
                     tools:text="Success" />
             </LinearLayout>
@@ -162,7 +162,7 @@
                     android:layout_height="wrap_content"
                     android:layout_marginEnd="10dp"
                     android:text="Date/Time"
-                    android:textColor="@color/colorOnSurfaceVariant" />
+                    android:textColor="@color/on_surface_variant" />
 
                 <TextView
                     android:id="@+id/tv_txn_date_time"
@@ -189,7 +189,7 @@
                     android:layout_height="wrap_content"
                     android:layout_marginEnd="10dp"
                     android:text="Sender"
-                    android:textColor="@color/colorOnSurfaceVariant" />
+                    android:textColor="@color/on_surface_variant" />
 
                 <TextView
                     android:id="@+id/tv_txn_sender_id"
@@ -216,7 +216,7 @@
                     android:layout_height="wrap_content"
                     android:layout_marginEnd="10dp"
                     android:text="Recipient"
-                    android:textColor="@color/colorOnSurfaceVariant" />
+                    android:textColor="@color/on_surface_variant" />
 
                 <TextView
                     android:id="@+id/tv_txn_recipient_id"
@@ -243,7 +243,7 @@
                     android:layout_height="wrap_content"
                     android:layout_marginEnd="10dp"
                     android:text="Recipient Name"
-                    android:textColor="@color/colorOnSurfaceVariant" />
+                    android:textColor="@color/on_surface_variant" />
 
                 <TextView
                     android:id="@+id/tv_txn_recipient_name"
@@ -271,7 +271,7 @@
                     android:layout_height="wrap_content"
                     android:layout_marginEnd="10dp"
                     android:text="Description"
-                    android:textColor="@color/colorOnSurfaceVariant" />
+                    android:textColor="@color/on_surface_variant" />
 
                 <TextView
                     android:id="@+id/tv_txn_description"
@@ -289,7 +289,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="1dp"
                 android:layout_marginTop="15dp"
-                app:dividerColor="@color/divider_color" />
+                app:dividerColor="@color/divider" />
 
             <LinearLayout
                 android:layout_width="match_parent"
@@ -304,7 +304,7 @@
                     android:layout_height="wrap_content"
                     android:layout_marginEnd="10dp"
                     android:text="Transaction ID"
-                    android:textColor="@color/colorOnSurfaceVariant" />
+                    android:textColor="@color/on_surface_variant" />
 
                 <TextView
                     android:id="@+id/tv_transaction_id"
@@ -322,7 +322,7 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:src="@drawable/ic_copy"
-                    app:tint="@color/colorOnSurfaceVariant" />
+                    app:tint="@color/on_surface_variant" />
             </LinearLayout>
         </LinearLayout>
 

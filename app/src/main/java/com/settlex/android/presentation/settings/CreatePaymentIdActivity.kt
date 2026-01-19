@@ -44,11 +44,11 @@ class CreatePaymentIdActivity : AppCompatActivity() {
             R.drawable.bg_surface_rounded8
         )
     }
-    private val successStateColor by lazy { ContextCompat.getColor(this, R.color.colorSuccess) }
+    private val successStateColor by lazy { ContextCompat.getColor(this, R.color.success) }
     private val defaultStateColor by lazy {
         ContextCompat.getColor(
             this,
-            R.color.colorOnSurfaceVariant
+            R.color.on_surface_variant
         )
     }
 
@@ -70,7 +70,7 @@ class CreatePaymentIdActivity : AppCompatActivity() {
     }
 
     private fun initViews() = with(binding) {
-        StatusBar.setColor(this@CreatePaymentIdActivity, R.color.colorBackground)
+        StatusBar.setColor(this@CreatePaymentIdActivity, R.color.surface)
         setupPaymentIdTextWatcher()
         disableBackButton()
 
@@ -177,8 +177,8 @@ class CreatePaymentIdActivity : AppCompatActivity() {
 
         val statusText = if (isPaymentIdTaken) "Not Available" else "Available"
         val statusColor = when (isPaymentIdTaken) {
-            true -> ContextCompat.getColor(this@CreatePaymentIdActivity, R.color.colorError)
-            false -> ContextCompat.getColor(this@CreatePaymentIdActivity, R.color.colorSuccess)
+            true -> ContextCompat.getColor(this@CreatePaymentIdActivity, R.color.error)
+            false -> ContextCompat.getColor(this@CreatePaymentIdActivity, R.color.success)
         }
 
         tvPaymentIdAvailabilityStatus.also {

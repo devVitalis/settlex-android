@@ -22,7 +22,7 @@
             android:layout_gravity="center"
             android:background="@drawable/bg_secondary_oval"
             android:src="@drawable/ic_service_payment_sent"
-            android:tint="@color/colorPrimary"
+            android:tint="@color/primary"
             app:contentPadding="5dp" />
 
         <LinearLayout
@@ -53,7 +53,7 @@
                     style="@style/Widget.SettleX.TextMedium"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:textColor="@color/colorError"
+                    android:textColor="@color/error"
                     android:textSize="13sp"
                     tools:text="-" />
 
@@ -84,7 +84,7 @@
                     android:layout_height="wrap_content"
                     android:ellipsize="end"
                     android:maxLines="1"
-                    android:textColor="@color/colorOnSurfaceVariant"
+                    android:textColor="@color/on_surface_variant"
                     android:textSize="11sp"
                     tools:text="Aug 28, 3:39 AM" />
 
@@ -103,7 +103,7 @@
                     android:layout_weight="1"
                     android:ellipsize="end"
                     android:maxLines="1"
-                    android:textColor="@color/colorOnSurfaceVariant"
+                    android:textColor="@color/on_surface_variant"
                     android:textSize="11sp"
                     tools:text="NNAEMEKA BENJAMIN CHISOM" />
 
@@ -115,7 +115,7 @@
                     android:background="@drawable/bg_success_container_rounded3"
                     android:maxLines="1"
                     android:paddingHorizontal="5dp"
-                    android:textColor="@color/colorOnSuccessContainer"
+                    android:textColor="@color/on_success_container"
                     android:textSize="9sp"
                     tools:text="Successful" />
             </LinearLayout>
@@ -127,6 +127,6 @@
         android:id="@+id/divider"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        app:dividerColor="@color/divider_color"
+        app:dividerColor="@color/divider"
         app:dividerThickness="1.5dp" />
 </LinearLayout>

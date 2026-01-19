@@ -51,7 +51,7 @@ class ReceiveActivity : AppCompatActivity() {
     }
 
     private fun initViews() = with(binding) {
-        StatusBar.setColor(this@ReceiveActivity, R.color.colorSurfaceVariant)
+        StatusBar.setColor(this@ReceiveActivity, R.color.surface)
 
         btnCopy.setOnClickListener { tvPaymentId.copyToClipboard("Payment ID") }
         btnBackBefore.setOnClickListener { finish() }

@@ -77,7 +77,7 @@ class RegisterContactFragment : Fragment() {
     }
 
     private fun initViews() {
-        StatusBar.setColor(requireActivity(), R.color.colorBackground)
+        StatusBar.setColor(requireActivity(), R.color.surface)
         setupListeners()
         setupLegalLinks()
         setupInputValidation()
@@ -219,7 +219,7 @@ class RegisterContactFragment : Fragment() {
             }
 
             override fun updateDrawState(textPaint: TextPaint) {
-                textPaint.color = ContextCompat.getColor(requireContext(), R.color.colorPrimary)
+                textPaint.color = ContextCompat.getColor(requireContext(), R.color.primary)
                 textPaint.isUnderlineText = true
             }
         }

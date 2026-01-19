@@ -53,7 +53,7 @@
             android:minWidth="30dp"
             android:paddingHorizontal="5dp"
             android:paddingVertical="2dp"
-            android:textColor="@color/colorOnBadge"
+            android:textColor="@color/on_alert"
             android:textSize="8sp"
             app:layout_constraintStart_toStartOf="@id/center_guide_line"
             app:layout_constraintTop_toTopOf="@+id/icon_frame"
@@ -68,7 +68,7 @@
         android:layout_marginTop="4dp"
         android:gravity="center"
         android:textAlignment="center"
-        android:textColor="@color/colorOnBackground"
+        android:textColor="@color/on_surface"
         android:textSize="12sp"
         tools:text="Service" />
 </LinearLayout>

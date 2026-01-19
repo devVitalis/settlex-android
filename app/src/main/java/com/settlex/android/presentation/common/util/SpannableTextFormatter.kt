@@ -24,7 +24,7 @@ object SpannableTextFormatter {
         context: Context,
         text: String,
         target: String,
-        @ColorInt color: Int = ContextCompat.getColor(context, R.color.colorPrimary),
+        @ColorInt color: Int = ContextCompat.getColor(context, R.color.primary),
         setBold: Boolean = false,
         setUnderline: Boolean = false
     ): SpannableString {

@@ -5,12 +5,12 @@
     android:id="@+id/main"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@color/blue_400"
+    android:background="@color/secondary"
     android:fitsSystemWindows="true"
     tools:context=".presentation.dashboard.rewards.RewardsDashboardFragment">
 
     <LinearLayout
-        android:id="@+id/logged_out_state"
+        android:id="@+id/view_unauthenticated_ui_state"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:gravity="center"
@@ -21,13 +21,13 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent">
 
-        <ImageView
+        <com.google.android.material.imageview.ShapeableImageView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:contentDescription="@null"
             android:src="@drawable/ic_rewards_logged_out_state" />
     </LinearLayout>
 
+    <!-- Header -->
     <LinearLayout
         android:id="@+id/header"
         android:layout_width="match_parent"
@@ -40,23 +40,18 @@
         app:layout_constraintTop_toTopOf="parent">
 
         <TextView
-            android:id="@+id/header_title"
+            style="@style/Widget.SettleX.TextBold"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:fontFamily="@font/inter_bold"
             android:gravity="center"
-            android:includeFontPadding="false"
-            android:text="Rewards"
-            android:textColor="@color/white"
-            android:textSize="25sp"
-            android:textStyle="bold" />
+            android:text="Rewards" />
     </LinearLayout>
 
+    <!--  Scroll content -->
     <ScrollView
-        android:id="@+id/logged_in_state"
+        android:id="@+id/view_authenticated_ui_state"
         android:layout_width="match_parent"
         android:layout_height="0dp"
-        android:background="@drawable/bg_0dp_gradient_blue_400"
         android:fillViewport="true"
         android:overScrollMode="never"
         android:scrollbars="none"
@@ -66,471 +61,278 @@
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:orientation="vertical">
+            android:orientation="vertical"
+            android:padding="15dp">
 
-            <FrameLayout
+            <com.google.android.material.card.MaterialCardView
+                style="@style/Widget.SettleX.CardView.Filled.Medium"
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content">
-
-                <FrameLayout
-                    android:layout_width="match_parent"
-                    android:layout_height="120dp"
-                    android:background="@drawable/bg_10dp_bottom_rounded_blue_400" />
+                android:layout_height="wrap_content"
+                app:cardBackgroundColor="@color/surface">
 
                 <LinearLayout
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_marginHorizontal="15dp"
-                    android:gravity="center_vertical"
-                    android:orientation="vertical">
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:gravity="center"
+                    android:orientation="vertical"
+                    android:padding="15dp">
+
+                    <com.google.android.material.imageview.ShapeableImageView
+                        android:id="@+id/iv_illustrator"
+                        android:layout_width="match_parent"
+                        android:layout_height="120dp"
+                        android:background="@color/primary_container"
+                        android:src="@drawable/ic_invite"
+                        app:contentPadding="15dp"
+                        app:shapeAppearanceOverlay="@style/ShapeAppearance.Material3.Corner.Medium" />
 
                     <TextView
+                        style="@style/Widget.SettleX.TextBold"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:fontFamily="@font/inter_regular"
-                        android:includeFontPadding="false"
-                        android:text="Commission"
-                        android:textColor="@color/white"
-                        android:textSize="12sp"
-                        android:textStyle="bold" />
+                        android:layout_marginTop="15dp"
+                        android:text="Invite others to SettleX and earn forever"
+                        android:textAlignment="center"
+                        android:textColor="@color/primary"
+                        android:textSize="20sp" />
 
-                    <LinearLayout
-                        android:id="@+id/btn_view_commission_balance"
+                    <TextView
+                        android:id="@+id/tv_referral_info"
+                        style="@style/Widget.SettleX.TextRegular"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_marginTop="5dp"
-                        android:background="?attr/selectableItemBackground"
-                        android:clickable="true"
-                        android:focusable="true"
+                        android:text="Get 1% of every transaction your referrals make forever. The more you share, the more you earn!"
+                        android:textAlignment="center"
+                        android:textColor="@color/on_surface" />
+
+                    <TextView
+                        style="@style/Widget.SettleX.TextBold"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="15dp"
+                        android:text="See How It Works"
+                        android:textColor="@color/primary"
+                        android:textSize="14sp" />
+
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="15dp"
+                        android:background="@drawable/bg_secondary_rounded8"
                         android:gravity="center_vertical"
-                        android:orientation="horizontal">
+                        android:orientation="horizontal"
+                        android:padding="15dp">
 
-                        <ImageView
-                            android:layout_width="20dp"
-                            android:layout_height="20dp"
-                            android:contentDescription="@null"
-                            android:src="@drawable/ic_naira_coin" />
+                        <LinearLayout
+                            android:layout_width="0dp"
+                            android:layout_height="wrap_content"
+                            android:layout_weight="1"
+                            android:orientation="vertical">
 
-                        <TextView
-                            android:id="@+id/commission_balance"
+                            <TextView
+                                style="@style/Widget.SettleX.TextRegular"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:text="Referral Code"
+                                android:textColor="@color/on_surface_variant"
+                                android:textSize="12sp" />
+
+                            <TextView
+                                android:id="@+id/tv_referral_code"
+                                style="@style/Widget.SettleX.TextBold"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:layout_marginTop="3dp"
+                                android:textSize="18sp"
+                                tools:text="SETS659" />
+                        </LinearLayout>
+
+                        <com.google.android.material.imageview.ShapeableImageView
+                            android:id="@+id/iv_copy_referral"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
-                            android:layout_marginStart="5dp"
-                            android:includeFontPadding="false"
-                            android:textColor="@color/white"
-                            android:textSize="25sp"
-                            android:textStyle="bold"
-                            tools:text="₦236.80" />
-
-                        <ImageView
-                            android:layout_width="15dp"
-                            android:layout_height="15dp"
-                            android:contentDescription="@null"
-                            android:src="@drawable/ic_arrow_forward" />
+                            android:src="@drawable/ic_copy"
+                            app:tint="@color/on_secondary" />
                     </LinearLayout>
                 </LinearLayout>
+            </com.google.android.material.card.MaterialCardView>
 
-                <LinearLayout
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_gravity="bottom"
-                    android:layout_marginHorizontal="15dp"
-                    android:layout_marginTop="70dp"
-                    android:background="@drawable/bg_surface_variant_rounded16"
-                    android:gravity="center"
-                    android:orientation="vertical"
-                    android:paddingHorizontal="10dp"
-                    android:paddingVertical="15dp">
-
-                    <TextView
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:fontFamily="@font/inter_regular"
-                        android:gravity="center"
-                        android:includeFontPadding="false"
-                        android:text="Invite friends and earn forever!"
-                        android:textColor="@color/blue_500"
-                        android:textSize="16sp"
-                        android:textStyle="bold" />
-
-                    <ImageView
-                        android:id="@+id/illustrator"
-                        android:layout_width="220dp"
-                        android:layout_height="100dp"
-                        android:layout_marginTop="15dp"
-                        android:contentDescription="@null"
-                        android:scaleType="centerCrop"
-                        android:src="@drawable/ic_referral" />
-
-                    <TextView
-                        android:id="@+id/txt_referral_info"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_marginTop="10dp"
-                        android:fontFamily="@font/inter_regular"
-                        android:gravity="center"
-                        android:includeFontPadding="false"
-                        android:textAlignment="center"
-                        android:textColor="@color/black"
-                        android:textSize="13sp"
-                        tools:text="Get 1% commission on every transaction your referrals make, for a lifetime. Start sharing and watch your rewards grow!" />
-                </LinearLayout>
-            </FrameLayout>
-
+            <!--  Earnings -->
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginHorizontal="15dp"
                 android:layout_marginTop="10dp"
-                android:background="@drawable/bg_surface_variant_rounded16"
-                android:orientation="vertical"
-                android:paddingHorizontal="10dp"
-                android:paddingVertical="15dp">
+                android:orientation="horizontal">
 
-                <LinearLayout
-                    android:layout_width="match_parent"
+                <com.google.android.material.card.MaterialCardView
+                    style="@style/Widget.SettleX.CardView.Filled.Medium"
+                    android:layout_width="0dp"
                     android:layout_height="wrap_content"
-                    android:gravity="center_vertical"
-                    android:orientation="horizontal">
+                    android:layout_marginEnd="5dp"
+                    android:layout_weight="1"
+                    app:cardBackgroundColor="@color/surface">
 
-                    <Space
-                        android:layout_width="0dp"
-                        android:layout_height="0dp"
-                        android:layout_weight="1" />
+                    <!-- Referral Earnings -->
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:orientation="vertical"
+                        android:padding="15dp">
+
+                        <TextView
+                            style="@style/Widget.SettleX.TextRegular"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="Referral Earnings"
+                            android:textColor="@color/on_surface_variant" />
+
+                        <TextView
+                            android:id="@+id/tv_total_referral_earning"
+                            style="@style/Widget.SettleX.TextBalance"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:textColor="@color/black"
+                            tools:text="₦0.00" />
+                    </LinearLayout>
+                </com.google.android.material.card.MaterialCardView>
+
+                <!-- Total Referral -->
+                <com.google.android.material.card.MaterialCardView
+                    style="@style/Widget.SettleX.CardView.Filled.Medium"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="5dp"
+                    android:layout_weight="1"
+                    app:cardBackgroundColor="@color/surface">
 
                     <LinearLayout
-                        android:layout_width="wrap_content"
+                        android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:gravity="center"
-                        android:orientation="vertical">
+                        android:orientation="vertical"
+                        android:padding="15dp">
 
                         <TextView
+                            style="@style/Widget.SettleX.TextRegular"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
-                            android:layout_marginTop="5dp"
-                            android:fontFamily="@font/inter_regular"
-                            android:gravity="center"
-                            android:text="Step 1"
-                            android:textAlignment="center"
-                            android:textColor="@color/gray_500"
-                            android:textSize="11sp" />
-
-                        <com.google.android.material.imageview.ShapeableImageView
-                            style="@style/ShapeAppearance.SettleX.Circular"
-                            android:layout_width="50dp"
-                            android:layout_height="50dp"
-                            android:layout_marginTop="5dp"
-                            android:background="@drawable/bg_background_inverse_oval"
-                            android:scaleType="fitCenter"
-                            android:src="@drawable/ic_invite_step1" />
+                            android:text="Total Referrals"
+                            android:textColor="@color/on_surface_variant" />
 
                         <TextView
+                            android:id="@+id/tv_referrals_shared"
+                            style="@style/Widget.SettleX.TextBalance"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
-                            android:layout_marginTop="5dp"
-                            android:fontFamily="@font/inter_regular"
-                            android:gravity="center"
-                            android:text="Share invitation\nlink/code with\nfriends"
-                            android:textAlignment="center"
-                            android:textColor="@color/black"
-                            android:textSize="9sp" />
+                            android:textColor="@color/on_surface"
+                            tools:text="0" />
                     </LinearLayout>
-
-                    <Space
-                        android:layout_width="0dp"
-                        android:layout_height="0dp"
-                        android:layout_weight="1" />
-
-                    <TextView
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_marginBottom="10dp"
-                        android:gravity="center"
-                        android:includeFontPadding="false"
-                        android:text="--->"
-                        android:textColor="@color/gray_500"
-                        android:textSize="9sp"
-                        tools:ignore="SmallSp" />
-
-                    <Space
-                        android:layout_width="0dp"
-                        android:layout_height="0dp"
-                        android:layout_weight="1" />
-
-                    <LinearLayout
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:gravity="center"
-                        android:orientation="vertical">
-
-                        <TextView
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:layout_marginTop="5dp"
-                            android:fontFamily="@font/inter_regular"
-                            android:gravity="center"
-                            android:text="Step 2"
-                            android:textAlignment="center"
-                            android:textColor="@color/gray_500"
-                            android:textSize="11sp" />
-
-                        <com.google.android.material.imageview.ShapeableImageView
-                            style="@style/ShapeAppearance.SettleX.Circular"
-                            android:layout_width="50dp"
-                            android:layout_height="50dp"
-                            android:layout_marginTop="5dp"
-                            android:background="@drawable/bg_background_inverse_oval"
-                            android:scaleType="fitCenter"
-                            android:src="@drawable/ic_invite_step2" />
-
-                        <TextView
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:layout_marginTop="5dp"
-                            android:fontFamily="@font/inter_regular"
-                            android:gravity="center"
-                            android:text="Friend registered\nwith your link\nand transact"
-                            android:textAlignment="center"
-                            android:textColor="@color/black"
-                            android:textSize="9sp"
-                            tools:ignore="SmallSp" />
-                    </LinearLayout>
-
-                    <Space
-                        android:layout_width="0dp"
-                        android:layout_height="0dp"
-                        android:layout_weight="1" />
-
-                    <TextView
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_marginBottom="10dp"
-                        android:gravity="center"
-                        android:includeFontPadding="false"
-                        android:text="--->"
-                        android:textColor="@color/gray_500"
-                        android:textSize="9sp"
-                        tools:ignore="SmallSp" />
-
-                    <Space
-                        android:layout_width="0dp"
-                        android:layout_height="0dp"
-                        android:layout_weight="1" />
-
-                    <LinearLayout
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:gravity="center"
-                        android:orientation="vertical">
-
-                        <TextView
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:layout_marginTop="5dp"
-                            android:fontFamily="@font/inter_regular"
-                            android:gravity="center"
-                            android:text="Step 3"
-                            android:textAlignment="center"
-                            android:textColor="@color/gray_500"
-                            android:textSize="11sp" />
-
-                        <com.google.android.material.imageview.ShapeableImageView
-                            style="@style/ShapeAppearance.SettleX.Circular"
-                            android:layout_width="50dp"
-                            android:layout_height="50dp"
-                            android:layout_marginTop="5dp"
-                            android:background="@drawable/bg_background_inverse_oval"
-                            android:scaleType="fitCenter"
-                            android:src="@drawable/ic_invite_step3" />
-
-                        <TextView
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:layout_marginTop="5dp"
-                            android:fontFamily="@font/inter_regular"
-                            android:gravity="center"
-                            android:text="You'll recieve\nrewards in your\ncommission"
-                            android:textAlignment="center"
-                            android:textColor="@color/black"
-                            android:textSize="9sp" />
-                    </LinearLayout>
-
-                    <Space
-                        android:layout_width="0dp"
-                        android:layout_height="0dp"
-                        android:layout_weight="1" />
-                </LinearLayout>
-
-                <com.google.android.material.button.MaterialButton
-                    android:id="@+id/btn_share_invitation_link"
-                    style="@style/Widget.SettleX.Button.Filled.Gradient"
-                    android:layout_width="match_parent"
-                    android:layout_height="48dp"
-                    android:layout_marginTop="20dp"
-                    android:text="Share Invitation Link"
-                    android:textAllCaps="false"
-                    android:textColor="@color/white"
-                    app:icon="@drawable/ic_share"
-                    app:iconGravity="textEnd"
-                    app:iconTint="@color/white" />
-
-                <LinearLayout
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_marginTop="15dp"
-                    android:gravity="center_vertical"
-                    android:orientation="horizontal">
-
-                    <com.google.android.material.divider.MaterialDivider
-                        android:layout_width="0dp"
-                        android:layout_height="wrap_content"
-                        android:layout_weight="1"
-                        app:dividerColor="@color/gray_200" />
-
-                    <TextView
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_marginHorizontal="5dp"
-                        android:fontFamily="@font/inter_regular"
-                        android:gravity="center"
-                        android:includeFontPadding="false"
-                        android:text="OR"
-                        android:textColor="@color/gray_500"
-                        android:textSize="15sp" />
-
-                    <com.google.android.material.divider.MaterialDivider
-                        android:layout_width="0dp"
-                        android:layout_height="wrap_content"
-                        android:layout_weight="1"
-                        app:dividerColor="@color/gray_200" />
-                </LinearLayout>
-
-                <TextView
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_marginTop="10dp"
-                    android:layout_marginBottom="8dp"
-                    android:fontFamily="@font/inter_regular"
-                    android:gravity="center"
-                    android:includeFontPadding="false"
-                    android:text="Share Invitation Code"
-                    android:textColor="@color/black"
-                    android:textSize="13sp" />
-
-                <LinearLayout
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_gravity="center"
-                    android:background="@drawable/bg_surface_rounded8"
-                    android:gravity="center"
-                    android:minWidth="150dp"
-                    android:orientation="horizontal"
-                    android:paddingVertical="10dp">
-
-                    <TextView
-                        android:id="@+id/referral_code"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:fontFamily="@font/inter_regular"
-                        android:gravity="center"
-                        android:includeFontPadding="false"
-                        android:paddingHorizontal="5dp"
-                        android:textColor="@color/black"
-                        android:textSize="20sp"
-                        android:textStyle="bold"
-                        tools:text="\vitalis" />
-
-                    <ImageView
-                        android:id="@+id/btn_copy"
-                        android:layout_width="24dp"
-                        android:layout_height="24dp"
-                        android:contentDescription="Copy"
-                        android:src="@drawable/ic_copy"
-                        app:tint="@color/gray_500" />
-                </LinearLayout>
+                </com.google.android.material.card.MaterialCardView>
             </LinearLayout>
 
+            <!-- Get Started in 3 Steps -->
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginHorizontal="15dp"
                 android:layout_marginTop="10dp"
-                android:layout_marginBottom="50dp"
-                android:background="@drawable/bg_surface_variant_rounded16"
-                android:elevation="5dp"
-                android:orientation="vertical"
-                android:paddingHorizontal="10dp"
-                android:paddingVertical="15dp">
-
-                <LinearLayout
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:gravity="center_vertical"
-                    android:orientation="horizontal">
-
-                    <ImageView
-                        android:layout_width="20dp"
-                        android:layout_height="20dp"
-                        android:contentDescription="@null"
-                        android:src="@drawable/ic_coin_cash" />
-
-                    <TextView
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_marginStart="5dp"
-                        android:fontFamily="@font/inter_regular"
-                        android:includeFontPadding="false"
-                        android:text="Total Referral Earnings:"
-                        android:textColor="@color/black"
-                        android:textSize="15sp" />
-
-                    <TextView
-                        android:id="@+id/total_referral_earning"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_marginStart="5dp"
-                        android:includeFontPadding="false"
-                        android:text="₦0.00"
-                        android:textColor="@color/black"
-                        android:textSize="20sp"
-                        android:textStyle="bold" />
-                </LinearLayout>
+                android:gravity="center_vertical"
+                android:orientation="horizontal">
 
                 <com.google.android.material.divider.MaterialDivider
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    app:dividerColor="@color/on_surface_variant"
+                    app:dividerThickness="1.5dp" />
+
+                <TextView
+                    style="@style/Widget.SettleX.TextBold"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_marginTop="10dp"
-                    app:dividerColor="@color/gray_200" />
+                    android:layout_marginHorizontal="10dp"
+                    android:text="Get Started in 3 Steps"
+                    android:textSize="20sp" />
+
+                <com.google.android.material.divider.MaterialDivider
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    app:dividerColor="@color/on_surface_variant"
+                    app:dividerThickness="1.5dp" />
+            </LinearLayout>
+
+            <com.google.android.material.card.MaterialCardView
+                style="@style/Widget.SettleX.CardView.Filled.Medium"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="10dp"
+                app:cardBackgroundColor="@color/surface">
 
                 <LinearLayout
-                    android:id="@+id/btn_invitation_record"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_marginTop="10dp"
-                    android:background="?attr/selectableItemBackground"
-                    android:clickable="true"
-                    android:focusable="true"
                     android:gravity="center_vertical"
-                    android:orientation="horizontal">
+                    android:orientation="horizontal"
+                    android:padding="15dp">
 
-                    <TextView
-                        android:layout_width="0dp"
+                    <com.google.android.material.imageview.ShapeableImageView
+                        android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:layout_weight="1"
-                        android:fontFamily="@font/inter_regular"
-                        android:includeFontPadding="false"
-                        android:text="Invitation Record"
-                        android:textColor="@color/black"
-                        android:textSize="15sp" />
-
-                    <ImageView
-                        android:layout_width="15dp"
-                        android:layout_height="15dp"
-                        android:contentDescription="@null"
-                        android:src="@drawable/ic_arrow_forward"
-                        app:tint="@color/gray_500" />
+                        android:background="@drawable/bg_secondary_rounded8"
+                        app:contentPadding="8dp"
+                        app:srcCompat="@drawable/ic_link"
+                        app:tint="@color/on_secondary" />
                 </LinearLayout>
-            </LinearLayout>
+            </com.google.android.material.card.MaterialCardView>
+
+            <com.google.android.material.card.MaterialCardView
+                style="@style/Widget.SettleX.CardView.Filled.Medium"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="10dp"
+                app:cardBackgroundColor="@color/surface">
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:gravity="center_vertical"
+                    android:orientation="horizontal"
+                    android:padding="15dp">
+
+                    <com.google.android.material.imageview.ShapeableImageView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:background="@drawable/bg_secondary_rounded8"
+                        app:contentPadding="8dp"
+                        app:srcCompat="@drawable/ic_qr_code"
+                        app:tint="@color/on_secondary" />
+                </LinearLayout>
+            </com.google.android.material.card.MaterialCardView>
+
+            <com.google.android.material.card.MaterialCardView
+                style="@style/Widget.SettleX.CardView.Filled.Medium"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="10dp"
+                app:cardBackgroundColor="@color/surface">
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:gravity="center_vertical"
+                    android:orientation="horizontal"
+                    android:padding="15dp">
+
+                    <com.google.android.material.imageview.ShapeableImageView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:background="@drawable/bg_secondary_rounded8"
+                        app:contentPadding="8dp"
+                        app:srcCompat="@drawable/ic_link"
+                        app:tint="@color/on_secondary" />
+                </LinearLayout>
+            </com.google.android.material.card.MaterialCardView>
+
         </LinearLayout>
     </ScrollView>
 </androidx.constraintlayout.widget.ConstraintLayout>

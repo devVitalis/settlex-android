@@ -4,7 +4,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:background="@color/colorBackground"
+    android:background="@color/surface"
     android:gravity="center"
     android:orientation="vertical"
     android:padding="15dp">
@@ -16,7 +16,7 @@
         android:background="@drawable/bg_secondary_oval"
         android:src="@drawable/ic_lock_filled"
         app:contentPadding="8dp"
-        app:tint="@color/colorPrimary" />
+        app:tint="@color/primary" />
 
     <TextView
         android:id="@+id/tv_title"

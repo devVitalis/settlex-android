@@ -8,7 +8,6 @@ import android.util.Log
 import android.view.View
 import android.widget.TextView
 import android.widget.Toast
-import androidx.annotation.IdRes
 import androidx.core.content.ContextCompat
 import androidx.core.content.IntentCompat.getParcelableExtra
 import com.google.firebase.Timestamp
@@ -29,10 +28,6 @@ fun View.gone() {
     visibility = View.GONE
 }
 
-fun View.invisible() {
-    visibility = View.INVISIBLE
-}
-
 // TextView
 /**
  * Sets the text of a TextView to a string of four asterisks ("****").
@@ -41,7 +36,7 @@ fun TextView.setAsterisks() {
     text = "****"
 }
 
-fun TextView.setTextColorRes(@IdRes color: Int) {
+fun TextView.setTextColorRes(color: Int) {
     setTextColor(ContextCompat.getColor(context, color))
 }
 
@@ -78,7 +73,7 @@ fun String.maskPhoneNumber(): String {
         val visibleSuffixLength = 3
 
         // Extract visible parts
-        val prefix = phoneNumber.substring(0, visiblePrefixLength)
+        val prefix = phoneNumber.take(visiblePrefixLength)
         val suffix = phoneNumber.substring(phoneNumber.length - visibleSuffixLength)
 
         Log.d("UiExtension", "Prefix: $prefix")
@@ -129,7 +124,8 @@ fun Timestamp.toDateTimeString(): String {
 }
 
 fun Timestamp.toFullDateTimeString(): String {
-    val dateString = SimpleDateFormat("EEEE, dd MMMM, yyyy hh:mm a", Locale.US).format(this.toDate())
+    val dateString =
+        SimpleDateFormat("EEEE, dd MMMM, yyyy hh:mm a", Locale.US).format(this.toDate())
 
     val day = SimpleDateFormat("dd", Locale.US)
         .format(this.toDate()).toInt()

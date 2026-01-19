@@ -36,7 +36,7 @@
             style="@style/Widget.SettleX.TextName"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:textColor="@color/colorOnSurfaceVariant"
+            android:textColor="@color/on_surface_variant"
             tools:text="\@vitalisdft" />
     </LinearLayout>
 </LinearLayout>

@@ -50,7 +50,7 @@ class TransactionDetailsFragment : Fragment() {
     }
 
     private fun initViews() = with(binding) {
-        StatusBar.setColor(requireActivity(), R.color.colorSurfaceVariant)
+        StatusBar.setColor(requireActivity(), R.color.surface)
         onBackButtonPressed()
 
         ivCopyTransactionId.setOnClickListener { tvTransactionId.copyToClipboard("Transaction ID") }

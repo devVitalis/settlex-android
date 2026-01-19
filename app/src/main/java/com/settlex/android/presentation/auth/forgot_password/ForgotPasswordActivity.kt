@@ -46,7 +46,7 @@ class ForgotPasswordActivity : AppCompatActivity() {
 
     private fun initViews() {
         with(binding) {
-            StatusBar.setColor(this@ForgotPasswordActivity, R.color.colorBackground)
+            StatusBar.setColor(this@ForgotPasswordActivity, R.color.surface)
             setupInputValidation()
 
             focusManager.attachDoneAction(etEmail)

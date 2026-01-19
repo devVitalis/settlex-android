@@ -45,7 +45,7 @@ class RegisterNameFragment : Fragment() {
     }
 
     private fun initViews() = with(binding) {
-        StatusBar.setColor(requireActivity(), R.color.colorBackground)
+        StatusBar.setColor(requireActivity(), R.color.surface)
         setupInputValidation()
         focusManager.attachDoneAction(etLastname)
     }

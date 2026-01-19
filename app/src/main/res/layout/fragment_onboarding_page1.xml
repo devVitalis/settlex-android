@@ -55,7 +55,7 @@
         android:layout_marginTop="10dp"
         android:text="@string/tv_experience_seamless_payments_and_cheaper_bundles_built_for_you_settlex_makes_every_transaction_simple"
         android:textAlignment="viewStart"
-        android:textColor="@color/colorOnSurfaceVariant"
+        android:textColor="@color/on_surface_variant"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@id/header" />

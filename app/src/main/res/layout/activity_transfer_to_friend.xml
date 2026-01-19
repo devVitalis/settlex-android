@@ -5,7 +5,7 @@
     android:id="@+id/main"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@color/colorSurfaceVariant"
+    android:background="@color/surface"
     android:fitsSystemWindows="true"
     tools:context=".presentation.transactions.TransferToFriendActivity">
 
@@ -26,7 +26,7 @@
             android:layout_marginStart="15dp"
             android:background="?attr/selectableItemBackgroundBorderless"
             android:src="@drawable/ic_arrow_back"
-            app:tint="@color/colorOnBackground" />
+            app:tint="@color/on_surface" />
 
         <TextView
             style="@style/Widget.SettleX.TextBold"
@@ -40,7 +40,7 @@
     <ScrollView
         android:layout_width="match_parent"
         android:layout_height="0dp"
-        android:background="@color/colorBackgroundInverse"
+        android:background="@color/surface_container"
         android:fillViewport="true"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
@@ -108,11 +108,11 @@
                     android:drawablePadding="5dp"
                     android:gravity="center_vertical"
                     android:padding="5dp"
-                    android:textColor="@color/colorOnErrorContainer"
+                    android:textColor="@color/on_error_container"
                     android:textSize="12sp"
                     android:visibility="gone"
                     app:drawableStartCompat="@drawable/ic_info_outline"
-                    app:drawableTint="@color/colorOnErrorContainer"
+                    app:drawableTint="@color/on_error_container"
                     tools:text="You cannot send a payment to your own account. Please choose a different recipient" />
 
                 <!-- Selected recipient -->
@@ -154,7 +154,7 @@
                             style="@style/Widget.SettleX.TextName"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
-                            android:textColor="@color/colorOnSurfaceVariant"
+                            android:textColor="@color/on_surface_variant"
                             tools:text="\@vitalisdft" />
                     </LinearLayout>
 
@@ -162,7 +162,7 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:src="@drawable/ic_checkbox_checked"
-                        app:tint="@color/colorPrimary" />
+                        app:tint="@color/primary" />
                 </LinearLayout>
 
                 <FrameLayout
@@ -212,7 +212,7 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:text="Available Balance:"
-                        android:textColor="@color/colorOnSurfaceVariant"
+                        android:textColor="@color/on_surface_variant"
                         android:textSize="12sp" />
 
                     <TextView

@@ -4,7 +4,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@color/colorSurfaceVariant"
+    android:background="@color/surface"
     android:fitsSystemWindows="true"
     tools:context=".presentation.dashboard.account.ProfileActivity">
 
@@ -26,7 +26,7 @@
             android:layout_marginStart="15dp"
             android:scaleType="centerCrop"
             android:src="@drawable/ic_arrow_back"
-            app:tint="@color/colorOnBackground" />
+            app:tint="@color/on_surface" />
 
         <TextView
             style="@style/Widget.SettleX.TextBold"
@@ -41,7 +41,7 @@
     <ScrollView
         android:layout_width="match_parent"
         android:layout_height="0dp"
-        android:background="@color/colorBackgroundInverse"
+        android:background="@color/surface_container"
         android:fillViewport="true"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintTop_toBottomOf="@id/header">
@@ -81,7 +81,7 @@
                         android:background="@drawable/bg_scrim_oval"
                         android:src="@drawable/ic_camera"
                         app:contentPadding="5dp"
-                        app:tint="@color/colorOnScrim" />
+                        app:tint="@color/on_scrim" />
                 </FrameLayout>
 
                 <TextView
@@ -114,7 +114,7 @@
                         style="@style/Widget.SettleX.TextMedium"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:textColor="@color/colorOnSurfaceVariant"
+                        android:textColor="@color/on_surface_variant"
                         android:textSize="16sp"
                         tools:text="\@vitalis" />
 
@@ -125,7 +125,7 @@
                         android:layout_marginStart="2dp"
                         android:background="?attr/selectableItemBackgroundBorderless"
                         android:src="@drawable/ic_copy"
-                        app:tint="@color/colorOnSurfaceVariant" />
+                        app:tint="@color/on_surface_variant" />
                 </LinearLayout>
             </LinearLayout>
 
@@ -160,7 +160,7 @@
                         android:ellipsize="end"
                         android:maxLines="1"
                         android:textAlignment="textEnd"
-                        android:textColor="@color/colorOnSurfaceVariant"
+                        android:textColor="@color/on_surface_variant"
                         tools:text="BENJAMIN NNAEMEKA" />
                 </LinearLayout>
 
@@ -187,7 +187,7 @@
                         android:ellipsize="end"
                         android:maxLines="1"
                         android:textAlignment="textEnd"
-                        android:textColor="@color/colorOnSurfaceVariant"
+                        android:textColor="@color/on_surface_variant"
                         tools:text="+2347055606507" />
                 </LinearLayout>
 
@@ -214,7 +214,7 @@
                         android:ellipsize="end"
                         android:maxLines="1"
                         android:textAlignment="textEnd"
-                        android:textColor="@color/colorOnSurfaceVariant"
+                        android:textColor="@color/on_surface_variant"
                         tools:text="c**s@gmail.com" />
                 </LinearLayout>
 
@@ -241,7 +241,7 @@
                         android:ellipsize="end"
                         android:maxLines="1"
                         android:textAlignment="textEnd"
-                        android:textColor="@color/colorOnSurfaceVariant"
+                        android:textColor="@color/on_surface_variant"
                         tools:text="2 years ago" />
 
                     <com.google.android.material.imageview.ShapeableImageView
@@ -251,7 +251,7 @@
                         android:layout_marginStart="5dp"
                         android:background="?attr/selectableItemBackgroundBorderless"
                         android:src="@drawable/ic_info_outline"
-                        app:tint="@color/colorOnSurfaceVariant" />
+                        app:tint="@color/on_surface_variant" />
                 </LinearLayout>
             </LinearLayout>
         </LinearLayout>

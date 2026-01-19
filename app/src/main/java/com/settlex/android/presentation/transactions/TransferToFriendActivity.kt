@@ -73,7 +73,7 @@ class TransferToFriendActivity : AppCompatActivity() {
     }
 
     private fun initViews() = with(binding) {
-        StatusBar.setColor(this@TransferToFriendActivity, R.color.colorSurfaceVariant)
+        StatusBar.setColor(this@TransferToFriendActivity, R.color.surface)
 
         initRecipientRecyclerView()
         setupInputListeners()

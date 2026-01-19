@@ -40,7 +40,7 @@ class ServicesDashboardFragment : Fragment() {
     }
 
     private fun initViews() {
-        StatusBar.setColor(requireActivity(), R.color.colorSurfaceVariant)
+        StatusBar.setColor(requireActivity(), R.color.surface)
         initTelecomRecyclerView()
         initEntertainmentRecyclerView()
         initUtilitiesRecyclerView()

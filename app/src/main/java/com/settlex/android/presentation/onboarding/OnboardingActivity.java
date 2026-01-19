@@ -31,7 +31,7 @@ public class OnboardingActivity extends AppCompatActivity {
         binding = ActivityOnboardingBinding.inflate(getLayoutInflater());
         setContentView(binding.getRoot());
 
-        StatusBar.setColor(this, R.color.colorBackground);
+        StatusBar.setColor(this, R.color.surface);
         setupViewPager();
         setupUiActions();
     }

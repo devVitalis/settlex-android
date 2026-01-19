@@ -55,7 +55,7 @@ class OtpVerificationActivity : AppCompatActivity() {
     }
 
     private fun initViews() {
-        StatusBar.setColor(this, R.color.colorBackground)
+        StatusBar.setColor(this, R.color.surface)
         setupListeners()
         setupInputWatcher()
         startOtpResendCooldownTimer()

@@ -1,4 +1,4 @@
 <selector xmlns:android="http://schemas.android.com/apk/res/android">
-    <item android:color="@color/button_disabled_background" android:state_enabled="false" />
-    <item android:color="@color/colorPrimary" />
+    <item android:color="@color/button_primary_disabled" android:state_enabled="false" />
+    <item android:color="@color/primary" />
 </selector>

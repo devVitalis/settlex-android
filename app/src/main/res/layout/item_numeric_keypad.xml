@@ -4,7 +4,7 @@
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:layout_gravity="bottom"
-    android:background="@color/colorSurface"
+    android:background="@color/surface_container"
     android:columnCount="3"
     android:gravity="fill"
     android:orientation="vertical"
@@ -79,5 +79,5 @@
         app:icon="@drawable/ic_backspace"
         app:iconGravity="textStart"
         app:iconSize="30dp"
-        app:iconTint="@color/colorOnBackground" />
+        app:iconTint="@color/on_surface" />
 </GridLayout>

@@ -66,7 +66,7 @@ class RegisterPasswordFragment : Fragment() {
     }
 
     private fun initViews() {
-        StatusBar.setColor(requireActivity(), R.color.colorBackground)
+        StatusBar.setColor(requireActivity(), R.color.surface)
         setupInputValidation()
         togglePasswordVisibilityIcons(false)
         focusManager.attachDoneAction(binding!!.etInvitationCode)

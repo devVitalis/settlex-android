@@ -54,7 +54,7 @@ class LoginActivity : AppCompatActivity() {
     }
 
     private fun initViews() = with(binding) {
-        StatusBar.setColor(this@LoginActivity, R.color.colorBackground)
+        StatusBar.setColor(this@LoginActivity, R.color.surface)
         setupInputValidation()
         focusManager.attachDoneAction(editText = etPassword)
 
@@ -62,14 +62,14 @@ class LoginActivity : AppCompatActivity() {
             this@LoginActivity,
             "Not you? Switch Account",
             "Switch Account",
-            ContextCompat.getColor(this@LoginActivity, R.color.colorPrimary)
+            ContextCompat.getColor(this@LoginActivity, R.color.primary)
         )
 
         tvSignUp.text = SpannableTextFormatter(
             this@LoginActivity,
             "Don't have an account yet?\nClick here to register",
             "Click here to register",
-            ContextCompat.getColor(this@LoginActivity, R.color.colorPrimary)
+            ContextCompat.getColor(this@LoginActivity, R.color.primary)
         )
     }
 

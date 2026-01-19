@@ -72,7 +72,7 @@ class RegisterEmailVerificationFragment : Fragment() {
     }
 
     private fun initViews() = with(binding) {
-        StatusBar.setColor(requireActivity(), R.color.colorBackground)
+        StatusBar.setColor(requireActivity(), R.color.surface)
         setupInputWatcher()
 
         email.also { email ->
@@ -80,7 +80,7 @@ class RegisterEmailVerificationFragment : Fragment() {
                 requireContext(),
                 text = "We sent a code to $email. This code will expire after 10 minutes",
                 target = email,
-                color = ContextCompat.getColor(requireContext(), R.color.colorOnBackground),
+                color = ContextCompat.getColor(requireContext(), R.color.on_surface),
                 setBold = true,
             )
         }
@@ -181,7 +181,7 @@ class RegisterEmailVerificationFragment : Fragment() {
         tvResendCode.setTextColor(
             ContextCompat.getColor(
                 requireContext(),
-                R.color.colorOnSurfaceVariant
+                R.color.on_surface_variant
             )
         )
 

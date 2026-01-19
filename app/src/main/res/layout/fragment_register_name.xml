@@ -5,7 +5,7 @@
     android:id="@+id/main"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@color/colorBackground"
+    android:background="@color/surface"
     android:fitsSystemWindows="true"
     tools:context=".presentation.auth.register.RegisterNameFragment">
 
@@ -26,7 +26,7 @@
             android:layout_marginStart="15dp"
             android:background="?attr/selectableItemBackgroundBorderless"
             android:src="@drawable/ic_arrow_back"
-            app:tint="@color/colorOnBackground" />
+            app:tint="@color/on_surface" />
     </LinearLayout>
 
     <ScrollView

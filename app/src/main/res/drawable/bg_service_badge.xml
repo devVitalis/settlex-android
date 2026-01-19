@@ -3,8 +3,8 @@
     android:shape="rectangle">
     <gradient
         android:angle="0"
-        android:endColor="@color/colorBadge"
-        android:startColor="@color/colorBadgeSecondary"
+        android:endColor="@color/alert"
+        android:startColor="@color/alert_container"
         android:type="linear" />
 
     <corners

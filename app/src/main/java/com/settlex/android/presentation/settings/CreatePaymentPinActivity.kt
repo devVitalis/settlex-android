@@ -49,7 +49,7 @@ class CreatePaymentPinActivity : AppCompatActivity() {
     }
 
     private fun initViews() = with(binding) {
-        StatusBar.setColor(this@CreatePaymentPinActivity, R.color.colorBackground)
+        StatusBar.setColor(this@CreatePaymentPinActivity, R.color.surface)
         setupPinInputWatcher()
         updateUiFromIntent()
 

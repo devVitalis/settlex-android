@@ -29,7 +29,7 @@ class TransactionStatusActivity : AppCompatActivity() {
     }
 
     private fun initViews(result: TransactionResult) {
-        StatusBar.setColor(this, R.color.colorSurfaceVariant)
+        StatusBar.setColor(this, R.color.surface)
         showTransactionData(result)
         setupDoneButton()
     }

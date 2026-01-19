@@ -70,7 +70,7 @@ class ProfileActivity : AppCompatActivity() {
     }
 
     private fun initViews() = with(binding) {
-        StatusBar.setColor(this@ProfileActivity, R.color.colorSurfaceVariant)
+        StatusBar.setColor(this@ProfileActivity, R.color.surface)
         initGalleryPermissionLauncher()
         initCameraPermissionLauncher()
         initImagePickerLauncher()

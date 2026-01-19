@@ -1,6 +1,5 @@
 package com.settlex.android.presentation.dashboard.rewards
 
-import android.content.Intent
 import android.os.Bundle
 import android.text.Html
 import android.view.LayoutInflater
@@ -15,53 +14,46 @@ import androidx.lifecycle.repeatOnLifecycle
 import com.settlex.android.R
 import com.settlex.android.databinding.FragmentDashboardRewardsBinding
 import com.settlex.android.presentation.common.extensions.copyToClipboard
+import com.settlex.android.presentation.common.extensions.gone
+import com.settlex.android.presentation.common.extensions.show
 import com.settlex.android.presentation.common.extensions.toNairaString
-import com.settlex.android.presentation.common.extensions.toastNotImplemented
-import com.settlex.android.presentation.wallet.CommissionWithdrawalActivity
 import com.settlex.android.util.ui.StatusBar
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.launch
 
 @AndroidEntryPoint
 class RewardsDashboardFragment : Fragment() {
-    private var binding: FragmentDashboardRewardsBinding? = null
+    private var _binding: FragmentDashboardRewardsBinding? = null
+    private val binding get() = _binding!!
     private val viewModel: RewardsViewModel by activityViewModels()
 
     override fun onCreateView(
         inflater: LayoutInflater,
         container: ViewGroup?,
         savedInstanceState: Bundle?
-    ): View? {
-        binding = FragmentDashboardRewardsBinding.inflate(inflater, container, false)
+    ): View {
+        _binding = FragmentDashboardRewardsBinding.inflate(inflater, container, false)
 
-        setupUi()
-        observeUserState()
-        return binding!!.root
+        initViews()
+        observeUserSession()
+        return binding.root
     }
 
     override fun onDestroyView() {
         super.onDestroyView()
-        binding = null
+        _binding = null
     }
 
-    private fun setupUi() {
-        StatusBar.setColor(requireActivity(), R.color.blue_400)
+    private fun initViews() {
+        StatusBar.setColor(requireActivity(), R.color.surface_container)
         applyReferralInfoStyle()
 
-        binding!!.btnCopy.setOnClickListener { binding!!.referralCode.copyToClipboard("Referral Code") }
-        binding!!.btnShareInvitationLink.setOnClickListener { it.toastNotImplemented() }
-
-        binding!!.btnViewCommissionBalance.setOnClickListener {
-            startActivity(
-                Intent(
-                    requireContext(),
-                    CommissionWithdrawalActivity::class.java
-                )
-            )
+        with(binding) {
+            ivCopyReferral.setOnClickListener { tvReferralCode.copyToClipboard("Referral Code") }
         }
     }
 
-    private fun observeUserState() {
+    private fun observeUserSession() {
         viewLifecycleOwner.lifecycleScope.launch {
             viewLifecycleOwner.repeatOnLifecycle(Lifecycle.State.STARTED) {
 //                viewModel.userSession.collect {
@@ -71,8 +63,8 @@ class RewardsDashboardFragment : Fragment() {
 //                                showLoggedOutView()
 //                                return@collect
 //                            }
-//                            binding!!.loggedOutState.visibility = View.GONE
-//                            binding!!.loggedInState.visibility = View.VISIBLE
+//                            binding.loggedOutState.visibility = View.GONE
+//                            binding.loggedInState.visibility = View.VISIBLE
 //
 //                            displayRewardsData(it.data.user as RewardsUiModel)
 //                        }
@@ -85,23 +77,24 @@ class RewardsDashboardFragment : Fragment() {
     }
 
     private fun displayRewardsData(user: RewardsUiModel) {
-        binding!!.commissionBalance.text = user.commissionBalance.toNairaString()
-        binding!!.referralCode.text = user.paymentId ?: "Get Referral Code"
-        binding!!.totalReferralEarning.text = user.referralBalance.toNairaString()
+        with(binding) {
+            tvReferralCode.text = user.paymentId ?: "Get Referral Code"
+            tvTotalReferralEarning.text = user.referralBalance.toNairaString()
+            tvReferralsShared.text = "0"
+        }
     }
 
-    private fun showLoggedOutView() {
-        binding!!.root.setBackgroundColor(ContextCompat.getColor(requireContext(), R.color.white))
-        binding!!.headerTitle.setTextColor(ContextCompat.getColor(requireContext(), R.color.black))
+    private fun showLoggedOutView() = with(binding) {
+        root.setBackgroundColor(ContextCompat.getColor(requireContext(), R.color.white))
+//        tvHeaderTitle.setTextColor(ContextCompat.getColor(requireContext(), R.color.black))
 
-        binding!!.loggedInState.visibility = View.GONE
-        binding!!.loggedOutState.visibility = View.VISIBLE
+        viewAuthenticatedUiState.gone()
+        viewUnauthenticatedUiState.show()
     }
 
     private fun applyReferralInfoStyle() {
         val htmlText =
-            "Get <font color='#0044CC'><b>1% commission</b></font> on every transaction your referrals make, for " +
-                    "<font color='#0044CC'><b>a lifetime</b></font>. Start sharing and watch your rewards grow!"
-        binding!!.txtReferralInfo.text = Html.fromHtml(htmlText, Html.FROM_HTML_MODE_LEGACY)
+            "Get 1% commission on every transaction your referrals make, for a lifetime. Start sharing and watch your rewards grow!"
+        binding.tvReferralInfo.text = Html.fromHtml(htmlText, Html.FROM_HTML_MODE_LEGACY)
     }
 }

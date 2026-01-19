@@ -4,7 +4,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@color/colorSurfaceVariant"
+    android:background="@color/surface"
     android:fitsSystemWindows="true"
     tools:context=".presentation.dashboard.services.ServicesDashboardFragment">
 
@@ -31,7 +31,7 @@
     <ScrollView
         android:layout_width="match_parent"
         android:layout_height="0dp"
-        android:background="@color/colorBackgroundInverse"
+        android:background="@color/surface_container"
         android:fillViewport="true"
         android:scrollbars="none"
         app:layout_constraintBottom_toBottomOf="parent"
@@ -56,7 +56,7 @@
                     android:layout_height="wrap_content"
                     android:layout_marginTop="5dp"
                     android:text="@string/tv_telecom_amp_digital"
-                    android:textColor="@color/colorOnSurfaceVariant"
+                    android:textColor="@color/on_surface_variant"
                     android:textSize="12sp" />
 
                 <androidx.recyclerview.widget.RecyclerView
@@ -82,7 +82,7 @@
                     android:layout_height="wrap_content"
                     android:layout_marginTop="5dp"
                     android:text="@string/tv_entertainment"
-                    android:textColor="@color/colorOnSurfaceVariant"
+                    android:textColor="@color/on_surface_variant"
                     android:textSize="12sp" />
 
                 <androidx.recyclerview.widget.RecyclerView
@@ -108,7 +108,7 @@
                     android:layout_height="wrap_content"
                     android:layout_marginTop="5dp"
                     android:text="@string/tv_utilities_amp_bills"
-                    android:textColor="@color/colorOnSurfaceVariant"
+                    android:textColor="@color/on_surface_variant"
                     android:textSize="12sp" />
 
                 <androidx.recyclerview.widget.RecyclerView
@@ -134,7 +134,7 @@
                     android:layout_height="wrap_content"
                     android:layout_marginTop="5dp"
                     android:text="@string/tv_travel_amp_lifestyle"
-                    android:textColor="@color/colorOnSurfaceVariant"
+                    android:textColor="@color/on_surface_variant"
                     android:textSize="12sp" />
 
                 <androidx.recyclerview.widget.RecyclerView

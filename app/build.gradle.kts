@@ -128,7 +128,7 @@ dependencies {
     implementation(libs.ucrop)
 
     // Intent compact
-    implementation("androidx.core:core-ktx:1.9.0")
+    implementation(libs.core.ktx)
 }
 
 tasks.withType<JavaCompile>().configureEach {

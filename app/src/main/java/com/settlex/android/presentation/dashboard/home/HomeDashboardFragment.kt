@@ -91,7 +91,7 @@ class HomeDashboardFragment : Fragment() {
     }
 
     private fun initViews() {
-        StatusBar.setColor(requireActivity(), R.color.colorBackgroundInverse)
+        StatusBar.setColor(requireActivity(), R.color.surface_container)
         initListeners()
         initTransactionRecyclerView()
         setupDoubleBackPressToExit()
@@ -166,7 +166,7 @@ class HomeDashboardFragment : Fragment() {
     private fun onUserDataReceived(user: HomeUiModel) = with(binding) {
         if (user.paymentId == null) {
             startActivity(CreatePaymentIdActivity::class.java)
-            return
+            return@with
         }
 
         // Dismiss loading shimmer
@@ -382,8 +382,7 @@ class HomeDashboardFragment : Fragment() {
                 )
             }
         val adapter = ServicesAdapter(false, serviceList) { serviceUiModel ->
-            val destination = serviceUiModel.destination
-            when (destination) {
+            when (val destination = serviceUiModel.destination) {
                 null -> Toast.makeText(context, "Feature not yet implemented", Toast.LENGTH_SHORT)
                     .show()
 

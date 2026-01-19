@@ -5,7 +5,7 @@
     android:id="@+id/main"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@color/colorBackground"
+    android:background="@color/surface"
     android:fitsSystemWindows="true"
     tools:context=".presentation.auth.register.RegisterContactFragment">
 
@@ -27,7 +27,7 @@
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent"
-            app:tint="@color/colorOnBackground" />
+            app:tint="@color/on_surface" />
 
         <TextView
             android:id="@+id/btn_sign_in"
@@ -39,7 +39,7 @@
             android:fontFamily="@font/inter_medium"
             android:includeFontPadding="false"
             android:text="@string/tv_sign_in"
-            android:textColor="@color/colorPrimary"
+            android:textColor="@color/primary"
             android:textSize="15sp"
             android:textStyle="bold"
             app:layout_constraintBottom_toBottomOf="parent"

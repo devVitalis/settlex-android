@@ -4,7 +4,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@color/colorSurfaceVariant"
+    android:background="@color/surface"
     android:fitsSystemWindows="true"
     tools:context=".presentation.wallet.ReceiveActivity">
 
@@ -24,7 +24,7 @@
             android:layout_height="20dp"
             android:layout_marginStart="15dp"
             android:src="@drawable/ic_arrow_back"
-            app:tint="@color/colorOnBackground" />
+            app:tint="@color/on_surface" />
 
         <TextView
             style="@style/Widget.SettleX.TextBold"
@@ -38,7 +38,7 @@
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="0dp"
-        android:background="@color/colorBackgroundInverse"
+        android:background="@color/surface_container"
         android:orientation="vertical"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
@@ -59,7 +59,7 @@
                 android:layout_height="wrap_content"
                 android:layout_gravity="center"
                 android:text="@string/tv_settlex_payment_id"
-                android:textColor="@color/colorOnSurfaceVariant"
+                android:textColor="@color/on_surface_variant"
                 android:textSize="12sp" />
 
             <TextView
