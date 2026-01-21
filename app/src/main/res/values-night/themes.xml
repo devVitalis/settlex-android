@@ -1,13 +1,5 @@
 <resources>
-    <!-- Base application theme. -->
-    <style name="Base.Theme.SettleX" parent="Theme.Material3.DayNight.NoActionBar">
-        <!-- Transparent system bars for edge to edge support -->
-        <item name="android:navigationBarColor">@android:color/transparent</item>
-        <item name="android:statusBarColor">@android:color/transparent</item>
-        <item name="android:windowLightStatusBar">?attr/isLightTheme</item>
-    </style>
 
-    <!-- Default app theme -->
     <style name="Theme.SettleX" parent="Base.Theme.SettleX">
         <!-- Primary colors -->
         <item name="colorPrimary">@color/blue_primary</item>
@@ -58,12 +50,5 @@
         <!--        <item name="dividerColor">@color/gray_50</item>-->
         <!--        -->
         <item name="bottomSheetDialogTheme">@style/Theme_SettleX_Dialog_BottomSheet</item>
-    </style>
-
-    <!-- Splash theme -->
-    <style name="Theme.SettleX.Splash" parent="Theme.SplashScreen">
-        <item name="windowSplashScreenBackground">@color/blue_dark</item>
-        <item name="windowSplashScreenAnimatedIcon">@drawable/logo_splash_inset</item>
-        <item name="postSplashScreenTheme">@style/Theme.SettleX</item>
     </style>
 </resources>
