@@ -4,9 +4,9 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:background="@drawable/bg_surface_variant_ripple_rounded8"
     android:clipChildren="false"
     android:clipToPadding="false"
+    android:foreground="?attr/selectableItemBackground"
     android:gravity="center"
     android:orientation="vertical"
     android:paddingVertical="5dp">
@@ -23,52 +23,51 @@
             app:layout_constraintGuide_percent="0.5" />
 
         <FrameLayout
-            android:id="@+id/icon_frame"
-            android:layout_width="50dp"
-            android:layout_height="50dp"
-            android:background="@drawable/bg_background_inverse_oval"
+            android:id="@+id/view_icon_frame"
+            android:layout_width="35dp"
+            android:layout_height="35dp"
+            android:background="@drawable/bg_service_oval"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent">
 
-            <ImageView
+            <com.google.android.material.imageview.ShapeableImageView
                 android:id="@+id/iv_service_icon"
-                android:layout_width="24dp"
-                android:layout_height="24dp"
+                android:layout_width="20dp"
+                android:layout_height="20dp"
                 android:layout_gravity="center"
-                android:contentDescription="@null"
+                app:tint="?attr/colorPrimary"
                 tools:src="@drawable/ic_service_airtime" />
         </FrameLayout>
 
         <TextView
             android:id="@+id/tv_service_badge"
+            style="@style/TextAppearance.SettleX.Body1.Small"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginTop="-2dp"
             android:background="@drawable/bg_service_badge"
             android:gravity="center"
-            android:includeFontPadding="false"
             android:maxLines="1"
             android:minWidth="30dp"
-            android:paddingHorizontal="5dp"
-            android:paddingVertical="2dp"
-            android:textColor="@color/on_alert"
+            android:padding="2dp"
+            android:textColor="@color/pure_white"
             android:textSize="8sp"
-            app:layout_constraintStart_toStartOf="@id/center_guide_line"
-            app:layout_constraintTop_toTopOf="@+id/icon_frame"
+            app:layout_constraintStart_toStartOf="@+id/center_guide_line"
+            app:layout_constraintTop_toTopOf="@+id/view_icon_frame"
             tools:ignore="SmallSp"
-            tools:text="Hot" />
+            tools:text="up to 10%" />
     </androidx.constraintlayout.widget.ConstraintLayout>
 
     <TextView
         android:id="@+id/tv_service_name"
+        style="@style/TextAppearance.SettleX.Body1.Small"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginTop="4dp"
         android:gravity="center"
         android:textAlignment="center"
-        android:textColor="@color/on_surface"
-        android:textSize="12sp"
+        android:textColor="?attr/colorOnSurface"
         tools:text="Service" />
 </LinearLayout>

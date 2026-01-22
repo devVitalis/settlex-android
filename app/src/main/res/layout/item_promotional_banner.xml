@@ -1,13 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
-<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<com.google.android.material.imageview.ShapeableImageView xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:id="@+id/iv_promo_banner"
     android:layout_width="match_parent"
-    android:layout_height="match_parent">
-
-    <com.google.android.material.imageview.ShapeableImageView
-        android:id="@+id/iv_promo_banner"
-        android:layout_width="match_parent"
-        android:layout_height="120dp"
-        android:scaleType="centerCrop"
-        app:shapeAppearanceOverlay="@style/ShapeAppearance.SettleX.Rounded.16dp" />
-</FrameLayout>
+    android:layout_height="120dp"
+    android:scaleType="centerCrop"
+    app:shapeAppearanceOverlay="@style/ShapeAppearance.SettleX.Rounded.16dp"
+    app:srcCompat="@drawable/img_promo_banner_sample" />

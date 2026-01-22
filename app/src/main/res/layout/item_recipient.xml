@@ -5,7 +5,7 @@
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:layout_marginBottom="5dp"
-    android:background="@drawable/bg_background_inverse_rounded8"
+    android:background="@drawable/bg_surface_container_rounded8"
     android:gravity="center_vertical"
     android:orientation="horizontal"
     android:padding="8dp">
@@ -26,17 +26,18 @@
 
         <TextView
             android:id="@+id/tv_full_name"
-            style="@style/Widget.SettleX.TextName"
+            style="@style/TextAppearance.SettleX.Body1.Normal"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            tools:text="BENJAMIN NNAEMEKA" />
+            android:textColor="?attr/colorOnSurface"
+            tools:text="Benjamin Nnaemeka" />
 
         <TextView
             android:id="@+id/tv_payment_id"
-            style="@style/Widget.SettleX.TextName"
+            style="@style/TextAppearance.SettleX.Body1.Normal"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:textColor="@color/on_surface_variant"
+            android:textColor="?attr/colorOnSurfaceVariant"
             tools:text="\@vitalisdft" />
     </LinearLayout>
 </LinearLayout>
