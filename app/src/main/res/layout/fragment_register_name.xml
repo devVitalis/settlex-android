@@ -5,14 +5,14 @@
     android:id="@+id/main"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@color/surface"
+    android:background="?attr/colorSurface"
     android:fitsSystemWindows="true"
     tools:context=".presentation.auth.register.RegisterNameFragment">
 
     <LinearLayout
         android:id="@+id/header"
         android:layout_width="0dp"
-        android:layout_height="35dp"
+        android:layout_height="45dp"
         android:gravity="center_vertical"
         android:orientation="horizontal"
         app:layout_constraintEnd_toEndOf="parent"
@@ -20,13 +20,13 @@
         app:layout_constraintTop_toTopOf="parent">
 
         <com.google.android.material.imageview.ShapeableImageView
-            android:id="@+id/btn_back_before"
+            android:id="@+id/iv_back_before"
             android:layout_width="20dp"
             android:layout_height="20dp"
             android:layout_marginStart="15dp"
             android:background="?attr/selectableItemBackgroundBorderless"
             android:src="@drawable/ic_arrow_back"
-            app:tint="@color/on_surface" />
+            app:tint="?attr/colorOnSurface" />
     </LinearLayout>
 
     <ScrollView
@@ -54,11 +54,12 @@
                 android:orientation="horizontal">
 
                 <TextView
-                    style="@style/Widget.SettleX.TextBold"
+                    style="@style/TextAppearance.SettleX.Headline.Large"
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
                     android:layout_weight="1"
-                    android:text="@string/title_let_s_get_to_know_you" />
+                    android:text="@string/title_let_s_get_to_know_you"
+                    android:textColor="?attr/colorOnSurface" />
 
                 <!-- Step progress -->
                 <FrameLayout
@@ -75,20 +76,22 @@
 
                     <TextView
                         android:id="@+id/progress_text"
-                        style="@style/Widget.SettleX.TextRegular"
+                        style="@style/TextAppearance.SettleX.Body1.Normal"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_gravity="center"
-                        android:text="@string/tv_step_3_of_4" />
+                        android:text="@string/tv_step_3_of_4"
+                        android:textColor="?attr/colorOnSurface" />
                 </FrameLayout>
             </LinearLayout>
 
             <TextView
-                style="@style/Widget.SettleX.TextRegular"
+                style="@style/TextAppearance.SettleX.Body1.Normal"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_gravity="start"
-                android:text="@string/subtitle_what_should_we_call_you" />
+                android:text="@string/subtitle_enter_your_names"
+                android:textColor="?attr/colorOnSurface" />
 
             <!-- Firstname field -->
             <com.google.android.material.textfield.TextInputLayout
@@ -127,7 +130,6 @@
                     android:layout_width="match_parent"
                     android:layout_height="55dp"
                     android:imeOptions="actionDone"
-                    android:includeFontPadding="false"
                     android:inputType="textPersonName" />
             </com.google.android.material.textfield.TextInputLayout>
         </LinearLayout>
