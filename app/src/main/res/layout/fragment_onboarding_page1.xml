@@ -9,11 +9,11 @@
     tools:context=".presentation.onboarding.OnboardingPage1Fragment">
 
     <androidx.constraintlayout.widget.ConstraintLayout
-        android:id="@+id/image_container"
+        android:id="@+id/view_img_container"
         android:layout_width="0dp"
         android:layout_height="0dp"
         android:layout_marginBottom="50dp"
-        android:background="@drawable/bg_secondary_oval"
+        android:background="@drawable/bg_onboarding"
         android:clipToPadding="false"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintDimensionRatio="1:1"
@@ -38,24 +38,25 @@
 
     <TextView
         android:id="@+id/header"
-        style="@style/Widget.SettleX.TextBold"
+        style="@style/TextAppearance.SettleX.Headline.Large"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:layout_marginTop="10dp"
         android:text="@string/tv_welcome_to_nsettlex"
         android:textAlignment="viewStart"
+        android:textColor="?attr/colorOnSurface"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/image_container" />
+        app:layout_constraintTop_toBottomOf="@id/view_img_container" />
 
     <TextView
-        style="@style/Widget.SettleX.TextRegular"
+        style="@style/TextAppearance.SettleX.Body1.Normal"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:layout_marginTop="10dp"
         android:text="@string/tv_experience_seamless_payments_and_cheaper_bundles_built_for_you_settlex_makes_every_transaction_simple"
         android:textAlignment="viewStart"
-        android:textColor="@color/on_surface_variant"
+        android:textColor="?attr/colorOnSurfaceVariant"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@id/header" />
