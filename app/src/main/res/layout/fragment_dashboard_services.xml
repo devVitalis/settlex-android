@@ -4,7 +4,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@color/surface"
+    android:background="?attr/colorSurface"
     android:fitsSystemWindows="true"
     tools:context=".presentation.dashboard.services.ServicesDashboardFragment">
 
@@ -20,18 +20,18 @@
         app:layout_constraintTop_toTopOf="parent">
 
         <TextView
-            style="@style/Widget.SettleX.TextBold"
+            style="@style/TextAppearance.SettleX.Headline.Normal"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:gravity="center"
-            android:text="@string/tv_all_services"
-            android:textSize="15sp" />
+            android:text="@string/tv_all_services" />
     </LinearLayout>
 
+    <!--  Scroll -->
     <ScrollView
         android:layout_width="match_parent"
         android:layout_height="0dp"
-        android:background="@color/surface_container"
+        android:background="?attr/colorSurfaceDim"
         android:fillViewport="true"
         android:scrollbars="none"
         app:layout_constraintBottom_toBottomOf="parent"
@@ -46,18 +46,17 @@
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:background="@drawable/bg_surface_variant_rounded16"
+                android:background="@drawable/bg_surface_rounded8"
                 android:orientation="vertical"
-                android:padding="8dp">
+                android:padding="15dp">
 
                 <TextView
-                    style="@style/Widget.SettleX.TextRegular"
+                    style="@style/TextAppearance.SettleX.Body1.Small"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_marginTop="5dp"
                     android:text="@string/tv_telecom_amp_digital"
-                    android:textColor="@color/on_surface_variant"
-                    android:textSize="12sp" />
+                    android:textColor="?attr/colorOnSurface" />
 
                 <androidx.recyclerview.widget.RecyclerView
                     android:id="@+id/telecom_and_digital_recycler_view"
@@ -71,19 +70,18 @@
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="15dp"
-                android:background="@drawable/bg_surface_variant_rounded16"
+                android:layout_marginTop="10dp"
+                android:background="@drawable/bg_surface_rounded8"
                 android:orientation="vertical"
-                android:padding="8dp">
+                android:padding="15dp">
 
                 <TextView
-                    style="@style/Widget.SettleX.TextRegular"
+                    style="@style/TextAppearance.SettleX.Body1.Small"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_marginTop="5dp"
                     android:text="@string/tv_entertainment"
-                    android:textColor="@color/on_surface_variant"
-                    android:textSize="12sp" />
+                    android:textColor="?attr/colorOnSurface" />
 
                 <androidx.recyclerview.widget.RecyclerView
                     android:id="@+id/entertainment_recycler_view"
@@ -97,19 +95,18 @@
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="15dp"
-                android:background="@drawable/bg_surface_variant_rounded16"
+                android:layout_marginTop="10dp"
+                android:background="@drawable/bg_surface_rounded8"
                 android:orientation="vertical"
-                android:padding="8dp">
+                android:padding="15dp">
 
                 <TextView
-                    style="@style/Widget.SettleX.TextRegular"
+                    style="@style/TextAppearance.SettleX.Body1.Small"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_marginTop="5dp"
                     android:text="@string/tv_utilities_amp_bills"
-                    android:textColor="@color/on_surface_variant"
-                    android:textSize="12sp" />
+                    android:textColor="?attr/colorOnSurface" />
 
                 <androidx.recyclerview.widget.RecyclerView
                     android:id="@+id/utilities_and_bills_recycler_view"
@@ -123,19 +120,18 @@
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="15dp"
-                android:background="@drawable/bg_surface_variant_rounded16"
+                android:layout_marginTop="10dp"
+                android:background="@drawable/bg_surface_rounded8"
                 android:orientation="vertical"
-                android:padding="8dp">
+                android:padding="15dp">
 
                 <TextView
-                    style="@style/Widget.SettleX.TextRegular"
+                    style="@style/TextAppearance.SettleX.Body1.Small"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_marginTop="5dp"
                     android:text="@string/tv_travel_amp_lifestyle"
-                    android:textColor="@color/on_surface_variant"
-                    android:textSize="12sp" />
+                    android:textColor="?attr/colorOnSurface" />
 
                 <androidx.recyclerview.widget.RecyclerView
                     android:id="@+id/travel_and_lifestyle_recycler_view"

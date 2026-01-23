@@ -5,7 +5,7 @@
     android:id="@+id/main"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@drawable/bg_0dp_gradient_blue_200"
+    android:background="?attr/colorSurfaceDim"
     android:fitsSystemWindows="true"
     tools:context=".presentation.dashboard.account.AccountDashboardFragment">
 
@@ -13,10 +13,8 @@
         android:id="@+id/header"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:background="@drawable/bg_0dp_gradient_blue_200"
         android:paddingHorizontal="15dp"
-        android:paddingTop="5dp"
-        android:paddingBottom="25dp"
+        android:paddingVertical="5dp"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent">
@@ -25,7 +23,6 @@
             android:id="@+id/iv_profile_photo"
             android:layout_width="50dp"
             android:layout_height="50dp"
-            android:contentDescription="@null"
             android:src="@drawable/ic_avatar_default"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent"
@@ -48,46 +45,40 @@
 
                 <TextView
                     android:id="@+id/tv_greeting"
+                    style="@style/TextAppearance.SettleX.Body1.Normal"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:fontFamily="@font/poppins_regular"
-                    android:includeFontPadding="false"
                     android:text="Hello 👋"
-                    android:textColor="@color/black"
-                    android:textSize="14sp" />
+                    android:textColor="?attr/colorOnSurface" />
             </LinearLayout>
 
             <TextView
                 android:id="@+id/tv_full_name"
+                style="@style/TextAppearance.SettleX.Body1.Normal"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:fontFamily="@font/poppins_regular"
-                android:gravity="center"
-                android:includeFontPadding="false"
-                android:textColor="@color/black"
-                android:textSize="15sp"
+                android:textColor="?attr/colorOnSurface"
                 android:textStyle="bold"
                 tools:text="Nnaemeka Benjamin" />
         </LinearLayout>
 
-        <ImageView
+        <com.google.android.material.imageview.ShapeableImageView
             android:id="@+id/btn_settings_icon"
-            android:layout_width="25dp"
-            android:layout_height="25dp"
-            android:contentDescription="Settings"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
             android:src="@drawable/ic_settings"
             app:layout_constraintBottom_toBottomOf="@id/view_greeting_container"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintTop_toTopOf="@id/view_greeting_container"
-            app:tint="@color/black" />
+            app:tint="?attr/colorOnSurface" />
     </androidx.constraintlayout.widget.ConstraintLayout>
 
+    <!--  ScrollView -->
     <ScrollView
         android:id="@+id/scroll_view"
         android:layout_width="match_parent"
         android:layout_height="0dp"
         android:layout_gravity="bottom"
-        android:background="@color/gray_200"
         android:fillViewport="true"
         android:overScrollMode="never"
         android:scrollbars="none"
@@ -103,349 +94,154 @@
 
             <!-- Account settings -->
             <TextView
+                style="@style/TextAppearance.SettleX.Body1.Small"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="5dp"
-                android:fontFamily="@font/inter_regular"
-                android:includeFontPadding="false"
                 android:text="Account Settings"
-                android:textColor="@color/gray_500"
-                android:textSize="11sp" />
+                android:textColor="?attr/colorOnSurfaceVariant" />
 
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="5dp"
-                android:background="@drawable/bg_rounded8"
+                android:background="@drawable/bg_surface_rounded8"
                 android:orientation="vertical"
                 android:paddingHorizontal="5dp"
                 android:paddingVertical="10dp">
 
-                <!-- btn_transactions -->
+                <!-- Transactions history -->
                 <LinearLayout
                     android:id="@+id/btn_transactions"
                     android:layout_width="match_parent"
                     android:layout_height="45dp"
-                    android:background="@drawable/bg_surface_variant_ripple_rounded8"
+                    android:background="@drawable/bg_surface_ripple_rounded8"
                     android:gravity="center_vertical"
                     android:orientation="horizontal"
                     android:padding="5dp">
 
-                    <ImageView
+                    <com.google.android.material.imageview.ShapeableImageView
                         android:layout_width="25dp"
                         android:layout_height="25dp"
-                        android:contentDescription="@null"
                         android:src="@drawable/ic_receipt"
-                        app:tint="@color/blue_500" />
+                        app:tint="?attr/colorPrimary" />
 
                     <TextView
+                        style="@style/TextAppearance.SettleX.Body1.Normal"
                         android:layout_width="0dp"
                         android:layout_height="wrap_content"
                         android:layout_marginStart="15dp"
                         android:layout_weight="1"
-                        android:fontFamily="@font/inter_regular"
-                        android:includeFontPadding="false"
                         android:text="Transaction History"
-                        android:textColor="@color/black"
-                        android:textSize="14sp" />
+                        android:textColor="?attr/colorOnSurface" />
 
-                    <ImageView
+                    <com.google.android.material.imageview.ShapeableImageView
                         android:layout_width="15dp"
                         android:layout_height="15dp"
-                        android:contentDescription="@null"
                         android:src="@drawable/ic_arrow_forward"
-                        app:tint="@color/gray_500" />
+                        app:tint="?attr/colorOnSurfaceVariant" />
                 </LinearLayout>
 
-                <!-- btn_settings -->
+                <!-- Settings -->
                 <LinearLayout
                     android:id="@+id/btn_settings"
                     android:layout_width="match_parent"
                     android:layout_height="45dp"
                     android:layout_marginTop="10dp"
-                    android:background="@drawable/bg_surface_variant_ripple_rounded8"
+                    android:background="@drawable/bg_surface_ripple_rounded8"
                     android:gravity="center_vertical"
                     android:orientation="horizontal"
                     android:padding="5dp">
 
-                    <ImageView
+                    <com.google.android.material.imageview.ShapeableImageView
                         android:layout_width="25dp"
                         android:layout_height="25dp"
-                        android:contentDescription="@null"
                         android:src="@drawable/ic_settings"
-                        app:tint="@color/blue_500" />
+                        app:tint="?attr/colorPrimary" />
 
                     <TextView
+                        style="@style/TextAppearance.SettleX.Body1.Normal"
                         android:layout_width="0dp"
                         android:layout_height="wrap_content"
                         android:layout_marginStart="15dp"
                         android:layout_weight="1"
-                        android:fontFamily="@font/inter_regular"
-                        android:includeFontPadding="false"
                         android:text="Settings"
-                        android:textColor="@color/black"
-                        android:textSize="14sp" />
+                        android:textColor="?attr/colorOnSurface" />
 
-                    <ImageView
+                    <com.google.android.material.imageview.ShapeableImageView
                         android:layout_width="15dp"
                         android:layout_height="15dp"
-                        android:contentDescription="@null"
                         android:src="@drawable/ic_arrow_forward"
-                        app:tint="@color/gray_500" />
-                </LinearLayout>
-            </LinearLayout>
-
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="15dp"
-                android:fontFamily="@font/inter_regular"
-                android:includeFontPadding="false"
-                android:text="Engagement and Rewards"
-                android:textColor="@color/gray_500"
-                android:textSize="11sp"
-                android:visibility="gone" />
-
-            <LinearLayout
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="5dp"
-                android:background="@drawable/bg_rounded8"
-                android:orientation="vertical"
-                android:paddingHorizontal="5dp"
-                android:paddingVertical="10dp"
-                android:visibility="gone">
-
-                <LinearLayout
-                    android:id="@+id/btn_earn_rewards"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:background="@drawable/bg_surface_variant_ripple_rounded8"
-                    android:gravity="center_vertical"
-                    android:orientation="horizontal"
-                    android:padding="5dp">
-
-                    <ImageView
-                        android:layout_width="25dp"
-                        android:layout_height="25dp"
-                        android:contentDescription="@null"
-                        android:src="@drawable/ic_megaphone"
-                        app:tint="@color/blue_500" />
-
-                    <LinearLayout
-                        android:layout_width="0dp"
-                        android:layout_height="wrap_content"
-                        android:layout_marginStart="15dp"
-                        android:layout_weight="1"
-                        android:gravity="center_vertical"
-                        android:orientation="vertical">
-
-                        <TextView
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:fontFamily="@font/inter_regular"
-                            android:includeFontPadding="false"
-                            android:text="Earn Rewards"
-                            android:textColor="@color/black"
-                            android:textSize="14sp" />
-
-                        <TextView
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:fontFamily="@font/inter_regular"
-                            android:includeFontPadding="false"
-                            android:text="Invite friends and earn forever"
-                            android:textColor="@color/gray_500"
-                            android:textSize="12sp" />
-                    </LinearLayout>
-
-                    <ImageView
-                        android:layout_width="15dp"
-                        android:layout_height="15dp"
-                        android:contentDescription="@null"
-                        android:src="@drawable/ic_arrow_forward"
-                        app:tint="@color/gray_500" />
-                </LinearLayout>
-
-                <LinearLayout
-                    android:id="@+id/btn_rate_us"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_marginTop="10dp"
-                    android:background="@drawable/bg_surface_variant_ripple_rounded8"
-                    android:gravity="center_vertical"
-                    android:orientation="horizontal"
-                    android:padding="5dp">
-
-                    <ImageView
-                        android:layout_width="25dp"
-                        android:layout_height="25dp"
-                        android:contentDescription="@null"
-                        android:src="@drawable/ic_review"
-                        app:tint="@color/blue_500" />
-
-                    <LinearLayout
-                        android:layout_width="0dp"
-                        android:layout_height="wrap_content"
-                        android:layout_marginStart="15dp"
-                        android:layout_weight="1"
-                        android:gravity="center_vertical"
-                        android:orientation="vertical">
-
-                        <TextView
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:fontFamily="@font/inter_regular"
-                            android:includeFontPadding="false"
-                            android:text="Review Us"
-                            android:textColor="@color/black"
-                            android:textSize="14sp" />
-
-                        <TextView
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:fontFamily="@font/inter_regular"
-                            android:includeFontPadding="false"
-                            android:text="Your review helps others find us"
-                            android:textColor="@color/gray_500"
-                            android:textSize="12sp" />
-                    </LinearLayout>
-
-                    <ImageView
-                        android:layout_width="15dp"
-                        android:layout_height="15dp"
-                        android:contentDescription="@null"
-                        android:src="@drawable/ic_arrow_forward"
-                        app:tint="@color/gray_500" />
-                </LinearLayout>
-
-                <LinearLayout
-                    android:id="@+id/btn_feedback"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_marginTop="10dp"
-                    android:background="@drawable/bg_surface_variant_ripple_rounded8"
-                    android:gravity="center_vertical"
-                    android:orientation="horizontal"
-                    android:padding="5dp">
-
-                    <ImageView
-                        android:layout_width="25dp"
-                        android:layout_height="25dp"
-                        android:contentDescription="@null"
-                        android:src="@drawable/ic_message"
-                        app:tint="@color/blue_500" />
-
-                    <LinearLayout
-                        android:layout_width="0dp"
-                        android:layout_height="wrap_content"
-                        android:layout_marginStart="15dp"
-                        android:layout_weight="1"
-                        android:gravity="center_vertical"
-                        android:orientation="vertical">
-
-                        <TextView
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:fontFamily="@font/inter_regular"
-                            android:includeFontPadding="false"
-                            android:text="Feedback &amp; Suggestions"
-                            android:textColor="@color/black"
-                            android:textSize="14sp" />
-
-                        <TextView
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:fontFamily="@font/inter_regular"
-                            android:includeFontPadding="false"
-                            android:text="Help us improve by sharing your thoughts"
-                            android:textColor="@color/gray_500"
-                            android:textSize="12sp" />
-                    </LinearLayout>
-
-                    <ImageView
-                        android:layout_width="15dp"
-                        android:layout_height="15dp"
-                        android:contentDescription="@null"
-                        android:src="@drawable/ic_arrow_forward"
-                        app:tint="@color/gray_500" />
+                        app:tint="?attr/colorOnSurfaceVariant" />
                 </LinearLayout>
             </LinearLayout>
 
             <!-- About -->
             <TextView
+                style="@style/TextAppearance.SettleX.Body1.Small"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="15dp"
-                android:fontFamily="@font/inter_regular"
-                android:includeFontPadding="false"
                 android:text="About us"
-                android:textColor="@color/gray_500"
-                android:textSize="11sp" />
+                android:textColor="?attr/colorOnSurfaceVariant" />
 
             <LinearLayout
                 android:id="@+id/btn_about"
                 android:layout_width="match_parent"
                 android:layout_height="50dp"
                 android:layout_marginTop="5dp"
-                android:background="@drawable/bg_surface_variant_ripple_rounded8"
+                android:background="@drawable/bg_surface_ripple_rounded8"
                 android:gravity="center_vertical"
                 android:orientation="horizontal"
                 android:padding="5dp">
 
-                <ImageView
+                <com.google.android.material.imageview.ShapeableImageView
                     android:layout_width="25dp"
                     android:layout_height="25dp"
                     android:layout_marginStart="5dp"
-                    android:contentDescription="@null"
                     android:src="@drawable/ic_info_outline"
-                    app:tint="@color/blue_500" />
+                    app:tint="?attr/colorPrimary" />
 
                 <TextView
+                    style="@style/TextAppearance.SettleX.Body1.Normal"
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
                     android:layout_marginStart="15dp"
                     android:layout_weight="1"
-                    android:fontFamily="@font/inter_regular"
-                    android:includeFontPadding="false"
                     android:text="About"
-                    android:textColor="@color/black"
-                    android:textSize="14sp" />
+                    android:textColor="?attr/colorOnSurface" />
 
-                <ImageView
+                <com.google.android.material.imageview.ShapeableImageView
                     android:layout_width="15dp"
                     android:layout_height="15dp"
-                    android:contentDescription="@null"
                     android:src="@drawable/ic_arrow_forward"
-                    app:tint="@color/gray_500" />
+                    app:tint="?attr/colorOnSurfaceVariant" />
             </LinearLayout>
 
+            <!-- Sign out -->
             <LinearLayout
                 android:id="@+id/btn_sign_out"
                 android:layout_width="match_parent"
                 android:layout_height="50dp"
                 android:layout_marginTop="15dp"
-                android:background="@drawable/bg_surface_variant_ripple_rounded8"
+                android:background="@drawable/bg_surface_ripple_rounded8"
                 android:gravity="center"
                 android:orientation="horizontal"
                 android:padding="10dp">
 
-                <ImageView
-                    android:layout_width="25dp"
-                    android:layout_height="25dp"
-                    android:contentDescription="@null"
+                <com.google.android.material.imageview.ShapeableImageView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
                     android:src="@drawable/ic_log_out"
-                    app:tint="@color/red_500" />
+                    app:tint="?attr/colorOnSurfaceVariant" />
 
                 <TextView
+                    style="@style/TextAppearance.SettleX.Body1.Normal"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_marginStart="15dp"
-                    android:fontFamily="@font/inter_regular"
-                    android:includeFontPadding="false"
                     android:text="Sign Out"
-                    android:textColor="@color/black"
-                    android:textSize="14sp" />
+                    android:textColor="?attr/colorOnSurface" />
             </LinearLayout>
         </LinearLayout>
     </ScrollView>

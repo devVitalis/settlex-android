@@ -4,7 +4,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@color/surface_container"
+    android:background="?attr/colorSurfaceDim"
     android:fitsSystemWindows="true"
     android:orientation="vertical"
     tools:context=".presentation.dashboard.home.HomeDashboardFragment">
@@ -40,10 +40,11 @@
 
             <TextView
                 android:id="@+id/greeting"
-                style="@style/Widget.SettleX.TextName"
+                style="@style/TextAppearance.SettleX.Body1.Normal"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="@string/tv_hello" />
+                android:text="@string/tv_hello"
+                android:textColor="?attr/colorOnSurface" />
 
             <FrameLayout
                 android:layout_width="wrap_content"
@@ -51,10 +52,11 @@
 
                 <TextView
                     android:id="@+id/tv_user_full_name"
-                    style="@style/Widget.SettleX.TextName"
+                    style="@style/TextAppearance.SettleX.Body1.Normal"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_gravity="center"
+                    android:textColor="?attr/colorOnSurface"
                     android:textStyle="bold"
                     tools:text="Benjamin Nnaemeka" />
 
@@ -70,7 +72,7 @@
                     <View
                         android:layout_width="150dp"
                         android:layout_height="14sp"
-                        android:background="@drawable/bg_shimmer_effect" />
+                        android:background="@drawable/bg_shimmer_rounded" />
                 </com.facebook.shimmer.ShimmerFrameLayout>
             </FrameLayout>
         </LinearLayout>
@@ -99,7 +101,7 @@
             app:layout_constraintBottom_toBottomOf="@+id/btn_notification"
             app:layout_constraintEnd_toStartOf="@+id/btn_notification"
             app:layout_constraintTop_toTopOf="@id/btn_notification"
-            app:tint="@color/on_surface" />
+            app:tint="?attr/colorOnSurface" />
 
         <androidx.constraintlayout.widget.ConstraintLayout
             android:id="@+id/btn_notification"
@@ -112,7 +114,7 @@
             app:layout_constraintTop_toTopOf="parent">
 
             <com.google.android.material.imageview.ShapeableImageView
-                android:id="@+id/notification"
+                android:id="@+id/iv_notification"
                 android:layout_width="25dp"
                 android:layout_height="25dp"
                 android:src="@drawable/ic_notifications"
@@ -120,21 +122,21 @@
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toTopOf="parent"
-                app:tint="@color/on_surface" />
+                app:tint="?attr/colorOnSurface" />
 
             <com.google.android.material.textview.MaterialTextView
                 android:id="@+id/tv_unread_notification_badge"
+                style="@style/TextAppearance.SettleX.Body1.Small"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:background="@drawable/bg_oval_red"
+                android:background="@drawable/bg_alert_oval"
                 android:gravity="center"
-                android:includeFontPadding="false"
                 android:minWidth="12dp"
                 android:minHeight="12dp"
-                android:textColor="@color/on_error"
+                android:textColor="?attr/colorOnAlert"
                 android:textSize="9sp"
-                app:layout_constraintEnd_toEndOf="@id/notification"
-                app:layout_constraintTop_toTopOf="@id/notification"
+                app:layout_constraintEnd_toEndOf="@id/iv_notification"
+                app:layout_constraintTop_toTopOf="@id/iv_notification"
                 tools:ignore="SmallSp"
                 tools:text="2" />
         </androidx.constraintlayout.widget.ConstraintLayout>
@@ -161,17 +163,16 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="5dp"
-                android:background="@drawable/bg_gradient_rounded16"
+                android:background="@drawable/bg_balance_overview"
                 android:orientation="vertical"
                 android:padding="15dp">
 
                 <TextView
-                    style="@style/Widget.SettleX.TextRegular"
+                    style="@style/TextAppearance.SettleX.Body1.Small"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:text="@string/tv_wallet"
-                    android:textColor="@color/on_primary"
-                    android:textSize="12sp"
+                    android:textColor="?attr/colorOnPrimary"
                     app:layout_constraintBottom_toBottomOf="parent"
                     app:layout_constraintStart_toStartOf="parent"
                     app:layout_constraintTop_toTopOf="parent" />
@@ -192,22 +193,21 @@
                         app:layout_constraintStart_toStartOf="parent"
                         app:layout_constraintTop_toTopOf="parent">
 
-                        <ImageView
+                        <com.google.android.material.imageview.ShapeableImageView
                             android:id="@+id/iv_protection"
                             android:layout_width="15dp"
                             android:layout_height="15dp"
-                            android:contentDescription="@null"
                             android:src="@drawable/ic_shield_protection"
-                            app:tint="@color/white" />
+                            app:tint="?attr/colorOnPrimary" />
 
                         <TextView
                             android:id="@+id/balanceTitle"
-                            style="@style/Widget.SettleX.TextRegular"
+                            style="@style/TextAppearance.SettleX.Body1.Normal"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:layout_marginStart="2dp"
                             android:text="@string/tv_balance"
-                            android:textColor="@color/on_primary" />
+                            android:textColor="?attr/colorOnPrimary" />
 
                         <com.google.android.material.imageview.ShapeableImageView
                             android:id="@+id/iv_balance_toggle"
@@ -216,7 +216,7 @@
                             android:layout_marginStart="5dp"
                             android:background="?attr/selectableItemBackgroundBorderless"
                             android:src="@drawable/ic_visibility_on"
-                            app:tint="@color/on_primary" />
+                            app:tint="?attr/colorOnPrimary" />
                     </LinearLayout>
 
                     <FrameLayout
@@ -229,9 +229,10 @@
 
                         <TextView
                             android:id="@+id/tv_user_balance"
-                            style="@style/Widget.SettleX.TextBalance"
+                            style="@style/TextAppearance.SettleX.Body1.Large"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
+                            android:textColor="?attr/colorOnPrimary"
                             tools:text="₦2,500.00" />
 
                         <com.facebook.shimmer.ShimmerFrameLayout
@@ -245,7 +246,7 @@
                             <View
                                 android:layout_width="100dp"
                                 android:layout_height="15dp"
-                                android:background="@drawable/bg_shimmer_effect" />
+                                android:background="@drawable/bg_shimmer_rounded" />
                         </com.facebook.shimmer.ShimmerFrameLayout>
                     </FrameLayout>
 
@@ -262,11 +263,11 @@
 
                         <TextView
                             android:id="@+id/commission_balance"
-                            style="@style/Widget.SettleX.TextRegular"
+                            style="@style/TextAppearance.SettleX.Body1.Normal"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:text="@string/tv_commission"
-                            android:textColor="@color/on_primary" />
+                            android:textColor="?attr/colorOnPrimary" />
 
                         <FrameLayout
                             android:layout_width="wrap_content"
@@ -284,9 +285,10 @@
 
                                 <TextView
                                     android:id="@+id/tv_user_commission_balance"
-                                    style="@style/Widget.SettleX.TextBalance"
+                                    style="@style/TextAppearance.SettleX.Body1.Large"
                                     android:layout_width="wrap_content"
                                     android:layout_height="wrap_content"
+                                    android:textColor="?attr/colorOnPrimary"
                                     tools:text="₦534.18" />
 
                                 <com.google.android.material.imageview.ShapeableImageView
@@ -294,7 +296,7 @@
                                     android:layout_height="15dp"
                                     android:layout_marginStart="2dp"
                                     android:src="@drawable/ic_arrow_forward"
-                                    app:tint="@color/on_primary" />
+                                    app:tint="?attr/colorOnPrimary" />
                             </LinearLayout>
 
                             <com.facebook.shimmer.ShimmerFrameLayout
@@ -308,7 +310,7 @@
                                 <View
                                     android:layout_width="70dp"
                                     android:layout_height="15dp"
-                                    android:background="@drawable/bg_shimmer_effect" />
+                                    android:background="@drawable/bg_shimmer_rounded" />
                             </com.facebook.shimmer.ShimmerFrameLayout>
                         </FrameLayout>
                     </LinearLayout>
@@ -320,91 +322,48 @@
                     android:layout_height="wrap_content"
                     android:layout_marginTop="15dp">
 
-                    <LinearLayout
+                    <com.google.android.material.button.MaterialButton
                         android:id="@+id/btn_deposit"
+                        style="@style/Widget.SettleX.Action.Button.Rounded8"
                         android:layout_width="0dp"
                         android:layout_height="wrap_content"
-                        android:background="@drawable/bg_overlay_light_rounded8"
-                        android:gravity="center"
-                        android:orientation="vertical"
-                        android:paddingVertical="5dp"
+                        android:text="@string/tv_deposit"
+                        app:icon="@drawable/ic_add"
+                        app:iconGravity="top"
+                        app:iconPadding="0dp"
                         app:layout_constraintEnd_toStartOf="@id/btn_receive"
                         app:layout_constraintHorizontal_weight="1"
                         app:layout_constraintStart_toStartOf="parent"
-                        app:layout_constraintTop_toTopOf="parent">
+                        app:layout_constraintTop_toTopOf="parent" />
 
-                        <com.google.android.material.imageview.ShapeableImageView
-                            android:layout_width="20dp"
-                            android:layout_height="20dp"
-                            android:src="@drawable/ic_add"
-                            app:tint="@color/on_primary" />
-
-                        <TextView
-                            style="@style/Widget.SettleX.TextRegular"
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:text="@string/tv_deposit"
-                            android:textColor="@color/on_primary"
-                            android:textSize="11sp" />
-                    </LinearLayout>
-
-                    <LinearLayout
+                    <com.google.android.material.button.MaterialButton
                         android:id="@+id/btn_receive"
+                        style="@style/Widget.SettleX.Action.Button.Rounded8"
                         android:layout_width="0dp"
                         android:layout_height="wrap_content"
-                        android:layout_marginStart="20dp"
-                        android:layout_marginEnd="20dp"
-                        android:background="@drawable/bg_overlay_light_rounded8"
-                        android:gravity="center"
-                        android:orientation="vertical"
-                        android:paddingVertical="5dp"
+                        android:layout_marginHorizontal="15dp"
+                        android:text="@string/tv_receive"
+                        app:icon="@drawable/ic_receive"
+                        app:iconGravity="top"
+                        app:iconPadding="0dp"
                         app:layout_constraintEnd_toStartOf="@+id/btn_transfer"
                         app:layout_constraintHorizontal_weight="1"
                         app:layout_constraintStart_toEndOf="@+id/btn_deposit"
-                        app:layout_constraintTop_toTopOf="parent">
+                        app:layout_constraintTop_toTopOf="parent" />
 
-                        <com.google.android.material.imageview.ShapeableImageView
-                            android:layout_width="20dp"
-                            android:layout_height="20dp"
-                            android:src="@drawable/ic_receive"
-                            app:tint="@color/on_primary" />
-
-                        <TextView
-                            style="@style/Widget.SettleX.TextRegular"
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:text="@string/tv_receive"
-                            android:textColor="@color/on_primary"
-                            android:textSize="11sp" />
-                    </LinearLayout>
-
-                    <LinearLayout
+                    <com.google.android.material.button.MaterialButton
                         android:id="@+id/btn_transfer"
+                        style="@style/Widget.SettleX.Action.Button.Rounded8"
                         android:layout_width="0dp"
                         android:layout_height="wrap_content"
-                        android:background="@drawable/bg_overlay_light_rounded8"
-                        android:gravity="center"
-                        android:orientation="vertical"
-                        android:paddingVertical="5dp"
+                        android:text="@string/tv_transfer"
+                        app:icon="@drawable/ic_send"
+                        app:iconGravity="top"
+                        app:iconPadding="0dp"
                         app:layout_constraintEnd_toEndOf="parent"
                         app:layout_constraintHorizontal_weight="1"
                         app:layout_constraintStart_toEndOf="@id/btn_receive"
-                        app:layout_constraintTop_toTopOf="parent">
-
-                        <com.google.android.material.imageview.ShapeableImageView
-                            android:layout_width="20dp"
-                            android:layout_height="20dp"
-                            android:src="@drawable/ic_send"
-                            app:tint="@color/on_primary" />
-
-                        <TextView
-                            style="@style/Widget.SettleX.TextRegular"
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:text="@string/tv_transfer"
-                            android:textColor="@color/on_primary"
-                            android:textSize="11sp" />
-                    </LinearLayout>
+                        app:layout_constraintTop_toTopOf="parent" />
                 </androidx.constraintlayout.widget.ConstraintLayout>
             </LinearLayout>
 
@@ -414,7 +373,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="15dp"
-                android:background="@drawable/bg_surface_variant_rounded16"
+                android:background="@drawable/bg_surface_rounded16"
                 android:clipToPadding="false"
                 android:nestedScrollingEnabled="false"
                 android:padding="8dp" />
@@ -430,25 +389,23 @@
                 android:orientation="horizontal">
 
                 <TextView
-                    style="@style/Widget.SettleX.TextRegular"
+                    style="@style/TextAppearance.SettleX.Body1.Small"
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
                     android:layout_gravity="start"
                     android:layout_weight="1"
                     android:text="@string/tv_recent_transactions"
-                    android:textColor="@color/on_surface_variant"
-                    android:textSize="12sp" />
+                    android:textColor="?attr/colorOnSurfaceVariant" />
 
                 <TextView
                     android:id="@+id/tv_view_all_transaction"
-                    style="@style/Widget.SettleX.TextRegular"
+                    style="@style/TextAppearance.SettleX.Body1.Small"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_marginEnd="4dp"
                     android:background="?attr/selectableItemBackground"
                     android:text="@string/tv_view_all"
-                    android:textColor="@color/on_surface_variant"
-                    android:textSize="12sp"
+                    android:textColor="?attr/colorOnSurfaceVariant"
                     android:textStyle="bold" />
             </LinearLayout>
 
@@ -457,7 +414,7 @@
                 android:id="@+id/view_transaction_container"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:background="@drawable/bg_surface_variant_rounded16"
+                android:background="@drawable/bg_surface_rounded16"
                 android:paddingVertical="5dp">
 
                 <androidx.recyclerview.widget.RecyclerView
@@ -475,10 +432,8 @@
                     android:layout_height="wrap_content"
                     android:visibility="gone">
 
-                    <include
-                        layout="@layout/item_transaction_shimmer"
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content" />
+                    <include layout="@layout/item_transaction_shimmer" />
+                    <include layout="@layout/item_transaction_shimmer" />
                 </com.facebook.shimmer.ShimmerFrameLayout>
 
                 <LinearLayout
@@ -490,27 +445,25 @@
                     android:paddingVertical="5dp">
 
                     <TextView
-                        style="@style/Widget.SettleX.TextBold"
+                        style="@style/TextAppearance.SettleX.Body1.Normal"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:text="@string/tv_no_transactions_yet"
-                        android:textColor="@color/on_surface_container"
-                        android:textSize="15sp" />
+                        android:textColor="?attr/colorOnSurface"
+                        android:textStyle="bold" />
 
                     <TextView
-                        style="@style/Widget.SettleX.TextRegular"
+                        style="@style/TextAppearance.SettleX.Body1.Small"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_marginTop="5dp"
                         android:text="@string/tv_your_recent_transactions_will_appear_here"
-                        android:textColor="@color/on_surface_variant"
-                        android:textSize="12sp" />
+                        android:textColor="?attr/colorOnSurfaceVariant" />
 
-                    <ImageView
+                    <com.google.android.material.imageview.ShapeableImageView
                         android:layout_width="50dp"
                         android:layout_height="50dp"
                         android:layout_marginTop="5dp"
-                        android:contentDescription="@null"
                         android:src="@drawable/ic_no_transactions" />
                 </LinearLayout>
 
@@ -525,13 +478,12 @@
                     android:visibility="gone">
 
                     <TextView
-                        style="@style/Widget.SettleX.TextRegular"
+                        style="@style/TextAppearance.SettleX.Body1.Small"
                         android:layout_width="0dp"
                         android:layout_height="wrap_content"
                         android:layout_weight="1"
                         android:text="@string/error_no_internet"
-                        android:textColor="@color/on_surface_container"
-                        android:textSize="12sp" />
+                        android:textColor="?attr/colorOnSurface" />
 
                     <com.google.android.material.button.MaterialButton
                         android:id="@+id/btn_refresh_transactions"
@@ -550,7 +502,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="120dp"
                 android:layout_marginTop="15dp"
-                android:background="@drawable/bg_surface_variant_rounded16"
+                android:background="@drawable/bg_surface_rounded16"
                 android:visibility="visible">
 
                 <androidx.viewpager2.widget.ViewPager2
@@ -559,7 +511,7 @@
                     android:layout_height="match_parent" />
 
                 <ProgressBar
-                    android:id="@+id/promo_banner_progress_bar"
+                    android:id="@+id/pb_promo_banner"
                     style="@style/Widget.SettleX.AppCompat.CircularProgressBar."
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
@@ -571,12 +523,12 @@
                     android:layout_height="wrap_content"
                     android:layout_gravity="bottom|center_horizontal"
                     android:layout_marginBottom="10dp"
-                    app:dotsColor="@color/on_surface_variant"
+                    app:dotsColor="?attr/colorSurfaceVariant"
                     app:dotsSize="6dp"
                     app:dotsSpacing="2dp"
                     app:dotsWidthFactor="2.5"
                     app:progressMode="false"
-                    app:selectedDotColor="@color/primary" />
+                    app:selectedDotColor="?attr/colorPrimary" />
             </FrameLayout>
         </LinearLayout>
     </ScrollView>
