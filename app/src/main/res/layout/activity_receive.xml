@@ -4,7 +4,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@color/surface"
+    android:background="?attr/colorSurface"
     android:fitsSystemWindows="true"
     tools:context=".presentation.wallet.ReceiveActivity">
 
@@ -14,31 +14,30 @@
         android:layout_height="45dp"
         android:gravity="center_vertical"
         android:orientation="horizontal"
+        android:paddingHorizontal="15dp"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent">
 
         <com.google.android.material.imageview.ShapeableImageView
-            android:id="@+id/btn_back_before"
+            android:id="@+id/iv_back_before"
             android:layout_width="20dp"
             android:layout_height="20dp"
-            android:layout_marginStart="15dp"
-            android:src="@drawable/ic_arrow_back"
-            app:tint="@color/on_surface" />
+            android:src="@drawable/ic_arrow_ios_back"
+            app:tint="?attr/colorOnSurface" />
 
         <TextView
-            style="@style/Widget.SettleX.TextBold"
+            style="@style/TextAppearance.SettleX.TitleLarge"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginStart="10dp"
-            android:text="@string/tv_receive"
-            android:textSize="15sp" />
+            android:text="@string/tv_receive" />
     </LinearLayout>
 
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="0dp"
-        android:background="@color/surface_container"
+        android:background="?attr/colorSurfaceDim"
         android:orientation="vertical"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
@@ -49,22 +48,21 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_margin="15dp"
-            android:background="@drawable/bg_surface_variant_rounded16"
+            android:background="@drawable/bg_surface_rounded8"
             android:orientation="vertical"
             android:padding="20dp">
 
             <TextView
-                style="@style/Widget.SettleX.TextRegular"
+                style="@style/TextAppearance.SettleX.BodyMedium"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_gravity="center"
                 android:text="@string/tv_settlex_payment_id"
-                android:textColor="@color/on_surface_variant"
-                android:textSize="12sp" />
+                android:textColor="?attr/colorOnSurfaceVariant" />
 
             <TextView
                 android:id="@+id/tv_payment_id"
-                style="@style/Widget.SettleX.TextBold"
+                style="@style/TextAppearance.SettleX.HeadlineLarge"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_gravity="center"
@@ -73,13 +71,14 @@
                 tools:text="\@vitalis" />
 
             <TextView
-                style="@style/Widget.SettleX.TextRegular"
+                style="@style/TextAppearance.SettleX.BodyMedium"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_gravity="center"
                 android:gravity="center"
                 android:text="@string/share_ytv_our_id_to_get_paid_instantly_from_other_settlex_users"
-                android:textAlignment="center" />
+                android:textAlignment="center"
+                android:textColor="?attr/colorOnSurface" />
 
             <LinearLayout
                 android:layout_width="match_parent"

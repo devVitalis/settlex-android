@@ -20,7 +20,7 @@
         app:layout_constraintTop_toTopOf="parent">
 
         <TextView
-            style="@style/TextAppearance.SettleX.Headline.Normal"
+            style="@style/TextAppearance.SettleX.TitleLarge"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:gravity="center"
@@ -51,7 +51,7 @@
                 android:padding="15dp">
 
                 <TextView
-                    style="@style/TextAppearance.SettleX.Body1.Small"
+                    style="@style/TextAppearance.SettleX.BodySmall"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_marginTop="5dp"
@@ -76,7 +76,7 @@
                 android:padding="15dp">
 
                 <TextView
-                    style="@style/TextAppearance.SettleX.Body1.Small"
+                    style="@style/TextAppearance.SettleX.BodySmall"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_marginTop="5dp"
@@ -101,7 +101,7 @@
                 android:padding="15dp">
 
                 <TextView
-                    style="@style/TextAppearance.SettleX.Body1.Small"
+                    style="@style/TextAppearance.SettleX.BodySmall"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_marginTop="5dp"
@@ -126,7 +126,7 @@
                 android:padding="15dp">
 
                 <TextView
-                    style="@style/TextAppearance.SettleX.Body1.Small"
+                    style="@style/TextAppearance.SettleX.BodySmall"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_marginTop="5dp"

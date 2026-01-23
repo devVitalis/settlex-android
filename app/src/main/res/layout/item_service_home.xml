@@ -43,7 +43,7 @@
 
         <TextView
             android:id="@+id/tv_service_badge"
-            style="@style/TextAppearance.SettleX.Body1.Small"
+            style="@style/TextAppearance.SettleX.BodySmall"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginTop="-2dp"
@@ -62,7 +62,7 @@
 
     <TextView
         android:id="@+id/tv_service_name"
-        style="@style/TextAppearance.SettleX.Body1.Small"
+        style="@style/TextAppearance.SettleX.BodySmall"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginTop="4dp"

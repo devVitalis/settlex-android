@@ -19,19 +19,21 @@
 
     <TextView
         android:id="@+id/tv_title"
-        style="@style/Widget.SettleX.TextBold"
+        style="@style/TextAppearance.SettleX.HeadlineLarge"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginTop="10dp"
+        android:textColor="?attr/colorOnSurface"
         tools:text="Password Updated" />
 
     <TextView
         android:id="@+id/tv_message"
-        style="@style/Widget.SettleX.TextRegular"
+        style="@style/TextAppearance.SettleX.BodyMedium"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginTop="10dp"
         android:textAlignment="center"
+        android:textColor="?attr/colorOnSurface"
         tools:text="Your password has been changed successfully. You will now need to use your new password to sign in on all your devices." />
 
     <com.google.android.material.button.MaterialButton

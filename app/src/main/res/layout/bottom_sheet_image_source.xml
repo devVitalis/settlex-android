@@ -5,20 +5,21 @@
     android:layout_height="wrap_content"
     android:gravity="center"
     android:orientation="vertical"
-    android:padding="16dp">
+    android:padding="15dp">
 
     <View
-        android:layout_width="70dp"
+        android:layout_width="50dp"
         android:layout_height="5dp"
         android:background="@drawable/bg_on_surface_variant_rounded8" />
 
     <TextView
-        style="@style/Widget.SettleX.TextBold"
+        style="@style/TextAppearance.SettleX.HeadlineLarge"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginTop="15dp"
         android:gravity="center"
-        android:text="@string/tv_change_profile_photo" />
+        android:text="@string/tv_change_profile_photo"
+        android:textColor="?attr/colorOnSurface" />
 
     <com.google.android.material.imageview.ShapeableImageView
         android:id="@+id/iv_profile_photo"
@@ -34,8 +35,7 @@
         android:layout_width="match_parent"
         android:layout_height="55dp"
         android:layout_marginTop="10dp"
-        android:text="@string/tv_select_from_gallery"
-        android:textSize="16sp" />
+        android:text="@string/tv_select_from_gallery" />
 
     <com.google.android.material.button.MaterialButton
         android:id="@+id/tvCamera"
@@ -43,6 +43,5 @@
         android:layout_width="match_parent"
         android:layout_height="55dp"
         android:layout_marginTop="5dp"
-        android:text="@string/tv_take_a_photo"
-        android:textSize="16sp" />
+        android:text="@string/tv_take_a_photo" />
 </LinearLayout>

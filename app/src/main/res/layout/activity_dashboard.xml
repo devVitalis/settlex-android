@@ -21,9 +21,9 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_gravity="bottom"
-        android:background="@color/surface"
+        android:background="?attr/colorSurface"
         app:itemActiveIndicatorStyle="@style/Widget.SettleX.BottomNavigation.ActiveIndicator"
-        app:itemTextColor="@color/bottom_nav_color_selector"
+        app:itemTextColor="@color/bottom_nav_item_text_color_selector"
         app:labelVisibilityMode="labeled"
         app:menu="@menu/bottom_nav_menu" />
 </FrameLayout>

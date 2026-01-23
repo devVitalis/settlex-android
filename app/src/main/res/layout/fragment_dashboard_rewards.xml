@@ -44,7 +44,7 @@
             android:layout_width="20dp"
             android:layout_height="20dp"
             android:background="?attr/selectableItemBackgroundBorderless"
-            android:src="@drawable/ic_arrow_back"
+            android:src="@drawable/ic_arrow_ios_back"
             app:tint="?attr/colorOnSurface" />
     </LinearLayout>
 
@@ -66,7 +66,7 @@
             android:padding="15dp">
 
             <TextView
-                style="@style/TextAppearance.SettleX.Headline.Large"
+                style="@style/TextAppearance.SettleX.HeadlineLarge"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_gravity="center"
@@ -97,7 +97,7 @@
                         app:shapeAppearanceOverlay="@style/ShapeAppearance.Material3.Corner.Medium" />
 
                     <TextView
-                        style="@style/TextAppearance.SettleX.Body1.Large"
+                        style="@style/TextAppearance.SettleX.BodyLarge"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_marginTop="15dp"
@@ -107,7 +107,7 @@
 
                     <TextView
                         android:id="@+id/tv_referral_info"
-                        style="@style/TextAppearance.SettleX.Body1.Normal"
+                        style="@style/TextAppearance.SettleX.BodyMedium"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_marginTop="5dp"
@@ -116,7 +116,7 @@
                         android:textColor="?attr/colorOnSurface" />
 
                     <TextView
-                        style="@style/TextAppearance.SettleX.Body1.Normal"
+                        style="@style/TextAppearance.SettleX.BodyMedium"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_marginTop="15dp"
@@ -139,7 +139,7 @@
                             android:orientation="vertical">
 
                             <TextView
-                                style="@style/TextAppearance.SettleX.Body1.Small"
+                                style="@style/TextAppearance.SettleX.BodySmall"
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
                                 android:text="Referral Code"
@@ -147,7 +147,7 @@
 
                             <TextView
                                 android:id="@+id/tv_referral_code"
-                                style="@style/TextAppearance.SettleX.Body1.Large"
+                                style="@style/TextAppearance.SettleX.BodyLarge"
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
                                 android:layout_marginTop="3dp"
@@ -188,7 +188,7 @@
                         android:padding="15dp">
 
                         <TextView
-                            style="@style/TextAppearance.SettleX.Body1.Normal"
+                            style="@style/TextAppearance.SettleX.BodyMedium"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:text="Referral Earnings"
@@ -196,7 +196,7 @@
 
                         <TextView
                             android:id="@+id/tv_total_referral_earning"
-                            style="@style/TextAppearance.SettleX.Body1.Large"
+                            style="@style/TextAppearance.SettleX.BodyLarge"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:textColor="?attr/colorOnSurface"
@@ -220,7 +220,7 @@
                         android:padding="15dp">
 
                         <TextView
-                            style="@style/TextAppearance.SettleX.Body1.Normal"
+                            style="@style/TextAppearance.SettleX.BodyMedium"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:text="Total Referrals"
@@ -228,7 +228,7 @@
 
                         <TextView
                             android:id="@+id/tv_referrals_shared"
-                            style="@style/TextAppearance.SettleX.Body1.Large"
+                            style="@style/TextAppearance.SettleX.BodyLarge"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:textColor="?attr/colorOnSurface"
@@ -253,7 +253,7 @@
                     app:dividerThickness="0.5dp" />
 
                 <TextView
-                    style="@style/TextAppearance.SettleX.Body1.Large"
+                    style="@style/TextAppearance.SettleX.BodyLarge"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_marginHorizontal="10dp"
@@ -291,7 +291,7 @@
                         app:tint="?attr/colorOnSecondary" />
 
                     <TextView
-                        style="@style/TextAppearance.SettleX.Body1.Normal"
+                        style="@style/TextAppearance.SettleX.BodyMedium"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_marginStart="5dp"
@@ -323,7 +323,7 @@
                         app:tint="?attr/colorOnSecondary" />
 
                     <TextView
-                        style="@style/TextAppearance.SettleX.Body1.Normal"
+                        style="@style/TextAppearance.SettleX.BodyMedium"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_marginStart="5dp"
@@ -355,7 +355,7 @@
                         app:tint="?attr/colorOnSecondary" />
 
                     <TextView
-                        style="@style/TextAppearance.SettleX.Body1.Normal"
+                        style="@style/TextAppearance.SettleX.BodyMedium"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_marginStart="5dp"

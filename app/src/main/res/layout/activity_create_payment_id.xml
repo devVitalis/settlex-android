@@ -5,9 +5,17 @@
     android:id="@+id/main"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@color/surface"
+    android:background="?attr/colorSurface"
     android:fitsSystemWindows="true"
     tools:context=".presentation.settings.CreatePaymentIdActivity">
+
+    <com.google.android.material.appbar.MaterialToolbar
+        android:id="@+id/toolbar"
+        android:layout_width="match_parent"
+        android:layout_height="?attr/actionBarSize"
+        app:layout_constraintTop_toTopOf="parent"
+        app:navigationIcon="@drawable/ic_arrow_back_layer_list"
+        app:navigationIconTint="?attr/colorOnSurface" />
 
     <ScrollView
         android:layout_width="match_parent"
@@ -15,7 +23,7 @@
         android:fillViewport="true"
         android:scrollbars="none"
         app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintTop_toTopOf="parent">
+        app:layout_constraintTop_toBottomOf="@id/toolbar">
 
         <LinearLayout
             android:layout_width="match_parent"
@@ -23,30 +31,20 @@
             android:orientation="vertical"
             android:padding="15dp">
 
-            <com.google.android.material.imageview.ShapeableImageView
-                android:id="@+id/btn_close"
-                android:layout_width="40dp"
-                android:layout_height="40dp"
-                android:layout_gravity="end"
-                android:layout_marginVertical="10dp"
-                android:background="@drawable/bg_scrim_oval"
-                app:contentPadding="8dp"
-                app:srcCompat="@drawable/ic_close"
-                app:tint="@color/on_surface_variant" />
-
             <TextView
-                style="@style/Widget.SettleX.TextBold"
+                style="@style/TextAppearance.SettleX.HeadlineLarge"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="@string/tv_create_your_payment_id" />
+                android:text="@string/tv_create_your_payment_id"
+                android:textColor="?attr/colorOnSurface" />
 
             <TextView
-                style="@style/Widget.SettleX.TextRegular"
+                style="@style/TextAppearance.SettleX.BodyMedium"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="10dp"
                 android:text="@string/tv_this_id_lets_others_send_you_money_securely_on_settlex_once_created_it_can_t_be_changed"
-                android:textColor="@color/on_surface_variant" />
+                android:textColor="?attr/colorOnSurfaceVariant" />
 
             <com.google.android.material.textfield.TextInputLayout
                 style="@style/Widget.SettleX.TextInputLayout.Outlined"
@@ -73,11 +71,11 @@
                 android:orientation="horizontal">
 
                 <TextView
-                    android:id="@+id/tv_payment_id_availability_status"
-                    style="@style/Widget.SettleX.TextRegular"
+                    android:id="@+id/tv_payment_id_status"
+                    style="@style/TextAppearance.SettleX.BodyMedium"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:textColor="@color/success"
+                    android:textColor="?attr/colorSuccess"
                     android:visibility="gone"
                     tools:text="Available" />
 
@@ -88,7 +86,7 @@
                     android:layout_marginStart="5dp"
                     android:src="@drawable/ic_check_circle"
                     android:visibility="gone"
-                    app:tint="@color/success" />
+                    app:tint="?attr/colorSuccess" />
 
                 <ProgressBar
                     android:id="@+id/pb_payment_id_check"
@@ -104,7 +102,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="10dp"
-                android:background="@drawable/bg_surface_rounded8"
+                android:background="@drawable/bg_surface_container_rounded8"
                 android:gravity="center_vertical"
                 android:paddingHorizontal="10dp"
                 android:paddingVertical="5dp">
@@ -114,16 +112,16 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     app:srcCompat="@drawable/ic_check"
-                    app:tint="@color/on_surface_variant" />
+                    app:tint="?attr/colorOnSurfaceVariant" />
 
                 <com.google.android.material.textview.MaterialTextView
                     android:id="@+id/tv_rule_start_with"
-                    style="@style/Widget.SettleX.TextRegular"
+                    style="@style/TextAppearance.SettleX.BodyMedium"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_marginStart="5dp"
                     android:text="@string/tv_starts_with_a_letter"
-                    android:textColor="@color/on_surface_variant" />
+                    android:textColor="?attr/colorOnSurfaceVariant" />
             </LinearLayout>
 
             <!-- Rule length -->
@@ -132,7 +130,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="10dp"
-                android:background="@drawable/bg_surface_rounded8"
+                android:background="@drawable/bg_surface_container_rounded8"
                 android:gravity="center_vertical"
                 android:paddingHorizontal="10dp"
                 android:paddingVertical="5dp">
@@ -142,16 +140,16 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     app:srcCompat="@drawable/ic_check"
-                    app:tint="@color/on_surface_variant" />
+                    app:tint="?attr/colorOnSurfaceVariant" />
 
                 <com.google.android.material.textview.MaterialTextView
                     android:id="@+id/tv_rule_length"
-                    style="@style/Widget.SettleX.TextRegular"
+                    style="@style/TextAppearance.SettleX.BodyMedium"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_marginStart="5dp"
                     android:text="@string/tv_min_amp_max_5_20_characters"
-                    android:textColor="@color/on_surface_variant" />
+                    android:textColor="?attr/colorOnSurfaceVariant" />
             </LinearLayout>
 
             <!-- Rule contains -->
@@ -160,7 +158,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="10dp"
-                android:background="@drawable/bg_surface_rounded8"
+                android:background="@drawable/bg_surface_container_rounded8"
                 android:gravity="center_vertical"
                 android:paddingHorizontal="10dp"
                 android:paddingVertical="5dp">
@@ -170,16 +168,16 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     app:srcCompat="@drawable/ic_check"
-                    app:tint="@color/on_surface_variant" />
+                    app:tint="?attr/colorOnSurfaceVariant" />
 
                 <com.google.android.material.textview.MaterialTextView
                     android:id="@+id/tv_rule_contains"
-                    style="@style/Widget.SettleX.TextRegular"
+                    style="@style/TextAppearance.SettleX.BodyMedium"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_marginStart="5dp"
                     android:text="@string/tv_only_lowercase_letters_numbers_and_no_space"
-                    android:textColor="@color/on_surface_variant" />
+                    android:textColor="?attr/colorOnSurfaceVariant" />
             </LinearLayout>
 
             <com.google.android.material.button.MaterialButton
@@ -193,12 +191,13 @@
 
             <TextView
                 android:id="@+id/tv_error"
-                style="@style/Widget.SettleX.TextError"
+                style="@style/TextAppearance.SettleX.BodyMedium"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="10dp"
                 android:gravity="center"
                 android:textAlignment="center"
+                android:textColor="?attr/colorError"
                 android:visibility="gone"
                 tools:text="Error message" />
         </LinearLayout>

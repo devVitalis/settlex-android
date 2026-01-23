@@ -5,7 +5,7 @@
     android:id="@+id/main"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@color/surface"
+    android:background="?attr/colorSurface"
     android:fitsSystemWindows="true"
     tools:context=".presentation.onboarding.OnboardingActivity">
 
@@ -15,19 +15,18 @@
         android:orientation="vertical">
 
         <TextView
-            android:id="@+id/btn_skip"
-            style="@style/Widget.SettleX.TextRegular"
+            android:id="@+id/tv_skip"
+            style="@style/TextAppearance.SettleX.BodyLarge"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_gravity="end"
             android:layout_marginHorizontal="10dp"
             android:layout_marginTop="20dp"
-            android:background="@drawable/bg_surface_rounded16"
-            android:gravity="center"
+            android:background="@drawable/bg_surface_variant_rounded24"
             android:paddingHorizontal="15dp"
             android:paddingVertical="10dp"
             android:text="@string/tv_skip"
-            android:textColor="@color/on_surface_variant" />
+            android:textColor="?attr/colorOnSurfaceVariant" />
 
         <LinearLayout
             android:layout_width="match_parent"
@@ -44,13 +43,13 @@
                 android:layout_height="wrap_content"
                 app:vpi_orientation="horizontal"
                 app:vpi_slide_mode="smooth"
-                app:vpi_slider_checked_color="@color/primary"
-                app:vpi_slider_normal_color="@color/secondary"
+                app:vpi_slider_checked_color="?attr/colorPrimary"
+                app:vpi_slider_normal_color="?attr/colorSecondary"
                 app:vpi_style="round_rect" />
         </LinearLayout>
 
         <androidx.viewpager2.widget.ViewPager2
-            android:id="@+id/intro_view_pager"
+            android:id="@+id/vp_intro"
             android:layout_width="match_parent"
             android:layout_height="0dp"
             android:layout_marginTop="30dp"
@@ -58,7 +57,7 @@
             android:scrollbars="none" />
 
         <LinearLayout
-            android:id="@+id/btn_container"
+            android:id="@+id/footer"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:gravity="center_horizontal"

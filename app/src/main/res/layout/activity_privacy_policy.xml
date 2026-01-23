@@ -5,43 +5,20 @@
     android:id="@+id/main"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@color/white"
+    android:background="?attr/colorSurfaceDim"
     android:fitsSystemWindows="true"
     android:orientation="vertical"
     tools:context=".presentation.legal.PrivacyPolicyActivity">
 
-    <!--Header-->
-    <androidx.constraintlayout.widget.ConstraintLayout
-        android:id="@+id/header"
+    <com.google.android.material.appbar.MaterialToolbar
+        android:id="@+id/toolbar"
         android:layout_width="match_parent"
-        android:layout_height="35dp">
-
-        <ImageView
-            android:id="@+id/btn_back_before"
-            android:layout_width="20dp"
-            android:layout_height="20dp"
-            android:layout_marginStart="15dp"
-            android:contentDescription="Back"
-            app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent"
-            app:srcCompat="@drawable/ic_arrow_back" />
-
-        <TextView
-            android:id="@+id/txt_header_title"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:fontFamily="@font/inter_bold"
-            android:includeFontPadding="false"
-            android:text="Privacy Policy"
-            android:textColor="@color/black"
-            android:textSize="15sp"
-            android:textStyle="bold"
-            app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent" />
-    </androidx.constraintlayout.widget.ConstraintLayout>
+        android:layout_height="?attr/actionBarSize"
+        app:layout_constraintTop_toTopOf="parent"
+        app:navigationIcon="@drawable/ic_arrow_ios_back"
+        app:navigationIconTint="?attr/colorOnSurface"
+        app:title="Privacy Policy"
+        app:titleTextAppearance="@style/TextAppearance.SettleX.TitleLarge" />
 
     <!--Scrollable Content-->
     <ScrollView
@@ -58,25 +35,12 @@
             android:padding="15dp">
 
             <TextView
-                android:id="@+id/txt_last_updated"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_gravity="center"
-                android:fontFamily="@font/inter_regular"
-                android:includeFontPadding="false"
-                android:text="Last updated: October 2025"
-                android:textColor="@color/gray_500"
-                android:textSize="14sp" />
-
-            <TextView
                 android:id="@+id/txt_privacy_policy"
+                style="@style/TextAppearance.SettleX.BodyMedium"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="10dp"
-                android:fontFamily="@font/inter_regular"
-                android:includeFontPadding="false"
-                android:textColor="@color/black"
-                android:textSize="15sp"
+                android:textColor="?attr/colorOnSurface"
                 tools:text="Content" />
         </LinearLayout>
     </ScrollView>

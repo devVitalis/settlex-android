@@ -9,25 +9,13 @@
     android:fitsSystemWindows="true"
     tools:context=".presentation.auth.register.RegisterEmailVerificationFragment">
 
-    <LinearLayout
-        android:id="@+id/header"
+    <com.google.android.material.appbar.MaterialToolbar
+        android:id="@+id/toolbar"
         android:layout_width="match_parent"
-        android:layout_height="45dp"
-        android:gravity="center_vertical"
-        android:orientation="horizontal"
-        android:paddingHorizontal="15dp"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent">
-
-        <com.google.android.material.imageview.ShapeableImageView
-            android:id="@+id/iv_back_before"
-            android:layout_width="20dp"
-            android:layout_height="20dp"
-            android:background="?attr/selectableItemBackgroundBorderless"
-            android:src="@drawable/ic_arrow_back"
-            app:tint="?attr/colorOnSurface" />
-    </LinearLayout>
+        android:layout_height="?attr/actionBarSize"
+        app:layout_constraintTop_toTopOf="parent"
+        app:navigationIcon="@drawable/ic_arrow_ios_back"
+        app:navigationIconTint="?attr/colorOnSurface" />
 
     <!--  Scroll -->
     <ScrollView
@@ -37,7 +25,7 @@
         android:fillViewport="true"
         android:scrollbars="none"
         app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/header">
+        app:layout_constraintTop_toBottomOf="@id/toolbar">
 
         <LinearLayout
             android:layout_width="match_parent"
@@ -54,7 +42,7 @@
                 android:orientation="horizontal">
 
                 <TextView
-                    style="@style/TextAppearance.SettleX.Headline.Large"
+                    style="@style/TextAppearance.SettleX.HeadlineLarge"
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
                     android:layout_weight="1"
@@ -76,7 +64,7 @@
 
                     <TextView
                         android:id="@+id/progress_text"
-                        style="@style/TextAppearance.SettleX.Body1.Normal"
+                        style="@style/TextAppearance.SettleX.BodyMedium"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_gravity="center"
@@ -86,7 +74,7 @@
             </LinearLayout>
 
             <TextView
-                style="@style/TextAppearance.SettleX.Body1.Normal"
+                style="@style/TextAppearance.SettleX.BodyMedium"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_gravity="start"
@@ -101,7 +89,7 @@
 
             <TextView
                 android:id="@+id/tv_user_email"
-                style="@style/TextAppearance.SettleX.Body1.Normal"
+                style="@style/TextAppearance.SettleX.BodyMedium"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_gravity="start"
@@ -111,7 +99,7 @@
                 tools:text="We sent a verification code to your email example@gmail.com. This code will expire after 10 minutes" />
 
             <TextView
-                style="@style/TextAppearance.SettleX.Body1.Normal"
+                style="@style/TextAppearance.SettleX.BodyMedium"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_gravity="start"
@@ -135,7 +123,7 @@
 
             <TextView
                 android:id="@+id/tv_error"
-                style="@style/TextAppearance.SettleX.Body1.Normal"
+                style="@style/TextAppearance.SettleX.BodyMedium"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_gravity="center_vertical"
@@ -152,7 +140,7 @@
                 android:orientation="horizontal">
 
                 <TextView
-                    style="@style/TextAppearance.SettleX.Body1.Normal"
+                    style="@style/TextAppearance.SettleX.BodyMedium"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:text="@string/tv_didnt_receive_the_code"
@@ -160,7 +148,7 @@
 
                 <TextView
                     android:id="@+id/tv_resend_code"
-                    style="@style/TextAppearance.SettleX.Body1.Normal"
+                    style="@style/TextAppearance.SettleX.BodyMedium"
                     android:layout_width="wrap_content"
                     android:layout_height="match_parent"
                     android:layout_marginStart="5dp"
@@ -170,7 +158,7 @@
 
             <TextView
                 android:id="@+id/tv_spam_info"
-                style="@style/TextAppearance.SettleX.Body1.Normal"
+                style="@style/TextAppearance.SettleX.BodyMedium"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="15dp"

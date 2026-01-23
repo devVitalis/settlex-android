@@ -45,7 +45,7 @@
 
                 <TextView
                     android:id="@+id/tv_greeting"
-                    style="@style/TextAppearance.SettleX.Body1.Normal"
+                    style="@style/TextAppearance.SettleX.BodyMedium"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:text="Hello 👋"
@@ -54,7 +54,7 @@
 
             <TextView
                 android:id="@+id/tv_full_name"
-                style="@style/TextAppearance.SettleX.Body1.Normal"
+                style="@style/TextAppearance.SettleX.BodyMedium"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:textColor="?attr/colorOnSurface"
@@ -94,7 +94,7 @@
 
             <!-- Account settings -->
             <TextView
-                style="@style/TextAppearance.SettleX.Body1.Small"
+                style="@style/TextAppearance.SettleX.BodySmall"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="5dp"
@@ -127,7 +127,7 @@
                         app:tint="?attr/colorPrimary" />
 
                     <TextView
-                        style="@style/TextAppearance.SettleX.Body1.Normal"
+                        style="@style/TextAppearance.SettleX.BodyMedium"
                         android:layout_width="0dp"
                         android:layout_height="wrap_content"
                         android:layout_marginStart="15dp"
@@ -160,7 +160,7 @@
                         app:tint="?attr/colorPrimary" />
 
                     <TextView
-                        style="@style/TextAppearance.SettleX.Body1.Normal"
+                        style="@style/TextAppearance.SettleX.BodyMedium"
                         android:layout_width="0dp"
                         android:layout_height="wrap_content"
                         android:layout_marginStart="15dp"
@@ -178,7 +178,7 @@
 
             <!-- About -->
             <TextView
-                style="@style/TextAppearance.SettleX.Body1.Small"
+                style="@style/TextAppearance.SettleX.BodySmall"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="15dp"
@@ -203,7 +203,7 @@
                     app:tint="?attr/colorPrimary" />
 
                 <TextView
-                    style="@style/TextAppearance.SettleX.Body1.Normal"
+                    style="@style/TextAppearance.SettleX.BodyMedium"
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
                     android:layout_marginStart="15dp"
@@ -236,7 +236,7 @@
                     app:tint="?attr/colorOnSurfaceVariant" />
 
                 <TextView
-                    style="@style/TextAppearance.SettleX.Body1.Normal"
+                    style="@style/TextAppearance.SettleX.BodyMedium"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_marginStart="15dp"

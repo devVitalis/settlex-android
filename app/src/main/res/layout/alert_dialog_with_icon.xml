@@ -4,7 +4,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:background="@color/surface"
+    android:background="?attr/colorSurface"
     android:gravity="center"
     android:orientation="vertical"
     android:padding="15dp">
@@ -13,29 +13,31 @@
         android:id="@+id/iv_icon"
         android:layout_width="45dp"
         android:layout_height="45dp"
-        android:background="@drawable/bg_secondary_oval"
+        android:background="@drawable/bg_service_oval"
         android:src="@drawable/ic_lock_filled"
         app:contentPadding="8dp"
-        app:tint="@color/primary" />
+        app:tint="?attr/colorPrimary" />
 
     <TextView
         android:id="@+id/tv_title"
-        style="@style/Widget.SettleX.TextBold"
+        style="@style/TextAppearance.SettleX.HeadlineLarge"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginTop="5dp"
         android:gravity="center"
         android:textAlignment="center"
+        android:textColor="?attr/colorOnSurface"
         tools:text="Dialog Title" />
 
     <TextView
         android:id="@+id/tv_message"
-        style="@style/Widget.SettleX.TextRegular"
+        style="@style/TextAppearance.SettleX.BodyMedium"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginTop="10dp"
         android:gravity="center"
         android:textAlignment="center"
+        android:textColor="?attr/colorOnSurface"
         tools:text="Dialog Message" />
 
     <LinearLayout

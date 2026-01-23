@@ -40,7 +40,7 @@
 
             <TextView
                 android:id="@+id/greeting"
-                style="@style/TextAppearance.SettleX.Body1.Normal"
+                style="@style/TextAppearance.SettleX.BodyMedium"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="@string/tv_hello"
@@ -52,7 +52,7 @@
 
                 <TextView
                     android:id="@+id/tv_user_full_name"
-                    style="@style/TextAppearance.SettleX.Body1.Normal"
+                    style="@style/TextAppearance.SettleX.BodyMedium"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_gravity="center"
@@ -126,7 +126,7 @@
 
             <com.google.android.material.textview.MaterialTextView
                 android:id="@+id/tv_unread_notification_badge"
-                style="@style/TextAppearance.SettleX.Body1.Small"
+                style="@style/TextAppearance.SettleX.BodySmall"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:background="@drawable/bg_alert_oval"
@@ -168,7 +168,7 @@
                 android:padding="15dp">
 
                 <TextView
-                    style="@style/TextAppearance.SettleX.Body1.Small"
+                    style="@style/TextAppearance.SettleX.BodySmall"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:text="@string/tv_wallet"
@@ -202,7 +202,7 @@
 
                         <TextView
                             android:id="@+id/balanceTitle"
-                            style="@style/TextAppearance.SettleX.Body1.Normal"
+                            style="@style/TextAppearance.SettleX.BodyMedium"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:layout_marginStart="2dp"
@@ -229,7 +229,7 @@
 
                         <TextView
                             android:id="@+id/tv_user_balance"
-                            style="@style/TextAppearance.SettleX.Body1.Large"
+                            style="@style/TextAppearance.SettleX.BodyLarge"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:textColor="?attr/colorOnPrimary"
@@ -263,7 +263,7 @@
 
                         <TextView
                             android:id="@+id/commission_balance"
-                            style="@style/TextAppearance.SettleX.Body1.Normal"
+                            style="@style/TextAppearance.SettleX.BodyMedium"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:text="@string/tv_commission"
@@ -285,7 +285,7 @@
 
                                 <TextView
                                     android:id="@+id/tv_user_commission_balance"
-                                    style="@style/TextAppearance.SettleX.Body1.Large"
+                                    style="@style/TextAppearance.SettleX.BodyLarge"
                                     android:layout_width="wrap_content"
                                     android:layout_height="wrap_content"
                                     android:textColor="?attr/colorOnPrimary"
@@ -373,7 +373,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="15dp"
-                android:background="@drawable/bg_surface_rounded16"
+                android:background="@drawable/bg_surface_variant_rounded24"
                 android:clipToPadding="false"
                 android:nestedScrollingEnabled="false"
                 android:padding="8dp" />
@@ -389,7 +389,7 @@
                 android:orientation="horizontal">
 
                 <TextView
-                    style="@style/TextAppearance.SettleX.Body1.Small"
+                    style="@style/TextAppearance.SettleX.BodySmall"
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
                     android:layout_gravity="start"
@@ -399,7 +399,7 @@
 
                 <TextView
                     android:id="@+id/tv_view_all_transaction"
-                    style="@style/TextAppearance.SettleX.Body1.Small"
+                    style="@style/TextAppearance.SettleX.BodySmall"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_marginEnd="4dp"
@@ -414,7 +414,7 @@
                 android:id="@+id/view_transaction_container"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:background="@drawable/bg_surface_rounded16"
+                android:background="@drawable/bg_surface_variant_rounded24"
                 android:paddingVertical="5dp">
 
                 <androidx.recyclerview.widget.RecyclerView
@@ -445,7 +445,7 @@
                     android:paddingVertical="5dp">
 
                     <TextView
-                        style="@style/TextAppearance.SettleX.Body1.Normal"
+                        style="@style/TextAppearance.SettleX.BodyMedium"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:text="@string/tv_no_transactions_yet"
@@ -453,7 +453,7 @@
                         android:textStyle="bold" />
 
                     <TextView
-                        style="@style/TextAppearance.SettleX.Body1.Small"
+                        style="@style/TextAppearance.SettleX.BodySmall"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_marginTop="5dp"
@@ -478,7 +478,7 @@
                     android:visibility="gone">
 
                     <TextView
-                        style="@style/TextAppearance.SettleX.Body1.Small"
+                        style="@style/TextAppearance.SettleX.BodySmall"
                         android:layout_width="0dp"
                         android:layout_height="wrap_content"
                         android:layout_weight="1"
@@ -502,7 +502,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="120dp"
                 android:layout_marginTop="15dp"
-                android:background="@drawable/bg_surface_rounded16"
+                android:background="@drawable/bg_surface_variant_rounded24"
                 android:visibility="visible">
 
                 <androidx.viewpager2.widget.ViewPager2

@@ -5,122 +5,102 @@
     android:id="@+id/main"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@color/surface"
+    android:background="?attr/colorSurface"
     android:fitsSystemWindows="true"
     tools:context=".presentation.transactions.TransactionStatusActivity">
 
-    <LinearLayout
-        android:id="@+id/header"
-        android:layout_width="0dp"
-        android:layout_height="45dp"
-        android:gravity="center_vertical|end"
-        android:orientation="horizontal"
-        android:paddingHorizontal="15dp"
+    <FrameLayout
+        android:id="@+id/view_anim_container"
+        android:layout_width="120dp"
+        android:layout_height="120dp"
+        app:layout_constraintBottom_toTopOf="@+id/tv_txn_status"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent">
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintVertical_chainStyle="packed">
 
-        <TextView
-            android:id="@+id/tv_done"
-            style="@style/Widget.SettleX.TextBold"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="Done"
-            android:textColor="@color/primary"
-            android:textSize="15sp" />
-    </LinearLayout>
+        <com.airbnb.lottie.LottieAnimationView
+            android:id="@+id/anim_txn_pending"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:visibility="gone"
+            app:lottie_autoPlay="true"
+            app:lottie_fileName="txn_pending_anim.json"
+            app:lottie_loop="false"
+            tools:visibility="visible" />
 
-    <LinearLayout
-        android:id="@+id/view_content_container"
+        <com.airbnb.lottie.LottieAnimationView
+            android:id="@+id/anim_txn_success"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:visibility="gone"
+            app:lottie_autoPlay="true"
+            app:lottie_fileName="txn_success_anim.json"
+            app:lottie_loop="false" />
+
+        <com.airbnb.lottie.LottieAnimationView
+            android:id="@+id/anim_txn_failed"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:visibility="gone"
+            app:lottie_autoPlay="true"
+            app:lottie_fileName="txn_failed_anim.json"
+            app:lottie_loop="false" />
+    </FrameLayout>
+
+    <TextView
+        android:id="@+id/tv_txn_status"
+        style="@style/TextAppearance.SettleX.TitleLarge"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="24dp"
+        android:textColor="?attr/colorOnSurface"
+        app:layout_constraintBottom_toTopOf="@+id/tv_txn_amount"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/view_anim_container"
+        tools:text="Transaction Successful" />
+
+    <TextView
+        android:id="@+id/tv_txn_amount"
+        style="@style/TextAppearance.SettleX.HeadlineLarge"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="8dp"
+        android:textColor="?attr/colorOnSurface"
+        app:layout_constraintBottom_toTopOf="@+id/tv_error"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/tv_txn_status"
+        tools:text="₦1,000" />
+
+    <TextView
+        android:id="@+id/tv_error"
+        style="@style/TextAppearance.Material3.BodyLarge"
         android:layout_width="0dp"
-        android:layout_height="0dp"
-        android:background="@color/surface_container"
-        android:orientation="vertical"
-        android:padding="15dp"
+        android:layout_height="wrap_content"
+        android:layout_marginHorizontal="24dp"
+        android:layout_marginTop="16dp"
+        android:gravity="center"
+        android:textColor="?attr/colorError"
+        android:visibility="gone"
+        app:layout_constraintBottom_toTopOf="@+id/btn_done"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/tv_txn_amount"
+        tools:text="This is a failure reason. It can be a bit long."
+        tools:visibility="visible" />
+
+    <com.google.android.material.button.MaterialButton
+        android:id="@+id/btn_done"
+        style="@style/Widget.SettleX.Button.Primary"
+        android:layout_width="0dp"
+        android:layout_height="55dp"
+        android:layout_marginHorizontal="24dp"
+        android:layout_marginBottom="24dp"
+        android:text="Done"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/header">
+        app:layout_constraintStart_toStartOf="parent" />
 
-        <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:background="@drawable/bg_surface_variant_rounded8"
-            android:gravity="center"
-            android:orientation="vertical"
-            android:paddingTop="10dp"
-            android:paddingBottom="20dp">
-
-            <FrameLayout
-                android:id="@+id/view_anim_container"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_gravity="center">
-
-                <com.airbnb.lottie.LottieAnimationView
-                    android:id="@+id/anim_txn_pending"
-                    android:layout_width="70dp"
-                    style="@style/Widget.SettleX.TextMedium"
-                    android:layout_height="70dp"
-                    android:layout_gravity="center"
-                    android:visibility="gone"
-                    app:lottie_autoPlay="true"
-                    app:lottie_fileName="txn_pending_anim.json"
-                    app:lottie_loop="false" />
-
-                <com.airbnb.lottie.LottieAnimationView
-                    android:id="@+id/anim_txn_success"
-                    android:layout_width="80dp"
-                    android:layout_height="80dp"
-                    android:layout_gravity="center"
-                    android:visibility="gone"
-                    app:lottie_autoPlay="true"
-                    app:lottie_fileName="txn_success_anim.json"
-                    app:lottie_loop="false" />
-
-                <com.airbnb.lottie.LottieAnimationView
-                    android:id="@+id/anim_txn_failed"
-                    android:layout_width="40dp"
-                    android:layout_height="40dp"
-                    android:layout_gravity="center"
-                    android:layout_marginVertical="10dp"
-                    android:visibility="gone"
-                    app:lottie_autoPlay="true"
-                    app:lottie_fileName="txn_failed_anim.json"
-                    app:lottie_loop="false" />
-            </FrameLayout>
-
-            <TextView
-                android:id="@+id/tv_txn_status"
-                style="@style/Widget.SettleX.TextMedium"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_gravity="center"
-                android:layout_marginTop="10dp"
-                android:textSize="16sp"
-                tools:text="Transaction Successful" />
-
-            <TextView
-                android:id="@+id/tv_txn_amount"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_gravity="center"
-                android:layout_marginTop="5dp"
-                android:includeFontPadding="false"
-                android:textColor="@color/on_surface"
-                android:textSize="25sp"
-                android:textStyle="bold"
-                tools:text="₦1,000" />
-
-            <TextView
-                android:id="@+id/tv_error"
-                style="@style/Widget.SettleX.TextError"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_gravity="center"
-                android:layout_marginTop="20dp"
-                android:visibility="gone"
-                tools:text="Failure reason" />
-        </LinearLayout>
-    </LinearLayout>
 </androidx.constraintlayout.widget.ConstraintLayout>

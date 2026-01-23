@@ -4,7 +4,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@color/surface"
+    android:background="?attr/colorSurface"
     android:fitsSystemWindows="true"
     tools:context=".presentation.transactions.TransactionDetailsFragment">
 
@@ -23,24 +23,22 @@
             android:id="@+id/btn_back_before"
             android:layout_width="20dp"
             android:layout_height="20dp"
-            android:scaleType="centerCrop"
-            android:src="@drawable/ic_arrow_back"
-            app:tint="@color/on_surface" />
+            android:src="@drawable/ic_arrow_ios_back"
+            app:tint="?attr/colorOnSurface" />
 
         <TextView
-            style="@style/Widget.SettleX.TextBold"
+            style="@style/TextAppearance.SettleX.TitleLarge"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginStart="10dp"
-            android:text="Transaction Details"
-            android:textSize="15sp" />
+            android:text="Transaction Details" />
     </LinearLayout>
 
     <!-- Content -->
     <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
         android:layout_height="0dp"
-        android:background="@color/surface_container"
+        android:background="?attr/colorSurfaceDim"
         android:orientation="vertical"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
@@ -61,21 +59,21 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginHorizontal="15dp"
-                android:background="@drawable/bg_surface_variant_rounded8"
+                android:background="@drawable/bg_surface_rounded8"
                 android:gravity="center"
                 android:orientation="vertical"
-                android:paddingHorizontal="10dp"
-                android:paddingVertical="15sp"
+                android:padding="15dp"
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent">
 
                 <TextView
                     android:id="@+id/tv_txn_name"
-                    style="@style/Widget.SettleX.TextRegular"
+                    style="@style/TextAppearance.SettleX.BodyMedium"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_marginTop="20dp"
+                    android:textColor="?attr/colorOnSurface"
                     android:textSize="16sp"
                     tools:text="Payment Received" />
 
@@ -88,30 +86,30 @@
 
                     <TextView
                         android:id="@+id/tv_txn_operation"
+                        style="@style/TextAppearance.SettleX.BodyLarge"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:textColor="@color/on_surface"
-                        android:textSize="20sp"
+                        android:textColor="?attr/colorOnSurface"
                         tools:text="+" />
 
                     <TextView
                         android:id="@+id/tv_txn_amount"
-                        style="@style/Widget.SettleX.TextBalance"
+                        style="@style/TextAppearance.SettleX.BodyLarge"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:textColor="@color/on_surface"
+                        android:textColor="?attr/colorOnSurface"
                         tools:text="₦100,000.00" />
                 </LinearLayout>
 
                 <TextView
                     android:id="@+id/tv_txn_status"
-                    style="@style/Widget.SettleX.TextRegular"
+                    style="@style/TextAppearance.SettleX.BodyMedium"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_marginTop="10dp"
                     android:paddingHorizontal="8dp"
                     android:paddingVertical="2dp"
-                    android:textColor="@color/on_success_container"
+                    android:textColor="?attr/colorOnSuccessContainer"
                     tools:background="@drawable/bg_success_container_rounded3"
                     tools:text="Success" />
             </LinearLayout>
@@ -120,7 +118,7 @@
                 android:layout_width="60dp"
                 android:layout_height="60dp"
                 android:layout_marginBottom="-25dp"
-                android:background="@drawable/bg_background_inverse_oval"
+                android:background="@drawable/bg_surface_dim_oval"
                 android:padding="5dp"
                 app:layout_constraintBottom_toTopOf="@id/view_card"
                 app:layout_constraintEnd_toEndOf="parent"
@@ -131,8 +129,9 @@
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
                     android:layout_gravity="center"
-                    android:background="@drawable/bg_secondary_oval"
+                    android:background="@drawable/bg_service_oval"
                     app:contentPadding="8dp"
+                    app:tint="?attr/colorPrimary"
                     tools:src="@drawable/ic_service_payment_sent" />
             </FrameLayout>
         </androidx.constraintlayout.widget.ConstraintLayout>
@@ -142,10 +141,9 @@
             android:layout_height="0dp"
             android:layout_marginHorizontal="15dp"
             android:layout_marginTop="15dp"
-            android:background="@drawable/bg_surface_variant_rounded8"
+            android:background="@drawable/bg_surface_rounded8"
             android:orientation="vertical"
-            android:paddingHorizontal="15dp"
-            android:paddingVertical="15sp"
+            android:padding="15dp"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/view_card_container">
@@ -157,103 +155,107 @@
                 android:orientation="horizontal">
 
                 <TextView
-                    style="@style/Widget.SettleX.TextRegular"
+                    style="@style/TextAppearance.SettleX.BodyMedium"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_marginEnd="10dp"
                     android:text="Date/Time"
-                    android:textColor="@color/on_surface_variant" />
+                    android:textColor="?attr/colorOnSurface" />
 
                 <TextView
                     android:id="@+id/tv_txn_date_time"
-                    style="@style/Widget.SettleX.TextRegular"
+                    style="@style/TextAppearance.SettleX.BodyMedium"
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
                     android:layout_weight="1"
                     android:ellipsize="end"
                     android:gravity="end"
                     android:maxLines="1"
+                    android:textColor="?attr/colorOnSurfaceVariant"
                     tools:text="14/09/2025 11:58PM" />
             </LinearLayout>
 
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="10dp"
+                android:layout_marginTop="15dp"
                 android:gravity="center_vertical"
                 android:orientation="horizontal">
 
                 <TextView
-                    style="@style/Widget.SettleX.TextRegular"
+                    style="@style/TextAppearance.SettleX.BodyMedium"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_marginEnd="10dp"
                     android:text="Sender"
-                    android:textColor="@color/on_surface_variant" />
+                    android:textColor="?attr/colorOnSurface" />
 
                 <TextView
                     android:id="@+id/tv_txn_sender_id"
-                    style="@style/Widget.SettleX.TextRegular"
+                    style="@style/TextAppearance.SettleX.BodyMedium"
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
                     android:layout_weight="1"
                     android:ellipsize="end"
                     android:gravity="end"
                     android:maxLines="1"
+                    android:textColor="?attr/colorOnSurfaceVariant"
                     tools:text="\@benjamin213" />
             </LinearLayout>
 
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="10dp"
+                android:layout_marginTop="15dp"
                 android:gravity="center_vertical"
                 android:orientation="horizontal">
 
                 <TextView
-                    style="@style/Widget.SettleX.TextRegular"
+                    style="@style/TextAppearance.SettleX.BodyMedium"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_marginEnd="10dp"
                     android:text="Recipient"
-                    android:textColor="@color/on_surface_variant" />
+                    android:textColor="?attr/colorOnSurface" />
 
                 <TextView
                     android:id="@+id/tv_txn_recipient_id"
-                    style="@style/Widget.SettleX.TextRegular"
+                    style="@style/TextAppearance.SettleX.BodyMedium"
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
                     android:layout_weight="1"
                     android:ellipsize="end"
                     android:gravity="end"
                     android:maxLines="1"
+                    android:textColor="?attr/colorOnSurfaceVariant"
                     tools:text="\@vitalis" />
             </LinearLayout>
 
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="10dp"
+                android:layout_marginTop="15dp"
                 android:gravity="center_vertical"
                 android:orientation="horizontal">
 
                 <TextView
-                    style="@style/Widget.SettleX.TextRegular"
+                    style="@style/TextAppearance.SettleX.BodyMedium"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_marginEnd="10dp"
                     android:text="Recipient Name"
-                    android:textColor="@color/on_surface_variant" />
+                    android:textColor="?attr/colorOnSurface" />
 
                 <TextView
                     android:id="@+id/tv_txn_recipient_name"
-                    style="@style/Widget.SettleX.TextRegular"
+                    style="@style/TextAppearance.SettleX.BodyMedium"
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
                     android:layout_weight="1"
                     android:ellipsize="end"
                     android:gravity="end"
                     android:maxLines="1"
+                    android:textColor="?attr/colorOnSurfaceVariant"
                     tools:text="BENJAMIN NNAEMEKA" />
             </LinearLayout>
 
@@ -261,60 +263,61 @@
                 android:id="@+id/view_description_container"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="10dp"
+                android:layout_marginTop="15dp"
                 android:gravity="center_vertical"
                 android:orientation="horizontal">
 
                 <TextView
-                    style="@style/Widget.SettleX.TextRegular"
+                    style="@style/TextAppearance.SettleX.BodyMedium"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_marginEnd="10dp"
                     android:text="Description"
-                    android:textColor="@color/on_surface_variant" />
+                    android:textColor="?attr/colorOnSurface" />
 
                 <TextView
                     android:id="@+id/tv_txn_description"
-                    style="@style/Widget.SettleX.TextRegular"
+                    style="@style/TextAppearance.SettleX.BodyMedium"
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
                     android:layout_weight="1"
                     android:ellipsize="end"
                     android:gravity="end"
                     android:maxLines="1"
+                    android:textColor="?attr/colorOnSurfaceVariant"
                     tools:text="Bills Payment" />
             </LinearLayout>
 
             <com.google.android.material.divider.MaterialDivider
                 android:layout_width="match_parent"
-                android:layout_height="1dp"
-                android:layout_marginTop="15dp"
-                app:dividerColor="@color/divider" />
+                android:layout_height="0.5dp"
+                android:layout_marginVertical="15dp"
+                app:dividerColor="?attr/colorOnSurfaceVariant" />
 
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="15dp"
                 android:gravity="center_vertical"
                 android:orientation="horizontal">
 
                 <TextView
-                    style="@style/Widget.SettleX.TextRegular"
+                    style="@style/TextAppearance.SettleX.BodyMedium"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_marginEnd="10dp"
                     android:text="Transaction ID"
-                    android:textColor="@color/on_surface_variant" />
+                    android:textColor="?attr/colorOnSurface" />
 
                 <TextView
                     android:id="@+id/tv_transaction_id"
-                    style="@style/Widget.SettleX.TextRegular"
+                    style="@style/TextAppearance.SettleX.BodyMedium"
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
                     android:layout_weight="1"
                     android:ellipsize="end"
                     android:gravity="end"
                     android:maxLines="1"
+                    android:textColor="?attr/colorOnSurfaceVariant"
                     tools:text="fe367bfgndhdgdtrvebjs5892gfdtja" />
 
                 <com.google.android.material.imageview.ShapeableImageView
@@ -322,7 +325,7 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:src="@drawable/ic_copy"
-                    app:tint="@color/on_surface_variant" />
+                    app:tint="?attr/colorOnSurfaceVariant" />
             </LinearLayout>
         </LinearLayout>
 
@@ -330,11 +333,10 @@
             android:id="@+id/footer"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:background="@drawable/bg_surface_variant_top_rounded"
+            android:background="@drawable/bg_surface_top_rounded"
             android:gravity="center"
-            android:orientation="vertical"
-            android:paddingHorizontal="15dp"
-            android:paddingVertical="15dp"
+            android:orientation="horizontal"
+            android:padding="15dp"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent">

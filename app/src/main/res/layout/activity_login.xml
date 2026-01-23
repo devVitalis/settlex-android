@@ -5,37 +5,26 @@
     android:id="@+id/main"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@color/surface"
+    android:background="?attr/colorSurface"
     android:fitsSystemWindows="true"
     tools:context=".presentation.auth.login.LoginActivity">
 
-    <LinearLayout
-        android:id="@+id/header"
+    <com.google.android.material.appbar.MaterialToolbar
+        android:id="@+id/toolbar"
         android:layout_width="match_parent"
-        android:layout_height="35dp"
-        android:gravity="center_vertical"
-        android:orientation="horizontal"
-        android:paddingHorizontal="15dp"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent">
+        android:layout_height="?attr/actionBarSize"
+        app:layout_constraintTop_toTopOf="parent"
+        app:navigationIcon="@drawable/ic_arrow_ios_back"
+        app:navigationIconTint="?attr/colorOnSurface" />
 
-        <com.google.android.material.imageview.ShapeableImageView
-            android:id="@+id/btn_back_before"
-            android:layout_width="20dp"
-            android:layout_height="20dp"
-            android:background="?attr/selectableItemBackgroundBorderless"
-            android:src="@drawable/ic_arrow_back"
-            app:tint="@color/on_surface" />
-    </LinearLayout>
-
+    <!-- Scroll -->
     <ScrollView
         android:id="@+id/scroll_content"
         android:layout_width="match_parent"
         android:layout_height="0dp"
         android:fillViewport="true"
         app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/header">
+        app:layout_constraintTop_toBottomOf="@id/toolbar">
 
         <LinearLayout
             android:layout_width="match_parent"
@@ -64,25 +53,24 @@
                     android:id="@+id/iv_user_profile_photo"
                     android:layout_width="65dp"
                     android:layout_height="65dp"
-                    android:contentDescription="@null"
                     app:shapeAppearanceOverlay="@style/ShapeAppearance.SettleX.Circular"
                     app:srcCompat="@drawable/ic_avatar_default" />
 
                 <TextView
                     android:id="@+id/tv_user_display_name"
-                    style="@style/Widget.SettleX.TextRegular"
+                    style="@style/TextAppearance.SettleX.BodyMedium"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_marginTop="10dp"
-                    android:textSize="15sp"
+                    android:textColor="?attr/colorOnSurface"
                     tools:text="Hi, Benjamin Nnaemeka" />
 
                 <TextView
                     android:id="@+id/tv_user_email"
-                    style="@style/Widget.SettleX.TextName"
+                    style="@style/TextAppearance.SettleX.BodyMedium"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:textSize="15sp"
+                    android:textColor="?attr/colorOnSurface"
                     android:textStyle="bold"
                     tools:text="(b***k@gmail.com)" />
             </LinearLayout>
@@ -127,23 +115,23 @@
 
             <TextView
                 android:id="@+id/tv_login_error"
-                style="@style/Widget.SettleX.TextRegular"
+                style="@style/TextAppearance.SettleX.BodyMedium"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="5dp"
-                android:textColor="@color/red_500"
+                android:textColor="?attr/colorError"
                 android:visibility="gone"
                 tools:text="error occurred" />
 
             <TextView
                 android:id="@+id/tv_forgot_password"
-                style="@style/Widget.SettleX.TextRegular"
+                style="@style/TextAppearance.SettleX.BodyMedium"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_gravity="end"
                 android:layout_marginTop="10dp"
                 android:text="@string/tv_forgot_password"
-                android:textColor="@color/primary" />
+                android:textColor="?attr/colorPrimary" />
 
             <LinearLayout
                 android:layout_width="match_parent"
@@ -166,11 +154,11 @@
                     android:layout_width="55dp"
                     android:layout_height="55dp"
                     android:layout_marginStart="10dp"
-                    android:background="@color/scrim_black_10"
+                    android:background="@drawable/bg_scrim_oval"
                     android:src="@drawable/ic_fingerprint"
                     app:contentPadding="10dp"
                     app:shapeAppearanceOverlay="@style/ShapeAppearance.SettleX.Circular"
-                    app:tint="@color/primary" />
+                    app:tint="?attr/colorPrimary" />
             </LinearLayout>
 
             <Space
@@ -189,19 +177,21 @@
 
                 <TextView
                     android:id="@+id/tv_sign_up"
-                    style="@style/Widget.SettleX.TextRegular"
+                    style="@style/TextAppearance.SettleX.BodyMedium"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:gravity="center"
-                    android:text="@string/tv_don_t_have_an_account_yet_nclick_here_to_register" />
+                    android:text="@string/tv_don_t_have_an_account_yet_nclick_here_to_register"
+                    android:textColor="?attr/colorOnSurface" />
 
                 <TextView
                     android:id="@+id/tv_switch_account"
-                    style="@style/Widget.SettleX.TextRegular"
+                    style="@style/TextAppearance.SettleX.BodyMedium"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:gravity="center"
                     android:text="@string/tv_not_you_switch_account"
+                    android:textColor="?attr/colorOnSurface"
                     android:visibility="gone" />
             </LinearLayout>
         </LinearLayout>

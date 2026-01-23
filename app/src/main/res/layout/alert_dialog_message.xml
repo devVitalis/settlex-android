@@ -3,7 +3,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:background="@color/surface"
+    android:background="?attr/colorSurface"
     android:gravity="center"
     android:orientation="vertical"
     android:paddingHorizontal="10dp"
@@ -11,12 +11,13 @@
 
     <TextView
         android:id="@+id/tv_message"
-        style="@style/Widget.SettleX.TextRegular"
+        style="@style/TextAppearance.SettleX.BodyMedium"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginTop="10dp"
         android:gravity="center"
         android:textAlignment="center"
+        android:textColor="?attr/colorOnSurface"
         tools:text="Dialog message" />
 
     <LinearLayout
@@ -34,7 +35,6 @@
             android:layout_height="55dp"
             android:layout_marginEnd="15dp"
             android:layout_weight="1"
-            android:textSize="14sp"
             tools:text="Secondary" />
 
         <com.google.android.material.button.MaterialButton
@@ -43,7 +43,6 @@
             android:layout_width="0dp"
             android:layout_height="55dp"
             android:layout_weight="1"
-            android:textSize="14sp"
             tools:text="Primary" />
     </LinearLayout>
 </LinearLayout>

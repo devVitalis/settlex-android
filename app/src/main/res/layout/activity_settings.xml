@@ -5,335 +5,335 @@
     android:id="@+id/main"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@color/white"
+    android:background="?attr/colorSurfaceDim"
     android:fitsSystemWindows="true"
     tools:context=".presentation.settings.SettingsActivity">
 
-    <LinearLayout
-        android:id="@+id/header"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:gravity="center_vertical"
-        android:paddingHorizontal="15dp"
-        android:paddingVertical="15dp"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent">
+    <!--    <LinearLayout-->
+    <!--        android:id="@+id/header"-->
+    <!--        android:layout_width="match_parent"-->
+    <!--        android:layout_height="wrap_content"-->
+    <!--        android:gravity="center_vertical"-->
+    <!--        android:paddingHorizontal="15dp"-->
+    <!--        android:paddingVertical="15dp"-->
+    <!--        app:layout_constraintEnd_toEndOf="parent"-->
+    <!--        app:layout_constraintStart_toStartOf="parent"-->
+    <!--        app:layout_constraintTop_toTopOf="parent">-->
 
-        <ImageView
-            android:id="@+id/btn_back_before"
-            android:layout_width="20dp"
-            android:layout_height="20dp"
-            android:contentDescription="Back Button"
-            app:srcCompat="@drawable/ic_arrow_back" />
+    <!--        <ImageView-->
+    <!--            android:id="@+id/btn_back_before"-->
+    <!--            android:layout_width="20dp"-->
+    <!--            android:layout_height="20dp"-->
+    <!--            android:contentDescription="Back Button"-->
+    <!--            app:srcCompat="@drawable/ic_arrow_back" />-->
 
-        <TextView
-            android:id="@+id/txt_header_title"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginStart="15dp"
-            android:fontFamily="@font/inter_bold"
-            android:includeFontPadding="false"
-            android:text="Settings"
-            android:textColor="@color/black"
-            android:textSize="15sp"
-            android:textStyle="bold" />
-    </LinearLayout>
+    <!--        <TextView-->
+    <!--            android:id="@+id/txt_header_title"-->
+    <!--            android:layout_width="wrap_content"-->
+    <!--            android:layout_height="wrap_content"-->
+    <!--            android:layout_marginStart="15dp"-->
+    <!--            android:fontFamily="@font/inter_bold"-->
+    <!--            android:includeFontPadding="false"-->
+    <!--            android:text="Settings"-->
+    <!--            android:textColor="@color/black"-->
+    <!--            android:textSize="15sp"-->
+    <!--            android:textStyle="bold" />-->
+    <!--    </LinearLayout>-->
 
-    <ScrollView
-        android:layout_width="match_parent"
-        android:layout_height="0dp"
-        android:fillViewport="true"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/header">
+    <!--    <ScrollView-->
+    <!--        android:layout_width="match_parent"-->
+    <!--        android:layout_height="0dp"-->
+    <!--        android:fillViewport="true"-->
+    <!--        app:layout_constraintBottom_toBottomOf="parent"-->
+    <!--        app:layout_constraintTop_toBottomOf="@id/header">-->
 
-        <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:background="@color/gray_200"
-            android:orientation="vertical"
-            android:padding="15dp">
+    <!--        <LinearLayout-->
+    <!--            android:layout_width="match_parent"-->
+    <!--            android:layout_height="wrap_content"-->
+    <!--            android:background="@color/gray_200"-->
+    <!--            android:orientation="vertical"-->
+    <!--            android:padding="15dp">-->
 
-            <!-- Payment Card -->
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginBottom="5dp"
-                android:fontFamily="@font/inter_regular"
-                android:includeFontPadding="false"
-                android:text="Payment"
-                android:textColor="@color/gray_500"
-                android:textSize="12sp" />
+    <!--            &lt;!&ndash; Payment Card &ndash;&gt;-->
+    <!--            <TextView-->
+    <!--                android:layout_width="wrap_content"-->
+    <!--                android:layout_height="wrap_content"-->
+    <!--                android:layout_marginBottom="5dp"-->
+    <!--                android:fontFamily="@font/inter_regular"-->
+    <!--                android:includeFontPadding="false"-->
+    <!--                android:text="Payment"-->
+    <!--                android:textColor="@color/gray_500"-->
+    <!--                android:textSize="12sp" />-->
 
-            <LinearLayout
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:background="@drawable/bg_rounded8"
-                android:orientation="vertical"
-                android:paddingHorizontal="5dp"
-                android:paddingVertical="10dp">
+    <!--            <LinearLayout-->
+    <!--                android:layout_width="match_parent"-->
+    <!--                android:layout_height="wrap_content"-->
+    <!--                android:background="@drawable/bg_rounded8"-->
+    <!--                android:orientation="vertical"-->
+    <!--                android:paddingHorizontal="5dp"-->
+    <!--                android:paddingVertical="10dp">-->
 
-                <!-- btn_create_payment_pin -->
-                <LinearLayout
-                    android:id="@+id/btn_create_payment_pin"
-                    android:layout_width="match_parent"
-                    android:layout_height="45dp"
-                    android:background="@drawable/bg_surface_variant_ripple_rounded8"
-                    android:gravity="center_vertical"
-                    android:orientation="horizontal"
-                    android:padding="5dp">
+    <!--                &lt;!&ndash; btn_create_payment_pin &ndash;&gt;-->
+    <!--                <LinearLayout-->
+    <!--                    android:id="@+id/btn_create_payment_pin"-->
+    <!--                    android:layout_width="match_parent"-->
+    <!--                    android:layout_height="45dp"-->
+    <!--                    android:background="@drawable/bg_surface_ripple_rounded8"-->
+    <!--                    android:gravity="center_vertical"-->
+    <!--                    android:orientation="horizontal"-->
+    <!--                    android:padding="5dp">-->
 
-                    <TextView
-                        android:layout_width="0dp"
-                        android:layout_height="wrap_content"
-                        android:layout_weight="1"
-                        android:fontFamily="@font/inter_regular"
-                        android:includeFontPadding="false"
-                        android:text="Create Payment Pin"
-                        android:textColor="@color/black"
-                        android:textSize="14sp" />
+    <!--                    <TextView-->
+    <!--                        android:layout_width="0dp"-->
+    <!--                        android:layout_height="wrap_content"-->
+    <!--                        android:layout_weight="1"-->
+    <!--                        android:fontFamily="@font/inter_regular"-->
+    <!--                        android:includeFontPadding="false"-->
+    <!--                        android:text="Create Payment Pin"-->
+    <!--                        android:textColor="@color/black"-->
+    <!--                        android:textSize="14sp" />-->
 
-                    <TextView
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_marginEnd="5dp"
-                        android:fontFamily="@font/inter_regular"
-                        android:includeFontPadding="false"
-                        android:text="Setup"
-                        android:textColor="@color/blue_500"
-                        android:textSize="12sp" />
+    <!--                    <TextView-->
+    <!--                        android:layout_width="wrap_content"-->
+    <!--                        android:layout_height="wrap_content"-->
+    <!--                        android:layout_marginEnd="5dp"-->
+    <!--                        android:fontFamily="@font/inter_regular"-->
+    <!--                        android:includeFontPadding="false"-->
+    <!--                        android:text="Setup"-->
+    <!--                        android:textColor="@color/blue_500"-->
+    <!--                        android:textSize="12sp" />-->
 
-                    <ImageView
-                        android:layout_width="15dp"
-                        android:layout_height="15dp"
-                        android:contentDescription="@null"
-                        android:src="@drawable/ic_arrow_forward"
-                        app:tint="@color/gray_500" />
-                </LinearLayout>
+    <!--                    <ImageView-->
+    <!--                        android:layout_width="15dp"-->
+    <!--                        android:layout_height="15dp"-->
+    <!--                        android:contentDescription="@null"-->
+    <!--                        android:src="@drawable/ic_arrow_forward"-->
+    <!--                        app:tint="@color/gray_500" />-->
+    <!--                </LinearLayout>-->
 
-                <!-- btn_change_payment_pin -->
-                <LinearLayout
-                    android:id="@+id/btn_change_payment_pin"
-                    android:layout_width="match_parent"
-                    android:layout_height="45dp"
-                    android:background="@drawable/bg_surface_variant_ripple_rounded8"
-                    android:gravity="center_vertical"
-                    android:orientation="horizontal"
-                    android:padding="5dp">
+    <!--                &lt;!&ndash; btn_change_payment_pin &ndash;&gt;-->
+    <!--                <LinearLayout-->
+    <!--                    android:id="@+id/btn_change_payment_pin"-->
+    <!--                    android:layout_width="match_parent"-->
+    <!--                    android:layout_height="45dp"-->
+    <!--                    android:background="@drawable/bg_surface_ripple_rounded8"-->
+    <!--                    android:gravity="center_vertical"-->
+    <!--                    android:orientation="horizontal"-->
+    <!--                    android:padding="5dp">-->
 
-                    <TextView
-                        android:layout_width="0dp"
-                        android:layout_height="wrap_content"
-                        android:layout_weight="1"
-                        android:fontFamily="@font/inter_regular"
-                        android:includeFontPadding="false"
-                        android:text="Change Payment Pin"
-                        android:textColor="@color/black"
-                        android:textSize="14sp" />
+    <!--                    <TextView-->
+    <!--                        android:layout_width="0dp"-->
+    <!--                        android:layout_height="wrap_content"-->
+    <!--                        android:layout_weight="1"-->
+    <!--                        android:fontFamily="@font/inter_regular"-->
+    <!--                        android:includeFontPadding="false"-->
+    <!--                        android:text="Change Payment Pin"-->
+    <!--                        android:textColor="@color/black"-->
+    <!--                        android:textSize="14sp" />-->
 
-                    <ImageView
-                        android:layout_width="15dp"
-                        android:layout_height="15dp"
-                        android:contentDescription="@null"
-                        android:src="@drawable/ic_arrow_forward"
-                        app:tint="@color/gray_500" />
-                </LinearLayout>
+    <!--                    <ImageView-->
+    <!--                        android:layout_width="15dp"-->
+    <!--                        android:layout_height="15dp"-->
+    <!--                        android:contentDescription="@null"-->
+    <!--                        android:src="@drawable/ic_arrow_forward"-->
+    <!--                        app:tint="@color/gray_500" />-->
+    <!--                </LinearLayout>-->
 
-                <!-- btn_forgot_payment_pin -->
-                <LinearLayout
-                    android:id="@+id/btn_forgot_payment_pin"
-                    android:layout_width="match_parent"
-                    android:layout_height="45dp"
-                    android:background="@drawable/bg_surface_variant_ripple_rounded8"
-                    android:gravity="center_vertical"
-                    android:orientation="horizontal"
-                    android:padding="5dp">
+    <!--                &lt;!&ndash; btn_forgot_payment_pin &ndash;&gt;-->
+    <!--                <LinearLayout-->
+    <!--                    android:id="@+id/btn_forgot_payment_pin"-->
+    <!--                    android:layout_width="match_parent"-->
+    <!--                    android:layout_height="45dp"-->
+    <!--                    android:background="@drawable/bg_surface_ripple_rounded8"-->
+    <!--                    android:gravity="center_vertical"-->
+    <!--                    android:orientation="horizontal"-->
+    <!--                    android:padding="5dp">-->
 
-                    <TextView
-                        android:layout_width="0dp"
-                        android:layout_height="wrap_content"
-                        android:layout_weight="1"
-                        android:fontFamily="@font/inter_regular"
-                        android:includeFontPadding="false"
-                        android:text="Forgot Payment Pin"
-                        android:textColor="@color/black"
-                        android:textSize="14sp" />
+    <!--                    <TextView-->
+    <!--                        android:layout_width="0dp"-->
+    <!--                        android:layout_height="wrap_content"-->
+    <!--                        android:layout_weight="1"-->
+    <!--                        android:fontFamily="@font/inter_regular"-->
+    <!--                        android:includeFontPadding="false"-->
+    <!--                        android:text="Forgot Payment Pin"-->
+    <!--                        android:textColor="@color/black"-->
+    <!--                        android:textSize="14sp" />-->
 
-                    <ImageView
-                        android:layout_width="15dp"
-                        android:layout_height="15dp"
-                        android:contentDescription="@null"
-                        android:src="@drawable/ic_arrow_forward"
-                        app:tint="@color/gray_500" />
-                </LinearLayout>
+    <!--                    <ImageView-->
+    <!--                        android:layout_width="15dp"-->
+    <!--                        android:layout_height="15dp"-->
+    <!--                        android:contentDescription="@null"-->
+    <!--                        android:src="@drawable/ic_arrow_forward"-->
+    <!--                        app:tint="@color/gray_500" />-->
+    <!--                </LinearLayout>-->
 
-                <!-- btn_switch_pay_with_biometrics -->
-                <LinearLayout
-                    android:layout_width="match_parent"
-                    android:layout_height="45dp"
-                    android:background="@drawable/bg_surface_variant_ripple_rounded8"
-                    android:gravity="center_vertical"
-                    android:orientation="horizontal"
-                    android:padding="5dp">
+    <!--                &lt;!&ndash; btn_switch_pay_with_biometrics &ndash;&gt;-->
+    <!--                <LinearLayout-->
+    <!--                    android:layout_width="match_parent"-->
+    <!--                    android:layout_height="45dp"-->
+    <!--                    android:background="@drawable/bg_surface_ripple_rounded8"-->
+    <!--                    android:gravity="center_vertical"-->
+    <!--                    android:orientation="horizontal"-->
+    <!--                    android:padding="5dp">-->
 
-                    <LinearLayout
-                        android:layout_width="0dp"
-                        android:layout_height="wrap_content"
-                        android:layout_weight="1"
-                        android:gravity="center_vertical"
-                        android:orientation="vertical">
+    <!--                    <LinearLayout-->
+    <!--                        android:layout_width="0dp"-->
+    <!--                        android:layout_height="wrap_content"-->
+    <!--                        android:layout_weight="1"-->
+    <!--                        android:gravity="center_vertical"-->
+    <!--                        android:orientation="vertical">-->
 
-                        <TextView
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:fontFamily="@font/inter_regular"
-                            android:includeFontPadding="false"
-                            android:text="Pay with Fingerprint"
-                            android:textColor="@color/black"
-                            android:textSize="14sp" />
+    <!--                        <TextView-->
+    <!--                            android:layout_width="wrap_content"-->
+    <!--                            android:layout_height="wrap_content"-->
+    <!--                            android:fontFamily="@font/inter_regular"-->
+    <!--                            android:includeFontPadding="false"-->
+    <!--                            android:text="Pay with Fingerprint"-->
+    <!--                            android:textColor="@color/black"-->
+    <!--                            android:textSize="14sp" />-->
 
-                        <TextView
-                            android:id="@+id/pay_with_biometrics_error"
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:layout_marginTop="2dp"
-                            android:fontFamily="@font/inter_regular"
-                            android:includeFontPadding="false"
-                            android:textColor="@color/red_500"
-                            android:textSize="11sp"
-                            tools:text="Biometric not available on this device" />
-                    </LinearLayout>
+    <!--                        <TextView-->
+    <!--                            android:id="@+id/pay_with_biometrics_error"-->
+    <!--                            android:layout_width="wrap_content"-->
+    <!--                            android:layout_height="wrap_content"-->
+    <!--                            android:layout_marginTop="2dp"-->
+    <!--                            android:fontFamily="@font/inter_regular"-->
+    <!--                            android:includeFontPadding="false"-->
+    <!--                            android:textColor="@color/red_500"-->
+    <!--                            android:textSize="11sp"-->
+    <!--                            tools:text="Biometric not available on this device" />-->
+    <!--                    </LinearLayout>-->
 
-                    <com.google.android.material.materialswitch.MaterialSwitch
-                        android:id="@+id/btn_switch_pay_with_biometrics"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        app:trackDecorationTint="@color/switch_track_decoration_tint_selector"
-                        app:trackTint="@color/switch_track_color_selector" />
-                </LinearLayout>
-            </LinearLayout>
+    <!--                    <com.google.android.material.materialswitch.MaterialSwitch-->
+    <!--                        android:id="@+id/btn_switch_pay_with_biometrics"-->
+    <!--                        android:layout_width="wrap_content"-->
+    <!--                        android:layout_height="wrap_content"-->
+    <!--                        app:trackDecorationTint="@color/switch_track_decoration_tint_selector"-->
+    <!--                        app:trackTint="@color/switch_track_color_selector" />-->
+    <!--                </LinearLayout>-->
+    <!--            </LinearLayout>-->
 
-            <!-- Login Card -->
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="15dp"
-                android:layout_marginBottom="5dp"
-                android:fontFamily="@font/inter_regular"
-                android:includeFontPadding="false"
-                android:text="Login"
-                android:textColor="@color/gray_500"
-                android:textSize="12sp" />
+    <!--            &lt;!&ndash; Login Card &ndash;&gt;-->
+    <!--            <TextView-->
+    <!--                android:layout_width="wrap_content"-->
+    <!--                android:layout_height="wrap_content"-->
+    <!--                android:layout_marginTop="15dp"-->
+    <!--                android:layout_marginBottom="5dp"-->
+    <!--                android:fontFamily="@font/inter_regular"-->
+    <!--                android:includeFontPadding="false"-->
+    <!--                android:text="Login"-->
+    <!--                android:textColor="@color/gray_500"-->
+    <!--                android:textSize="12sp" />-->
 
-            <LinearLayout
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:background="@drawable/bg_rounded8"
-                android:orientation="vertical"
-                android:paddingHorizontal="5dp"
-                android:paddingVertical="10dp">
+    <!--            <LinearLayout-->
+    <!--                android:layout_width="match_parent"-->
+    <!--                android:layout_height="wrap_content"-->
+    <!--                android:background="@drawable/bg_rounded8"-->
+    <!--                android:orientation="vertical"-->
+    <!--                android:paddingHorizontal="5dp"-->
+    <!--                android:paddingVertical="10dp">-->
 
-                <!-- btn_change_password -->
-                <LinearLayout
-                    android:id="@+id/btn_change_password"
-                    android:layout_width="match_parent"
-                    android:layout_height="45dp"
-                    android:background="@drawable/bg_surface_variant_ripple_rounded8"
-                    android:gravity="center_vertical"
-                    android:orientation="horizontal"
-                    android:padding="5dp">
+    <!--                &lt;!&ndash; btn_change_password &ndash;&gt;-->
+    <!--                <LinearLayout-->
+    <!--                    android:id="@+id/btn_change_password"-->
+    <!--                    android:layout_width="match_parent"-->
+    <!--                    android:layout_height="45dp"-->
+    <!--                    android:background="@drawable/bg_surface_ripple_rounded8"-->
+    <!--                    android:gravity="center_vertical"-->
+    <!--                    android:orientation="horizontal"-->
+    <!--                    android:padding="5dp">-->
 
-                    <TextView
-                        android:layout_width="0dp"
-                        android:layout_height="wrap_content"
-                        android:layout_weight="1"
-                        android:fontFamily="@font/inter_regular"
-                        android:includeFontPadding="false"
-                        android:text="Change Password"
-                        android:textColor="@color/black"
-                        android:textSize="14sp" />
+    <!--                    <TextView-->
+    <!--                        android:layout_width="0dp"-->
+    <!--                        android:layout_height="wrap_content"-->
+    <!--                        android:layout_weight="1"-->
+    <!--                        android:fontFamily="@font/inter_regular"-->
+    <!--                        android:includeFontPadding="false"-->
+    <!--                        android:text="Change Password"-->
+    <!--                        android:textColor="@color/black"-->
+    <!--                        android:textSize="14sp" />-->
 
-                    <ImageView
-                        android:layout_width="15dp"
-                        android:layout_height="15dp"
-                        android:contentDescription="@null"
-                        android:src="@drawable/ic_arrow_forward"
-                        app:tint="@color/gray_500" />
-                </LinearLayout>
+    <!--                    <ImageView-->
+    <!--                        android:layout_width="15dp"-->
+    <!--                        android:layout_height="15dp"-->
+    <!--                        android:contentDescription="@null"-->
+    <!--                        android:src="@drawable/ic_arrow_forward"-->
+    <!--                        app:tint="@color/gray_500" />-->
+    <!--                </LinearLayout>-->
 
-                <!-- btn_forgot_password -->
-                <LinearLayout
-                    android:id="@+id/btn_forgot_password"
-                    android:layout_width="match_parent"
-                    android:layout_height="45dp"
-                    android:background="@drawable/bg_surface_variant_ripple_rounded8"
-                    android:gravity="center_vertical"
-                    android:orientation="horizontal"
-                    android:padding="5dp">
+    <!--                &lt;!&ndash; btn_forgot_password &ndash;&gt;-->
+    <!--                <LinearLayout-->
+    <!--                    android:id="@+id/btn_forgot_password"-->
+    <!--                    android:layout_width="match_parent"-->
+    <!--                    android:layout_height="45dp"-->
+    <!--                    android:background="@drawable/bg_surface_ripple_rounded8"-->
+    <!--                    android:gravity="center_vertical"-->
+    <!--                    android:orientation="horizontal"-->
+    <!--                    android:padding="5dp">-->
 
-                    <TextView
-                        android:layout_width="0dp"
-                        android:layout_height="wrap_content"
-                        android:layout_weight="1"
-                        android:fontFamily="@font/inter_regular"
-                        android:includeFontPadding="false"
-                        android:text="Forgot Password"
-                        android:textColor="@color/black"
-                        android:textSize="14sp" />
+    <!--                    <TextView-->
+    <!--                        android:layout_width="0dp"-->
+    <!--                        android:layout_height="wrap_content"-->
+    <!--                        android:layout_weight="1"-->
+    <!--                        android:fontFamily="@font/inter_regular"-->
+    <!--                        android:includeFontPadding="false"-->
+    <!--                        android:text="Forgot Password"-->
+    <!--                        android:textColor="@color/black"-->
+    <!--                        android:textSize="14sp" />-->
 
-                    <ImageView
-                        android:layout_width="15dp"
-                        android:layout_height="15dp"
-                        android:contentDescription="@null"
-                        android:src="@drawable/ic_arrow_forward"
-                        app:tint="@color/gray_500" />
-                </LinearLayout>
+    <!--                    <ImageView-->
+    <!--                        android:layout_width="15dp"-->
+    <!--                        android:layout_height="15dp"-->
+    <!--                        android:contentDescription="@null"-->
+    <!--                        android:src="@drawable/ic_arrow_forward"-->
+    <!--                        app:tint="@color/gray_500" />-->
+    <!--                </LinearLayout>-->
 
-                <!-- btn_switch_login_with_biometrics -->
-                <LinearLayout
-                    android:layout_width="match_parent"
-                    android:layout_height="45dp"
-                    android:background="@drawable/bg_surface_variant_ripple_rounded8"
-                    android:gravity="center_vertical"
-                    android:orientation="horizontal"
-                    android:padding="5dp">
+    <!--                &lt;!&ndash; btn_switch_login_with_biometrics &ndash;&gt;-->
+    <!--                <LinearLayout-->
+    <!--                    android:layout_width="match_parent"-->
+    <!--                    android:layout_height="45dp"-->
+    <!--                    android:background="@drawable/bg_surface_ripple_rounded8"-->
+    <!--                    android:gravity="center_vertical"-->
+    <!--                    android:orientation="horizontal"-->
+    <!--                    android:padding="5dp">-->
 
-                    <LinearLayout
-                        android:layout_width="0dp"
-                        android:layout_height="wrap_content"
-                        android:layout_weight="1"
-                        android:gravity="center_vertical"
-                        android:orientation="vertical">
+    <!--                    <LinearLayout-->
+    <!--                        android:layout_width="0dp"-->
+    <!--                        android:layout_height="wrap_content"-->
+    <!--                        android:layout_weight="1"-->
+    <!--                        android:gravity="center_vertical"-->
+    <!--                        android:orientation="vertical">-->
 
-                        <TextView
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:fontFamily="@font/inter_regular"
-                            android:includeFontPadding="false"
-                            android:text="Login with Fingerprint"
-                            android:textColor="@color/black"
-                            android:textSize="14sp" />
+    <!--                        <TextView-->
+    <!--                            android:layout_width="wrap_content"-->
+    <!--                            android:layout_height="wrap_content"-->
+    <!--                            android:fontFamily="@font/inter_regular"-->
+    <!--                            android:includeFontPadding="false"-->
+    <!--                            android:text="Login with Fingerprint"-->
+    <!--                            android:textColor="@color/black"-->
+    <!--                            android:textSize="14sp" />-->
 
-                        <TextView
-                            android:id="@+id/login_with_biometrics_error"
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:layout_marginTop="2dp"
-                            android:fontFamily="@font/inter_regular"
-                            android:includeFontPadding="false"
-                            android:textColor="@color/red_500"
-                            android:textSize="11sp"
-                            tools:text="Biometric not available on this device" />
-                    </LinearLayout>
+    <!--                        <TextView-->
+    <!--                            android:id="@+id/login_with_biometrics_error"-->
+    <!--                            android:layout_width="wrap_content"-->
+    <!--                            android:layout_height="wrap_content"-->
+    <!--                            android:layout_marginTop="2dp"-->
+    <!--                            android:fontFamily="@font/inter_regular"-->
+    <!--                            android:includeFontPadding="false"-->
+    <!--                            android:textColor="@color/red_500"-->
+    <!--                            android:textSize="11sp"-->
+    <!--                            tools:text="Biometric not available on this device" />-->
+    <!--                    </LinearLayout>-->
 
-                    <com.google.android.material.materialswitch.MaterialSwitch
-                        android:id="@+id/btn_switch_login_with_biometrics"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        app:trackDecorationTint="@color/switch_track_decoration_tint_selector"
-                        app:trackTint="@color/switch_track_color_selector" />
-                </LinearLayout>
-            </LinearLayout>
-        </LinearLayout>
-    </ScrollView>
+    <!--                    <com.google.android.material.materialswitch.MaterialSwitch-->
+    <!--                        android:id="@+id/btn_switch_login_with_biometrics"-->
+    <!--                        android:layout_width="wrap_content"-->
+    <!--                        android:layout_height="wrap_content"-->
+    <!--                        app:trackDecorationTint="@color/switch_track_decoration_tint_selector"-->
+    <!--                        app:trackTint="@color/switch_track_color_selector" />-->
+    <!--                </LinearLayout>-->
+    <!--            </LinearLayout>-->
+    <!--        </LinearLayout>-->
+    <!--    </ScrollView>-->
 </androidx.constraintlayout.widget.ConstraintLayout>

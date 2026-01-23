@@ -38,7 +38,7 @@
 
     <TextView
         android:id="@+id/header"
-        style="@style/TextAppearance.SettleX.Headline.Large"
+        style="@style/TextAppearance.SettleX.HeadlineLarge"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:layout_marginTop="10dp"
@@ -50,7 +50,7 @@
         tools:text="Secure By\nDesign" />
 
     <TextView
-        style="@style/TextAppearance.SettleX.Body1.Normal"
+        style="@style/TextAppearance.SettleX.BodyMedium"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:layout_marginTop="10dp"

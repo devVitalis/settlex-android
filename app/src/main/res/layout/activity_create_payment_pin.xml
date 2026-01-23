@@ -5,29 +5,17 @@
     android:id="@+id/main"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@color/surface"
+    android:background="?attr/colorSurface"
     android:fitsSystemWindows="true"
     tools:context=".presentation.settings.CreatePaymentPinActivity">
 
-    <LinearLayout
-        android:id="@+id/header"
+    <com.google.android.material.appbar.MaterialToolbar
+        android:id="@+id/toolbar"
         android:layout_width="match_parent"
-        android:layout_height="45dp"
-        android:gravity="center_vertical"
-        android:orientation="horizontal"
-        android:paddingHorizontal="15dp"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent">
-
-        <com.google.android.material.imageview.ShapeableImageView
-            android:id="@+id/btn_back_before"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:background="?attr/selectableItemBackgroundBorderless"
-            android:src="@drawable/ic_arrow_back"
-            app:tint="@color/on_surface" />
-    </LinearLayout>
+        android:layout_height="?attr/actionBarSize"
+        app:layout_constraintTop_toTopOf="parent"
+        app:navigationIcon="@drawable/ic_arrow_ios_back"
+        app:navigationIconTint="?attr/colorOnSurface" />
 
     <!-- Content -->
     <LinearLayout
@@ -37,34 +25,35 @@
         android:orientation="vertical"
         android:padding="20dp"
         app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/header">
+        app:layout_constraintTop_toBottomOf="@id/toolbar">
 
         <com.google.android.material.imageview.ShapeableImageView
             android:layout_width="60dp"
             android:layout_height="60dp"
             android:layout_marginTop="10dp"
-            android:background="@drawable/bg_secondary_filled_primary_outlined_oval"
+            android:background="@drawable/bg_sec_filled_pri_outlined_oval"
             android:src="@drawable/ic_lock_filled"
             app:contentPadding="10dp"
-            app:tint="@color/on_secondary" />
+            app:tint="?attr/colorOnSecondary" />
 
         <TextView
             android:id="@+id/tv_title"
-            style="@style/Widget.SettleX.TextBold"
+            style="@style/TextAppearance.SettleX.HeadlineLarge"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginTop="15dp"
+            android:textColor="?attr/colorOnSurface"
             tools:text="Set Payment PIN" />
 
         <TextView
-            style="@style/Widget.SettleX.TextRegular"
+            style="@style/TextAppearance.SettleX.BodyLarge"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginTop="5dp"
             android:gravity="center"
             android:text="Create a 4-digit PIN to secure your transaction."
             android:textAlignment="center"
-            android:textColor="@color/on_surface_variant" />
+            android:textColor="?attr/colorOnSurfaceVariant" />
 
         <LinearLayout
             android:id="@+id/view_current_pin_container"
@@ -76,12 +65,11 @@
             android:visibility="gone">
 
             <TextView
-                style="@style/Widget.SettleX.TextRegular"
+                style="@style/TextAppearance.SettleX.BodyMedium"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="Enter Current Payment PIN"
-                android:textColor="@color/on_surface_variant"
-                android:textSize="12sp" />
+                android:textColor="?attr/colorOnSurfaceVariant" />
 
             <com.chaos.view.PinView
                 android:id="@+id/current_pin_view"
@@ -103,11 +91,11 @@
             android:orientation="vertical">
 
             <TextView
-                style="@style/Widget.SettleX.TextRegular"
+                style="@style/TextAppearance.SettleX.LabelMedium"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="Enter 4-digit PIN"
-                android:textColor="@color/on_surface_variant" />
+                android:textColor="?attr/colorOnSurfaceVariant" />
 
             <com.chaos.view.PinView
                 android:id="@+id/new_pin_view"
@@ -120,10 +108,11 @@
 
             <TextView
                 android:id="@+id/tv_new_pin_view_error"
-                style="@style/Widget.SettleX.TextError"
+                style="@style/TextAppearance.SettleX.BodyMedium"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="5dp"
+                android:textColor="?attr/colorError"
                 android:visibility="gone"
                 tools:text="Error occurred" />
         </LinearLayout>
@@ -139,11 +128,11 @@
             android:visibility="gone">
 
             <TextView
-                style="@style/Widget.SettleX.TextRegular"
+                style="@style/TextAppearance.SettleX.LabelMedium"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="Re-enter 4-digits PIN to confirm"
-                android:textColor="@color/on_surface_variant" />
+                android:textColor="?attr/colorOnSurfaceVariant" />
 
             <com.chaos.view.PinView
                 android:id="@+id/confirm_pin_view"
@@ -156,10 +145,11 @@
 
             <TextView
                 android:id="@+id/confirm_pin_view_error"
-                style="@style/Widget.SettleX.TextError"
+                style="@style/TextAppearance.SettleX.BodyMedium"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="5dp"
+                android:textColor="?attr/colorError"
                 android:visibility="gone"
                 tools:text="Error occurred" />
         </LinearLayout>
