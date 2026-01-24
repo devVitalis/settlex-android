@@ -217,7 +217,7 @@ object PaymentBottomSheetHelper {
 
         with(binding) {
             btnClose.setOnClickListener { dialog.dismiss() }
-            btnForgotPaymentPin.setOnClickListener { }
+            tvForgotPaymentPin.setOnClickListener { }
 
             // Disable system keyboard
             (context.getSystemService(Context.INPUT_METHOD_SERVICE) as InputMethodManager).apply {

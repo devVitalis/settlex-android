@@ -5,7 +5,6 @@ import android.os.CountDownTimer
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import androidx.core.content.ContextCompat
 import androidx.core.widget.doOnTextChanged
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
@@ -19,6 +18,7 @@ import com.settlex.android.data.enums.OtpType
 import com.settlex.android.data.exception.AppException
 import com.settlex.android.databinding.FragmentRegisterEmailVerificationBinding
 import com.settlex.android.presentation.auth.AuthViewModel
+import com.settlex.android.presentation.common.extensions.getThemeColor
 import com.settlex.android.presentation.common.extensions.gone
 import com.settlex.android.presentation.common.extensions.show
 import com.settlex.android.presentation.common.state.UiState
@@ -42,7 +42,7 @@ class RegisterEmailVerificationFragment : Fragment() {
         inflater: LayoutInflater,
         container: ViewGroup?,
         savedInstanceState: Bundle?
-    ): View? {
+    ): View {
         _binding =
             FragmentRegisterEmailVerificationBinding.inflate(
                 inflater,
@@ -72,28 +72,27 @@ class RegisterEmailVerificationFragment : Fragment() {
     }
 
     private fun initViews() = with(binding) {
-        StatusBar.setColor(requireActivity(), R.color.surface)
+        StatusBar.setColor(requireActivity(), requireContext().getThemeColor(R.attr.colorSurface))
         setupInputWatcher()
 
         email.also { email ->
             tvUserEmail.text = SpannableTextFormatter(
                 requireContext(),
-                text = "We sent a code to $email. This code will expire after 10 minutes",
+                text = "We sent a verification code to your email $email. This code will expire after 10 minutes",
                 target = email,
-                color = ContextCompat.getColor(requireContext(), R.color.on_surface),
+                color = requireContext().getThemeColor(R.attr.colorOnSurface),
                 setBold = true,
             )
         }
 
-        /**
         tvSpamInfo.text = SpannableTextFormatter(
-        requireContext(),
-        "Didn’t get the email? Make sure to also check your spam/junk folder if you can't find the email in your inbox",
-        "check your spam/junk folder",
-        ContextCompat.getColor(requireContext(), R.color.colorWarning)
-        )*/
+            requireContext(),
+            "Didn’t get the email? Make sure to also check your spam/junk folder if you can't find the email in your inbox",
+            "check your spam/junk folder",
+            requireContext().getThemeColor(R.attr.colorOnWarningContainer)
+        )
 
-        btnBackBefore.setOnClickListener {
+        toolbar.setNavigationOnClickListener {
             NavHostFragment.findNavController(
                 this@RegisterEmailVerificationFragment
             ).popBackStack()
@@ -178,12 +177,7 @@ class RegisterEmailVerificationFragment : Fragment() {
 
     private fun startOtpResendCooldownTimer() = with(binding) {
         tvResendCode.isEnabled = false
-        tvResendCode.setTextColor(
-            ContextCompat.getColor(
-                requireContext(),
-                R.color.on_surface_variant
-            )
-        )
+        tvResendCode.setTextColor(requireContext().getThemeColor(R.attr.colorOnSurfaceVariant))
 
         tvResendCode.text.also { originalText ->
             otpResendCountdownTimer = object :
@@ -201,12 +195,7 @@ class RegisterEmailVerificationFragment : Fragment() {
                 override fun onFinish() {
                     tvResendCode.text = originalText
                     tvResendCode.isEnabled = true
-                    tvResendCode.setTextColor(
-                        ContextCompat.getColor(
-                            requireContext(),
-                            R.color.blue_500
-                        )
-                    )
+                    tvResendCode.setTextColor(requireContext().getThemeColor(R.attr.colorPrimary))
                 }
             }.start()
         }
@@ -217,7 +206,7 @@ class RegisterEmailVerificationFragment : Fragment() {
 
     private fun setupInputWatcher() {
         with(binding) {
-            etOtpCode.doOnTextChanged { otp, _, _, _ ->
+            etOtpCode.doOnTextChanged { _, _, _, _ ->
                 tvError.gone()
                 btnContinue.isEnabled = isOtpComplete()
             }

@@ -17,6 +17,7 @@ import com.settlex.android.presentation.auth.AuthViewModel
 import com.settlex.android.presentation.auth.login.LoginActivity
 import com.settlex.android.presentation.auth.util.PasswordFlow
 import com.settlex.android.presentation.auth.util.PasswordFlowParser
+import com.settlex.android.presentation.common.extensions.getThemeColor
 import com.settlex.android.presentation.common.extensions.gone
 import com.settlex.android.presentation.common.extensions.show
 import com.settlex.android.presentation.common.state.UiState
@@ -57,7 +58,7 @@ class CreatePasswordActivity : AppCompatActivity() {
     }
 
     private fun initViews() {
-        StatusBar.setColor(this, R.color.surface)
+        StatusBar.setColor(this, getThemeColor(R.attr.colorSurface))
         updateUiFromIntent()
         setupListeners()
         setupInputValidation()
@@ -66,7 +67,7 @@ class CreatePasswordActivity : AppCompatActivity() {
 
     private fun setupListeners() = with(binding) {
         btnChangePassword.setOnClickListener { onChangePasswordClicked() }
-        btnBackBefore.setOnClickListener { finish() }
+        toolbar.setNavigationOnClickListener { finish() }
     }
 
     private fun updateUiFromIntent() {
@@ -77,14 +78,12 @@ class CreatePasswordActivity : AppCompatActivity() {
             }
     }
 
-    private fun onChangePasswordClicked() = with(binding) {
-        when (passwordFlow) {
-            is PasswordFlow.ChangePassword -> {
-                // TODO: call authenticated password reset API
-            }
-
-            else -> setNewPassword()
+    private fun onChangePasswordClicked() = when (passwordFlow) {
+        is PasswordFlow.ChangePassword -> {
+            // TODO: call authenticated password reset API
         }
+
+        else -> setNewPassword()
     }
 
     private fun setNewPassword() = with(binding) {

@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <attr name="colorPrimary" format="color" />
+    <attr name="colorOnPrimary" format="color" />
+    <attr name="colorPrimaryContainer" format="color" />
+    <attr name="colorOnPrimaryContainer" format="color" />
+    <attr name="colorPrimaryDisabled" format="color" />
+
+    <attr name="colorSecondary" format="color" />
+    <attr name="colorOnSecondary" format="color" />
+    <attr name="colorSecondaryFixed" format="color" />
+
+    <attr name="colorSurface" format="color" />
+    <attr name="colorOnSurface" format="color" />
+    <attr name="colorSurfaceVariant" format="color" />
+    <attr name="colorOnSurfaceVariant" format="color" />
+    <attr name="colorSurfaceContainer" format="color" />
+    <attr name="colorSurfaceDim" format="color" />
+
+    <attr name="colorShimmer" format="color" />
+    <attr name="colorSuccess" format="color" />
+    <attr name="colorOnSuccess" format="color" />
+    <attr name="colorSuccessContainer" format="color" />
+    <attr name="colorOnSuccessContainer" format="color" />
+    <attr name="colorRippleOverlay" format="color" />
+    <attr name="colorPrimaryDisabled" format="color" />
+    <attr name="colorError" format="color" />
+    <attr name="colorOnError" format="color" />
+    <attr name="colorWarning" format="color" />
+    <attr name="colorOnWarning" format="color" />
+    <attr name="colorWarningContainer" format="color" />
+    <attr name="colorOnWarningContainer" format="color" />
+    <attr name="colorRewardsBackground" format="color" />
+    <attr name="colorAlert" format="color" />
+    <attr name="colorOnAlert" format="color" />
+    <attr name="colorScrimOverlay" format="color" />
+    <attr name="colorOnScrimOverlay" format="color" />
+    <attr name="colorScrimOverlayContainer" format="color" />
+</resources>

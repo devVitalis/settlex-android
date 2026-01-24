@@ -15,6 +15,7 @@ import com.settlex.android.data.enums.OtpType
 import com.settlex.android.data.exception.AppException
 import com.settlex.android.databinding.ActivityForgotPasswordBinding
 import com.settlex.android.presentation.auth.AuthViewModel
+import com.settlex.android.presentation.common.extensions.getThemeColor
 import com.settlex.android.presentation.common.extensions.gone
 import com.settlex.android.presentation.common.extensions.show
 import com.settlex.android.presentation.common.state.UiState
@@ -45,25 +46,12 @@ class ForgotPasswordActivity : AppCompatActivity() {
     }
 
     private fun initViews() {
+        StatusBar.setColor(this, getThemeColor(R.attr.colorSurface))
+        setupInputValidation()
+
         with(binding) {
-            StatusBar.setColor(this@ForgotPasswordActivity, R.color.surface)
-            setupInputValidation()
-
             focusManager.attachDoneAction(etEmail)
-
-            /** For Testing
-            btnBackBefore.setOnClickListener {
-            startActivity(
-            Intent(this@ForgotPasswordActivity, CreatePasswordActivity::class.java)
-            .putExtra(
-            "email",
-            binding.etEmail.text.toString().lowercase()
-            )
-            .putExtra("password_flow", "forgot")
-            )
-            }
-             **/
-            btnBackBefore.setOnClickListener { finish() }
+            toolbar.setNavigationOnClickListener { finish() }
             btnContinue.setOnClickListener {
                 tvError.gone()
                 sendVerificationCode()

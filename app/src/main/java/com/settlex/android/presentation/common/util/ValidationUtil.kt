@@ -11,6 +11,9 @@ object ValidationUtil {
     const val ALLOWED_SPECIAL_CHARS = "!@#$%^&*()_+-=[]{};:,.?"
     const val ERROR_PASSWORD_MISMATCH = "Passwords do not match!"
     const val PAYMENT_PIN_REGEX = "^\\d+$.*"
+    private const val PHONE_NUMBER_REGEX = "^(0)?[7-9][0-1]\\d{8}$"
+    private const val NAME_VALIDATION_REGEX = "^[a-zA-Z]{2,}(?:\\s[a-zA-Z]{2,})*$"
+
 
     fun isPasswordAndConfirmationValid(password: String, confirmationPassword: String): Boolean {
         val hasLength = password.length >= LENGTH
@@ -46,5 +49,13 @@ object ValidationUtil {
 
     fun isPaymentPinValidAndMatch(pin: String, confirmationPin: String): Boolean {
         return pin.matches(PAYMENT_PIN_REGEX.toRegex()) && pin == confirmationPin
+    }
+
+    fun isPhoneNumberValid(phoneNumber: String): Boolean {
+        return phoneNumber.matches(PHONE_NUMBER_REGEX.toRegex())
+    }
+
+    fun isNamesValid(name1: String, name2: String): Boolean {
+        return name1.matches(NAME_VALIDATION_REGEX.toRegex()) && name2.matches(NAME_VALIDATION_REGEX.toRegex())
     }
 }

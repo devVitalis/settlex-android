@@ -2,14 +2,19 @@ package com.settlex.android.presentation.common.extensions
 
 import android.content.ClipData
 import android.content.ClipboardManager
+import android.content.Context
 import android.content.Intent
+import android.graphics.Color
 import android.os.Build
 import android.util.Log
 import android.view.View
 import android.widget.TextView
 import android.widget.Toast
+import androidx.annotation.AttrRes
+import androidx.annotation.ColorInt
 import androidx.core.content.ContextCompat
 import androidx.core.content.IntentCompat.getParcelableExtra
+import com.google.android.material.color.MaterialColors
 import com.google.firebase.Timestamp
 import java.math.BigDecimal
 import java.math.RoundingMode
@@ -291,4 +296,9 @@ fun View.toastNotImplemented() {
 
 inline fun <reified T> Intent.getParcelableExtraCompat(key: String): T {
     return getParcelableExtra(this, key, T::class.java)!!
+}
+
+@ColorInt
+fun Context.getThemeColor(@AttrRes attrs: Int): Int {
+    return MaterialColors.getColor(this, attrs, Color.MAGENTA)
 }

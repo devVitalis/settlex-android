@@ -12,7 +12,9 @@ import androidx.navigation.fragment.NavHostFragment
 import com.settlex.android.R
 import com.settlex.android.databinding.FragmentRegisterNameBinding
 import com.settlex.android.presentation.common.extensions.capitalizeEachWord
+import com.settlex.android.presentation.common.extensions.getThemeColor
 import com.settlex.android.presentation.common.util.FocusManager
+import com.settlex.android.presentation.common.util.ValidationUtil
 import com.settlex.android.util.ui.StatusBar
 import dagger.hilt.android.AndroidEntryPoint
 
@@ -22,16 +24,12 @@ class RegisterNameFragment : Fragment() {
     private val binding get() = _binding!!
     private val registerViewModel: RegisterViewModel by activityViewModels()
     private val focusManager by lazy { FocusManager(requireActivity()) }
-
-    companion object {
-        private const val NAME_VALIDATION_REGEX = "^[a-zA-Z]{2,}(?:\\s[a-zA-Z]{2,})*$"
-    }
-
+    
     override fun onCreateView(
         inflater: LayoutInflater,
         container: ViewGroup?,
         savedInstanceState: Bundle?
-    ): View? {
+    ): View {
         _binding = FragmentRegisterNameBinding.inflate(inflater, container, false)
 
         initViews()
@@ -45,13 +43,13 @@ class RegisterNameFragment : Fragment() {
     }
 
     private fun initViews() = with(binding) {
-        StatusBar.setColor(requireActivity(), R.color.surface)
+        StatusBar.setColor(requireActivity(), requireContext().getThemeColor(R.attr.colorSurface))
         setupInputValidation()
         focusManager.attachDoneAction(etLastname)
     }
 
     private fun setupClickListeners() = with(binding) {
-        btnBackBefore.setOnClickListener {
+        toolbar.setNavigationOnClickListener {
             NavHostFragment.findNavController(
                 this@RegisterNameFragment
             ).popBackStack()
@@ -89,19 +87,15 @@ class RegisterNameFragment : Fragment() {
     }
 
     private fun updateContinueButtonState() = with(binding) {
-        val isValidFirstName = isFirstNameValid()
-        val isValidLastName = isLastNameValid()
-
-        btnContinue.isEnabled = isValidFirstName && isValidLastName
+        btnContinue.isEnabled = isValidNames()
     }
 
-    private fun isFirstNameValid(): Boolean = with(binding) {
+    private fun isValidNames(): Boolean = with(binding) {
         val firstName = etFirstname.text.toString().trim()
-        return firstName.isNotEmpty() && firstName.matches(NAME_VALIDATION_REGEX.toRegex())
-    }
-
-    private fun isLastNameValid(): Boolean = with(binding) {
         val lastName = etLastname.text.toString().trim()
-        return lastName.isNotEmpty() && lastName.matches(NAME_VALIDATION_REGEX.toRegex())
+
+        return firstName.isNotBlank()
+                && lastName.isNotBlank()
+                && ValidationUtil.isNamesValid(firstName, lastName)
     }
 }

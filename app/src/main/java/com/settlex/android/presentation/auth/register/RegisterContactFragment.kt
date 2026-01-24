@@ -14,7 +14,6 @@ import android.util.Patterns
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import androidx.core.content.ContextCompat
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
 import androidx.lifecycle.Lifecycle
@@ -27,12 +26,14 @@ import com.settlex.android.data.exception.AppException
 import com.settlex.android.databinding.FragmentRegisterContactBinding
 import com.settlex.android.presentation.auth.AuthViewModel
 import com.settlex.android.presentation.auth.login.LoginActivity
+import com.settlex.android.presentation.common.extensions.getThemeColor
 import com.settlex.android.presentation.common.extensions.gone
 import com.settlex.android.presentation.common.extensions.show
 import com.settlex.android.presentation.common.extensions.toNigerianPhoneNumber
 import com.settlex.android.presentation.common.state.UiState
 import com.settlex.android.presentation.common.util.EditTextFocusBackgroundChanger
 import com.settlex.android.presentation.common.util.FocusManager
+import com.settlex.android.presentation.common.util.ValidationUtil
 import com.settlex.android.presentation.legal.PrivacyPolicyActivity
 import com.settlex.android.presentation.legal.TermsAndConditionsActivity
 import com.settlex.android.util.ui.ProgressDialogManager
@@ -77,7 +78,7 @@ class RegisterContactFragment : Fragment() {
     }
 
     private fun initViews() {
-        StatusBar.setColor(requireActivity(), R.color.surface)
+        StatusBar.setColor(requireActivity(), requireContext().getThemeColor(R.attr.colorSurface))
         setupListeners()
         setupLegalLinks()
         setupInputValidation()
@@ -91,7 +92,7 @@ class RegisterContactFragment : Fragment() {
             requireActivity().finish()
         }
 
-        btnBackBefore.setOnClickListener {
+        ivBackBefore.setOnClickListener {
             requireActivity().onBackPressedDispatcher.onBackPressed()
             requireActivity().finish()
         }
@@ -186,7 +187,7 @@ class RegisterContactFragment : Fragment() {
     }
 
     private fun isPhoneValid(phone: String): Boolean {
-        return phone.isNotEmpty() && phone.matches(PHONE_NUMBER_REGEX.toRegex())
+        return phone.isNotEmpty() && ValidationUtil.isPhoneNumberValid(phone)
     }
 
     private fun isTermsAndPrivacyChecked(): Boolean {
@@ -201,6 +202,7 @@ class RegisterContactFragment : Fragment() {
 
         val span =
             SpannableStringBuilder("I have read, understood and agreed to the Terms & Conditions and Privacy Policy.")
+        val colorPrimary = requireContext().getThemeColor(R.attr.colorPrimary)
 
         val termsSpan: ClickableSpan = object : ClickableSpan() {
             override fun onClick(widget: View) {
@@ -208,7 +210,7 @@ class RegisterContactFragment : Fragment() {
             }
 
             override fun updateDrawState(textPaint: TextPaint) {
-                textPaint.color = ContextCompat.getColor(requireContext(), R.color.blue_500)
+                textPaint.color = colorPrimary
                 textPaint.isUnderlineText = true
             }
         }
@@ -219,7 +221,7 @@ class RegisterContactFragment : Fragment() {
             }
 
             override fun updateDrawState(textPaint: TextPaint) {
-                textPaint.color = ContextCompat.getColor(requireContext(), R.color.primary)
+                textPaint.color = colorPrimary
                 textPaint.isUnderlineText = true
             }
         }
@@ -244,9 +246,5 @@ class RegisterContactFragment : Fragment() {
 
     private fun startActivity(activityClass: Class<out Activity>) {
         startActivity(Intent(requireContext(), activityClass))
-    }
-
-    companion object {
-        private const val PHONE_NUMBER_REGEX = "^(0)?[7-9][0-1]\\d{8}$"
     }
 }

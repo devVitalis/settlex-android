@@ -7,7 +7,6 @@ import android.text.Spanned
 import android.text.style.ForegroundColorSpan
 import android.text.style.StyleSpan
 import android.text.style.UnderlineSpan
-import androidx.annotation.ColorInt
 import androidx.core.content.ContextCompat
 import com.settlex.android.R
 
@@ -24,7 +23,7 @@ object SpannableTextFormatter {
         context: Context,
         text: String,
         target: String,
-        @ColorInt color: Int = ContextCompat.getColor(context, R.color.primary),
+        color: Int = ContextCompat.getColor(context, R.attr.colorPrimary),
         setBold: Boolean = false,
         setUnderline: Boolean = false
     ): SpannableString {

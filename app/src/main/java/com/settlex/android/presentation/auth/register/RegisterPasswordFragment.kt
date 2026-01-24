@@ -23,6 +23,7 @@ import com.settlex.android.data.exception.AppException
 import com.settlex.android.databinding.FragmentRegisterPasswordBinding
 import com.settlex.android.presentation.auth.AuthViewModel
 import com.settlex.android.presentation.auth.login.LoginActivity
+import com.settlex.android.presentation.common.extensions.getThemeColor
 import com.settlex.android.presentation.common.extensions.gone
 import com.settlex.android.presentation.common.extensions.show
 import com.settlex.android.presentation.common.state.UiState
@@ -46,7 +47,7 @@ class RegisterPasswordFragment : Fragment() {
         inflater: LayoutInflater,
         container: ViewGroup?,
         savedInstanceState: Bundle?
-    ): View? {
+    ): View {
         binding = FragmentRegisterPasswordBinding.inflate(inflater, container, false)
 
         initViews()
@@ -66,7 +67,7 @@ class RegisterPasswordFragment : Fragment() {
     }
 
     private fun initViews() {
-        StatusBar.setColor(requireActivity(), R.color.surface)
+        StatusBar.setColor(requireActivity(), requireContext().getThemeColor(R.attr.colorSurface))
         setupInputValidation()
         togglePasswordVisibilityIcons(false)
         focusManager.attachDoneAction(binding!!.etInvitationCode)
@@ -76,7 +77,7 @@ class RegisterPasswordFragment : Fragment() {
         btnExpendInvitationCode.setOnClickListener { toggleReferralCodeVisibility() }
         btnCreateAccount.setOnClickListener { validateAndCreateAccount() }
 
-        btnBackBefore.setOnClickListener {
+        toolbar.setNavigationOnClickListener {
             NavHostFragment.findNavController(this@RegisterPasswordFragment).popBackStack()
         }
     }
