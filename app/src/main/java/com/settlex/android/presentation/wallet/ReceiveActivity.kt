@@ -32,29 +32,27 @@ class ReceiveActivity : AppCompatActivity() {
         observeUserSession()
     }
 
-    private fun observeUserSession() = with(binding) {
-        lifecycleScope.launch {
-            repeatOnLifecycle(Lifecycle.State.STARTED) {
-                viewModel.userSessionState.collect { state ->
-                    when (state) {
-                        is UserSessionState.Authenticated ->
-                            state.user.paymentId?.addAtPrefix().also {
-                                userPaymentId = it
-                                tvPaymentId.text = it
-                            }
+    private fun observeUserSession() = lifecycleScope.launch {
+        repeatOnLifecycle(Lifecycle.State.STARTED) {
+            viewModel.userSessionState.collect { state ->
+                when (state) {
+                    is UserSessionState.Authenticated ->
+                        state.user.paymentId?.addAtPrefix().also {
+                            userPaymentId = it
+                            binding.tvPaymentId.text = it
+                        }
 
-                        else -> Unit
-                    }
+                    else -> Unit
                 }
             }
         }
     }
 
     private fun initViews() = with(binding) {
-        StatusBar.setColor(this@ReceiveActivity, R.color.surface)
+        StatusBar.setColor(this@ReceiveActivity, R.attr.colorSurface)
 
         btnCopy.setOnClickListener { tvPaymentId.copyToClipboard("Payment ID") }
-        btnBackBefore.setOnClickListener { finish() }
+        toolbar.setNavigationOnClickListener { finish() }
         btnShareDetails.setOnClickListener { sharePaymentId() }
     }
 

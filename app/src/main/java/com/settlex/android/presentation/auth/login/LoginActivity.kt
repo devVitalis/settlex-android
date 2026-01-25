@@ -58,7 +58,7 @@ class LoginActivity : AppCompatActivity() {
         setupInputValidation()
         focusManager.attachDoneAction(editText = etPassword)
 
-        val colorPrimary = getThemeColor(R.attr.colorPrimary)
+        val colorPrimary = R.attr.colorPrimary
         tvSwitchAccount.text = SpannableTextFormatter(
             this@LoginActivity,
             "Not you? Switch Account",

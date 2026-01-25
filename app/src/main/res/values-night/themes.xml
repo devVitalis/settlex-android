@@ -3,13 +3,14 @@
     <style name="Theme.SettleX" parent="Base.Theme.SettleX">
         <!-- Primary colors -->
         <item name="colorPrimary">@color/blue_primary</item>
-        <!--        <item name="colorOnPrimary">@color/pure_white</item>-->
-        <!--        <item name="colorPrimaryContainer">@color/blue_light</item>-->
-        <!--        <item name="colorOnPrimaryContainer">@color/blue_dark</item>-->
+        <item name="colorOnPrimary">@color/pure_white</item>
+        <item name="colorPrimaryContainer">@color/blue_light</item>
+        <item name="colorOnPrimaryContainer">@color/blue_dark</item>
+        <item name="colorPrimaryDisabled">@color/blue_primary_disabled</item>
 
-        <!--        &lt;!&ndash; Secondary colors &ndash;&gt;-->
-        <!--        <item name="colorSecondary">@color/blue_lightest</item>-->
-        <!--        <item name="colorOnSecondary">@color/blue_primary</item>-->
+        <!-- Secondary colors -->
+        <item name="colorSecondary">@color/blue_dark</item>
+        <item name="colorOnSecondary">@color/blue_primary</item>
         <!--        <item name="colorSecondaryContainer">@color/blue_medium</item>-->
         <!--        <item name="colorOnSecondaryContainer">@color/blue_primary</item>-->
         <item name="colorSecondaryFixed">@color/blue_lightest</item>
@@ -17,21 +18,20 @@
         <!-- Surface colors -->
         <item name="colorSurface">@color/surface_primary</item>
         <item name="colorOnSurface">@color/content_primary</item>
-        <item name="colorSurfaceVariant">@color/surface_secondary</item>
+        <item name="colorSurfaceVariant">#303030</item>
         <item name="colorOnSurfaceVariant">@color/content_secondary</item>
         <item name="colorSurfaceContainer">@color/surface_secondary</item>
         <item name="colorSurfaceDim">@color/surface_tertiary</item>
 
+        <!-- Error colors -->
+        <item name="colorError">@color/error_primary</item>
+        <item name="colorOnError">@color/pure_white</item>
+        <item name="colorErrorContainer">@color/error_container</item>
+        <item name="colorOnErrorContainer">@color/error_primary</item>
 
-        <!--        &lt;!&ndash; Error colors &ndash;&gt;-->
-        <!--        <item name="colorError">@color/red_500</item>-->
-        <!--        <item name="colorOnError">@color/white</item>-->
-        <!--        <item name="colorErrorContainer">@color/red_50</item>-->
-        <!--        <item name="colorOnErrorContainer">@color/red_500</item>-->
-
-        <!--        &lt;!&ndash; Outline/divider &ndash;&gt;-->
-        <!--        <item name="colorOutline">@color/gray_400</item>-->
-        <!--        <item name="colorOutlineVariant">@color/gray_50</item>-->
+        <!-- Outline/divider -->
+        <item name="colorOutline">@color/content_secondary</item>
+        <!--                <item name="colorOutlineVariant">@color/gray_50</item>-->
 
         <!-- Custom attributes for non-standard colors -->
         <item name="colorSuccess">@color/success_primary</item>
@@ -39,16 +39,20 @@
         <item name="colorSuccessContainer">@color/success_container</item>
         <item name="colorOnSuccessContainer">@color/success_primary</item>
 
-        <!--        <item name="warningColor">@color/orange_500</item>-->
-        <!--        <item name="onWarningColor">@color/white</item>-->
-        <!--        <item name="warningContainerColor">@color/orange_50</item>-->
+        <item name="colorWarning">@color/warning_primary</item>
+        <item name="colorOnWarning">@color/pure_white</item>
+        <item name="colorWarningContainer">@color/warning_container</item>
+        <item name="colorOnWarningContainer">@color/warning_primary</item>
 
-        <!--        <item name="alertColor">@color/red_500</item>-->
-        <!--        <item name="alertContainerColor">@color/red_200</item>-->
+        <item name="colorAlert">@color/error_primary</item>
+        <item name="colorOnAlert">@color/pure_white</item>
 
         <item name="colorShimmer">@color/surface_tertiary</item>
-        <!--        <item name="dividerColor">@color/gray_50</item>-->
-        <!--        -->
-        <item name="bottomSheetDialogTheme">@style/Theme_SettleX_Dialog_BottomSheet</item>
+        <item name="colorRippleOverlay">@color/ripple_overlay</item>
+        <item name="colorScrimOverlay">@color/scrim_overlay_white_50</item>
+        <item name="colorOnScrimOverlay">@color/pure_white</item>
+        <item name="colorScrimOverlayContainer">@color/scrim_overlay_black_50</item>
+
+        <item name="colorRewardsBackground">@color/surface_tertiary</item>
     </style>
 </resources>

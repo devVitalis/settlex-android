@@ -49,11 +49,11 @@ class CreatePaymentPinActivity : AppCompatActivity() {
     }
 
     private fun initViews() = with(binding) {
-        StatusBar.setColor(this@CreatePaymentPinActivity, R.color.surface)
+        StatusBar.setColor(this@CreatePaymentPinActivity, R.attr.colorSurface)
         setupPinInputWatcher()
         updateUiFromIntent()
 
-        btnBackBefore.setOnClickListener { finish() }
+        toolbar.setNavigationOnClickListener { finish() }
         btnSetPin.setOnClickListener { settingsViewModel.setPaymentPin(newPinView.text.toString()) }
     }
 

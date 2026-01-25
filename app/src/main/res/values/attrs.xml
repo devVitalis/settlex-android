@@ -17,13 +17,14 @@
     <attr name="colorSurfaceContainer" format="color" />
     <attr name="colorSurfaceDim" format="color" />
 
+    <attr name="colorOutline" format="color" />
+
     <attr name="colorShimmer" format="color" />
     <attr name="colorSuccess" format="color" />
     <attr name="colorOnSuccess" format="color" />
     <attr name="colorSuccessContainer" format="color" />
     <attr name="colorOnSuccessContainer" format="color" />
     <attr name="colorRippleOverlay" format="color" />
-    <attr name="colorPrimaryDisabled" format="color" />
     <attr name="colorError" format="color" />
     <attr name="colorOnError" format="color" />
     <attr name="colorWarning" format="color" />

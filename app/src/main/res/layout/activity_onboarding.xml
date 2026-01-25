@@ -22,7 +22,7 @@
             android:layout_gravity="end"
             android:layout_marginHorizontal="10dp"
             android:layout_marginTop="20dp"
-            android:background="@drawable/bg_surface_variant_rounded24"
+            android:background="@drawable/bg_surface_rounded16"
             android:paddingHorizontal="15dp"
             android:paddingVertical="10dp"
             android:text="@string/tv_skip"

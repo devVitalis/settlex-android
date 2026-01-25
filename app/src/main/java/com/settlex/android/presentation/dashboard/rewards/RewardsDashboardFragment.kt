@@ -5,7 +5,6 @@ import android.text.Html
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import androidx.core.content.ContextCompat
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
 import androidx.lifecycle.Lifecycle
@@ -14,6 +13,7 @@ import androidx.lifecycle.repeatOnLifecycle
 import com.settlex.android.R
 import com.settlex.android.databinding.FragmentDashboardRewardsBinding
 import com.settlex.android.presentation.common.extensions.copyToClipboard
+import com.settlex.android.presentation.common.extensions.getThemeColor
 import com.settlex.android.presentation.common.extensions.gone
 import com.settlex.android.presentation.common.extensions.show
 import com.settlex.android.presentation.common.extensions.toNairaString
@@ -45,7 +45,7 @@ class RewardsDashboardFragment : Fragment() {
     }
 
     private fun initViews() {
-        StatusBar.setColor(requireActivity(), R.color.surface_container)
+        StatusBar.setColor(requireActivity(), R.attr.colorRewardsBackground)
         applyReferralInfoStyle()
 
         with(binding) {
@@ -85,8 +85,7 @@ class RewardsDashboardFragment : Fragment() {
     }
 
     private fun showLoggedOutView() = with(binding) {
-        root.setBackgroundColor(ContextCompat.getColor(requireContext(), R.color.white))
-//        tvHeaderTitle.setTextColor(ContextCompat.getColor(requireContext(), R.color.black))
+        root.setBackgroundColor(requireContext().getThemeColor(R.attr.colorSurface))
 
         viewAuthenticatedUiState.gone()
         viewUnauthenticatedUiState.show()

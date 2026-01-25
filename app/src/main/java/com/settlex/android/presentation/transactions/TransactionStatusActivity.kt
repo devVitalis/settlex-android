@@ -29,7 +29,7 @@ class TransactionStatusActivity : AppCompatActivity() {
     }
 
     private fun initViews(result: TransactionResult) {
-        StatusBar.setColor(this, R.color.surface)
+        StatusBar.setColor(this, R.attr.colorSurfaceDim)
         showTransactionData(result)
         setupDoneButton()
     }
@@ -73,7 +73,7 @@ class TransactionStatusActivity : AppCompatActivity() {
     }
 
     private fun setupDoneButton() = with(binding) {
-        tvDone.setOnClickListener {
+        btnDone.setOnClickListener {
             navigateToDashboard()
         }
     }

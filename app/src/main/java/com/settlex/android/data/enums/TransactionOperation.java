@@ -6,8 +6,8 @@ import com.settlex.android.R;
  * Enum representing transaction types with symbols and color for UI display
  */
 public enum TransactionOperation {
-    CREDIT("+", R.color.green_500),
-    DEBIT("-", R.color.red_500);
+    CREDIT("+", R.attr.colorSuccess),
+    DEBIT("-", R.attr.colorError);
 
     private final String symbol;
     private final int symbolColorRes;

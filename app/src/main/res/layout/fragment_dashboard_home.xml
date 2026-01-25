@@ -229,7 +229,7 @@
 
                         <TextView
                             android:id="@+id/tv_user_balance"
-                            style="@style/TextAppearance.SettleX.BodyLarge"
+                            style="@style/TextAppearance.SettleX.HeadlineMedium"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:textColor="?attr/colorOnPrimary"
@@ -285,7 +285,7 @@
 
                                 <TextView
                                     android:id="@+id/tv_user_commission_balance"
-                                    style="@style/TextAppearance.SettleX.BodyLarge"
+                                    style="@style/TextAppearance.SettleX.HeadlineMedium"
                                     android:layout_width="wrap_content"
                                     android:layout_height="wrap_content"
                                     android:textColor="?attr/colorOnPrimary"
@@ -373,7 +373,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="15dp"
-                android:background="@drawable/bg_surface_variant_rounded24"
+                android:background="@drawable/bg_surface_rounded16"
                 android:clipToPadding="false"
                 android:nestedScrollingEnabled="false"
                 android:padding="8dp" />
@@ -414,7 +414,7 @@
                 android:id="@+id/view_transaction_container"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:background="@drawable/bg_surface_variant_rounded24"
+                android:background="@drawable/bg_surface_rounded16"
                 android:paddingVertical="5dp">
 
                 <androidx.recyclerview.widget.RecyclerView
@@ -433,6 +433,7 @@
                     android:visibility="gone">
 
                     <include layout="@layout/item_transaction_shimmer" />
+
                     <include layout="@layout/item_transaction_shimmer" />
                 </com.facebook.shimmer.ShimmerFrameLayout>
 
@@ -502,7 +503,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="120dp"
                 android:layout_marginTop="15dp"
-                android:background="@drawable/bg_surface_variant_rounded24"
+                android:background="@drawable/bg_surface_rounded16"
                 android:visibility="visible">
 
                 <androidx.viewpager2.widget.ViewPager2

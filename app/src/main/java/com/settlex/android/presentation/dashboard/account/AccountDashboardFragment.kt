@@ -15,6 +15,7 @@ import androidx.lifecycle.repeatOnLifecycle
 import androidx.navigation.fragment.NavHostFragment
 import com.settlex.android.R
 import com.settlex.android.databinding.FragmentDashboardAccountBinding
+import com.settlex.android.presentation.common.extensions.getThemeColor
 import com.settlex.android.presentation.common.extensions.toastNotImplemented
 import com.settlex.android.presentation.dashboard.account.viewmodel.ProfileViewModel
 import com.settlex.android.presentation.settings.SettingsActivity
@@ -24,54 +25,42 @@ import kotlinx.coroutines.launch
 
 @AndroidEntryPoint
 class AccountDashboardFragment : Fragment() {
-    private var binding: FragmentDashboardAccountBinding? = null
+    private var _binding: FragmentDashboardAccountBinding? = null
+    private val binding = _binding!!
     private val profileViewModel: ProfileViewModel by activityViewModels()
 
     override fun onCreateView(
         inflater: LayoutInflater,
         container: ViewGroup?,
         savedInstanceState: Bundle?
-    ): View? {
-        binding = FragmentDashboardAccountBinding.inflate(inflater, container, false)
+    ): View {
+        _binding = FragmentDashboardAccountBinding.inflate(inflater, container, false)
 
         initViews()
         observeUserState()
-        return binding!!.getRoot()
+        return binding.root
     }
 
     override fun onDestroyView() {
         super.onDestroyView()
-        binding = null
+        _binding = null
     }
 
     private fun initViews() {
-        StatusBar.setColor(requireActivity(), R.color.blue_200)
+        StatusBar.setColor(requireActivity(), R.attr.colorSurface)
+        with(binding) {
 
-        binding!!.ivProfilePhoto.setOnClickListener {
-            startActivity(
-                ProfileActivity::class.java
-            )
-        }
-        binding!!.btnSettings.setOnClickListener {
-            startActivity(
-                SettingsActivity::class.java
-            )
-        }
-        binding!!.btnSettingsIcon.setOnClickListener {
-            startActivity(
-                SettingsActivity::class.java
-            )
-        }
-        binding!!.btnTransactions.setOnClickListener { it.toastNotImplemented() }
-        binding!!.btnAbout.setOnClickListener {
-            startActivity(
-                AboutActivity::class.java
-            )
-        }
-        binding!!.btnEarnRewards.setOnClickListener {
-            toFragment(
-                R.id.rewards_fragment
-            )
+            for (item in listOf(btnSettings, btnSettingsIcon)) {
+                item.setOnClickListener {
+                    startActivity(
+                        SettingsActivity::class.java
+                    )
+                }
+            }
+
+            btnTransactions.setOnClickListener { it.toastNotImplemented() }
+            ivProfilePhoto.setOnClickListener { startActivity(ProfileActivity::class.java) }
+            btnAbout.setOnClickListener { startActivity(AboutActivity::class.java) }
         }
     }
 

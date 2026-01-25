@@ -25,6 +25,7 @@ import com.settlex.android.data.remote.profile.ProfileService
 import com.settlex.android.data.session.UserSessionState
 import com.settlex.android.databinding.FragmentDashboardHomeBinding
 import com.settlex.android.presentation.auth.login.LoginActivity
+import com.settlex.android.presentation.common.extensions.getThemeColor
 import com.settlex.android.presentation.common.extensions.gone
 import com.settlex.android.presentation.common.extensions.setAsterisks
 import com.settlex.android.presentation.common.extensions.show
@@ -91,7 +92,7 @@ class HomeDashboardFragment : Fragment() {
     }
 
     private fun initViews() {
-        StatusBar.setColor(requireActivity(), R.color.surface_container)
+        StatusBar.setColor(requireActivity(), R.attr.colorSurfaceDim)
         initListeners()
         initTransactionRecyclerView()
         setupDoubleBackPressToExit()
@@ -187,8 +188,7 @@ class HomeDashboardFragment : Fragment() {
         tvUserFullName.text = user.fullName
     }
 
-    private fun handleUserErrorState() = with(binding) {
-
+    private fun handleUserErrorState() {
     }
 
     private fun showUnauthenticatedState() = with(binding) {
@@ -315,22 +315,20 @@ class HomeDashboardFragment : Fragment() {
         }
     }
 
-    private fun observePromotionalBanners() = with(binding) {
-        viewLifecycleOwner.lifecycleScope.launch {
-            viewLifecycleOwner.repeatOnLifecycle(Lifecycle.State.STARTED) {
-                bannerViewModel.banners.collect { banner ->
-                    when (banner) {
-                        is UiState.Loading -> promoBannerProgressBar.show()
-                        is UiState.Success -> onPromoBannersSuccess(banner.data)
-                        is UiState.Failure -> promoBannerProgressBar.gone()
-                    }
+    private fun observePromotionalBanners() = viewLifecycleOwner.lifecycleScope.launch {
+        viewLifecycleOwner.repeatOnLifecycle(Lifecycle.State.STARTED) {
+            bannerViewModel.banners.collect { banner ->
+                when (banner) {
+                    is UiState.Loading -> binding.pbPromoBanner.show()
+                    is UiState.Success -> onPromoBannersSuccess(banner.data)
+                    is UiState.Failure -> binding.pbPromoBanner.gone()
                 }
             }
         }
     }
 
     private fun onPromoBannersSuccess(banner: List<PromoBannerUiModel>) = with(binding) {
-        promoBannerProgressBar.gone()
+        pbPromoBanner.gone()
 
         if (banner.isEmpty()) {
             viewPromoBannerContainer.gone()

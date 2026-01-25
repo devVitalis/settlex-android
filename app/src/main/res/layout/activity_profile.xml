@@ -8,32 +8,15 @@
     android:fitsSystemWindows="true"
     tools:context=".presentation.dashboard.account.ProfileActivity">
 
-    <LinearLayout
-        android:id="@+id/header"
+    <com.google.android.material.appbar.MaterialToolbar
+        android:id="@+id/toolbar"
         android:layout_width="match_parent"
-        android:layout_height="45dp"
-        android:gravity="center_vertical"
-        android:orientation="horizontal"
-        android:paddingHorizontal="15dp"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent">
-
-        <com.google.android.material.imageview.ShapeableImageView
-            android:id="@+id/iv_back_before"
-            android:layout_width="20dp"
-            android:layout_height="20dp"
-            android:src="@drawable/ic_arrow_ios_back"
-            app:tint="?attr/colorOnSurface" />
-
-        <TextView
-            style="@style/TextAppearance.SettleX.TitleLarge"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginStart="10dp"
-            android:text="@string/tv_my_profile"
-            android:textColor="?attr/colorOnSurface" />
-    </LinearLayout>
+        android:layout_height="?attr/actionBarSize"
+        app:layout_constraintTop_toTopOf="parent"
+        app:navigationIcon="@drawable/ic_arrow_ios_back"
+        app:navigationIconTint="?attr/colorOnSurface"
+        app:title="@string/tv_my_profile"
+        app:titleTextAppearance="@style/TextAppearance.SettleX.TitleLarge" />
 
     <!-- Scroll -->
     <ScrollView
@@ -42,7 +25,7 @@
         android:background="?attr/colorSurfaceDim"
         android:fillViewport="true"
         app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/header">
+        app:layout_constraintTop_toBottomOf="@id/toolbar">
 
         <LinearLayout
             android:layout_width="match_parent"

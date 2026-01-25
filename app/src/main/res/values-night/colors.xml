@@ -1,46 +1,37 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <color name="primary">#0A66C2</color>
-    <color name="on_primary">#FFFFFF</color>
-    <color name="primary_container">#003180</color>
-    <color name="on_primary_container">#D1E4FF</color>
+    <!-- Blue palette -->
+    <color name="blue_primary">#5A9FFF</color>
+    <color name="blue_primary_disabled">#0E4FA3</color>
+    <color name="blue_light">#D1E4FF</color>
+    <color name="blue_lightest">#E9F1FF</color>
+    <color name="blue_dark">#003180</color>
 
-    <color name="secondary">#0A1E33</color>
-    <color name="on_secondary">#E9F1FF</color>
+    <!-- Surface colors -->
+    <color name="surface_primary">#242424</color>
+    <color name="surface_secondary">#4A4A4A</color>
+    <color name="surface_tertiary">#1A1A1A</color>
 
-    <color name="surface">#242424</color>
-    <color name="on_surface">#FFFFFF</color>
-    <color name="surface_container">#4A4A4A</color>
-    <color name="on_surface_container">#FFFFFF</color>
-    <color name="surface_variant">#F5F5F5</color>
-    <color name="on_surface_variant">#9E9E9E</color>
+    <!-- Content/Text colors -->
+    <color name="content_primary">#FFFFFF</color>
+    <color name="content_secondary">#9E9E9E</color>
 
-    <color name="scrim">#80000000</color>
-    <color name="on_scrim">#FFFFFF</color>
-
-    <color name="success">#00C48C</color>
-    <color name="on_success">#FFFFFF</color>
+    <!-- Status colors - Success -->
+    <color name="success_primary">#00C48C</color>
     <color name="success_container">#0C2B24</color>
-    <color name="on_success_container">#00C48C</color>
 
-    <color name="warning">#FFA500</color>
-    <color name="on_warning">#FFFFFF</color>
-    <color name="warning_container">#D9883D</color>
-    <color name="on_warning_container">#FFA500</color>
+    <!-- Status colors - Warning -->
+    <color name="warning_primary">#FFA500</color>
+    <color name="warning_container">#3D3428</color>
 
-    <color name="error">#FF4444</color>
-    <color name="on_error">#FFFFFF</color>
+    <!-- Status colors - Error -->
+    <color name="error_primary">#FF4444</color>
     <color name="error_container">#2B1615</color>
-    <color name="on_error_container">#FF4444</color>
 
-    <color name="alert">#FF4444</color>
-    <color name="on_alert">#FFFFFF</color>
-    <color name="alert_container">#FAA19F</color>
-    <color name="on_alert_container">#FF4444</color>
+    <!-- Overlays -->
+    <color name="scrim_overlay_black_10">#80000000</color>
+    <color name="ripple_overlay">#42FFFFFF</color>
 
-    <color name="button_primary_disabled">#0E4FA3</color>
-    <color name="button_ripple">#42FFFFFF</color>
-    <color name="divider">#242424</color>
-    <color name="outline">#9E9E9E</color>
-    <color name="shimmer">#E0E0E0</color>
+    <!-- Constants (never change) -->
+    <color name="pure_white">#FFFFFF</color>
 </resources>

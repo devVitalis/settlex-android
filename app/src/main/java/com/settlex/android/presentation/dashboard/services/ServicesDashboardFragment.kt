@@ -27,7 +27,7 @@ class ServicesDashboardFragment : Fragment() {
         inflater: LayoutInflater,
         container: ViewGroup?,
         savedInstanceState: Bundle?
-    ): View? {
+    ): View {
         _binding = FragmentDashboardServicesBinding.inflate(inflater, container, false)
 
         initViews()
@@ -40,7 +40,7 @@ class ServicesDashboardFragment : Fragment() {
     }
 
     private fun initViews() {
-        StatusBar.setColor(requireActivity(), R.color.surface)
+        StatusBar.setColor(requireActivity(), R.attr.colorSurface)
         initTelecomRecyclerView()
         initEntertainmentRecyclerView()
         initUtilitiesRecyclerView()
@@ -63,8 +63,8 @@ class ServicesDashboardFragment : Fragment() {
         val services = ServiceType.entries
             .filter { serviceType ->
                 serviceType.transactionServiceType == TransactionServiceType.AIRTIME_RECHARGE ||
-                serviceType.transactionServiceType == TransactionServiceType.DATA_RECHARGE ||
-                serviceType.transactionServiceType == TransactionServiceType.INTERNET
+                        serviceType.transactionServiceType == TransactionServiceType.DATA_RECHARGE ||
+                        serviceType.transactionServiceType == TransactionServiceType.INTERNET
             }
             .map { serviceType ->
                 ServiceUiModel(
@@ -84,9 +84,9 @@ class ServicesDashboardFragment : Fragment() {
         val services = ServiceType.entries
             .filter { serviceType ->
                 serviceType.transactionServiceType == TransactionServiceType.CABLE_TV_SUBSCRIPTION ||
-                serviceType.transactionServiceType == TransactionServiceType.BETTING_TOPUP ||
-                serviceType.transactionServiceType == TransactionServiceType.VOUCHER ||
-                serviceType.transactionServiceType == TransactionServiceType.GIFT_CARD
+                        serviceType.transactionServiceType == TransactionServiceType.BETTING_TOPUP ||
+                        serviceType.transactionServiceType == TransactionServiceType.VOUCHER ||
+                        serviceType.transactionServiceType == TransactionServiceType.GIFT_CARD
             }
             .map { serviceType ->
                 ServiceUiModel(
@@ -124,7 +124,7 @@ class ServicesDashboardFragment : Fragment() {
         val services = ServiceType.entries
             .filter { serviceType ->
                 serviceType.transactionServiceType == TransactionServiceType.FLIGHT ||
-                serviceType.transactionServiceType == TransactionServiceType.HOTEL
+                        serviceType.transactionServiceType == TransactionServiceType.HOTEL
             }
             .map { serviceType ->
                 ServiceUiModel(

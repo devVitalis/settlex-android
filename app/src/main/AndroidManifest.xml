@@ -88,9 +88,6 @@
             android:name=".presentation.legal.TermsAndConditionsActivity"
             android:exported="false" />
         <activity
-            android:name=".presentation.help.AuthHelpActivity"
-            android:exported="false" />
-        <activity
             android:name=".presentation.auth.register.RegisterActivity"
             android:exported="false" />
         <activity

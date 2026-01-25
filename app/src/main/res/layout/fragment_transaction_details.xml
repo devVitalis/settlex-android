@@ -110,7 +110,7 @@
                     android:paddingHorizontal="8dp"
                     android:paddingVertical="2dp"
                     android:textColor="?attr/colorOnSuccessContainer"
-                    tools:background="@drawable/bg_success_container_rounded3"
+                    tools:background="@drawable/bg_label_status_success"
                     tools:text="Success" />
             </LinearLayout>
 

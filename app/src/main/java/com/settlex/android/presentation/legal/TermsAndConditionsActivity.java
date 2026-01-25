@@ -21,9 +21,9 @@ public class TermsAndConditionsActivity extends AppCompatActivity {
         ActivityTermsAndConditionsBinding binding = ActivityTermsAndConditionsBinding.inflate(getLayoutInflater());
         setContentView(binding.getRoot());
 
-        StatusBar.setColor(this, R.color.surface);
-        binding.btnBackBefore.setOnClickListener(v -> finish());
-        binding.txtTermsAndConditions.setText(Html.fromHtml(getTermsHtml(), Html.FROM_HTML_MODE_LEGACY));
+        StatusBar.setColor(this, R.attr.colorSurfaceDim);
+        binding.toolbar.setNavigationOnClickListener(v -> finish());
+        binding.tvTermsAndConditions.setText(Html.fromHtml(getTermsHtml(), Html.FROM_HTML_MODE_LEGACY));
     }
 
     private String getTermsHtml() {

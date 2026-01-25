@@ -25,7 +25,6 @@ class TransactionListAdapter(private val listener: OnTransactionClickListener) :
     }
 
     override fun onBindViewHolder(holder: TransactionViewHolder, position: Int) {
-        if (position == itemCount - 1) holder.binding.divider.gone()
         holder.bind(getItem(position), listener)
     }
 
@@ -46,7 +45,7 @@ class TransactionListAdapter(private val listener: OnTransactionClickListener) :
                 tvTxnAmount.setTextColorRes(transaction.operationColor)
 
                 tvTxnDateTime.text = transaction.timestamp.toDateTimeString()
-                recipientOrSender.text = transaction.recipientOrSenderName
+                tvRecipientOrSender.text = transaction.recipientOrSenderName
 
                 tvTxnStatus.text = transaction.status
                 tvTxnStatus.setTextColorRes(transaction.statusColor)

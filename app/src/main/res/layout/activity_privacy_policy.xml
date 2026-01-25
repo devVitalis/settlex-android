@@ -35,7 +35,7 @@
             android:padding="15dp">
 
             <TextView
-                android:id="@+id/txt_privacy_policy"
+                android:id="@+id/tv_privacy_policy"
                 style="@style/TextAppearance.SettleX.BodyMedium"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"

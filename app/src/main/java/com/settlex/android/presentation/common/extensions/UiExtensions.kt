@@ -5,13 +5,14 @@ import android.content.ClipboardManager
 import android.content.Context
 import android.content.Intent
 import android.graphics.Color
+import android.graphics.drawable.Drawable
 import android.os.Build
 import android.util.Log
 import android.view.View
 import android.widget.TextView
 import android.widget.Toast
 import androidx.annotation.AttrRes
-import androidx.annotation.ColorInt
+import androidx.annotation.DrawableRes
 import androidx.core.content.ContextCompat
 import androidx.core.content.IntentCompat.getParcelableExtra
 import com.google.android.material.color.MaterialColors
@@ -41,8 +42,8 @@ fun TextView.setAsterisks() {
     text = "****"
 }
 
-fun TextView.setTextColorRes(color: Int) {
-    setTextColor(ContextCompat.getColor(context, color))
+fun TextView.setTextColorRes(@AttrRes color: Int) {
+    setTextColor(context.getThemeColor(color))
 }
 
 // String
@@ -298,7 +299,14 @@ inline fun <reified T> Intent.getParcelableExtraCompat(key: String): T {
     return getParcelableExtra(this, key, T::class.java)!!
 }
 
-@ColorInt
 fun Context.getThemeColor(@AttrRes attrs: Int): Int {
     return MaterialColors.getColor(this, attrs, Color.MAGENTA)
+}
+
+fun Context.getDrawableRes(@DrawableRes resId: Int): Drawable? {
+    return ContextCompat.getDrawable(this, resId)
+}
+
+fun Context.getColorRes(@AttrRes resId: Int): Int {
+    return ContextCompat.getColor(this, resId)
 }

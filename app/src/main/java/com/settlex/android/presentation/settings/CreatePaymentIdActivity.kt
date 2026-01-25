@@ -9,7 +9,6 @@ import android.widget.Toast
 import androidx.activity.OnBackPressedCallback
 import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
-import androidx.core.content.ContextCompat
 import androidx.core.widget.doAfterTextChanged
 import androidx.core.widget.doOnTextChanged
 import androidx.lifecycle.Lifecycle
@@ -18,6 +17,9 @@ import androidx.lifecycle.repeatOnLifecycle
 import com.settlex.android.R
 import com.settlex.android.data.exception.AppException
 import com.settlex.android.databinding.ActivityCreatePaymentIdBinding
+import com.settlex.android.presentation.common.extensions.getColorRes
+import com.settlex.android.presentation.common.extensions.getDrawableRes
+import com.settlex.android.presentation.common.extensions.getThemeColor
 import com.settlex.android.presentation.common.extensions.gone
 import com.settlex.android.presentation.common.extensions.show
 import com.settlex.android.presentation.common.state.UiState
@@ -32,25 +34,10 @@ import kotlinx.coroutines.launch
 
 @AndroidEntryPoint
 class CreatePaymentIdActivity : AppCompatActivity() {
-    private val validStateBackground by lazy {
-        ContextCompat.getDrawable(
-            this,
-            R.drawable.bg_success_container_rounded8
-        )
-    }
-    private val defaultStateBackground by lazy {
-        ContextCompat.getDrawable(
-            this,
-            R.drawable.bg_surface_rounded8
-        )
-    }
-    private val successStateColor by lazy { ContextCompat.getColor(this, R.color.success) }
-    private val defaultStateColor by lazy {
-        ContextCompat.getColor(
-            this,
-            R.color.on_surface_variant
-        )
-    }
+    private val validStateBackground by lazy { getDrawableRes(R.drawable.bg_success_container_rounded8) }
+    private val defaultStateBackground by lazy { getDrawableRes(R.drawable.bg_surface_container_rounded8) }
+    private val successStateColor by lazy { getThemeColor(R.attr.colorSuccess) }
+    private val defaultStateColor by lazy { getThemeColor(R.attr.colorOnSurfaceVariant) }
 
     // Dependencies
     private lateinit var binding: ActivityCreatePaymentIdBinding
@@ -69,19 +56,21 @@ class CreatePaymentIdActivity : AppCompatActivity() {
         initObservers()
     }
 
-    private fun initViews() = with(binding) {
-        StatusBar.setColor(this@CreatePaymentIdActivity, R.color.surface)
+    private fun initViews() {
+        StatusBar.setColor(this, R.attr.colorSurface)
         setupPaymentIdTextWatcher()
         disableBackButton()
 
-        btnClose.setOnClickListener {
-            Toast.makeText(
-                this@CreatePaymentIdActivity,
-                "Payment ID creation is required to continue",
-                Toast.LENGTH_SHORT
-            ).show()
+        with(binding) {
+            toolbar.setNavigationOnClickListener {
+                Toast.makeText(
+                    this@CreatePaymentIdActivity,
+                    "Payment ID creation is required to continue",
+                    Toast.LENGTH_SHORT
+                ).show()
+            }
+            btnContinue.setOnClickListener { viewModel.assignPaymentId(getPaymentId()) }
         }
-        btnContinue.setOnClickListener { viewModel.assignPaymentId(getPaymentId()) }
     }
 
     private fun initObservers() {
@@ -177,11 +166,11 @@ class CreatePaymentIdActivity : AppCompatActivity() {
 
         val statusText = if (isPaymentIdTaken) "Not Available" else "Available"
         val statusColor = when (isPaymentIdTaken) {
-            true -> ContextCompat.getColor(this@CreatePaymentIdActivity, R.color.error)
-            false -> ContextCompat.getColor(this@CreatePaymentIdActivity, R.color.success)
+            true -> getColorRes(R.attr.colorError)
+            false -> getColorRes(R.attr.colorSuccess)
         }
 
-        tvPaymentIdAvailabilityStatus.also {
+        tvPaymentIdStatus.also {
             it.text = statusText
             it.setTextColor(statusColor)
             it.show()
@@ -197,7 +186,7 @@ class CreatePaymentIdActivity : AppCompatActivity() {
         listOf(
             pbPaymentIdCheck,
             ivPaymentIdAvailable,
-            tvPaymentIdAvailabilityStatus
+            tvPaymentIdStatus
         ).forEach { it.gone() }
     }
 
@@ -210,7 +199,7 @@ class CreatePaymentIdActivity : AppCompatActivity() {
 
             listOf(
                 ivPaymentIdAvailable,
-                tvPaymentIdAvailabilityStatus,
+                tvPaymentIdStatus,
                 tvError
             ).forEach { it.gone() }
         }
@@ -271,7 +260,7 @@ class CreatePaymentIdActivity : AppCompatActivity() {
     }
 
     private fun isPaymentIdLengthInRange(paymentId: String): Boolean {
-        return paymentId.length >= 5 && paymentId.length <= 20
+        return paymentId.length in 5..20
     }
 
     private fun isPaymentIdLowercaseAlphanumeric(paymentId: String): Boolean {

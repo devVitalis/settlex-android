@@ -31,15 +31,15 @@ public class OnboardingActivity extends AppCompatActivity {
         binding = ActivityOnboardingBinding.inflate(getLayoutInflater());
         setContentView(binding.getRoot());
 
-        StatusBar.setColor(this, R.color.surface);
+        StatusBar.setColor(this, R.attr.colorSurface);
         setupViewPager();
         setupUiActions();
     }
 
     private void setupViewPager() {
         OnboardingAdapter adapter = new OnboardingAdapter(this);
-        binding.introViewPager.setAdapter(adapter);
-        setupIndicatorView(binding.introViewPager);
+        binding.vpIntro.setAdapter(adapter);
+        setupIndicatorView(binding.vpIntro);
     }
 
     private void setupIndicatorView(ViewPager2 viewPager2) {
@@ -51,7 +51,7 @@ public class OnboardingActivity extends AppCompatActivity {
     private void setupUiActions() {
         attachNavigation(binding.btnCreateAccount, RegisterActivity.class);
         attachNavigation(binding.btnLogin, LoginActivity.class);
-        attachNavigation(binding.btnSkip, RegisterActivity.class);
+        attachNavigation(binding.tvSkip, RegisterActivity.class);
     }
 
     private void attachNavigation(View button, Class<? extends AppCompatActivity> targetActivity) {

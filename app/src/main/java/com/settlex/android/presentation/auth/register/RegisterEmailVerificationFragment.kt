@@ -80,7 +80,7 @@ class RegisterEmailVerificationFragment : Fragment() {
                 requireContext(),
                 text = "We sent a verification code to your email $email. This code will expire after 10 minutes",
                 target = email,
-                color = requireContext().getThemeColor(R.attr.colorOnSurface),
+                colorRes = R.attr.colorOnSurface,
                 setBold = true,
             )
         }
@@ -89,7 +89,7 @@ class RegisterEmailVerificationFragment : Fragment() {
             requireContext(),
             "Didn’t get the email? Make sure to also check your spam/junk folder if you can't find the email in your inbox",
             "check your spam/junk folder",
-            requireContext().getThemeColor(R.attr.colorOnWarningContainer)
+            R.attr.colorOnWarningContainer
         )
 
         toolbar.setNavigationOnClickListener {

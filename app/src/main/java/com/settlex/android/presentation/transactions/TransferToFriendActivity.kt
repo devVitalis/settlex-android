@@ -73,13 +73,13 @@ class TransferToFriendActivity : AppCompatActivity() {
     }
 
     private fun initViews() = with(binding) {
-        StatusBar.setColor(this@TransferToFriendActivity, R.color.surface)
+        StatusBar.setColor(this@TransferToFriendActivity, R.attr.colorSurface)
 
         initRecipientRecyclerView()
         setupInputListeners()
         focusManager.attachDoneAction(etDescription)
 
-        btnBackBefore.setOnClickListener { onBackPressedDispatcher.onBackPressed() }
+        toolbar.setNavigationOnClickListener { onBackPressedDispatcher.onBackPressed() }
         btnVerify.setOnClickListener { fetchRecipientData(getRecipientPaymentId()) }
         btnNext.setOnClickListener { showPaymentConfirmationBottomSheet() }
     }

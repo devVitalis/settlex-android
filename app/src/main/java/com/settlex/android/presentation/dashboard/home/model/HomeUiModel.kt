@@ -12,8 +12,4 @@ data class HomeUiModel(
 ) {
 
     val fullName: String get() = "$firstName $lastName"
-
-    fun hasPin(): Boolean {
-        return hasPin
-    }
 }

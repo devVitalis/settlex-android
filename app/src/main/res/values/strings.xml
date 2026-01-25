@@ -11,8 +11,6 @@
     <!--  XML IDS -->
     <!-- REGISTER CONTACT FRAGMENT -->
     <string name="tv_sign_in">Sign in</string>
-    <string name="cd_back_before">Back</string>
-    <string name="tv_help">Help</string>
     <string name="title_create_your_account">Create Your Account</string>
     <string name="sub_title_enter_your_email_and_phone_number_we_ll_send_a_one_time_verification_code_otp_to_your_email_to_confirm_your_account">Enter your email and phone number. We\'ll send a one-time verification code (OTP) to your email to confirm your account.</string>
     <string name="tv_step_1_of_4">1/4</string>
@@ -25,16 +23,16 @@
     <string name="title_email_verification">Email Verification</string>
     <string name="subtitle_check_your_email_inbox">Check your email inbox</string>
     <string name="tv_step_2_of_4">2/4</string>
-    <string name="label_enter_6_digit_code">Enter 6-digit code</string>
+    <string name="label_enter_6_digit_code">Enter the 6-digit code</string>
     <string name="tv_didnt_receive_the_code">Didn\'t receive the code?</string>
     <string name="tv_resend_code">Resend code</string>
     <string name="tv_verification_code">Verification code</string>
 
     <!-- REGISTER NAME FRAGMENT -->
     <string name="title_let_s_get_to_know_you">Let\'s Get to Know You</string>
-    <string name="subtitle_what_should_we_call_you">What should we call you?</string>
-    <string name="hint_enter_your_first_name">Enter your firstname</string>
-    <string name="hint_enter_your_last_name">Enter your lastname</string>
+    <string name="subtitle_enter_your_names">Enter your firstname and lastname</string>
+    <string name="hint_enter_your_first_name">Firstname</string>
+    <string name="hint_enter_your_last_name">Lastname</string>
     <string name="tv_step_3_of_4">3/4</string>
 
     <!-- REGISTER PASSWORD FRAGMENT -->
@@ -44,7 +42,6 @@
     <string name="hint_create_your_password">Create your password</string>
     <string name="hint_confirm_your_password">Confirm your password</string>
     <string name="tv_have_an_invitation_code_optional">Have an Invitation Code? (Optional)</string>
-    <string name="btn_expend">Expend</string>
     <string name="hint_invitation_code">Invitation Code</string>
     <string name="btn_create_account">Create Account</string>
 
@@ -58,9 +55,7 @@
 
     <!-- OTP VERIFICATION ACTIVITY -->
     <string name="title_otp_verification">OTP Verification</string>
-    <string name="subtitle_we_ve_sent_a_6_digit_code">We\'ve sent a 6-digit code</string>
-    <string name="body_please_check_the_otp_that_has_been_sent_to_your_email_and_fill_the_box">Please check the OTP that has been sent to your email and fill the box:</string>
-    <string name="tv_never_share_this_code_with_anyone_including_settlex_staff">Never share this code with anyone, including SettleX staff</string>
+    <string name="subtitle_enter_code">Enter code</string>
     <string name="btn_confirm">Confirm</string>
     <string name="btn_resend">Resend</string>
 
@@ -150,7 +145,6 @@
     <string name="btn_confirm_transfer">Confirm Transfer</string>
 
     <!-- ITEM NUMERIC KEYPAD -->
-    <string name="tv_settlex_secure_numeric_keypad">SettleX Secure Numeric Keypad</string>
     <string name="num_1">1</string>
     <string name="num_2">2</string>
     <string name="num_3">3</string>

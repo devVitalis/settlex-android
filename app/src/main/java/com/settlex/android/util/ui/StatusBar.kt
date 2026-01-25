@@ -1,9 +1,10 @@
 package com.settlex.android.util.ui
 
 import android.app.Activity
-import androidx.annotation.ColorRes
+import androidx.annotation.AttrRes
 import androidx.core.content.ContextCompat
 import androidx.core.view.WindowCompat
+import com.settlex.android.presentation.common.extensions.getThemeColor
 
 /**
  * Utility class for managing the status bar appearance.
@@ -11,9 +12,9 @@ import androidx.core.view.WindowCompat
 object StatusBar {
 
     @JvmStatic
-    fun setColor(activity: Activity, @ColorRes colorRes: Int) {
+    fun setColor(activity: Activity, @AttrRes colorRes: Int) {
         val window = activity.window
-        val color = ContextCompat.getColor(activity, colorRes)
+        val color = activity.getThemeColor(colorRes)
 
         WindowCompat.setDecorFitsSystemWindows(window, false)
         window.statusBarColor = color

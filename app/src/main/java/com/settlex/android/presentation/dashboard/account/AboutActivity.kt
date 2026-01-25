@@ -7,8 +7,8 @@ import android.os.Bundle
 import android.util.Log
 import androidx.appcompat.app.AppCompatActivity
 import com.settlex.android.R
-import com.settlex.android.SettleXApp
 import com.settlex.android.databinding.ActivityAboutBinding
+import com.settlex.android.presentation.common.extensions.getThemeColor
 import com.settlex.android.presentation.legal.PrivacyPolicyActivity
 import com.settlex.android.presentation.legal.TermsAndConditionsActivity
 import com.settlex.android.util.ui.StatusBar
@@ -25,23 +25,22 @@ class AboutActivity : AppCompatActivity() {
         setupUiActions()
     }
 
-    private fun setupUiActions() {
-        StatusBar.setColor(this, R.color.white)
-        binding.appVersion.text = getAppVersion()
+    private fun setupUiActions() = with(binding) {
+        StatusBar.setColor(this@AboutActivity, R.attr.colorSurface)
+        tvAppVersion.text = getAppVersion()
 
-
-        binding.btnTermsAndCondition.setOnClickListener {
+        viewTermsAndCondition.setOnClickListener {
             routeToDestination(
                 TermsAndConditionsActivity::class.java
             )
         }
 
-        binding.btnPrivacyPolicy.setOnClickListener { routeToDestination(PrivacyPolicyActivity::class.java) }
-        binding.btnBackBefore.setOnClickListener { finish() }
+        viewPrivacyPolicy.setOnClickListener { routeToDestination(PrivacyPolicyActivity::class.java) }
+        toolbar.setNavigationOnClickListener { finish() }
     }
 
     private fun getAppVersion(): String {
-        val context = SettleXApp.Companion.appContext
+        val context = this
         try {
             val packageManager = context.packageManager
             val packageInfo = packageManager.getPackageInfo(context.packageName, 0)

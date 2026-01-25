@@ -29,6 +29,7 @@ import com.settlex.android.data.session.UserSessionState
 import com.settlex.android.databinding.ActivityProfileBinding
 import com.settlex.android.presentation.common.extensions.addAtPrefix
 import com.settlex.android.presentation.common.extensions.copyToClipboard
+import com.settlex.android.presentation.common.extensions.getThemeColor
 import com.settlex.android.presentation.common.extensions.getTimeAgo
 import com.settlex.android.presentation.common.extensions.maskEmail
 import com.settlex.android.presentation.common.extensions.maskPhoneNumber
@@ -69,18 +70,20 @@ class ProfileActivity : AppCompatActivity() {
         initObservers()
     }
 
-    private fun initViews() = with(binding) {
-        StatusBar.setColor(this@ProfileActivity, R.color.surface)
+    private fun initViews() {
+        StatusBar.setColor(this, R.attr.colorSurface)
         initGalleryPermissionLauncher()
         initCameraPermissionLauncher()
         initImagePickerLauncher()
         initTakePictureLauncher()
         initCropImageLauncher()
 
-        btnBackBefore.setOnClickListener { finish() }
-        btnChangeProfilePic.setOnClickListener { showImageSourceBottomSheet() }
-        ivMemberSinceInfo.setOnClickListener { showJoinedDateDialog() }
-        btnCopyPaymentId.setOnClickListener { tvPaymentId.copyToClipboard("Payment ID") }
+        with(binding) {
+            toolbar.setNavigationOnClickListener { finish() }
+            btnChangeProfilePic.setOnClickListener { showImageSourceBottomSheet() }
+            ivMemberSinceInfo.setOnClickListener { showJoinedDateDialog() }
+            btnCopyPaymentId.setOnClickListener { tvPaymentId.copyToClipboard("Payment ID") }
+        }
     }
 
     private fun initObservers() {
