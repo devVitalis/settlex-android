@@ -1,5 +1,62 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
+    <!-- Light Theme -->
+    <!-- Primary colors -->
+    <color name="colorPrimary">@color/blue_primary</color>
+    <color name="colorOnPrimary">@color/pure_white</color>
+    <color name="colorPrimaryContainer">@color/blue_light</color>
+    <color name="colorOnPrimaryContainer">@color/blue_dark</color>
+    <color name="colorPrimaryDisabled">@color/blue_primary_disabled</color>
+
+    <!-- Secondary colors -->
+    <color name="colorSecondary">@color/blue_lightest</color>
+    <color name="colorOnSecondary">@color/blue_primary</color>
+    <!--        <color name="colorSecondaryContainer">@color/blue_medium</color>-->
+    <!--        <color name="colorOnSecondaryContainer">@color/blue_primary</color>-->
+    <color name="colorSecondaryFixed">@color/blue_lightest</color>
+
+    <!-- Surface colors -->
+    <color name="colorSurface">@color/surface_primary</color>
+    <color name="colorOnSurface">@color/content_primary</color>
+    <color name="colorSurfaceVariant">@color/surface_tertiary</color>
+    <color name="colorOnSurfaceVariant">@color/content_secondary</color>
+    <color name="colorSurfaceContainer">@color/surface_secondary</color>
+    <color name="colorSurfaceDim">@color/surface_secondary</color>
+
+    <!-- Error colors -->
+    <color name="colorError">@color/error_primary</color>
+    <color name="colorOnError">@color/pure_white</color>
+    <color name="colorErrorContainer">@color/error_container</color>
+    <color name="colorOnErrorContainer">@color/error_primary</color>
+
+    <!-- Outline/divider -->
+    <color name="colorOutline">@color/content_secondary</color>
+    <!--        <color name="colorOutlineVariant">@color/gray_50</color>-->
+
+    <!-- Custom attributes for non-standard colors -->
+    <color name="colorSuccess">@color/success_primary</color>
+    <color name="colorOnSuccess">@color/pure_white</color>
+    <color name="colorSuccessContainer">@color/success_container</color>
+    <color name="colorOnSuccessContainer">@color/success_primary</color>
+
+    <color name="colorWarning">@color/warning_primary</color>
+    <color name="colorOnWarning">@color/pure_white</color>
+    <color name="colorWarningContainer">@color/warning_container</color>
+    <color name="colorOnWarningContainer">@color/warning_primary</color>
+
+    <color name="colorAlert">@color/error_primary</color>
+    <color name="colorOnAlert">@color/pure_white</color>
+
+    <color name="colorShimmer">@color/surface_tertiary</color>
+    <color name="colorRippleOverlay">@color/ripple_overlay</color>
+
+    <color name="colorScrimOverlay">@color/scrim_overlay_white_50</color>
+    <color name="colorOnScrimOverlay">@color/pure_white</color>
+    <color name="colorScrimOverlayContainer">@color/scrim_overlay_black_10</color>
+
+    <color name="colorRewardsBackground">@color/blue_lightest</color>
+
+    <!-- Literals -->
     <!-- Blue palette -->
     <color name="blue_primary">#1A56DB</color>
     <color name="blue_primary_disabled">#9EC5FF</color>
@@ -7,27 +64,46 @@
     <color name="blue_lightest">#E9F1FF</color>
     <color name="blue_dark">#001A47</color>
 
+    <color name="blue_primary_night">#5A9FFF</color>
+    <color name="blue_primary_disabled_night">#0E4FA3</color>
+    <color name="blue_light_night">#D1E4FF</color>
+    <color name="blue_lightest_night">#E9F1FF</color>
+    <color name="blue_dark_night">#003180</color>
+
     <!-- Surface colors -->
     <color name="surface_primary">#FFFFFF</color>
     <color name="surface_secondary">#F5F5F5</color>
     <color name="surface_tertiary">#EEEEEE</color>
-<!--    <color name="surface_tertiary">#E0E0E0</color>-->
+    <!--    <color name="surface_variant">#E0E0E0</color>-->
+
+    <color name="surface_primary_night">#242424</color>
+    <color name="surface_secondary_night">#4A4A4A</color>
+    <color name="surface_tertiary_night">#1A1A1A</color>
+    <color name="surface_variant_night">#303030</color>
 
     <!-- Content/Text colors -->
     <color name="content_primary">#000000</color>
     <color name="content_secondary">#9E9E9E</color>
+    <color name="content_primary_night">#FFFFFF</color>
+    <color name="content_secondary_night">#9E9E9E</color>
 
     <!-- Status colors - Success -->
     <color name="success_primary">#00C48C</color>
     <color name="success_container">#E0FAF3</color>
+    <color name="success_primary_night">#00C48C</color>
+    <color name="success_container_night">#0C2B24</color>
 
     <!-- Status colors - Warning -->
     <color name="warning_primary">#FFA500</color>
     <color name="warning_container">#FFF4E0</color>
+    <color name="warning_primary_night">#FFA500</color>
+    <color name="warning_container_night">#3D3428</color>
 
     <!-- Status colors - Error -->
     <color name="error_primary">#FF0A0A</color>
     <color name="error_container">#FDE2E1</color>
+    <color name="error_primary_night">#FF4444</color>
+    <color name="error_container_night">#2B1615</color>
 
     <!-- Overlays -->
     <color name="ripple_overlay">#42FFFFFF</color>

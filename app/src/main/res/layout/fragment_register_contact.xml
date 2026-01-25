@@ -5,7 +5,7 @@
     android:id="@+id/main"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="?attr/colorSurface"
+    android:background="@color/colorSurface"
     android:fitsSystemWindows="true"
     tools:context=".presentation.auth.register.RegisterContactFragment">
 
@@ -27,7 +27,7 @@
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent"
-            app:tint="?attr/colorOnSurface" />
+            app:tint="@color/colorOnSurface" />
 
         <com.google.android.material.button.MaterialButton
             android:id="@+id/btn_sign_in"
@@ -71,7 +71,7 @@
                     android:layout_height="wrap_content"
                     android:layout_weight="1"
                     android:text="@string/title_create_your_account"
-                    android:textColor="?attr/colorOnSurface" />
+                    android:textColor="@color/colorOnSurface" />
 
                 <!-- Step progress -->
                 <FrameLayout
@@ -93,7 +93,7 @@
                         android:layout_height="wrap_content"
                         android:layout_gravity="center"
                         android:text="@string/tv_step_1_of_4"
-                        android:textColor="?attr/colorOnSurface" />
+                        android:textColor="@color/colorOnSurface" />
                 </FrameLayout>
             </LinearLayout>
 
@@ -102,7 +102,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="@string/sub_title_enter_your_email_and_phone_number_we_ll_send_a_one_time_verification_code_otp_to_your_email_to_confirm_your_account"
-                android:textColor="?attr/colorOnSurface" />
+                android:textColor="@color/colorOnSurface" />
 
             <com.google.android.material.textfield.TextInputEditText
                 android:id="@+id/et_email"
@@ -122,7 +122,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="5dp"
-                android:textColor="?attr/colorError"
+                android:textColor="@color/colorError"
                 android:visibility="gone"
                 tools:text="error message" />
 
@@ -159,7 +159,7 @@
                     android:layout_width="1dp"
                     android:layout_height="20dp"
                     android:layout_marginStart="8dp"
-                    app:dividerColor="?attr/colorSurfaceVariant"
+                    app:dividerColor="@color/colorSurfaceVariant"
                     app:layout_constraintBottom_toBottomOf="parent"
                     app:layout_constraintStart_toEndOf="@id/tv_country_code"
                     app:layout_constraintTop_toTopOf="parent" />
@@ -212,7 +212,7 @@
                 style="@style/TextAppearance.SettleX.BodyMedium"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:textColor="?attr/colorOnSurface"
+                android:textColor="@color/colorOnSurface"
                 tools:text="I have read, understood and agreed to the Terms &amp; Conditions and Privacy Policy." />
         </LinearLayout>
 

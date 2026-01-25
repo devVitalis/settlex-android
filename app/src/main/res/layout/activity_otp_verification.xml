@@ -5,7 +5,7 @@
     android:id="@+id/main"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="?attr/colorSurface"
+    android:background="@color/colorSurface"
     android:fitsSystemWindows="true"
     tools:context=".presentation.auth.forgot_password.OtpVerificationActivity">
 
@@ -15,7 +15,7 @@
         android:layout_height="?attr/actionBarSize"
         app:layout_constraintTop_toTopOf="parent"
         app:navigationIcon="@drawable/ic_arrow_ios_back"
-        app:navigationIconTint="?attr/colorOnSurface"
+        app:navigationIconTint="@color/colorOnSurface"
         app:title="@string/title_otp_verification"
         app:titleTextAppearance="@style/TextAppearance.SettleX.TitleLarge" />
 
@@ -42,7 +42,7 @@
                 android:background="@drawable/bg_sec_filled_pri_outlined_oval"
                 android:src="@drawable/ic_security"
                 app:contentPadding="10dp"
-                app:tint="?attr/colorOnSecondary" />
+                app:tint="@color/colorOnSecondary" />
 
             <TextView
                 android:id="@+id/tv_title"
@@ -53,7 +53,7 @@
                 android:layout_marginTop="25dp"
                 android:text="@string/subtitle_enter_code"
                 android:textAlignment="center"
-                android:textColor="?attr/colorOnSurface" />
+                android:textColor="@color/colorOnSurface" />
 
             <TextView
                 android:id="@+id/tv_info"
@@ -62,7 +62,7 @@
                 android:layout_height="wrap_content"
                 android:layout_marginTop="8dp"
                 android:textAlignment="center"
-                android:textColor="?attr/colorOnSurfaceVariant"
+                android:textColor="@color/colorOnSurfaceVariant"
                 tools:text="We sent a verification code to your email app***d@gmail.com" />
 
             <com.chaos.view.PinView
@@ -84,7 +84,7 @@
                 android:layout_height="wrap_content"
                 android:layout_gravity="center_horizontal"
                 android:layout_marginTop="8dp"
-                android:textColor="?attr/colorError"
+                android:textColor="@color/colorError"
                 android:visibility="gone"
                 tools:text="Invalid OTP" />
         </LinearLayout>
@@ -110,7 +110,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="@string/tv_didnt_receive_the_code"
-                android:textColor="?attr/colorOnSurface" />
+                android:textColor="@color/colorOnSurface" />
 
             <com.google.android.material.button.MaterialButton
                 android:id="@+id/btn_resend_otp"

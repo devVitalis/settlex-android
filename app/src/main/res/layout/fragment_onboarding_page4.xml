@@ -43,7 +43,7 @@
         android:layout_height="wrap_content"
         android:layout_marginTop="10dp"
         android:textAlignment="viewStart"
-        android:textColor="?attr/colorOnSurface"
+        android:textColor="@color/colorOnSurface"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@id/view_img_container"
@@ -56,7 +56,7 @@
         android:layout_marginTop="10dp"
         android:text="@string/tv_we_protect_your_information_with_the_same_high_level_encryption_trusted_by_major_banks_keeping_your_personal_details_secure_and_private"
         android:textAlignment="viewStart"
-        android:textColor="?attr/colorOnSurfaceVariant"
+        android:textColor="@color/colorOnSurfaceVariant"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@id/header" />

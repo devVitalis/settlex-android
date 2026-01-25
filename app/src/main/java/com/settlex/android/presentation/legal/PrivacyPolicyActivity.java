@@ -20,7 +20,7 @@ public class PrivacyPolicyActivity extends AppCompatActivity {
         ActivityPrivacyPolicyBinding binding = ActivityPrivacyPolicyBinding.inflate(getLayoutInflater());
         setContentView(binding.getRoot());
 
-        StatusBar.setColor(this, R.attr.colorSurfaceDim);
+        StatusBar.setColor(this, R.color.colorSurfaceDim);
         binding.toolbar.setNavigationOnClickListener(v -> finish());
         binding.tvPrivacyPolicy.setText(Html.fromHtml(getPolicyHtml(), Html.FROM_HTML_MODE_LEGACY));
     }

@@ -20,7 +20,6 @@ import com.settlex.android.presentation.auth.forgot_password.ForgotPasswordActiv
 import com.settlex.android.presentation.auth.register.RegisterActivity
 import com.settlex.android.presentation.common.components.BiometricAuthManager
 import com.settlex.android.presentation.common.components.BiometricAuthManager.BiometricAuthCallback
-import com.settlex.android.presentation.common.extensions.getThemeColor
 import com.settlex.android.presentation.common.extensions.gone
 import com.settlex.android.presentation.common.extensions.maskEmail
 import com.settlex.android.presentation.common.extensions.show
@@ -54,11 +53,11 @@ class LoginActivity : AppCompatActivity() {
     }
 
     private fun initViews() = with(binding) {
-        StatusBar.setColor(this@LoginActivity, R.attr.colorSurface)
+        StatusBar.setColor(this@LoginActivity, R.color.colorSurface)
         setupInputValidation()
         focusManager.attachDoneAction(editText = etPassword)
 
-        val colorPrimary = R.attr.colorPrimary
+        val colorPrimary = R.color.colorPrimary
         tvSwitchAccount.text = SpannableTextFormatter(
             this@LoginActivity,
             "Not you? Switch Account",

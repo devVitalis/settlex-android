@@ -43,7 +43,7 @@
         android:layout_height="wrap_content"
         android:layout_marginTop="10dp"
         android:textAlignment="viewStart"
-        android:textColor="?attr/colorOnSurface"
+        android:textColor="@color/colorOnSurface"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@id/view_img_container"
@@ -56,7 +56,7 @@
         android:layout_marginTop="10dp"
         android:text="@string/tv_get_the_cheapest_data_bundles_and_easily_manage_your_electricity_airtime_and_betting_payments_one_app_for_all_your_needs"
         android:textAlignment="viewStart"
-        android:textColor="?attr/colorOnSurfaceVariant"
+        android:textColor="@color/colorOnSurfaceVariant"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@id/header" />

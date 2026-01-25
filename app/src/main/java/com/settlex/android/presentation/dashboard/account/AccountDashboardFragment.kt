@@ -15,7 +15,6 @@ import androidx.lifecycle.repeatOnLifecycle
 import androidx.navigation.fragment.NavHostFragment
 import com.settlex.android.R
 import com.settlex.android.databinding.FragmentDashboardAccountBinding
-import com.settlex.android.presentation.common.extensions.getThemeColor
 import com.settlex.android.presentation.common.extensions.toastNotImplemented
 import com.settlex.android.presentation.dashboard.account.viewmodel.ProfileViewModel
 import com.settlex.android.presentation.settings.SettingsActivity
@@ -47,7 +46,7 @@ class AccountDashboardFragment : Fragment() {
     }
 
     private fun initViews() {
-        StatusBar.setColor(requireActivity(), R.attr.colorSurface)
+        StatusBar.setColor(requireActivity(), R.color.colorSurface)
         with(binding) {
 
             for (item in listOf(btnSettings, btnSettingsIcon)) {

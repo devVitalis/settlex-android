@@ -25,7 +25,7 @@ class CommissionWithdrawalActivity : AppCompatActivity() {
     }
 
     private fun setupUiActions() {
-        StatusBar.setColor(this, R.attr.colorSurface)
+        StatusBar.setColor(this, R.color.colorSurface)
 
         binding.btnWithdraw.setOnClickListener { it.toastNotImplemented() }
         binding.toolbar.setNavigationOnClickListener { finish() }

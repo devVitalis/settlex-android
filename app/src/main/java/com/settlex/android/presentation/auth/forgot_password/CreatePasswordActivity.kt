@@ -17,7 +17,6 @@ import com.settlex.android.presentation.auth.AuthViewModel
 import com.settlex.android.presentation.auth.login.LoginActivity
 import com.settlex.android.presentation.auth.util.PasswordFlow
 import com.settlex.android.presentation.auth.util.PasswordFlowParser
-import com.settlex.android.presentation.common.extensions.getThemeColor
 import com.settlex.android.presentation.common.extensions.gone
 import com.settlex.android.presentation.common.extensions.show
 import com.settlex.android.presentation.common.state.UiState
@@ -58,7 +57,7 @@ class CreatePasswordActivity : AppCompatActivity() {
     }
 
     private fun initViews() {
-        StatusBar.setColor(this, getThemeColor(R.attr.colorSurface))
+        StatusBar.setColor(this, R.color.colorSurface)
         updateUiFromIntent()
         setupListeners()
         setupInputValidation()

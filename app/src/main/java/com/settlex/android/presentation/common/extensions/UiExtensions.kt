@@ -7,11 +7,11 @@ import android.content.Intent
 import android.graphics.Color
 import android.graphics.drawable.Drawable
 import android.os.Build
-import android.util.Log
 import android.view.View
 import android.widget.TextView
 import android.widget.Toast
 import androidx.annotation.AttrRes
+import androidx.annotation.ColorRes
 import androidx.annotation.DrawableRes
 import androidx.core.content.ContextCompat
 import androidx.core.content.IntentCompat.getParcelableExtra
@@ -24,8 +24,8 @@ import java.text.NumberFormat
 import java.text.SimpleDateFormat
 import java.util.Locale
 
+// ============== View Extensions ==============
 
-// View
 fun View.show() {
     visibility = View.VISIBLE
 }
@@ -34,23 +34,34 @@ fun View.gone() {
     visibility = View.GONE
 }
 
-// TextView
-/**
- * Sets the text of a TextView to a string of four asterisks ("****").
- */
+fun View.toastNotImplemented() {
+    Toast.makeText(context, "Feature not yet implemented", Toast.LENGTH_SHORT).show()
+}
+
+// ============== TextView Extensions ==============
+
 fun TextView.setAsterisks() {
     text = "****"
 }
 
-fun TextView.setTextColorRes(@AttrRes color: Int) {
-    setTextColor(context.getThemeColor(color))
+fun TextView.setTextColorRes(@ColorRes colorResId: Int) {
+    setTextColor(context.getColorRes(colorResId = colorResId))
 }
 
-// String
-/**
- * Returns a new string by prepending an "@" symbol.
- * eg., "PaymentId" becomes "@PaymentId".
- */
+fun TextView.copyToClipboard(clipLabel: String) {
+    this.text.also { text ->
+        val clipboardManager = ContextCompat.getSystemService(context, ClipboardManager::class.java)
+        val clipData = ClipData.newPlainText(clipLabel, text)
+        clipboardManager?.setPrimaryClip(clipData)
+
+        if (Build.VERSION.SDK_INT < Build.VERSION_CODES.TIRAMISU) {
+            Toast.makeText(context, "Copied", Toast.LENGTH_SHORT).show()
+        }
+    }
+}
+
+// ============== String Extensions ==============
+
 fun String.addAtPrefix(): String {
     return "@$this"
 }
@@ -78,12 +89,9 @@ fun String.maskPhoneNumber(): String {
         val visiblePrefixLength = 7
         val visibleSuffixLength = 3
 
-        // Extract visible parts
         val prefix = phoneNumber.take(visiblePrefixLength)
         val suffix = phoneNumber.substring(phoneNumber.length - visibleSuffixLength)
 
-        Log.d("UiExtension", "Prefix: $prefix")
-        Log.d("UiExtension", "Suffix: $suffix")
         return "$prefix****$suffix"
     }
 }
@@ -111,7 +119,25 @@ fun String.capitalizeEachWord(): String {
     }
 }
 
-// Timestamp
+fun String.fromNairaStringToKobo(): Long {
+    this.also { nairaString ->
+        if (nairaString.isBlank()) return 0L
+        val cleanedNairaString = nairaString.replace("₦", "").replace(",", "")
+
+        try {
+            val amount = BigDecimal(cleanedNairaString)
+            val amountInKobo = amount.multiply(BigDecimal("100"))
+            val roundedKobo = amountInKobo.setScale(0, RoundingMode.HALF_UP)
+
+            return roundedKobo.longValueExact()
+        } catch (e: Exception) {
+            return 0L
+        }
+    }
+}
+
+// ============== Timestamp Extensions ==============
+
 fun Timestamp.toDateTimeString(): String {
     val dateString = SimpleDateFormat("dd MMM, hh:mm a", Locale.US).format(this.toDate())
 
@@ -154,10 +180,6 @@ fun Timestamp.toDateString(): String {
     val day = SimpleDateFormat("dd", Locale.US)
         .format(this.toDate()).toInt()
 
-    Log.d("UiExtensions", "day: $day")
-    Log.d("UiExtensions", "day suffix: ${day % 10}")
-    Log.d("UiExtensions", "day suffix: ${day.toString().padStart(2, '0')}")
-
     val suffix = when {
         day in 11..13 -> "th"
         day % 10 == 1 -> "st"
@@ -182,7 +204,6 @@ fun Timestamp.getTimeAgo(): String {
         val time = timestamp.toDate().time
         val now = System.currentTimeMillis()
         val diff = now - time
-
 
         if (diff < minute) return "Just now"
 
@@ -215,6 +236,8 @@ fun Timestamp.getTimeAgo(): String {
         return years.toString() + " yr" + (if (years > 1) "s" else "") + " ago"
     }
 }
+
+// ============== Long Extensions ==============
 
 fun Long.toNairaString(): String {
     return this.let { amountInKobo ->
@@ -257,47 +280,13 @@ fun Long.toNairaStringShort(): String {
     }
 }
 
-fun String.fromNairaStringToKobo(): Long {
-    this.also { nairaString ->
-        if (nairaString.isBlank()) return 0L
-        val cleanedNairaString = nairaString.replace("₦", "").replace(",", "")
-        Log.d("UiExtension", "Naira String: $this")
-        Log.d("UiExtension", "Cleaned Naira String: $cleanedNairaString")
-
-        try {
-            val amount = BigDecimal(cleanedNairaString)
-            val amountInKobo = amount.multiply(BigDecimal("100"))
-
-            // Round to nearest whole Kobo
-            val roundedKobo = amountInKobo.setScale(0, RoundingMode.HALF_UP)
-
-            return roundedKobo.longValueExact()
-        } catch (e: Exception) {
-            Log.e("UiExtension", "Error: ${e.message} ", e)
-            return 0L
-        }
-    }
-}
-
-fun TextView.copyToClipboard(clipLabel: String) {
-    this.text.also { text ->
-        val clipboardManager = ContextCompat.getSystemService(context, ClipboardManager::class.java)
-        val clipData = ClipData.newPlainText(clipLabel, text)
-        clipboardManager?.setPrimaryClip(clipData)
-
-        if (Build.VERSION.SDK_INT < Build.VERSION_CODES.TIRAMISU) {
-            Toast.makeText(context, "Copied", Toast.LENGTH_SHORT).show()
-        }
-    }
-}
-
-fun View.toastNotImplemented() {
-    Toast.makeText(context, "Feature not yet implemented", Toast.LENGTH_SHORT).show()
-}
+// ============== Intent Extensions ==============
 
 inline fun <reified T> Intent.getParcelableExtraCompat(key: String): T {
     return getParcelableExtra(this, key, T::class.java)!!
 }
+
+// ============== Context Extensions ==============
 
 fun Context.getThemeColor(@AttrRes attrs: Int): Int {
     return MaterialColors.getColor(this, attrs, Color.MAGENTA)
@@ -307,6 +296,10 @@ fun Context.getDrawableRes(@DrawableRes resId: Int): Drawable? {
     return ContextCompat.getDrawable(this, resId)
 }
 
-fun Context.getColorRes(@AttrRes resId: Int): Int {
-    return ContextCompat.getColor(this, resId)
+fun Context.getColorRes(@ColorRes colorResId: Int): Int {
+    return ContextCompat.getColor(this, colorResId)
+}
+
+fun Context.toastNotImplemented() {
+    Toast.makeText(this, "Feature not yet implemented", Toast.LENGTH_SHORT).show()
 }

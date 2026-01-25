@@ -5,7 +5,7 @@
     android:id="@+id/main"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="?attr/colorSurface"
+    android:background="@color/colorSurface"
     android:fitsSystemWindows="true"
     tools:context=".presentation.auth.register.RegisterNameFragment">
 
@@ -15,7 +15,7 @@
         android:layout_height="?attr/actionBarSize"
         app:layout_constraintTop_toTopOf="parent"
         app:navigationIcon="@drawable/ic_arrow_ios_back"
-        app:navigationIconTint="?attr/colorOnSurface" />
+        app:navigationIconTint="@color/colorOnSurface" />
 
     <ScrollView
         android:layout_width="0dp"
@@ -47,7 +47,7 @@
                     android:layout_height="wrap_content"
                     android:layout_weight="1"
                     android:text="@string/title_let_s_get_to_know_you"
-                    android:textColor="?attr/colorOnSurface" />
+                    android:textColor="@color/colorOnSurface" />
 
                 <!-- Step progress -->
                 <FrameLayout
@@ -69,7 +69,7 @@
                         android:layout_height="wrap_content"
                         android:layout_gravity="center"
                         android:text="@string/tv_step_3_of_4"
-                        android:textColor="?attr/colorOnSurface" />
+                        android:textColor="@color/colorOnSurface" />
                 </FrameLayout>
             </LinearLayout>
 
@@ -79,7 +79,7 @@
                 android:layout_height="wrap_content"
                 android:layout_gravity="start"
                 android:text="@string/subtitle_enter_your_names"
-                android:textColor="?attr/colorOnSurface" />
+                android:textColor="@color/colorOnSurface" />
 
             <!-- Firstname field -->
             <com.google.android.material.textfield.TextInputLayout

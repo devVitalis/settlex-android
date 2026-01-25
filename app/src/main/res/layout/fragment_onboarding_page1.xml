@@ -44,7 +44,7 @@
         android:layout_marginTop="10dp"
         android:text="@string/tv_welcome_to_nsettlex"
         android:textAlignment="viewStart"
-        android:textColor="?attr/colorOnSurface"
+        android:textColor="@color/colorOnSurface"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@id/view_img_container" />
@@ -56,7 +56,7 @@
         android:layout_marginTop="10dp"
         android:text="@string/tv_experience_seamless_payments_and_cheaper_bundles_built_for_you_settlex_makes_every_transaction_simple"
         android:textAlignment="viewStart"
-        android:textColor="?attr/colorOnSurfaceVariant"
+        android:textColor="@color/colorOnSurfaceVariant"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@id/header" />

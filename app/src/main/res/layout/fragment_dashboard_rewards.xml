@@ -5,7 +5,7 @@
     android:id="@+id/main"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="?attr/colorRewardsBackground"
+    android:background="@color/colorRewardsBackground"
     android:fitsSystemWindows="true"
     tools:context=".presentation.dashboard.rewards.RewardsDashboardFragment">
 
@@ -45,7 +45,7 @@
             android:layout_height="20dp"
             android:background="?attr/selectableItemBackgroundBorderless"
             android:src="@drawable/ic_arrow_ios_back"
-            app:tint="?attr/colorOnSurface" />
+            app:tint="@color/colorOnSurface" />
     </LinearLayout>
 
     <!--  Scroll content -->
@@ -72,13 +72,13 @@
                 android:layout_gravity="center"
                 android:layout_marginBottom="15dp"
                 android:text="Rewards"
-                android:textColor="?attr/colorOnSurface" />
+                android:textColor="@color/colorOnSurface" />
 
             <com.google.android.material.card.MaterialCardView
                 style="@style/Widget.SettleX.CardView.Filled.Medium"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                app:cardBackgroundColor="?attr/colorSurface">
+                app:cardBackgroundColor="@color/colorSurface">
 
                 <LinearLayout
                     android:layout_width="match_parent"
@@ -91,7 +91,7 @@
                         android:id="@+id/iv_illustrator"
                         android:layout_width="match_parent"
                         android:layout_height="120dp"
-                        android:background="?attr/colorPrimaryContainer"
+                        android:background="@color/colorPrimaryContainer"
                         android:src="@drawable/ic_invite"
                         app:contentPadding="15dp"
                         app:shapeAppearanceOverlay="@style/ShapeAppearance.Material3.Corner.Medium" />
@@ -103,7 +103,7 @@
                         android:layout_marginTop="15dp"
                         android:text="Invite others to SettleX and earn forever"
                         android:textAlignment="center"
-                        android:textColor="?attr/colorPrimary" />
+                        android:textColor="@color/colorPrimary" />
 
                     <TextView
                         android:id="@+id/tv_referral_info"
@@ -113,7 +113,7 @@
                         android:layout_marginTop="5dp"
                         android:text="Get 1% of every transaction your referrals make forever. The more you share, the more you earn!"
                         android:textAlignment="center"
-                        android:textColor="?attr/colorOnSurface" />
+                        android:textColor="@color/colorOnSurface" />
 
                     <TextView
                         style="@style/TextAppearance.SettleX.BodyMedium"
@@ -121,7 +121,7 @@
                         android:layout_height="wrap_content"
                         android:layout_marginTop="15dp"
                         android:text="See How It Works"
-                        android:textColor="?attr/colorPrimary" />
+                        android:textColor="@color/colorPrimary" />
 
                     <LinearLayout
                         android:layout_width="match_parent"
@@ -143,7 +143,7 @@
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
                                 android:text="Referral Code"
-                                android:textColor="?attr/colorOnSurfaceVariant" />
+                                android:textColor="@color/colorOnSurfaceVariant" />
 
                             <TextView
                                 android:id="@+id/tv_referral_code"
@@ -151,7 +151,7 @@
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
                                 android:layout_marginTop="3dp"
-                                android:textColor="?attr/colorOnSurface"
+                                android:textColor="@color/colorOnSurface"
                                 tools:text="SETS659" />
                         </LinearLayout>
 
@@ -160,7 +160,7 @@
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:src="@drawable/ic_copy"
-                            app:tint="?attr/colorOnSecondary" />
+                            app:tint="@color/colorOnSecondary" />
                     </LinearLayout>
                 </LinearLayout>
             </com.google.android.material.card.MaterialCardView>
@@ -178,7 +178,7 @@
                     android:layout_height="wrap_content"
                     android:layout_marginEnd="5dp"
                     android:layout_weight="1"
-                    app:cardBackgroundColor="?attr/colorSurface">
+                    app:cardBackgroundColor="@color/colorSurface">
 
                     <!-- Referral Earnings -->
                     <LinearLayout
@@ -192,14 +192,14 @@
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:text="Referral Earnings"
-                            android:textColor="?attr/colorOnSurfaceVariant" />
+                            android:textColor="@color/colorOnSurfaceVariant" />
 
                         <TextView
                             android:id="@+id/tv_total_referral_earning"
                             style="@style/TextAppearance.SettleX.BodyLarge"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
-                            android:textColor="?attr/colorOnSurface"
+                            android:textColor="@color/colorOnSurface"
                             tools:text="₦0.00" />
                     </LinearLayout>
                 </com.google.android.material.card.MaterialCardView>
@@ -211,7 +211,7 @@
                     android:layout_height="wrap_content"
                     android:layout_marginStart="5dp"
                     android:layout_weight="1"
-                    app:cardBackgroundColor="?attr/colorSurface">
+                    app:cardBackgroundColor="@color/colorSurface">
 
                     <LinearLayout
                         android:layout_width="match_parent"
@@ -224,14 +224,14 @@
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:text="Total Referrals"
-                            android:textColor="?attr/colorOnSurfaceVariant" />
+                            android:textColor="@color/colorOnSurfaceVariant" />
 
                         <TextView
                             android:id="@+id/tv_referrals_shared"
                             style="@style/TextAppearance.SettleX.BodyLarge"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
-                            android:textColor="?attr/colorOnSurface"
+                            android:textColor="@color/colorOnSurface"
                             tools:text="0" />
                     </LinearLayout>
                 </com.google.android.material.card.MaterialCardView>
@@ -249,7 +249,7 @@
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
                     android:layout_weight="1"
-                    app:dividerColor="?attr/colorSurfaceVariant"
+                    app:dividerColor="@color/colorSurfaceVariant"
                     app:dividerThickness="0.5dp" />
 
                 <TextView
@@ -258,13 +258,13 @@
                     android:layout_height="wrap_content"
                     android:layout_marginHorizontal="10dp"
                     android:text="Get Started in 3 Steps"
-                    android:textColor="?attr/colorOnSurface" />
+                    android:textColor="@color/colorOnSurface" />
 
                 <com.google.android.material.divider.MaterialDivider
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
                     android:layout_weight="1"
-                    app:dividerColor="?attr/colorSurfaceVariant"
+                    app:dividerColor="@color/colorSurfaceVariant"
                     app:dividerThickness="0.5dp" />
             </LinearLayout>
 
@@ -273,7 +273,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="10dp"
-                app:cardBackgroundColor="?attr/colorSurface">
+                app:cardBackgroundColor="@color/colorSurface">
 
                 <LinearLayout
                     android:layout_width="match_parent"
@@ -288,7 +288,7 @@
                         android:background="@drawable/bg_secondary_rounded8"
                         app:contentPadding="8dp"
                         app:srcCompat="@drawable/ic_link"
-                        app:tint="?attr/colorOnSecondary" />
+                        app:tint="@color/colorOnSecondary" />
 
                     <TextView
                         style="@style/TextAppearance.SettleX.BodyMedium"
@@ -296,7 +296,7 @@
                         android:layout_height="wrap_content"
                         android:layout_marginStart="5dp"
                         android:text="Share invitation link/code with friends"
-                        android:textColor="?attr/colorOnSurface" />
+                        android:textColor="@color/colorOnSurface" />
                 </LinearLayout>
             </com.google.android.material.card.MaterialCardView>
 
@@ -305,7 +305,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="10dp"
-                app:cardBackgroundColor="?attr/colorSurface">
+                app:cardBackgroundColor="@color/colorSurface">
 
                 <LinearLayout
                     android:layout_width="match_parent"
@@ -320,7 +320,7 @@
                         android:background="@drawable/bg_secondary_rounded8"
                         app:contentPadding="8dp"
                         app:srcCompat="@drawable/ic_qr_code"
-                        app:tint="?attr/colorOnSecondary" />
+                        app:tint="@color/colorOnSecondary" />
 
                     <TextView
                         style="@style/TextAppearance.SettleX.BodyMedium"
@@ -328,7 +328,7 @@
                         android:layout_height="wrap_content"
                         android:layout_marginStart="5dp"
                         android:text="Friends sign up and pay their bills"
-                        android:textColor="?attr/colorOnSurface" />
+                        android:textColor="@color/colorOnSurface" />
                 </LinearLayout>
             </com.google.android.material.card.MaterialCardView>
 
@@ -337,7 +337,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="10dp"
-                app:cardBackgroundColor="?attr/colorSurface">
+                app:cardBackgroundColor="@color/colorSurface">
 
                 <LinearLayout
                     android:layout_width="match_parent"
@@ -352,7 +352,7 @@
                         android:background="@drawable/bg_secondary_rounded8"
                         app:contentPadding="8dp"
                         app:srcCompat="@drawable/ic_link"
-                        app:tint="?attr/colorOnSecondary" />
+                        app:tint="@color/colorOnSecondary" />
 
                     <TextView
                         style="@style/TextAppearance.SettleX.BodyMedium"
@@ -360,7 +360,7 @@
                         android:layout_height="wrap_content"
                         android:layout_marginStart="5dp"
                         android:text="Earn 1% commission on their bill payments"
-                        android:textColor="?attr/colorOnSurface" />
+                        android:textColor="@color/colorOnSurface" />
                 </LinearLayout>
             </com.google.android.material.card.MaterialCardView>
 

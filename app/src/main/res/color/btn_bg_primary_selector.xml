@@ -1,4 +1,4 @@
 <selector xmlns:android="http://schemas.android.com/apk/res/android">
-    <item android:color="?attr/colorPrimaryDisabled" android:state_enabled="false" />
-    <item android:color="?attr/colorPrimary" />
+    <item android:color="@color/colorPrimaryDisabled" android:state_enabled="false" />
+    <item android:color="@color/colorPrimary" />
 </selector>

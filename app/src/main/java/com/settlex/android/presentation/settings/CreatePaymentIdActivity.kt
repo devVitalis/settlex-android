@@ -19,7 +19,6 @@ import com.settlex.android.data.exception.AppException
 import com.settlex.android.databinding.ActivityCreatePaymentIdBinding
 import com.settlex.android.presentation.common.extensions.getColorRes
 import com.settlex.android.presentation.common.extensions.getDrawableRes
-import com.settlex.android.presentation.common.extensions.getThemeColor
 import com.settlex.android.presentation.common.extensions.gone
 import com.settlex.android.presentation.common.extensions.show
 import com.settlex.android.presentation.common.state.UiState
@@ -36,8 +35,8 @@ import kotlinx.coroutines.launch
 class CreatePaymentIdActivity : AppCompatActivity() {
     private val validStateBackground by lazy { getDrawableRes(R.drawable.bg_success_container_rounded8) }
     private val defaultStateBackground by lazy { getDrawableRes(R.drawable.bg_surface_container_rounded8) }
-    private val successStateColor by lazy { getThemeColor(R.attr.colorSuccess) }
-    private val defaultStateColor by lazy { getThemeColor(R.attr.colorOnSurfaceVariant) }
+    private val successStateColor by lazy { getColorRes(R.color.colorSuccess) }
+    private val defaultStateColor by lazy { getColorRes(R.color.colorOnSurfaceVariant) }
 
     // Dependencies
     private lateinit var binding: ActivityCreatePaymentIdBinding
@@ -57,7 +56,7 @@ class CreatePaymentIdActivity : AppCompatActivity() {
     }
 
     private fun initViews() {
-        StatusBar.setColor(this, R.attr.colorSurface)
+        StatusBar.setColor(this, R.color.colorSurface)
         setupPaymentIdTextWatcher()
         disableBackButton()
 
@@ -166,8 +165,8 @@ class CreatePaymentIdActivity : AppCompatActivity() {
 
         val statusText = if (isPaymentIdTaken) "Not Available" else "Available"
         val statusColor = when (isPaymentIdTaken) {
-            true -> getColorRes(R.attr.colorError)
-            false -> getColorRes(R.attr.colorSuccess)
+            true -> getColorRes(R.color.colorError)
+            false -> getColorRes(R.color.colorSuccess)
         }
 
         tvPaymentIdStatus.also {

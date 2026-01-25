@@ -4,7 +4,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="?attr/colorSurface"
+    android:background="@color/colorSurface"
     android:fitsSystemWindows="true"
     tools:context=".presentation.wallet.CommissionWithdrawalActivity">
 
@@ -14,14 +14,14 @@
         android:layout_height="?attr/actionBarSize"
         app:layout_constraintTop_toTopOf="parent"
         app:navigationIcon="@drawable/ic_arrow_back"
-        app:navigationIconTint="?attr/colorOnSurface"
+        app:navigationIconTint="@color/colorOnSurface"
         app:title="@string/tv_commission"
         app:titleTextAppearance="@style/TextAppearance.SettleX.TitleLarge" />
 
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="0dp"
-        android:background="?attr/colorSurfaceDim"
+        android:background="@color/colorSurfaceDim"
         android:orientation="vertical"
         android:padding="15dp"
         app:layout_constraintBottom_toBottomOf="parent"
@@ -41,7 +41,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="Commission Balance"
-                android:textColor="?attr/colorOnPrimary" />
+                android:textColor="@color/colorOnPrimary" />
 
             <LinearLayout
                 android:layout_width="match_parent"
@@ -56,7 +56,7 @@
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
                     android:layout_weight="1"
-                    android:textColor="?attr/colorOnPrimary"
+                    android:textColor="@color/colorOnPrimary"
                     tools:text="₦534.18" />
 
                 <com.google.android.material.button.MaterialButton
@@ -64,7 +64,7 @@
                     style="@style/Widget.SettleX.Button.Primary"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:backgroundTint="?attr/colorWarning"
+                    android:backgroundTint="@color/colorWarning"
                     android:text="Withdraw" />
             </LinearLayout>
         </LinearLayout>
@@ -81,7 +81,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="Earn commission on every transaction, start today!"
-                android:textColor="?attr/colorOnSurface" />
+                android:textColor="@color/colorOnSurface" />
         </LinearLayout>
     </LinearLayout>
 </androidx.constraintlayout.widget.ConstraintLayout>

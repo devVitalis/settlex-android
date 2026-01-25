@@ -4,7 +4,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="?attr/colorSurface"
+    android:background="@color/colorSurface"
     android:fitsSystemWindows="true"
     tools:context=".presentation.transactions.TransactionDetailsFragment">
 
@@ -24,7 +24,7 @@
             android:layout_width="20dp"
             android:layout_height="20dp"
             android:src="@drawable/ic_arrow_ios_back"
-            app:tint="?attr/colorOnSurface" />
+            app:tint="@color/colorOnSurface" />
 
         <TextView
             style="@style/TextAppearance.SettleX.TitleLarge"
@@ -38,7 +38,7 @@
     <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
         android:layout_height="0dp"
-        android:background="?attr/colorSurfaceDim"
+        android:background="@color/colorSurfaceDim"
         android:orientation="vertical"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
@@ -73,7 +73,7 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_marginTop="20dp"
-                    android:textColor="?attr/colorOnSurface"
+                    android:textColor="@color/colorOnSurface"
                     android:textSize="16sp"
                     tools:text="Payment Received" />
 
@@ -89,7 +89,7 @@
                         style="@style/TextAppearance.SettleX.BodyLarge"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:textColor="?attr/colorOnSurface"
+                        android:textColor="@color/colorOnSurface"
                         tools:text="+" />
 
                     <TextView
@@ -97,7 +97,7 @@
                         style="@style/TextAppearance.SettleX.BodyLarge"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:textColor="?attr/colorOnSurface"
+                        android:textColor="@color/colorOnSurface"
                         tools:text="₦100,000.00" />
                 </LinearLayout>
 
@@ -109,7 +109,7 @@
                     android:layout_marginTop="10dp"
                     android:paddingHorizontal="8dp"
                     android:paddingVertical="2dp"
-                    android:textColor="?attr/colorOnSuccessContainer"
+                    android:textColor="@color/colorOnSuccessContainer"
                     tools:background="@drawable/bg_label_status_success"
                     tools:text="Success" />
             </LinearLayout>
@@ -131,7 +131,7 @@
                     android:layout_gravity="center"
                     android:background="@drawable/bg_service_oval"
                     app:contentPadding="8dp"
-                    app:tint="?attr/colorPrimary"
+                    app:tint="@color/colorPrimary"
                     tools:src="@drawable/ic_service_payment_sent" />
             </FrameLayout>
         </androidx.constraintlayout.widget.ConstraintLayout>
@@ -160,7 +160,7 @@
                     android:layout_height="wrap_content"
                     android:layout_marginEnd="10dp"
                     android:text="Date/Time"
-                    android:textColor="?attr/colorOnSurface" />
+                    android:textColor="@color/colorOnSurface" />
 
                 <TextView
                     android:id="@+id/tv_txn_date_time"
@@ -171,7 +171,7 @@
                     android:ellipsize="end"
                     android:gravity="end"
                     android:maxLines="1"
-                    android:textColor="?attr/colorOnSurfaceVariant"
+                    android:textColor="@color/colorOnSurfaceVariant"
                     tools:text="14/09/2025 11:58PM" />
             </LinearLayout>
 
@@ -188,7 +188,7 @@
                     android:layout_height="wrap_content"
                     android:layout_marginEnd="10dp"
                     android:text="Sender"
-                    android:textColor="?attr/colorOnSurface" />
+                    android:textColor="@color/colorOnSurface" />
 
                 <TextView
                     android:id="@+id/tv_txn_sender_id"
@@ -199,7 +199,7 @@
                     android:ellipsize="end"
                     android:gravity="end"
                     android:maxLines="1"
-                    android:textColor="?attr/colorOnSurfaceVariant"
+                    android:textColor="@color/colorOnSurfaceVariant"
                     tools:text="\@benjamin213" />
             </LinearLayout>
 
@@ -216,7 +216,7 @@
                     android:layout_height="wrap_content"
                     android:layout_marginEnd="10dp"
                     android:text="Recipient"
-                    android:textColor="?attr/colorOnSurface" />
+                    android:textColor="@color/colorOnSurface" />
 
                 <TextView
                     android:id="@+id/tv_txn_recipient_id"
@@ -227,7 +227,7 @@
                     android:ellipsize="end"
                     android:gravity="end"
                     android:maxLines="1"
-                    android:textColor="?attr/colorOnSurfaceVariant"
+                    android:textColor="@color/colorOnSurfaceVariant"
                     tools:text="\@vitalis" />
             </LinearLayout>
 
@@ -244,7 +244,7 @@
                     android:layout_height="wrap_content"
                     android:layout_marginEnd="10dp"
                     android:text="Recipient Name"
-                    android:textColor="?attr/colorOnSurface" />
+                    android:textColor="@color/colorOnSurface" />
 
                 <TextView
                     android:id="@+id/tv_txn_recipient_name"
@@ -255,7 +255,7 @@
                     android:ellipsize="end"
                     android:gravity="end"
                     android:maxLines="1"
-                    android:textColor="?attr/colorOnSurfaceVariant"
+                    android:textColor="@color/colorOnSurfaceVariant"
                     tools:text="BENJAMIN NNAEMEKA" />
             </LinearLayout>
 
@@ -273,7 +273,7 @@
                     android:layout_height="wrap_content"
                     android:layout_marginEnd="10dp"
                     android:text="Description"
-                    android:textColor="?attr/colorOnSurface" />
+                    android:textColor="@color/colorOnSurface" />
 
                 <TextView
                     android:id="@+id/tv_txn_description"
@@ -284,7 +284,7 @@
                     android:ellipsize="end"
                     android:gravity="end"
                     android:maxLines="1"
-                    android:textColor="?attr/colorOnSurfaceVariant"
+                    android:textColor="@color/colorOnSurfaceVariant"
                     tools:text="Bills Payment" />
             </LinearLayout>
 
@@ -292,7 +292,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="0.5dp"
                 android:layout_marginVertical="15dp"
-                app:dividerColor="?attr/colorOnSurfaceVariant" />
+                app:dividerColor="@color/colorOnSurfaceVariant" />
 
             <LinearLayout
                 android:layout_width="match_parent"
@@ -306,7 +306,7 @@
                     android:layout_height="wrap_content"
                     android:layout_marginEnd="10dp"
                     android:text="Transaction ID"
-                    android:textColor="?attr/colorOnSurface" />
+                    android:textColor="@color/colorOnSurface" />
 
                 <TextView
                     android:id="@+id/tv_transaction_id"
@@ -317,7 +317,7 @@
                     android:ellipsize="end"
                     android:gravity="end"
                     android:maxLines="1"
-                    android:textColor="?attr/colorOnSurfaceVariant"
+                    android:textColor="@color/colorOnSurfaceVariant"
                     tools:text="fe367bfgndhdgdtrvebjs5892gfdtja" />
 
                 <com.google.android.material.imageview.ShapeableImageView
@@ -325,7 +325,7 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:src="@drawable/ic_copy"
-                    app:tint="?attr/colorOnSurfaceVariant" />
+                    app:tint="@color/colorOnSurfaceVariant" />
             </LinearLayout>
         </LinearLayout>
 

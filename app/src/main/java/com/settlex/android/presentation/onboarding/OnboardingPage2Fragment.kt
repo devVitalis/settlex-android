@@ -37,7 +37,7 @@ class OnboardingPage2Fragment : Fragment() {
             requireContext(),
             "Pay Bills\nWithout Stress",
             "Bills",
-            R.attr.colorPrimary,
+            R.color.colorPrimary,
         )
     }
 

@@ -5,7 +5,7 @@
     android:id="@+id/main"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="?attr/colorSurface"
+    android:background="@color/colorSurface"
     android:fitsSystemWindows="true"
     tools:context=".presentation.onboarding.OnboardingActivity">
 
@@ -26,7 +26,7 @@
             android:paddingHorizontal="15dp"
             android:paddingVertical="10dp"
             android:text="@string/tv_skip"
-            android:textColor="?attr/colorOnSurfaceVariant" />
+            android:textColor="@color/colorOnSurfaceVariant" />
 
         <LinearLayout
             android:layout_width="match_parent"
@@ -43,8 +43,8 @@
                 android:layout_height="wrap_content"
                 app:vpi_orientation="horizontal"
                 app:vpi_slide_mode="smooth"
-                app:vpi_slider_checked_color="?attr/colorPrimary"
-                app:vpi_slider_normal_color="?attr/colorSecondary"
+                app:vpi_slider_checked_color="@color/colorPrimary"
+                app:vpi_slider_normal_color="@color/colorSecondary"
                 app:vpi_style="round_rect" />
         </LinearLayout>
 

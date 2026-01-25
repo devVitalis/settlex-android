@@ -15,7 +15,7 @@
         android:layout_gravity="center"
         android:background="@drawable/bg_service_oval"
         android:src="@drawable/ic_service_payment_sent"
-        android:tint="?attr/colorPrimary"
+        android:tint="@color/colorPrimary"
         app:contentPadding="5dp" />
 
     <LinearLayout
@@ -38,7 +38,7 @@
                 android:layout_weight="1"
                 android:ellipsize="end"
                 android:maxLines="1"
-                android:textColor="?attr/colorOnSurface"
+                android:textColor="@color/colorOnSurface"
                 tools:text="Payment Sent" />
 
             <TextView
@@ -74,7 +74,7 @@
                 android:layout_height="wrap_content"
                 android:ellipsize="end"
                 android:maxLines="1"
-                android:textColor="?attr/colorOnSurfaceVariant"
+                android:textColor="@color/colorOnSurfaceVariant"
                 tools:text="Aug 28, 3:39 AM" />
 
             <View
@@ -92,7 +92,7 @@
                 android:layout_weight="1"
                 android:ellipsize="end"
                 android:maxLines="1"
-                android:textColor="?attr/colorOnSurfaceVariant"
+                android:textColor="@color/colorOnSurfaceVariant"
                 tools:text="NNAEMEKA BENJAMIN CHISOM" />
 
             <TextView
@@ -103,7 +103,7 @@
                 android:background="@drawable/bg_label_status_success"
                 android:maxLines="1"
                 android:paddingHorizontal="5dp"
-                android:textColor="?attr/colorOnSuccessContainer"
+                android:textColor="@color/colorOnSuccessContainer"
                 android:textSize="11sp"
                 tools:text="Successful" />
         </LinearLayout>

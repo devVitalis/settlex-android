@@ -20,7 +20,7 @@
         android:layout_height="wrap_content"
         android:layout_gravity="end"
         android:src="@drawable/ic_close"
-        app:tint="?attr/colorOnSurfaceVariant" />
+        app:tint="@color/colorOnSurfaceVariant" />
 
     <TextView
         android:id="@+id/tv_transfer_amount_header"
@@ -44,7 +44,7 @@
             android:layout_marginEnd="15dp"
             android:layout_weight="1"
             android:text="@string/tv_recipient"
-            android:textColor="?attr/colorOnSurfaceVariant" />
+            android:textColor="@color/colorOnSurfaceVariant" />
 
         <TextView
             android:id="@+id/tv_recipient_payment_id"
@@ -53,7 +53,7 @@
             android:layout_height="wrap_content"
             android:ellipsize="end"
             android:maxLines="1"
-            android:textColor="?attr/colorOnSurface"
+            android:textColor="@color/colorOnSurface"
             tools:text="\@vitalis" />
     </LinearLayout>
 
@@ -71,7 +71,7 @@
             android:layout_marginEnd="10dp"
             android:layout_weight="1"
             android:text="@string/tv_recipient_name"
-            android:textColor="?attr/colorOnSurfaceVariant" />
+            android:textColor="@color/colorOnSurfaceVariant" />
 
         <com.google.android.material.imageview.ShapeableImageView
             android:id="@+id/iv_recipient_profile_photo"
@@ -88,7 +88,7 @@
             android:layout_height="wrap_content"
             android:ellipsize="end"
             android:maxLines="1"
-            android:textColor="?attr/colorOnSurface"
+            android:textColor="@color/colorOnSurface"
             tools:text="BENJAMIN CHISOM NNAEMEKA" />
     </LinearLayout>
 
@@ -106,7 +106,7 @@
             android:layout_marginEnd="10dp"
             android:layout_weight="1"
             android:text="@string/tv_amount"
-            android:textColor="?attr/colorOnSurfaceVariant" />
+            android:textColor="@color/colorOnSurfaceVariant" />
 
         <TextView
             android:id="@+id/tv_transfer_amount"
@@ -115,7 +115,7 @@
             android:layout_height="wrap_content"
             android:ellipsize="end"
             android:maxLines="1"
-            android:textColor="?attr/colorOnSurface"
+            android:textColor="@color/colorOnSurface"
             tools:text="₦100,000.00" />
     </LinearLayout>
 
@@ -123,7 +123,7 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginVertical="7.5dp"
-        app:dividerColor="?attr/colorOnSurfaceVariant"
+        app:dividerColor="@color/colorOnSurfaceVariant"
         app:dividerThickness="0.5dp" />
 
     <LinearLayout
@@ -138,14 +138,14 @@
             android:layout_height="wrap_content"
             android:layout_weight="1"
             android:text="@string/tv_payment_method"
-            android:textColor="?attr/colorOnSurface" />
+            android:textColor="@color/colorOnSurface" />
 
         <TextView
             android:id="@+id/tv_payment_method"
             style="@style/TextAppearance.SettleX.BodyMedium"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:textColor="?attr/colorOnSurface"
+            android:textColor="@color/colorOnSurface"
             android:textSize="12sp"
             tools:text="ALL" />
     </LinearLayout>
@@ -172,7 +172,7 @@
                 android:layout_height="wrap_content"
                 android:layout_marginEnd="5dp"
                 android:text="@string/tv_available_balance"
-                android:textColor="?attr/colorOnSurface" />
+                android:textColor="@color/colorOnSurface" />
 
             <TextView
                 android:id="@+id/tv_sender_total_balance"
@@ -182,21 +182,21 @@
                 android:layout_weight="1"
                 android:ellipsize="end"
                 android:maxLines="1"
-                android:textColor="?attr/colorOnSurface"
+                android:textColor="@color/colorOnSurface"
                 tools:text="(₦198,535.57)" />
 
             <com.google.android.material.imageview.ShapeableImageView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:src="@drawable/ic_check"
-                app:tint="?attr/colorSuccess" />
+                app:tint="@color/colorSuccess" />
         </LinearLayout>
 
         <com.google.android.material.divider.MaterialDivider
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginVertical="5dp"
-            app:dividerColor="?attr/colorOnSurfaceVariant"
+            app:dividerColor="@color/colorOnSurfaceVariant"
             app:dividerThickness="0.5dp" />
 
         <LinearLayout
@@ -212,7 +212,7 @@
                 android:layout_height="wrap_content"
                 android:layout_marginEnd="5dp"
                 android:text="@string/tv_wallet_balance"
-                android:textColor="?attr/colorOnSurfaceVariant" />
+                android:textColor="@color/colorOnSurfaceVariant" />
 
             <TextView
                 android:id="@+id/tv_sender_wallet_balance"
@@ -220,7 +220,7 @@
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
-                android:textColor="?attr/colorOnSurfaceVariant"
+                android:textColor="@color/colorOnSurfaceVariant"
                 tools:text="(₦198,000.32)" />
 
             <TextView
@@ -228,7 +228,7 @@
                 style="@style/TextAppearance.SettleX.BodySmall"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:textColor="?attr/colorOnSurface"
+                android:textColor="@color/colorOnSurface"
                 tools:text="-₦5,230.00" />
         </LinearLayout>
 
@@ -246,7 +246,7 @@
                 android:layout_height="wrap_content"
                 android:layout_marginEnd="5dp"
                 android:text="@string/tv_commission_balance"
-                android:textColor="?attr/colorOnSurfaceVariant" />
+                android:textColor="@color/colorOnSurfaceVariant" />
 
             <TextView
                 android:id="@+id/tv_sender_commission_balance"
@@ -254,7 +254,7 @@
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
-                android:textColor="?attr/colorOnSurfaceVariant"
+                android:textColor="@color/colorOnSurfaceVariant"
                 tools:text="(₦535.25)" />
 
             <TextView
@@ -262,7 +262,7 @@
                 style="@style/TextAppearance.SettleX.BodySmall"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:textColor="?attr/colorOnSurface"
+                android:textColor="@color/colorOnSurface"
                 tools:text="-₦10,230.00" />
         </LinearLayout>
     </LinearLayout>
@@ -273,7 +273,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_gravity="center"
-        android:textColor="?attr/colorError"
+        android:textColor="@color/colorError"
         android:visibility="gone"
         tools:text="Insufficient Balance" />
 

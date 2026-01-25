@@ -26,7 +26,6 @@ import com.settlex.android.data.exception.AppException
 import com.settlex.android.databinding.FragmentRegisterContactBinding
 import com.settlex.android.presentation.auth.AuthViewModel
 import com.settlex.android.presentation.auth.login.LoginActivity
-import com.settlex.android.presentation.common.extensions.getThemeColor
 import com.settlex.android.presentation.common.extensions.gone
 import com.settlex.android.presentation.common.extensions.show
 import com.settlex.android.presentation.common.extensions.toNigerianPhoneNumber
@@ -78,7 +77,7 @@ class RegisterContactFragment : Fragment() {
     }
 
     private fun initViews() {
-        StatusBar.setColor(requireActivity(), requireContext().getThemeColor(R.attr.colorSurface))
+        StatusBar.setColor(requireActivity(), R.color.colorSurface)
         setupListeners()
         setupLegalLinks()
         setupInputValidation()
@@ -202,7 +201,7 @@ class RegisterContactFragment : Fragment() {
 
         val span =
             SpannableStringBuilder("I have read, understood and agreed to the Terms & Conditions and Privacy Policy.")
-        val colorPrimary = requireContext().getThemeColor(R.attr.colorPrimary)
+        val colorPrimary = R.color.colorPrimary
 
         val termsSpan: ClickableSpan = object : ClickableSpan() {
             override fun onClick(widget: View) {

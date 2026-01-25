@@ -29,7 +29,7 @@
             style="@style/TextAppearance.SettleX.BodyMedium"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:textColor="?attr/colorOnSurface"
+            android:textColor="@color/colorOnSurface"
             tools:text="Benjamin Nnaemeka" />
 
         <TextView
@@ -37,7 +37,7 @@
             style="@style/TextAppearance.SettleX.BodyMedium"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:textColor="?attr/colorOnSurfaceVariant"
+            android:textColor="@color/colorOnSurfaceVariant"
             tools:text="\@vitalisdft" />
     </LinearLayout>
 </LinearLayout>

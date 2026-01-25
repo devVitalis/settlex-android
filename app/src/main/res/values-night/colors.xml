@@ -1,37 +1,57 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <!-- Blue palette -->
-    <color name="blue_primary">#5A9FFF</color>
-    <color name="blue_primary_disabled">#0E4FA3</color>
-    <color name="blue_light">#D1E4FF</color>
-    <color name="blue_lightest">#E9F1FF</color>
-    <color name="blue_dark">#003180</color>
+    <!-- Night theme -->
+    <!-- Primary colors -->
+    <color name="colorPrimary">@color/blue_primary_night</color>
+    <color name="colorOnPrimary">@color/pure_white</color>
+    <color name="colorPrimaryContainer">@color/blue_light_night</color>
+    <color name="colorOnPrimaryContainer">@color/blue_dark_night</color>
+    <color name="colorPrimaryDisabled">@color/blue_primary_disabled_night</color>
+
+    <!-- Secondary colors -->
+    <color name="colorSecondary">@color/blue_dark_night</color>
+    <color name="colorOnSecondary">@color/blue_primary_night</color>
+    <!--   <color name="colorSecondaryContainer">@color/blue_medium</color>-->
+    <!--   <color name="colorOnSecondaryContainer">@color/blue_primary</color>-->
+    <color name="colorSecondaryFixed">@color/blue_lightest_night</color>
 
     <!-- Surface colors -->
-    <color name="surface_primary">#242424</color>
-    <color name="surface_secondary">#4A4A4A</color>
-    <color name="surface_tertiary">#1A1A1A</color>
+    <color name="colorSurface">@color/surface_primary_night</color>
+    <color name="colorOnSurface">@color/content_primary_night</color>
+    <color name="colorSurfaceVariant">@color/surface_variant_night</color>
+    <color name="colorOnSurfaceVariant">@color/content_secondary_night</color>
+    <color name="colorSurfaceContainer">@color/surface_secondary_night</color>
+    <color name="colorSurfaceDim">@color/surface_tertiary_night</color>
 
-    <!-- Content/Text colors -->
-    <color name="content_primary">#FFFFFF</color>
-    <color name="content_secondary">#9E9E9E</color>
+    <!-- Error colors -->
+    <color name="colorError">@color/error_primary_night</color>
+    <color name="colorOnError">@color/pure_white</color>
+    <color name="colorErrorContainer">@color/error_container_night</color>
+    <color name="colorOnErrorContainer">@color/error_primary_night</color>
 
-    <!-- Status colors - Success -->
-    <color name="success_primary">#00C48C</color>
-    <color name="success_container">#0C2B24</color>
+    <!-- Outline/divider -->
+    <color name="colorOutline">@color/content_secondary_night</color>
+    <!--   <color name="colorOutlineVariant">@color/gray_50</color>-->
 
-    <!-- Status colors - Warning -->
-    <color name="warning_primary">#FFA500</color>
-    <color name="warning_container">#3D3428</color>
+    <!-- Custom attributes for non-standard colors -->
+    <color name="colorSuccess">@color/success_primary_night</color>
+    <color name="colorOnSuccess">@color/pure_white</color>
+    <color name="colorSuccessContainer">@color/success_container_night</color>
+    <color name="colorOnSuccessContainer">@color/success_primary_night</color>
 
-    <!-- Status colors - Error -->
-    <color name="error_primary">#FF4444</color>
-    <color name="error_container">#2B1615</color>
+    <color name="colorWarning">@color/warning_primary_night</color>
+    <color name="colorOnWarning">@color/pure_white</color>
+    <color name="colorWarningContainer">@color/warning_container_night</color>
+    <color name="colorOnWarningContainer">@color/warning_primary_night</color>
 
-    <!-- Overlays -->
-    <color name="scrim_overlay_black_10">#80000000</color>
-    <color name="ripple_overlay">#42FFFFFF</color>
+    <color name="colorAlert">@color/error_primary_night</color>
+    <color name="colorOnAlert">@color/pure_white</color>
 
-    <!-- Constants (never change) -->
-    <color name="pure_white">#FFFFFF</color>
+    <color name="colorShimmer">@color/surface_tertiary_night</color>
+    <color name="colorRippleOverlay">@color/ripple_overlay</color>
+    <color name="colorScrimOverlay">@color/scrim_overlay_white_50</color>
+    <color name="colorOnScrimOverlay">@color/pure_white</color>
+    <color name="colorScrimOverlayContainer">@color/scrim_overlay_black_50</color>
+
+    <color name="colorRewardsBackground">@color/surface_tertiary_night</color>
 </resources>

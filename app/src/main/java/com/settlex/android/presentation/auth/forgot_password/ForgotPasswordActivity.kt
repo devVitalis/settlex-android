@@ -15,7 +15,6 @@ import com.settlex.android.data.enums.OtpType
 import com.settlex.android.data.exception.AppException
 import com.settlex.android.databinding.ActivityForgotPasswordBinding
 import com.settlex.android.presentation.auth.AuthViewModel
-import com.settlex.android.presentation.common.extensions.getThemeColor
 import com.settlex.android.presentation.common.extensions.gone
 import com.settlex.android.presentation.common.extensions.show
 import com.settlex.android.presentation.common.state.UiState
@@ -46,7 +45,7 @@ class ForgotPasswordActivity : AppCompatActivity() {
     }
 
     private fun initViews() {
-        StatusBar.setColor(this, getThemeColor(R.attr.colorSurface))
+        StatusBar.setColor(this, R.color.colorSurface)
         setupInputValidation()
 
         with(binding) {

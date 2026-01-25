@@ -19,7 +19,7 @@
         android:layout_marginTop="15dp"
         android:gravity="center"
         android:text="@string/tv_change_profile_photo"
-        android:textColor="?attr/colorOnSurface" />
+        android:textColor="@color/colorOnSurface" />
 
     <com.google.android.material.imageview.ShapeableImageView
         android:id="@+id/iv_profile_photo"

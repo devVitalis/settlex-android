@@ -29,7 +29,6 @@ import com.settlex.android.data.session.UserSessionState
 import com.settlex.android.databinding.ActivityProfileBinding
 import com.settlex.android.presentation.common.extensions.addAtPrefix
 import com.settlex.android.presentation.common.extensions.copyToClipboard
-import com.settlex.android.presentation.common.extensions.getThemeColor
 import com.settlex.android.presentation.common.extensions.getTimeAgo
 import com.settlex.android.presentation.common.extensions.maskEmail
 import com.settlex.android.presentation.common.extensions.maskPhoneNumber
@@ -71,7 +70,7 @@ class ProfileActivity : AppCompatActivity() {
     }
 
     private fun initViews() {
-        StatusBar.setColor(this, R.attr.colorSurface)
+        StatusBar.setColor(this, R.color.colorSurface)
         initGalleryPermissionLauncher()
         initCameraPermissionLauncher()
         initImagePickerLauncher()

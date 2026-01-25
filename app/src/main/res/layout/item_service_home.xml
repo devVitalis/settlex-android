@@ -37,7 +37,7 @@
                 android:layout_width="20dp"
                 android:layout_height="20dp"
                 android:layout_gravity="center"
-                app:tint="?attr/colorPrimary"
+                app:tint="@color/colorPrimary"
                 tools:src="@drawable/ic_service_airtime" />
         </FrameLayout>
 
@@ -68,6 +68,6 @@
         android:layout_marginTop="4dp"
         android:gravity="center"
         android:textAlignment="center"
-        android:textColor="?attr/colorOnSurface"
+        android:textColor="@color/colorOnSurface"
         tools:text="Service" />
 </LinearLayout>

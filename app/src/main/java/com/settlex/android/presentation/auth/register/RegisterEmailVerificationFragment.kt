@@ -18,8 +18,8 @@ import com.settlex.android.data.enums.OtpType
 import com.settlex.android.data.exception.AppException
 import com.settlex.android.databinding.FragmentRegisterEmailVerificationBinding
 import com.settlex.android.presentation.auth.AuthViewModel
-import com.settlex.android.presentation.common.extensions.getThemeColor
 import com.settlex.android.presentation.common.extensions.gone
+import com.settlex.android.presentation.common.extensions.setTextColorRes
 import com.settlex.android.presentation.common.extensions.show
 import com.settlex.android.presentation.common.state.UiState
 import com.settlex.android.presentation.common.util.SpannableTextFormatter
@@ -72,7 +72,7 @@ class RegisterEmailVerificationFragment : Fragment() {
     }
 
     private fun initViews() = with(binding) {
-        StatusBar.setColor(requireActivity(), requireContext().getThemeColor(R.attr.colorSurface))
+        StatusBar.setColor(requireActivity(), R.color.colorSurface)
         setupInputWatcher()
 
         email.also { email ->
@@ -80,7 +80,7 @@ class RegisterEmailVerificationFragment : Fragment() {
                 requireContext(),
                 text = "We sent a verification code to your email $email. This code will expire after 10 minutes",
                 target = email,
-                colorRes = R.attr.colorOnSurface,
+                colorRes = R.color.colorOnSurface,
                 setBold = true,
             )
         }
@@ -89,7 +89,7 @@ class RegisterEmailVerificationFragment : Fragment() {
             requireContext(),
             "Didn’t get the email? Make sure to also check your spam/junk folder if you can't find the email in your inbox",
             "check your spam/junk folder",
-            R.attr.colorOnWarningContainer
+            R.color.colorOnWarningContainer
         )
 
         toolbar.setNavigationOnClickListener {
@@ -177,7 +177,7 @@ class RegisterEmailVerificationFragment : Fragment() {
 
     private fun startOtpResendCooldownTimer() = with(binding) {
         tvResendCode.isEnabled = false
-        tvResendCode.setTextColor(requireContext().getThemeColor(R.attr.colorOnSurfaceVariant))
+        tvResendCode.setTextColorRes(R.color.colorOnSurfaceVariant)
 
         tvResendCode.text.also { originalText ->
             otpResendCountdownTimer = object :
@@ -195,7 +195,7 @@ class RegisterEmailVerificationFragment : Fragment() {
                 override fun onFinish() {
                     tvResendCode.text = originalText
                     tvResendCode.isEnabled = true
-                    tvResendCode.setTextColor(requireContext().getThemeColor(R.attr.colorPrimary))
+                    tvResendCode.setTextColorRes(R.color.colorOnSurfaceVariant)
                 }
             }.start()
         }

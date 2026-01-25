@@ -5,7 +5,7 @@
     android:id="@+id/main"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="?attr/colorSurfaceDim"
+    android:background="@color/colorSurfaceDim"
     android:fitsSystemWindows="true"
     android:orientation="vertical"
     tools:context=".presentation.legal.PrivacyPolicyActivity">
@@ -16,7 +16,7 @@
         android:layout_height="?attr/actionBarSize"
         app:layout_constraintTop_toTopOf="parent"
         app:navigationIcon="@drawable/ic_arrow_ios_back"
-        app:navigationIconTint="?attr/colorOnSurface"
+        app:navigationIconTint="@color/colorOnSurface"
         app:title="Privacy Policy"
         app:titleTextAppearance="@style/TextAppearance.SettleX.TitleLarge" />
 
@@ -40,7 +40,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="10dp"
-                android:textColor="?attr/colorOnSurface"
+                android:textColor="@color/colorOnSurface"
                 tools:text="Content" />
         </LinearLayout>
     </ScrollView>

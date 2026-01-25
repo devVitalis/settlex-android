@@ -24,11 +24,11 @@
             android:layout_width="150dp"
             android:layout_height="14dp"
             android:layout_marginBottom="5dp"
-            android:background="?attr/colorShimmer" />
+            android:background="@color/colorShimmer" />
 
         <View
             android:layout_width="100dp"
             android:layout_height="14dp"
-            android:background="?attr/colorShimmer" />
+            android:background="@color/colorShimmer" />
     </LinearLayout>
 </LinearLayout>

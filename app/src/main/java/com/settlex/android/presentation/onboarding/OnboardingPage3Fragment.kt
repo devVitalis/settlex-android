@@ -37,7 +37,7 @@ class OnboardingPage3Fragment : Fragment() {
             requireContext(),
             "Never Miss\nYour Shows",
             "Shows",
-            R.attr.colorPrimary,
+            R.color.colorPrimary,
         )
     }
 

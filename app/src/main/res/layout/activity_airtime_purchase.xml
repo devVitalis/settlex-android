@@ -5,7 +5,7 @@
     android:id="@+id/main"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="?attr/colorSurface"
+    android:background="@color/colorSurface"
     android:fitsSystemWindows="true"
     tools:context=".presentation.dashboard.services.AirtimePurchaseActivity">
 
@@ -15,7 +15,7 @@
         android:layout_height="wrap_content"
         android:includeFontPadding="false"
         android:text="Feature not yet implemented"
-        android:textColor="?attr/colorOnSurface"
+        android:textColor="@color/colorOnSurface"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"

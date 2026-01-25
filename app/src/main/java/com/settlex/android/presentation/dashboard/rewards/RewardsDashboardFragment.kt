@@ -13,7 +13,7 @@ import androidx.lifecycle.repeatOnLifecycle
 import com.settlex.android.R
 import com.settlex.android.databinding.FragmentDashboardRewardsBinding
 import com.settlex.android.presentation.common.extensions.copyToClipboard
-import com.settlex.android.presentation.common.extensions.getThemeColor
+import com.settlex.android.presentation.common.extensions.getColorRes
 import com.settlex.android.presentation.common.extensions.gone
 import com.settlex.android.presentation.common.extensions.show
 import com.settlex.android.presentation.common.extensions.toNairaString
@@ -45,7 +45,7 @@ class RewardsDashboardFragment : Fragment() {
     }
 
     private fun initViews() {
-        StatusBar.setColor(requireActivity(), R.attr.colorRewardsBackground)
+        StatusBar.setColor(requireActivity(), R.color.colorRewardsBackground)
         applyReferralInfoStyle()
 
         with(binding) {
@@ -85,7 +85,7 @@ class RewardsDashboardFragment : Fragment() {
     }
 
     private fun showLoggedOutView() = with(binding) {
-        root.setBackgroundColor(requireContext().getThemeColor(R.attr.colorSurface))
+        root.setBackgroundColor(requireContext().getColorRes(R.color.colorSurface))
 
         viewAuthenticatedUiState.gone()
         viewUnauthenticatedUiState.show()

@@ -1,6 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-
     <!-- Shape appearance -->
     <style name="ShapeAppearance.SettleX.Rounded.8dp" parent="ShapeAppearance.Material3.Corner.None">
         <item name="cornerSize">8dp</item>
@@ -20,45 +19,45 @@
     <!-- Buttons -->
     <style name="Widget.SettleX.Button.Primary" parent="Widget.Material3.Button">
         <item name="backgroundTint">@color/btn_bg_primary_selector</item>
-        <item name="android:textColor">?attr/colorOnPrimary</item>
-        <item name="rippleColor">?attr/colorRippleOverlay</item>
+        <item name="android:textColor">@color/colorOnPrimary</item>
+        <item name="rippleColor">@color/colorRippleOverlay</item>
         <item name="android:includeFontPadding">false</item>
         <item name="android:textAllCaps">false</item>
     </style>
 
     <style name="Widget.SettleX.Button.Primary.Rounded8" parent="Widget.Material3.Button">
         <item name="backgroundTint">@color/btn_bg_primary_selector</item>
-        <item name="android:textColor">?attr/colorOnPrimary</item>
+        <item name="android:textColor">@color/colorOnPrimary</item>
         <item name="android:includeFontPadding">false</item>
-        <item name="rippleColor">?attr/colorRippleOverlay</item>
+        <item name="rippleColor">@color/colorRippleOverlay</item>
         <item name="android:textSize">14sp</item>
         <item name="android:textAllCaps">false</item>
         <item name="shapeAppearance">@style/ShapeAppearance.SettleX.Rounded.8dp</item>
     </style>
 
     <style name="Widget.SettleX.Button.Secondary" parent="Widget.Material3.Button.TonalButton">
-        <item name="backgroundTint">?attr/colorSecondary</item>
-        <item name="android:textColor">?attr/colorOnSecondary</item>
-        <item name="rippleColor">?attr/colorRippleOverlay</item>
+        <item name="backgroundTint">@color/colorSecondary</item>
+        <item name="android:textColor">@color/colorOnSecondary</item>
+        <item name="rippleColor">@color/colorRippleOverlay</item>
         <item name="android:includeFontPadding">false</item>
         <item name="android:textAllCaps">false</item>
     </style>
 
     <style name="Widget.SettleX.Button.Outlined" parent="Widget.Material3.Button.OutlinedButton">
-        <item name="android:textColor">?attr/colorPrimary</item>
-        <item name="strokeColor">?attr/colorPrimary</item>
+        <item name="android:textColor">@color/colorPrimary</item>
+        <item name="strokeColor">@color/colorPrimary</item>
         <item name="android:includeFontPadding">false</item>
-        <item name="rippleColor">?attr/colorRippleOverlay</item>
+        <item name="rippleColor">@color/colorRippleOverlay</item>
         <item name="android:textSize">14sp</item>
         <item name="android:textAllCaps">false</item>
     </style>
 
     <style name="Widget.SettleX.Action.Button.Rounded8" parent="Widget.Material3.Button">
-        <item name="backgroundTint">?attr/colorScrimOverlay</item>
+        <item name="backgroundTint">@color/colorScrimOverlay</item>
         <item name="android:includeFontPadding">false</item>
-        <item name="rippleColor">?attr/colorRippleOverlay</item>
+        <item name="rippleColor">@color/colorRippleOverlay</item>
         <item name="android:textSize">14sp</item>
-        <item name="android:textColor">?attr/colorOnScrimOverlay</item>
+        <item name="android:textColor">@color/colorOnScrimOverlay</item>
         <item name="android:textAllCaps">false</item>
         <item name="shapeAppearance">@style/ShapeAppearance.SettleX.Rounded.8dp</item>
     </style>
@@ -69,9 +68,9 @@
         <item name="android:layout_margin">3dp</item>
         <item name="android:layout_columnWeight">1</item>
         <item name="android:textSize">18sp</item>
-        <item name="android:textColor">?attr/colorOnSurface</item>
+        <item name="android:textColor">@color/colorOnSurface</item>
         <item name="backgroundTint">@null</item>
-        <item name="rippleColor">?attr/colorRippleOverlay</item>
+        <item name="rippleColor">@color/colorRippleOverlay</item>
         <item name="android:includeFontPadding">false</item>
         <item name="android:background">@drawable/bg_numeric_keypad</item>
     </style>
@@ -83,24 +82,24 @@
 
     <!-- TextInputLayout  -->
     <style name="Widget.SettleX.TextInputLayout.Outlined" parent="Widget.Material3.TextInputLayout.OutlinedBox">
-        <item name="boxBackgroundColor">?attr/colorSurface</item>
+        <item name="boxBackgroundColor">@color/colorSurface</item>
         <item name="boxStrokeColor">@color/til_outline_color_selector</item>
         <item name="strokeWidth">2dp</item>
         <item name="shapeAppearance">@style/ShapeAppearance.SettleX.Rounded.8dp</item>
         <item name="fontFamily">@font/inter_regular</item>
-        <item name="boxStrokeErrorColor">?attr/colorError</item>
-        <item name="endIconTint">?attr/colorOnSurfaceVariant</item>
-        <item name="android:textColor">?attr/colorOnSurface</item>
-        <item name="android:textColorHint">?attr/colorOnSurfaceVariant</item>
+        <item name="boxStrokeErrorColor">@color/colorError</item>
+        <item name="endIconTint">@color/colorOnSurfaceVariant</item>
+        <item name="android:textColor">@color/colorOnSurface</item>
+        <item name="android:textColorHint">@color/colorOnSurfaceVariant</item>
         <item name="hintTextColor">@color/til_hint_color_selector</item>
         <item name="android:includeFontPadding">false</item>
     </style>
 
     <!-- EditText  -->
     <style name="Widget.SettleX.TextInputEditText.Outlined" parent="ThemeOverlay.Material3.TextInputEditText.OutlinedBox">
-        <item name="android:textColor">?attr/colorOnSurface</item>
+        <item name="android:textColor">@color/colorOnSurface</item>
         <item name="android:includeFontPadding">false</item>
-        <item name="hintTextColor">?attr/colorOnSurfaceVariant</item>
+        <item name="hintTextColor">@color/colorOnSurfaceVariant</item>
         <item name="android:textSize">16sp</item>
         <item name="android:paddingHorizontal">15sp</item>
     </style>
@@ -165,7 +164,7 @@
         <item name="viewType">rectangle</item>
         <item name="itemRadius">8dp</item>
         <item name="android:cursorVisible">true</item>
-        <item name="cursorColor">?attr/colorOnSurface</item>
+        <item name="cursorColor">@color/colorOnSurface</item>
         <item name="lineColor">@color/pin_input_outline_selector</item>
         <item name="lineWidth">1.5dp</item>
         <item name="android:itemBackground">@drawable/pin_input_bg</item>
@@ -186,17 +185,17 @@
     </style>
 
     <style name="Widget.SettleX.BottomNavigation.ActiveIndicator" parent="Widget.Material3.BottomNavigationView.ActiveIndicator">
-        <item name="android:color">?attr/colorSecondary</item>
+        <item name="android:color">@color/colorSecondary</item>
     </style>
 
     <!-- Progress indicator -->
     <style name="Widget.SettleX.AppCompat.CircularProgressBar." parent="Widget.AppCompat.ProgressBar">
-        <item name="android:indeterminateTint">?attr/colorPrimary</item>
+        <item name="android:indeterminateTint">@color/colorPrimary</item>
     </style>
 
     <style name="Widget.SettleX.StepProgressIndicator" parent="Widget.Material3.CircularProgressIndicator">
-        <item name="indicatorColor">?attr/colorPrimary</item>
-        <item name="trackColor">?attr/colorSurfaceVariant</item>
+        <item name="indicatorColor">@color/colorPrimary</item>
+        <item name="trackColor">@color/colorSurfaceVariant</item>
         <item name="trackThickness">4dp</item>"
         <item name="android:max">4</item>
         <item name="indicatorSize">35dp</item>
@@ -208,13 +207,13 @@
         <item name="android:backgroundDimEnabled">false</item>
     </style>
 
-    <!-- Dialog -->
+    <!-- Dialog and Bottom Sheet -->
     <style name="Theme_SettleX_Dialog_BottomSheet" parent="ThemeOverlay.Material3.BottomSheetDialog">
-        <item name="android:backgroundTint">?attr/colorSurface</item>
+        <item name="android:backgroundTint">@color/colorSurface</item>
     </style>
 
     <style name="Theme_SettleX_Dialog_Alert" parent="MaterialAlertDialog.Material3">
-        <item name="android:backgroundTint">?attr/colorSurface</item>
+        <item name="android:backgroundTint">@color/colorSurface</item>
     </style>
 
     <style name="Theme_SettleX_Dialog_Alert_Rounded16dp" parent="MaterialAlertDialog.Material3">
@@ -231,5 +230,4 @@
         <item name="cardElevation">0dp</item>
         <item name="shapeAppearanceOverlay">@style/ShapeAppearance.SettleX.Rounded.16dp</item>
     </style>
-
 </resources>

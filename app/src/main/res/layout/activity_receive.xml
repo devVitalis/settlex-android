@@ -4,7 +4,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="?attr/colorSurface"
+    android:background="@color/colorSurface"
     android:fitsSystemWindows="true"
     tools:context=".presentation.wallet.ReceiveActivity">
 
@@ -14,14 +14,14 @@
         android:layout_height="?attr/actionBarSize"
         app:layout_constraintTop_toTopOf="parent"
         app:navigationIcon="@drawable/ic_arrow_ios_back"
-        app:navigationIconTint="?attr/colorOnSurface"
+        app:navigationIconTint="@color/colorOnSurface"
         app:title="@string/tv_receive"
         app:titleTextAppearance="@style/TextAppearance.SettleX.TitleLarge" />
 
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="0dp"
-        android:background="?attr/colorSurfaceDim"
+        android:background="@color/colorSurfaceDim"
         android:orientation="vertical"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
@@ -42,7 +42,7 @@
                 android:layout_height="wrap_content"
                 android:layout_gravity="center"
                 android:text="@string/tv_settlex_payment_id"
-                android:textColor="?attr/colorOnSurfaceVariant" />
+                android:textColor="@color/colorOnSurfaceVariant" />
 
             <TextView
                 android:id="@+id/tv_payment_id"
@@ -62,7 +62,7 @@
                 android:gravity="center"
                 android:text="@string/share_ytv_our_id_to_get_paid_instantly_from_other_settlex_users"
                 android:textAlignment="center"
-                android:textColor="?attr/colorOnSurface" />
+                android:textColor="@color/colorOnSurface" />
 
             <LinearLayout
                 android:layout_width="match_parent"

@@ -4,7 +4,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="?attr/colorSurface"
+    android:background="@color/colorSurface"
     android:fitsSystemWindows="true"
     tools:context=".presentation.dashboard.account.ProfileActivity">
 
@@ -14,7 +14,7 @@
         android:layout_height="?attr/actionBarSize"
         app:layout_constraintTop_toTopOf="parent"
         app:navigationIcon="@drawable/ic_arrow_ios_back"
-        app:navigationIconTint="?attr/colorOnSurface"
+        app:navigationIconTint="@color/colorOnSurface"
         app:title="@string/tv_my_profile"
         app:titleTextAppearance="@style/TextAppearance.SettleX.TitleLarge" />
 
@@ -22,7 +22,7 @@
     <ScrollView
         android:layout_width="match_parent"
         android:layout_height="0dp"
-        android:background="?attr/colorSurfaceDim"
+        android:background="@color/colorSurfaceDim"
         android:fillViewport="true"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintTop_toBottomOf="@id/toolbar">
@@ -62,7 +62,7 @@
                         android:background="@drawable/bg_scrim_oval"
                         android:src="@drawable/ic_camera"
                         app:contentPadding="5dp"
-                        app:tint="?attr/colorOnScrimOverlay" />
+                        app:tint="@color/colorOnScrimOverlay" />
                 </FrameLayout>
 
                 <TextView
@@ -72,7 +72,7 @@
                     android:layout_height="wrap_content"
                     android:layout_gravity="center"
                     android:layout_marginTop="10dp"
-                    android:textColor="?attr/colorError"
+                    android:textColor="@color/colorError"
                     android:visibility="gone"
                     tools:text="Upload failed" />
 
@@ -89,7 +89,7 @@
                         android:layout_height="wrap_content"
                         android:layout_weight="1"
                         android:text="@string/tv_payment_id"
-                        android:textColor="?attr/colorOnSurface"
+                        android:textColor="@color/colorOnSurface"
                         android:textSize="16sp" />
 
                     <TextView
@@ -97,7 +97,7 @@
                         style="@style/TextAppearance.SettleX.BodyMedium"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:textColor="?attr/colorOnSurfaceVariant"
+                        android:textColor="@color/colorOnSurfaceVariant"
                         android:textSize="16sp"
                         tools:text="\@vitalis" />
 
@@ -108,7 +108,7 @@
                         android:layout_marginStart="2dp"
                         android:background="?attr/selectableItemBackgroundBorderless"
                         android:src="@drawable/ic_copy"
-                        app:tint="?attr/colorOnSurfaceVariant" />
+                        app:tint="@color/colorOnSurfaceVariant" />
                 </LinearLayout>
             </LinearLayout>
 
@@ -132,7 +132,7 @@
                         android:layout_width="wrap_content"
                         android:layout_height="match_parent"
                         android:text="@string/tv_full_name"
-                        android:textColor="?attr/colorOnSurface" />
+                        android:textColor="@color/colorOnSurface" />
 
                     <TextView
                         android:id="@+id/tv_full_name"
@@ -144,7 +144,7 @@
                         android:ellipsize="end"
                         android:maxLines="1"
                         android:textAlignment="viewEnd"
-                        android:textColor="?attr/colorOnSurfaceVariant"
+                        android:textColor="@color/colorOnSurfaceVariant"
                         tools:text="BENJAMIN NNAEMEKA" />
                 </LinearLayout>
 
@@ -160,7 +160,7 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:text="@string/tv_phone_number"
-                        android:textColor="?attr/colorOnSurface" />
+                        android:textColor="@color/colorOnSurface" />
 
                     <TextView
                         android:id="@+id/tv_phone_number"
@@ -172,7 +172,7 @@
                         android:ellipsize="end"
                         android:maxLines="1"
                         android:textAlignment="viewEnd"
-                        android:textColor="?attr/colorOnSurfaceVariant"
+                        android:textColor="@color/colorOnSurfaceVariant"
                         tools:text="+2347055606507" />
                 </LinearLayout>
 
@@ -188,7 +188,7 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:text="@string/tv_email_address"
-                        android:textColor="?attr/colorOnSurface" />
+                        android:textColor="@color/colorOnSurface" />
 
                     <TextView
                         android:id="@+id/tv_email"
@@ -200,7 +200,7 @@
                         android:ellipsize="end"
                         android:maxLines="1"
                         android:textAlignment="viewEnd"
-                        android:textColor="?attr/colorOnSurfaceVariant"
+                        android:textColor="@color/colorOnSurfaceVariant"
                         tools:text="c**s@gmail.com" />
                 </LinearLayout>
 
@@ -216,7 +216,7 @@
                         android:layout_width="wrap_content"
                         android:layout_height="match_parent"
                         android:text="@string/tv_member_since"
-                        android:textColor="?attr/colorOnSurface" />
+                        android:textColor="@color/colorOnSurface" />
 
                     <TextView
                         android:id="@+id/tv_joined_date"
@@ -228,7 +228,7 @@
                         android:ellipsize="end"
                         android:maxLines="1"
                         android:textAlignment="viewEnd"
-                        android:textColor="?attr/colorOnSurfaceVariant"
+                        android:textColor="@color/colorOnSurfaceVariant"
                         tools:text="2 years ago" />
 
                     <com.google.android.material.imageview.ShapeableImageView
@@ -238,7 +238,7 @@
                         android:layout_marginStart="5dp"
                         android:background="?attr/selectableItemBackgroundBorderless"
                         android:src="@drawable/ic_info_outline"
-                        app:tint="?attr/colorOnSurfaceVariant" />
+                        app:tint="@color/colorOnSurfaceVariant" />
                 </LinearLayout>
             </LinearLayout>
         </LinearLayout>

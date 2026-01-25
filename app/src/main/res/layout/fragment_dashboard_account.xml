@@ -5,7 +5,7 @@
     android:id="@+id/main"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="?attr/colorSurfaceDim"
+    android:background="@color/colorSurfaceDim"
     android:fitsSystemWindows="true"
     tools:context=".presentation.dashboard.account.AccountDashboardFragment">
 
@@ -49,7 +49,7 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:text="Hello 👋"
-                    android:textColor="?attr/colorOnSurface" />
+                    android:textColor="@color/colorOnSurface" />
             </LinearLayout>
 
             <TextView
@@ -57,7 +57,7 @@
                 style="@style/TextAppearance.SettleX.BodyMedium"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:textColor="?attr/colorOnSurface"
+                android:textColor="@color/colorOnSurface"
                 android:textStyle="bold"
                 tools:text="Nnaemeka Benjamin" />
         </LinearLayout>
@@ -70,7 +70,7 @@
             app:layout_constraintBottom_toBottomOf="@id/view_greeting_container"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintTop_toTopOf="@id/view_greeting_container"
-            app:tint="?attr/colorOnSurface" />
+            app:tint="@color/colorOnSurface" />
     </androidx.constraintlayout.widget.ConstraintLayout>
 
     <!--  ScrollView -->
@@ -99,7 +99,7 @@
                 android:layout_height="wrap_content"
                 android:layout_marginTop="5dp"
                 android:text="Account Settings"
-                android:textColor="?attr/colorOnSurfaceVariant" />
+                android:textColor="@color/colorOnSurfaceVariant" />
 
             <LinearLayout
                 android:layout_width="match_parent"
@@ -124,7 +124,7 @@
                         android:layout_width="25dp"
                         android:layout_height="25dp"
                         android:src="@drawable/ic_receipt"
-                        app:tint="?attr/colorPrimary" />
+                        app:tint="@color/colorPrimary" />
 
                     <TextView
                         style="@style/TextAppearance.SettleX.BodyMedium"
@@ -133,13 +133,13 @@
                         android:layout_marginStart="15dp"
                         android:layout_weight="1"
                         android:text="Transaction History"
-                        android:textColor="?attr/colorOnSurface" />
+                        android:textColor="@color/colorOnSurface" />
 
                     <com.google.android.material.imageview.ShapeableImageView
                         android:layout_width="15dp"
                         android:layout_height="15dp"
                         android:src="@drawable/ic_arrow_forward"
-                        app:tint="?attr/colorOnSurfaceVariant" />
+                        app:tint="@color/colorOnSurfaceVariant" />
                 </LinearLayout>
 
                 <!-- Settings -->
@@ -157,7 +157,7 @@
                         android:layout_width="25dp"
                         android:layout_height="25dp"
                         android:src="@drawable/ic_settings"
-                        app:tint="?attr/colorPrimary" />
+                        app:tint="@color/colorPrimary" />
 
                     <TextView
                         style="@style/TextAppearance.SettleX.BodyMedium"
@@ -166,13 +166,13 @@
                         android:layout_marginStart="15dp"
                         android:layout_weight="1"
                         android:text="Settings"
-                        android:textColor="?attr/colorOnSurface" />
+                        android:textColor="@color/colorOnSurface" />
 
                     <com.google.android.material.imageview.ShapeableImageView
                         android:layout_width="15dp"
                         android:layout_height="15dp"
                         android:src="@drawable/ic_arrow_forward"
-                        app:tint="?attr/colorOnSurfaceVariant" />
+                        app:tint="@color/colorOnSurfaceVariant" />
                 </LinearLayout>
             </LinearLayout>
 
@@ -183,7 +183,7 @@
                 android:layout_height="wrap_content"
                 android:layout_marginTop="15dp"
                 android:text="About us"
-                android:textColor="?attr/colorOnSurfaceVariant" />
+                android:textColor="@color/colorOnSurfaceVariant" />
 
             <LinearLayout
                 android:id="@+id/btn_about"
@@ -200,7 +200,7 @@
                     android:layout_height="25dp"
                     android:layout_marginStart="5dp"
                     android:src="@drawable/ic_info_outline"
-                    app:tint="?attr/colorPrimary" />
+                    app:tint="@color/colorPrimary" />
 
                 <TextView
                     style="@style/TextAppearance.SettleX.BodyMedium"
@@ -209,13 +209,13 @@
                     android:layout_marginStart="15dp"
                     android:layout_weight="1"
                     android:text="About"
-                    android:textColor="?attr/colorOnSurface" />
+                    android:textColor="@color/colorOnSurface" />
 
                 <com.google.android.material.imageview.ShapeableImageView
                     android:layout_width="15dp"
                     android:layout_height="15dp"
                     android:src="@drawable/ic_arrow_forward"
-                    app:tint="?attr/colorOnSurfaceVariant" />
+                    app:tint="@color/colorOnSurfaceVariant" />
             </LinearLayout>
 
             <!-- Sign out -->
@@ -233,7 +233,7 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:src="@drawable/ic_log_out"
-                    app:tint="?attr/colorOnSurfaceVariant" />
+                    app:tint="@color/colorOnSurfaceVariant" />
 
                 <TextView
                     style="@style/TextAppearance.SettleX.BodyMedium"
@@ -241,7 +241,7 @@
                     android:layout_height="wrap_content"
                     android:layout_marginStart="15dp"
                     android:text="Sign Out"
-                    android:textColor="?attr/colorOnSurface" />
+                    android:textColor="@color/colorOnSurface" />
             </LinearLayout>
         </LinearLayout>
     </ScrollView>

@@ -7,9 +7,9 @@ import android.text.Spanned
 import android.text.style.ForegroundColorSpan
 import android.text.style.StyleSpan
 import android.text.style.UnderlineSpan
-import androidx.annotation.AttrRes
+import androidx.annotation.ColorRes
 import com.settlex.android.R
-import com.settlex.android.presentation.common.extensions.getThemeColor
+import com.settlex.android.presentation.common.extensions.getColorRes
 
 object SpannableTextFormatter {
 
@@ -24,7 +24,7 @@ object SpannableTextFormatter {
         context: Context,
         text: String,
         target: String,
-        @AttrRes colorRes: Int = R.attr.colorPrimary,
+        @ColorRes colorRes: Int = R.color.colorPrimary,
         setBold: Boolean = false,
         setUnderline: Boolean = false
     ): SpannableString {
@@ -32,10 +32,10 @@ object SpannableTextFormatter {
 
         val startIndex = text.indexOf(target)
         val endIndex = text.indexOf(target) + target.length
-        val colorTheme = context.getThemeColor(colorRes)
+        val targetColor = context.getColorRes(colorRes)
 
         spannable.setSpan(
-            ForegroundColorSpan(colorTheme),
+            ForegroundColorSpan(targetColor),
             startIndex,
             endIndex,
             Spanned.SPAN_EXCLUSIVE_EXCLUSIVE

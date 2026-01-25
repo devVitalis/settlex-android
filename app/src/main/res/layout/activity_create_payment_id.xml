@@ -5,7 +5,7 @@
     android:id="@+id/main"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="?attr/colorSurface"
+    android:background="@color/colorSurface"
     android:fitsSystemWindows="true"
     tools:context=".presentation.settings.CreatePaymentIdActivity">
 
@@ -15,7 +15,7 @@
         android:layout_height="?attr/actionBarSize"
         app:layout_constraintTop_toTopOf="parent"
         app:navigationIcon="@drawable/ic_arrow_back_layer_list"
-        app:navigationIconTint="?attr/colorOnSurface" />
+        app:navigationIconTint="@color/colorOnSurface" />
 
     <ScrollView
         android:layout_width="match_parent"
@@ -36,7 +36,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="@string/tv_create_your_payment_id"
-                android:textColor="?attr/colorOnSurface" />
+                android:textColor="@color/colorOnSurface" />
 
             <TextView
                 style="@style/TextAppearance.SettleX.BodyMedium"
@@ -44,7 +44,7 @@
                 android:layout_height="wrap_content"
                 android:layout_marginTop="10dp"
                 android:text="@string/tv_this_id_lets_others_send_you_money_securely_on_settlex_once_created_it_can_t_be_changed"
-                android:textColor="?attr/colorOnSurfaceVariant" />
+                android:textColor="@color/colorOnSurfaceVariant" />
 
             <com.google.android.material.textfield.TextInputLayout
                 style="@style/Widget.SettleX.TextInputLayout.Outlined"
@@ -75,7 +75,7 @@
                     style="@style/TextAppearance.SettleX.BodyMedium"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:textColor="?attr/colorSuccess"
+                    android:textColor="@color/colorSuccess"
                     android:visibility="gone"
                     tools:text="Available" />
 
@@ -86,7 +86,7 @@
                     android:layout_marginStart="5dp"
                     android:src="@drawable/ic_check_circle"
                     android:visibility="gone"
-                    app:tint="?attr/colorSuccess" />
+                    app:tint="@color/colorSuccess" />
 
                 <ProgressBar
                     android:id="@+id/pb_payment_id_check"
@@ -112,7 +112,7 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     app:srcCompat="@drawable/ic_check"
-                    app:tint="?attr/colorOnSurfaceVariant" />
+                    app:tint="@color/colorOnSurfaceVariant" />
 
                 <com.google.android.material.textview.MaterialTextView
                     android:id="@+id/tv_rule_start_with"
@@ -121,7 +121,7 @@
                     android:layout_height="wrap_content"
                     android:layout_marginStart="5dp"
                     android:text="@string/tv_starts_with_a_letter"
-                    android:textColor="?attr/colorOnSurfaceVariant" />
+                    android:textColor="@color/colorOnSurfaceVariant" />
             </LinearLayout>
 
             <!-- Rule length -->
@@ -140,7 +140,7 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     app:srcCompat="@drawable/ic_check"
-                    app:tint="?attr/colorOnSurfaceVariant" />
+                    app:tint="@color/colorOnSurfaceVariant" />
 
                 <com.google.android.material.textview.MaterialTextView
                     android:id="@+id/tv_rule_length"
@@ -149,7 +149,7 @@
                     android:layout_height="wrap_content"
                     android:layout_marginStart="5dp"
                     android:text="@string/tv_min_amp_max_5_20_characters"
-                    android:textColor="?attr/colorOnSurfaceVariant" />
+                    android:textColor="@color/colorOnSurfaceVariant" />
             </LinearLayout>
 
             <!-- Rule contains -->
@@ -168,7 +168,7 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     app:srcCompat="@drawable/ic_check"
-                    app:tint="?attr/colorOnSurfaceVariant" />
+                    app:tint="@color/colorOnSurfaceVariant" />
 
                 <com.google.android.material.textview.MaterialTextView
                     android:id="@+id/tv_rule_contains"
@@ -177,7 +177,7 @@
                     android:layout_height="wrap_content"
                     android:layout_marginStart="5dp"
                     android:text="@string/tv_only_lowercase_letters_numbers_and_no_space"
-                    android:textColor="?attr/colorOnSurfaceVariant" />
+                    android:textColor="@color/colorOnSurfaceVariant" />
             </LinearLayout>
 
             <com.google.android.material.button.MaterialButton
@@ -197,7 +197,7 @@
                 android:layout_marginTop="10dp"
                 android:gravity="center"
                 android:textAlignment="center"
-                android:textColor="?attr/colorError"
+                android:textColor="@color/colorError"
                 android:visibility="gone"
                 tools:text="Error message" />
         </LinearLayout>

@@ -4,7 +4,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="?attr/colorSurfaceDim"
+    android:background="@color/colorSurfaceDim"
     android:fitsSystemWindows="true"
     android:orientation="vertical"
     tools:context=".presentation.dashboard.home.HomeDashboardFragment">
@@ -44,7 +44,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="@string/tv_hello"
-                android:textColor="?attr/colorOnSurface" />
+                android:textColor="@color/colorOnSurface" />
 
             <FrameLayout
                 android:layout_width="wrap_content"
@@ -56,7 +56,7 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_gravity="center"
-                    android:textColor="?attr/colorOnSurface"
+                    android:textColor="@color/colorOnSurface"
                     android:textStyle="bold"
                     tools:text="Benjamin Nnaemeka" />
 
@@ -101,7 +101,7 @@
             app:layout_constraintBottom_toBottomOf="@+id/btn_notification"
             app:layout_constraintEnd_toStartOf="@+id/btn_notification"
             app:layout_constraintTop_toTopOf="@id/btn_notification"
-            app:tint="?attr/colorOnSurface" />
+            app:tint="@color/colorOnSurface" />
 
         <androidx.constraintlayout.widget.ConstraintLayout
             android:id="@+id/btn_notification"
@@ -122,7 +122,7 @@
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toTopOf="parent"
-                app:tint="?attr/colorOnSurface" />
+                app:tint="@color/colorOnSurface" />
 
             <com.google.android.material.textview.MaterialTextView
                 android:id="@+id/tv_unread_notification_badge"
@@ -133,7 +133,7 @@
                 android:gravity="center"
                 android:minWidth="12dp"
                 android:minHeight="12dp"
-                android:textColor="?attr/colorOnAlert"
+                android:textColor="@color/colorOnAlert"
                 android:textSize="9sp"
                 app:layout_constraintEnd_toEndOf="@id/iv_notification"
                 app:layout_constraintTop_toTopOf="@id/iv_notification"
@@ -172,7 +172,7 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:text="@string/tv_wallet"
-                    android:textColor="?attr/colorOnPrimary"
+                    android:textColor="@color/colorOnPrimary"
                     app:layout_constraintBottom_toBottomOf="parent"
                     app:layout_constraintStart_toStartOf="parent"
                     app:layout_constraintTop_toTopOf="parent" />
@@ -198,7 +198,7 @@
                             android:layout_width="15dp"
                             android:layout_height="15dp"
                             android:src="@drawable/ic_shield_protection"
-                            app:tint="?attr/colorOnPrimary" />
+                            app:tint="@color/colorOnPrimary" />
 
                         <TextView
                             android:id="@+id/balanceTitle"
@@ -207,7 +207,7 @@
                             android:layout_height="wrap_content"
                             android:layout_marginStart="2dp"
                             android:text="@string/tv_balance"
-                            android:textColor="?attr/colorOnPrimary" />
+                            android:textColor="@color/colorOnPrimary" />
 
                         <com.google.android.material.imageview.ShapeableImageView
                             android:id="@+id/iv_balance_toggle"
@@ -216,7 +216,7 @@
                             android:layout_marginStart="5dp"
                             android:background="?attr/selectableItemBackgroundBorderless"
                             android:src="@drawable/ic_visibility_on"
-                            app:tint="?attr/colorOnPrimary" />
+                            app:tint="@color/colorOnPrimary" />
                     </LinearLayout>
 
                     <FrameLayout
@@ -232,7 +232,7 @@
                             style="@style/TextAppearance.SettleX.HeadlineMedium"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
-                            android:textColor="?attr/colorOnPrimary"
+                            android:textColor="@color/colorOnPrimary"
                             tools:text="₦2,500.00" />
 
                         <com.facebook.shimmer.ShimmerFrameLayout
@@ -267,7 +267,7 @@
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:text="@string/tv_commission"
-                            android:textColor="?attr/colorOnPrimary" />
+                            android:textColor="@color/colorOnPrimary" />
 
                         <FrameLayout
                             android:layout_width="wrap_content"
@@ -288,7 +288,7 @@
                                     style="@style/TextAppearance.SettleX.HeadlineMedium"
                                     android:layout_width="wrap_content"
                                     android:layout_height="wrap_content"
-                                    android:textColor="?attr/colorOnPrimary"
+                                    android:textColor="@color/colorOnPrimary"
                                     tools:text="₦534.18" />
 
                                 <com.google.android.material.imageview.ShapeableImageView
@@ -296,7 +296,7 @@
                                     android:layout_height="15dp"
                                     android:layout_marginStart="2dp"
                                     android:src="@drawable/ic_arrow_forward"
-                                    app:tint="?attr/colorOnPrimary" />
+                                    app:tint="@color/colorOnPrimary" />
                             </LinearLayout>
 
                             <com.facebook.shimmer.ShimmerFrameLayout
@@ -395,7 +395,7 @@
                     android:layout_gravity="start"
                     android:layout_weight="1"
                     android:text="@string/tv_recent_transactions"
-                    android:textColor="?attr/colorOnSurfaceVariant" />
+                    android:textColor="@color/colorOnSurfaceVariant" />
 
                 <TextView
                     android:id="@+id/tv_view_all_transaction"
@@ -405,7 +405,7 @@
                     android:layout_marginEnd="4dp"
                     android:background="?attr/selectableItemBackground"
                     android:text="@string/tv_view_all"
-                    android:textColor="?attr/colorOnSurfaceVariant"
+                    android:textColor="@color/colorOnSurfaceVariant"
                     android:textStyle="bold" />
             </LinearLayout>
 
@@ -450,7 +450,7 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:text="@string/tv_no_transactions_yet"
-                        android:textColor="?attr/colorOnSurface"
+                        android:textColor="@color/colorOnSurface"
                         android:textStyle="bold" />
 
                     <TextView
@@ -459,7 +459,7 @@
                         android:layout_height="wrap_content"
                         android:layout_marginTop="5dp"
                         android:text="@string/tv_your_recent_transactions_will_appear_here"
-                        android:textColor="?attr/colorOnSurfaceVariant" />
+                        android:textColor="@color/colorOnSurfaceVariant" />
 
                     <com.google.android.material.imageview.ShapeableImageView
                         android:layout_width="50dp"
@@ -484,7 +484,7 @@
                         android:layout_height="wrap_content"
                         android:layout_weight="1"
                         android:text="@string/error_no_internet"
-                        android:textColor="?attr/colorOnSurface" />
+                        android:textColor="@color/colorOnSurface" />
 
                     <com.google.android.material.button.MaterialButton
                         android:id="@+id/btn_refresh_transactions"
@@ -524,12 +524,12 @@
                     android:layout_height="wrap_content"
                     android:layout_gravity="bottom|center_horizontal"
                     android:layout_marginBottom="10dp"
-                    app:dotsColor="?attr/colorSurfaceVariant"
+                    app:dotsColor="@color/colorSurfaceVariant"
                     app:dotsSize="6dp"
                     app:dotsSpacing="2dp"
                     app:dotsWidthFactor="2.5"
                     app:progressMode="false"
-                    app:selectedDotColor="?attr/colorPrimary" />
+                    app:selectedDotColor="@color/colorPrimary" />
             </FrameLayout>
         </LinearLayout>
     </ScrollView>

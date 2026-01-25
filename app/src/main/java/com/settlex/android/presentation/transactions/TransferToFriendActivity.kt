@@ -73,7 +73,7 @@ class TransferToFriendActivity : AppCompatActivity() {
     }
 
     private fun initViews() = with(binding) {
-        StatusBar.setColor(this@TransferToFriendActivity, R.attr.colorSurface)
+        StatusBar.setColor(this@TransferToFriendActivity, R.color.colorSurface)
 
         initRecipientRecyclerView()
         setupInputListeners()
@@ -192,7 +192,7 @@ class TransferToFriendActivity : AppCompatActivity() {
             }
 
             rvRecipient.gone()
-            return
+            return@with
         }
 
         tvError.gone()
@@ -356,7 +356,7 @@ class TransferToFriendActivity : AppCompatActivity() {
         if (paymentId == currentUser.paymentId) {
             tvError.text = ERROR_CANNOT_SEND_TO_SELF
             tvError.show()
-            return
+            return@with
         }
 
         viewModel.getRecipientByPaymentId(paymentId)

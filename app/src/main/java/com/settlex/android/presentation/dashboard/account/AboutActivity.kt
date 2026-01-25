@@ -8,7 +8,6 @@ import android.util.Log
 import androidx.appcompat.app.AppCompatActivity
 import com.settlex.android.R
 import com.settlex.android.databinding.ActivityAboutBinding
-import com.settlex.android.presentation.common.extensions.getThemeColor
 import com.settlex.android.presentation.legal.PrivacyPolicyActivity
 import com.settlex.android.presentation.legal.TermsAndConditionsActivity
 import com.settlex.android.util.ui.StatusBar
@@ -26,7 +25,7 @@ class AboutActivity : AppCompatActivity() {
     }
 
     private fun setupUiActions() = with(binding) {
-        StatusBar.setColor(this@AboutActivity, R.attr.colorSurface)
+        StatusBar.setColor(this@AboutActivity, R.color.colorSurface)
         tvAppVersion.text = getAppVersion()
 
         viewTermsAndCondition.setOnClickListener {

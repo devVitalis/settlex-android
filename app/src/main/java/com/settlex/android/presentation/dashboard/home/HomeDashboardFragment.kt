@@ -25,7 +25,6 @@ import com.settlex.android.data.remote.profile.ProfileService
 import com.settlex.android.data.session.UserSessionState
 import com.settlex.android.databinding.FragmentDashboardHomeBinding
 import com.settlex.android.presentation.auth.login.LoginActivity
-import com.settlex.android.presentation.common.extensions.getThemeColor
 import com.settlex.android.presentation.common.extensions.gone
 import com.settlex.android.presentation.common.extensions.setAsterisks
 import com.settlex.android.presentation.common.extensions.show
@@ -92,7 +91,7 @@ class HomeDashboardFragment : Fragment() {
     }
 
     private fun initViews() {
-        StatusBar.setColor(requireActivity(), R.attr.colorSurfaceDim)
+        StatusBar.setColor(requireActivity(), R.color.colorSurfaceDim)
         initListeners()
         initTransactionRecyclerView()
         setupDoubleBackPressToExit()
@@ -103,7 +102,7 @@ class HomeDashboardFragment : Fragment() {
         ivProfilePhoto.setOnClickListener { startActivity(ProfileActivity::class.java) }
         btnLogin.setOnClickListener { startActivity(LoginActivity::class.java) }
         btnTransfer.setOnClickListener { startActivity(TransferToFriendActivity::class.java) }
-        btnNotification.setOnClickListener { it.toastNotImplemented() }
+        btnNotification.setOnClickListener { requireContext().toastNotImplemented() }
         btnSupport.setOnClickListener { it.toastNotImplemented() }
         tvViewAllTransaction.setOnClickListener { it.toastNotImplemented() }
         btnDeposit.setOnClickListener { it.toastNotImplemented() }
@@ -121,7 +120,8 @@ class HomeDashboardFragment : Fragment() {
         rvTransactions.setLayoutManager(layoutManager)
 
         // Initialize adapter and set click listener
-        transactionsListAdapter = TransactionListAdapter(object : TransactionListAdapter.OnTransactionClickListener {
+        transactionsListAdapter =
+            TransactionListAdapter(object : TransactionListAdapter.OnTransactionClickListener {
                 override fun onClick(transaction: TransactionItemUiModel) {
                     val intent = Intent(context, TransactionActivity::class.java)
                     intent.putExtra("transaction", transaction)

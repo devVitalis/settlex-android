@@ -5,7 +5,7 @@
     android:id="@+id/main"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="?attr/colorSurface"
+    android:background="@color/colorSurface"
     android:fitsSystemWindows="true"
     tools:context=".presentation.settings.CreatePaymentPinActivity">
 
@@ -15,7 +15,7 @@
         android:layout_height="?attr/actionBarSize"
         app:layout_constraintTop_toTopOf="parent"
         app:navigationIcon="@drawable/ic_arrow_ios_back"
-        app:navigationIconTint="?attr/colorOnSurface" />
+        app:navigationIconTint="@color/colorOnSurface" />
 
     <!-- Content -->
     <LinearLayout
@@ -34,7 +34,7 @@
             android:background="@drawable/bg_sec_filled_pri_outlined_oval"
             android:src="@drawable/ic_lock_filled"
             app:contentPadding="10dp"
-            app:tint="?attr/colorOnSecondary" />
+            app:tint="@color/colorOnSecondary" />
 
         <TextView
             android:id="@+id/tv_title"
@@ -42,7 +42,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginTop="15dp"
-            android:textColor="?attr/colorOnSurface"
+            android:textColor="@color/colorOnSurface"
             tools:text="Set Payment PIN" />
 
         <TextView
@@ -53,7 +53,7 @@
             android:gravity="center"
             android:text="Create a 4-digit PIN to secure your transaction."
             android:textAlignment="center"
-            android:textColor="?attr/colorOnSurfaceVariant" />
+            android:textColor="@color/colorOnSurfaceVariant" />
 
         <LinearLayout
             android:id="@+id/view_current_pin_container"
@@ -69,7 +69,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="Enter Current Payment PIN"
-                android:textColor="?attr/colorOnSurfaceVariant" />
+                android:textColor="@color/colorOnSurfaceVariant" />
 
             <com.chaos.view.PinView
                 android:id="@+id/current_pin_view"
@@ -95,7 +95,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="Enter 4-digit PIN"
-                android:textColor="?attr/colorOnSurfaceVariant" />
+                android:textColor="@color/colorOnSurfaceVariant" />
 
             <com.chaos.view.PinView
                 android:id="@+id/new_pin_view"
@@ -112,7 +112,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="5dp"
-                android:textColor="?attr/colorError"
+                android:textColor="@color/colorError"
                 android:visibility="gone"
                 tools:text="Error occurred" />
         </LinearLayout>
@@ -132,7 +132,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="Re-enter 4-digits PIN to confirm"
-                android:textColor="?attr/colorOnSurfaceVariant" />
+                android:textColor="@color/colorOnSurfaceVariant" />
 
             <com.chaos.view.PinView
                 android:id="@+id/confirm_pin_view"
@@ -149,7 +149,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="5dp"
-                android:textColor="?attr/colorError"
+                android:textColor="@color/colorError"
                 android:visibility="gone"
                 tools:text="Error occurred" />
         </LinearLayout>

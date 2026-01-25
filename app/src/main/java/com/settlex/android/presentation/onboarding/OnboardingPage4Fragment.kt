@@ -37,7 +37,7 @@ class OnboardingPage4Fragment : Fragment() {
             requireContext(),
             "Secure By\nDesign",
             "Design",
-            R.attr.colorPrimary,
+            R.color.colorPrimary,
         )
     }
 

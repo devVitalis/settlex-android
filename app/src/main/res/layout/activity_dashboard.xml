@@ -21,7 +21,7 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_gravity="bottom"
-        android:background="?attr/colorSurface"
+        android:background="@color/colorSurface"
         app:itemActiveIndicatorStyle="@style/Widget.SettleX.BottomNavigation.ActiveIndicator"
         app:itemTextColor="@color/bottom_nav_item_text_color_selector"
         app:labelVisibilityMode="labeled"

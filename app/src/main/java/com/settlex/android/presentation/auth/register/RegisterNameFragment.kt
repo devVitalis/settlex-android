@@ -12,7 +12,6 @@ import androidx.navigation.fragment.NavHostFragment
 import com.settlex.android.R
 import com.settlex.android.databinding.FragmentRegisterNameBinding
 import com.settlex.android.presentation.common.extensions.capitalizeEachWord
-import com.settlex.android.presentation.common.extensions.getThemeColor
 import com.settlex.android.presentation.common.util.FocusManager
 import com.settlex.android.presentation.common.util.ValidationUtil
 import com.settlex.android.util.ui.StatusBar
@@ -24,7 +23,7 @@ class RegisterNameFragment : Fragment() {
     private val binding get() = _binding!!
     private val registerViewModel: RegisterViewModel by activityViewModels()
     private val focusManager by lazy { FocusManager(requireActivity()) }
-    
+
     override fun onCreateView(
         inflater: LayoutInflater,
         container: ViewGroup?,
@@ -43,7 +42,7 @@ class RegisterNameFragment : Fragment() {
     }
 
     private fun initViews() = with(binding) {
-        StatusBar.setColor(requireActivity(), requireContext().getThemeColor(R.attr.colorSurface))
+        StatusBar.setColor(requireActivity(), R.color.colorSurface)
         setupInputValidation()
         focusManager.attachDoneAction(etLastname)
     }
