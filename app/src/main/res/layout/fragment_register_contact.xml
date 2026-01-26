@@ -46,7 +46,7 @@
         android:layout_height="0dp"
         android:fillViewport="true"
         android:scrollbars="none"
-        app:layout_constraintBottom_toTopOf="@id/btn_container"
+        app:layout_constraintBottom_toTopOf="@id/footer"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@id/header">
@@ -55,13 +55,11 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:orientation="vertical"
-            android:paddingStart="15dp"
-            android:paddingEnd="15dp">
+            android:padding="@dimen/page_spacing">
 
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="25dp"
                 android:gravity="center_vertical"
                 android:orientation="horizontal">
 
@@ -104,17 +102,24 @@
                 android:text="@string/sub_title_enter_your_email_and_phone_number_we_ll_send_a_one_time_verification_code_otp_to_your_email_to_confirm_your_account"
                 android:textColor="@color/colorOnSurface" />
 
-            <com.google.android.material.textfield.TextInputEditText
-                android:id="@+id/et_email"
-                style="@style/Widget.SettleX.TextInputEditText.Outlined"
+            <com.google.android.material.textfield.TextInputLayout
+                style="@style/Widget.SettleX.TextInputLayout.Outlined"
                 android:layout_width="match_parent"
-                android:layout_height="55dp"
+                android:layout_height="wrap_content"
                 android:layout_marginTop="15dp"
-                android:background="@drawable/bg_input_field_outlined"
-                android:hint="@string/hint_enter_your_email_address"
-                android:imeOptions="actionNext"
-                android:inputType="textEmailAddress"
-                android:paddingHorizontal="15dp" />
+                app:endIconMode="clear_text"
+                app:hintEnabled="false">
+
+                <com.google.android.material.textfield.TextInputEditText
+                    android:id="@+id/et_email"
+                    style="@style/Widget.SettleX.TextInputEditText.Outlined"
+                    android:layout_width="match_parent"
+                    android:layout_height="55dp"
+                    android:background="@drawable/bg_input_field_outlined"
+                    android:hint="@string/hint_enter_your_email_address"
+                    android:imeOptions="actionNext"
+                    android:inputType="textEmailAddress" />
+            </com.google.android.material.textfield.TextInputLayout>
 
             <TextView
                 android:id="@+id/tv_error"
@@ -131,7 +136,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="55dp"
                 android:layout_marginTop="10dp"
-                android:background="@drawable/bg_input_field_outlined">
+                android:background="@drawable/bg_input_field_outline_selector">
 
                 <com.google.android.material.imageview.ShapeableImageView
                     android:id="@+id/iv_flag_icon"
@@ -159,7 +164,7 @@
                     android:layout_width="1dp"
                     android:layout_height="20dp"
                     android:layout_marginStart="8dp"
-                    app:dividerColor="@color/colorSurfaceVariant"
+                    app:dividerColor="@color/colorOnSurfaceVariant"
                     app:layout_constraintBottom_toBottomOf="parent"
                     app:layout_constraintStart_toEndOf="@id/tv_country_code"
                     app:layout_constraintTop_toTopOf="parent" />
@@ -169,7 +174,6 @@
                     style="@style/Widget.SettleX.TextInputEditText.Outlined"
                     android:layout_width="0dp"
                     android:layout_height="0dp"
-                    android:layout_marginStart="10dp"
                     android:background="@android:color/transparent"
                     android:hint="@string/hint_enter_your_phone_number"
                     android:imeOptions="actionDone"
@@ -184,7 +188,7 @@
     </ScrollView>
 
     <LinearLayout
-        android:id="@+id/btn_container"
+        android:id="@+id/footer"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:orientation="vertical"

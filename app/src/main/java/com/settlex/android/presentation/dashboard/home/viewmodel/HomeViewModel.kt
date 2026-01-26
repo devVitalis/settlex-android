@@ -2,22 +2,19 @@ package com.settlex.android.presentation.dashboard.home.viewmodel
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.settlex.android.R
-import com.settlex.android.data.enums.TransactionOperation
-import com.settlex.android.data.enums.TransactionStatus
+import com.settlex.android.data.enums.ServiceType
 import com.settlex.android.data.exception.AppException
 import com.settlex.android.data.exception.ExceptionMapper
 import com.settlex.android.data.mapper.toHomeUiModel
-import com.settlex.android.data.remote.dto.TransactionDto
+import com.settlex.android.data.mapper.toTransactionUiModel
 import com.settlex.android.data.repository.TransactionRepositoryImpl
 import com.settlex.android.data.session.UserSessionManager
 import com.settlex.android.data.session.UserSessionState
-import com.settlex.android.presentation.common.extensions.addAtPrefix
-import com.settlex.android.presentation.common.extensions.toDateTimeString
 import com.settlex.android.presentation.common.extensions.toNairaString
 import com.settlex.android.presentation.common.extensions.toNairaStringShort
 import com.settlex.android.presentation.common.state.UiState
 import com.settlex.android.presentation.dashboard.home.model.HomeUiModel
+import com.settlex.android.presentation.dashboard.services.model.ServiceUiModel
 import com.settlex.android.presentation.transactions.model.TransactionItemUiModel
 import com.settlex.android.util.network.NetworkMonitor
 import dagger.hilt.android.lifecycle.HiltViewModel
@@ -95,15 +92,15 @@ class HomeViewModel @Inject constructor(
         MutableStateFlow<UiState<List<TransactionItemUiModel>>>(UiState.Loading)
     val recentTransactions = _recentTransactions.asStateFlow()
 
-    fun fetchRecentTransactions(uid: String) {
+    fun fetchRecentTransactions() {
         viewModelScope.launch {
-            if (!isNetworkConnected()) {
-                _recentTransactions.value = UiState.Failure(
-                    AppException.NetworkException(ExceptionMapper.ERROR_NO_NETWORK)
-                )
+            if (!isNetworkAvailable()) {
+                _recentTransactions.value = sendNetworkErrorException()
                 return@launch
             }
-            transactionRepoImpl.getRecentTransactions(uid).collect { result ->
+
+            val (uid, transactionsFlow) = transactionRepoImpl.fetchRecentTransactions()
+            transactionsFlow.collect { result ->
                 result.fold(
                     onSuccess = { dtoList ->
                         if (dtoList.isEmpty()) {
@@ -111,7 +108,7 @@ class HomeViewModel @Inject constructor(
                             return@fold
                         }
 
-                        val mapped = dtoList.map { dto -> toUiModel(uid, dto) }
+                        val mapped = dtoList.map { it.toTransactionUiModel(uid) }
                         _recentTransactions.value = UiState.Success(mapped)
                     },
 
@@ -123,36 +120,30 @@ class HomeViewModel @Inject constructor(
         }
     }
 
-    private fun toUiModel(uid: String, dto: TransactionDto): TransactionItemUiModel {
+    val homeServiceList by lazy {
+        ServiceType.entries
+            .take(8)
+            .map { serviceType ->
+                ServiceUiModel(
+                    serviceType.displayName,
+                    serviceType.iconRes,
+                    serviceType.cashbackPercentage,
+                    serviceType.label,
+                    serviceType.transactionServiceType,
+                    serviceType.destination
+                )
+            }
+    }
 
-        val isSender = uid == dto.senderUid
-
-        val operation = when (dto.status) {
-            TransactionStatus.REVERSED -> if (isSender) TransactionOperation.CREDIT else TransactionOperation.DEBIT
-            else -> if (isSender) TransactionOperation.DEBIT else TransactionOperation.CREDIT
-        }
-
-        return TransactionItemUiModel(
-            transactionId = dto.transactionId,
-            description = dto.description,
-            senderId = dto.sender.addAtPrefix(),
-            senderName = dto.senderName.uppercase(),
-            recipientId = dto.recipient.addAtPrefix(),
-            recipientName = dto.recipientName.uppercase(),
-            recipientOrSenderName = if (isSender) dto.recipientName.uppercase() else dto.senderName.uppercase(),
-            serviceTypeName = if (isSender) dto.serviceType.displayName else "Payment Received",
-            serviceTypeIcon = if (isSender) dto.serviceType.iconRes else R.drawable.ic_service_payment_received,
-            operationSymbol = operation.symbol,
-            operationColor = operation.colorRes,
-            amount = dto.amount.toNairaString(),
-            timestamp = dto.createdAt,
-            status = dto.status.displayName,
-            statusColor = dto.status.colorRes,
-            statusBackgroundColor = dto.status.bgColorRes
+    private fun <T> sendNetworkErrorException(): UiState<T> {
+        return UiState.Failure(
+            AppException.NetworkException(
+                ExceptionMapper.ERROR_NO_NETWORK
+            )
         )
     }
 
-    private fun isNetworkConnected(): Boolean {
+    private fun isNetworkAvailable(): Boolean {
         return NetworkMonitor.networkStatus.value
     }
 

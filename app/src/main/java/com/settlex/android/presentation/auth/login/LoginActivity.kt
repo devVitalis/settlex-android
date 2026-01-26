@@ -78,11 +78,7 @@ class LoginActivity : AppCompatActivity() {
     }
 
     private fun initListeners() = with(binding) {
-        tvForgotPassword.setOnClickListener {
-            launchActivity(
-                ForgotPasswordActivity::class.java
-            )
-        }
+        tvForgotPassword.setOnClickListener { launchActivity(ForgotPasswordActivity::class.java) }
         toolbar.setNavigationOnClickListener { onBackPressedDispatcher.onBackPressed() }
         tvSwitchAccount.setOnClickListener { showLoggedOutView() }
         ivFingerprint.setOnClickListener { authenticateWithBiometrics() }

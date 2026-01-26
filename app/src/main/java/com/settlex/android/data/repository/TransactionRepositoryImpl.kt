@@ -14,8 +14,8 @@ class TransactionRepositoryImpl @Inject constructor(
     private val exception: ExceptionMapper
 ) : TransactionsRepository {
 
-    override suspend fun getRecentTransactions(uid: String): Flow<Result<List<TransactionDto>>> {
-        return remote.getRecentTransactions(uid)
+    override suspend fun fetchRecentTransactions(): Pair<String, Flow<Result<List<TransactionDto>>>> {
+        return remote.fetchRecentTransactions().first to remote.fetchRecentTransactions().second
             .catch { exception.map(it as Exception) }
     }
 

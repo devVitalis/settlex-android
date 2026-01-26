@@ -44,7 +44,7 @@ class ServicesAdapter(
 
         when {
             service.cashbackPercentage > 0 -> {
-                "up to ${service.cashbackPercentage} %".also { holder.tvServiceBadge.text = it }
+                "up to ${service.cashbackPercentage}%".also { holder.tvServiceBadge.text = it }
                 tvServiceBadge.show()
             }
 

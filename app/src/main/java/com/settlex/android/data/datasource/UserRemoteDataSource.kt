@@ -19,9 +19,14 @@ import com.settlex.android.domain.TransactionIdGenerator
 import com.settlex.android.util.image.ImageConverter
 import jakarta.inject.Inject
 import jakarta.inject.Singleton
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.Job
 import kotlinx.coroutines.channels.awaitClose
 import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.callbackFlow
+import kotlinx.coroutines.flow.shareIn
 import kotlinx.coroutines.tasks.await
 
 @Singleton
@@ -30,6 +35,7 @@ class UserRemoteDataSource @Inject constructor(
     private val auth: FirebaseAuth,
     private val cloudFunctions: FunctionsApiClient,
 ) {
+    private val scope = CoroutineScope(Dispatchers.Default + Job())
 
     fun getCurrentUser(): FirebaseUser? = auth.currentUser
 
@@ -42,7 +48,7 @@ class UserRemoteDataSource @Inject constructor(
     }
 
     suspend fun assignPaymentId(id: String) {
-        val uid: String = getCurrentUser()?.uid ?: return
+        val uid: String = getCurrentUser()!!.uid
 
         firestore.runTransaction { transaction ->
             val globalDocRef = firestore.collection("payment_ids").document(id)
@@ -69,19 +75,17 @@ class UserRemoteDataSource @Inject constructor(
         }.await()
     }
 
-    suspend fun setPaymentPin(pin: String): ApiResponse<String> {
-        return cloudFunctions.call(
-            name = "api-setUserPaymentPin",
-            data = mapOf("pin" to pin)
-        )
-    }
+    suspend fun setPaymentPin(pin: String): ApiResponse<String> = cloudFunctions.call(
+        name = "api-setUserPaymentPin",
+        data = mapOf("pin" to pin)
+    )
 
-    suspend fun authPaymentPin(pin: String): ApiResponse<Boolean> {
-        return cloudFunctions.call(
-            name = "api-authUserPaymentPin",
-            data = mapOf("pin" to pin)
-        )
-    }
+
+    suspend fun authPaymentPin(pin: String): ApiResponse<Boolean> = cloudFunctions.call(
+        name = "api-authUserPaymentPin",
+        data = mapOf("pin" to pin)
+    )
+
 
     suspend fun resetPaymentPin(oldPin: String, newPin: String): ApiResponse<String> {
         return cloudFunctions.call(
@@ -137,8 +141,8 @@ class UserRemoteDataSource @Inject constructor(
         )
     }
 
-    fun getRecentTransactions(uid: String): Flow<Result<List<TransactionDto>>> {
-        return callbackFlow {
+    private val _recentTransactionsFlow: Flow<Result<List<TransactionDto>>> by lazy {
+        callbackFlow {
             Log.d("UserRemoteDataSource", "Fetching recent transactions...")
 
             val ref = firestore.collection("users")
@@ -148,19 +152,16 @@ class UserRemoteDataSource @Inject constructor(
                 .limit(2)
 
             val listener = ref.addSnapshotListener { snapshot, error ->
-
                 if (error != null) {
                     trySend(Result.failure(error))
                     return@addSnapshotListener
                 }
 
-                // No snapshot or empty transactions
                 if (snapshot == null || snapshot.isEmpty) {
                     trySend(Result.success(emptyList()))
                     return@addSnapshotListener
                 }
 
-                // Convert snapshot DTOs
                 val transactions = snapshot.documents.mapNotNull { doc ->
                     doc.toObject(TransactionDto::class.java)
                 }
@@ -168,8 +169,16 @@ class UserRemoteDataSource @Inject constructor(
                 trySend(Result.success(transactions))
             }
 
-            // Stop listening when flow is cancelled
             awaitClose { listener.remove() }
-        }
+        }.shareIn(
+            scope = scope,
+            started = SharingStarted.WhileSubscribed(5000),
+            replay = 1
+        )
+    }
+
+    fun fetchRecentTransactions(): Pair<String, Flow<Result<List<TransactionDto>>>> {
+        val uid = getCurrentUser()!!.uid
+        return uid to _recentTransactionsFlow
     }
 }

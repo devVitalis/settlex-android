@@ -22,7 +22,7 @@
         android:layout_height="0dp"
         android:fillViewport="true"
         android:scrollbars="none"
-        app:layout_constraintBottom_toTopOf="@id/footer"
+        app:layout_constraintBottom_toTopOf="@id/btn_continue"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@id/toolbar">
@@ -31,13 +31,11 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:orientation="vertical"
-            android:paddingStart="15dp"
-            android:paddingEnd="15dp">
+            android:padding="@dimen/page_spacing">
 
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="25dp"
                 android:gravity="center_vertical"
                 android:orientation="horizontal">
 
@@ -124,25 +122,17 @@
     </ScrollView>
 
     <!-- Footer -->
-    <LinearLayout
-        android:id="@+id/footer"
-        android:layout_width="0dp"
-        android:layout_height="wrap_content"
-        android:gravity="center"
-        android:orientation="vertical"
-        android:paddingHorizontal="15dp"
-        android:paddingVertical="25dp"
+    <com.google.android.material.button.MaterialButton
+        android:id="@+id/btn_continue"
+        style="@style/Widget.SettleX.Button.Primary.Rounded8"
+        android:layout_width="match_parent"
+        android:layout_height="55dp"
+        android:layout_gravity="center"
+        android:layout_marginHorizontal="@dimen/page_spacing"
+        android:layout_marginBottom="25dp"
+        android:enabled="false"
+        android:text="@string/btn_continue"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent">
-
-        <com.google.android.material.button.MaterialButton
-            android:id="@+id/btn_continue"
-            style="@style/Widget.SettleX.Button.Primary.Rounded8"
-            android:layout_width="match_parent"
-            android:layout_height="55dp"
-            android:layout_gravity="center"
-            android:enabled="false"
-            android:text="@string/btn_continue" />
-    </LinearLayout>
+        app:layout_constraintStart_toStartOf="parent" />
 </androidx.constraintlayout.widget.ConstraintLayout>

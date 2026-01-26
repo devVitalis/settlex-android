@@ -6,14 +6,15 @@
     android:layout_height="wrap_content"
     android:foreground="?attr/selectableItemBackground"
     android:orientation="horizontal"
-    android:padding="15dp">
+    android:paddingHorizontal="15dp"
+    android:paddingVertical="10dp">
 
     <com.google.android.material.imageview.ShapeableImageView
         android:id="@+id/iv_txn_icon"
         android:layout_width="30dp"
         android:layout_height="30dp"
         android:layout_gravity="center"
-        android:background="@drawable/bg_service_oval"
+        android:background="@drawable/bg_transaction_icon"
         android:src="@drawable/ic_service_payment_sent"
         android:tint="@color/colorPrimary"
         app:contentPadding="5dp" />

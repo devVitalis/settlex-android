@@ -19,6 +19,7 @@ import android.widget.EditText
  * @param mappings A vararg of [Pair]s, where each pair maps an [EditText] to the [View] whose background should be changed.
  *                 The first element of the pair is the `EditText` to monitor, and the second is the `View` to update.
  */
+// TODO: Delete if unused
 class EditTextFocusBackgroundChanger(
     private val defaultBackgroundResource: Int,
     private val focusedBackgroundResource: Int,

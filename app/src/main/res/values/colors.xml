@@ -31,7 +31,7 @@
 
     <!-- Outline/divider -->
     <color name="colorOutline">@color/content_secondary</color>
-    <!--        <color name="colorOutlineVariant">@color/gray_50</color>-->
+    <color name="colorOutlineVariant">@color/content_secondary</color>
 
     <!-- Custom attributes for non-standard colors -->
     <color name="colorSuccess">@color/success_primary</color>
@@ -55,17 +55,19 @@
     <color name="colorScrimOverlayContainer">@color/scrim_overlay_black_10</color>
 
     <color name="colorRewardsBackground">@color/blue_lightest</color>
+    <color name="colorServiceBackground">@color/blue_lightest</color>
 
-    <!-- Literals -->
+    <!-- ================== Raw Colors =================== -->
     <!-- Blue palette -->
     <color name="blue_primary">#1A56DB</color>
     <color name="blue_primary_disabled">#9EC5FF</color>
     <color name="blue_light">#ADC7FF</color>
     <color name="blue_lightest">#E9F1FF</color>
+    <color name="blue_medium">#42A5F5</color>
     <color name="blue_dark">#001A47</color>
 
     <color name="blue_primary_night">#5A9FFF</color>
-    <color name="blue_primary_disabled_night">#0E4FA3</color>
+    <color name="blue_primary_disabled_night">#5A7FC2</color>
     <color name="blue_light_night">#D1E4FF</color>
     <color name="blue_lightest_night">#E9F1FF</color>
     <color name="blue_dark_night">#003180</color>

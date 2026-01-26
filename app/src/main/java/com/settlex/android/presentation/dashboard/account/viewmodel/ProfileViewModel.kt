@@ -9,7 +9,6 @@ import com.settlex.android.data.exception.ExceptionMapper
 import com.settlex.android.data.mapper.toProfileUiModel
 import com.settlex.android.data.session.UserSessionManager
 import com.settlex.android.data.session.UserSessionState
-import com.settlex.android.domain.usecase.user.SetPaymentPinUseCase
 import com.settlex.android.domain.usecase.user.SetProfilePictureUseCase
 import com.settlex.android.presentation.common.state.UiState
 import com.settlex.android.presentation.dashboard.account.model.ProfileUiModel
@@ -48,7 +47,10 @@ class ProfileViewModel @Inject constructor(
 
     fun setProfilePhoto(context: Context, uri: Uri) {
         viewModelScope.launch {
-            requireInternetConnection()
+            if (!isNetworkAvailable()) {
+                _setProfilePictureEvent.send(sendNetworkErrorException())
+                return@launch
+            }
 
             _setProfilePictureEvent.send(UiState.Loading)
             setProfilePhotoUseCase(context, uri).fold(
@@ -58,13 +60,15 @@ class ProfileViewModel @Inject constructor(
         }
     }
 
-    private fun requireInternetConnection() {
-        if (!NetworkMonitor.networkStatus.value) {
-            UiState.Failure(
-                AppException.NetworkException(
-                    message = ExceptionMapper.ERROR_NO_NETWORK
-                )
+    private fun <T> sendNetworkErrorException(): UiState<T> {
+        return UiState.Failure(
+            AppException.NetworkException(
+                ExceptionMapper.ERROR_NO_NETWORK
             )
-        }
+        )
+    }
+
+    private fun isNetworkAvailable(): Boolean {
+        return NetworkMonitor.networkStatus.value
     }
 }

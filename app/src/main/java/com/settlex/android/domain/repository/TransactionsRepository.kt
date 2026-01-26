@@ -5,8 +5,6 @@ import com.settlex.android.data.remote.dto.TransactionDto
 import kotlinx.coroutines.flow.Flow
 
 interface TransactionsRepository {
-
-    suspend fun getRecentTransactions(uid: String): Flow<Result<List<TransactionDto>>>
-
+    suspend fun fetchRecentTransactions(): Pair<String, Flow<Result<List<TransactionDto>>>>
     suspend fun transferToFriend(toRecipientPaymentId: String, transferAmount: Long, description: String?): Result<ApiResponse<String>>
 }

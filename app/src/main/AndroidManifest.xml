@@ -10,6 +10,7 @@
     <uses-feature
         android:name="android.hardware.camera"
         android:required="false" />
+
     <uses-permission
         android:name="android.permission.READ_EXTERNAL_STORAGE"
         android:maxSdkVersion="32" />
@@ -24,7 +25,9 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/Theme.SettleX">
-
+        <activity
+            android:name=".presentation.transactions.TransactionHistoryActivity"
+            android:exported="false" />
         <!-- uCrop Activity -->
         <activity android:name="com.yalantis.ucrop.UCropActivity" />
         <activity
@@ -50,7 +53,8 @@
             android:exported="false" />
         <activity
             android:name=".presentation.auth.login.LoginActivity"
-            android:exported="false" />
+            android:exported="false"
+            android:windowSoftInputMode="adjustPan" />
         <activity
             android:name=".presentation.dashboard.services.CableTvSubscriptionActivity"
             android:exported="false" />
@@ -103,7 +107,6 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-
         <activity
             android:name=".presentation.dashboard.DashboardActivity"
             android:exported="true"
@@ -120,9 +123,7 @@
                     android:host="settlex"
                     android:scheme="app" />
             </intent-filter>
-        </activity>
-
-        <!-- Firebase Messaging Service -->
+        </activity> <!-- Firebase Messaging Service -->
         <service
             android:name=".data.remote.messaging.AppFirebaseMessagingService"
             android:exported="false">
@@ -141,4 +142,5 @@
                 android:resource="@xml/file_paths" />
         </provider>
     </application>
+
 </manifest>

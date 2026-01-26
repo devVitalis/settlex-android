@@ -17,8 +17,14 @@ import com.settlex.android.presentation.dashboard.services.AirtimePurchaseActivi
 import com.settlex.android.presentation.dashboard.services.BettingTopUpActivity
 import com.settlex.android.presentation.dashboard.services.DataPurchaseActivity
 
-class PromotionalBannerAdapter(private val promoBanners: List<PromoBannerUiModel>) :
+class PromotionalBannerAdapter(private var promoBanners: List<PromoBannerUiModel> = emptyList()) :
     RecyclerView.Adapter<PromoViewHolder>() {
+
+    fun updatePromoBanners(newBanners: List<PromoBannerUiModel>) {
+        this.promoBanners = newBanners
+        notifyDataSetChanged()
+    }
+
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): PromoViewHolder {
         val binding = ItemPromotionalBannerBinding.inflate(
             LayoutInflater.from(parent.context),

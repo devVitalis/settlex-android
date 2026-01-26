@@ -35,8 +35,8 @@ import com.settlex.android.util.ui.StatusBar
 import kotlinx.coroutines.launch
 
 class RegisterPasswordFragment : Fragment() {
-
-    private var binding: FragmentRegisterPasswordBinding? = null
+    private var _binding: FragmentRegisterPasswordBinding? = null
+    private val binding get() = _binding!!
     private val authViewModel: AuthViewModel by activityViewModels()
     private val registerViewModel: RegisterViewModel by activityViewModels()
     private val focusManager by lazy { FocusManager(requireActivity()) }
@@ -47,12 +47,12 @@ class RegisterPasswordFragment : Fragment() {
         container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View {
-        binding = FragmentRegisterPasswordBinding.inflate(inflater, container, false)
+        _binding = FragmentRegisterPasswordBinding.inflate(inflater, container, false)
 
         initViews()
         setupListeners()
 
-        return binding!!.root
+        return binding.root
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
@@ -62,17 +62,17 @@ class RegisterPasswordFragment : Fragment() {
 
     override fun onDestroyView() {
         super.onDestroyView()
-        binding = null
+        _binding = null
     }
 
     private fun initViews() {
         StatusBar.setColor(requireActivity(), R.color.colorSurface)
         setupInputValidation()
         togglePasswordVisibilityIcons(false)
-        focusManager.attachDoneAction(binding!!.etInvitationCode)
+        focusManager.attachDoneAction(binding.etInvitationCode)
     }
 
-    private fun setupListeners() = with(binding!!) {
+    private fun setupListeners() = with(binding) {
         btnExpendInvitationCode.setOnClickListener { toggleReferralCodeVisibility() }
         btnCreateAccount.setOnClickListener { validateAndCreateAccount() }
 
@@ -106,55 +106,49 @@ class RegisterPasswordFragment : Fragment() {
         progressLoader.hide()
     }
 
-    private fun onRegistrationFailure(error: AppException) {
-        with(binding!!) {
-            when (error) {
-                is AppException.AuthException -> showLoginRedirectDialog(error.message)
-                else -> {
-                    tvError.text = error.message
-                    tvError.show()
-                }
+    private fun onRegistrationFailure(error: AppException) = with(binding) {
+        when (error) {
+            is AppException.AuthException -> showLoginRedirectDialog(error.message)
+            else -> {
+                tvError.text = error.message
+                tvError.show()
             }
-
-            progressLoader.hide()
         }
+
+        progressLoader.hide()
     }
 
-    private fun showLoginRedirectDialog(message: String) {
-        DialogHelper.showCustomAlertDialog(
-            requireContext()
-        ) { dialog, binding ->
-            with(binding) {
-                tvMessage.text = message
-                "Sign In".also { btnPrimary.text = it }
+    private fun showLoginRedirectDialog(message: String) = DialogHelper.showCustomAlertDialog(
+        requireContext()
+    ) { dialog, binding ->
+        with(binding) {
+            tvMessage.text = message
+            "Sign In".also { btnPrimary.text = it }
 
-                btnSecondary.gone()
-                btnPrimary.setOnClickListener {
-                    startActivity(
-                        Intent(
-                            requireContext(),
-                            LoginActivity::class.java
-                        )
+            btnSecondary.gone()
+            btnPrimary.setOnClickListener {
+                startActivity(
+                    Intent(
+                        requireContext(),
+                        LoginActivity::class.java
                     )
-                    requireActivity().finishAffinity()
-                    dialog.dismiss()
-                }
+                )
+                requireActivity().finishAffinity()
+                dialog.dismiss()
             }
         }
     }
 
-    private fun validateAndCreateAccount() {
-        with(binding!!) {
-            val password: String = etPassword.text.toString().trim()
-            val invitationCode: String = etInvitationCode.text.toString().trim()
+    private fun validateAndCreateAccount() = with(binding) {
+        val password: String = etPassword.text.toString().trim()
+        val invitationCode: String = etInvitationCode.text.toString().trim()
 
-            registerViewModel.updateReferralCode(invitationCode)
-            val user = registerViewModel.buildUserModel(uid = "")
-            authViewModel.register(user, password)
-        }
+        registerViewModel.updateReferralCode(invitationCode)
+        val user = registerViewModel.buildUserModel(uid = "")
+        authViewModel.register(user, password)
     }
 
-    private fun updateCreateAccountButtonState() = with(binding!!) {
+    private fun updateCreateAccountButtonState() = with(binding) {
         val password = etPassword.text.toString().trim()
         val confirmPassword = etConfirmPassword.text.toString().trim()
 
@@ -163,7 +157,7 @@ class RegisterPasswordFragment : Fragment() {
     }
 
     private fun setCreateAccountBtnEnabled(isPasswordValid: Boolean) {
-        binding!!.btnCreateAccount.isEnabled = isPasswordValid
+        binding.btnCreateAccount.isEnabled = isPasswordValid
     }
 
     companion object {
@@ -172,8 +166,8 @@ class RegisterPasswordFragment : Fragment() {
         private const val ERROR_PASSWORD_MISMATCH = ValidationUtil.ERROR_PASSWORD_MISMATCH
     }
 
-    private fun validatePasswordRequirements(password: String, confirm: String): Boolean {
-        with(binding!!) {
+    private fun validatePasswordRequirements(password: String, confirm: String): Boolean =
+        with(binding) {
             val hasLength = password.length >= LENGTH
             val hasUpper = password.any { it.isUpperCase() }
             val hasLower = password.any { it.isLowerCase() }
@@ -192,7 +186,6 @@ class RegisterPasswordFragment : Fragment() {
             showPasswordRequirements(hasLength, hasUpper, hasLower, hasSpecial, password)
             return hasLength && hasUpper && hasLower && hasSpecial && matches
         }
-    }
 
     private fun showPasswordRequirements(
         hasLength: Boolean,
@@ -211,7 +204,7 @@ class RegisterPasswordFragment : Fragment() {
             "Contains special character (e.g. !@#$%^&*()_+-=[]{};:,.?)"
         )
 
-        with(binding!!) {
+        with(binding) {
             val showPasswordPrompt =
                 password.isEmpty() || (hasLength && hasUpper && hasLower && hasSpecial)
             tvPasswordPrompt.visibility = if (!showPasswordPrompt) View.VISIBLE else View.GONE
@@ -219,13 +212,13 @@ class RegisterPasswordFragment : Fragment() {
         }
     }
 
-    private fun appendRequirement(builder: SpannableStringBuilder, isMet: Boolean, text: String?) {
+    private fun appendRequirement(builder: SpannableStringBuilder, isMet: Boolean, text: String) {
         val icon = ContextCompat.getDrawable(
             requireContext(),
             if (isMet) R.drawable.ic_checkbox_checked else R.drawable.ic_checkbox_unchecked
         )!!
 
-        val size = (binding!!.tvPasswordPrompt.textSize * 1.2f).toInt()
+        val size = (binding.tvPasswordPrompt.textSize * 1.2f).toInt()
         icon.setBounds(0, 0, size, size)
         builder.append(" ")
         builder.setSpan(
@@ -246,20 +239,18 @@ class RegisterPasswordFragment : Fragment() {
                 togglePasswordVisibilityIcons(s.isNotEmpty())
             }
         }
-        with(binding!!) {
+        with(binding) {
             etPassword.addTextChangedListener(passwordWatcher)
             etConfirmPassword.addTextChangedListener(passwordWatcher)
         }
     }
 
-    private fun togglePasswordVisibilityIcons(show: Boolean) {
-        with(binding!!) {
-            tilPassword.isEndIconVisible = show
-            tilConfirmPassword.isEndIconVisible = show
-        }
+    private fun togglePasswordVisibilityIcons(show: Boolean) = with(binding) {
+        tilPassword.isEndIconVisible = show
+        tilConfirmPassword.isEndIconVisible = show
     }
 
-    private fun toggleReferralCodeVisibility() = with(binding!!) {
+    private fun toggleReferralCodeVisibility() = with(binding) {
         val iconExpendLess = R.drawable.ic_expend_less
         val iconExpendMore = R.drawable.ic_expend_more
         val isVisible = etInvitationCode.isVisible

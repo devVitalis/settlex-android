@@ -55,7 +55,7 @@
 
     <!-- OTP VERIFICATION ACTIVITY -->
     <string name="title_otp_verification">OTP Verification</string>
-    <string name="subtitle_enter_code">Enter code</string>
+    <string name="subtitle_enter_code">Enter OTP Code</string>
     <string name="btn_confirm">Confirm</string>
     <string name="btn_resend">Resend</string>
 

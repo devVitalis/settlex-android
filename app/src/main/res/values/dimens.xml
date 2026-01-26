@@ -2,4 +2,8 @@
 <resources>
     <dimen name="page_indicator_width">87dp</dimen>
     <dimen name="page_indicator_height">5dp</dimen>
+    <dimen name="page_spacing">15dp</dimen>
+    <dimen name="corner_radius_large">16dp</dimen>
+    <dimen name="corner_radius_medium">12dp</dimen>
+    <dimen name="corner_radius_small">8dp</dimen>
 </resources>

@@ -215,7 +215,7 @@
                             android:layout_height="18dp"
                             android:layout_marginStart="5dp"
                             android:background="?attr/selectableItemBackgroundBorderless"
-                            android:src="@drawable/ic_visibility_on"
+                            android:src="@drawable/balance_state_icon_selector"
                             app:tint="@color/colorOnPrimary" />
                     </LinearLayout>
 
@@ -373,10 +373,9 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="15dp"
-                android:background="@drawable/bg_surface_rounded16"
-                android:clipToPadding="false"
+                android:background="@drawable/bg_surface_rd_medium"
                 android:nestedScrollingEnabled="false"
-                android:padding="8dp" />
+                android:paddingVertical="10dp" />
 
             <!-- Transaction label -->
             <LinearLayout
@@ -409,12 +408,12 @@
                     android:textStyle="bold" />
             </LinearLayout>
 
-            <!-- View recent transactions -->
+            <!-- Recent transactions -->
             <FrameLayout
                 android:id="@+id/view_transaction_container"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:background="@drawable/bg_surface_rounded16"
+                android:background="@drawable/bg_surface_rd_medium"
                 android:paddingVertical="5dp">
 
                 <androidx.recyclerview.widget.RecyclerView
@@ -432,18 +431,25 @@
                     android:layout_height="wrap_content"
                     android:visibility="gone">
 
-                    <include layout="@layout/item_transaction_shimmer" />
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:orientation="vertical">
 
-                    <include layout="@layout/item_transaction_shimmer" />
+                        <include layout="@layout/item_transaction_shimmer" />
+
+                        <include layout="@layout/item_transaction_shimmer" />
+                    </LinearLayout>
                 </com.facebook.shimmer.ShimmerFrameLayout>
 
+                <!-- Empty state -->
                 <LinearLayout
                     android:id="@+id/view_no_transactions_ui"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:gravity="center"
                     android:orientation="vertical"
-                    android:paddingVertical="5dp">
+                    android:paddingVertical="10dp">
 
                     <TextView
                         style="@style/TextAppearance.SettleX.BodyMedium"
@@ -468,7 +474,7 @@
                         android:src="@drawable/ic_no_transactions" />
                 </LinearLayout>
 
-                <!-- No internet connection -->
+                <!-- Error no internet state -->
                 <LinearLayout
                     android:id="@+id/view_no_internet"
                     android:layout_width="match_parent"
@@ -503,11 +509,11 @@
                 android:layout_width="match_parent"
                 android:layout_height="120dp"
                 android:layout_marginTop="15dp"
-                android:background="@drawable/bg_surface_rounded16"
+                android:background="@drawable/bg_surface_rd_medium"
                 android:visibility="visible">
 
                 <androidx.viewpager2.widget.ViewPager2
-                    android:id="@+id/banner_view_pager"
+                    android:id="@+id/vp_promotiona_banner"
                     android:layout_width="match_parent"
                     android:layout_height="match_parent" />
 

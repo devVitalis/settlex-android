@@ -32,12 +32,11 @@
             android:layout_height="wrap_content"
             android:gravity="center_horizontal"
             android:orientation="vertical"
-            android:paddingHorizontal="15dp">
+            android:padding="@dimen/page_spacing">
 
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="25dp"
                 android:gravity="center_vertical"
                 android:orientation="horizontal">
 
@@ -92,11 +91,11 @@
                 style="@style/TextAppearance.SettleX.BodyMedium"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_gravity="start"
+                android:textAlignment="center"
                 android:layout_marginTop="15dp"
-                android:textColor="@color/colorOnSurface"
+                android:textColor="@color/colorOnSurfaceVariant"
                 android:textSize="16sp"
-                tools:text="We sent a verification code to your email example@gmail.com. This code will expire after 10 minutes" />
+                tools:text="We sent a verification code to example@gmail.com. This code will expire after 10 minutes" />
 
             <TextView
                 style="@style/TextAppearance.SettleX.BodyMedium"
@@ -156,9 +155,18 @@
                     android:textColor="@color/colorPrimary" />
             </LinearLayout>
 
+            <com.google.android.material.button.MaterialButton
+                android:id="@+id/btn_continue"
+                style="@style/Widget.SettleX.Button.Primary.Rounded8"
+                android:layout_width="match_parent"
+                android:layout_height="55dp"
+                android:layout_marginTop="20dp"
+                android:enabled="false"
+                android:text="@string/btn_continue" />
+
             <TextView
                 android:id="@+id/tv_spam_info"
-                style="@style/TextAppearance.SettleX.BodyMedium"
+                style="@style/TextAppearance.SettleX.BodySmall"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="15dp"
@@ -167,22 +175,9 @@
                 android:drawablePadding="5dp"
                 android:drawableTint="@color/colorWarning"
                 android:gravity="center_vertical"
-                android:padding="15dp"
+                android:padding="8dp"
                 android:text="Spam info"
-                android:textColor="@color/colorOnWarning" />
+                android:textColor="@color/colorOnSurface" />
         </LinearLayout>
     </ScrollView>
-
-    <com.google.android.material.button.MaterialButton
-        android:id="@+id/btn_continue"
-        style="@style/Widget.SettleX.Button.Primary.Rounded8"
-        android:layout_width="match_parent"
-        android:layout_height="55dp"
-        android:layout_marginHorizontal="15dp"
-        android:layout_marginBottom="25dp"
-        android:enabled="false"
-        android:text="@string/btn_continue"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent" />
 </androidx.constraintlayout.widget.ConstraintLayout>

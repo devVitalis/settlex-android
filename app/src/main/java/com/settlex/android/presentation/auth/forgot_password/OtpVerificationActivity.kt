@@ -18,9 +18,12 @@ import com.settlex.android.presentation.auth.AuthViewModel
 import com.settlex.android.presentation.auth.util.PasswordFlow
 import com.settlex.android.presentation.auth.util.PasswordFlowParser
 import com.settlex.android.presentation.common.extensions.gone
+import com.settlex.android.presentation.common.extensions.maskEmail
+import com.settlex.android.presentation.common.extensions.setTextColorRes
 import com.settlex.android.presentation.common.extensions.show
 import com.settlex.android.presentation.common.state.UiState
 import com.settlex.android.presentation.common.util.FocusManager
+import com.settlex.android.presentation.common.util.SpannableTextFormatter
 import com.settlex.android.util.ui.ProgressDialogManager
 import com.settlex.android.util.ui.StatusBar
 import dagger.hilt.android.AndroidEntryPoint
@@ -59,11 +62,27 @@ class OtpVerificationActivity : AppCompatActivity() {
         setupListeners()
         setupInputWatcher()
         startOtpResendCooldownTimer()
+
+        userEmail.maskEmail().also { maskedEmail ->
+            binding.tvInfo.text = SpannableTextFormatter(
+                this,
+                "We sent a verification code to your email $maskedEmail}",
+                maskedEmail,
+                R.color.colorPrimary
+            )
+        }
+
+        binding.tvWarning.text = SpannableTextFormatter(
+            this,
+            "This code expires in 10mins. Never share this code with anyone.",
+            "Never share this code with anyone.",
+            R.color.colorOnWarningContainer
+        )
     }
 
     private fun setupListeners() = with(binding) {
         toolbar.setNavigationOnClickListener { finish() }
-        btnResendOtp.setOnClickListener { resendVerificationCode() }
+        tvResendOtp.setOnClickListener { resendVerificationCode() }
         btnConfirm.setOnClickListener { onConfirmButtonClicked() }
     }
 
@@ -165,20 +184,24 @@ class OtpVerificationActivity : AppCompatActivity() {
     }
 
     private fun startOtpResendCooldownTimer() = with(binding) {
-        btnResendOtp.isEnabled = false
-        btnResendOtp.tag = binding.btnResendOtp.text
+        tvResendOtp.apply {
+            isEnabled = false
+            setTextColorRes(R.color.colorOnSurfaceVariant)
+            tag = tvResendOtp.text
+        }
 
         object : CountDownTimer(60000, 1000) {
             override fun onTick(millisUntilFinished: Long) {
                 val seconds = (millisUntilFinished / 1000).toInt()
-                val countDown = "Resend in $seconds seconds"
-
-                if (seconds > 0) btnResendOtp.text = countDown
+                if (seconds > 0) "Resend in $seconds sec(s)".also { tvResendOtp.text = it }
             }
 
             override fun onFinish() {
-                btnResendOtp.text = btnResendOtp.tag as CharSequence
-                btnResendOtp.isEnabled = true
+                tvResendOtp.apply {
+                    isEnabled = true
+                    setTextColorRes(R.color.colorPrimary)
+                    text = tvResendOtp.tag as CharSequence
+                }
             }
         }.start()
     }

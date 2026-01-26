@@ -1,6 +1,8 @@
 package com.settlex.android.presentation.auth.register
 
 import android.os.Bundle
+import android.os.Handler
+import android.os.Looper
 import android.text.Editable
 import android.text.TextWatcher
 import android.view.LayoutInflater
@@ -14,6 +16,7 @@ import com.settlex.android.databinding.FragmentRegisterNameBinding
 import com.settlex.android.presentation.common.extensions.capitalizeEachWord
 import com.settlex.android.presentation.common.util.FocusManager
 import com.settlex.android.presentation.common.util.ValidationUtil
+import com.settlex.android.util.ui.ProgressDialogManager
 import com.settlex.android.util.ui.StatusBar
 import dagger.hilt.android.AndroidEntryPoint
 
@@ -23,6 +26,7 @@ class RegisterNameFragment : Fragment() {
     private val binding get() = _binding!!
     private val registerViewModel: RegisterViewModel by activityViewModels()
     private val focusManager by lazy { FocusManager(requireActivity()) }
+    private val progressLoader by lazy { ProgressDialogManager(requireActivity()) }
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -53,7 +57,15 @@ class RegisterNameFragment : Fragment() {
                 this@RegisterNameFragment
             ).popBackStack()
         }
-        btnContinue.setOnClickListener { updateNameAndContinue() }
+
+        btnContinue.setOnClickListener {
+            progressLoader.show()
+
+            Handler(Looper.getMainLooper()).postDelayed({
+                updateNameAndContinue()
+                progressLoader.hide()
+            }, 1200)
+        }
     }
 
     private fun setupInputValidation() = with(binding) {

@@ -1,10 +1,13 @@
 package com.settlex.android.presentation.common.extensions
 
+import android.app.Activity
 import android.content.ClipData
 import android.content.ClipboardManager
 import android.content.Context
 import android.content.Intent
 import android.graphics.Color
+import android.graphics.RenderEffect
+import android.graphics.Shader
 import android.graphics.drawable.Drawable
 import android.os.Build
 import android.view.View
@@ -92,7 +95,8 @@ fun String.maskPhoneNumber(): String {
         val prefix = phoneNumber.take(visiblePrefixLength)
         val suffix = phoneNumber.substring(phoneNumber.length - visibleSuffixLength)
 
-        return "$prefix****$suffix"
+        val mask = "*".repeat(phoneNumber.length - visiblePrefixLength - visibleSuffixLength)
+        return "$prefix$mask$suffix"
     }
 }
 
@@ -302,4 +306,22 @@ fun Context.getColorRes(@ColorRes colorResId: Int): Int {
 
 fun Context.toastNotImplemented() {
     Toast.makeText(this, "Feature not yet implemented", Toast.LENGTH_SHORT).show()
+}
+
+fun View.applyBlurEffect() {
+    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.S) {
+        this.setRenderEffect(RenderEffect.createBlurEffect(5f, 5f, Shader.TileMode.CLAMP))
+    }
+}
+
+fun Context.applyBlurEffect() {
+    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.S) {
+        (this as Activity).window.decorView.setRenderEffect(
+            RenderEffect.createBlurEffect(
+                5f,
+                5f,
+                Shader.TileMode.CLAMP
+            )
+        )
+    }
 }

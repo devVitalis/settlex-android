@@ -17,7 +17,7 @@ object SpannableTextFormatter {
      * Returns a SpannableString where all occurrences of [target] in [text] are colored [colorRes].
      * @param text The full text to format.
      * @param target The substring to color.
-     * @param colorRes Hex color string, default color is "#0044CC".
+     * @param colorRes Hex color string, default color is [R.color.colorPrimary]".
      */
     @JvmName("format")
     operator fun invoke(

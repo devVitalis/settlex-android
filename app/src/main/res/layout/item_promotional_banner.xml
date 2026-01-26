@@ -6,5 +6,5 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:scaleType="centerCrop"
-    app:shapeAppearanceOverlay="@style/ShapeAppearance.SettleX.Rounded.16dp"
+    app:shapeAppearanceOverlay="@style/ShapeAppearance.SettleX.Rounded.12dp"
     tools:srcCompat="@drawable/img_promo_banner_sample" />

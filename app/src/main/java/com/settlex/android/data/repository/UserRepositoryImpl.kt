@@ -9,10 +9,13 @@ import com.settlex.android.data.remote.dto.ApiResponse
 import com.settlex.android.data.remote.dto.RecipientDto
 import com.settlex.android.domain.repository.UserRepository
 import jakarta.inject.Inject
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.launch
 
 class UserRepositoryImpl @Inject constructor(
     private val remote: UserRemoteDataSource,
-    private val exception: ExceptionMapper
+    private val exception: ExceptionMapper,
 ) : UserRepository {
 
     override fun getCurrentUser(): FirebaseUser? {
@@ -85,7 +88,13 @@ class UserRepositoryImpl @Inject constructor(
     ): Result<ApiResponse<String>> {
         return runCatching { remote.setProfilePhoto(context, imageUri) }
             .fold(
-                onSuccess = { Result.success(it) },
+                onSuccess = {
+                    // Reload user data
+                    CoroutineScope(Dispatchers.IO).launch {
+                        runCatching { remote.refreshUser() }
+                    }
+                    Result.success(it)
+                },
                 onFailure = { Result.failure(exception.map(it as Exception)) }
             )
     }

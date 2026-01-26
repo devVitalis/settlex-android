@@ -1,10 +1,6 @@
 package com.settlex.android.presentation.common.util
 
-import android.app.Activity
 import android.content.Context
-import android.graphics.RenderEffect
-import android.graphics.Shader
-import android.os.Build
 import android.view.LayoutInflater
 import androidx.appcompat.app.AlertDialog
 import com.google.android.material.bottomsheet.BottomSheetDialog
@@ -14,6 +10,7 @@ import com.settlex.android.databinding.AlertDialogMessageBinding
 import com.settlex.android.databinding.AlertDialogWithIconBinding
 import com.settlex.android.databinding.BottomSheetImageSourceBinding
 import com.settlex.android.databinding.BottomSheetSuccessDialogBinding
+import com.settlex.android.presentation.common.extensions.applyBlurEffect
 
 /**
  * Utility class for common UI operations
@@ -75,10 +72,7 @@ object DialogHelper {
         }
 
         // Blur background on Android 12+
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.S) {
-            val rootView = (context as Activity).window.decorView
-            rootView.setRenderEffect(RenderEffect.createBlurEffect(5f, 5f, Shader.TileMode.CLAMP))
-        }
+        context.applyBlurEffect()
 
         binding.anim.playAnimation()
         config(dialog, binding)

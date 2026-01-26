@@ -31,7 +31,7 @@
 
     <!-- Outline/divider -->
     <color name="colorOutline">@color/content_secondary_night</color>
-    <!--   <color name="colorOutlineVariant">@color/gray_50</color>-->
+    <color name="colorOutlineVariant">@color/pure_white</color>
 
     <!-- Custom attributes for non-standard colors -->
     <color name="colorSuccess">@color/success_primary_night</color>
@@ -54,4 +54,5 @@
     <color name="colorScrimOverlayContainer">@color/scrim_overlay_black_50</color>
 
     <color name="colorRewardsBackground">@color/surface_tertiary_night</color>
+    <color name="colorServiceBackground">@color/surface_tertiary_night</color>
 </resources>

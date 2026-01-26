@@ -26,11 +26,11 @@ import com.settlex.android.data.exception.AppException
 import com.settlex.android.databinding.FragmentRegisterContactBinding
 import com.settlex.android.presentation.auth.AuthViewModel
 import com.settlex.android.presentation.auth.login.LoginActivity
+import com.settlex.android.presentation.common.extensions.getColorRes
 import com.settlex.android.presentation.common.extensions.gone
 import com.settlex.android.presentation.common.extensions.show
 import com.settlex.android.presentation.common.extensions.toNigerianPhoneNumber
 import com.settlex.android.presentation.common.state.UiState
-import com.settlex.android.presentation.common.util.EditTextFocusBackgroundChanger
 import com.settlex.android.presentation.common.util.FocusManager
 import com.settlex.android.presentation.common.util.ValidationUtil
 import com.settlex.android.presentation.legal.PrivacyPolicyActivity
@@ -142,13 +142,7 @@ class RegisterContactFragment : Fragment() {
     }
 
     private fun setupFocusHandlers() = with(binding) {
-        val focusBgRes = R.drawable.bg_edit_txt_custom_white_focused
-        val defaultBgRes = R.drawable.bg_input_field_outlined
-        EditTextFocusBackgroundChanger(
-            defaultBackgroundResource = defaultBgRes,
-            focusedBackgroundResource = focusBgRes,
-            etPhone to etPhoneBackground,
-        )
+        etPhone.setOnFocusChangeListener { _, hasFocus -> etPhoneBackground.isActivated = hasFocus }
     }
 
     private fun setupInputValidation() = with(binding) {
@@ -198,10 +192,9 @@ class RegisterContactFragment : Fragment() {
     }
 
     private fun setupLegalLinks() = with(binding) {
-
         val span =
             SpannableStringBuilder("I have read, understood and agreed to the Terms & Conditions and Privacy Policy.")
-        val colorPrimary = R.color.colorPrimary
+        val colorPrimary = requireContext().getColorRes(R.color.colorPrimary)
 
         val termsSpan: ClickableSpan = object : ClickableSpan() {
             override fun onClick(widget: View) {

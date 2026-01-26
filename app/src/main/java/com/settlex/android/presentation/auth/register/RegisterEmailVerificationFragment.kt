@@ -78,7 +78,7 @@ class RegisterEmailVerificationFragment : Fragment() {
         email.also { email ->
             tvUserEmail.text = SpannableTextFormatter(
                 requireContext(),
-                text = "We sent a verification code to your email $email. This code will expire after 10 minutes",
+                text = "We sent a verification code $email. This code will expire after 10 minutes",
                 target = email,
                 colorRes = R.color.colorOnSurface,
                 setBold = true,
@@ -195,7 +195,7 @@ class RegisterEmailVerificationFragment : Fragment() {
                 override fun onFinish() {
                     tvResendCode.text = originalText
                     tvResendCode.isEnabled = true
-                    tvResendCode.setTextColorRes(R.color.colorOnSurfaceVariant)
+                    tvResendCode.setTextColorRes(R.color.colorPrimary)
                 }
             }.start()
         }
