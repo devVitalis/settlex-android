@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="utf-8"?>
+<navigation xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/services_nav_graph"
+    app:startDestination="@id/services_fragment">
+
+    <fragment
+        android:id="@+id/services_fragment"
+        android:name="com.settlex.android.presentation.dashboard.services.ServicesDashboardFragment"
+        android:label="Services"
+        tools:layout="@layout/fragment_dashboard_services" />
+</navigation>

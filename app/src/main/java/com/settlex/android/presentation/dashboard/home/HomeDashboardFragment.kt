@@ -38,6 +38,7 @@ import com.settlex.android.presentation.dashboard.services.adapter.ServicesAdapt
 import com.settlex.android.presentation.dashboard.services.model.ServiceUiModel
 import com.settlex.android.presentation.settings.CreatePaymentIdActivity
 import com.settlex.android.presentation.transactions.TransactionActivity
+import com.settlex.android.presentation.transactions.TransactionHistoryActivity
 import com.settlex.android.presentation.transactions.TransferToFriendActivity
 import com.settlex.android.presentation.transactions.adapter.TransactionListAdapter
 import com.settlex.android.presentation.transactions.model.TransactionItemUiModel
@@ -70,18 +71,15 @@ class HomeDashboardFragment : Fragment() {
         savedInstanceState: Bundle?
     ): View {
         _binding = FragmentDashboardHomeBinding.inflate(inflater, container, false)
-        initViews()
+
         return binding.root
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        // OPTIMIZATION: Only setup observers once, not on every tab switch
-        if (savedInstanceState == null) {
-            initObservers()
-            initAppServices()
-        }
-        Log.d("HomeDashboardFragment", "onViewCreated savedInstanceState is null? ${savedInstanceState == null}")
+
+        initViews()
+        initObservers()
     }
 
     override fun onResume() {
@@ -91,6 +89,7 @@ class HomeDashboardFragment : Fragment() {
 
     override fun onDestroyView() {
         super.onDestroyView()
+        Log.d("HomeDashboardFragment", "Fragment is destroyed")
         bannerScrollJob?.cancel()
         binding.rvTransactions.adapter = null
         binding.rvServices.adapter = null
@@ -98,7 +97,6 @@ class HomeDashboardFragment : Fragment() {
     }
 
     private fun initObservers() {
-        // OPTIMIZATION: Only start observers once when fragment is first created
         observeUserSessionWithBalance()
         observeUserBalanceHiddenState()
         observeUserRecentTransactions()
@@ -107,6 +105,7 @@ class HomeDashboardFragment : Fragment() {
 
     private fun initViews() {
         initListeners()
+        initAppServices()
         initTransactionList()
         initPromoBannersList()
         setupDoubleBackPressToExit()
@@ -119,21 +118,20 @@ class HomeDashboardFragment : Fragment() {
         btnTransfer.setOnClickListener { startActivity(TransferToFriendActivity::class.java) }
         btnNotification.setOnClickListener { requireContext().toastNotImplemented() }
         btnSupport.setOnClickListener { requireContext().toastNotImplemented() }
-        tvViewAllTransaction.setOnClickListener { requireContext().toastNotImplemented() }
+        tvViewAllTransaction.setOnClickListener { startActivity(TransactionHistoryActivity::class.java) }
         btnDeposit.setOnClickListener { requireContext().toastNotImplemented() }
         ivBalanceToggle.setOnClickListener { viewModel.toggleBalanceVisibility() }
         btnRefreshTransactions.setOnClickListener { viewModel.fetchRecentTransactions() }
         viewUserCommissionBalance.setOnClickListener { startActivity(CommissionWithdrawalActivity::class.java) }
     }
 
-    // OPTIMIZATION: Combine user session and balance into one observer
     private fun observeUserSessionWithBalance() {
         viewLifecycleOwner.lifecycleScope.launch {
             viewLifecycleOwner.repeatOnLifecycle(Lifecycle.State.STARTED) {
                 viewModel.userSessionState.collect { state ->
                     when (state) {
                         is UserSessionState.Authenticated -> {
-                            if (!hasFetchRecentTransactions) {
+                            if (hasFetchRecentTransactions.not()) {
                                 viewModel.fetchRecentTransactions()
                                 hasFetchRecentTransactions = true
                             }
@@ -148,7 +146,7 @@ class HomeDashboardFragment : Fragment() {
             }
         }
 
-        // OPTIMIZATION: Collect balance in same scope to batch UI updates
+        // Collect balance in same scope to batch UI updates
         viewLifecycleOwner.lifecycleScope.launch {
             viewLifecycleOwner.repeatOnLifecycle(Lifecycle.State.STARTED) {
                 viewModel.userBalance.collect { balance ->
@@ -162,7 +160,11 @@ class HomeDashboardFragment : Fragment() {
 
     private fun showUserLoadingState() = with(binding) {
         listOf(tvUserFullName, tvUserBalance, viewUserCommissionBalance).forEach { it.gone() }
-        listOf(shimmerUserFullName, shimmerUserBalance, shimmerUserCommissionBalance).forEach { it.show() }
+        listOf(
+            shimmerUserFullName,
+            shimmerUserBalance,
+            shimmerUserCommissionBalance
+        ).forEach { it.show() }
     }
 
     private fun onUserDataReceived(user: HomeUiModel) = with(binding) {
@@ -171,7 +173,11 @@ class HomeDashboardFragment : Fragment() {
             return@with
         }
 
-        listOf(shimmerUserFullName, shimmerUserBalance, shimmerUserCommissionBalance).forEach { it.gone() }
+        listOf(
+            shimmerUserFullName,
+            shimmerUserBalance,
+            shimmerUserCommissionBalance
+        ).forEach { it.gone() }
         listOf(tvUserFullName, tvUserBalance, viewUserCommissionBalance).forEach { it.show() }
 
         ProfileService.loadProfilePhoto(user.photoUrl, ivProfilePhoto)
@@ -248,18 +254,19 @@ class HomeDashboardFragment : Fragment() {
         shimmerTransactions.show()
     }
 
-    private fun setTransactionsData(transactions: List<TransactionItemUiModel>?) = with(binding) {
-        listOf(shimmerTransactions, viewNoInternet).forEach { it.gone() }
+    private fun setTransactionsData(transactions: List<TransactionItemUiModel>?) =
+        with(binding) {
+            listOf(shimmerTransactions, viewNoInternet).forEach { it.gone() }
 
-        if (transactions?.isEmpty() == true) {
-            transactionsListAdapter.submitList(emptyList())
-            viewNoTransactionsUi.show()
-        } else {
-            transactionsListAdapter.submitList(transactions)
-            viewNoTransactionsUi.gone()
-            rvTransactions.show()
+            if (transactions?.isEmpty() == true) {
+                transactionsListAdapter.submitList(emptyList())
+                viewNoTransactionsUi.show()
+            } else {
+                transactionsListAdapter.submitList(transactions)
+                viewNoTransactionsUi.gone()
+                rvTransactions.show()
+            }
         }
-    }
 
     private fun onTransactionsError(error: AppException) = with(binding) {
         listOf(shimmerTransactions, viewNoTransactionsUi, rvTransactions).forEach { it.gone() }
@@ -316,11 +323,7 @@ class HomeDashboardFragment : Fragment() {
     private fun initAppServices() {
         binding.rvServices.apply {
             layoutManager = GridLayoutManager(context, 4)
-            adapter = ServicesAdapter(
-                isHomeDashboard = true,
-                viewModel.homeServiceList,
-                ::onServiceClicked
-            )
+            adapter = ServicesAdapter(true, viewModel.homeServiceList, ::onServiceClicked)
             setHasFixedSize(true)
         }
     }
