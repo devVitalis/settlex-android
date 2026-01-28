@@ -61,7 +61,7 @@ enum class ServiceType(
         displayName = "More",
         iconRes = R.drawable.ic_service_more,
         transactionServiceType = TransactionServiceType.MORE,
-        destination = ServiceDestination(null, R.id.services_fragment)
+        destination = ServiceDestination(null, R.id.menu_services_fragment)
     ),
     VOUCHER(
         displayName = "Voucher",

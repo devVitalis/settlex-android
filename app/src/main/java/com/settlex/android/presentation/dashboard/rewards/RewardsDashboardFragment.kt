@@ -2,6 +2,7 @@ package com.settlex.android.presentation.dashboard.rewards
 
 import android.os.Bundle
 import android.text.Html
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -33,9 +34,12 @@ class RewardsDashboardFragment : Fragment() {
         savedInstanceState: Bundle?
     ): View {
         _binding = FragmentDashboardRewardsBinding.inflate(inflater, container, false)
+        Log.d("HomeDashboardFragment", " RewardsDashboardFragment onViewCreated - Fragment is alive")
 
         initViews()
         observeUserSession()
+
+        Log.d("HomeDashboardFragment", "onCreateView - binding=${binding != null}")
         return binding.root
     }
 

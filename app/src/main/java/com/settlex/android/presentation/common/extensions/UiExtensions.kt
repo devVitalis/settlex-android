@@ -37,6 +37,10 @@ fun View.gone() {
     visibility = View.GONE
 }
 
+fun View.invisible() {
+    visibility = View.INVISIBLE
+}
+
 fun View.toastNotImplemented() {
     Toast.makeText(context, "Feature not yet implemented", Toast.LENGTH_SHORT).show()
 }

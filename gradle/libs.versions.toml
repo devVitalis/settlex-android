@@ -8,6 +8,7 @@ datastorePreferences = "1.1.7"
 dotsindicator = "5.1.0"
 firebaseBom = "34.3.0"
 firebaseConfig = "23.0.1"
+fragmentviewbindingdelegate = "1.0.0"
 glide = "4.16.0"
 gson = "2.13.2"
 hiltAndroid = "2.58"
@@ -27,6 +28,7 @@ activity = "1.11.0"
 constraintlayout = "2.2.1"
 firebaseFunctions = "22.0.1"
 navigationFragmentKtx = "2.9.5"
+navigationFragmentKtxVersion = "2.7.7"
 navigationUiKtx = "2.9.5"
 pinview = "1.4.4"
 shimmer = "0.5.0"
@@ -41,6 +43,7 @@ core-ktx = { module = "androidx.core:core-ktx", version.ref = "coreKtx" }
 currencyedittext = { module = "com.cottacush:CurrencyEditText", version.ref = "currencyedittext" }
 datastore-preferences = { module = "androidx.datastore:datastore-preferences", version.ref = "datastorePreferences" }
 firebase-config = { module = "com.google.firebase:firebase-config", version.ref = "firebaseConfig" }
+fragmentviewbindingdelegate = { module = "com.ncapdevi:FragmentViewBindingDelegate", version.ref = "fragmentviewbindingdelegate" }
 glide = { module = "com.github.bumptech.glide:glide", version.ref = "glide" }
 core-splashscreen = { module = "androidx.core:core-splashscreen", version.ref = "coreSplashscreen" }
 dotsindicator = { module = "com.tbuonomo:dotsindicator", version.ref = "dotsindicator" }
@@ -66,6 +69,7 @@ activity = { group = "androidx.activity", name = "activity", version.ref = "acti
 constraintlayout = { group = "androidx.constraintlayout", name = "constraintlayout", version.ref = "constraintlayout" }
 firebase-functions = { group = "com.google.firebase", name = "firebase-functions", version.ref = "firebaseFunctions" }
 navigation-fragment-ktx = { module = "androidx.navigation:navigation-fragment-ktx", version.ref = "navigationFragmentKtx" }
+navigation-fragment-ktx-v277 = { module = "androidx.navigation:navigation-fragment-ktx", version.ref = "navigationFragmentKtxVersion" }
 navigation-ui-ktx = { module = "androidx.navigation:navigation-ui-ktx", version.ref = "navigationUiKtx" }
 pinview = { module = "io.github.chaosleung:pinview", version.ref = "pinview" }
 shimmer = { module = "com.facebook.shimmer:shimmer", version.ref = "shimmer" }

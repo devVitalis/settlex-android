@@ -129,6 +129,8 @@ dependencies {
 
     // Intent compact
     implementation(libs.core.ktx)
+
+    implementation(libs.navigation.fragment.ktx.v277)
 }
 
 tasks.withType<JavaCompile>().configureEach {

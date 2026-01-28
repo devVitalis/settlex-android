@@ -3,10 +3,10 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/home_nav_graph"
-    app:startDestination="@id/home_fragment">
+    app:startDestination="@id/menu_home_fragment">
 
     <fragment
-        android:id="@id/home_fragment"
+        android:id="@+id/menu_home_fragment"
         android:name="com.settlex.android.presentation.dashboard.home.HomeDashboardFragment"
         android:label="Home"
         tools:layout="@layout/fragment_dashboard_home" />

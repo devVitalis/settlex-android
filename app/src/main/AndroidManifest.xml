@@ -25,11 +25,16 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/Theme.SettleX">
+
+        <meta-data
+            android:name="androidx.navigation.fragment.keep_state"
+            android:value="true" />
+
+        <!-- uCrop Activity -->
+        <activity android:name="com.yalantis.ucrop.UCropActivity" />
         <activity
             android:name=".presentation.transactions.TransactionHistoryActivity"
             android:exported="false" />
-        <!-- uCrop Activity -->
-        <activity android:name="com.yalantis.ucrop.UCropActivity" />
         <activity
             android:name=".presentation.dashboard.account.AboutActivity"
             android:exported="false" />
@@ -123,7 +128,9 @@
                     android:host="settlex"
                     android:scheme="app" />
             </intent-filter>
-        </activity> <!-- Firebase Messaging Service -->
+        </activity>
+
+        <!-- Firebase Messaging Service -->
         <service
             android:name=".data.remote.messaging.AppFirebaseMessagingService"
             android:exported="false">

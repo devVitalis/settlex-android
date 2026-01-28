@@ -3,10 +3,10 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/rewards_nav_graph"
-    app:startDestination="@id/rewards_fragment">
+    app:startDestination="@id/menu_rewards_fragment">
 
     <fragment
-        android:id="@+id/rewards_fragment"
+        android:id="@+id/menu_rewards_fragment"
         android:name="com.settlex.android.presentation.dashboard.rewards.RewardsDashboardFragment"
         android:label="Rewards"
         tools:layout="@layout/fragment_dashboard_rewards" />

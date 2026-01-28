@@ -3,6 +3,7 @@ package com.settlex.android.presentation.dashboard.account
 import android.app.Activity
 import android.content.Intent
 import android.os.Bundle
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -25,7 +26,7 @@ import kotlinx.coroutines.launch
 @AndroidEntryPoint
 class AccountDashboardFragment : Fragment() {
     private var _binding: FragmentDashboardAccountBinding? = null
-    private val binding = _binding!!
+    private val binding get() = _binding!!
     private val profileViewModel: ProfileViewModel by activityViewModels()
 
     override fun onCreateView(
@@ -34,9 +35,12 @@ class AccountDashboardFragment : Fragment() {
         savedInstanceState: Bundle?
     ): View {
         _binding = FragmentDashboardAccountBinding.inflate(inflater, container, false)
+        Log.d("HomeDashboardFragment", " AccountDashboardFragment onViewCreated - Fragment is alive")
 
         initViews()
         observeUserState()
+
+        Log.d("HomeDashboardFragment", "onCreateView - binding=${binding != null}")
         return binding.root
     }
 

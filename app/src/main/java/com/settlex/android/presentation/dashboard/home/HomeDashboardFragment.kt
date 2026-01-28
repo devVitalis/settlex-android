@@ -28,6 +28,7 @@ import com.settlex.android.presentation.common.extensions.setAsterisks
 import com.settlex.android.presentation.common.extensions.show
 import com.settlex.android.presentation.common.extensions.toastNotImplemented
 import com.settlex.android.presentation.common.state.UiState
+import com.settlex.android.presentation.dashboard.DashboardActivity
 import com.settlex.android.presentation.dashboard.account.ProfileActivity
 import com.settlex.android.presentation.dashboard.home.adapter.PromotionalBannerAdapter
 import com.settlex.android.presentation.dashboard.home.model.HomeUiModel
@@ -334,7 +335,9 @@ class HomeDashboardFragment : Fragment() {
             else -> {
                 when {
                     destination.isActivity -> startActivity(destination.activity)
-                    destination.isFragment -> navController.navigate(destination.navDestinationId!!)
+                    destination.isFragment -> (activity as DashboardActivity).binding.bottomNavigationView.selectedItemId =
+                        destination.navDestinationId!!
+
                 }
             }
         }

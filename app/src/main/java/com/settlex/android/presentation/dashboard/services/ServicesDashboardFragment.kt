@@ -2,6 +2,7 @@ package com.settlex.android.presentation.dashboard.services
 
 import android.content.Intent
 import android.os.Bundle
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -29,8 +30,10 @@ class ServicesDashboardFragment : Fragment() {
         savedInstanceState: Bundle?
     ): View {
         _binding = FragmentDashboardServicesBinding.inflate(inflater, container, false)
-
+        Log.d("HomeDashboardFragment", " ServicesDashboardFragment onViewCreated - Fragment is alive")
         initViews()
+
+        Log.d("HomeDashboardFragment", "onCreateView - binding=${binding != null}")
         return binding.root
     }
 
