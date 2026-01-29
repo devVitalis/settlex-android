@@ -15,7 +15,7 @@ import com.settlex.android.presentation.common.extensions.toNairaStringShort
 import com.settlex.android.presentation.common.state.UiState
 import com.settlex.android.presentation.dashboard.home.model.HomeUiModel
 import com.settlex.android.presentation.dashboard.services.model.ServiceUiModel
-import com.settlex.android.presentation.transactions.model.TransactionItemUiModel
+import com.settlex.android.presentation.transactions.model.TransactionUiModel
 import com.settlex.android.util.network.NetworkMonitor
 import dagger.hilt.android.lifecycle.HiltViewModel
 import jakarta.inject.Inject
@@ -88,8 +88,7 @@ class HomeViewModel @Inject constructor(
         initialValue = null
     )
 
-    private val _recentTransactions =
-        MutableStateFlow<UiState<List<TransactionItemUiModel>>>(UiState.Loading)
+    private val _recentTransactions = MutableStateFlow<UiState<List<TransactionUiModel>>>(UiState.Loading)
     val recentTransactions = _recentTransactions.asStateFlow()
 
     fun fetchRecentTransactions() {

@@ -12,7 +12,7 @@ import com.settlex.android.presentation.dashboard.account.model.ProfileUiModel
 import com.settlex.android.presentation.dashboard.home.model.HomeUiModel
 import com.settlex.android.presentation.dashboard.rewards.RewardsUiModel
 import com.settlex.android.presentation.transactions.model.RecipientUiModel
-import com.settlex.android.presentation.transactions.model.TransactionItemUiModel
+import com.settlex.android.presentation.transactions.model.TransactionUiModel
 import com.settlex.android.presentation.transactions.model.TransferToFriendUiModel
 import com.settlex.android.presentation.wallet.model.WalletUiModel
 
@@ -77,7 +77,7 @@ fun RecipientDto.toRecipientUiModel(): RecipientUiModel {
     )
 }
 
-fun TransactionDto.toTransactionUiModel(uid: String): TransactionItemUiModel {
+fun TransactionDto.toTransactionUiModel(uid: String): TransactionUiModel {
     val isSender = uid == senderUid
 
     val operation = when (status) {
@@ -85,7 +85,7 @@ fun TransactionDto.toTransactionUiModel(uid: String): TransactionItemUiModel {
         else -> if (isSender) TransactionOperation.DEBIT else TransactionOperation.CREDIT
     }
 
-    return TransactionItemUiModel(
+    return TransactionUiModel(
         transactionId = transactionId,
         description = description,
         senderId = sender.addAtPrefix(),

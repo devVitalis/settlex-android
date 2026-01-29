@@ -82,7 +82,7 @@
     <string name="tv_no_transactions_yet">No transactions yet</string>
     <string name="tv_your_recent_transactions_will_appear_here">Your recent transactions will appear here</string>
     <string name="tv_recent_transactions">Recent Transactions</string>
-    <string name="tv_view_all">View ALL</string>
+    <string name="tv_view_all">View All</string>
     <string name="tv_commission">Commission</string>
     <string name="tv_balance">Balance</string>
     <string name="tv_deposit">Deposit</string>

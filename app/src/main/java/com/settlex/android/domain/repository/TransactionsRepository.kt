@@ -6,5 +6,10 @@ import kotlinx.coroutines.flow.Flow
 
 interface TransactionsRepository {
     suspend fun fetchRecentTransactions(): Pair<String, Flow<Result<List<TransactionDto>>>>
-    suspend fun transferToFriend(toRecipientPaymentId: String, transferAmount: Long, description: String?): Result<ApiResponse<String>>
+    suspend fun fetchTransactionsForTheMonth(): Flow<Result<Pair<String, List<TransactionDto>>>>
+    suspend fun transferToFriend(
+        toRecipientPaymentId: String,
+        transferAmount: Long,
+        description: String?
+    ): Result<ApiResponse<String>>
 }

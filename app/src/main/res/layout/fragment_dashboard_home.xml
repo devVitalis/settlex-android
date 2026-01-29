@@ -57,7 +57,6 @@
                     android:layout_height="wrap_content"
                     android:layout_gravity="center"
                     android:textColor="@color/colorOnSurface"
-                    android:textStyle="bold"
                     tools:text="Benjamin Nnaemeka" />
 
                 <com.facebook.shimmer.ShimmerFrameLayout
@@ -472,35 +471,6 @@
                         android:layout_height="50dp"
                         android:layout_marginTop="5dp"
                         android:src="@drawable/ic_no_transactions" />
-                </LinearLayout>
-
-                <!-- Error no internet state -->
-                <LinearLayout
-                    android:id="@+id/view_no_internet"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:gravity="center_vertical"
-                    android:orientation="horizontal"
-                    android:padding="8dp"
-                    android:visibility="gone">
-
-                    <TextView
-                        style="@style/TextAppearance.SettleX.BodySmall"
-                        android:layout_width="0dp"
-                        android:layout_height="wrap_content"
-                        android:layout_weight="1"
-                        android:text="@string/error_no_internet"
-                        android:textColor="@color/colorOnSurface" />
-
-                    <com.google.android.material.button.MaterialButton
-                        android:id="@+id/btn_refresh_transactions"
-                        style="@style/Widget.SettleX.Button.Outlined"
-                        android:layout_width="70dp"
-                        android:layout_height="40dp"
-                        android:layout_marginStart="5dp"
-                        android:paddingHorizontal="0dp"
-                        android:text="@string/btn_refresh"
-                        android:textSize="12sp" />
                 </LinearLayout>
             </FrameLayout>
 

@@ -5,7 +5,7 @@ import com.settlex.android.data.enums.TransactionServiceType;
 import com.settlex.android.data.enums.TransactionStatus;
 
 /**
- * Production DTO representing a transaction in Firestore
+ * DTO representing a transaction in Firestore
  */
 public class TransactionDto {
     public String transactionId;

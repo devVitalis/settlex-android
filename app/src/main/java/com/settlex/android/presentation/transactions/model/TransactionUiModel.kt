@@ -9,7 +9,7 @@ import kotlinx.parcelize.Parcelize
  * This model is parcelable to allow it to be passed between Android components, such as activities or fragments.
  */
 @Parcelize
-data class TransactionItemUiModel(
+data class TransactionUiModel(
     val transactionId: String,
     val description: String?,
     val senderId: String,

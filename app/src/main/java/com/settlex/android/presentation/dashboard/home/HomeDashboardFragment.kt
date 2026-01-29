@@ -3,7 +3,6 @@ package com.settlex.android.presentation.dashboard.home
 import android.app.Activity
 import android.content.Intent
 import android.os.Bundle
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -14,7 +13,6 @@ import androidx.fragment.app.activityViewModels
 import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.lifecycleScope
 import androidx.lifecycle.repeatOnLifecycle
-import androidx.navigation.fragment.NavHostFragment
 import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.settlex.android.R
@@ -42,7 +40,7 @@ import com.settlex.android.presentation.transactions.TransactionActivity
 import com.settlex.android.presentation.transactions.TransactionHistoryActivity
 import com.settlex.android.presentation.transactions.TransferToFriendActivity
 import com.settlex.android.presentation.transactions.adapter.TransactionListAdapter
-import com.settlex.android.presentation.transactions.model.TransactionItemUiModel
+import com.settlex.android.presentation.transactions.model.TransactionUiModel
 import com.settlex.android.presentation.wallet.CommissionWithdrawalActivity
 import com.settlex.android.presentation.wallet.ReceiveActivity
 import com.settlex.android.util.ui.StatusBar
@@ -62,7 +60,6 @@ class HomeDashboardFragment : Fragment() {
     private lateinit var transactionsListAdapter: TransactionListAdapter
     private lateinit var promotionalBannerAdapter: PromotionalBannerAdapter
 
-    private val navController by lazy { NavHostFragment.findNavController(this) }
     private val viewModel: HomeViewModel by activityViewModels()
     private val bannerViewModel: PromoBannerViewModel by activityViewModels()
 
@@ -90,7 +87,6 @@ class HomeDashboardFragment : Fragment() {
 
     override fun onDestroyView() {
         super.onDestroyView()
-        Log.d("HomeDashboardFragment", "Fragment is destroyed")
         bannerScrollJob?.cancel()
         binding.rvTransactions.adapter = null
         binding.rvServices.adapter = null
@@ -122,7 +118,6 @@ class HomeDashboardFragment : Fragment() {
         tvViewAllTransaction.setOnClickListener { startActivity(TransactionHistoryActivity::class.java) }
         btnDeposit.setOnClickListener { requireContext().toastNotImplemented() }
         ivBalanceToggle.setOnClickListener { viewModel.toggleBalanceVisibility() }
-        btnRefreshTransactions.setOnClickListener { viewModel.fetchRecentTransactions() }
         viewUserCommissionBalance.setOnClickListener { startActivity(CommissionWithdrawalActivity::class.java) }
     }
 
@@ -132,7 +127,7 @@ class HomeDashboardFragment : Fragment() {
                 viewModel.userSessionState.collect { state ->
                     when (state) {
                         is UserSessionState.Authenticated -> {
-                            if (hasFetchRecentTransactions.not()) {
+                            if (!hasFetchRecentTransactions) {
                                 viewModel.fetchRecentTransactions()
                                 hasFetchRecentTransactions = true
                             }
@@ -155,6 +150,14 @@ class HomeDashboardFragment : Fragment() {
                     binding.tvUserBalance.text = userBalance
                     binding.tvUserCommissionBalance.text = commissionBalance
                 }
+            }
+        }
+    }
+
+    private fun observeUserBalanceHiddenState() = viewLifecycleOwner.lifecycleScope.launch {
+        viewLifecycleOwner.repeatOnLifecycle(Lifecycle.State.STARTED) {
+            viewModel.isBalanceHidden.collect { isBalanceHidden ->
+                binding.ivBalanceToggle.isSelected = isBalanceHidden
             }
         }
     }
@@ -209,20 +212,10 @@ class HomeDashboardFragment : Fragment() {
         btnLogin.show()
     }
 
-    private fun observeUserBalanceHiddenState() {
-        viewLifecycleOwner.lifecycleScope.launch {
-            viewLifecycleOwner.repeatOnLifecycle(Lifecycle.State.STARTED) {
-                viewModel.isBalanceHidden.collect { isBalanceHidden ->
-                    binding.ivBalanceToggle.isSelected = isBalanceHidden
-                }
-            }
-        }
-    }
-
     private fun initTransactionList() = with(binding) {
         transactionsListAdapter =
             TransactionListAdapter(object : TransactionListAdapter.OnTransactionClickListener {
-                override fun onClick(transaction: TransactionItemUiModel) {
+                override fun onClick(transaction: TransactionUiModel) {
                     val intent = Intent(context, TransactionActivity::class.java)
                     intent.putExtra("transaction", transaction)
                     startActivity(intent)
@@ -239,11 +232,11 @@ class HomeDashboardFragment : Fragment() {
     private fun observeUserRecentTransactions() {
         viewLifecycleOwner.lifecycleScope.launch {
             viewLifecycleOwner.repeatOnLifecycle(Lifecycle.State.STARTED) {
-                viewModel.recentTransactions.collect { transactions ->
-                    when (transactions) {
+                viewModel.recentTransactions.collect { state ->
+                    when (state) {
                         is UiState.Loading -> onTransactionsLoading()
-                        is UiState.Success -> setTransactionsData(transactions.data)
-                        is UiState.Failure -> onTransactionsError(transactions.exception)
+                        is UiState.Success -> setTransactionsData(state.data)
+                        is UiState.Failure -> onTransactionsError(state.exception)
                     }
                 }
             }
@@ -251,13 +244,13 @@ class HomeDashboardFragment : Fragment() {
     }
 
     private fun onTransactionsLoading() = with(binding) {
-        listOf(viewNoTransactionsUi, viewNoInternet, rvTransactions).forEach { it.gone() }
+        listOf(viewNoTransactionsUi, rvTransactions).forEach { it.gone() }
         shimmerTransactions.show()
     }
 
-    private fun setTransactionsData(transactions: List<TransactionItemUiModel>?) =
+    private fun setTransactionsData(transactions: List<TransactionUiModel>?) =
         with(binding) {
-            listOf(shimmerTransactions, viewNoInternet).forEach { it.gone() }
+            shimmerTransactions.gone()
 
             if (transactions?.isEmpty() == true) {
                 transactionsListAdapter.submitList(emptyList())
@@ -272,9 +265,7 @@ class HomeDashboardFragment : Fragment() {
     private fun onTransactionsError(error: AppException) = with(binding) {
         listOf(shimmerTransactions, viewNoTransactionsUi, rvTransactions).forEach { it.gone() }
 
-        if (error is AppException.NetworkException) {
-            viewNoInternet.show()
-        }
+        viewNoTransactionsUi.show()
     }
 
     private fun initPromoBannersList() = with(binding) {

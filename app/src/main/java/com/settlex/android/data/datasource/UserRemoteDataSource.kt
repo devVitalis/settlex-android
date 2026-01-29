@@ -16,6 +16,7 @@ import com.settlex.android.data.remote.dto.ApiResponse
 import com.settlex.android.data.remote.dto.RecipientDto
 import com.settlex.android.data.remote.dto.TransactionDto
 import com.settlex.android.domain.TransactionIdGenerator
+import com.settlex.android.util.DateUtil
 import com.settlex.android.util.image.ImageConverter
 import jakarta.inject.Inject
 import jakarta.inject.Singleton
@@ -31,7 +32,7 @@ import kotlinx.coroutines.tasks.await
 
 @Singleton
 class UserRemoteDataSource @Inject constructor(
-    private val firestore: FirebaseFirestore,
+    private val db: FirebaseFirestore,
     private val auth: FirebaseAuth,
     private val cloudFunctions: FunctionsApiClient,
 ) {
@@ -39,8 +40,10 @@ class UserRemoteDataSource @Inject constructor(
 
     fun getCurrentUser(): FirebaseUser? = auth.currentUser
 
+    fun signOut() = auth.signOut()
+
     suspend fun isPaymentIdTaken(id: String): Boolean {
-        val snapshot = firestore.collection("payment_ids")
+        val snapshot = db.collection("payment_ids")
             .document(id)
             .get().await()
 
@@ -50,9 +53,9 @@ class UserRemoteDataSource @Inject constructor(
     suspend fun assignPaymentId(id: String) {
         val uid: String = getCurrentUser()!!.uid
 
-        firestore.runTransaction { transaction ->
-            val globalDocRef = firestore.collection("payment_ids").document(id)
-            val userDocRef = firestore.collection("users").document(uid)
+        db.runTransaction { transaction ->
+            val globalDocRef = db.collection("payment_ids").document(id)
+            val userDocRef = db.collection("users").document(uid)
 
             // Check if the payment ID is already taken
             val snapshot = transaction.get(globalDocRef)
@@ -143,10 +146,11 @@ class UserRemoteDataSource @Inject constructor(
 
     private val _recentTransactionsFlow: Flow<Result<List<TransactionDto>>> by lazy {
         callbackFlow {
+            val uid = getCurrentUser()?.uid ?: return@callbackFlow
             Log.d("UserRemoteDataSource", "Fetching recent transactions...")
 
-            val ref = firestore.collection("users")
-                .document(getCurrentUser()!!.uid)
+            val ref = db.collection("users")
+                .document(uid)
                 .collection("transactions")
                 .orderBy("createdAt", Query.Direction.DESCENDING)
                 .limit(2)
@@ -167,6 +171,11 @@ class UserRemoteDataSource @Inject constructor(
                 }
 
                 trySend(Result.success(transactions))
+                val source = if (snapshot.metadata.isFromCache) "Local Cache" else "Server"
+                Log.d(
+                    "UserRemoteDataSource",
+                    "Recent transactions Data fetched from: $source with ${transactions.size} items"
+                )
             }
 
             awaitClose { listener.remove() }
@@ -181,4 +190,50 @@ class UserRemoteDataSource @Inject constructor(
         val uid = getCurrentUser()!!.uid
         return uid to _recentTransactionsFlow
     }
+
+    fun fetchTransactionsForTheMonth(): Flow<Result<Pair<String, List<TransactionDto>>>> =
+        callbackFlow {
+            val uid = getCurrentUser()?.uid ?: run {
+                trySend(
+                    Result.failure(
+                        FirebaseFirestoreException(
+                            "User not authenticated",
+                            FirebaseFirestoreException.Code.UNAUTHENTICATED
+                        )
+                    )
+                )
+                close()
+                return@callbackFlow
+            }
+
+            val query = db.collection("users")
+                .document(uid)
+                .collection("transactions")
+                .orderBy("createdAt", Query.Direction.DESCENDING)
+                .whereGreaterThanOrEqualTo("createdAt", DateUtil.getStartOfMonth())
+
+            val listener = query.addSnapshotListener { snapshot, error ->
+                if (error != null) {
+                    trySend(Result.failure(error))
+                    Log.e("UserRemoteDataSource", "Error fetching transactions: $error")
+                    return@addSnapshotListener
+                }
+
+                if (snapshot != null) {
+                    val transactionList =
+                        snapshot.documents.mapNotNull { it.toObject(TransactionDto::class.java) }
+                    trySend(Result.success(uid to transactionList))
+
+                    val source = if (snapshot.metadata.isFromCache) "Local Cache" else "Server"
+                    Log.d(
+                        "UserRemoteDataSource",
+                        "Fetched $source: ${transactionList.size} items for UID: $uid"
+                    )
+                }
+            }
+
+            awaitClose {
+                listener.remove()
+            }
+        }
 }

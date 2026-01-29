@@ -7,16 +7,30 @@ import com.settlex.android.data.remote.dto.TransactionDto
 import com.settlex.android.domain.repository.TransactionsRepository
 import jakarta.inject.Inject
 import kotlinx.coroutines.flow.Flow
-import kotlinx.coroutines.flow.catch
+import kotlinx.coroutines.flow.map
 
 class TransactionRepositoryImpl @Inject constructor(
     private val remote: UserRemoteDataSource,
-    private val exception: ExceptionMapper
+    private val exceptionMapper: ExceptionMapper
 ) : TransactionsRepository {
 
     override suspend fun fetchRecentTransactions(): Pair<String, Flow<Result<List<TransactionDto>>>> {
-        return remote.fetchRecentTransactions().first to remote.fetchRecentTransactions().second
-            .catch { exception.map(it as Exception) }
+        val (uid, transactions) = remote.fetchRecentTransactions()
+        return uid to transactions.map { result ->
+            result.fold(
+                onSuccess = { Result.success(it) },
+                onFailure = { Result.failure(exceptionMapper.map(it as Exception)) }
+            )
+        }
+    }
+
+    override suspend fun fetchTransactionsForTheMonth(): Flow<Result<Pair<String, List<TransactionDto>>>> {
+        return remote.fetchTransactionsForTheMonth().map { result ->
+            result.fold(
+                onSuccess = { Result.success(it) },
+                onFailure = { Result.failure(exceptionMapper.map(it as Exception)) }
+            )
+        }
     }
 
     override suspend fun transferToFriend(
@@ -32,7 +46,7 @@ class TransactionRepositoryImpl @Inject constructor(
             )
         }.fold(
             onSuccess = { return Result.success(it) },
-            onFailure = { return Result.failure(exception.map(it as Exception)) }
+            onFailure = { return Result.failure(exceptionMapper.map(it as Exception)) }
         )
     }
 }

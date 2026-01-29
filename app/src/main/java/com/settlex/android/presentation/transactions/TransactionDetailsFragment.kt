@@ -14,7 +14,7 @@ import com.settlex.android.presentation.common.extensions.gone
 import com.settlex.android.presentation.common.extensions.setTextColorRes
 import com.settlex.android.presentation.common.extensions.show
 import com.settlex.android.presentation.common.extensions.toFullDateTimeString
-import com.settlex.android.presentation.transactions.model.TransactionItemUiModel
+import com.settlex.android.presentation.transactions.model.TransactionUiModel
 import com.settlex.android.util.ui.StatusBar
 import dagger.hilt.android.AndroidEntryPoint
 
@@ -38,7 +38,7 @@ class TransactionDetailsFragment : Fragment() {
         super.onViewCreated(view, savedInstanceState)
 
         bindTransactionDetails(
-            requireActivity().intent.getParcelableExtraCompat<TransactionItemUiModel>(
+            requireActivity().intent.getParcelableExtraCompat<TransactionUiModel>(
                 "transaction"
             )
         )
@@ -57,7 +57,7 @@ class TransactionDetailsFragment : Fragment() {
         btnBackBefore.setOnClickListener { requireActivity().finish() }
     }
 
-    private fun bindTransactionDetails(transaction: TransactionItemUiModel) = with(binding) {
+    private fun bindTransactionDetails(transaction: TransactionUiModel) = with(binding) {
         ivTxnIcon.setImageResource(transaction.serviceTypeIcon)
         tvTxnName.text = transaction.serviceTypeName
 
